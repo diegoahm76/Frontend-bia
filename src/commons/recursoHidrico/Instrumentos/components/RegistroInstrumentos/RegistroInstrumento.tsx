@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+  Autocomplete,
   Button,
   Divider,
   Grid,
@@ -24,8 +25,7 @@ import { Controller } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
 import { agregar_instrumento } from '../../request/request';
 import dayjs from 'dayjs';
-import { ValueCuenca } from '../../interfaces/interface';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   const columns_aforo: GridColDef[] = [
@@ -141,6 +141,10 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   ];
 
   const {
+    pozos_selected,
+    cuenca,
+    id_pozo_selected,
+    data_id_cuencas,
     id_seccion,
     id_subseccion,
     archivos,
@@ -152,46 +156,55 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     row_cartera_aforo,
     row_prueba_bombeo,
     row_result_laboratorio,
+    is_loading_submit,
+    set_is_loading_submit,
     set_is_open_cuenca,
     set_is_open_pozos,
     handle_date_change,
+    handle_change_autocomplete,
     register,
     handleSubmit,
+    fetch_data_cuencas,
+    fetch_data_pozo,
     control,
     formErrors,
   } = useRegisterInstrumentoHook();
 
-  const [clase_tercero, set_clase_tercero] = useState<ValueCuenca[]>([]);
-
-
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    // Perform submit logic here
     try {
+      set_is_loading_submit(true);
       const nombre_archivos_set = new Set(nombres_archivos);
       if (nombre_archivos_set.size !== nombres_archivos.length) {
         control_error('No se permiten nombres de archivo duplicados');
         return;
       }
-      const fecha_crea = dayjs(data.fecha_creacion_instrumento).format('YYYY-MM-DDTHH:mm:ss');
+      const fecha_crea = dayjs(data.fecha_creacion_instrumento).format(
+        'YYYY-MM-DDTHH:mm:ss'
+      );
+      const fecha_vigencia = dayjs(data.fecha_fin_vigencia).format(
+        'YYYY-MM-DD'
+      );
+      const id_cuencas = data_id_cuencas;
       console.log(fecha_crea, 'fecha_crea');
 
       const datos_instrumento = new FormData();
       datos_instrumento.append('nombre', data.nombre);
       datos_instrumento.append('fecha_creacion_instrumento', fecha_crea);
-      datos_instrumento.append(
-        'fecha_vigencia_instrumento',
-        data.fecha_vigencia_instrumento
-      );
+      datos_instrumento.append('fecha_fin_vigencia', fecha_vigencia);
       datos_instrumento.append('cod_tipo_agua', tipo_agua_selected);
       if (id_seccion && id_subseccion) {
         datos_instrumento.append('id_seccion', id_seccion.toString());
         datos_instrumento.append('id_subseccion', id_subseccion.toString());
       }
-      datos_instrumento.append(
-        'id_cuencas',
-        '[{"id_cuenca":1},{"id_cuenca":2}]'
-      );
+      if (id_pozo_selected) {
+        datos_instrumento.append('id_pozo', id_pozo_selected.toString());
+      }
+      if (id_cuencas.length > 0) {
+        datos_instrumento.append(
+          'id_cuencas',
+          JSON.stringify(id_cuencas) as any
+        );
+      }
       archivos.forEach((archivo: any, index: any) => {
         if (archivo != null) {
           datos_instrumento.append(`archivo`, archivo);
@@ -199,27 +212,20 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
         }
       });
 
-      await agregar_instrumento(datos_instrumento)
+      await agregar_instrumento(datos_instrumento);
       control_success('Se agregó instrumento correctamente');
-
-
+      set_is_loading_submit(false);
       console.log('datos_instrumento', datos_instrumento);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      set_is_loading_submit(false);
+      control_error(error.response.data.detail);
     }
   });
 
-  const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: ValueCuenca[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<ValueCuenca>
-  ): void => {
-    set_value(
-      'datos_clasificacion_persona',
-      value.map((e) => e.value)
-    );
-  };
+  useEffect(() => {
+    void fetch_data_cuencas();
+    fetch_data_pozo();
+  }, []);
 
   return (
     <>
@@ -291,7 +297,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
               disabled
             />
           </Grid>
-
           <Grid item xs={12} sm={6}>
             <Controller
               name="cod_tipo_agua"
@@ -374,13 +379,12 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                     fullWidth
                     size="small"
                     {...params}
-                    {...register('fecha_vigencia_instrumento', {
+                    {...register('fecha_fin_vigencia', {
                       required: true,
                     })}
-                    error={!!formErrors?.fecha_vigencia_instrumento}
+                    error={!!formErrors?.fecha_fin_vigencia}
                     helperText={
-                      formErrors?.fecha_vigencia_instrumento?.type ===
-                      'required'
+                      formErrors?.fecha_fin_vigencia?.type === 'required'
                         ? 'Este campo es obligatorio'
                         : ''
                     }
@@ -390,34 +394,93 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
             </LocalizationProvider>
           </Grid>
           {tipo_agua_selected === 'SUP' ? (
-            <Grid item spacing={2} justifyContent="end" container>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    set_is_open_cuenca(true);
-                  }}
-                >
-                  Buscar Cuenca
-                </Button>
+            <>
+              {cuenca.length > 0 && (
+                <Grid item xs={12}>
+                  <Autocomplete
+                    multiple
+                    fullWidth
+                    size="medium"
+                    options={cuenca}
+                    getOptionLabel={(option: any) => option.label}
+                    isOptionEqualToValue={(option: any, value) =>
+                      option?.value === value?.value
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        key={params.id}
+                        {...params}
+                        label="Asociar Cuenca"
+                        placeholder="Asociar Cuenca"
+                      />
+                    )}
+                    {...register('id_cuencas')}
+                    onChange={handle_change_autocomplete}
+                  />
+                </Grid>
+              )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      set_is_open_cuenca(true);
+                    }}
+                  >
+                    Buscar Cuenca
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            </>
           ) : null}
           {tipo_agua_selected === 'SUB' ? (
-            <Grid item spacing={2} justifyContent="end" container>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    set_is_open_pozos(true);
-                  }}
-                >
-                  Buscar Pozo
-                </Button>
+            <>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="id_pozo"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Seleccione un pozo"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      // required
+                      // error={!!formErrors.cod_tipo_agua}
+                      // helperText={
+                      //   formErrors?.cod_tipo_agua?.type === 'required' &&
+                      //   'Este campo es obligatorio'
+                      // }
+                    >
+                      {pozos_selected.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
               </Grid>
-            </Grid>
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      set_is_open_pozos(true);
+                    }}
+                  >
+                    Buscar Pozo
+                  </Button>
+                </Grid>
+              </Grid>
+            </>
           ) : null}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
@@ -425,7 +488,13 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
               <ButtonSalir />
             </Grid>
             <Grid item>
-              <LoadingButton variant="contained" color="success" type="submit">
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                loading={is_loading_submit}
+                disabled={is_loading_submit}
+              >
                 Guardar
               </LoadingButton>
             </Grid>
@@ -466,32 +535,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                     getRowId={(row) => uuidv4()}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
-                  />
-                </Grid>
-              </>
-            )}
-            {clase_tercero.length > 0 && (
-              <>
-                <Grid item xs={12}>
-                  <Autocomplete
-                    multiple
-                    fullWidth
-                    size="medium"
-                    options={clase_tercero}
-                    getOptionLabel={(option: any) => option.label}
-                    isOptionEqualToValue={(option: any, value) =>
-                      option?.value === value?.value
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        key={params.id}
-                        {...params}
-                        label="Datos clasificación Cormacarena"
-                        placeholder="Clasificacion Cormacarena"
-                      />
-                    )}
-                    {...register('datos_clasificacion_persona')}
-                    onChange={handle_change_autocomplete}
                   />
                 </Grid>
               </>

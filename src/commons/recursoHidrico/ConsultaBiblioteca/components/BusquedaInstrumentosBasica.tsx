@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Grid,
   Stack,
@@ -59,7 +60,8 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
-                set_id_instrumento(params.row.id_instumento);
+                set_id_instrumento(params.row.id_instrumento);
+                console.log(params.row, 'params.row');
                 handle_close();
               }}
             />
@@ -105,7 +107,7 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
     if (open_dialog) {
       void fetch_busqueda_basica();
     }
-  }, [open_dialog]);
+  }, [open_dialog, id_seccion, id_subseccion]);
 
   useEffect(() => {
     if (nombre_subseccion) {
@@ -201,6 +203,17 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
             </Grid>
           </Grid>
         </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              handle_close();
+            }}
+          >
+            CERRAR
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

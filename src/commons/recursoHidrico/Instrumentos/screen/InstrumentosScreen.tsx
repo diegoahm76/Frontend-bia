@@ -1,10 +1,19 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { BusquedaSeccionSubseccion } from '../components/BusquedaSeccionSubseccion';
 import { RegistroInstrumentos } from '../components/RegistroInstrumentos/RegistroInstrumento';
+import { useContext } from 'react';
+import { DataContext } from '../context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InstrumentosScreen: React.FC = () => {
+
+  const {
+    id_seccion,
+    id_subseccion,
+  }= useContext(DataContext);
+
   return (
     <>
       <Grid
@@ -27,7 +36,9 @@ export const InstrumentosScreen: React.FC = () => {
         </Grid>
       </Grid>
       <BusquedaSeccionSubseccion />
+      {(id_seccion && id_subseccion) && (
       <RegistroInstrumentos />
+        )}
     </>
   );
 };
