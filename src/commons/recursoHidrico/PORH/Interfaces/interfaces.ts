@@ -58,3 +58,10 @@ export interface BusquedaAvanzada {
     nombre_programa?: string;
     nombre_PORH?: string;
 }
+export interface BusquedaPorhI {
+    id_instrumento:  number;
+    nombre:       string;
+    fecha_inicio: string;
+    fecha_fin:    string;
+    nombre_PORH:  string;
+}

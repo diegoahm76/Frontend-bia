@@ -35,9 +35,7 @@ const SeleccionarBienDespacho = () => {
     handleSubmit: handle_submit_despacho,
     reset: reset_despacho,
   } = useForm<IObjBienDespacho>();
-  // const { bodega_seleccionada } = useAppSelector(
-  //   (state: { bodegas: any }) => state.bodegas
-  // );
+
   const { current_solicitud } = useAppSelector(
     (state: { solic_consumo: any }) => state.solic_consumo
   );
@@ -164,7 +162,7 @@ const SeleccionarBienDespacho = () => {
 
 
   const columns_bienes_despacho: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
@@ -516,6 +514,7 @@ const SeleccionarBienDespacho = () => {
               helper_text: '',
               on_blur_function: search_bien,
             },
+
             {
               datum_type: 'input_controller',
               xs: 12,
@@ -534,6 +533,7 @@ const SeleccionarBienDespacho = () => {
               disabled: true,
               helper_text: '',
             },
+
           ]}
           form_inputs_list={[
             {
@@ -686,7 +686,7 @@ const SeleccionarBienDespacho = () => {
           set_models={set_bienes}
           get_filters_models={null}
           models={bienes}
-          button_add_selection_hidden={table_origin === 'B'}
+          // button_add_selection_hidden={table_origin === 'B'}
           columns_model={table_origin === 'A' ? columns_bienes : columns_bienes_origen}
           row_id={table_origin === 'A' ? 'id_inventario' : 'id_entrada_almacen'}
           title_table_modal={'Resultados de la busqueda'}

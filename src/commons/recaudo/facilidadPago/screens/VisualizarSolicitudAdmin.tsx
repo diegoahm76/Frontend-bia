@@ -53,10 +53,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   };
 
   useEffect(() => {
-    if(solicitud_facilidad.id_deudor_actuacion !== undefined){
+    if(solicitud_facilidad.id_deudor !== undefined){
       try {
-        void dispatch(get_datos_deudor(solicitud_facilidad.id_deudor_actuacion));
-        void dispatch(get_datos_contacto(solicitud_facilidad.id_deudor_actuacion));
+        void dispatch(get_datos_deudor(solicitud_facilidad.id_deudor));
+        void dispatch(get_datos_contacto(solicitud_facilidad.id_deudor));
         // void get_bienes_deudor(solicitud_facilidad.id_deudor_actuacion);
       } catch (error: any) {
         throw new Error(error);

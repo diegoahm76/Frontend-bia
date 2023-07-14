@@ -28,6 +28,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {
   current_germination_bed,
   initial_state_current_germination_bed,
+  reset_state,
 } from '../store/slice/configuracionSlice';
 import BlockIcon from '@mui/icons-material/Block';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
@@ -36,6 +37,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArticleIcon from '@mui/icons-material/Article';
 import CrearCamaGerminacionDialogForm from '../componentes/CrearCamaGerminacionDialogForm';
 import AutocompleteVivero from '../../componentes/AutocompleteVivero';
+import Limpiar from '../../componentes/Limpiar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministracionCamasGerminacionScreen(): JSX.Element {
@@ -332,6 +334,15 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                     >
                       GUARDAR
                     </Button>
+                    <Grid item xs={12} md={3}>
+                      <Limpiar
+                        dispatch={dispatch}
+                        reset_state={reset_state}
+                        set_initial_values={null}
+                        variant_button={'outlined'}
+                        button_clean_show={false}
+                      />
+                    </Grid>
                   </Stack>
                 </Box>
               </Grid>

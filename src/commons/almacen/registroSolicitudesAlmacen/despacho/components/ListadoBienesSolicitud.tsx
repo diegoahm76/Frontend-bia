@@ -18,7 +18,7 @@ const ListadoBienesSolicitud = () => {
 
   // const [action, set_action] = useState<string>("agregar");
 
-  const { bienes_solicitud } = useAppSelector((state) => state.solic_consumo);
+  const { bienes_solicitud } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
   const { bienes_solicitud_aux, bienes_despacho } = useAppSelector(
     (state) => state.despacho
   );

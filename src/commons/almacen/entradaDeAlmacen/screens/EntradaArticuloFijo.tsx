@@ -43,9 +43,9 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
         obtener_estados_fc();
         obtener_unidades_medida_fc();
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        set_title('Registro de detalles (' + 0 + ' de ' + props.cantidad_entrada +')');
+        set_title('Registro de detalles (' + 0 + ' de ' + props.cantidad_entrada + ')');
     }, []);
-    
+
     const obtener_estados_fc: () => void = () => {
         dispatch(obtener_estados()).then((response: any) => {
             set_estados(response);
@@ -85,19 +85,19 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
 
     const valida_detalle_complementario = (): boolean => {
         let validador = true;
-        if (placa_serial === ""){
+        if (placa_serial === "") {
             set_msj_error_placa_serial("El campo Placa/Serial es obligatorio.");
             validador = false;
         }
-        if (vida_util === ""){
+        if (vida_util === "") {
             set_msj_error_vida_util("El campo Vida util es obligatorio.");
             validador = false;
         }
-        if (unidad_tiempo === ""){
+        if (unidad_tiempo === "") {
             set_msj_error_unidad_tiempo("El campo Unidad tiempo es obligatorio.");
             validador = false;
         }
-        if (valor_residual === ""){
+        if (valor_residual === "") {
             set_msj_error_valor_residual("El campo Valor residual es obligatorio.");
             validador = false;
         }
@@ -107,7 +107,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
     }
 
     const agregar_entradas = (): void => {
-        if(detalle_complementario.length === props.cantidad_entrada){
+        if (detalle_complementario.length === props.cantidad_entrada) {
             props.detalles_entrada(detalle_complementario);
             props.set_is_modal_active(false);
         }
@@ -115,7 +115,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
 
     const guardar_entrada = (): void => {
         if (valida_detalle_complementario()) {
-            if(detalle_complementario.findIndex(dc => dc.placa_serial === placa_serial) === -1){
+            if (detalle_complementario.findIndex(dc => dc.placa_serial === placa_serial) === -1) {
                 const values: any = {
                     id: String(uuid()),
                     estado,
@@ -126,10 +126,10 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                     valor_residual,
                     abrir_hdv
                 };
-                if(detalle_complementario.length < props.cantidad_entrada){
-                    set_detalle_complementario([...detalle_complementario,values]);
+                if (detalle_complementario.length < props.cantidad_entrada) {
+                    set_detalle_complementario([...detalle_complementario, values]);
                     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-                    set_title('Registro de detalles (' + (detalle_complementario.length + 1) + ' de ' + props.cantidad_entrada +')');
+                    set_title('Registro de detalles (' + (detalle_complementario.length + 1) + ' de ' + props.cantidad_entrada + ')');
                 }
             }
         }
@@ -294,7 +294,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                         }}
                     >
                         <Grid item md={12} xs={12}>
-                            <Title title={tittle}  />
+                            <Title title={tittle} />
                             <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                                 <Grid item container spacing={2}>
                                     <Grid item xs={12} sm={12}>
@@ -346,11 +346,11 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                     style={{ width: '15%' }}
                                                 ></Column>
                                                 <Column header="Acciones" style={{ width: '10%' }} align={'center'} body={(rowData) => {
-                                                    return <Button color="error" size="small" variant='contained' onClick={() => { 
-                                                        const index = detalle_complementario.findIndex((d:any) => d.id_entrada_local === rowData.id_entrada_local);
-                                                        detalle_complementario.splice(index,1);
+                                                    return <Button color="error" size="small" variant='contained' onClick={() => {
+                                                        const index = detalle_complementario.findIndex((d: any) => d.id_entrada_local === rowData.id_entrada_local);
+                                                        detalle_complementario.splice(index, 1);
                                                         set_detalle_complementario([...detalle_complementario]);
-                                                     }}><DeleteForeverIcon fontSize="small" /></Button>;
+                                                    }}><DeleteForeverIcon fontSize="small" /></Button>;
                                                 }}></Column>
                                             </DataTable>
                                         </div>

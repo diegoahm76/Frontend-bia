@@ -13,7 +13,7 @@ import {
   Divider,
   MenuItem,
   Grid,
-
+  Chip,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
@@ -25,19 +25,20 @@ import {
   edit_nursery_service,
   get_viverista_id_service,
 } from '../store/thunks/gestorViveroThunks';
-import {
-  set_current_nursery
-} from '../store/slice/viveroSlice';
+import { set_current_nursery } from '../store/slice/viveroSlice';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjNursery as FormValues } from '../interfaces/vivero';
 import { api } from '../../../../api/axios';
 import type { IList } from '../../../../interfaces/globalModels';
-import { get_ciudades } from "../../../../request/getRequest";
+import { get_ciudades } from '../../../../request/getRequest';
 import { control_error } from '../../solicitudMaterial/store/thunks/solicitudViveroThunks';
 import FormInputFileController from '../../../../components/partials/form/FormInputFileController';
 import ViveristaActual from './ViveristaActual';
-
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import BusinessIcon from '@mui/icons-material/Business';
+import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
 interface IProps {
   action: string;
   is_modal_active: boolean;
@@ -58,12 +59,13 @@ const CrearViveroDialogForm = ({
   ];
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const [municipalities, set_municipalities] =
     useState<IList[]>(initial_options);
   const [nursery_types, set_nursery_types] = useState(initial_options);
   const [source_resources, set_source_resources] = useState(initial_options);
   const [file, set_file] = useState<any>(null);
-  const [file_name, set_file_name] = useState<string>("");
+  const [file_name, set_file_name] = useState<string>('');
 
   const { current_nursery } = useAppSelector((state) => state.nursery);
 
@@ -82,34 +84,45 @@ const CrearViveroDialogForm = ({
     reset_nursery(current_nursery);
     if (current_nursery.id_vivero !== null) {
       if (current_nursery.ruta_archivo_creacion !== null) {
-        set_file_name(String(current_nursery.ruta_archivo_creacion))
-        if(current_nursery.id_viverista_actual !== null){
-          void dispatch(get_viverista_id_service(Number(current_nursery.id_vivero ?? 0))) 
+        if (typeof current_nursery.ruta_archivo_creacion === 'string') {
+          const name =
+            current_nursery.ruta_archivo_creacion?.split('/').pop() ?? '';
+          set_file_name(name);
+        }
+        if (current_nursery.id_viverista_actual !== null) {
+          void dispatch(
+            get_viverista_id_service(Number(current_nursery.id_vivero ?? 0))
+          );
         }
       }
+    } else {
+      set_file_name('');
     }
   }, [current_nursery]);
-
 
   useEffect(() => {
     if (file !== null) {
       if ('name' in file) {
-        console.log(file.name)
-        set_file_name(file.name)
-        dispatch(set_current_nursery({ 
-          ...current_nursery, 
-          nombre: get_values("nombre"),
-          cod_municipio: get_values("cod_municipio"),
-          direccion: get_values("direccion"),
-          area_mt2: get_values("area_mt2"),
-          area_propagacion_mt2: get_values("area_propagacion_mt2"),
-          tiene_area_produccion: get_values("tiene_area_produccion"),
-          tiene_areas_pep_sustrato: get_values("tiene_areas_pep_sustrato"),
-          tiene_area_embolsado: get_values("tiene_area_embolsado"),
-          cod_tipo_vivero: get_values("cod_tipo_vivero"),
-          cod_origen_recursos_vivero: get_values("cod_origen_recursos_vivero"),
-          ruta_archivo_creacion: file
-        }))
+        console.log(file.name);
+        set_file_name(file.name);
+        dispatch(
+          set_current_nursery({
+            ...current_nursery,
+            nombre: get_values('nombre'),
+            cod_municipio: get_values('cod_municipio'),
+            direccion: get_values('direccion'),
+            area_mt2: get_values('area_mt2'),
+            area_propagacion_mt2: get_values('area_propagacion_mt2'),
+            tiene_area_produccion: get_values('tiene_area_produccion'),
+            tiene_areas_pep_sustrato: get_values('tiene_areas_pep_sustrato'),
+            tiene_area_embolsado: get_values('tiene_area_embolsado'),
+            cod_tipo_vivero: get_values('cod_tipo_vivero'),
+            cod_origen_recursos_vivero: get_values(
+              'cod_origen_recursos_vivero'
+            ),
+            ruta_archivo_creacion: file,
+          })
+        );
       }
     }
   }, [file]);
@@ -158,12 +171,12 @@ const CrearViveroDialogForm = ({
   const get_numicipalities = async (): Promise<void> => {
     try {
       const {
-        data: { data: municipios }
-      } = await get_ciudades("50");
+        data: { data: municipios },
+      } = await get_ciudades('50');
       set_municipalities(municipios);
     } catch (err) {
-      control_error("Error encontrando municipios");
-    } 
+      control_error('Error encontrando municipios');
+    }
   };
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -176,14 +189,13 @@ const CrearViveroDialogForm = ({
   useEffect(() => {
     const get_selects_options: any = async () => {
       try {
-        
         const { data: nursery_types_no_format } = await api.get(
           'conservacion/choices/tipo-vivero/'
         );
         const { data: source_resources_no_format } = await api.get(
           'conservacion/choices/origen-recursos-vivero/'
         );
-       
+
         const nursery_types_format = text_choise_adapter(
           nursery_types_no_format
         );
@@ -207,8 +219,6 @@ const CrearViveroDialogForm = ({
     };
     void get_selects_options();
   }, []);
-
-
 
   return (
     <Dialog
@@ -580,25 +590,99 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            
-                <FormInputFileController
-                xs={11}
-                md={5}
-                margin={1}
-                control_form={control_vivero}
-                control_name="ruta_archivo_creacion"
-                default_value=""
-                rules={{required_rule: {rule: true, message: "Archivo requerido"}}}
-                label="Archivo de soporte"
-                disabled={false}
-                helper_text=""
-                set_value={set_file}
-                hidden_text={action !== 'create'}
-                file_name={file_name}
+
+            <FormInputFileController
+              xs={11}
+              md={5}
+              margin={1}
+              control_form={control_vivero}
+              control_name="ruta_archivo_creacion"
+              default_value=""
+              rules={{
+                required_rule: { rule: true, message: 'Archivo requerido' },
+              }}
+              label="Archivo de soporte"
+              disabled={action !== 'create'}
+              helper_text=""
+              set_value={set_file}
+              hidden_text={action === 'edit'}
+              file_name={file_name}
+              value_file={current_nursery.ruta_archivo_creacion}
             />
             {current_nursery.id_viverista_actual !== null &&
-              <ViveristaActual/>
-            }
+              current_nursery.activo === true && <ViveristaActual />}
+            <Grid item xs={12} marginY={2}>
+              {current_nursery.vivero_en_cuarentena === true ? (
+                <Chip
+                  label={
+                    <>
+                      El vivero se encuentra en cuarentena desde el dia{' '}
+                      {String(current_nursery.fecha_inicio_cuarentena).slice(
+                        0,
+                        10
+                      )}{' '}
+                      <a
+                        href={`#/app/conservacion/gestor_vivero/cuarentena_detalle/${
+                          current_nursery.id_vivero ?? ''
+                        }/`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        más información
+                      </a>
+                    </>
+                  }
+                  color="error"
+                  variant="outlined"
+                />
+              ) : current_nursery.en_funcionamiento !== true ? (
+                current_nursery.id_viverista_actual === null ? (
+                  <Chip
+                    label={`El vivero no tiene viverista asignado`}
+                    color="error"
+                    variant="outlined"
+                  />
+                ) : (
+                  <Chip
+                    label={
+                      current_nursery.fecha_cierre_actual === null ? (
+                        'El vivero nunca ha sido abierto'
+                      ) : (
+                        <>
+                          El vivero se encuentra cerrado desde el dia{' '}
+                          {String(current_nursery.fecha_cierre_actual).slice(
+                            0,
+                            10
+                          )}{' '}
+                          <a
+                            href={`#/app/conservacion/gestor_vivero/apertura_cierre_detalle/${
+                              current_nursery.id_vivero ?? ''
+                            }/`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            más información
+                          </a>
+                        </>
+                      )
+                    }
+                    color="error"
+                    variant="outlined"
+                  />
+                )
+              ) : (
+                <Chip
+                  label={`El vivero se encuentra abierto y en normalidad desde el
+                      dia ${String(current_nursery.fecha_ultima_apertura).slice(
+                        0,
+                        10
+                      )}
+                      `}
+                  color="success"
+                  variant="outlined"
+                />
+              )}
+            </Grid>
           </Grid>
         </DialogContent>
         <Divider />
@@ -615,6 +699,65 @@ const CrearViveroDialogForm = ({
             >
               CERRAR
             </Button>
+
+            {current_nursery.activo === true &&
+              current_nursery.id_viverista_actual !== null && (
+                <>
+                  {current_nursery.vivero_en_cuarentena !== true && (
+                    <Button
+                      variant="contained"
+                      href={`#/app/conservacion/gestor_vivero/apertura_cierre/${
+                        current_nursery.id_vivero ?? ''
+                      }/`}
+                      color={
+                        current_nursery.en_funcionamiento === true
+                          ? 'warning'
+                          : 'primary'
+                      }
+                      onClick={handle_close_add_nursery}
+                      startIcon={
+                        current_nursery.en_funcionamiento === true ? (
+                          <LockIcon />
+                        ) : (
+                          <LockOpenIcon />
+                        )
+                      }
+                    >
+                      {current_nursery.en_funcionamiento === true
+                        ? 'Cerrar vivero'
+                        : 'Abrir vivero'}
+                    </Button>
+                  )}
+                  {(current_nursery.fecha_ultima_apertura !== null ||
+                    current_nursery.fecha_ultima_apertura !== '') &&
+                    (current_nursery.en_funcionamiento === true ||
+                      current_nursery.vivero_en_cuarentena === true) && (
+                      <Button
+                        variant="contained"
+                        href={`#/app/conservacion/gestor_vivero/cuarentena/${
+                          current_nursery.id_vivero ?? ''
+                        }/`}
+                        color={
+                          current_nursery.vivero_en_cuarentena === true
+                            ? 'success'
+                            : 'error'
+                        }
+                        onClick={handle_close_add_nursery}
+                        startIcon={
+                          current_nursery.vivero_en_cuarentena === true ? (
+                            <BusinessIcon />
+                          ) : (
+                            <DomainDisabledIcon />
+                          )
+                        }
+                      >
+                        {current_nursery.vivero_en_cuarentena === true
+                          ? 'Quitar cuarentena'
+                          : 'Poner cuarentena'}
+                      </Button>
+                    )}
+                </>
+              )}
             {action === 'create' ? (
               <Button
                 type="submit"

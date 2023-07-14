@@ -10,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DataContext } from '../../context/contextData';
 import dayjs, { type Dayjs } from 'dayjs';
+import { LoadingButton } from '@mui/lab';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarPrograma: React.FC = () => {
@@ -20,13 +21,14 @@ export const EditarPrograma: React.FC = () => {
     setValue: set_value,
     errors,
     data_programa,
+    is_saving,
   } = useContext(DataContext);
 
   const nombre = watch('nombre_programa');
   const [start_date, set_start_date] = useState<Dayjs | null>(null);
   const [end_date, set_end_date] = useState<Dayjs | null>(null);
 
-  const start_date_valid = start_date !== null && start_date < dayjs();
+  const start_date_valid = start_date !== null && start_date;
   const end_date_valid =
     end_date !== null && start_date !== null && end_date > start_date;
 
@@ -42,7 +44,7 @@ export const EditarPrograma: React.FC = () => {
 
   useEffect(() => {
     if (data_programa) {
-      console.log(data_programa, 'data_programa')
+      console.log(data_programa, 'data_programa');
       set_start_date(dayjs(data_programa.fecha_inicio));
       set_value('fecha_fin', data_programa.fecha_fin);
       set_value('fecha_inicio', data_programa.fecha_inicio);
@@ -65,7 +67,6 @@ export const EditarPrograma: React.FC = () => {
           mb: '0px',
         }}
       >
-        {' '}
         <Grid item xs={12}>
           <Title title=" EDICIÓN INFORMACIÓN DE PROGRAMA" />
         </Grid>
@@ -151,6 +152,19 @@ export const EditarPrograma: React.FC = () => {
               )}
             />
           </LocalizationProvider>
+        </Grid>
+      </Grid>
+      <Grid item spacing={2} justifyContent="end" container>
+        <Grid item>
+          <LoadingButton
+            variant="contained"
+            color="success"
+            type="submit"
+            disabled={is_saving}
+            loading={is_saving}
+          >
+            Actualizar
+          </LoadingButton>
         </Grid>
       </Grid>
     </>
