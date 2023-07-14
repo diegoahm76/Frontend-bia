@@ -15,9 +15,16 @@ import { get_nurseries_mortalidad_service } from '../store/thunks/produccionThun
 interface IProps {
   control_incidencia: any;
   get_values: any;
+  open_modal: boolean;
+  set_open_modal: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarIncidencia = ({ control_incidencia, get_values }: IProps) => {
+const SeleccionarIncidencia = ({
+  control_incidencia,
+  get_values,
+  open_modal,
+  set_open_modal,
+}: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
 
   const {
@@ -120,6 +127,9 @@ const SeleccionarIncidencia = ({ control_incidencia, get_values }: IProps) => {
           get_filters_models={get_incidencias}
           set_models={set_incidencias}
           button_submit_label="Buscar incidencias"
+          show_search_button={false}
+          open_search_modal={open_modal}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'select_controller',

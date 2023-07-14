@@ -6,7 +6,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Grid } from '@mui/material';
 import FormButton from '../../../../components/partials/form/FormButton';
 import { useForm } from 'react-hook-form';
-import { set_current_solicitud } from '../../solicitudMaterial/store/slices/indexSolicitud';
+import {
+  set_current_solicitud,
+  reset_state as reset_state_solicitud,
+} from '../../solicitudMaterial/store/slices/indexSolicitud';
 import {
   type IObjSolicitudVivero,
   type IObjNursery,
@@ -35,6 +38,8 @@ import {
   set_current_despacho,
   set_transfer_person,
   set_origin_nursery,
+  reset_state,
+  initial_state_current_nursery,
 } from '../store/slice/distribucionSlice';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
@@ -46,10 +51,13 @@ import {
   crear_despacho,
   editar_despacho,
   closed_solicitud_service,
+  control_error,
 } from '../store/thunks/distribucionThunks';
 import AnularEliminar from '../../componentes/AnularEliminar';
 import Block from '@mui/icons-material/Block';
 import SaveIcon from '@mui/icons-material/Save';
+import Limpiar from '../../componentes/Limpiar';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
 const DespachoScreen = () => {
@@ -83,7 +91,10 @@ const DespachoScreen = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const [action, set_action] = useState<string>('Crear');
-
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => {
+    set_open_search_modal(true);
+  };
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_num_despacho());
@@ -95,16 +106,35 @@ const DespachoScreen = () => {
       })
     );
   }, []);
+  const initial_values = (): void => {
+    dispatch(reset_state_solicitud());
+    void dispatch(get_uni_organizacional());
+    void dispatch(get_num_despacho());
+    void dispatch(get_nurcery());
+
+    dispatch(
+      set_transfer_person({
+        nombre_completo: userinfo.nombre,
+        id_persona: userinfo.id_persona,
+      })
+    );
+    set_action('Crear');
+  };
 
   useEffect(() => {
     console.log(watch_despacho('id_vivero'));
+
     if (watch_despacho('id_vivero') !== null) {
       const vivero: IObjNursery | undefined = nurseries.find(
         (p: IObjNursery) => p.id_vivero === watch_despacho('id_vivero')
       );
       if (vivero !== undefined) {
         dispatch(set_origin_nursery(vivero));
+      } else {
+        dispatch(set_origin_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_origin_nursery(initial_state_current_nursery));
     }
   }, [watch_despacho('id_vivero')]);
 
@@ -228,22 +258,32 @@ const DespachoScreen = () => {
       current_despacho.id_despacho_viveros !== null &&
       current_despacho.id_despacho_viveros !== undefined
     ) {
-      set_action('editar');
+      const fecha_actual = new Date();
+      const fecha_despacho = new Date(data.fecha_despacho ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_despacho.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 9) {
+        set_action('editar');
 
-      const aux_items: IObjBienDespacho[] = [];
-      bienes_despacho.forEach((element: IObjBienDespacho, index: number) => {
-        aux_items.push({ ...element, nro_posicion_en_despacho: index });
-      });
+        const aux_items: IObjBienDespacho[] = [];
+        bienes_despacho.forEach((element: IObjBienDespacho, index: number) => {
+          aux_items.push({ ...element, nro_posicion_en_despacho: index });
+        });
 
-      form_data.append('info_despacho', JSON.stringify({ ...data }));
-      form_data.append(
-        'ruta_archivo_con_recibido',
-        data.ruta_archivo_con_recibido
-      );
-      form_data.append('items_despacho', JSON.stringify(aux_items));
-      void dispatch(
-        editar_despacho(current_despacho.id_despacho_viveros, form_data)
-      );
+        form_data.append('info_despacho', JSON.stringify({ ...data }));
+        form_data.append(
+          'ruta_archivo_con_recibido',
+          data.ruta_archivo_con_recibido
+        );
+        form_data.append('items_despacho', JSON.stringify(aux_items));
+        void dispatch(
+          editar_despacho(current_despacho.id_despacho_viveros, form_data)
+        );
+      } else {
+        control_error(
+          'Solo se pueden editar despachos hasta 9 dias despues de la fecha de despacho'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_despacho ?? '').toISOString();
@@ -341,6 +381,8 @@ const DespachoScreen = () => {
       <SeleccionarDespacho
         control_despacho={control_despacho}
         get_values={get_values}
+        open_modal={open_search_modal}
+        set_open_modal={set_open_search_modal}
       />
 
       <SeleccionarSolicitudAprobada
@@ -377,200 +419,221 @@ const DespachoScreen = () => {
             />
           </Grid>
         )}
-        <Grid item xs={12} md={4}>
-          <AnularEliminar
-            action={
-              current_solicitud.solicitud_abierta === true
-                ? 'Cerrar por no disponibilidad'
-                : 'Detalle del cierre'
-            }
-            button_icon_class={<Block />}
-            button_disabled={false}
-            modal_title={
-              current_solicitud.solicitud_abierta === true
-                ? 'Cerrar solicitud'
-                : 'Detalle del cierre de solicitud por no disponibilidad'
-            }
-            button_submit_label={'Cierre de solicitud'}
-            button_submit_disabled={
-              !(current_solicitud.solicitud_abierta === true)
-            }
-            button_submit_icon_class={<Block />}
-            button_submit_action={handle_submit_solicitud(on_submit_closed)}
-            modal_inputs={[
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud_aprobada,
-                control_name: 'nro_solicitud',
-                default_value: '',
-                rules: {},
-                label: 'Número de solicitud',
-                type: 'number',
-
-
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                person: true,
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud_aprobada,
-                control_name: 'persona_cierra',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Debe seleccionar la personas que la creó',
-                  },
-                },
-                label: 'Cierre realizado por',
-                type: 'text',
-
-
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'date_picker_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud_aprobada,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_cierre_no_dispo'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
-
-
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_solicitud_aprobada,
-                control_name: 'observacion_cierre_no_dispo_viveros',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Observación requerida',
-                  },
-                },
-                label: 'Observación',
-                type: 'text',
-                multiline_text: true,
-                rows_text: 4,
-                disabled: false,
-                helper_text: '',
-              },
-            ]}
-          />
-        </Grid>
         <Grid item xs={12} md={3}>
-          <AnularEliminar
-            action={
-              current_despacho.despacho_anulado === true
-                ? 'Detalle anulación'
-                : 'Anular'
-            }
-            button_icon_class={<Block />}
-            button_disabled={false}
-            modal_title={
-              current_despacho.despacho_anulado === true
-                ? 'Detalle anulación'
-                : 'Anular despacho'
-            }
-            button_submit_label={'Anular'}
-            button_submit_disabled={current_despacho.despacho_anulado}
-            button_submit_icon_class={<Block />}
-            button_submit_action={handle_submit(on_submit_annul)}
-            modal_inputs={[
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_despacho,
-                control_name: 'nro_despachos_viveros',
-                default_value: '',
-                rules: {},
-                label: 'Número de despacho',
-                type: 'number',
-
-
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                person: true,
-                xs: 12,
-                md: 4,
-                control_form: control_despacho,
-                control_name: 'persona_anula',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Debe seleccionar la personas que la creó',
-                  },
-                },
-                label: 'Anulación realizada por',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'date_picker_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_despacho,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_anulacion'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
-
-
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_despacho,
-                control_name: 'justificacion_anulacion',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Observación requerida',
-                  },
-                },
-                label: 'Justificación',
-                type: 'text',
-
-
-                multiline_text: true,
-                rows_text: 4,
-                disabled: false,
-                helper_text: '',
-              },
-            ]}
+          <FormButton
+            variant_button="contained"
+            on_click_function={handle_open_select_model}
+            icon_class={<SearchIcon />}
+            label={'Buscar despacho'}
+            type_button="button"
+            disabled={origin_nursery.id_vivero === null}
           />
         </Grid>
+        <Grid item xs={12} md={2}>
+          <Limpiar
+            dispatch={dispatch}
+            reset_state={reset_state}
+            set_initial_values={initial_values}
+            variant_button={'contained'}
+          />
+        </Grid>
+        {current_solicitud.id_solicitud_vivero !== null &&
+          current_despacho.id_despacho_viveros === null && (
+            <Grid item xs={12} md={4}>
+              <AnularEliminar
+                action={
+                  current_solicitud.solicitud_abierta === true
+                    ? 'Cerrar por no disponibilidad'
+                    : 'Detalle del cierre'
+                }
+                button_icon_class={<Block />}
+                button_disabled={false}
+                modal_title={
+                  current_solicitud.solicitud_abierta === true
+                    ? 'Cerrar solicitud'
+                    : 'Detalle del cierre de solicitud por no disponibilidad'
+                }
+                button_submit_label={'Cierre de solicitud'}
+                button_submit_disabled={
+                  !(current_solicitud.solicitud_abierta === true)
+                }
+                button_submit_icon_class={<Block />}
+                button_submit_action={handle_submit_solicitud(on_submit_closed)}
+                modal_inputs={[
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_solicitud_aprobada,
+                    control_name: 'nro_solicitud',
+                    default_value: '',
+                    rules: {},
+                    label: 'Número de solicitud',
+                    type: 'number',
+
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    person: true,
+                    xs: 12,
+                    md: 4,
+                    control_form: control_solicitud_aprobada,
+                    control_name: 'persona_cierra',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Debe seleccionar la personas que la creó',
+                      },
+                    },
+                    label: 'Cierre realizado por',
+                    type: 'text',
+
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'date_picker_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_solicitud_aprobada,
+                    control_name:
+                      current_solicitud.solicitud_anulada_solicitante === true
+                        ? 'fecha_cierre_no_dispo'
+                        : 'fecha',
+                    default_value: new Date().toString(),
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Fecha actual',
+                    type: 'text',
+
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_solicitud_aprobada,
+                    control_name: 'observacion_cierre_no_dispo_viveros',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Observación requerida',
+                      },
+                    },
+                    label: 'Observación',
+                    type: 'text',
+                    multiline_text: true,
+                    rows_text: 4,
+                    disabled: false,
+                    helper_text: '',
+                  },
+                ]}
+              />
+            </Grid>
+          )}
+        {current_despacho.id_despacho_viveros !== null && (
+          <Grid item xs={12} md={3}>
+            <AnularEliminar
+              action={
+                current_despacho.despacho_anulado === true
+                  ? 'Detalle anulación'
+                  : 'Anular'
+              }
+              button_icon_class={<Block />}
+              button_disabled={false}
+              modal_title={
+                current_despacho.despacho_anulado === true
+                  ? 'Detalle anulación'
+                  : 'Anular despacho'
+              }
+              button_submit_label={'Anular'}
+              button_submit_disabled={current_despacho.despacho_anulado}
+              button_submit_icon_class={<Block />}
+              button_submit_action={handle_submit(on_submit_annul)}
+              modal_inputs={[
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_despacho,
+                  control_name: 'nro_despachos_viveros',
+                  default_value: '',
+                  rules: {},
+                  label: 'Número de despacho',
+                  type: 'number',
+
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_despacho,
+                  control_name: 'persona_anula',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar la personas que la creó',
+                    },
+                  },
+                  label: 'Anulación realizada por',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'date_picker_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_despacho,
+                  control_name:
+                    current_solicitud.solicitud_anulada_solicitante === true
+                      ? 'fecha_anulacion'
+                      : 'fecha',
+                  default_value: new Date().toString(),
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
+                  label: 'Fecha actual',
+                  type: 'text',
+
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 12,
+                  control_form: control_despacho,
+                  control_name: 'justificacion_anulacion',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Observación requerida',
+                    },
+                  },
+                  label: 'Justificación',
+                  type: 'text',
+
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: '',
+                },
+              ]}
+            />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

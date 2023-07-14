@@ -8,8 +8,7 @@ import {
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 interface IRuleMessage {
   rule: any;
   message: string | null;
@@ -26,7 +25,7 @@ interface IProps {
   margin?: number;
   control_form: any;
   control_name: string;
-  default_value: string | number | null | Date;
+  default_value: string | number | null;
   rules: IRules;
   label: string;
   disabled: boolean;
@@ -38,7 +37,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const FormDatePickerController = ({
+const FormDateTimePickerController = ({
   xs,
   md,
   control_form,
@@ -54,6 +53,8 @@ const FormDatePickerController = ({
   format,
   margin,
 }: IProps) => {
+  const min = new Date(min_date ?? '');
+  const max = new Date(max_date ?? '');
   return (
     <>
       {!(hidden_text ?? false) && (
@@ -70,14 +71,15 @@ const FormDatePickerController = ({
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
+                  <DateTimePicker
+                    ampm={false}
                     disabled={disabled}
                     label={label}
                     value={value}
                     onChange={onChange}
-                    inputFormat={format ?? 'YYYY/MM/DD'}
-                    minDate={min_date ?? null}
-                    maxDate={max_date ?? null}
+                    inputFormat={format ?? 'YYYY/MM/DD HH:ii:ss'}
+                    minDate={(min_date ?? '') === '' ? null : min}
+                    maxDate={(max_date ?? '') === '' ? null : max}
                     renderInput={(
                       params: JSX.IntrinsicAttributes & TextFieldProps
                     ) => (
@@ -93,13 +95,7 @@ const FormDatePickerController = ({
                   />
                 </LocalizationProvider>
                 <FormHelperText error={!(error == null)}>
-                  {error != null
-                    ? error.type === 'required'
-                      ? rules.required_rule?.message
-                      : error.type === 'min'
-                      ? rules.min_rule?.message
-                      : rules.max_rule?.message
-                    : helper_text}
+                  {error != null ? rules.required_rule?.message : helper_text}
                 </FormHelperText>
               </FormControl>
             )}
@@ -111,4 +107,4 @@ const FormDatePickerController = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default FormDatePickerController;
+export default FormDateTimePickerController;
