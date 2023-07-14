@@ -42,11 +42,11 @@ const PersonaResponsable = ({
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
     const [personas, set_personas] = useState<Persona[]>([]);
     const columns_personas: GridColDef[] = [
-        { field: 'id_persona', headerName: 'ID', width: 20 },
+        // { field: 'id_persona', headerName: 'ID', width: 20 },
         {
             field: 'numero_documento',
             headerName: 'Número de documento',
-            width: 200,
+            width: 200,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -56,7 +56,7 @@ const PersonaResponsable = ({
         {
             field: 'nombre_completo',
             headerName: 'Nombre',
-            width: 300,
+            width: 300,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -67,7 +67,7 @@ const PersonaResponsable = ({
         {
             field: 'razon_social',
             headerName: 'Razón social',
-            width: 250,
+            width: 250,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -77,7 +77,7 @@ const PersonaResponsable = ({
         {
             field: 'nombre_comercial',
             headerName: 'Nombre comercial',
-            width: 200,
+            width: 200,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}

@@ -14,24 +14,47 @@ import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGener
 import { control_error } from './utils/control_error_or_success';
 
 const columns = [
-    { field: 'id', headerName: 'Nro Sucursal', width: 150 },
-    { field: 'descripcion', headerName: 'Descripción de la Sucursal', width: 200 },
-    { field: 'principal', headerName: 'Principal', width: 120 },
-    { field: 'direccion', headerName: 'Dirección', width: 250 },
-    { field: 'accion', headerName: 'Acción', width: 120 },
+    // { field: 'id', headerName: 'Nro Sucursal', width: 150 },
+    // { field: 'descripcion', headerName: 'Descripción de la Sucursal', width: 200 },
+    // { field: 'principal', headerName: 'Principal', width: 120 },
+    // { field: 'direccion', headerName: 'Dirección', width: 250 },
+    // { field: 'accion', headerName: 'Acción', width: 120 },
+    { field: 'id', headerName: 'Nro Sucursal', width: 150, flex: 1 },
+    { field: 'nombre', headerName: 'descripcin', width: 120, flex: 1 },
+    { field: 'principal', headerName: 'Principal', width: 120, flex: 1 },
+
 ];
 
 const rows = [
-    { id: 1, descripcion: 'Sucursal 1', principal: 'Sí', direccion: 'Calle 1, Ciudad', accion: 'Editar' },
-    { id: 2, descripcion: 'Sucursal 2', principal: 'No', direccion: 'Calle 2, Ciudad', accion: 'Editar' },
-    { id: 3, descripcion: 'Sucursal 3', principal: 'No', direccion: 'Calle 3, Ciudad', accion: 'Editar' },
-    // Agrega más filas según sea necesario
+    { id: 1, principal: 'Sí', nombre: 'miguel' },
+    // { id: 1, descripcion: 'Sucursal 1', principal: 'Sí', direccion: 'Calle 1, Ciudad', accion: 'Editar' },
+    // { id: 2, descripcion: 'Sucursal 2', principal: 'No', direccion: 'Calle 2, Ciudad', accion: 'Editar' },
+    // { id: 3, descripcion: 'Sucursal 3', principal: 'No', direccion: 'Calle 3, Ciudad', accion: 'Editar' },
+    // // Agrega más filas según sea necesario
 ];
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalEntidad: FC = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [nuevaSucursal, setNuevaSucursal] = useState('');
+    const [nombrenuebo, setnombrenuebo] = useState('');
+
+    const [data_rows, set_data_rows] = useState(rows);
+
+
+    const agregar_sucursal = (): void => {
+        const nueva_sucursal_obj = {
+            id: data_rows.length + 1,
+            principal: nuevaSucursal,
+            nombre: nombrenuebo,
+        };
+
+        const nuevas_filas = [...data_rows, nueva_sucursal_obj];
+        set_data_rows(nuevas_filas);
+        setNuevaSucursal('');
+        setnombrenuebo('');
+    };
 
     const [email, set_email] = useState('');
     const [confirm_email, set_confirm_email] = useState('');
@@ -171,6 +194,7 @@ export const SucursalEntidad: FC = () => {
                             label=" Descripcion"
                             required
                             fullWidth
+                            value={nombrenuebo} onChange={(event) => { setnombrenuebo(event.target.value) }}
                         />
                     </Grid>
                     <Grid
@@ -350,7 +374,7 @@ export const SucursalEntidad: FC = () => {
                     <Grid item xs={12} sm={2}>
                         <FormControl required size="small" fullWidth>
                             <InputLabel>Principal</InputLabel>
-                            <Select
+                            <Select value={nuevaSucursal} onChange={(event) => { setNuevaSucursal(event.target.value) }}
                                 label="Principal"
                             >
                                 <MenuItem value="si">Sí</MenuItem>
@@ -370,13 +394,12 @@ export const SucursalEntidad: FC = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <div style={{ height: 300, width: '100%' }}>
-                            <DataGrid rows={rows} columns={columns} />
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
                         <Button variant='contained' onClick={handle_submit}>Verificar correos </Button>
                     </Grid>
+                    <div style={{ height: 300, width: '100%' }}>
+                        <DataGrid rows={data_rows} columns={columns} />
+                    </div>
+                    <Button onClick={agregar_sucursal}>agregar</Button>
                 </Grid>
             </Grid>
         </>
