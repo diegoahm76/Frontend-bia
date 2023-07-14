@@ -4,21 +4,22 @@ import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { TablaObligacionesUsuarioConsulta } from './TablaObligacionesUsuarioConsulta';
-import { type event } from '../interfaces/interfaces';
+import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
+import { type event, type ObligacionesUsuario, type Contribuyente } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
 import { get_filtro_deudores, get_deudores } from '../slices/DeudoresSlice';
 
-interface Contribuyente {
-  identificacion: string;
-  nombre_contribuyente: string;
-}
-
-interface RootState {
+interface RootStateDeudores {
   deudores: {
     deudores: Contribuyente[];
+  }
+}
+
+interface RootStateObligaciones {
+  obligaciones: {
+    obligaciones: ObligacionesUsuario[];
   }
 }
 
@@ -27,9 +28,9 @@ export const TablaConsultaAdmin: React.FC = () => {
   const [visible_rows, set_visible_rows] = useState(Array<Contribuyente>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
-  const [deudor, set_deudor] = useState(0);
   const [obligaciones_module, set_obligaciones_module] = useState(false);
-  const { deudores } = useSelector((state: RootState) => state.deudores);
+  const { deudores } = useSelector((state: RootStateDeudores) => state.deudores);
+  const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const columns: GridColDef[] = [
@@ -66,7 +67,6 @@ export const TablaConsultaAdmin: React.FC = () => {
                     try {
                       void dispatch(get_obligaciones_id(params.row.identificacion));
                       set_obligaciones_module(true);
-                      set_deudor(params.row.id_deudor);
                     } catch (error: any) {
                       throw new Error(error);
                     }
@@ -232,8 +232,14 @@ export const TablaConsultaAdmin: React.FC = () => {
               noValidate
               autoComplete="off"
             >
-                <p>Las obligaciones pendientes por pago son las siguientes:</p>
-                <TablaObligacionesUsuarioConsulta deudor={deudor} />
+              {
+                obligaciones.length !== 0 ? (
+                  <>
+                    <p>Las obligaciones pendientes por pago son las siguientes:</p>
+                    <TablaObligacionesUsuario />
+                  </>
+                ): <p>El usuario no tiene obligaciones pendientes por pago.</p>
+              }
             </Box>
           </Grid>
         </Grid>

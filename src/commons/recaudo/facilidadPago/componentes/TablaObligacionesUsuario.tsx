@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Grid, Box, Checkbox, TextField, Stack, Button, DialogActions, Dialog, DialogTitle } from '@mui/material';
+import { Add, Close } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -23,10 +23,14 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
+  const [modal, set_modal] = useState(false);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
 
   const handle_submit = async () => {
     const arr_registro = []
@@ -274,8 +278,12 @@ export const TablaObligacionesUsuario: React.FC = () => {
             startIcon={<Add />}
             sx={{ marginTop: '30px' }}
             onClick={() => {
-              navigate('../registro')
-              void handle_submit()
+              if(obligaciones.tiene_facilidad){
+                handle_open();
+              } else {
+                navigate('../registro');
+                void handle_submit();
+              }
             }}
           >
             Crear Facilidad de Pago
@@ -283,6 +291,25 @@ export const TablaObligacionesUsuario: React.FC = () => {
         </Stack>
         </Grid>
       </Grid>
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
+      >
+        <Box component="form">
+          <DialogTitle>{`El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`}</DialogTitle>
+          <DialogActions>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={handle_close}
+            >
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   );
 }
