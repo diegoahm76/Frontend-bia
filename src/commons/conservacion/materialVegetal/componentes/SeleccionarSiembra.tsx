@@ -19,6 +19,7 @@ interface IProps {
   get_values: any;
   open_modal: boolean;
   set_open_modal: any;
+  beds: any;
 }
 
 const max_date = new Date();
@@ -30,13 +31,13 @@ const SeleccionarSiembra = ({
   get_values,
   open_modal,
   set_open_modal,
+  beds,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const {
     current_planting,
     plantings,
     nurseries,
-    germination_beds,
     vegetal_materials,
     current_nursery,
   } = useAppSelector((state) => state.material_vegetal);
@@ -191,7 +192,7 @@ const SeleccionarSiembra = ({
                 required_rule: { rule: true, message: 'Vivero requerido' },
               },
               label: 'Vivero',
-              disabled: current_planting.id_siembra !== null,
+              disabled: current_nursery.id_vivero !== null,
               helper_text: 'Seleccione Vivero',
               select_options: nurseries,
               option_label: 'nombre',
@@ -228,7 +229,7 @@ const SeleccionarSiembra = ({
               label: 'Cama de germinación',
               disabled: current_nursery.id_vivero === null,
               helper_text: 'Debe seleccionar campo',
-              select_options: germination_beds,
+              select_options: beds,
               option_label: 'nombre',
               option_key: 'id_cama_germinacion_vivero',
               multiple: true,
@@ -287,7 +288,7 @@ const SeleccionarSiembra = ({
               helper_text: '',
               min_date: min_date,
               max_date: max_date,
-              format: 'YYYY/MM/DD',
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_file_controller',
@@ -297,7 +298,7 @@ const SeleccionarSiembra = ({
               control_name: 'ruta_archivo_soporte',
               default_value: '',
               rules: {
-                required_rule: { rule: false, message: 'Archivo requerido' },
+                required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Archivo soporte',
               disabled: false,

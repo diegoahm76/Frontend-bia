@@ -28,7 +28,7 @@ export const initial_state_planting: IObjPlanting = {
   observaciones: '',
   ruta_archivo_soporte: '',
 };
-const initial_state_current_nursery = {
+export const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',
   cod_municipio: '',

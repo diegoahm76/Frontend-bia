@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Chip, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import SeleccionarIngresoCuarentena from '../componentes/SeleccionarIngresoCuarentena';
 import SeleccionarLoteSiembra from '../componentes/SeleccionarLoteSiembra';
@@ -9,11 +9,13 @@ import {
   set_current_plant_seed_lot,
   initial_satate_current_plant_seed_lot,
   reset_state,
+  initial_state_current_nursery,
 } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from 'react';
 import {
   add_plant_quarantine_service,
   annul_plant_quarantine_service,
+  control_error,
   edit_plant_quarantine_service,
   get_liftings_service,
   get_mortalities_service,
@@ -224,7 +226,11 @@ export function IngresoCuarentenaScreen(): JSX.Element {
       );
       if (vivero !== undefined) {
         dispatch(set_current_nursery(vivero));
+      } else {
+        dispatch(set_current_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero')]);
 
@@ -235,19 +241,29 @@ export function IngresoCuarentenaScreen(): JSX.Element {
       current_plant_quarantine.id_cuarentena_mat_vegetal !== null &&
       current_plant_quarantine.id_cuarentena_mat_vegetal !== undefined
     ) {
-      set_action('editar');
-      const data_edit = {
-        ...data,
-        cantidad_cuarentena: Number(data.cantidad_cuarentena),
-      };
-      form_data.append('data', JSON.stringify({ ...data_edit }));
-      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
-      void dispatch(
-        edit_plant_quarantine_service(
-          form_data,
-          current_plant_quarantine.id_cuarentena_mat_vegetal
-        )
-      );
+      const fecha_actual = new Date();
+      const fecha_cuarentena = new Date(data.fecha_cuarentena ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_cuarentena.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
+        const data_edit = {
+          ...data,
+          cantidad_cuarentena: Number(data.cantidad_cuarentena),
+        };
+        form_data.append('data', JSON.stringify({ ...data_edit }));
+        form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+        void dispatch(
+          edit_plant_quarantine_service(
+            form_data,
+            current_plant_quarantine.id_cuarentena_mat_vegetal
+          )
+        );
+      } else {
+        control_error(
+          'Solo se pueden editar ingresos a cuarentena hasta 30 dias despues de la fecha de registro de cuarentena'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_cuarentena ?? '').toISOString();
@@ -278,17 +294,26 @@ export function IngresoCuarentenaScreen(): JSX.Element {
       fecha_anulacion: data.fecha_anulacion,
       id_persona_anula: data.id_persona_anula,
     };
-    console.log(data_annul);
     if (
       current_plant_quarantine.id_cuarentena_mat_vegetal !== null &&
       current_plant_quarantine.id_cuarentena_mat_vegetal !== undefined
     ) {
-      void dispatch(
-        annul_plant_quarantine_service(
-          current_plant_quarantine.id_cuarentena_mat_vegetal,
-          data_annul
-        )
-      );
+      const fecha_actual = new Date();
+      const fecha_cuarentena = new Date(data.fecha_cuarentena ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_cuarentena.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 2) {
+        void dispatch(
+          annul_plant_quarantine_service(
+            current_plant_quarantine.id_cuarentena_mat_vegetal,
+            data_annul
+          )
+        );
+      } else {
+        control_error(
+          'Solo se pueden anular ingresos a cuarentena hasta 2 dias despues del registro de cuarentena'
+        );
+      }
     }
   };
 
@@ -308,7 +333,14 @@ export function IngresoCuarentenaScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Ingreso a cuarentena de material vegetal"></Title>
         </Grid>
-
+        {current_plant_quarantine.cuarentena_anulada ??
+          (false && (
+            <Chip
+              label={`Este registro de cuarentena fue anulado el ${current_plant_quarantine.fecha_anulacion}`}
+              color="error"
+              variant="outlined"
+            />
+          ))}
         <SeleccionarIngresoCuarentena
           control_cuarentena={control_cuarentena}
           get_values={get_values}

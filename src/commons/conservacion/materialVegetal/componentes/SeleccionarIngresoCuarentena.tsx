@@ -19,6 +19,12 @@ interface IProps {
   open_modal: boolean;
   set_open_modal: any;
 }
+
+const max_date = new Date();
+const min_date = new Date();
+min_date.setDate(min_date.getDate() - 1);
+let diferencia_dias: number;
+
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarIngresoCuarentena = ({
   control_cuarentena,
@@ -32,12 +38,12 @@ const SeleccionarIngresoCuarentena = ({
     nurseries,
     current_plant_quarantine,
     plant_quarantines,
+    current_nursery,
   } = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>('');
 
   const columns_cuarentena: GridColDef[] = [
-    { field: 'id_cuarentena_mat_vegetal', headerName: 'ID', width: 20 },
     {
       field: 'consec_cueren_por_lote_etapa',
       headerName: 'Consecutivo',
@@ -181,10 +187,19 @@ const SeleccionarIngresoCuarentena = ({
   }, [file]);
 
   useEffect(() => {
-    if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null) {
-      if (current_plant_quarantine.ruta_archivo_soporte !== null) {
-        set_file_name(current_plant_quarantine.ruta_archivo_soporte);
+    const fecha_cuarentena = new Date(
+      current_plant_quarantine.fecha_cuarentena ?? ''
+    );
+    const diferencia_ms = max_date.getTime() - fecha_cuarentena.getTime();
+    diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+    if (current_plant_quarantine.ruta_archivo_soporte !== null) {
+      if (typeof current_plant_quarantine.ruta_archivo_soporte === 'string') {
+        const name =
+          current_plant_quarantine.ruta_archivo_soporte?.split('/').pop() ?? '';
+        set_file_name(name);
       }
+    } else {
+      set_file_name('');
     }
   }, [current_plant_quarantine]);
 
@@ -221,15 +236,18 @@ const SeleccionarIngresoCuarentena = ({
               control_name: 'id_vivero',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar un vivero',
+                },
               },
               label: 'Vivero',
-              disabled:
-                current_plant_quarantine.id_cuarentena_mat_vegetal !== null,
+              disabled: current_nursery.id_vivero !== null,
               helper_text: 'Seleccione Vivero',
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'input_controller',
@@ -249,20 +267,33 @@ const SeleccionarIngresoCuarentena = ({
                 current_plant_quarantine.id_cuarentena_mat_vegetal === null,
             },
             {
-              datum_type: 'input_controller',
+              datum_type: 'date_picker_controller',
               xs: 12,
-              md:
-                current_plant_quarantine.id_cuarentena_mat_vegetal !== null
-                  ? 3
-                  : 4,
+              md: 3,
               control_form: control_cuarentena,
               control_name: 'fecha_cuarentena',
               default_value: '',
-              rules: { required_rule: { rule: false, message: 'requerido' } },
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+                min_rule: {
+                  rule: new Date().setDate(new Date().getDate() - 30),
+                  message: `La fecha minima posible es 
+                  ${min_date.toString().slice(0, 16)}`,
+                },
+                max_rule: {
+                  rule: new Date(),
+                  message: `La fecha maxima posible es ${max_date
+                    .toString()
+                    .slice(0, 16)}`,
+                },
+              },
               label: 'Fecha de cuarentena',
-              type: 'text',
-              disabled: true,
+              disabled:
+                current_plant_quarantine.id_cuarentena_mat_vegetal !== null,
               helper_text: '',
+              min_date: min_date,
+              max_date: max_date,
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_file_controller',
@@ -270,18 +301,22 @@ const SeleccionarIngresoCuarentena = ({
               md:
                 current_plant_quarantine.id_cuarentena_mat_vegetal !== null
                   ? 3
-                  : 4,
+                  : 5,
               control_form: control_cuarentena,
               control_name: 'ruta_archivo_soporte',
               default_value: '',
               rules: {
-                required_rule: { rule: false, message: 'Archivo requerido' },
+                required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Archivo soporte',
               disabled: false,
               helper_text: '',
               set_value: set_file,
               file_name,
+              value_file:
+                current_plant_quarantine.id_cuarentena_mat_vegetal !== null
+                  ? current_plant_quarantine.ruta_archivo_soporte ?? null
+                  : null,
             },
             {
               datum_type: 'input_controller',
@@ -300,15 +335,23 @@ const SeleccionarIngresoCuarentena = ({
                   message: 'La cantidad debe ser mayor a 0',
                 },
                 max_rule: {
-                  rule: current_plant_quarantine.saldo_disponible,
-                  message:
-                    'La cantidad debe ser maximo ' +
-                    String(current_plant_quarantine.saldo_disponible),
+                  rule:
+                    current_plant_quarantine.cod_etapa_lote === 'G'
+                      ? 100
+                      : current_plant_quarantine.saldo_disponible ?? 0,
+                  message: `La cantidad debe ser maximo ${
+                    (current_plant_quarantine.cod_etapa_lote ?? 'P') === 'G'
+                      ? 100
+                      : current_plant_quarantine.saldo_disponible ?? 0
+                  }`,
                 },
               },
-              label: 'Cantidad a cuarentena',
+              label:
+                current_plant_quarantine.cod_etapa_lote === 'G'
+                  ? 'Cantidad a cuarentena (0-100%)'
+                  : 'Cantidad a cuarentena',
               type: 'number',
-              disabled: false,
+              disabled: diferencia_dias > 2,
               helper_text: '',
             },
             {
@@ -366,7 +409,7 @@ const SeleccionarIngresoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 12,
+              md: 6,
               control_form: control_cuarentena,
               control_name: 'descrip_corta_diferenciable',
               default_value: '',
@@ -383,7 +426,7 @@ const SeleccionarIngresoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 12,
+              md: 6,
               control_form: control_cuarentena,
               control_name: 'motivo',
               default_value: '',

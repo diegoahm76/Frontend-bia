@@ -208,6 +208,7 @@ export const get_plantings_service = (): any => {
       const { data } = await api.get(
         'conservacion/camas-siembras/siembra/get/'
       );
+      console.log(data);
       dispatch(set_plantings(data.data));
       return data;
     } catch (error: any) {

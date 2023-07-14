@@ -19,6 +19,7 @@ import {
   set_current_nursery,
   set_bienes_bajas,
   reset_state,
+  initial_state_current_nursery,
 } from '../store/slice/viveroSlice';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
@@ -105,7 +106,11 @@ export function BajaHerramientaScreen(): JSX.Element {
       );
       if (vivero !== undefined) {
         dispatch(set_current_nursery(vivero));
+      } else {
+        dispatch(set_current_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero')]);
 
@@ -168,7 +173,7 @@ export function BajaHerramientaScreen(): JSX.Element {
       const fecha_baja = new Date(data.fecha_baja ?? '');
       const diferencia_ms = fecha_actual.getTime() - fecha_baja.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
+      if (diferencia_dias <= 2) {
         void dispatch(annul_baja_service(current_genera_baja.id_baja, data));
       } else {
         control_error(

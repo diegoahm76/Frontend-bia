@@ -335,9 +335,22 @@ const DespachoScreen = () => {
       current_despacho.id_despacho_viveros !== null &&
       current_despacho.id_despacho_viveros !== undefined
     ) {
-      void dispatch(
-        annul_despacho_service(current_despacho.id_despacho_viveros, data_annul)
-      );
+      const fecha_actual = new Date();
+      const fecha_despacho = new Date(data.fecha_despacho ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_despacho.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 9) {
+        void dispatch(
+          annul_despacho_service(
+            current_despacho.id_despacho_viveros,
+            data_annul
+          )
+        );
+      } else {
+        control_error(
+          'Solo se pueden anular despachos hasta 9 dias despues de la fecha de despacho'
+        );
+      }
     }
   };
 

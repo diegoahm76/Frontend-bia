@@ -84,7 +84,7 @@ const FormSelectController = ({
                   onChange={onChange}
                   error={
                     !(error == null) ||
-                    ((auto_focus ?? false) && value === null)
+                    ((auto_focus ?? false) && (value === null || value === ''))
                   }
                 >
                   {!(multiple ?? false) && (
@@ -104,10 +104,11 @@ const FormSelectController = ({
                 <FormHelperText
                   error={
                     !(error == null) ||
-                    ((auto_focus ?? false) && value === null)
+                    ((auto_focus ?? false) && (value === null || value === ''))
                   }
                 >
-                  {!(error == null) || ((auto_focus ?? false) && value === null)
+                  {!(error == null) ||
+                  ((auto_focus ?? false) && (value === null || value === ''))
                     ? rules.required_rule?.message
                     : helper_text}
                 </FormHelperText>

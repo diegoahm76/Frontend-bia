@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   set_current_planting,
   set_current_nursery,
-  set_germination_beds,
   reset_state,
 } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from 'react';
@@ -56,6 +55,7 @@ export function SiembraSemillasScreen(): JSX.Element {
   } = useForm<IObjPlanting>();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const [action, set_action] = useState<string>('Crear');
+  const [beds, set_beds] = useState<any>([]);
   const dispatch = useAppDispatch();
 
   const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
@@ -90,40 +90,52 @@ export function SiembraSemillasScreen(): JSX.Element {
   useEffect(() => {
     reset_siembra(current_planting);
     if (current_planting.id_siembra !== null) {
-      void dispatch(
-        get_germination_beds_service(Number(current_planting.id_vivero))
+      const vivero: IObjNursery | undefined = nurseries.find(
+        (p: IObjNursery) => p.id_vivero === current_planting.id_vivero
       );
+      if (vivero !== undefined) {
+        dispatch(set_current_nursery(vivero));
+        void dispatch(get_germination_beds_service(Number(vivero.id_vivero)));
+        if (current_planting.cama_germinacion !== null) {
+          void dispatch(
+            get_germination_beds_id_service(current_planting.cama_germinacion)
+          );
+        }
+      }
+
       void dispatch(get_planting_goods_service(current_planting.id_siembra));
       set_action('editar');
     }
   }, [current_planting]);
 
   useEffect(() => {
-    if (current_nursery.id_vivero !== null) {
-      if (current_planting.cama_germinacion !== null) {
-        void dispatch(
-          get_germination_beds_id_service(current_planting.cama_germinacion)
-        );
+    if (current_germination_beds.length > 0) {
+      if (
+        !deepEqual(
+          germination_beds,
+          germination_beds.concat(current_germination_beds)
+        )
+      ) {
+        set_beds(germination_beds.concat(current_germination_beds));
       }
-    }
-  }, [current_nursery]);
-
-  useEffect(() => {
-    dispatch(
-      set_germination_beds(germination_beds.concat(current_germination_beds))
-    );
-  }, [current_germination_beds]);
-
-  useEffect(() => {
-    if (!(current_germination_beds.length > 0)) {
-      const vivero: IObjNursery | undefined = nurseries.find(
-        (p: IObjNursery) => p.id_vivero === current_planting.id_vivero
-      );
-      if (vivero !== undefined) {
-        dispatch(set_current_nursery(vivero));
-      }
+    } else {
+      set_beds(germination_beds);
     }
   }, [germination_beds]);
+  useEffect(() => {
+    if (current_germination_beds.length > 0) {
+      if (
+        !deepEqual(
+          germination_beds,
+          germination_beds.concat(current_germination_beds)
+        )
+      ) {
+        set_beds(germination_beds.concat(current_germination_beds));
+      }
+    } else {
+      set_beds(germination_beds);
+    }
+  }, [current_germination_beds]);
 
   useEffect(() => {
     if (watch('id_vivero') !== null) {
@@ -131,13 +143,13 @@ export function SiembraSemillasScreen(): JSX.Element {
         (p: IObjNursery) => p.id_vivero === watch('id_vivero')
       );
       if (vivero !== undefined) {
-        dispatch(
-          set_current_planting({
-            ...current_planting,
-            id_vivero: vivero.id_vivero,
-          })
-        );
+        dispatch(set_current_nursery(vivero));
         void dispatch(get_germination_beds_service(Number(vivero.id_vivero)));
+        if (current_planting.cama_germinacion !== null) {
+          void dispatch(
+            get_germination_beds_id_service(current_planting.cama_germinacion)
+          );
+        }
       }
     }
   }, [watch('id_vivero')]);
@@ -213,6 +225,7 @@ export function SiembraSemillasScreen(): JSX.Element {
           get_values={get_values}
           open_modal={open_search_modal}
           set_open_modal={set_open_search_modal}
+          beds={beds}
         />
         <PersonaSiembra title={'Persona que siembra'} />
         {current_nursery.id_vivero !== null && <SeleccionarBienSiembra />}
@@ -261,4 +274,39 @@ export function SiembraSemillasScreen(): JSX.Element {
       </Grid>
     </>
   );
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function deepEqual(obj1: any, obj2: any) {
+  // Verificar si son el mismo objeto en memoria
+  if (obj1 === obj2) {
+    return true;
+  }
+
+  // Verificar si ambos son objetos y tienen la misma cantidad de propiedades
+  if (
+    typeof obj1 === 'object' &&
+    obj1 !== null &&
+    typeof obj2 === 'object' &&
+    obj2 !== null
+  ) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    // Recorrer las propiedades y comparar su contenido de forma recursiva
+    for (const key of keys1) {
+      if (!deepEqual(obj1[key], obj2[key])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // Si no cumple ninguna de las condiciones anteriores, consideramos los objetos diferentes
+  return false;
 }
