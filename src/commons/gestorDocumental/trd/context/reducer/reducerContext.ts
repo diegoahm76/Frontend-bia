@@ -47,6 +47,17 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalBusquedaTipologiasDocumentales: payload || false
       };
+    //* MODAL ADMINISTRACION TIPOLOGIAS DOCUMENTALES
+    case Modal.OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES:
+      return {
+        ...state,
+        modalAdministracionTipologiasDocumentales: payload || true
+      };
+    case Modal.CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES:
+      return {
+        ...state,
+        modalAdministracionTipologiasDocumentales: payload || false
+      };
     // ? buttons, loading, etc
     case Modal.CREATE_TRD_LOADING_BUTTON:
       return {

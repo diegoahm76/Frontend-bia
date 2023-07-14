@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-
 export enum Modal {
   OPEN_MODAL_SEARCH_TRD = 'OPEN_MODAL_SEARCH_TRD',
   CLOSE_MODAL_SEARCH_TRD = 'CLOSE_MODAL_SEARCH_TRD',
@@ -13,10 +12,11 @@ export enum Modal {
   //*
   OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES = 'OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES',
   CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES = 'CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES',
+  //*
+  OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
+  CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
   // ? buttons, loading, etc
-  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON',
-  // busquedaCreacionCCDModal = 'busquedaCreacionCCDModal',
-  // loadingButton = 'loadingButton',
+  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON'
 }
 
 export const initialState = {
@@ -24,6 +24,7 @@ export const initialState = {
   modalCCDUsados: false,
   modalCreacionFormatoTipo: false,
   modalBusquedaTipologiasDocumentales: false,
+  modalAdministracionTipologiasDocumentales: false,
   // ? buttons, loading, etc
-  createTRDLoadingButton: false,
+  createTRDLoadingButton: false
 };

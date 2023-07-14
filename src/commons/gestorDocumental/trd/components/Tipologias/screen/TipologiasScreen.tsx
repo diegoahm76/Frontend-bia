@@ -10,10 +10,13 @@ import GradingIcon from '@mui/icons-material/Grading';
 import SearchIcon from '@mui/icons-material/Search';
 import { ModalContextTRD } from '../../../context/ModalsContextTrd';
 import { BusquedaTipologias } from '../components/BusquedaTipologias/BusquedaTipologias';
+import { AdministrarTipologiasDocumentales } from '../components/AdmistrarTipologias/AdministrarTipologiasDocumentales';
 
 export const TipologiasScreen = (): JSX.Element => {
-  const { openModalBusquedaTipologiasDocumentales } =
-    useContext(ModalContextTRD);
+  const {
+    openModalBusquedaTipologiasDocumentales,
+    openModalAdministracionTipologiasDocumentales
+  } = useContext(ModalContextTRD);
 
   return (
     <>
@@ -26,20 +29,6 @@ export const TipologiasScreen = (): JSX.Element => {
       >
         <Box sx={{ width: '100%' }}>
           <Title title="Tipologías documentales" />
-          {/* <DataGrid
-            sx={{
-              marginTop: '.5rem',
-            }}
-            density="compact"
-            autoHeight
-            rows={catalado_series_subseries_unidad_organizacional}
-            columns={columns_catalogo}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            experimentalFeatures={{ newEditingApi: true }}
-            getRowId={(row) => row.id_cat_serie_und}
-          /> */}
-
           <Stack
             direction="row"
             justifyContent="center"
@@ -53,7 +42,10 @@ export const TipologiasScreen = (): JSX.Element => {
               variant="contained"
               // disabled={true}
               startIcon={<GradingIcon />}
-              onClick={() => console.log('ESTABLECER TIPOLOGÍAS')}
+              onClick={() => {
+                openModalAdministracionTipologiasDocumentales();
+                console.log('ESTABLECER TIPOLOGÍAS'); // ? this is the function to open the modal
+              }}
             >
               {/* this button must be part of the TRD administration */}
               ADMINISTRAR TIPOLOGÍAS DOCUMENTALES
@@ -79,7 +71,7 @@ export const TipologiasScreen = (): JSX.Element => {
       {/*  modules that will appear */}
 
       <BusquedaTipologias />
-
+      <AdministrarTipologiasDocumentales />
       {/*  modules that will appear */}
     </>
   );

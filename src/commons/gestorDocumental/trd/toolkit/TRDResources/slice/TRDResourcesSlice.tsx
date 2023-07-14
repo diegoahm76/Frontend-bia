@@ -14,6 +14,10 @@ interface TRD {
 
   //! data tipologias documentales
   tipologias: any[];
+  tipologias_documental_current: any;
+
+  //! catalogo TRD
+  catalogo_trd: any[];
 }
 
 const initial_state: TRD = {
@@ -26,7 +30,10 @@ const initial_state: TRD = {
   data_format_documental_type_current: null,
   data_format_documental_type: [],
   //! data tipologias documentales
-  tipologias: []
+  tipologias: [],
+  tipologias_documental_current: null,
+  //! catalogo TRD
+  catalogo_trd: []
 };
 
 export const trd_slice = createSlice({

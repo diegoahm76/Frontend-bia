@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFinishedCcdThunks';
 import {
   get_catalogo_series_subseries_unidad_organizacional,
+  get_catalogo_trd_action,
   // get_data_format_documental_type,
   get_data_format_documental_type_current,
   get_trd_current,
@@ -75,7 +76,8 @@ export const use_trd = (): any => {
     watch: watchBusquedaTipologiasDocumentales
   } = useForm({
     defaultValues: {
-      nombre: ''
+      nombre: '',
+      activo: true,
     },
     mode: 'onBlur',
     reValidateMode: 'onChange'
@@ -94,7 +96,7 @@ export const use_trd = (): any => {
     }
   ]);
 
-  // ? button to change between create or edit documental type format --------------------->
+  // ? button to change between create or edit documental type format ------------------->
   // ? button that manage the name (state (save or update))
   const [title_button, set_title_button] = useState('Guardar');
   //* -------------------------------------------------------------------------->
@@ -163,6 +165,7 @@ export const use_trd = (): any => {
   const reset_all_trd = (): void => {
     //* reset trd list
     dispatch(get_trds([]));
+    dispatch(get_catalogo_trd_action([]));
     dispatch(get_trd_current(null));
     dispatch(get_catalogo_series_subseries_unidad_organizacional([]));
     //* reset form
