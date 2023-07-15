@@ -158,7 +158,7 @@ export const DialogRepresentantes: React.FC = () => {
   const options = [
     { label: 'Nombre propio', value: 'Nombre propio' },
     { label: 'En representación de una empresa', value: 'Nombre propio' },
-    { label: 'En representación de una persona', value: 'Nombre propio' },
+    { label: 'En representación de una persona', value: 'Nombre propio' }
   ];
 
   const select_representado = (value: string): void => {
@@ -183,18 +183,37 @@ export const DialogRepresentantes: React.FC = () => {
         <Typography>Seleccione a quien representará</Typography>
       </DialogTitle>
       <List>
-        {options
-          .filter(option => !representante_legal.length || option.label !== 'En representación de una empresa')
-          .map(option => (
-            <ListItem key={option.label} disableGutters alignItems="center">
-              <ListItemButton autoFocus onClick={() => select_representado(option.value)}>
-                <ListItemIcon>
-                  <PersonIcon />
-                </ListItemIcon>
-                <ListItemText primary={option.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+        {representante_legal.length > 0
+          ? options.map((option) => (
+              <ListItem key={option.label} disableGutters alignItems="center">
+                <ListItemButton
+                  autoFocus
+                  onClick={() => select_representado(option.value)}
+                >
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={option.label} />
+                </ListItemButton>
+              </ListItem>
+            ))
+          : options
+              .filter(
+                (option) => option.label !== 'En representación de una empresa'
+              )
+              .map((option) => (
+                <ListItem key={option.label} disableGutters alignItems="center">
+                  <ListItemButton
+                    autoFocus
+                    onClick={() => select_representado(option.value)}
+                  >
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={option.label} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
       </List>
     </Dialog>
   );
