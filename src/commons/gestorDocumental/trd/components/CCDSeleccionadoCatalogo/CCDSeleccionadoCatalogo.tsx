@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   Grid,
   Box,
-  Divider,
+  // Divider,
   // TextField,
   // Stack,
   // ButtonGroup,
@@ -32,7 +32,6 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
         }}
       >
         <Box sx={{ width: '100%' }}>
-          <Divider />
           <Title title="Cuadro de clasificación documental Seleccionado" />
           <DataGrid
             sx={{

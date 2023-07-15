@@ -3,6 +3,7 @@ import { Modal } from '../state/initialState';
 
 export const reducer = (state: any, { payload, type }: any): any => {
   switch (type) {
+    //* MODAL SEARCH TRD
     case Modal.OPEN_MODAL_SEARCH_TRD:
       return {
         ...state,
@@ -13,6 +14,7 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalSearchTRD: payload || false
       };
+    //* MODAL CCD USADOS
     case Modal.OPEN_MODAL_CCD_USADOS:
       return {
         ...state,
@@ -23,7 +25,7 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalCCDUsados: payload || false
       };
-
+    //* MODAL CREACION FORMATO TIPO
     case Modal.OPEN_MODAL_CREACION_FORMATO_TIPO:
       return {
         ...state,
@@ -33,6 +35,34 @@ export const reducer = (state: any, { payload, type }: any): any => {
       return {
         ...state,
         modalCreacionFormatoTipo: payload || false
+      };
+    //* MODAL BUSQUEDA TIPOLOGIAS DOCUMENTALES
+    case Modal.OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES:
+      return {
+        ...state,
+        modalBusquedaTipologiasDocumentales: payload || true
+      };
+    case Modal.CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES:
+      return {
+        ...state,
+        modalBusquedaTipologiasDocumentales: payload || false
+      };
+    //* MODAL ADMINISTRACION TIPOLOGIAS DOCUMENTALES
+    case Modal.OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES:
+      return {
+        ...state,
+        modalAdministracionTipologiasDocumentales: payload || true
+      };
+    case Modal.CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES:
+      return {
+        ...state,
+        modalAdministracionTipologiasDocumentales: payload || false
+      };
+    // ? buttons, loading, etc
+    case Modal.CREATE_TRD_LOADING_BUTTON:
+      return {
+        ...state,
+        createTRDLoadingButton: payload || false
       };
     default:
       return state;
