@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useEffect, useState } from "react";
 import type { OpcionLiquidacion } from "../interfaces/liquidacion";
 import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
