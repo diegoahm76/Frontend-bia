@@ -32,9 +32,11 @@ import { columns } from './utils/columns';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../hooks/use_trd';
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
-
-
+//* icons
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -59,7 +61,6 @@ export const BusquedaTipologias = (): JSX.Element => {
     });
     dispatch(get_data_tipologias_documentales([]));
   };
-
 
   const columns_tipologias_documentales_trd = [
     ...columns,
@@ -86,14 +87,14 @@ export const BusquedaTipologias = (): JSX.Element => {
         )
     },
     {
-      headerName: 'Acción',
+      headerName: 'Acciones',
       field: 'accion',
-      width: 70,
+      width: 250,
       renderCell: (params: any) => (
         <>
           <IconButton
             onClick={() => {
-             /* dispatch(get_trd_current(params.row));
+              /* dispatch(get_trd_current(params.row));
               closeModalModalSearchTRD();
               dispatch(get_trds([]));
               const ccd_current = {
@@ -122,11 +123,57 @@ export const BusquedaTipologias = (): JSX.Element => {
               />
             </Avatar>
           </IconButton>
+          <IconButton
+            onClick={() => {
+              /* reset_format_documental_type({
+                  nombre: params.row.nombre,
+                  'cod-tipo-medio': {
+                    label: params.row.tipo_medio_doc,
+                    value: 0,
+                    'cod-tipo-medio': params.row.cod_tipo_medio_doc
+                  },
+                  activo: params.row.activo,
+                  id_formato_tipo_medio: params.row.id_formato_tipo_medio
+                });
+                set_title_button('Actualizar'); */
+              console.log('params edit formato', params.row);
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <EditIcon
+                titleAccess="Editar formato tipo de medio"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px'
+                }}
+              />
+            </Avatar>
+          </IconButton>
+
+          {params.row.item_ya_usado ? null : (
+            <IconButton
+              onClick={() => {
+                console.log('params delete tipologia', params.row);
+                // void deleteFormat(params);
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <DeleteIcon
+                  titleAccess="Eliminar formato tipo de medio"
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px'
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          )}
         </>
       )
     }
   ];
-
 
   return (
     <>

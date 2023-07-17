@@ -38,7 +38,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
   //* se repiten los controladores de la busqueda de tipologias documentales
   const {
-    controlBusquedaTipologiasDocumentales
+    controlBusquedaTipologiasDocumentales,
+    // form_data_searched_tipologia_documental,
+    resetBusquedaTipologiasDocumentales,
   } = use_trd();
 
   //* context elements that are used in this component
@@ -46,6 +48,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     closeModalAdministracionTipologiasDocumentales,
     modalAdministracionTipologiasDocumentales
   } = useContext(ModalContextTRD);
+
+
+  //* useForm 
 
   //* reset all when the modal is closed
   const resetOnCloseModal = (): any => {
@@ -226,6 +231,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                   color="success"
                   // sx={{ ml: '10px' }}
                   onClick={() => {
+                    resetBusquedaTipologiasDocumentales();
                     console.log(
                       'limpiando admistrador de tipologías documentales'
                     );

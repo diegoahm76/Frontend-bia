@@ -242,7 +242,7 @@ export const SideBar: FC<SideBarProps> = ({
       set_permisos(permisos_store);
       console.log('permisos', permisos);
       set_is_loading(false);
-    }, 1000);
+    }, 800);
   }, [permisos_store]);
 
   // ? ------- static side bar content, except super user delegation screen ------
