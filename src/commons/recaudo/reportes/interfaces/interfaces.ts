@@ -18,12 +18,6 @@ export interface CarteraEdad {
   nombre_deudor: string;
 }
 
-export interface CarteraFecha {
-  codigo_contable: number;
-  concepto_deuda: string;
-  valor_sancion: string;
-}
-
 export interface FacilidadGeneral {
   total_general: number;
   total_sanciones_coactivo: number;

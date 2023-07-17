@@ -76,6 +76,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
             <input
               type="file"
               style={{display: 'none'}}
+              required
               onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
                 handle_file_change(event, `${id}-${tipo_atributo}`);
               }}
@@ -88,6 +89,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
             type="date"
             size="small"
             fullWidth
+            required
             onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
               handle_input_change(event, `${id}-${tipo_atributo}`);
             }}
@@ -101,6 +103,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
             onKeyDown={(event) => {
               event.stopPropagation();
             }}
+            required
             onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
               handle_input_change(event, `${id}-${tipo_atributo}`);
             }}
@@ -114,6 +117,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
             onKeyDown={(event) => {
               event.stopPropagation();
             }}
+            required
             onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
               handle_input_change(event, `${id}-${tipo_atributo}`);
             }}
@@ -144,8 +148,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
           <Box
             component='form'
             sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
+            onSubmit={handle_post_valores_proceso}
           >
             <DataGrid
               autoHeight
@@ -161,9 +164,9 @@ export const CobroCoactivo: React.FC<IProps> = ({
               }}
             >
               <Button
+                type="submit"
                 color="primary"
                 variant="contained"
-                onClick={handle_post_valores_proceso}
                 startIcon={<SaveIcon />}
               >
                 Guardar valores del proceso

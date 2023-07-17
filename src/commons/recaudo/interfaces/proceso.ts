@@ -9,11 +9,17 @@ export interface TipoAtributo {
   tipo: string;
 }
 
+export interface CategoriaAtributo {
+  id: number;
+  categoria: string;
+}
+
 export interface AtributoEtapa {
   id: number;
   descripcion: string;
   obligatorio: number;
   id_tipo: TipoAtributo;
+  id_categoria: CategoriaAtributo;
 }
 
 export interface ValoresProceso {
