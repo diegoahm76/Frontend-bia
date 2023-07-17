@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
@@ -9,6 +10,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/ReportesSlice';
 import { faker } from '@faker-js/faker';
+import JsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface RootState {
   reportes_recaudo: {
@@ -22,6 +25,7 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [total, set_total] = useState(0);
+  const [values, set_values] = useState([]);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
@@ -178,6 +182,12 @@ export const TablaCarteraDetallada: React.FC = () => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
 
+  useEffect(() => {
+    if(visible_rows.length !== 0){
+      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    }
+  }, [visible_rows])
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
@@ -251,8 +261,7 @@ export const TablaCarteraDetallada: React.FC = () => {
             color='primary'
             variant='outlined'
             startIcon={<FileDownloadOutlined />}
-            onClick={() => {
-            }}
+            onClick={handle_export_excel}
           >
             Exportar Excel
           </Button>
@@ -260,13 +269,13 @@ export const TablaCarteraDetallada: React.FC = () => {
             color='primary'
             variant='outlined'
             startIcon={<FileDownloadOutlined />}
-            onClick={() => {
-            }}
+            onClick={handle_export_pdf}
           >
             Exportar PDF
           </Button>
         </Stack>
       </Stack>
+      <div id='report'>
       {
         visible_rows.length !== 0 ? (
           <Grid
@@ -313,6 +322,7 @@ export const TablaCarteraDetallada: React.FC = () => {
           </Grid>
         ) : null
       }
+      </div>
     </Box>
   );
 }

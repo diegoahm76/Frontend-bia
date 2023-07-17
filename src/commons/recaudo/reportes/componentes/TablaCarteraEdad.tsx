@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Stack, TextField } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -5,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { type CarteraEdad } from '../interfaces/interfaces';
 import { useSelector } from 'react-redux';
 import { faker } from '@faker-js/faker';
+import { Title } from '../../../../components/Title';
 
 interface RootState {
   reportes_recaudo: {
@@ -12,8 +14,11 @@ interface RootState {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaCarteraEdad: React.FC = () => {
+interface Filtro {
+  filtro: string;
+}
+
+export const TablaCarteraEdad: React.FC<Filtro> = (props: Filtro) => {
   const [visible_rows, set_visible_rows] = useState(Array<CarteraEdad>);
   const [total, set_total] = useState(0);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
@@ -47,7 +52,7 @@ export const TablaCarteraEdad: React.FC = () => {
     {
       field: 'nombre_deudor',
       headerName: 'Nombre Deudor',
-      width: 200,
+      width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -86,7 +91,7 @@ export const TablaCarteraEdad: React.FC = () => {
     },
     {
       field: 'valor_sancion',
-      headerName: 'Valor',
+      headerName: 'Total',
       width: 170,
       renderCell: (params) => {
         const precio_cop = new Intl.NumberFormat("es-ES", {
@@ -121,6 +126,7 @@ export const TablaCarteraEdad: React.FC = () => {
               boxShadow: '0px 3px 6px #042F4A26',
             }}
           >
+            <Title title={`${props.filtro}`} />
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
