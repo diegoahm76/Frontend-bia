@@ -1,97 +1,11 @@
 import { Box, Button, Grid } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid} from '@mui/x-data-grid';
-import { useEffect, useState } from "react";
-import { api } from "../../../../../../api/axios";
-
-interface ISucursalEmpresa {
-    id_sucursal_empresa: number;
-    numero_sucursal: number;
-    descripcion_sucursal: string;
-    direccion: string;
-    direccion_sucursal_georeferenciada: string | null;
-    municipio: string | null;
-    pais_sucursal_exterior: string | null;
-    direccion_notificacion: string;
-    direccion_notificacion_referencia: string | null;
-    municipio_notificacion: string | null;
-    email_sucursal: string;
-    telefono_sucursal: string;
-    es_principal: boolean;
-    activo: boolean;
-    item_ya_usado: boolean;
-    id_persona_empresa: number;
-}
-
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaSucursales: React.FC = () => {
 
-
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const initialStateArraytanle: ISucursalEmpresa = {
-        id_sucursal_empresa: 0,
-        numero_sucursal: 0,
-        descripcion_sucursal: "",
-        direccion: "",
-        direccion_sucursal_georeferenciada: "",
-        municipio: null,
-        pais_sucursal_exterior: null,
-        direccion_notificacion: "",
-        direccion_notificacion_referencia: "",
-        municipio_notificacion: "",
-        email_sucursal: "",
-        telefono_sucursal: "",
-        es_principal: true,
-        activo: true,
-        item_ya_usado: false,
-        id_persona_empresa: 0
-    };
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [dataEntidad, setdataEntidad] = useState(initialStateArraytanle);
-
-
-    const {
-        id_sucursal_empresa,
-        // numero_sucursal,
-        // descripcion_sucursal,
-        // direccion,
-        // direccion_sucursal_georeferenciada,
-        // municipio,
-        // pais_sucursal_exterior,
-        // direccion_notificacion,
-        // direccion_notificacion_referencia,
-        // municipio_notificacion,
-        // email_sucursal,
-        // telefono_sucursal,
-        // es_principal,
-        // activo,
-        // item_ya_usado,
-        // id_persona_empresa
-                             } = dataEntidad;
-    console.log(id_sucursal_empresa);
-    console.log(2);
-
-
-    const url = "transversal/sucursales/sucursales-empresa-lista/3";
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const fetchData = async (): Promise<void> => {
-        try {
-            const res = await api.get(url);
-            setdataEntidad(res.data.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        fetchData().catch((error) => {
-            console.error(error);
-        });
-    }, []);
 
     
     const roles= [

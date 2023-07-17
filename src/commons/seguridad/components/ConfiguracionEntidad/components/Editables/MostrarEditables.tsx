@@ -8,6 +8,30 @@ import { ModalEditarCargo } from "./ModalEditable/MotadlEditable";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MostrarEditables: React.FC = () => {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 // eslint-disable-next-line @typescript-eslint/naming-convention
     const director = "stiven";
     const fecha = "hoy";
