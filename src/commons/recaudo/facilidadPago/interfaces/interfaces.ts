@@ -32,6 +32,7 @@ export interface ObligacionesUsuario {
   numero_identificacion: string;
   email: string;
   obligaciones: Obligacion[];
+  tiene_facilidad: boolean;
 }
 
 export interface FacilidadPago {
@@ -51,7 +52,7 @@ export interface Funcionario {
 export interface FacilidadPagoSolicitud {
   id: number;
   id_funcionario: number;
-  id_deudor_actuacion: number;
+  id_deudor: number;
   fecha_generacion: string;
   tipo_actuacion: string;
   periodicidad: number;
@@ -71,6 +72,11 @@ export interface RespuestaFacilidadPago {
   aprobacion : boolean;
   observacion : string;
   consulta_dbme : string;
+}
+
+export interface Contribuyente {
+  identificacion: string;
+  nombre_contribuyente: string;
 }
 
 export interface Deudor {

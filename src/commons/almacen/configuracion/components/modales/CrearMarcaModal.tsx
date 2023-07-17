@@ -12,6 +12,7 @@ import {
   Divider,
   Grid
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
@@ -137,6 +138,13 @@ const CrearMarcaModal = ({
             >
               CERRAR
             </Button>
+            <Button
+                type="submit"
+                variant="contained"
+                startIcon={<EditIcon />}
+              >
+                EDITAR
+              </Button>
             {action === "create" &&
               <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
                 GUARDAR

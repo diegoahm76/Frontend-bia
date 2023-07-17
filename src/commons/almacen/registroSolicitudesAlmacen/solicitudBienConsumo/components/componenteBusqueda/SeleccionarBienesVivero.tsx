@@ -45,11 +45,11 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     const columns_bienes: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 100 },
+        // { field: 'id_bien', headerName: 'ID', width: 100 },
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 350,
+            width: 350,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -59,7 +59,7 @@ const SeleccionarBienConsumoVivero = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 350,
+            width: 350,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}

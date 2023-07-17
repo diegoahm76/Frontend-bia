@@ -21,12 +21,12 @@ const SeleccionarOtros = ({
     const dispatch = useAppDispatch();
 
     const columns_solicitudes: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 200 },
+        // { field: 'id_bien', headerName: 'ID', width: 200 },
 
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200,
+            width: 200,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -37,7 +37,7 @@ const SeleccionarOtros = ({
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,
+            width: 200,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -48,7 +48,7 @@ const SeleccionarOtros = ({
         {
             field: 'cod_tipo_activo',
             headerName: 'Tipo de bien',
-            width: 200,
+            width: 200,flex:1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}

@@ -1,0 +1,233 @@
+import { Box, Grid } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { type IObjItem } from '../interfaces/vivero';
+import { useEffect, useState } from 'react';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { Title } from '../../../../components/Title';
+import FormButton from '../../../../components/partials/form/FormButton';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  set_bien_selected,
+  set_current_bien,
+  set_items_despacho_aux,
+} from '../store/slice/viveroSlice';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+const ListadoBienesDespacho = () => {
+  const [selected_row, set_selected_row] = useState([]);
+
+  // const [action, set_action] = useState<string>("agregar");
+
+  const {
+    items_despacho,
+    items_despacho_aux,
+    items_distribuidos,
+    current_despacho,
+  } = useAppSelector((state) => state.nursery);
+
+  // const [item_solicitudes, set_item_solicitudes] = useState<ItemSolicitudConsumible[]>([]);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (items_despacho.length > 0) {
+      if (items_distribuidos.length > 0) {
+        const aux_items: IObjItem[] = [];
+        let distribuida: number = 0;
+
+        items_despacho.forEach((option) => {
+          distribuida = 0;
+
+          items_distribuidos.forEach((option_distribucion) => {
+            if (option.id_bien === option_distribucion.id_bien) {
+              distribuida =
+                distribuida + (option_distribucion.cantidad_asignada ?? 0);
+            }
+          });
+          aux_items.push({
+            ...option,
+            cantidad_distribuida: distribuida,
+            cantidad_restante: (option.cantidad_entrante ?? 0) - distribuida,
+          });
+        });
+        dispatch(set_items_despacho_aux(aux_items));
+      } else {
+        dispatch(set_items_despacho_aux(items_despacho));
+      }
+    }
+  }, [items_despacho]);
+
+  useEffect(() => {
+    console.log(items_distribuidos);
+    if (items_despacho.length > 0) {
+      if (items_distribuidos.length > 0) {
+        const aux_items: IObjItem[] = [];
+        let distribuida: number = 0;
+
+        items_despacho.forEach((option) => {
+          distribuida = 0;
+
+          items_distribuidos.forEach((option_distribucion) => {
+            if (option.id_bien === option_distribucion.id_bien) {
+              distribuida =
+                distribuida + (option_distribucion.cantidad_asignada ?? 0);
+            }
+          });
+          aux_items.push({
+            ...option,
+            cantidad_distribuida: distribuida,
+            cantidad_restante: (option.cantidad_entrante ?? 0) - distribuida,
+          });
+        });
+        dispatch(set_items_despacho_aux(aux_items));
+      } else {
+        dispatch(set_items_despacho_aux(items_despacho));
+      }
+    }
+  }, [items_distribuidos]);
+
+  const columns_items_despacho: GridColDef[] = [
+    {
+      field: 'codigo_bien',
+      headerName: 'Código',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'nombre_bien',
+      headerName: 'Nombre',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'cod_tipo_elemento_vivero',
+      headerName: 'Tipo',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value === 'P'
+            ? 'Producción'
+            : params.value === 'D'
+            ? 'Distribución'
+            : params.value === 'G'
+            ? 'Germinación'
+            : '-'}
+        </div>
+      ),
+    },
+    {
+      field: 'cantidad_entrante',
+      headerName: 'Cantidad entrante',
+      width: 140,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'cantidad_distribuida',
+      headerName:
+        current_despacho.distribucion_confirmada === true
+          ? 'Cantidad distribuida'
+          : 'Cantidad a distribuir',
+      width: 140,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value ?? 0}
+        </div>
+      ),
+    },
+    {
+      field: 'cantidad_restante',
+      headerName: 'Cantidad restante',
+      width: 140,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value ?? params.row.cantidad}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'Tipo de documento',
+      width: 140,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value ?? params.row.cantidad}
+        </div>
+      ),
+    },
+    {
+      field: 'observacion',
+      headerName: 'Observación',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+  ];
+
+  const handle_selection_change = (selection: any): void => {
+    set_selected_row(selection);
+  };
+
+  const select_model = (): void => {
+    const model = items_despacho_aux.find((p) => p.id_bien === selected_row[0]);
+    if (model !== undefined) {
+      dispatch(set_bien_selected(model));
+      dispatch(set_current_bien(model));
+    }
+  };
+
+  return (
+    <>
+      <Grid container direction="row" padding={2} borderRadius={2}>
+        <Grid
+          container
+          spacing={2}
+          justifyContent="center"
+          direction="row"
+          marginTop={2}
+        >
+          <Box sx={{ width: '100%' }}>
+            <Title title="Bienes recibidos"></Title>
+            <DataGrid
+              onSelectionModelChange={handle_selection_change}
+              density="compact"
+              autoHeight
+              rows={items_despacho_aux}
+              columns={columns_items_despacho}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              experimentalFeatures={{ newEditingApi: true }}
+              getRowId={(row) => row.id_bien}
+              selectionModel={selected_row}
+            />
+            <Grid item xs={12} md={12}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={select_model}
+                icon_class={<SearchIcon />}
+                label={'Distribuir bien seleccionado'}
+                type_button="button"
+              />
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+// eslint-disable-next-line no-restricted-syntax
+export default ListadoBienesDespacho;

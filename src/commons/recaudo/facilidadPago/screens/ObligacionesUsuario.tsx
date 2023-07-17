@@ -47,14 +47,14 @@ export const ObligacionesUsuarios: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-              {
-                obligaciones.length !== 0 ? (
-                  <>
-                    <p>Sus obligaciones pendientes por pago son las siguientes:</p>
-                    <TablaObligacionesUsuario />
-                  </>
-                ): <p>Usted no tiene obligaciones pendientes por pago.</p>
-              }
+            {
+              obligaciones.length !== 0 ? (
+                <>
+                  <p>Sus obligaciones pendientes por pago son las siguientes:</p>
+                  <TablaObligacionesUsuario />
+                </>
+              ): <p>Usted no tiene obligaciones pendientes por pago.</p>
+            }
           </Box>
         </Grid>
       </Grid>
