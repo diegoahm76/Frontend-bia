@@ -15,6 +15,7 @@ import { type IObjEntrega } from '../interfaces/entregas';
 import SeleccionarEntrega from '../components/SeleccionarEntrega';
 import SeleccionarBodega from '../components/SeleccionarBodega';
 import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
+import Seccion from '../components/SeccionPrimera';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -97,7 +98,13 @@ const EntregaScreen = () => {
 
             }}
         >
+            <Grid item xs={12} marginY={2}>
+                <Seccion
+                    control_entrega={control_entrega}
+                    get_values={get_values}
 
+                />
+            </Grid>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarEntrega
                     control_entrega={control_entrega}
