@@ -223,7 +223,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
           <DialogTitle>Medios documentales y formatos asociados</DialogTitle>
           <DialogContent
             sx={{
-              height: '200px',
+              height: '20f0px',
               mb: '0px',
               justifyContent: 'center'
             }}
@@ -368,7 +368,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                   console.log('GUARDANDO TIPOLOGÍAS DOCUMENTALES TRD');
                 }}
               >
-                ACTUALIZAR TIPOLOGÍA DOCUMENTAL
+                GUARDAR TIPOLOGÍA DOCUMENTAL
               </Button>
               <Button
                 variant="outlined"
