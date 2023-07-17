@@ -45,29 +45,14 @@ interface DepartamentoResponse {
 };
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalDirecciones: FC = () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention 
 
-
-    const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [selected_pais, setselected_pais] = useState('');
-    useEffect(() => {
-        const fetch_data = async (): Promise<any> => {
-            try {
-                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=');
-                const data: MunicipiosResponse = await response.json();
-                if (data.success) {
-                    setmunicipios(data.data);
-                } else {
-                    console.log(data.detail);
-                }
-            } catch (error) {
-                console.log('Error fetching municipios:', error);
-            }
-        };
-
-        void fetch_data();
-    }, []);
-    const [paises, setpaises] = useState<Paises[]>([]);
+     const [paises, setpaises] = useState<Paises[]>([]);
+    const [departamentos, set_departamentos] = useState<Departamento[]>([]);
+    const [link, set_link] = useState('');
+ 
+    const [municipios, setmunicipios] = useState<Municipios[]>([]);
 
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
@@ -85,12 +70,16 @@ export const SucursalDirecciones: FC = () => {
         };
         void fetch_data();
     }, []);
-    const [departamentos, set_departamentos] = useState<Departamento[]>([]);
 
+
+
+    useEffect(() => {
+        set_link(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=${selected_pais}`);
+    }, [selected_pais]);
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO');
+                const response = await fetch(link);
                 const data: DepartamentoResponse = await response.json();
                 if (data.success) {
                     set_departamentos(data.data);
@@ -103,7 +92,30 @@ export const SucursalDirecciones: FC = () => {
         };
 
         void fetch_data();
+    }, [link]);
+
+
+    
+
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=');
+                const data: MunicipiosResponse = await response.json();
+                if (data.success) {
+                    setmunicipios(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching municipios:', error);
+            }
+        };
+
+        void fetch_data();
     }, []);
+
+
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false)
     const set_value_direction = (_value: string, type: string): void => {
 
@@ -133,7 +145,7 @@ export const SucursalDirecciones: FC = () => {
                 openDialog={setopengeneradordirecciones}
                 onChange={set_value_direction}
                 type={type_direction}
-                
+
             />
 
 
@@ -151,30 +163,15 @@ export const SucursalDirecciones: FC = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-      <FormControl required size="small" fullWidth>
-        <InputLabel>pais</InputLabel>
-        <Select
-          label="pais"
-          value={selected_pais}
-          onChange={(event) => {
-            setselected_pais(event.target.value);
-          }}
-        >
-          {paises.map((Paises) => (
-            <MenuItem key={Paises.value} value={Paises.value}>
-              {Paises.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-    <h1>{selected_pais}</h1>
-
-
-                <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel>pais</InputLabel>
-                        <Select label="pais">
+                        <Select
+                            label="pais"
+                            value={selected_pais}
+                            onChange={(event) => {
+                                setselected_pais(event.target.value);
+                            }}
+                        >
                             {paises.map((Paises) => (
                                 <MenuItem key={Paises.value} value={Paises.value}>
                                     {Paises.label}
@@ -191,11 +188,11 @@ export const SucursalDirecciones: FC = () => {
                                 <MenuItem key={departamento.value} value={departamento.value}>
                                     {departamento.label}
                                 </MenuItem>
-
                             ))}
                         </Select>
                     </FormControl>
                 </Grid>
+
                 <Grid item xs={12} sm={4}>
                     <FormControl required size='small' fullWidth>
                         <InputLabel>Municipio</InputLabel>
