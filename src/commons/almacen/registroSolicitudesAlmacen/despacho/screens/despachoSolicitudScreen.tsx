@@ -47,27 +47,12 @@ import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const {
-    control: control_solicitud_despacho,
-    handleSubmit: handle_submit_solicitud,
-    reset: reset_solicitud_aprobacion,
-  } = useForm<IObjSolicitud>();
-  const {
-    control: control_despacho,
-    handleSubmit: handle_submit,
-    reset: reset_despacho,
-    getValues: get_values,
-    // watch: watch_despacho,
-  } = useForm<IObjDespacho>();
-
+  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, } = useForm<IObjSolicitud>();
+  const { control: control_despacho, handleSubmit: handle_submit, reset: reset_despacho, getValues: get_values, } = useForm<IObjDespacho>();
   const [action, set_action] = useState<string>('Crear');
-  const { current_solicitud, persona_solicita, current_funcionario } =
-    useAppSelector((state: { solic_consumo: any }) => state.solic_consumo);
-  const { persona_despacha, current_despacho, nro_despacho, bienes_despacho } =
-    useAppSelector((state) => state.despacho);
-  const { bodega_seleccionada } = useAppSelector(
-    (state: { bodegas: any }) => state.bodegas
-  );
+  const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any }) => state.solic_consumo);
+  const { persona_despacha, current_despacho, nro_despacho, bienes_despacho } = useAppSelector((state) => state.despacho);
+  const { bodega_seleccionada } = useAppSelector((state: { bodegas: any }) => state.bodegas);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

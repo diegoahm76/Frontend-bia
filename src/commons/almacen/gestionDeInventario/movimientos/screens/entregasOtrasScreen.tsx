@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { set_current_entrega, set_persona_entrega, } from '../store/slice/indexEntrega';
 import { get_bienes_entrada, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
 import { get_uni_organizacional } from '../../../registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
-import { type IObjEntrega } from '../interfaces/entregas';
+import type { IObjEntrada, IObjEntrega } from '../interfaces/entregas';
 import SeleccionarEntrega from '../components/SeleccionarEntrega';
 import SeleccionarBodega from '../components/SeleccionarBodega';
 import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
@@ -22,17 +22,19 @@ import Seccion from '../components/SeccionPrimera';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EntregaScreen = () => {
-    const { userinfo } = useSelector((state: AuthSlice) => state.auth); const { control: control_entrega, reset: reset_despacho, getValues: get_values } = useForm<IObjEntrega>();
-    const { nro_entrega, current_entrega, persona_entrega } = useAppSelector((state) => state.entrega_otros);
+    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+    const { control: control_entrega, reset: reset_entrega, getValues: get_values } = useForm<IObjEntrega>();
+    const { control: control_entrada_entrega } = useForm<IObjEntrada>();
+    const { nro_entrega, current_entrega, persona_entrega, current_entrada } = useAppSelector((state) => state.entrega_otros);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         // console.log(current_solicitud)
         console.log(current_entrega);
-        reset_despacho(current_entrega);
+        reset_entrega(current_entrega);
         if ('persona_crea' in current_entrega) {
-            reset_despacho(current_entrega);
+            reset_entrega(current_entrega);
         } else {
             if (
                 current_entrega.id_persona_despacha !== null &&
@@ -40,15 +42,9 @@ const EntregaScreen = () => {
             )
                 void dispatch(
                     get_person_id_entrega(current_entrega.id_persona_despacha)
-                ); // get persona despacho
+                ); // get persona entrega
         }
     }, [current_entrega]);
-
-    useEffect(() => {
-        if (current_entrega.id_entrada_almacen !== null && current_entrega.id_entrada_almacen !== undefined) {
-            void dispatch(get_bienes_entrada(current_entrega.id_entrada_almacen));
-        }
-    }, [current_entrega.id_entrada_almacen]);
 
     useEffect(() => {
         void dispatch(get_uni_organizacional());
@@ -61,6 +57,7 @@ const EntregaScreen = () => {
             })
         );
     }, []);
+
     useEffect(() => {
         dispatch(
             set_current_entrega({
@@ -81,6 +78,16 @@ const EntregaScreen = () => {
         );
         console.log(nro_entrega)
     }, [nro_entrega]);
+
+    // entrada 
+    useEffect(() => {
+        if (current_entrada.id_entrada_almacen !== null && current_entrada.id_entrada_almacen !== undefined) {
+            void dispatch(get_bienes_entrada(current_entrada.id_entrada_almacen));
+            console.log(current_entrada)
+        }
+    },
+        [current_entrada.id_entrada_almacen]);
+
 
 
     return (
@@ -107,7 +114,7 @@ const EntregaScreen = () => {
             </Grid>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarEntrega
-                    control_entrega={control_entrega}
+                    control_entrada_entrega={control_entrada_entrega}
                     get_values={get_values}
 
                 />
@@ -130,7 +137,7 @@ const EntregaScreen = () => {
 
                     <FormButton
                         variant_button="outlined"
-                        on_click_function={reset_despacho}
+                        on_click_function={reset_entrega}
                         icon_class={<CleaningServicesIcon />}
                         label={"Limpiar"}
                         type_button="button"

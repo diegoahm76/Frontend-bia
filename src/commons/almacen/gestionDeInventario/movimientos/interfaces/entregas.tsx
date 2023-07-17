@@ -11,7 +11,9 @@ export interface IEntrega {
     nro_entrega: number | null;
     tipo_entrada: TipoEntrada[];
     bienes_entrada: IObjBienesEntrada[];
+    current_entrada: IObjEntrada;
     entradas: IObjEntrada[];
+
 
 }
 
