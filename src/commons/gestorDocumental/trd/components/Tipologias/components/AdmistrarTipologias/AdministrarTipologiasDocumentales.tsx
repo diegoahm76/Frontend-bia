@@ -72,7 +72,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* context elements that are used in this component
   const {
     closeModalAdministracionTipologiasDocumentales,
-    modalAdministracionTipologiasDocumentales
+    modalAdministracionTipologiasDocumentales,
+    openModalBusquedaTipologiasDocumentales,
   } = useContext(ModalContextTRD);
 
   //* useForm
@@ -392,7 +393,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 color="primary"
                 // sx={{ ml: '10px' }}
                 onClick={() => {
-                  resetBusquedaTipologiasDocumentales();
+                  resetOnCloseModal();
+                  openModalBusquedaTipologiasDocumentales();
                   console.log(
                     'REDIRECCIONANDO A BUSCADOR DE TIPOLOGÍAS DOCUMENTALES'
                   );
