@@ -46,6 +46,8 @@ interface UserContext {
   fetch_data_pozo: () => void;
 }
 
+// <--------------------- Data context --------------------->
+
 export const DataContext = createContext<UserContext>({
   pozos_selected: [],
   mode: '',

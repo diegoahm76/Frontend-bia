@@ -21,7 +21,7 @@ export const useRegisterInstrumentoHook = () => {
   const {
     handleSubmit,
     register,
-    reset,
+    reset: reset_instrumento,
     control,
     setValue,
     watch,
@@ -29,6 +29,8 @@ export const useRegisterInstrumentoHook = () => {
   } = useForm({
     defaultValues: {
       nombre: '',
+      nombre_seccion: '',
+      nombre_subseccion: '',
       cod_tipo_agua: '',
       fecha_creacion_instrumento: '',
       fecha_fin_vigencia: '',
@@ -36,6 +38,8 @@ export const useRegisterInstrumentoHook = () => {
       id_pozo: '',
     },
   });
+
+  const watch_instrumento = watch();
 
   const {
     row_cartera_aforo,
@@ -51,6 +55,8 @@ export const useRegisterInstrumentoHook = () => {
     set_is_open_cuenca,
     set_is_open_pozos,
     fetch_data_pozo,
+    set_archivos,
+    set_nombres_archivos,
   } = useContext(DataContext);
 
   const tipo_agua_selected = watch('cod_tipo_agua') ?? '';
@@ -80,10 +86,7 @@ export const useRegisterInstrumentoHook = () => {
         break;
       case 'fecha_vigencia':
         set_fecha_vigencia(value);
-        setValue(
-          'fecha_fin_vigencia',
-          value?.format('YYYY-MM-DD') ?? ''
-        );
+        setValue('fecha_fin_vigencia', value?.format('YYYY-MM-DD') ?? '');
         break;
       default:
         break;
@@ -120,6 +123,22 @@ export const useRegisterInstrumentoHook = () => {
     setValue('id_cuencas', value.map((e) => e.value) as never[]);
   };
 
+  const limpiar_formulario = (): void => {
+    reset_instrumento();
+    set_fecha_creacion(null);
+    set_fecha_vigencia(null);
+    set_cuenca([]);
+    set_archivos([]);
+    set_nombres_archivos([]);
+  };
+
+  // <-------------------> ver cartera de aforo o prueba de bombeo <------------------->
+
+  const [is_open_cartera_aforo, set_is_open_cartera_aforo] =
+    useState<boolean>(false);
+  const [is_open_prueba_bombeo, set_is_open_prueba_bombeo] =
+    useState<boolean>(false);
+
   return {
     is_loading_submit,
     pozos_selected,
@@ -146,11 +165,23 @@ export const useRegisterInstrumentoHook = () => {
     handle_change_autocomplete,
     fetch_data_cuencas,
     fetch_data_pozo,
+
+    // * ver cartera de aforo o prueba de bombeo
+    is_open_cartera_aforo,
+    is_open_prueba_bombeo,
+    set_is_open_cartera_aforo,
+    set_is_open_prueba_bombeo,
+
+    // *use form
     register,
-    reset,
+    reset_instrumento,
     handleSubmit,
     watch,
+    watch_instrumento,
     control,
     formErrors,
+
+    // * limpia formulario
+    limpiar_formulario,
   };
 };

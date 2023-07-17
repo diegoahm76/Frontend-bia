@@ -125,7 +125,7 @@ export const BusquedaPorh: React.FC = () => {
       <Grid item xs={12} sm={6} md={3}>
         <TextField
           label="Nombre PORH "
-          value={info_instrumento?.nombre ?? ''}
+          value={info_instrumento?.nombre_PORH ?? ''}
           disabled={true}
           fullWidth
           size="small"
