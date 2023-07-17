@@ -55,6 +55,8 @@ export const useRegisterInstrumentoHook = () => {
     set_is_open_cuenca,
     set_is_open_pozos,
     fetch_data_pozo,
+    set_archivos,
+    set_nombres_archivos,
   } = useContext(DataContext);
 
   const tipo_agua_selected = watch('cod_tipo_agua') ?? '';
@@ -121,6 +123,15 @@ export const useRegisterInstrumentoHook = () => {
     setValue('id_cuencas', value.map((e) => e.value) as never[]);
   };
 
+  const limpiar_formulario = (): void => {
+    reset_instrumento();
+    set_fecha_creacion(null);
+    set_fecha_vigencia(null);
+    set_cuenca([]);
+    set_archivos([]);
+    set_nombres_archivos([]);
+  };
+
   // <-------------------> ver cartera de aforo o prueba de bombeo <------------------->
 
   const [is_open_cartera_aforo, set_is_open_cartera_aforo] =
@@ -169,5 +180,8 @@ export const useRegisterInstrumentoHook = () => {
     watch_instrumento,
     control,
     formErrors,
+
+    // * limpia formulario
+    limpiar_formulario,
   };
 };

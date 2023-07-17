@@ -194,7 +194,9 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
           <Grid container spacing={2}>
-            <Title title="Búsqueda de sección y de subsección" />
+            <Grid item xs={12}>
+              <Title title="Búsqueda de sección y de subsección" />
+            </Grid>
             <form onSubmit={on_submit_advance}>
               <Grid container spacing={2} mt={1} mb={2}>
                 <Grid item xs={12} sm={6} md={4}>

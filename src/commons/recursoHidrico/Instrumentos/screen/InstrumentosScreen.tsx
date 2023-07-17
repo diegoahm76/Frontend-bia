@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { BusquedaSeccionSubseccion } from '../components/BusquedaSeccionSubseccion';
 import { RegistroInstrumentos } from '../components/RegistroInstrumentos/RegistroInstrumento';
 import { useContext } from 'react';
 import { DataContext } from '../context/contextData';
+import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InstrumentosScreen: React.FC = () => {
-
-  const {
-    id_seccion,
-    id_subseccion,
-  }= useContext(DataContext);
+  const { id_seccion, id_subseccion } = useContext(DataContext);
 
   return (
     <>
@@ -36,9 +33,17 @@ export const InstrumentosScreen: React.FC = () => {
         </Grid>
       </Grid>
       <BusquedaSeccionSubseccion />
-      {(id_seccion && id_subseccion) && (
-      <RegistroInstrumentos />
-        )}
+      {id_seccion && id_subseccion ? <RegistroInstrumentos /> : null}
+      <Grid item spacing={2} justifyContent="end" container>
+        <Grid item>
+          <Button variant="outlined" color="primary">
+            BUSCAR
+          </Button>
+        </Grid>
+        <Grid item>
+          <ButtonSalir />
+        </Grid>
+      </Grid>
     </>
   );
 };
