@@ -28,11 +28,11 @@ const SeleccionarSolicitudDespacho = ({
   const dispatch = useAppDispatch();
 
   const columns_solicitudes_despacho: GridColDef[] = [
-    { field: 'nro_solicitud_por_tipo', headerName: 'Número de solicitud', width: 180,flex:1, },
+    { field: 'nro_solicitud_por_tipo', headerName: 'Número de solicitud', width: 180, flex: 1, },
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
-      width: 200,flex:1.5,
+      width: 200, flex: 1.5,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -42,7 +42,7 @@ const SeleccionarSolicitudDespacho = ({
     {
       field: 'fecha_aprobacion_responsable',
       headerName: 'Fecha de aprobación',
-      width: 200,flex:1.5,
+      width: 200, flex: 1.5,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -52,12 +52,12 @@ const SeleccionarSolicitudDespacho = ({
     {
       field: 'persona_solicita',
       headerName: 'Solicitud elaborada por:',
-      width: 300,flex:2,
+      width: 300, flex: 2,
     },
     {
       field: 'observacion',
       headerName: 'Observación',
-      width: 400,flex:2,
+      width: 400, flex: 2,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -67,7 +67,7 @@ const SeleccionarSolicitudDespacho = ({
     {
       field: 'es_solicitud_de_conservacion',
       headerName: 'Solicitud de conservación',
-      width: 400,flex:1,
+      width: 400, flex: 1,
       renderCell: (params) => {
         return params.row.es_solicitud_de_conservacion === true ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
@@ -99,24 +99,12 @@ const SeleccionarSolicitudDespacho = ({
               title_label: title ?? 'hh',
             },
 
-            {
-              datum_type: 'input_controller',
-              xs: 5,
-              md: 2,
-              control_form: control_solicitud_despacho,
-              control_name: 'nro_solicitud_por_tipo',
-              default_value: '',
-              rules: {},
-              label: 'ID',
-              type: 'number',
-              disabled: false,
-              helper_text: '',
-            },
+
 
             {
               datum_type: 'input_controller',
-              xs: 5,
-              md: 5,
+              xs: 12,
+              md: 6,
               control_form: control_solicitud_despacho,
               control_name: 'fecha_solicitud',
               default_value: '',
@@ -128,8 +116,8 @@ const SeleccionarSolicitudDespacho = ({
             },
             {
               datum_type: 'input_controller',
-              xs: 5,
-              md: 5,
+              xs: 12,
+              md: 6,
               control_form: control_solicitud_despacho,
               control_name: 'fecha_aprobacion_responsable',
               default_value: '',

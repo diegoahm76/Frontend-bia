@@ -64,7 +64,6 @@ const SeleccionarBienSiembra = () => {
   const dispatch = useAppDispatch();
 
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
@@ -128,7 +127,6 @@ const SeleccionarBienSiembra = () => {
   ];
 
   const columns_bienes_siembra: GridColDef[] = [
-    { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
@@ -283,12 +281,6 @@ const SeleccionarBienSiembra = () => {
               ? p.id_mezcla_consumida === current_good.id_mezcla
               : p.id_bien_consumido === current_good.id_bien
         );
-        let asignada = 0;
-        aux_planting_goods.forEach((option) => {
-          if (option.id_bien_consumido !== bien?.id_bien_consumido) {
-            asignada = asignada + (option.cantidad ?? 0);
-          }
-        });
 
         if (
           (data.cantidad ?? 0) <= (current_good.cantidad_disponible_bien ?? 0)
@@ -362,22 +354,32 @@ const SeleccionarBienSiembra = () => {
 
   const edit_bien_siembra = (item: IObjPlantingGoods): void => {
     set_action('editar');
-    const item_bien = aux_planting_goods.find((p) =>
+    const bien: IObjGoods | undefined = goods.find((p: IObjGoods) =>
       item.tipo_bien === 'Mezcla'
-        ? p.id_mezcla_consumida === item.id_mezcla_consumida
-        : p.id_bien_consumido === item.id_bien_consumido
+        ? p.id_mezcla === item.id_mezcla_consumida
+        : p.id_bien === item.id_bien_consumido
     );
-    reset_siembra(item_bien);
+    console.log(bien, item);
+
+    reset_siembra(item);
     const aux_items: IObjPlantingGoods[] = [];
     aux_planting_goods.forEach((option) => {
       if (option.id_bien_consumido !== item.id_bien_consumido) {
         aux_items.push(option);
       }
     });
-    // if(bien !== undefined){
-    //     restante = (bien.cantidad_disponible_bien ?? 0) + (item_bien?.cantidad?? 0)
-    //     dispatch(set_current_good({...bien, cantidad_disponible_bien: restante}))
-    // }
+    if (bien !== undefined) {
+      console.log(item);
+      const restante =
+        (bien.cantidad_disponible_bien ?? 0) + (item?.cantidad ?? 0);
+      if (item.id_consumo_siembra !== null) {
+        dispatch(
+          set_current_good({ ...bien, cantidad_disponible_bien: restante })
+        );
+      } else {
+        dispatch(set_current_good(bien));
+      }
+    }
     set_aux_planting_goods(aux_items);
   };
 
@@ -387,9 +389,25 @@ const SeleccionarBienSiembra = () => {
         ? p.id_mezcla === item.id_mezcla_consumida
         : p.id_bien === item.id_bien_consumido
     );
+    reset_siembra({
+      ...item,
+      id_bien_consumido: null,
+      cantidad: null,
+      id_consumo_siembra: null,
+      id_mezcla_consumida: null,
+      observaciones: null,
+    });
 
     if (bien !== undefined) {
-      dispatch(set_current_good(bien));
+      const restante =
+        (bien.cantidad_disponible_bien ?? 0) + (item?.cantidad ?? 0);
+      if (item.id_consumo_siembra !== null) {
+        dispatch(
+          set_current_good({ ...bien, cantidad_disponible_bien: restante })
+        );
+      } else {
+        dispatch(set_current_good(bien));
+      }
     }
     const aux_items: IObjPlantingGoods[] = [];
     aux_planting_goods.forEach((option) => {

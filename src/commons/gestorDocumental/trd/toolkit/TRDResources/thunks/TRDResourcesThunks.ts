@@ -282,6 +282,55 @@ export const get_tipologias_documentales_by_name = (name?: string): any => {
   };
 };
 
+// ? get documentary typologies by code (E,H,F) -------------------------------------->
+
+export const get_formatos_documentales_by_code = (code?: string): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError | any> => {
+    try {
+      if (!code) {
+        return;
+      }
+
+      const url = `gestor/trd/formatos/get-by-cod/${code ?? ''}`;
+      const { data } = await api.get(url);
+
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('No se encontró data relacionada');
+
+      dispatch(get_data_format_documental_type(data.data));
+      return data.data;
+    } catch (error: any) {
+      control_error('Ha ocurrido un error, no se han encontrado data');
+
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
+
+export const create_tipologia_documental_service = (bodyPost: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(
+        'gestor/trd/tipologia-documental/create/',
+        bodyPost
+      );
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 //! ---------- At this point I start the develop of: catalogo TRD (administrate TRD) ----------->
 
 export const get_catalogo_trd = (id_trd: number): any => {
