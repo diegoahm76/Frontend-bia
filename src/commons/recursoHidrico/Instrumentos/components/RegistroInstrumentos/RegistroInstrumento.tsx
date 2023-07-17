@@ -25,9 +25,15 @@ import { Controller } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
 import { agregar_instrumento } from '../../request/request';
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
+import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
+import { DataContext } from '../../context/contextData';
 
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
+  // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+
   const columns_aforo: GridColDef[] = [
     // ...columns_result_lab,
     {
@@ -141,6 +147,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   ];
 
   const {
+    // reset_instrumento,
     pozos_selected,
     cuenca,
     id_pozo_selected,
@@ -169,6 +176,11 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     control,
     formErrors,
   } = useRegisterInstrumentoHook();
+  const { nombre_subseccion, nombre_seccion } = useContext(DataContext);
+
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -185,7 +197,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
         'YYYY-MM-DD'
       );
       const id_cuencas = data_id_cuencas;
-      console.log(fecha_crea, 'fecha_crea');
 
       const datos_instrumento = new FormData();
       datos_instrumento.append('nombre', data.nombre);
@@ -213,6 +224,13 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
       });
 
       await agregar_instrumento(datos_instrumento);
+      dispatch(
+        setCurrentInstrumento({
+          nombre: data.nombre,
+          nombre_seccion,
+          nombre_subseccion,
+        })
+      );
       control_success('Se agregó instrumento correctamente');
       set_is_loading_submit(false);
       console.log('datos_instrumento', datos_instrumento);
@@ -541,9 +559,20 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
             )}
             <Grid item spacing={2} justifyContent="end" container>
               <Grid item>
-                <LoadingButton variant="outlined" color="primary" type="submit">
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    navigate(
+                      '/app/recurso_hidrico/instrumentos/cartera_aforo',
+                      {
+                        replace: true,
+                      }
+                    );
+                  }}
+                >
                   Agregar nueva cartera de aforo
-                </LoadingButton>
+                </Button>
               </Grid>
             </Grid>
           </>
