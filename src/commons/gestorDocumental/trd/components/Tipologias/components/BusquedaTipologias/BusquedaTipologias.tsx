@@ -30,7 +30,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { get_tipologias_documentales_by_name } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columns } from './utils/columns';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { get_data_format_documental_type_current, get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../hooks/use_trd';
 //* icons
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -136,6 +136,7 @@ export const BusquedaTipologias = (): JSX.Element => {
                   id_formato_tipo_medio: params.row.id_formato_tipo_medio
                 });
                 set_title_button('Actualizar'); */
+                dispatch(get_data_format_documental_type_current(params.row))
               console.log('params edit formato', params.row);
             }}
           >

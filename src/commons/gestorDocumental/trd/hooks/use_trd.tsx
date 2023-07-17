@@ -86,7 +86,7 @@ export const use_trd = (): any => {
   });
   const form_data_searched_tipologia_documental =
     watchBusquedaTipologiasDocumentales();
-    console.log(form_data_searched_tipologia_documental, 'form_data_searched_tipologia_documental');
+     console.log(form_data_searched_tipologia_documental, 'form_data_searched_tipologia_documental'); 
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->

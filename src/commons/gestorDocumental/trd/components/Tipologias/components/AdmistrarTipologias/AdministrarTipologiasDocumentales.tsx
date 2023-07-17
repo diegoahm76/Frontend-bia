@@ -18,7 +18,7 @@ import {
   Grid,
   // IconButton,
   Stack,
-  TextField,
+  TextField
   // Tooltip,
   // Typography
 } from '@mui/material';
@@ -34,13 +34,15 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { use_trd } from '../../../../hooks/use_trd';
 // import InfoIcon  from '@mui/icons-material/Info';
 
-export const AdministrarTipologiasDocumentales = (): JSX.Element => {
+// * react select
+import Select from 'react-select';
 
+export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se repiten los controladores de la busqueda de tipologias documentales
   const {
     controlBusquedaTipologiasDocumentales,
     // form_data_searched_tipologia_documental,
-    resetBusquedaTipologiasDocumentales,
+    resetBusquedaTipologiasDocumentales
   } = use_trd();
 
   //* context elements that are used in this component
@@ -49,8 +51,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     modalAdministracionTipologiasDocumentales
   } = useContext(ModalContextTRD);
 
-
-  //* useForm 
+  //* useForm
 
   //* reset all when the modal is closed
   const resetOnCloseModal = (): any => {
@@ -66,7 +67,10 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     <>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="xl"
+        sx={{
+          height: "60vh",
+        }}
         open={modalAdministracionTipologiasDocumentales}
         onClose={resetOnCloseModal}
       >
@@ -138,8 +142,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 />
               </Grid>
 
-            {/* pending to define active checkbox (especially it's interaction */}
-{/*
+              {/* pending to define active checkbox (especially it's interaction */}
+              {/*
             <Grid
                 item
                 xs={4}
@@ -214,17 +218,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               </Grid>
 */}
 
-            {/* closed space checkbox */}
+              {/* closed space checkbox */}
 
               <Grid item xs={4} sm={3}>
-               {/* <Button
-                  variant="contained"
-                  type="submit"
-                  startIcon={<SearchIcon />}
-                  color="primary"
-                >
-                  BUSCAR
-                </Button> */}
                 <Button
                   variant="contained"
                   startIcon={<CleanIcon />}
@@ -254,6 +250,74 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
             /> */}
           </DialogContent>
           <Divider />
+          <DialogTitle>Medios documentales y formatos asociados</DialogTitle>
+          <DialogContent
+            sx={{
+              mb: '0px',
+              justifyContent: 'center'
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="cod-tipo-medio"
+                  control={controlBusquedaTipologiasDocumentales}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                          console.log(selectedOption);
+                          onChange(selectedOption);
+                        }}
+                        // isDisabled={!control_format_documental_type._formValues.item.value}
+                        options={[
+                          { value: null, label: 'Seleccionar', "cod_tipo_medio_doc": null },
+                          { value: 'F', label: 'Físico', "cod_tipo_medio_doc": "F" },
+                          { value: 'E', label: 'Electrónico', "cod_tipo_medio_doc": "E" },
+                          { value: 'H', label: 'Híbrido', "cod_tipo_medio_doc" : "H"}
+                        ]}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem'
+                          }}
+                        >
+                          Tipo de medio documental
+                          {/* {trd_current != null
+                            ? `CCD seleccionado`
+                            : `CDD's no usados en otro TRD`} */}
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
+            </Grid>
+            {/* <DataGrid
+
+              sx={{ mt: '15px' }}
+              density="compact"
+              autoHeight
+              rows={tipologias}
+              columns={columns_tipologias_documentales_trd}
+              pageSize={5}
+              rowsPerPageOptions={[7]}
+              experimentalFeatures={{ newEditingApi: true }}
+              getRowId={(row) => row.id_tipologia_documental}
+            /> */}
+          </DialogContent>
+
           <DialogActions>
             <Stack
               direction="row"
