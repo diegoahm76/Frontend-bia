@@ -8,6 +8,7 @@ export interface IDistribucion {
   transfers_nurseries: IObjTransfer[];
   current_transfer: IObjTransfer;
   goods: IObjGoods[];
+  goods_aux: IObjGoods[];
   current_good: IObjGoods;
   transfer_goods: IObjTransferGoods[];
   persons: Persona[];
@@ -145,6 +146,8 @@ export interface IObjTransfer {
   persona_anula?: string | null;
   fecha_desde?: string | null;
   fecha_hasta?: string | null;
+  fecha_test?: string | null | Array<Date>;
+
 }
 
 

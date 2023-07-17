@@ -39,6 +39,11 @@ export const TablaCarteraDetallada: React.FC = () => {
     }
   }, [visible_rows])
 
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
   const handle_export_excel = async (): Promise<void> => {
     try {
       const xlsx = await import('xlsx');
@@ -79,7 +84,7 @@ export const TablaCarteraDetallada: React.FC = () => {
       theme: 'grid',
       head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
       body: values,
-      foot:[['Total General', '', '', '', '', '', '', `${total.toFixed(2)}`]],
+      foot:[['Total General', '', '', '', '', '', '', `${total_cop}`]],
     })
     report.save('Reporte General de Cartera con Detalle.pdf');
   }
@@ -159,11 +164,17 @@ export const TablaCarteraDetallada: React.FC = () => {
       field: 'valor_sancion',
       headerName: 'Total',
       width: 170,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      }
     },
   ];
 
@@ -298,12 +309,12 @@ export const TablaCarteraDetallada: React.FC = () => {
                 display='flex'
                 justifyContent='flex-end'
               >
-                <Grid item xs={12} sm={2} mt='30px'>
+                <Grid item xs={12} sm={2.5} mt='30px'>
                   <TextField
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total.toFixed(2)}
+                    value={total_cop}
                   />
                 </Grid>
             </Stack>

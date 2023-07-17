@@ -14,6 +14,7 @@ import DespachoBienesConsumoScreen from '../registroSolicitudesAlmacen/despacho/
 import SolicitudConsumoViveroScreen from '../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudConsumoViveroScreen';
 import AprobacionSolicitudViveroScreen from '../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudViveroScreen';
 import RechazoSolicitudScreen from '../registroSolicitudesAlmacen/despacho/screens/rechazoSolicitudScreen';
+import EntregaScreen from '../gestionDeInventario/movimientos/screens/entregasOtrasScreen';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -68,6 +69,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="rechazo_solicitudes/*"
         element={<RechazoSolicitudScreen />}
+      />
+      <Route
+        path="otras_entregas/*"
+        element={<EntregaScreen />}
       />
 
       <Route path="/*" element={<Page404 />} />

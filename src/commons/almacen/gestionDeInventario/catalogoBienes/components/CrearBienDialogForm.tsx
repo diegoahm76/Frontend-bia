@@ -119,7 +119,7 @@ const CrearBienDialogForm = ({
         );
         set_metodo_valoracion(metodo_valoracion_format);
         const { data: depreciacion_types_no_format } = await api.get(
-          'almacen/choices/metodo-valoracion-articulo/'
+          'almacen/choices/tipo-depreciacion-activo/'
         );
         const depreciacion_types_format: IList[] = text_choise_adapter(
           depreciacion_types_no_format

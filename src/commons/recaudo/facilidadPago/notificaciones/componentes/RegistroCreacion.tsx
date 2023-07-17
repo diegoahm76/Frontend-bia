@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, Stack, TextField } from '@mui/material';
-import { EditorTexto } from '../../componentes/EditorTexto/EditorTexto';
 import { Add, Close } from '@mui/icons-material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import esLocale from 'dayjs/locale/es';
@@ -137,8 +136,18 @@ export const Email: React.FC = () => {
                     />
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación"
+                  size="small"
+                  fullWidth
+                  name='observaciones'
+                  onChange={on_input_change}
+                />
+              </Grid>
             </Grid>
-            <EditorTexto />
             <Stack
               direction="row"
               justifyContent="right"
@@ -364,8 +373,18 @@ export const Fisico: React.FC = () => {
                     />
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación"
+                  size="small"
+                  fullWidth
+                  name='observaciones'
+                  onChange={on_input_change}
+                />
+              </Grid>
             </Grid>
-            <EditorTexto />
             <Stack
               direction="row"
               justifyContent="right"
@@ -555,8 +574,18 @@ export const Edicto: React.FC = () => {
                     />
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación"
+                  size="small"
+                  fullWidth
+                  name='observaciones'
+                  onChange={on_input_change}
+                />
+              </Grid>
             </Grid>
-            <EditorTexto />
             <Stack
               direction="row"
               justifyContent="right"

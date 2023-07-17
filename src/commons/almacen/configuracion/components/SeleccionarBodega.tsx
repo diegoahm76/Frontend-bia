@@ -60,17 +60,17 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
   }, [bodega_seleccionada]);
 
   const columns_solicitudes: GridColDef[] = [
-    { field: 'id_bodega', headerName: 'ID', width: 40 },
+    // { field: 'id_bodega', headerName: 'ID', width: 40 },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex:1,
     },
 
     {
       field: 'direccion',
       headerName: 'Dirección',
-      width: 350,
+      width: 350,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -81,7 +81,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
     {
       field: 'es_principal',
       headerName: 'Bodega principal',
-      width: 150,
+      width: 150,flex:1,
       renderCell: (params) => {
         return params.row.es_principal === true ? (
           <Chip size="small" label="Sí" color="success" variant="outlined" />

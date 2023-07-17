@@ -30,7 +30,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   }
 
   const accionar_busqueda: any = () => {
-    if(nombre === '' && codigo === ''){
+    if (nombre === '' && codigo === '') {
       set_grid_busqueda(grid_busqueda_before);
       return
     }
@@ -44,8 +44,8 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   }
 
   useEffect(() => {
-    dispatch(obtener_bienes()).then((response: {success: boolean,detail: string, data: any[]}) => {
-      if(response.success){
+    dispatch(obtener_bienes()).then((response: { success: boolean, detail: string, data: any[] }) => {
+      if (response.success) {
         const articulos = response.data.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
         set_grid_busqueda(articulos);
         set_grid_busqueda_before([...articulos]);
@@ -122,8 +122,8 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
-                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows  paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                    selectionMode="single" selection={seleccion_articulo} onSelectionChange={(e) => { set_seleccion_articulo(e.value); }} dataKey="id_bien"
+                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                      selectionMode="single" selection={seleccion_articulo} onSelectionChange={(e) => { set_seleccion_articulo(e.value); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
                       <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>

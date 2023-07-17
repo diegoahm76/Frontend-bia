@@ -13,6 +13,21 @@ export const TablaProyeccionPagos: React.FC = () => {
   const [total, set_total] = useState(0);
   const navigate = useNavigate();
 
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
+  const capital_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(capital)
+
+  const intereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(intereses)
+
   const lista = [
     {
       cuota: '',
@@ -62,31 +77,49 @@ export const TablaProyeccionPagos: React.FC = () => {
       field: 'monto_inicial',
       headerName: 'Capital',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
     {
       field: 'valor_intereses',
       headerName: 'Intereses',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
     {
       field: 'valor_total',
       headerName: 'Cuota',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
   ];
 
@@ -170,28 +203,28 @@ export const TablaProyeccionPagos: React.FC = () => {
             spacing={2}
             sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Capital"
                 size="small"
                 fullWidth
-                value={capital}
+                value={capital_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Intereses"
                 size="small"
                 fullWidth
-                value={intereses}
+                value={intereses_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Cuotas"
                 size="small"
                 fullWidth
-                value={total}
+                value={total_cop}
               />
             </Grid>
         </Stack>

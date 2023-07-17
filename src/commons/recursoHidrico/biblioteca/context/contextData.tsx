@@ -92,6 +92,7 @@ export const DataContext = createContext<UserContext>({
   },
   info_subseccion: {
     id_subseccion: 0,
+    instrumentos_count: 0,
     id_seccion: 0,
     nombre: '',
     descripcion: '',

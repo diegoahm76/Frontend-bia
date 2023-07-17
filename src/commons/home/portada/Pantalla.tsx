@@ -16,16 +16,16 @@ export const Pantalla: React.FC = () => {
     <section
       
       style={{
-        marginTop: '-64px',
+        marginTop: '0px',
         // zIndex: -1000,
         position: 'relative',
-        backgroundImage: 'url(../image/imagenes/cumpleCormacarena.jpg)',
+        backgroundImage: 'url(../image/imagenes/FondoCormaca.jpg)',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         height: '100vh',
         width: '100%'
-      }}
+       }}
     >
       <footer
         style={{

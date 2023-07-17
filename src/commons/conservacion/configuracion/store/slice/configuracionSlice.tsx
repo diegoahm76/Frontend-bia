@@ -6,28 +6,27 @@ import {
   type IMedidas,
   type IObjGerminationBed,
   type IObjNursery,
-
 } from '../../interfaces/configuracion';
 
 const initial_state_current_mixture = {
   id_mezcla: null,
-  unidad_medida: "",
-  nombre: "",
+  unidad_medida: '',
+  nombre: '',
   item_activo: true,
   item_ya_usado: false,
-  id_unidad_medida: null
-}
+  id_unidad_medida: null,
+};
 
 const initial_state_current_bien = {
   id_bien: null,
   codigo_bien: null,
   nro_elemento_bien: null,
-  nombre: "",
+  nombre: '',
   cod_tipo_bien: null,
   cod_tipo_activo: null,
   nivel_jerarquico: null,
   nombre_cientifico: null,
-  descripcion: "",
+  descripcion: '',
   es_semilla_vivero: null,
   cod_tipo_elemento_vivero: null,
   doc_identificador_nro: null,
@@ -50,13 +49,13 @@ const initial_state_current_bien = {
 
 export const initial_state_current_germination_bed = {
   id_cama_germinacion_vivero: null,
-  nombre: "",
+  nombre: '',
   nro_de_orden: null,
-  observacion: "",
+  observacion: '',
   item_activo: true,
   item_ya_usado: false,
-  id_vivero: null
-}
+  id_vivero: null,
+};
 const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',
@@ -97,35 +96,42 @@ const initial_state: IConfiguration = {
   unidad_medida: [],
   germination_beds: [],
   current_germination_bed: initial_state_current_germination_bed,
-  nurseries:[],
-  current_nursery: initial_state_current_nursery
+  nurseries: [],
+  current_nursery: initial_state_current_nursery,
 };
 export const configuracion_slice = createSlice({
   name: 'configuracion',
   initialState: initial_state,
   reducers: {
-    get_nurseries: (state: IConfiguration, action: PayloadAction<IObjNursery[]>) => {
+    reset_state: () => initial_state,
+    get_nurseries: (
+      state: IConfiguration,
+      action: PayloadAction<IObjNursery[]>
+    ) => {
       state.nurseries = action.payload;
     },
-    current_nursery: (state: IConfiguration, action: PayloadAction<IObjNursery>) => {
+    current_nursery: (
+      state: IConfiguration,
+      action: PayloadAction<IObjNursery>
+    ) => {
       state.current_nursery = action.payload;
     },
-    get_germination_beds: (state: IConfiguration, action: PayloadAction<IObjGerminationBed[]>) => {
+    get_germination_beds: (
+      state: IConfiguration,
+      action: PayloadAction<IObjGerminationBed[]>
+    ) => {
       state.germination_beds = action.payload;
     },
-    current_germination_bed: (state: IConfiguration, action: PayloadAction<IObjGerminationBed>) => {
+    current_germination_bed: (
+      state: IConfiguration,
+      action: PayloadAction<IObjGerminationBed>
+    ) => {
       state.current_germination_bed = action.payload;
     },
-    get_bienes: (
-      state: IConfiguration,
-      action: PayloadAction<IObjBien[]>
-    ) => {
+    get_bienes: (state: IConfiguration, action: PayloadAction<IObjBien[]>) => {
       state.bienes = action.payload;
     },
-    current_bien: (
-      state: IConfiguration,
-      action: PayloadAction<IObjBien>
-    ) => {
+    current_bien: (state: IConfiguration, action: PayloadAction<IObjBien>) => {
       state.current_bien = action.payload;
     },
     get_mixtures: (
@@ -158,4 +164,5 @@ export const {
   get_mixtures,
   current_mixture,
   get_unit_measurement,
+  reset_state,
 } = configuracion_slice.actions;
