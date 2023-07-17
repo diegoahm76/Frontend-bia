@@ -43,6 +43,7 @@ import { use_trd } from '../../../../hooks/use_trd';
 import Select from 'react-select';
 import { get_formatos_documentales_by_code } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import { get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones

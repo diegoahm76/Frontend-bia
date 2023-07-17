@@ -292,8 +292,8 @@ export const BusquedaTipologias = (): JSX.Element => {
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={(row) =>
                 row.id_tipologia_documental
-                  ? row.id_tipologia_documental
-                  : uuidv4()
+                  /* ? row.id_tipologia_documental
+                  : uuidv4() */
               }
             />
           </DialogContent>

@@ -302,7 +302,7 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
           )
         : control_error('No se encontró data relacionada');
 
-      dispatch(get_data_tipologias_documentales(data.data));
+      dispatch(get_data_format_documental_type(data.data));
       return data.data;
     } catch (error: any) {
       control_error('Ha ocurrido un error, no se han encontrado data');
