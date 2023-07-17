@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import {
   add_lifting_quarantine_service,
   annul_lifting_quarantine_service,
+  control_error,
   edit_lifting_quarantine_service,
   get_nurseries_quarantine_service,
   get_person_id_service,
@@ -194,16 +195,30 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
       current_lifting.id_item_levanta_cuarentena !== null &&
       current_lifting.id_item_levanta_cuarentena !== undefined
     ) {
-      set_action('editar');
+      const fecha_actual = new Date();
+      const fecha_levantamiento = new Date(data.fecha_levantamiento ?? '');
+      const diferencia_ms =
+        fecha_actual.getTime() - fecha_levantamiento.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
 
-      form_data.append('cantidad_a_levantar', Number(data.cantidad_a_levantar));
-      form_data.append('observaciones', data.observaciones);
-      void dispatch(
-        edit_lifting_quarantine_service(
-          form_data,
-          current_lifting.id_item_levanta_cuarentena
-        )
-      );
+        form_data.append(
+          'cantidad_a_levantar',
+          Number(data.cantidad_a_levantar)
+        );
+        form_data.append('observaciones', data.observaciones);
+        void dispatch(
+          edit_lifting_quarantine_service(
+            form_data,
+            current_lifting.id_item_levanta_cuarentena
+          )
+        );
+      } else {
+        control_error(
+          'Solo se puede editar levantamientos hasta 30 dias despues de la fecha de levantamiento'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_levantamiento ?? '').toISOString();
@@ -237,12 +252,25 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
       current_lifting.id_item_levanta_cuarentena !== null &&
       current_lifting.id_item_levanta_cuarentena !== undefined
     ) {
-      void dispatch(
-        annul_lifting_quarantine_service(
-          current_lifting.id_item_levanta_cuarentena,
-          form_data
-        )
+      const fecha_actual = new Date();
+      const fecha_levantamiento = new Date(
+        current_lifting.fecha_levantamiento ?? ''
       );
+      const diferencia_ms =
+        fecha_actual.getTime() - fecha_levantamiento.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 2) {
+        void dispatch(
+          annul_lifting_quarantine_service(
+            current_lifting.id_item_levanta_cuarentena,
+            form_data
+          )
+        );
+      } else {
+        control_error(
+          'Solo se puede eliminar levantamientos hasta 2 dias despues de la fecha de levantamiento'
+        );
+      }
     }
   };
 
@@ -263,14 +291,14 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
           <Title title="Levantamiento de cuarentena de material vegetal"></Title>
         </Grid>
         <SeleccionarCuarentena />
-        {current_plant_quarantine.id_cuarentena_mat_vegetal !== null && (
-          <SeleccionarLevantamientoCuarentena
-            control_levantamiento={control_levantamiento}
-            get_values={get_values}
-            open_modal={open_search_modal}
-            set_open_modal={set_open_search_modal}
-          />
-        )}
+
+        <SeleccionarLevantamientoCuarentena
+          control_levantamiento={control_levantamiento}
+          get_values={get_values}
+          open_modal={open_search_modal}
+          set_open_modal={set_open_search_modal}
+        />
+
         {current_plant_quarantine.id_cuarentena_mat_vegetal !== null && (
           <Grid container direction="row" padding={2} spacing={2}>
             {plant_quarantine_lifting.length > 0 && (

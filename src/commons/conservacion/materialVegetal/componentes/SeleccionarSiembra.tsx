@@ -197,6 +197,7 @@ const SeleccionarSiembra = ({
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'select_controller',
@@ -286,8 +287,8 @@ const SeleccionarSiembra = ({
               label: 'Fecha de siembra',
               disabled: current_planting.id_siembra !== null,
               helper_text: '',
-              min_date: min_date,
-              max_date: max_date,
+              min_date,
+              max_date,
               format: 'YYYY-MM-DD',
             },
             {

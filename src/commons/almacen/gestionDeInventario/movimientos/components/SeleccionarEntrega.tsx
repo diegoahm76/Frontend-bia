@@ -95,33 +95,9 @@ const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
                             title_label: 'INFORMACIÓN DE LA ENTREGA',
                         },
 
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 3,
-                            control_form: control_entrega,
-                            control_name: 'numero_despacho_consumo',
-                            default_value: '',
-                            rules: {},
-                            label: 'Número entrega',
-                            type: 'number',
-                            disabled: true,
-                            helper_text: '',
-                        },
 
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 3,
-                            control_form: control_entrega,
-                            control_name: 'fecha_despacho',
-                            default_value: '',
-                            rules: {},
-                            label: 'Fecha de Entrega',
-                            type: 'text',
-                            disabled: true,
-                            helper_text: '',
-                        },
+
+
                         {
                             datum_type: 'input_controller',
                             xs: 12,
