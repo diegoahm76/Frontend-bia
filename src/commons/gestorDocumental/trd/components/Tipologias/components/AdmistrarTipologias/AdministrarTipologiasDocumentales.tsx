@@ -34,6 +34,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
+import SyncIcon from '@mui/icons-material/Sync';
 
 import { use_trd } from '../../../../hooks/use_trd';
 // import InfoIcon  from '@mui/icons-material/Info';
@@ -41,20 +42,30 @@ import { use_trd } from '../../../../hooks/use_trd';
 // * react select
 import Select from 'react-select';
 import { get_formatos_documentales_by_code } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
-import { useAppDispatch } from '../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones
   const dispatch = useAppDispatch();
+  const { tipologias_documental_current } = useAppSelector(
+    (state: any) => state.trd_slice
+  );
 
   //* se repiten los controladores de la busqueda de tipologias documentales
   //* se importan los elementos necesarios del hook use_trd
   const {
+    // ? form create or edit documental typology
     controlBusquedaTipologiasDocumentales,
-    // form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales,
+    // form_data_searched_tipologia_documental,
+
+    // ? update list of documental formats in the autocomplete element
     set_list_format_documental_type,
-    list_format_documental_type
+    list_format_documental_type,
+
+    // ? button that define create or update the submit button
+    title_button_administrar_tipologias
+    // set_title_button_administrar_tipologias
   } = use_trd();
 
   //* context elements that are used in this component
@@ -68,11 +79,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* reset all when the modal is closed
   const resetOnCloseModal = (): any => {
     closeModalAdministracionTipologiasDocumentales();
-    /* reset_searched_trd_modal({
-      nombre: '',
-      version: ''
-    });
-    dispatch(get_trds([])); */
+    set_list_format_documental_type([]);
+    resetBusquedaTipologiasDocumentales();
   };
 
   return (
@@ -119,6 +127,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
+                      disabled={tipologias_documental_current?.item_ya_usado ?? false}
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
@@ -215,23 +224,12 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
               {/* closed space checkbox */}
             </Grid>
-            {/* <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={tipologias}
-              columns={columns_tipologias_documentales_trd}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id_tipologia_documental}
-            /> */}
           </DialogContent>
           <Divider />
           <DialogTitle>Medios documentales y formatos asociados</DialogTitle>
           <DialogContent
             sx={{
-              height: '225px',
+              height: '235px',
               mb: '0px',
               justifyContent: 'center'
             }}
@@ -334,9 +332,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                             placeholder="Formatos para el medio documental seleccionado"
                           />
                         )}
-                        /* onChange={(event, value) => {
-                          console.log(value);
-                        }} */
                       />
                       <label>
                         <small
@@ -359,18 +354,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 />
               </Grid>
             </Grid>
-            {/* <DataGrid
-
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={tipologias}
-              columns={columns_tipologias_documentales_trd}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id_tipologia_documental}
-            /> */}
           </DialogContent>
 
           <DialogActions>
@@ -381,7 +364,13 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
             >
               <Button
                 variant="contained"
-                startIcon={<SaveIcon />}
+                startIcon={
+                  title_button_administrar_tipologias === 'Guardar' ? (
+                    <SaveIcon />
+                  ) : (
+                    <SyncIcon />
+                  )
+                }
                 color="primary"
                 // sx={{ ml: '10px' }}
                 onClick={() => {
@@ -389,7 +378,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                   console.log('GUARDANDO TIPOLOGÍAS DOCUMENTALES TRD');
                 }}
               >
-                GUARDAR TIPOLOGÍA DOCUMENTAL
+                {title_button_administrar_tipologias === 'Guardar'
+                  ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
+                  : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
               </Button>
               <Button
                 variant="outlined"
@@ -433,56 +424,3 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     </>
   );
 };
-
-/* 
-  
-  <Grid item xs={12}>
-                  <Autocomplete
-                    multiple
-                    fullWidth
-                    size="medium"
-                    options={cuenca}
-                    getOptionLabel={(option: any) => option.label}
-                    isOptionEqualToValue={(option: any, value) =>
-                      option?.value === value?.value
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        key={params.id}
-                        {...params}
-                        label="Asociar Cuenca"
-                        placeholder="Asociar Cuenca"
-                      />
-                    )}
-                    {...register('id_cuencas')}
-                    onChange={handle_change_autocomplete}
-                  />
-                </Grid>
-  
-  const [cuenca, set_cuenca] = useState<ValueProps[]>([]); */
-
-/* const fetch_data_cuencas = async (): Promise<void> => {
-    try {
-      const response = await get_cuencas();
-      if (response?.length > 0) {
-        const data_cuenca = response.map((item: IpropsCuenca) => ({
-          value: item.id_cuenca,
-          label: item.nombre,
-        }));
-        setValue('id_cuencas', data_cuenca.map((e) => e.value) as never[]);
-        set_cuenca(data_cuenca);
-      }
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-    }
-  };
-
-const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: ValueProps[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<ValueProps>
-  ): void => {
-    setValue('id_cuencas', value.map((e) => e.value) as never[]);
-    set_cuenca(value);
-  }; */

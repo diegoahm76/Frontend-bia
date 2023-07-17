@@ -30,13 +30,17 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { get_tipologias_documentales_by_name } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columns } from './utils/columns';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { get_data_format_documental_type_current, get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import {
+  get_data_format_documental_type_current,
+  get_data_tipologias_documentales
+} from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../hooks/use_trd';
 //* icons
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import { v4 as uuidv4 } from 'uuid';
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -136,7 +140,7 @@ export const BusquedaTipologias = (): JSX.Element => {
                   id_formato_tipo_medio: params.row.id_formato_tipo_medio
                 });
                 set_title_button('Actualizar'); */
-                dispatch(get_data_format_documental_type_current(params.row))
+              dispatch(get_data_format_documental_type_current(params.row));
               console.log('params edit formato', params.row);
             }}
           >
@@ -282,11 +286,15 @@ export const BusquedaTipologias = (): JSX.Element => {
               density="compact"
               autoHeight
               rows={tipologias}
-              columns={columns_tipologias_documentales_trd}
+              columns={columns_tipologias_documentales_trd ?? []}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id_tipologia_documental}
+              getRowId={(row) =>
+                row.id_tipologia_documental
+                  ? row.id_tipologia_documental
+                  : uuidv4()
+              }
             />
           </DialogContent>
           <Divider />
