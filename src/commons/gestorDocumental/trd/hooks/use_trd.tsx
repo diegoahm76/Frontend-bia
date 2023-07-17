@@ -78,12 +78,18 @@ export const use_trd = (): any => {
     defaultValues: {
       nombre: '',
       activo: true,
+      cod_tipo_medio_doc: '',
+      formatos: []
     },
     mode: 'onBlur',
     reValidateMode: 'onChange'
   });
   const form_data_searched_tipologia_documental =
     watchBusquedaTipologiasDocumentales();
+  console.log(
+    form_data_searched_tipologia_documental,
+    'form_data_searched_tipologia_documental'
+  );
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -95,10 +101,24 @@ export const use_trd = (): any => {
       value: 0
     }
   ]);
+  // ? list of formats by documental type --------------------->
+  const [list_format_documental_type, set_list_format_documental_type] =
+    useState<any[]>([
+      {
+        label: '',
+        value: 0
+      }
+    ]);
 
   // ? button to change between create or edit documental type format ------------------->
   // ? button that manage the name (state (save or update))
   const [title_button, set_title_button] = useState('Guardar');
+
+  // ? button to change between create or edit typologies ----------------->
+  const [
+    title_button_administrar_tipologias,
+    set_title_button_administrar_tipologias
+  ] = useState('Guardar');
   //* -------------------------------------------------------------------------->
   //! useEffects that I will use in different components --------------------->
 
@@ -219,8 +239,13 @@ export const use_trd = (): any => {
     reset_all_format_documental_type_modal, //* reset functions data format documental type
     errors_format_documental_type,
     data_format_documental_type_watch_form,
+
+    //! plain states
     set_title_button, //* (save or edit state)
     title_button, //* (save or edit state)
+
+    title_button_administrar_tipologias,
+    set_title_button_administrar_tipologias,
 
     // ? administrar o buscar tipologias documentales --------------------------------------------->
     controlBusquedaTipologiasDocumentales,
@@ -232,6 +257,9 @@ export const use_trd = (): any => {
     reset_create_trd_modal,
 
     // ? list of finished ccd --------------------------------------------->
-    list_finished_ccd
+    list_finished_ccd,
+    // ? list of formats by documental type --------------------------------------------->
+    set_list_format_documental_type,
+    list_format_documental_type
   };
 };
