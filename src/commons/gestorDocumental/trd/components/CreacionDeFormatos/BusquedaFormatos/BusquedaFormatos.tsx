@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useState, useContext } from 'react';
+import { useContext } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -21,7 +21,12 @@ import {
   IconButton,
   TextField,
   Avatar,
-  Chip
+  Chip,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  Typography,
+  Tooltip
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -37,132 +42,112 @@ import { ModalContextTRD } from '../../../context/ModalsContextTrd';
 // * react select
 import Select from 'react-select';
 import { use_trd } from '../../../hooks/use_trd';
-import { get_formatos_by_tipo_medio_by_format_and_name } from '../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {
+  create_formato_by_tipo_medio_service,
+  delete_formato_by_tipo_medio_service,
+  edit_formato_by_tipo_medio_service,
+  get_formatos_by_tipo_medio_by_format_and_name
+} from '../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import { columsTRD } from './utils/colums';
+import { options_search_trd } from './utils/options';
+import InfoIcon from '@mui/icons-material/Info';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
-  const dispatch: any = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const { data_format_documental_type } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
   const {
+    //* necesary to use the form
     control_format_documental_type,
-    data_format_documental_type_watch_form
+    data_format_documental_type_watch_form,
+    reset_format_documental_type, //* basic reset form to manage edit data
+    reset_all_format_documental_type_modal,
+
+    // ? state button to manage create or update documental type format
+    set_title_button,
+    title_button
   } = use_trd();
 
   //! context for the modal interacion
   const { modalCreacionFormatoTipo, closeModalCreacionFormatoTipo } =
     useContext(ModalContextTRD);
 
-  // const { ccd_current } = useAppSelector((state: any) => state.ccd);
-  const [title_button, set_title_button] = useState('Guardar');
+  // ? function that allow us to create a format documental type
+  const onSubmitCreateFormate = async () => {
+    const {
+      'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
+      nombre
+    } = data_format_documental_type_watch_form;
 
-  /* const {
-    register,
-    reset,
-    watch,
-    formState: { errors, isValid, isDirty, touchedFields }
-  } = useForm<IFormValues>({
-    defaultValues: initial_state
-  }); */
-  //! const data allow us to watch the values of the form
-  // const data = watch();
-
-  //! this use effect is to set the title of the button and the values of the form
-  /* useEffect(() => {
-    if (serie_ccd_current !== null) {
-      reset({
-        codigo: serie_ccd_current.codigo,
-        nombre: serie_ccd_current.nombre,
-        id_subserie_doc: null,
-        id_serie_doc: serie_ccd_current.id_serie_doc
-      });
-      set_title_button('Actualizar');
-      console.log('serie_ccd_current.id_serie_doc', serie_ccd_current);
-      dispatch(get_subseries_service(serie_ccd_current));
-    } else {
-      reset(initial_state);
-      set_title_button('Guardar');
-    }
-  }, [serie_ccd_current]); */
-
-  //! useEffect to clean the current serie
-  /*  useEffect(() => {
-    return () => {
-      dispatch(get_serie_ccd_current(null));
-      clean();
-    };
-  }, [is_modal_active]);
-
-  //! function to clean the form
-  const clean = (): void => {
-    reset(initial_state);
-    set_title_button('Guardar');
-  }; */
-
-  //! create or edit series, it depends on the title_button and the parameters
-  /*  const manage_series = (): void => {
-    const updatedSeries = {
-      ...data,
-      nombre: data.nombre
-    };
-    const newSeries =
-      title_button === 'Guardar'
-        ? {
-            nombre: data.nombre,
-            codigo: Number(data.codigo),
-            id_ccd: ccd_current?.id_ccd
-          }
-        : updatedSeries;
-    const action =
-      title_button === 'Guardar'
-        ? create_series_service(newSeries, clean)
-        : update_series_data(updatedSeries, ccd_current, clean);
-    void dispatch(action);
-  }; */
-
-  // * console.log(params.row);
-  /* const handleOnClick_prepareEdit = (params: any) =>
-    dispatch(get_serie_ccd_current(params.row)); */
-  /*
-  const handleDeleteSeries = async (params: any) => {
-    const { row } = params;
-    if (row?.tiene_subseries) {
-      set_is_modal_active(false);
-      await notification_error(
-        'No se puede eliminar una serie con subseries asociadas, debe eliminarse primero las subseries asociadas'
+    try {
+      await dispatch(
+        create_formato_by_tipo_medio_service({
+          cod_tipo_medio_doc,
+          nombre
+        })
       );
-    } else {
-      void dispatch(delete_series_service(params, () => ({})));
-    }
-  }; */
 
-  /*  const handleAddIndependentSeries = (params: any) => {
-    void dispatch(create_indepent_series_service(params.row.id_serie_doc)).then(() => {
-      dispatch(
-        getCatalogoSeriesYSubseries(ccd_current.id_ccd)
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
       );
-    })
-  }; */
+      reset_all_format_documental_type_modal();
+      // set_title_button('Actualizar');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // ? function that allow us to update a format documental type
+  const onSubmitUpdateFormate = async () => {
+    const {
+      'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
+      nombre,
+      activo,
+      id_formato_tipo_medio
+    } = data_format_documental_type_watch_form;
+
+    try {
+      await dispatch(
+        edit_formato_by_tipo_medio_service({
+          cod_tipo_medio_doc,
+          nombre,
+          activo,
+          id_formato_tipo_medio
+        })
+      );
+
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+      );
+      reset_all_format_documental_type_modal();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // ?  function that allow us to delete a format documental type
+  const deleteFormat = async ({
+    row: { id_formato_tipo_medio, cod_tipo_medio_doc }
+  }: any) => {
+    try {
+      await dispatch(
+        delete_formato_by_tipo_medio_service(id_formato_tipo_medio)
+      );
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+      );
+      console.log(`format deleted: ${id_formato_tipo_medio}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   //! this code allow us to create the colums in the grid that will be displayed in the modal
   const columns_creacion_formatos: GridColDef[] = [
-    {
-      headerName: 'Tipo de medio documental',
-      field: 'tipo_medio_doc',
-      minWidth: 200,
-      maxWidth: 225,
-      flex: 1
-    },
-    {
-      headerName: 'Nombre del formato',
-      field: 'nombre',
-      minWidth: 170,
-      maxWidth: 200,
-      flex: 1
-    },
+    ...columsTRD,
     {
       headerName: 'Usado',
       field: 'item_ya_usado',
@@ -183,7 +168,20 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       maxWidth: 135,
       flex: 1,
       renderCell: (params: any) =>
-        params.row.registro_precargado === true ? (
+        params.row.registro_precargado ? (
+          <Chip label="Si" color="error" variant="outlined" />
+        ) : (
+          <Chip label="No" color="info" variant="outlined" />
+        )
+    },
+    {
+      headerName: 'Activo',
+      field: 'activo',
+      minWidth: 130,
+      maxWidth: 135,
+      flex: 1,
+      renderCell: (params: any) =>
+        params.row.activo ? (
           <Chip label="Si" color="error" variant="outlined" />
         ) : (
           <Chip label="No" color="info" variant="outlined" />
@@ -201,6 +199,17 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           <>
             <IconButton
               onClick={() => {
+                reset_format_documental_type({
+                  nombre: params.row.nombre,
+                  'cod-tipo-medio': {
+                    label: params.row.tipo_medio_doc,
+                    value: 0,
+                    'cod-tipo-medio': params.row.cod_tipo_medio_doc
+                  },
+                  activo: params.row.activo,
+                  id_formato_tipo_medio: params.row.id_formato_tipo_medio
+                });
+                set_title_button('Actualizar');
                 console.log('params edit formato', params.row);
               }}
             >
@@ -213,7 +222,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
             </IconButton>
             <IconButton
               onClick={() => {
-                console.log('params delete formato', params.row);
+                void deleteFormat(params);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -230,7 +239,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
 
   return (
     <Dialog
-      id="dialog_series_ccd"
       maxWidth="md"
       open={modalCreacionFormatoTipo}
       onClose={closeModalCreacionFormatoTipo}
@@ -254,7 +262,10 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       <DialogContent sx={{ mb: '0px' }}>
         <form
           onSubmit={(e) => {
-            console.log('hello from onSubmmit events');
+            e.preventDefault();
+            title_button === 'Actualizar'
+              ? void onSubmitUpdateFormate()
+              : void onSubmitCreateFormate();
           }}
           autoComplete="off"
         >
@@ -272,36 +283,11 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                     <Select
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(
-                          'selectedOption en tipo de formato por medio',
-                          selectedOption
-                        );
-                        /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          ); */
+                        // console.log(selectedOption);
                         onChange(selectedOption);
                       }}
                       // isDisabled={!control_format_documental_type._formValues.item.value}
-                      options={[
-                        {
-                          label: 'Seleccionar',
-                          value: null,
-                          'cod-tipo-medio': null
-                        },
-                        {
-                          label: 'Físico',
-                          value: 1,
-                          'cod-tipo-medio': 'F'
-                        },
-                        {
-                          label: 'Electronico',
-                          value: 2,
-                          'cod-tipo-medio': 'E'
-                        }
-                        // ...ccd_list
-                      ]}
+                      options={options_search_trd}
                       placeholder="Seleccionar"
                     />
                     <label>
@@ -339,6 +325,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                     fullWidth
                     // name="version"
                     label="Nombre tipo de formato"
+                    inputProps={{ maxLength: 20 }}
                     helperText={
                       'Ingrese nombre'
                       /*  trd_current != null
@@ -351,11 +338,86 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      console.log(e.target.value);
+                      // console.log(e.target.value);
                     }}
                   />
                 )}
               />
+              <Grid
+                item
+                xs={4}
+                sm={4}
+                sx={{
+                  ml: '-25rem'
+                }}
+              >
+                {title_button === 'Actualizar' ? (
+                  <Controller
+                    name="activo"
+                    control={control_format_documental_type}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <FormControl
+                        fullWidth
+                      >
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={value}
+                              onChange={(e) => {
+                                onChange(e.target.checked);
+                              }}
+                              // name="checkedB"
+                              color="primary"
+                            />
+                          }
+                          label={
+                            value ? (
+                              <Typography variant="body2">
+                                Activo
+                                <Tooltip
+                                  title="Formato tipo de medio activo"
+                                  placement="right"
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      width: '1.2rem',
+                                      height: '1.2rem',
+                                      ml: '0.5rem',
+                                      color: 'green'
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Typography>
+                            ) : (
+                              <Typography variant="body2">
+                                Inactivo
+                                <Tooltip
+                                  title="Formato tipo de medio inactivo"
+                                  placement="right"
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      width: '1.2rem',
+                                      height: '1.2rem',
+                                      ml: '0.5rem',
+                                      color: 'orange'
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Typography>
+                            )
+                          }
+                        />
+                      </FormControl>
+                    )}
+                  />
+                ) : null}
+              </Grid>
               <Stack
                 direction="row"
                 justifyContent="flex-end"
@@ -398,7 +460,10 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   variant="contained"
                   startIcon={<CleanIcon />}
                   onClick={() => {
-                    console.log('hello from clean button');
+                    reset_all_format_documental_type_modal();
+                    console.log(
+                      'hello from clean button, Im going to clean all fields'
+                    );
                   }}
                 >
                   LIMPIAR

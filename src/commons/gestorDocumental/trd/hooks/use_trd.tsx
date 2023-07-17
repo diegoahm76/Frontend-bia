@@ -1,11 +1,19 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { initial_state_searched_trd } from './utils/constants';
+import {
+  initial_state_create_trd,
+  initial_state_format_documental_type,
+  initial_state_searched_trd
+} from './utils/constants';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFinishedCcdThunks';
 import {
   get_catalogo_series_subseries_unidad_organizacional,
+  get_catalogo_trd_action,
+  // get_data_format_documental_type,
+  get_data_format_documental_type_current,
   get_trd_current,
   get_trds
 } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
@@ -14,9 +22,8 @@ export const use_trd = (): any => {
   const dispatch: any = useAppDispatch();
 
   // eslint-disable-next-line no-empty-pattern
-  const { trd_current, data_format_documental_type_current /* trds */ } = useAppSelector(
-    (state: any) => state.trd_slice
-  );
+  const { trd_current /* data_format_documental_type_current */ /* trds */ } =
+    useAppSelector((state: any) => state.trd_slice);
 
   // eslint-disable-next-line no-empty-pattern
   const { ccd_finished } = useAppSelector(
@@ -45,13 +52,7 @@ export const use_trd = (): any => {
     reset: reset_create_trd_modal
 
     // formState: { errors: errors_create_trd_modal }
-  } = useForm({
-    defaultValues: {
-      id_ccd: 0,
-      nombre: '',
-      version: ''
-    }
-  });
+  } = useForm({ defaultValues: initial_state_create_trd });
   const data_create_trd_modal = watch_create_trd_modal();
 
   // ? form (create, edit, delete or deactivate) format documental type --------------------->
@@ -62,16 +63,27 @@ export const use_trd = (): any => {
     watch: watch_format_documental_type,
     reset: reset_format_documental_type,
     formState: { errors: errors_format_documental_type }
-  } = useForm({ defaultValues: {
-    "cod-tipo-medio": {
-      label: '',
-      value: 0,
-      "cod-tipo-medio": '',
-    },
-    nombre: '',
-  } });
+  } = useForm({ defaultValues: initial_state_format_documental_type });
   const data_format_documental_type_watch_form = watch_format_documental_type();
   // console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
+
+  // ? tipologias documentales ---------------------> (search), (administrar)
+  const {
+    control: controlBusquedaTipologiasDocumentales,
+    // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
+    // formState: { errors },
+    reset: resetBusquedaTipologiasDocumentales,
+    watch: watchBusquedaTipologiasDocumentales
+  } = useForm({
+    defaultValues: {
+      nombre: '',
+      activo: true,
+    },
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
+  });
+  const form_data_searched_tipologia_documental =
+    watchBusquedaTipologiasDocumentales();
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -83,6 +95,10 @@ export const use_trd = (): any => {
       value: 0
     }
   ]);
+
+  // ? button to change between create or edit documental type format ------------------->
+  // ? button that manage the name (state (save or update))
+  const [title_button, set_title_button] = useState('Guardar');
   //* -------------------------------------------------------------------------->
   //! useEffects that I will use in different components --------------------->
 
@@ -126,9 +142,8 @@ export const use_trd = (): any => {
     }
   }, [trd_current]);
 
-
-   // ? try to edit format type x --------------------->
-   useEffect(() => {
+  // ? try to edit format type x --------------------->
+  /*   useEffect(() => {
     console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
     console.log(data_format_documental_type_current, 'data_format_documental_type_current');
     if (data_format_documental_type_current !== null) {
@@ -137,25 +152,20 @@ export const use_trd = (): any => {
       });
       console.log('result_name', result_name);
       const obj: any = {
-        /* id_ccd: {
-          label: result_name[0].nombre,
-          value: result_name[0].id_ccd
-        }, */
         nombre: data_format_documental_type_current.nombre,
-        // version: trd_current.version,
-        // id_trd: trd_current.id_trd
       };
       console.log(obj, 'obj');
       reset_format_documental_type(obj);
     }
-  }, [data_format_documental_type_current]);
+  }, [data_format_documental_type_current]); */
 
-
+  //! reset functions that I will use in different components --------------------->
 
   // ? reset all trd data --------------------->
   const reset_all_trd = (): void => {
     //* reset trd list
     dispatch(get_trds([]));
+    dispatch(get_catalogo_trd_action([]));
     dispatch(get_trd_current(null));
     dispatch(get_catalogo_series_subseries_unidad_organizacional([]));
     //* reset form
@@ -168,6 +178,24 @@ export const use_trd = (): any => {
       nombre: '',
       version: ''
     });
+  };
+
+  // ? reset create or edit format documental type data --------------------->
+  const reset_all_format_documental_type_modal = (): void => {
+    //* reset form
+    dispatch(get_data_format_documental_type_current(null));
+    // dispatch(get_data_format_documental_type([]));
+    reset_format_documental_type({
+      'cod-tipo-medio': {
+        label: '',
+        value: 0,
+        'cod-tipo-medio': ''
+      },
+      nombre: '',
+      activo: true
+    });
+
+    set_title_button('Guardar');
   };
 
   return {
@@ -187,9 +215,17 @@ export const use_trd = (): any => {
     // ? format_documental_type of trd --------------------------------------------->
     control_format_documental_type,
     watch_format_documental_type,
-    reset_format_documental_type,
+    reset_format_documental_type, //* basic reset to manage edit data
+    reset_all_format_documental_type_modal, //* reset functions data format documental type
     errors_format_documental_type,
     data_format_documental_type_watch_form,
+    set_title_button, //* (save or edit state)
+    title_button, //* (save or edit state)
+
+    // ? administrar o buscar tipologias documentales --------------------------------------------->
+    controlBusquedaTipologiasDocumentales,
+    form_data_searched_tipologia_documental,
+    resetBusquedaTipologiasDocumentales,
 
     // ? reset functions data trd --------------------------------------------->
     reset_all_trd,

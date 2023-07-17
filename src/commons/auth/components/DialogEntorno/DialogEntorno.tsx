@@ -1,3 +1,4 @@
+import {useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import PersonIcon from '@mui/icons-material/Person';
 import BussinessIcon from '@mui/icons-material/Business';
@@ -24,7 +25,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DialogEntorno: React.FC = () => {
-  const { open_dialog, userinfo } = useSelector(
+  const { open_dialog, userinfo, representante_legal } = useSelector(
     (state: AuthSlice) => state.auth
   );
 
@@ -45,6 +46,13 @@ export const DialogEntorno: React.FC = () => {
       dispatch(set_authenticated());
     }
   };
+
+  useEffect(() => {
+    console.log('user infoooo -----')
+    console.log(userinfo)
+    console.log(representante_legal)
+    console.log('user infoooo -----')
+  }, [userinfo])
 
   return (
     <Dialog onClose={handle_close} open={open_dialog}>

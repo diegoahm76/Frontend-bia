@@ -275,7 +275,7 @@ const BuscarModelo = ({
               <FormButton
                 variant_button="contained"
                 on_click_function={handle_open_select_model}
-                icon_class={<SearchIcon />}
+                icon_class={button_icon_class ?? <SearchIcon />}
                 label={button_submit_label ?? 'BUSCAR'}
                 type_button="button"
                 disabled={button_submit_disabled ?? false}

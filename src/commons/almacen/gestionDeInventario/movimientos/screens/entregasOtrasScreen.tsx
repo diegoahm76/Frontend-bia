@@ -15,6 +15,7 @@ import { type IObjEntrega } from '../interfaces/entregas';
 import SeleccionarEntrega from '../components/SeleccionarEntrega';
 import SeleccionarBodega from '../components/SeleccionarBodega';
 import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
+import Seccion from '../components/SeccionPrimera';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -41,9 +42,6 @@ const EntregaScreen = () => {
                     get_person_id_entrega(current_entrega.id_persona_despacha)
                 ); // get persona despacho
         }
-
-
-
     }, [current_entrega]);
 
     useEffect(() => {
@@ -51,8 +49,6 @@ const EntregaScreen = () => {
             void dispatch(get_bienes_entrada(current_entrega.id_entrada_almacen));
         }
     }, [current_entrega.id_entrada_almacen]);
-
-
 
     useEffect(() => {
         void dispatch(get_uni_organizacional());
@@ -89,7 +85,6 @@ const EntregaScreen = () => {
 
     return (
 
-
         <Grid
             container
             spacing={2}
@@ -103,7 +98,13 @@ const EntregaScreen = () => {
 
             }}
         >
+            <Grid item xs={12} marginY={2}>
+                <Seccion
+                    control_entrega={control_entrega}
+                    get_values={get_values}
 
+                />
+            </Grid>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarEntrega
                     control_entrega={control_entrega}

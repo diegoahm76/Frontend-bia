@@ -35,7 +35,7 @@ import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import AnularEliminar from '../../componentes/AnularEliminar';
 import Block from '@mui/icons-material/Block';
 import Limpiar from '../../componentes/Limpiar';
@@ -334,14 +334,16 @@ export function IngresoCuarentenaScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Ingreso a cuarentena de material vegetal"></Title>
         </Grid>
-        {current_plant_quarantine.cuarentena_anulada ??
-          (false && (
-            <Chip
-              label={`Este registro de cuarentena fue anulado el ${current_plant_quarantine.fecha_anulacion}`}
-              color="error"
-              variant="outlined"
-            />
-          ))}
+        {current_plant_quarantine.cuarentena_anulada === true && (
+          <Chip
+            label={`Este registro de cuarentena fue anulado el ${
+              current_plant_quarantine.fecha_anulacion?.slice(0, 10) ?? ''
+            }`}
+            color="error"
+            variant="outlined"
+          />
+        )}
+        <SeleccionarLoteSiembra />
         <SeleccionarIngresoCuarentena
           control_cuarentena={control_cuarentena}
           get_values={get_values}
@@ -349,11 +351,10 @@ export function IngresoCuarentenaScreen(): JSX.Element {
           set_open_modal={set_open_search_modal}
         />
 
-        {current_nursery.id_vivero !== null && <SeleccionarLoteSiembra />}
         {current_plant_quarantine.id_cuarentena_mat_vegetal !== null && (
           <Grid container direction="row" padding={2} spacing={2}>
             {plant_quarantine_lifting.length > 0 && (
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4}>
                 <BuscarModelo
                   set_current_model={null}
                   row_id={'id_item_levanta_cuarentena'}
@@ -367,12 +368,13 @@ export function IngresoCuarentenaScreen(): JSX.Element {
                   modal_form_filters={[]}
                   button_add_selection_hidden={true}
                   md_button={12}
-                  button_icon_class={<PlaylistAddCheckIcon />}
+                  button_icon_class={<ManageSearchIcon />}
+                  border_show={false}
                 />
               </Grid>
             )}
             {plant_quarantine_mortalities.length > 0 && (
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4}>
                 <BuscarModelo
                   set_current_model={null}
                   row_id={'id_item_baja_viveros'}
@@ -386,7 +388,8 @@ export function IngresoCuarentenaScreen(): JSX.Element {
                   modal_form_filters={[]}
                   button_add_selection_hidden={true}
                   md_button={12}
-                  button_icon_class={<PlaylistAddCheckIcon />}
+                  button_icon_class={<ManageSearchIcon />}
+                  border_show={false}
                 />
               </Grid>
             )}
@@ -396,7 +399,7 @@ export function IngresoCuarentenaScreen(): JSX.Element {
           {!(current_plant_quarantine.cuarentena_anulada === true) && (
             <>
               {(current_plant_quarantine.cantidad_levantada ?? 0) === 0 &&
-                (current_plant_quarantine.cantidad_levantada ?? 0) === 0 && (
+                (current_plant_quarantine.cantidad_bajas ?? 0) === 0 && (
                   <Grid item xs={12} md={3}>
                     <FormButton
                       variant_button="contained"
@@ -427,109 +430,111 @@ export function IngresoCuarentenaScreen(): JSX.Element {
               variant_button={'outlined'}
             />
           </Grid>
-          {current_plant_quarantine.id_cuarentena_mat_vegetal !== null && (
-            <Grid item xs={12} md={3}>
-              <AnularEliminar
-                action={
-                  current_plant_quarantine.cuarentena_anulada === true
-                    ? 'Detalle anulación'
-                    : 'Anular'
-                }
-                button_icon_class={<Block />}
-                button_disabled={false}
-                modal_title={
-                  current_plant_quarantine.cuarentena_anulada === true
-                    ? 'Detalle anulación'
-                    : 'Anular ingreso a cuarentena'
-                }
-                button_submit_label={'Anular'}
-                button_submit_disabled={
-                  current_plant_quarantine.cuarentena_anulada
-                }
-                button_submit_icon_class={<Block />}
-                button_submit_action={handle_submit(on_submit_annul)}
-                modal_inputs={[
-                  {
-                    datum_type: 'select_controller',
-                    xs: 12,
-                    md: 4,
-                    control_form: control_cuarentena,
-                    control_name: 'id_vivero',
-                    default_value: current_plant_quarantine.id_vivero,
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Vivero requerido',
+          {current_plant_quarantine.id_cuarentena_mat_vegetal !== null &&
+            (current_plant_quarantine.cantidad_levantada ?? 0) === 0 &&
+            (current_plant_quarantine.cantidad_bajas ?? 0) === 0 && (
+              <Grid item xs={12} md={3}>
+                <AnularEliminar
+                  action={
+                    current_plant_quarantine.cuarentena_anulada === true
+                      ? 'Detalle anulación'
+                      : 'Anular'
+                  }
+                  button_icon_class={<Block />}
+                  button_disabled={false}
+                  modal_title={
+                    current_plant_quarantine.cuarentena_anulada === true
+                      ? 'Detalle anulación'
+                      : 'Anular ingreso a cuarentena'
+                  }
+                  button_submit_label={'Anular'}
+                  button_submit_disabled={
+                    current_plant_quarantine.cuarentena_anulada
+                  }
+                  button_submit_icon_class={<Block />}
+                  button_submit_action={handle_submit(on_submit_annul)}
+                  modal_inputs={[
+                    {
+                      datum_type: 'select_controller',
+                      xs: 12,
+                      md: 4,
+                      control_form: control_cuarentena,
+                      control_name: 'id_vivero',
+                      default_value: current_plant_quarantine.id_vivero,
+                      rules: {
+                        required_rule: {
+                          rule: true,
+                          message: 'Vivero requerido',
+                        },
                       },
+                      label: 'Vivero',
+                      disabled: true,
+                      helper_text: '',
+                      select_options: nurseries,
+                      option_label: 'nombre',
+                      option_key: 'id_vivero',
                     },
-                    label: 'Vivero',
-                    disabled: true,
-                    helper_text: '',
-                    select_options: nurseries,
-                    option_label: 'nombre',
-                    option_key: 'id_vivero',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    person: true,
-                    xs: 12,
-                    md: 4,
-                    control_form: control_cuarentena,
-                    control_name: 'persona_anula',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Debe seleccionar la personas que la creó',
+                    {
+                      datum_type: 'input_controller',
+                      person: true,
+                      xs: 12,
+                      md: 4,
+                      control_form: control_cuarentena,
+                      control_name: 'persona_anula',
+                      default_value: '',
+                      rules: {
+                        required_rule: {
+                          rule: true,
+                          message: 'Debe seleccionar la personas que la creó',
+                        },
                       },
+                      label: 'Anulación realizada por',
+                      type: 'text',
+                      disabled: true,
+                      helper_text: '',
                     },
-                    label: 'Preparación realizada por',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
-                  },
-                  {
-                    datum_type: 'date_picker_controller',
-                    xs: 12,
-                    md: 4,
-                    control_form: control_cuarentena,
-                    control_name:
-                      current_plant_quarantine.cuarentena_anulada === true
-                        ? 'fecha_anulacion'
-                        : 'fecha',
-                    default_value: new Date().toString(),
-                    rules: {
-                      required_rule: { rule: true, message: 'Requerido' },
-                    },
-                    label: 'Fecha actual',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 12,
-                    control_form: control_cuarentena,
-                    control_name: 'justificacion_anulacion',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Observación requerida',
+                    {
+                      datum_type: 'date_picker_controller',
+                      xs: 12,
+                      md: 4,
+                      control_form: control_cuarentena,
+                      control_name:
+                        current_plant_quarantine.cuarentena_anulada === true
+                          ? 'fecha_anulacion'
+                          : 'fecha',
+                      default_value: new Date().toString(),
+                      rules: {
+                        required_rule: { rule: true, message: 'Requerido' },
                       },
+                      label: 'Fecha actual',
+                      type: 'text',
+                      disabled: true,
+                      helper_text: '',
                     },
-                    label: 'Justificación',
-                    type: 'text',
-                    multiline_text: true,
-                    rows_text: 4,
-                    disabled: false,
-                    helper_text: '',
-                  },
-                ]}
-              />
-            </Grid>
-          )}
+                    {
+                      datum_type: 'input_controller',
+                      xs: 12,
+                      md: 12,
+                      control_form: control_cuarentena,
+                      control_name: 'justificacion_anulacion',
+                      default_value: '',
+                      rules: {
+                        required_rule: {
+                          rule: true,
+                          message: 'Observación requerida',
+                        },
+                      },
+                      label: 'Justificación',
+                      type: 'text',
+                      multiline_text: true,
+                      rows_text: 4,
+                      disabled: false,
+                      helper_text: '',
+                    },
+                  ]}
+                />
+              </Grid>
+            )}
         </Grid>
       </Grid>
     </>

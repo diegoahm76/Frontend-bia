@@ -100,7 +100,7 @@ export const initial_satate_current_plant_seed_lot: IObjSeedLot = {
   nombre_bien: '',
 };
 
-const initial_satate_current_plant_quarantine: IObjQuarantine = {
+export const initial_satate_current_plant_quarantine: IObjQuarantine = {
   id_cuarentena_mat_vegetal: null,
   agno_lote: null,
   nro_lote: null,
@@ -128,7 +128,7 @@ export const initial_satate_current_lifting: IObjLifting = {
   id_item_levanta_cuarentena: null,
   realizado_por: '',
   consec_levan_por_cuaren: null,
-  fecha_levantamiento: fecha.toString(),
+  fecha_levantamiento: new Date().toString(),
   fecha_registro: null,
   cantidad_a_levantar: null,
   observaciones: '',
@@ -148,6 +148,7 @@ const initial_state: IMaterialVegetal = {
   current_germination_beds: [],
   planting_goods: [],
   goods: [],
+  goods_aux: [],
   current_good: initial_state_current_good,
   plantings: [],
   current_planting: initial_state_planting,
@@ -208,6 +209,12 @@ export const material_vegetal_slice = createSlice({
     },
 
     set_goods: (
+      state: IMaterialVegetal,
+      action: PayloadAction<IObjGoods[]>
+    ) => {
+      state.goods = action.payload;
+    },
+    set_goods_aux: (
       state: IMaterialVegetal,
       action: PayloadAction<IObjGoods[]>
     ) => {
@@ -302,6 +309,7 @@ export const {
   set_persons,
   set_current_good,
   set_goods,
+  set_goods_aux,
   set_planting_person,
   set_current_nursery,
   set_nurseries,

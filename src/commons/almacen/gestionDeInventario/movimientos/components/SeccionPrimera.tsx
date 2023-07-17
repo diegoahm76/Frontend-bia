@@ -44,7 +44,7 @@ const Seccion = ({ control_entrega, get_values }: IProps) => {
                     form_inputs={[
                         {
                             datum_type: 'title',
-                            title_label: 'INFORMACIÓN DE LA ENTREGA',
+                            title_label: 'ENTREGA DE BIENES DE CONSUMO A VIVERO',
                         },
                         {
                             datum_type: 'input_controller',
@@ -60,18 +60,21 @@ const Seccion = ({ control_entrega, get_values }: IProps) => {
                             helper_text: '',
                         },
 
+
                         {
-                            datum_type: 'input_controller',
+                            datum_type: 'date_picker_controller',
                             xs: 12,
                             md: 6,
                             control_form: control_entrega,
                             control_name: 'fecha_despacho',
                             default_value: '',
-                            rules: {},
-                            label: 'Fecha de Entrega',
-                            type: 'text',
+                            rules: {
+
+                            },
+                            label: 'Fecha de despacho',
                             disabled: true,
                             helper_text: '',
+                            format: 'YYYY-MM-DD',
                         },
                     ]}
                     modal_select_model_title="Buscar despacho"

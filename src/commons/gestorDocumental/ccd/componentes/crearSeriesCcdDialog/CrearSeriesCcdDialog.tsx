@@ -67,7 +67,6 @@ const CrearSeriesCcdDialog = ({
   //! const data allow us to watch the values of the form
   const data = watch();
 
-
   //! this use effect is to set the title of the button and the values of the form
   useEffect(() => {
     if (serie_ccd_current !== null) {
@@ -144,11 +143,11 @@ const CrearSeriesCcdDialog = ({
 
   const handleAddIndependentSeries = (params: any) => {
     // ? console.log(params.row);
-    void dispatch(create_indepent_series_service(params.row.id_serie_doc)).then(() => {
-      dispatch(
-        getCatalogoSeriesYSubseries(ccd_current.id_ccd)
-      );
-    })
+    void dispatch(create_indepent_series_service(params.row.id_serie_doc)).then(
+      () => {
+        dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+      }
+    );
   };
 
   const columns: GridColDef[] = [
@@ -174,7 +173,12 @@ const CrearSeriesCcdDialog = ({
       flex: 1,
       renderCell: (params: any) => (
         <>
-          <IconButton onClick={() => handleOnClick_prepareEdit(params)}>
+          <IconButton
+            sx={{
+              visibility: ccd_current?.actual ? ' hidden ' : ''
+            }}
+            onClick={() => handleOnClick_prepareEdit(params)}
+          >
             <Avatar sx={AvatarStyles} variant="rounded">
               <EditIcon
                 titleAccess="Editar serie"
@@ -182,7 +186,12 @@ const CrearSeriesCcdDialog = ({
               />
             </Avatar>
           </IconButton>
-          <IconButton onClick={() => void handleDeleteSeries(params)}>
+          <IconButton
+            sx={{
+              visibility: ccd_current?.actual ? ' hidden ' : ''
+            }}
+            onClick={() => void handleDeleteSeries(params)}
+          >
             <Avatar sx={AvatarStyles} variant="rounded">
               <DeleteIcon
                 titleAccess="Eliminar serie"
@@ -240,7 +249,14 @@ const CrearSeriesCcdDialog = ({
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              sx={{
+                visibility: ccd_current?.actual ? ' hidden ' : ''
+              }}
+            >
               <TextField
                 margin="dense"
                 fullWidth
@@ -252,7 +268,14 @@ const CrearSeriesCcdDialog = ({
               />
               {errors.nombre !== null && <p>{errors.nombre?.message}</p>}
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              sx={{
+                display: ccd_current?.actual ? ' none ' : ''
+              }}
+            >
               <TextField
                 margin="dense"
                 fullWidth
