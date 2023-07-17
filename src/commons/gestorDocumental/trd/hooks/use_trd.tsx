@@ -260,7 +260,6 @@ export const use_trd = (): any => {
     list_finished_ccd,
     // ? list of formats by documental type --------------------------------------------->
     set_list_format_documental_type,
-    list_format_documental_type,
-    
+    list_format_documental_type
   };
 };

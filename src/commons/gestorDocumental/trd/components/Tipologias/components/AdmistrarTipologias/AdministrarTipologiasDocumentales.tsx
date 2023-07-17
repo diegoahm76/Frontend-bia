@@ -40,13 +40,21 @@ import { use_trd } from '../../../../hooks/use_trd';
 
 // * react select
 import Select from 'react-select';
+import { get_formatos_documentales_by_code } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import { useAppDispatch } from '../../../../../../../hooks';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
+  //* se implmenta el dispatch para las funciones
+  const dispatch = useAppDispatch();
+
   //* se repiten los controladores de la busqueda de tipologias documentales
+  //* se importan los elementos necesarios del hook use_trd
   const {
     controlBusquedaTipologiasDocumentales,
     // form_data_searched_tipologia_documental,
-    resetBusquedaTipologiasDocumentales
+    resetBusquedaTipologiasDocumentales,
+    set_list_format_documental_type,
+    list_format_documental_type
   } = use_trd();
 
   //* context elements that are used in this component
@@ -101,7 +109,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                   name="nombre"
                   control={controlBusquedaTipologiasDocumentales}
                   defaultValue=""
-                  // rules={{ required: false }}
+                  rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
@@ -223,7 +231,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
           <DialogTitle>Medios documentales y formatos asociados</DialogTitle>
           <DialogContent
             sx={{
-              height: '20f0px',
+              height: '225px',
               mb: '0px',
               justifyContent: 'center'
             }}
@@ -249,8 +257,25 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         }}
                         value={value}
                         onChange={(selectedOption) => {
-                          console.log(selectedOption);
+                          // *console.log(selectedOption);
                           onChange(selectedOption);
+                          dispatch(
+                            get_formatos_documentales_by_code(
+                              selectedOption.value
+                            )
+                          ).then((res: any) => {
+                            res
+                              ? set_list_format_documental_type(
+                                  res?.map((format: any) => {
+                                    return {
+                                      format,
+                                      label: format.nombre,
+                                      value: format.id_formato_tipo_medio
+                                    };
+                                  })
+                                )
+                              : set_list_format_documental_type([]);
+                          });
                         }}
                         // isDisabled={!control_format_documental_type._formValues.item.value}
                         options={[
@@ -285,6 +310,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 <Controller
                   name="formatos"
                   control={controlBusquedaTipologiasDocumentales}
+                  rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
@@ -294,12 +320,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         multiple
                         fullWidth
                         size="medium"
-                        options={[
-                          { value: 'papel', label: 'Papel' },
-                          { value: 'microfilm', label: 'Microfilm' },
-                          { value: 'microficha', label: 'Microficha' },
-                          { value: 'fotografia', label: 'Fotografía' }
-                        ]}
+                        options={list_format_documental_type ?? []}
                         getOptionLabel={(option: any) => option.label}
                         isOptionEqualToValue={(option: any, value) =>
                           option?.value === value?.value
@@ -313,7 +334,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                             placeholder="Formatos para el medio documental seleccionado"
                           />
                         )}
-                       /* onChange={(event, value) => {
+                        /* onChange={(event, value) => {
                           console.log(value);
                         }} */
                       />
