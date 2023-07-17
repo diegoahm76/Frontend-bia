@@ -43,7 +43,7 @@ import { use_trd } from '../../../../hooks/use_trd';
 import Select from 'react-select';
 import { get_formatos_documentales_by_code } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { get_data_format_documental_type } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones
@@ -80,6 +80,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* reset all when the modal is closed
   const resetOnCloseModal = (): any => {
     closeModalAdministracionTipologiasDocumentales();
+    dispatch(get_data_format_documental_type([]));
     set_list_format_documental_type([]);
     resetBusquedaTipologiasDocumentales();
   };
@@ -128,7 +129,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
-                      disabled={tipologias_documental_current?.item_ya_usado ?? false}
+                      disabled={
+                        tipologias_documental_current?.item_ya_usado ?? false
+                      }
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
