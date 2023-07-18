@@ -56,11 +56,13 @@ export const ActualizarPozo: React.FC<IProps> = ({
   };
 
   useEffect(() => {
-    set_value('nombre', data?.nombre);
-    set_value('activo', data?.activo);
-    set_value('cod_pozo', data?.cod_pozo);
-    set_value('descripcion', data?.descripcion)
-  }, []);
+    setTimeout(() => {
+      set_value('nombre', data?.nombre);
+      set_value('activo', data?.activo);
+      set_value('cod_pozo', data?.cod_pozo);
+      set_value('descripcion', data?.descripcion);
+    }, 100);
+  }, [data, reset]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

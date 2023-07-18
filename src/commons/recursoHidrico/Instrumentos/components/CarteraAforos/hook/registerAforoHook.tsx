@@ -2,9 +2,23 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
 import type { Dayjs } from 'dayjs';
+import { useForm } from 'react-hook-form';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const register_aforo_hook = () => {
+export const use_register_aforo_hook = () => {
+
+  // use form
+  
+  const {
+    control: control_cartera_aforo,
+    watch: watch_cartera_aforo,
+    // register,
+    // handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const watch_aforo = watch_cartera_aforo();
+
   // Datos generales
 
   const [fecha_aforo, set_fecha_aforo] = useState<Dayjs | null>(null);
@@ -79,6 +93,12 @@ export const register_aforo_hook = () => {
   };
 
   return {
+    // use form cartera de aforo
+    control_cartera_aforo,
+    watch_aforo,
+    errors,
+
+    // general
     fecha_aforo,
     tipo_aforo_value,
     row_aforo,

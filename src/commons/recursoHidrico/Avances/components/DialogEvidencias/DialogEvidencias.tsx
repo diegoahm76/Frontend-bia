@@ -4,6 +4,7 @@ import {
   type Dispatch,
   type SetStateAction,
   useContext,
+  useState,
 } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import {
@@ -20,6 +21,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { Title } from '../../../../../components/Title';
 import { DataContext } from '../../context/contextData';
 import '../../css/styles.css';
+import type { Evidencia } from '../../Interfaces/interfaces';
 
 interface IProps {
   is_modal_active: boolean;
@@ -28,47 +30,40 @@ interface IProps {
 
 const columns: GridColDef[] = [
   {
-    field: 'nombre',
-    headerName: 'DESCRIPCIÓN DE LA ACTIVIDAD',
+    field: 'nombre_archivo',
+    headerName: 'NOMBRE ARCHIVO',
     sortable: true,
-    width: 500,
-    renderCell: (params) => <div className="container">{params.value}</div>,
+    width: 400,
   },
-  {
-    field: 'fecha_registro',
-    headerName: 'FECHA DE REGISTRO',
-    sortable: true,
-    width: 200,
-  }
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DialogActividades: React.FC<IProps> = ({
+export const DialogEvidencias: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
-  const { id_proyecto, rows_actividades, fetch_data_actividades } =
-    useContext(DataContext);
+  const { info_avance } = useContext(DataContext);
+
+  const [rows_evidencia, set_rows_evidencia] = useState<Evidencia[]>([]);
+
+  useEffect(() => {
+    set_rows_evidencia(info_avance?.evidencias ?? []);
+  }, [info_avance]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   };
 
-  useEffect(() => {
-    if (is_modal_active && id_proyecto) {
-      void fetch_data_actividades();
-    }
-  }, [is_modal_active]);
   return (
     <>
       <Dialog
         open={is_modal_active}
         onClose={handle_close}
         fullWidth
-        maxWidth={'md'}
+        maxWidth={'sm'}
       >
         <DialogTitle>
-          <Title title="ACTIVIDADES DEL PROYECTO" />
+          <Title title="LISTADO DE EVIDENCIAS" />
         </DialogTitle>
         <Divider />
         <Grid
@@ -87,15 +82,14 @@ export const DialogActividades: React.FC<IProps> = ({
           }}
         >
           <Grid item xs={12}>
-            {rows_actividades.length > 0 ? (
+            {rows_evidencia.length > 0 ? (
               <DataGrid
                 autoHeight
-                rows={rows_actividades}
+                rows={rows_evidencia}
                 columns={columns}
-                getRowId={(row) => row.id_proyecto}
+                getRowId={(row) => row.id_evidencia_avance}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                rowHeight={100}
               />
             ) : (
               <Grid item xs={12}>

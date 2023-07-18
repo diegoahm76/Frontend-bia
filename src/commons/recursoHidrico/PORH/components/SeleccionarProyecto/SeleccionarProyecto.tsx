@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import Grid from '@mui/material/Grid';
@@ -150,6 +151,15 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
       headerName: 'DESCRIPCIÓN',
       sortable: true,
       width: 300,
+    },
+    {
+      field: 'fecha_actual',
+      headerName: 'FECHA DE REGISTRO',
+      width: 200,
+      renderCell: () => {
+        const fechaActual = new Date().toLocaleDateString();
+        return <span>{fechaActual}</span>;
+      },
     },
     {
       field: 'ACCIONES',
@@ -507,9 +517,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
                     variant="contained"
                     color="success"
                     type="submit"
-                    disabled={
-                      is_saving
-                    }
+                    disabled={is_saving}
                     loading={is_saving}
                   >
                     Actualizar

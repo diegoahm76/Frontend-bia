@@ -68,58 +68,18 @@ export const ParametrosLabScreen: React.FC = () => {
       },
     },
     {
-      field: 'precargado',
-      headerName: 'PRECARGADO',
-      sortable: true,
-      width: 120,
-      renderCell: (params) => {
-        return params.row.precargado === true ? (
-          <Chip
-            size="small"
-            label="Activo"
-            color="success"
-            variant="outlined"
-          />
-        ) : (
-          <Chip
-            size="small"
-            label="Inactivo"
-            color="error"
-            variant="outlined"
-          />
-        );
-      },
-    },
-    {
-      field: 'item_ya_usado',
-      headerName: 'ITEM YA USADO',
-      sortable: true,
-      width: 120,
-      renderCell: (params) => {
-        return params.row.item_ya_usado === true ? (
-          <Chip
-            size="small"
-            label="Activo"
-            color="success"
-            variant="outlined"
-          />
-        ) : (
-          <Chip
-            size="small"
-            label="Inactivo"
-            color="error"
-            variant="outlined"
-          />
-        );
-      },
-    },
-    {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
       width: 200,
       renderCell: (params) => (
         <>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              handle_open_editar();
+              set_parametros(params.row);
+              console.log(params.row);
+            }}
+          >
             <Avatar
               sx={{
                 width: 24,
@@ -131,10 +91,6 @@ export const ParametrosLabScreen: React.FC = () => {
             >
               <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                onClick={() => {
-                  handle_open_editar();
-                  set_parametros(params.row);
-                }}
               />
             </Avatar>
           </IconButton>
@@ -171,8 +127,19 @@ export const ParametrosLabScreen: React.FC = () => {
       ),
     },
   ];
+
+  const initial_state: Parametros = {
+    id_parametro: 0,
+    cod_tipo_parametro: '',
+    unidad_de_medida: '',
+    nombre: '',
+    activo: true,
+    precargado: false,
+    item_ya_usado: false,
+  };
+
   const [rows, set_rows] = useState<Parametros[]>([]);
-  const [parametros, set_parametros] = useState<Parametros>();
+  const [parametros, set_parametros] = useState(initial_state);
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
 
@@ -291,7 +258,7 @@ export const ParametrosLabScreen: React.FC = () => {
         set_is_modal_active={set_is_editar}
         get_data={get_traer_parametros}
         data={
-          parametros ?? {
+          parametros /* ?? {
             id_parametro: 0,
             cod_tipo_parametro: '',
             nombre: '',
@@ -299,7 +266,7 @@ export const ParametrosLabScreen: React.FC = () => {
             precargado: false,
             activo: false,
             item_ya_usado: false,
-          }
+          } */
         }
       />
     </>
