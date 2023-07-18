@@ -44,10 +44,14 @@ import { use_trd } from '../../../../hooks/use_trd';
 import Select from 'react-select';
 import {
   create_tipologia_documental_service,
-  get_formatos_documentales_by_code
+  get_formatos_documentales_by_code,
+  update_tipologia_documental_service
 } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { get_data_format_documental_type } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import {
+  get_current_tipologia_documental_action,
+  get_data_format_documental_type
+} from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones
@@ -55,11 +59,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   const { tipologias_documental_current } = useAppSelector(
     (state: any) => state.trd_slice
   );
-    console.log(`
-    tipologias_documental_current
-    `,
-    tipologias_documental_current
-    );
 
   //* se repiten los controladores de la busqueda de tipologias documentales
   //* se importan los elementos necesarios del hook use_trd
@@ -85,33 +84,46 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     openModalBusquedaTipologiasDocumentales
   } = useContext(ModalContextTRD);
 
+  const options = [
+    { value: 'F', label: 'Físico' },
+    { value: 'E', label: 'Electrónico' },
+    { value: 'H', label: 'Híbrido' }
+  ];
+
   //! useEffects
 
   useEffect(() => {
-    console.log(`hola`);
-  if (tipologias_documental_current) {
-    console.log(`
-    tipologias_documental_current
-    `);
-    console.log(tipologias_documental_current);
-    console.log(`
-    tipologias_documental_current
-    `);
-    resetBusquedaTipologiasDocumentales({
-      nombre: tipologias_documental_current.nombre ? tipologias_documental_current.nombre : "",
-      activo: tipologias_documental_current.activo ? tipologias_documental_current.activo : false,
-      cod_tipo_medio_doc: tipologias_documental_current.cod_tipo_medio_doc ? tipologias_documental_current.cod_tipo_medio_doc : "",
-      id_tipologia_documental:
-        tipologias_documental_current.id_tipologia_documental ? tipologias_documental_current.id_tipologia_documental : 0,
-      item_ya_usado: tipologias_documental_current.item_ya_usado ? tipologias_documental_current.item_ya_usado : false,
-    });
-  }
-}, [tipologias_documental_current]);
+    if (tipologias_documental_current) {
+      resetBusquedaTipologiasDocumentales({
+        nombre: tipologias_documental_current.nombre
+          ? tipologias_documental_current.nombre
+          : '',
+        activo: tipologias_documental_current.activo
+          ? tipologias_documental_current.activo
+          : false,
+        cod_tipo_medio_doc: tipologias_documental_current.cod_tipo_medio_doc
+          ? options.find(
+              (item: any) =>
+                item.value === tipologias_documental_current.cod_tipo_medio_doc
+            )
+          : '',
+        id_tipologia_documental:
+          tipologias_documental_current.id_tipologia_documental
+            ? tipologias_documental_current.id_tipologia_documental
+            : 0,
+        item_ya_usado: tipologias_documental_current.item_ya_usado
+          ? tipologias_documental_current.item_ya_usado
+          : false
+      });
+      set_title_button_administrar_tipologias('Actualizar');
+    }
+  }, [tipologias_documental_current]);
 
   //* reset all when the modal is closed
   const resetOnCloseModal = (): any => {
     closeModalAdministracionTipologiasDocumentales();
     dispatch(get_data_format_documental_type([]));
+    dispatch(get_current_tipologia_documental_action(null));
     set_list_format_documental_type([]);
     resetBusquedaTipologiasDocumentales();
   };
@@ -134,7 +146,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   const create_tipologia = () => {
     const data = {
       nombre: form_data_searched_tipologia_documental.nombre,
-      formatos: form_data_searched_tipologia_documental.formatos.map(
+      formatos: form_data_searched_tipologia_documental?.formatos?.map(
         (item: any) => item.value
       ),
       cod_tipo_medio_doc:
@@ -146,6 +158,35 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         if (response?.success) {
           clearAutocomplete();
           resetBusquedaTipologiasDocumentales();
+        }
+        // Handle success response
+      })
+      .catch((error: any) => {
+        console.log(error);
+        // Handle error response
+      });
+  };
+
+  const edit_tipologia = () => {
+    const data = {
+      nombre: form_data_searched_tipologia_documental.nombre,
+      formatos: form_data_searched_tipologia_documental?.formatos?.map(
+        (item: any) => item.value
+      ),
+      activo: form_data_searched_tipologia_documental.activo,
+      cod_tipo_medio_doc:
+        form_data_searched_tipologia_documental.cod_tipo_medio_doc.value,
+      id_tipologia_documental:
+        form_data_searched_tipologia_documental.id_tipologia_documental
+    };
+
+    dispatch(update_tipologia_documental_service(data))
+      .then((response: any) => {
+        if (response?.success) {
+          clearAutocomplete();
+          resetBusquedaTipologiasDocumentales();
+          set_title_button_administrar_tipologias('Guardar');
+          dispatch(get_current_tipologia_documental_action(null));
         }
         // Handle success response
       })
@@ -169,7 +210,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
             e.preventDefault();
             title_button_administrar_tipologias === 'Guardar'
               ? create_tipologia()
-              : console.log('actualizar');
+              : edit_tipologia();
           }}
         >
           <DialogTitle>Administración de Tipologias Documentales</DialogTitle>
@@ -341,11 +382,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                           });
                         }}
                         // isDisabled={!control_format_documental_type._formValues.item.value}
-                        options={[
-                          { value: 'F', label: 'Físico' },
-                          { value: 'E', label: 'Electrónico' },
-                          { value: 'H', label: 'Híbrido' }
-                        ]}
+                        options={options}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -469,6 +506,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 onClick={() => {
                   resetBusquedaTipologiasDocumentales();
                   clearAutocomplete();
+                  dispatch(get_current_tipologia_documental_action(null));
                   set_title_button_administrar_tipologias('Guardar');
                   console.log(
                     'limpiando admistrador de tipologías documentales'

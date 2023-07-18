@@ -83,7 +83,7 @@ export const trd_slice = createSlice({
       state: any,
       action: PayloadAction<any>
     ) => {
-      state.current_tipologia_documental = action.payload;
+      state.tipologias_documental_current = action.payload;
     },
 
     //! catalogo TRD --- I need this information to show the data in the table and administre the data (catalogo)

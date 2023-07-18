@@ -316,8 +316,11 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
 
 export const create_tipologia_documental_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
-
-    if(!bodyPost.nombre || !bodyPost.cod_tipo_medio_doc || !bodyPost.formatos){
+    if (
+      !bodyPost.nombre ||
+      !bodyPost.cod_tipo_medio_doc ||
+      !bodyPost.formatos
+    ) {
       control_error('Todos los campos son obligatorios');
       return;
     }
@@ -337,14 +340,26 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
   };
 };
 
-
 // ? update documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
 export const update_tipologia_documental_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
+    if (
+      !bodyPost.nombre ||
+      !bodyPost.cod_tipo_medio_doc ||
+      !bodyPost.formatos
+    ) {
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
     try {
       const { data } = await api.put(
-        `gestor/trd/update/tipologia/documental/${bodyPost.id}/`,
-        bodyPost
+        `gestor/trd/update/tipologia/documental/${bodyPost.id_tipologia_documental}/`,
+        {
+          nombre: bodyPost.nombre,
+          cod_tipo_medio_doc: bodyPost.cod_tipo_medio_doc,
+          formatos: bodyPost.formatos,
+          activo: bodyPost.activo
+        }
       );
       control_success(data.detail);
       return data;
@@ -370,10 +385,8 @@ export const delete_tipologia_documental_service = (id: any): any => {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
-
   };
 };
-
 
 //! ---------- At this point I start the develop of: catalogo TRD (administrate TRD) ----------->
 

@@ -34,7 +34,7 @@ import {
 import { columns } from './utils/columns';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import {
-  get_data_format_documental_type_current,
+  get_current_tipologia_documental_action,
   get_data_tipologias_documentales
 } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../hooks/use_trd';
@@ -105,20 +105,9 @@ export const BusquedaTipologias = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              /* reset_format_documental_type({
-                  nombre: params.row.nombre,
-                  'cod-tipo-medio': {
-                    label: params.row.tipo_medio_doc,
-                    value: 0,
-                    'cod-tipo-medio': params.row.cod_tipo_medio_doc
-                  },
-                  activo: params.row.activo,
-                  id_formato_tipo_medio: params.row.id_formato_tipo_medio
-                });
-                set_title_button('Actualizar'); */
-              dispatch(get_data_format_documental_type_current(params.row));
               closeModalBusquedaTipologiasDocumentales();
               openModalAdministracionTipologiasDocumentales();
+              dispatch(get_current_tipologia_documental_action(params.row));
               console.log('params edit formato', params.row);
             }}
           >
