@@ -1,6 +1,6 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IObjEntrega, IEntrega, IObjBienEntrega, TipoEntrada, IObjBienesEntrada, IObjEntrada } from '../../interfaces/entregas';
+import type { IObjEntrega, IEntrega, IObjBienEntrega, TipoEntrada, IObjBienesEntrada, IObjEntrada, IObjBienesEntradaAux } from '../../interfaces/entregas';
 import { type Persona } from '../../../../../../interfaces/globalModels';
 
 const initial_state_person: Persona = {
@@ -55,6 +55,15 @@ export const initial_state_entrada: IObjEntrada = {
     id_creador: null,
     id_persona_ult_act_dif_creador: null,
     id_persona_anula: null,
+
+}
+
+export const initial_state_bien_selected: IObjBienesEntrada = {
+    id_entrada_almacen: null,
+    id_bien: null,
+    cantidad_entrante: null,
+    codigo_bien: null,
+    nombre_bien: null,
 }
 
 export const initial_state: IEntrega = {
@@ -68,6 +77,8 @@ export const initial_state: IEntrega = {
     bienes_entrada: [],
     current_entrada: initial_state_entrada,
     entradas: [],
+    bien_selected: initial_state_bien_selected,
+    bienes_entrada_aux: []
 
 
 }
@@ -135,10 +146,24 @@ export const entrega_slice = createSlice({
             state: IEntrega,
             action: PayloadAction<IObjEntrada>
         ) => {
-            console.log('Valor de current_entrada:', action.payload);
             state.current_entrada = action.payload;
 
         },
+        set_bien_selected: (
+            state: IEntrega,
+            action: PayloadAction<IObjBienesEntrada>
+        ) => {
+            state.bien_selected = action.payload;
+
+        },
+        set_bienes_entrada_aux: (
+            state: IEntrega,
+            action: PayloadAction<IObjBienesEntradaAux[]>
+        ) => {
+            state.bienes_entrada_aux = action.payload;
+
+        },
+
 
 
 
@@ -148,4 +173,4 @@ export const entrega_slice = createSlice({
 })
 
 export const {
-    set_persona_entrega, set_nro_entrega, set_entregas, set_current_entrega, set_bienes_entrega, set_current_bien_entrega, set_tipo_entrada, set_bienes_entrada, set_current_entrada, set_entradas } = entrega_slice.actions;
+    set_persona_entrega, set_nro_entrega, set_entregas, set_current_entrega, set_bienes_entrega, set_current_bien_entrega, set_tipo_entrada, set_bienes_entrada, set_current_entrada, set_entradas, set_bienes_entrada_aux, set_bien_selected } = entrega_slice.actions;
