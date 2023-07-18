@@ -37,7 +37,7 @@ export const DownloadButton = ({
         download={fileName}
       />
       <Button
-        fullWidth
+        // fullWidth
         variant="contained"
         disabled={condition}
         onClick={handleDownload}
