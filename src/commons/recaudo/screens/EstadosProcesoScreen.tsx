@@ -12,12 +12,13 @@ import { api } from "../../../api/axios";
 import { CrearEtapaModal } from "../components/estadosProceso/CrearEtapaModal";
 import { NotificationModal } from "../components/NotificationModal";
 import { CrearCategoriaModal } from "../components/estadosProceso/CrearCategoriaModal";
+import { CollapsibleButton } from "../components/CollapsibleButton";
 // import type { GridRenderCellParams } from "@mui/x-data-grid";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstadosProcesoScreen: React.FC = () => {
   const [rows_etapas, set_rows_etapas] = useState<EtapaProceso[]>([]);
-  const [rows_atributos_etapa, set_rows_atributos_etapa] = useState<AtributoEtapa[]>([]);
+  const [rows_atributos_etapa, set_rows_atributos_etapa] = useState<AtributoEtapa[][]>([]);
   const [rows_categorias_atributos, set_rows_categorias_atributos] = useState<CategoriaAtributo[]>([]);
   const [open_atributo_modal, set_open_atributo_modal] = useState<boolean>(false);
   const [open_etapa_modal, set_open_etapa_modal] = useState<boolean>(false);
@@ -103,10 +104,16 @@ export const EstadosProcesoScreen: React.FC = () => {
       flex: 1,
     },
     {
-      field: 'tipo_atributo',
+      field: 'id_tipo',
       headerName: 'Tipo de Atributo',
       minWidth: 110,
       flex: 1,
+      valueGetter: (params) => {
+        if (!params.value){
+          return params.value;
+        }
+        return params.value.tipo;
+      }
     },
     {
       field: 'obligatorio',
@@ -121,10 +128,16 @@ export const EstadosProcesoScreen: React.FC = () => {
       }
     },
     {
-      field: 'opciones',
-      headerName: 'Opciones',
+      field: 'id_categoria',
+      headerName: 'Categoría',
       minWidth: 100,
       flex: 1,
+      valueGetter: (params) => {
+        if (!params.value) {
+          return params.value;
+        }
+        return params.value.categoria;
+      }
     },
   ];
 
@@ -170,28 +183,28 @@ export const EstadosProcesoScreen: React.FC = () => {
   const set_atributos_etapa = (id: number): void => {
     api.get(`recaudo/procesos/atributos/${id}`)
       .then((response) => {
-        set_rows_atributos_etapa(response.data.data);
+        group_atributos(response.data.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  // const group_atributos = (atributos: AtributoEtapa[]): void => {
-  //   const categorias_agrupadas: Record<string, AtributoEtapa[]> = {};
+  const group_atributos = (atributos: AtributoEtapa[]): void => {
+    const categorias_agrupadas: Record<string, AtributoEtapa[]> = {};
 
-  //   atributos.forEach(objeto => {
-  //     const categoria = objeto.id_categoria.categoria;
-  //     if (categorias_agrupadas[categoria]) {
-  //       categorias_agrupadas[categoria].push(objeto);
-  //     } else {
-  //       categorias_agrupadas[categoria] = [objeto];
-  //     }
-  //   });
+    atributos.forEach(objeto => {
+      const categoria = objeto.id_categoria.categoria;
+      if (categorias_agrupadas[categoria]) {
+        categorias_agrupadas[categoria].push(objeto);
+      } else {
+        categorias_agrupadas[categoria] = [objeto];
+      }
+    });
 
-  //   const nuevo_arreglo = Object.values(categorias_agrupadas);
-  //   set_rows_atributos_etapa(nuevo_arreglo);
-  // };
+    const nuevo_arreglo = Object.values(categorias_agrupadas);
+    set_rows_atributos_etapa(nuevo_arreglo);
+  };
 
   const submit_new_etapa = (etapa: string, descripcion: string): void => {
     api.post('recaudo/procesos/etapas/', {
@@ -331,8 +344,8 @@ export const EstadosProcesoScreen: React.FC = () => {
                     </Button>
                   </Grid>
                 </Stack>
-                <Box sx={{ width: '100%'}}>
-                  <DataGrid
+                <Box sx={{ width: '100%' }}>
+                  {/* <DataGrid
                     density="compact"
                     autoHeight
                     rows={rows_atributos_etapa}
@@ -342,7 +355,22 @@ export const EstadosProcesoScreen: React.FC = () => {
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.id}
                     components={{ Toolbar: GridToolbar }}
-                  />
+                  /> */}
+                  {rows_atributos_etapa.map((arreglo_objetos, index) => (
+                    <CollapsibleButton key={index} categoria={arreglo_objetos[0].id_categoria.categoria}>
+                      <DataGrid
+                        density="compact"
+                        autoHeight
+                        rows={arreglo_objetos}
+                        columns={columns_atributos_etapa}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        getRowId={(row) => row.id}
+                        components={{ Toolbar: GridToolbar }}
+                      />
+                    </CollapsibleButton>
+                  ))}
                 </Box>
               </TabPanel>
 
