@@ -3,11 +3,12 @@ import { Grid, Box, Checkbox, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { type Obligacion } from '../interfaces/interfaces';
+import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
 
 interface RootState {
   obligaciones: {
-    obligaciones: Obligacion[];
+    obligaciones: ObligacionesUsuario;
   }
 }
 
@@ -18,6 +19,66 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
+  const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
+
+  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
+    const selected_index = selected.indexOf(name);
+    let new_selected: readonly string[] = [];
+
+    if (selected_index === -1) {
+      new_selected = new_selected.concat(selected, name);
+    } else if (selected_index === 0) {
+      new_selected = new_selected.concat(selected.slice(1));
+    } else if (selected_index === selected.length - 1) {
+      new_selected = new_selected.concat(selected.slice(0, -1));
+    } else if (selected_index > 0) {
+      new_selected = new_selected.concat(
+        selected.slice(0, selected_index),
+        selected.slice(selected_index + 1),
+      );
+    }
+
+    set_selected(new_selected);
+  };
+
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
+  const intereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(intereses)
+
+  const capital_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(capital)
+
+  useEffect(() => {
+    set_lista_obligaciones(obligaciones.obligaciones)
+  }, [obligaciones.obligaciones])
+
+  useEffect(() => {
+    let sub_capital = 0
+    let sub_intereses = 0
+    for(let i=0; i< lista_obligaciones.length; i++){
+      for(let j=0; j< selected.length; j++){
+        if(lista_obligaciones[i].nombre === selected[j]){
+          sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
+          sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
+          set_capital(sub_capital)
+          set_intereses(sub_intereses)
+        }
+      }
+    }
+    if(selected.length === 0){
+      set_capital(0)
+      set_intereses(0)
+    }
+    set_total(capital + intereses)
+  }, [selected, capital, intereses])
 
   const columns: GridColDef[] = [
     {
@@ -78,21 +139,33 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
       field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'valor_intereses',
       headerName: 'Valor Intereses',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'dias_mora',
@@ -105,46 +178,6 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
       ),
     },
   ];
-
-  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
-    const selected_index = selected.indexOf(name);
-    let new_selected: readonly string[] = [];
-
-    if (selected_index === -1) {
-      new_selected = new_selected.concat(selected, name);
-    } else if (selected_index === 0) {
-      new_selected = new_selected.concat(selected.slice(1));
-    } else if (selected_index === selected.length - 1) {
-      new_selected = new_selected.concat(selected.slice(0, -1));
-    } else if (selected_index > 0) {
-      new_selected = new_selected.concat(
-        selected.slice(0, selected_index),
-        selected.slice(selected_index + 1),
-      );
-    }
-
-    set_selected(new_selected);
-  };
-
-  useEffect(() => {
-    let sub_capital = 0
-    let sub_intereses = 0
-    for(let i=0; i< obligaciones.length; i++){
-      for(let j=0; j< selected.length; j++){
-        if(obligaciones[i].nombre === selected[j]){
-          sub_capital = sub_capital + parseFloat(obligaciones[i].monto_inicial)
-          sub_intereses = sub_intereses + parseFloat(obligaciones[i].valor_intereses)
-          set_capital(sub_capital)
-          set_intereses(sub_intereses)
-        }
-      }
-    }
-    if(selected.length === 0){
-      set_capital(0)
-      set_intereses(0)
-    }
-    set_total(capital + intereses)
-  }, [selected, capital, intereses])
 
   return (
     <>
@@ -165,12 +198,12 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={obligaciones}
+                rows={lista_obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.nro_expediente}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>
@@ -180,31 +213,31 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
             spacing={2}
             sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Capital"
                 size="small"
                 fullWidth
-                value={capital}
+                value={capital_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Intereses"
                 size="small"
                 fullWidth
-                value={intereses}
+                value={intereses_cop}
               />
             </Grid>
-            <Grid item xs={12}  sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"
                 fullWidth
-                value={total}
+                value={total_cop}
               />
             </Grid>
-          </Stack>
+        </Stack>
         </Grid>
       </Grid>
     </>

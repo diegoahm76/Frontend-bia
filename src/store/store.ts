@@ -39,6 +39,7 @@ import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMateria
 import { finished_ccd_slice } from "../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice";
 import { trd_slice } from "./../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice";
 import { entrega_slice } from "../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega";
+import { instrumentos_slice } from "../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice";
 
 const persist_config = {
   key: "macarenia_app",
@@ -82,8 +83,11 @@ const app_reducers = combineReducers({
   // ? trd slices open
   finished_ccd_slice: finished_ccd_slice.reducer,
   trd_slice: trd_slice.reducer,
-  entrega_otros: entrega_slice.reducer,
   // ? trd slices close
+  // ? recurso hidrico slices open
+  instrumentos_slice: instrumentos_slice.reducer,
+  // ? recurso hidrico slices close
+  entrega_otros: entrega_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

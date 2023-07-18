@@ -5,7 +5,7 @@ import {
   Box,
   IconButton,
   Avatar,
-  Chip,
+  // Chip,
   CircularProgress,
   Dialog,
   DialogTitle,
@@ -60,37 +60,39 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const [rows, set_rows] = useState<UsersRol[]>([]);
 
   const columns: GridColDef[] = [
-    {
-      headerName: 'ID',
-      field: 'id_rol',
-      minWidth: 150,
-    },
+    // {
+    //   headerName: 'ID',
+    //   field: 'id_rol',
+    //   minWidth: 150,
+    // },
     {
       headerName: 'Nombre',
       field: 'nombre_rol',
       minWidth: 300,
+      flex: 1,
     },
     {
       headerName: 'Descripción',
       field: 'descripcion_rol',
-      minWidth: 300,
+      minWidth: 300,flex: 1,
     },
-    {
-      headerName: 'Estado',
-      field: 'Rol_sistema',
-      minWidth: 150,
-      renderCell: (params) => {
-        return params.row.Rol_sistema === true ? (
-          <Chip size="small" label="true" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="false" color="error" variant="outlined" />
-        );
-      },
-    },
+    // {
+    //   headerName: 'Estado',
+    //   field: 'Rol_sistema',
+    //   minWidth: 150,
+    //   renderCell: (params) => {
+    //     return params.row.Rol_sistema === true ? (
+    //       <Chip size="small" label="true" color="success" variant="outlined" />
+    //     ) : (
+    //       <Chip size="small" label="false" color="error" variant="outlined" />
+    //     );
+    //   },
+    // },
     {
       headerName: 'Acciones',
       field: 'accion',
       minWidth: 150,
+      flex: 1,
       renderCell: (params: any) => (
         <>
           <IconButton

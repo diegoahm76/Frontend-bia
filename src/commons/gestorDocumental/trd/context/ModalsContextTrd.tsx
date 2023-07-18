@@ -19,13 +19,24 @@ const ModalContextTRD = createContext<ModalContextState>({
   //*
   modalCreacionFormatoTipo: false,
   openModalCreacionFormatoTipo: () => {},
-  closeModalCreacionFormatoTipo: () => {}
+  closeModalCreacionFormatoTipo: () => {},
+  //*
+  modalBusquedaTipologiasDocumentales: false,
+  openModalBusquedaTipologiasDocumentales: () => {},
+  closeModalBusquedaTipologiasDocumentales: () => {},
+  //*
+  createTRDLoadingButton: false,
+  setCreateTRDLoadingButton: () => {},
+  //*
+  modalAdministracionTipologiasDocumentales: false,
+  openModalAdministracionTipologiasDocumentales: () => {},
+  closeModalAdministracionTipologiasDocumentales: () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  //*
+  //* -------------------------------------------------------> MODAL SEARCH TRD
   const openModalModalSearchTRD = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_SEARCH_TRD' });
   }, []);
@@ -34,7 +45,7 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_SEARCH_TRD' });
   }, []);
 
-  //*
+  //* -------------------------------------------------------> MODAL CCD USADOS
   const openModalCCDUsados = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_CCD_USADOS' });
   }, []);
@@ -43,7 +54,7 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_CCD_USADOS' });
   }, []);
 
-  //*
+  //* -------------------------------------------------------> MODAL CREACION FORMATO TIPO
   const openModalCreacionFormatoTipo = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_CREACION_FORMATO_TIPO' });
   }, []);
@@ -51,22 +62,58 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
   const closeModalCreacionFormatoTipo = useCallback(() => {
     dispatch({ type: 'CLOSE_MODAL_CREACION_FORMATO_TIPO' });
   }, []);
+  //* ----------------------------------------> MODAL BUSQUEDA TIPOLOGIAS DOCUMENTALES
+  const openModalBusquedaTipologiasDocumentales = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES' });
+  }, []);
+
+  const closeModalBusquedaTipologiasDocumentales = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES' });
+  }, []);
+
+  //* -------------------------------------> MODAL ADMINISTRACION TIPOLOGIAS DOCUMENTALES
+  const openModalAdministracionTipologiasDocumentales = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES' });
+  }, []);
+
+  const closeModalAdministracionTipologiasDocumentales = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES' });
+  }, []);
+
+  //* -------------------------------------> loading button create TRD
+  const setCreateTRDLoadingButton = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_CREATE_TRD_LOADING_BUTTON', payload: value });
+  }, []);
 
   return (
     <ModalContextTRD.Provider
       value={{
-        //*
+        //* -------------------------------------------> MODAL SEARCH TRD
         modalSearchTRD: state.modalSearchTRD,
         openModalModalSearchTRD,
         closeModalModalSearchTRD,
-        //*
+        //* -------------------------------------------------------> MODAL CCD USADOS
         modalCCDUsados: state.modalCCDUsados,
         openModalCCDUsados,
         closeModalCCDUsados,
-        //*
+        //* -------------------------------------------------------> MODAL CREACION FORMATO TIPO
         modalCreacionFormatoTipo: state.modalCreacionFormatoTipo,
         openModalCreacionFormatoTipo,
-        closeModalCreacionFormatoTipo
+        closeModalCreacionFormatoTipo,
+        //* ----------------------------------------> MODAL BUSQUEDA TIPOLOGIAS DOCUMENTALES
+        modalBusquedaTipologiasDocumentales:
+          state.modalBusquedaTipologiasDocumentales,
+        openModalBusquedaTipologiasDocumentales,
+        closeModalBusquedaTipologiasDocumentales,
+        //* -------------------------------------> MODAL ADMINISTRACION TIPOLOGIAS DOCUMENTALES
+        modalAdministracionTipologiasDocumentales:
+          state.modalAdministracionTipologiasDocumentales,
+        openModalAdministracionTipologiasDocumentales,
+        closeModalAdministracionTipologiasDocumentales,
+
+        //* -------------------------------------> loading button create TRD
+        createTRDLoadingButton: state.createTRDLoadingButton,
+        setCreateTRDLoadingButton
       }}
     >
       {children}

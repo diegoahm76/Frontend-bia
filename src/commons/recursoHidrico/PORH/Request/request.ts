@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { api } from "../../../../api/axios";
 import type { ResponseServer } from "../../../../interfaces/globalModels";
 import type { AxiosResponse } from "axios";
-import type { BusquedaAvanzada, InfoPorh } from "../Interfaces/interfaces";
+import type { BusquedaAvanzada, BusquedaPorhI, InfoPorh } from "../Interfaces/interfaces";
 
 
 export const get_data_id = async (id: number, set_data: any, url: string): Promise<any[]> => {
@@ -28,6 +28,7 @@ export const post_programa = async (
     'hidrico/programas/programa/recurso/hidrico/create/',
     {
       ...form,
+      id_instrumento: form.id_instrumento,
       id_programa: form.id_programa,
       nombre: form.nombre_programa,
       fecha_inicio: dayjs(form.fecha_inicio).format('YYYY-MM-DD'),
@@ -76,6 +77,7 @@ export const editar_programa = async (
     `hidrico/programas/actualizar/programa/${id_programa}/`,
     {
       ...datos,
+      id_instrumento: datos.id_instrumento,
       nombre: datos.nombre_programa,
       fecha_inicio: dayjs(datos.fecha_inicio,).format('YYYY-MM-DD'),
       fecha_fin: dayjs(datos.fecha_fin,).format('YYYY-MM-DD'),
@@ -120,6 +122,13 @@ export const search_avanzada = async ({
 }: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<InfoPorh[]>>> => {
   const url = `hidrico/programas/get/avanzada/programas/?nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_programa=${String(nombre_programa ?? '')}&nombre_PORH=${String(nombre_PORH ?? '')}`;
   return await api.get<ResponseServer<InfoPorh[]>>(url);
+};
+
+export const search_avanzada_porh = async ({
+  nombre_PORH,
+}: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<BusquedaPorhI[]>>> => {
+  const url = `hidrico/programas/programasporh/get-busqueda-avanzada/?nombre=${String(nombre_PORH ?? '')}`;
+  return await api.get<ResponseServer<BusquedaPorhI[]>>(url);
 };
 
 
