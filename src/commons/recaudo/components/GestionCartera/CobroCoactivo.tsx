@@ -1,24 +1,31 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Box, Button, Grid, Stack, TextField } from "@mui/material"
-import { DataGrid, type GridValueFormatterParams, type GridColDef } from "@mui/x-data-grid"
+import { Box, Button, Grid, TextField } from "@mui/material"
+import { DataGrid, type GridValueFormatterParams, type GridColDef, GridToolbar } from "@mui/x-data-grid"
 import { Title } from "../../../../components"
 import type { AtributoEtapa } from "../../interfaces/proceso";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import SaveIcon from '@mui/icons-material/Save';
+import { CollapsibleButton } from "../CollapsibleButton";
 
 interface IProps {
-  rows_atributos: AtributoEtapa[];
+  rows_atributos: AtributoEtapa[][];
+  input_values: Record<string, string>;
+  input_files: Record<string, File>;
   handle_input_change: (event: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   handle_file_change: (event: React.ChangeEvent<HTMLInputElement>, name: string) => void;
-  handle_post_valores_proceso: () => void;
+  handle_post_valores_sin_archivo: (id_atributo: string, value: string) => void;
+  handle_post_valores_con_archivo: (id_atributo: string, value: File) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
-export const CobroCoactivo: React.FC<IProps> = ({ 
-  rows_atributos, 
+export const CobroCoactivo: React.FC<IProps> = ({
+  rows_atributos,
+  input_values,
+  input_files,
   handle_input_change,
   handle_file_change,
-  handle_post_valores_proceso 
+  handle_post_valores_sin_archivo,
+  handle_post_valores_con_archivo
 }: IProps) => {
   const column_detalle: GridColDef[] = [
     {
@@ -58,6 +65,49 @@ export const CobroCoactivo: React.FC<IProps> = ({
           </>
         );
       }
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 200,
+      renderCell: (params) => {
+        if (params.row.id_tipo.tipo === 'Documento') {
+          return (
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              fullWidth
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              disabled={input_files[`${params.row.id}-${params.row.id_tipo.tipo}`].name === ''}
+              onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                handle_post_valores_con_archivo(params.row.id, input_files[`${params.row.id}-${params.row.id_tipo.tipo}`]);
+              }}
+            >
+              Guardar
+            </Button>
+          );
+        }
+        return (
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            startIcon={<SaveIcon />}
+            fullWidth
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            disabled={input_values[`${params.row.id}-${params.row.id_tipo.tipo}`] === ''}
+            onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              handle_post_valores_sin_archivo(params.row.id, input_values[`${params.row.id}-${params.row.id_tipo.tipo}`]);
+            }}
+          >
+            Guardar
+          </Button>
+        );
+      }
     }
   ];
 
@@ -75,7 +125,8 @@ export const CobroCoactivo: React.FC<IProps> = ({
             Subir archivo
             <input
               type="file"
-              style={{display: 'none'}}
+              name={`${id}-${tipo_atributo}`}
+              style={{ display: 'none' }}
               required
               onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
                 handle_file_change(event, `${id}-${tipo_atributo}`);
@@ -146,17 +197,30 @@ export const CobroCoactivo: React.FC<IProps> = ({
         <Grid item xs={12}>
           <Title title="Nuevo estado de Cartera: Cobro Coactivo"></Title>
           <Box
-            component='form'
             sx={{ mt: '20px' }}
-            onSubmit={handle_post_valores_proceso}
           >
-            <DataGrid
+            {/* <DataGrid
               autoHeight
               rows={rows_atributos}
               columns={column_detalle}
               getRowId={(row) => row.id}
-            />
-            <Stack
+            /> */}
+            {rows_atributos.map((arreglo_objetos, index) => (
+              <CollapsibleButton key={index} categoria={arreglo_objetos[0].id_categoria.categoria}>
+                <DataGrid
+                  density="standard"
+                  autoHeight
+                  rows={arreglo_objetos}
+                  columns={column_detalle}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id}
+                  components={{ Toolbar: GridToolbar }}
+                />
+              </CollapsibleButton>
+            ))}
+            {/* <Stack
               direction="row"
               justifyContent="center"
               sx={{
@@ -171,7 +235,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
               >
                 Guardar valores del proceso
               </Button>
-            </Stack>
+            </Stack> */}
           </Box>
         </Grid>
       </Grid>
