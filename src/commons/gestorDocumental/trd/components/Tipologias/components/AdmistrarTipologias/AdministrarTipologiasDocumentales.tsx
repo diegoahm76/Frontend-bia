@@ -5,7 +5,7 @@
 //* borrar las dos de arriba
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   Autocomplete,
   Box,
@@ -55,6 +55,11 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   const { tipologias_documental_current } = useAppSelector(
     (state: any) => state.trd_slice
   );
+    console.log(`
+    tipologias_documental_current
+    `,
+    tipologias_documental_current
+    );
 
   //* se repiten los controladores de la busqueda de tipologias documentales
   //* se importan los elementos necesarios del hook use_trd
@@ -80,7 +85,28 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     openModalBusquedaTipologiasDocumentales
   } = useContext(ModalContextTRD);
 
-  //* useForm
+  //! useEffects
+
+  useEffect(() => {
+    console.log(`hola`);
+  if (tipologias_documental_current) {
+    console.log(`
+    tipologias_documental_current
+    `);
+    console.log(tipologias_documental_current);
+    console.log(`
+    tipologias_documental_current
+    `);
+    resetBusquedaTipologiasDocumentales({
+      nombre: tipologias_documental_current.nombre ? tipologias_documental_current.nombre : "",
+      activo: tipologias_documental_current.activo ? tipologias_documental_current.activo : false,
+      cod_tipo_medio_doc: tipologias_documental_current.cod_tipo_medio_doc ? tipologias_documental_current.cod_tipo_medio_doc : "",
+      id_tipologia_documental:
+        tipologias_documental_current.id_tipologia_documental ? tipologias_documental_current.id_tipologia_documental : 0,
+      item_ya_usado: tipologias_documental_current.item_ya_usado ? tipologias_documental_current.item_ya_usado : false,
+    });
+  }
+}, [tipologias_documental_current]);
 
   //* reset all when the modal is closed
   const resetOnCloseModal = (): any => {
@@ -105,6 +131,30 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     }
   };
 
+  const create_tipologia = () => {
+    const data = {
+      nombre: form_data_searched_tipologia_documental.nombre,
+      formatos: form_data_searched_tipologia_documental.formatos.map(
+        (item: any) => item.value
+      ),
+      cod_tipo_medio_doc:
+        form_data_searched_tipologia_documental.cod_tipo_medio_doc.value
+    };
+
+    dispatch(create_tipologia_documental_service(data))
+      .then((response: any) => {
+        if (response?.success) {
+          clearAutocomplete();
+          resetBusquedaTipologiasDocumentales();
+        }
+        // Handle success response
+      })
+      .catch((error: any) => {
+        console.log(error);
+        // Handle error response
+      });
+  };
+
   return (
     <>
       <Dialog
@@ -117,23 +167,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            const dataToSend = {
-              nombre: form_data_searched_tipologia_documental.nombre,
-              formatos: form_data_searched_tipologia_documental.formatos.map(
-                (item: any) => item.value
-              ),
-              cod_tipo_medio_doc:
-                form_data_searched_tipologia_documental.cod_tipo_medio_doc.value
-            };
-
-            dispatch(create_tipologia_documental_service(dataToSend)).then(
-              (response: any) => {
-                console.log(response);
-
-                if (response?.data?.success)
-                  set_title_button_administrar_tipologias('Actualizar');
-              }
-            );
+            title_button_administrar_tipologias === 'Guardar'
+              ? create_tipologia()
+              : console.log('actualizar');
           }}
         >
           <DialogTitle>Administración de Tipologias Documentales</DialogTitle>
@@ -286,22 +322,22 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         onChange={(selectedOption) => {
                           // *console.log(selectedOption);
                           onChange(selectedOption);
+                          // clearAutocomplete();
                           dispatch(
                             get_formatos_documentales_by_code(
                               selectedOption.value
                             )
                           ).then((res: any) => {
-                            res
-                              ? set_list_format_documental_type(
-                                  res?.map((format: any) => {
-                                    return {
-                                      format,
-                                      label: format.nombre,
-                                      value: format.id_formato_tipo_medio
-                                    };
-                                  })
-                                )
-                              : set_list_format_documental_type([]);
+                            clearAutocomplete();
+                            set_list_format_documental_type(
+                              res?.map((format: any) => {
+                                return {
+                                  format,
+                                  label: format.nombre,
+                                  value: format.id_formato_tipo_medio
+                                };
+                              })
+                            );
                           });
                         }}
                         // isDisabled={!control_format_documental_type._formValues.item.value}
