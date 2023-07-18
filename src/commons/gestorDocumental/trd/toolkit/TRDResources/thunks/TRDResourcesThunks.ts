@@ -303,7 +303,7 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
         : control_error('No se encontró data relacionada');
 
       dispatch(get_data_format_documental_type(data.data));
-      return data.data;
+      return data;
     } catch (error: any) {
       control_error('Ha ocurrido un error, no se han encontrado data');
 
@@ -316,13 +316,19 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
 
 export const create_tipologia_documental_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
+
+    if(!bodyPost.nombre || !bodyPost.cod_tipo_medio_doc || !bodyPost.formatos){
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
+
     try {
       const { data } = await api.post(
         'gestor/trd/crear/tipologia/documental/',
         bodyPost
       );
       control_success(data.detail);
-      return data;
+      return data.data;
     } catch (error: any) {
       console.log(error.response.data, 'error');
       control_error(error.response.data.detail);

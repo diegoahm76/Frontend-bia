@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable no-constant-condition */
@@ -9,20 +10,20 @@ import {
   Autocomplete,
   Box,
   Button,
-  // Checkbox,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
-  // FormControl,
-  // FormControlLabel,
+  FormControl,
+  FormControlLabel,
   Grid,
   // IconButton,
   Stack,
-  TextField
-  // Tooltip,
-  // Typography
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
 
 //* context
@@ -35,9 +36,9 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import SyncIcon from '@mui/icons-material/Sync';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { use_trd } from '../../../../hooks/use_trd';
-// import InfoIcon  from '@mui/icons-material/Info';
 
 // * react select
 import Select from 'react-select';
@@ -68,8 +69,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     list_format_documental_type,
 
     // ? button that define create or update the submit button
-    title_button_administrar_tipologias
-    // set_title_button_administrar_tipologias
+    title_button_administrar_tipologias,
+    set_title_button_administrar_tipologias
   } = use_trd();
 
   //* context elements that are used in this component
@@ -87,6 +88,21 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     dispatch(get_data_format_documental_type([]));
     set_list_format_documental_type([]);
     resetBusquedaTipologiasDocumentales();
+  };
+
+  //* clear autcomplete function
+  const clearAutocomplete = () => {
+    const autocomplete = document.getElementById('autocomplete');
+    if (autocomplete) {
+      const autocompleteFormatos = autocomplete.querySelector(
+        'autocomplete_formatos'
+      ) as HTMLInputElement;
+      if (autocompleteFormatos) {
+        autocompleteFormatos.value = '';
+        autocompleteFormatos.blur();
+        autocompleteFormatos.focus();
+      }
+    }
   };
 
   return (
@@ -111,8 +127,11 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
             };
 
             dispatch(create_tipologia_documental_service(dataToSend)).then(
-              (res: any) => {
-                console.log(res);
+              (response: any) => {
+                console.log(response);
+
+                if (response?.data?.success)
+                  set_title_button_administrar_tipologias('Actualizar');
               }
             );
           }}
@@ -163,80 +182,74 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               </Grid>
 
               {/* pending to define active checkbox (especially it's interaction */}
-              {/*
-            <Grid
-                item
-                xs={4}
-                sm={3}
-              >
-                {Boolean(5) ? (
-                  <Controller
-                    name="activo"
-                    control={controlBusquedaTipologiasDocumentales}
-                    defaultValue=""
-                    // rules={{ required: false }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error }
-                    }) => (
-                      <FormControl
-                        fullWidth
-                      >
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={value}
-                              onChange={(e) => {
-                                onChange(e.target.checked);
-                              }}
-                              // name="checkedB"
-                              color="primary"
-                            />
-                          }
-                          label={
-                            value ? (
-                              <Typography variant="body2">
-                                Activo
-                                <Tooltip
-                                  title="Formato tipo de medio activo"
-                                  placement="right"
-                                >
-                                  <InfoIcon
-                                    sx={{
-                                      width: '1.2rem',
-                                      height: '1.2rem',
-                                      ml: '0.5rem',
-                                      color: 'green'
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Typography>
-                            ) : (
-                              <Typography variant="body2">
-                                Inactivo
-                                <Tooltip
-                                  title="Formato tipo de medio inactivo"
-                                  placement="right"
-                                >
-                                  <InfoIcon
-                                    sx={{
-                                      width: '1.2rem',
-                                      height: '1.2rem',
-                                      ml: '0.5rem',
-                                      color: 'orange'
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Typography>
-                            )
-                          }
-                        />
-                      </FormControl>
-                    )}
-                  />
-                ) : null}
-              </Grid>
-*/}
+              {title_button_administrar_tipologias === 'Actualizar' && (
+                <Grid item xs={4} sm={3}>
+                  {Boolean(5) ? (
+                    <Controller
+                      name="activo"
+                      control={controlBusquedaTipologiasDocumentales}
+                      defaultValue=""
+                      // rules={{ required: false }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error }
+                      }) => (
+                        <FormControl fullWidth>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={value}
+                                onChange={(e) => {
+                                  onChange(e.target.checked);
+                                }}
+                                // name="checkedB"
+                                color="primary"
+                              />
+                            }
+                            label={
+                              value ? (
+                                <Typography variant="body2">
+                                  Activa
+                                  <Tooltip
+                                    title="Tipología documental activa"
+                                    placement="right"
+                                  >
+                                    <InfoIcon
+                                      sx={{
+                                        width: '1.2rem',
+                                        height: '1.2rem',
+                                        ml: '0.5rem',
+                                        color: 'green'
+                                      }}
+                                    />
+                                  </Tooltip>
+                                </Typography>
+                              ) : (
+                                <Typography variant="body2">
+                                  Inactiva
+                                  <Tooltip
+                                    title="Tipología documental inactiva"
+                                    placement="right"
+                                  >
+                                    <InfoIcon
+                                      sx={{
+                                        width: '1.2rem',
+                                        height: '1.2rem',
+                                        ml: '0.5rem',
+                                        color: 'orange'
+                                      }}
+                                    />
+                                  </Tooltip>
+                                </Typography>
+                              )
+                            }
+                          />
+                        </FormControl>
+                      )}
+                    />
+                  ) : null}
+                </Grid>
+              )}
 
               {/* closed space checkbox */}
             </Grid>
@@ -293,7 +306,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         }}
                         // isDisabled={!control_format_documental_type._formValues.item.value}
                         options={[
-                          { value: null, label: 'Seleccionar' },
                           { value: 'F', label: 'Físico' },
                           { value: 'E', label: 'Electrónico' },
                           { value: 'H', label: 'Híbrido' }
@@ -333,6 +345,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                       <Autocomplete
                         multiple
                         fullWidth
+                        className="autocomplete"
+                        value={value}
                         size="medium"
                         options={list_format_documental_type ?? []}
                         getOptionLabel={(option: any) => option.label}
@@ -342,6 +356,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         onChange={(event: any, value: any) => onChange(value)}
                         renderInput={(params) => (
                           <TextField
+                            className="autocomplete_formatos"
                             key={params.id}
                             {...params}
                             // label="Formatos para el medio documental seleccionado"
@@ -417,7 +432,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 // sx={{ ml: '10px' }}
                 onClick={() => {
                   resetBusquedaTipologiasDocumentales();
-                  set_list_format_documental_type([]);
+                  clearAutocomplete();
+                  set_title_button_administrar_tipologias('Guardar');
                   console.log(
                     'limpiando admistrador de tipologías documentales'
                   );
