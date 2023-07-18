@@ -234,7 +234,7 @@ const SearchCcdModal = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                     // margin="dense"
                       fullWidth
                       size="small"
                       label="Nombre CCD"

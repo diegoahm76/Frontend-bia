@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useEffect, useState } from 'react';
-import XMLViewer from 'react-xml-viewer';
 import { api } from '../../../../api/axios';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';

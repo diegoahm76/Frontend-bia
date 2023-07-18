@@ -92,15 +92,30 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
   //! useEffects
 
+  const handleSelectedOption = (selectedOption: any, execute: any) => {
+    execute(selectedOption);
+    dispatch(get_formatos_documentales_by_code(selectedOption.value)).then(
+      (res: any) => {
+        set_list_format_documental_type(
+          res?.map((format: any) => {
+            return {
+              format,
+              label: format.nombre,
+              value: format.id_formato_tipo_medio
+            };
+          })
+        );
+      }
+    );
+  };
+
   useEffect(() => {
     if (tipologias_documental_current) {
       resetBusquedaTipologiasDocumentales({
         nombre: tipologias_documental_current.nombre
           ? tipologias_documental_current.nombre
           : '',
-        activo: tipologias_documental_current.activo
-          ? tipologias_documental_current.activo
-          : false,
+        activo: tipologias_documental_current.activo,
         cod_tipo_medio_doc: tipologias_documental_current.cod_tipo_medio_doc
           ? options.find(
               (item: any) =>
@@ -111,10 +126,21 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
           tipologias_documental_current.id_tipologia_documental
             ? tipologias_documental_current.id_tipologia_documental
             : 0,
+
         item_ya_usado: tipologias_documental_current.item_ya_usado
           ? tipologias_documental_current.item_ya_usado
           : false
       });
+      const formatos = tipologias_documental_current.formatos?.map(
+        (item: any) => {
+          return {
+            format: item,
+            label: item.nombre,
+            value: item.id_formato_tipo_medio
+          };
+        }
+      );
+      console.log('formatos de la tipologia documental current', formatos);
       set_title_button_administrar_tipologias('Actualizar');
     }
   }, [tipologias_documental_current]);
@@ -139,7 +165,14 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         autocompleteFormatos.value = '';
         autocompleteFormatos.blur();
         autocompleteFormatos.focus();
+        autocomplete.nodeValue = '';
+        autocomplete.blur();
+        autocomplete.focus();
+      } else {
+        console.warn('No se encontró el elemento "autocomplete_formatos"');
       }
+    } else {
+      console.warn('No se encontró el elemento "autocomplete"');
     }
   };
 
@@ -233,7 +266,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                     // margin="dense"
+                      // margin="dense"
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
@@ -360,26 +393,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                           })
                         }}
                         value={value}
-                        onChange={(selectedOption) => {
-                          // *console.log(selectedOption);
-                          onChange(selectedOption);
-                          // clearAutocomplete();
-                          dispatch(
-                            get_formatos_documentales_by_code(
-                              selectedOption.value
-                            )
-                          ).then((res: any) => {
-                            clearAutocomplete();
-                            set_list_format_documental_type(
-                              res?.map((format: any) => {
-                                return {
-                                  format,
-                                  label: format.nombre,
-                                  value: format.id_formato_tipo_medio
-                                };
-                              })
-                            );
-                          });
+                        onChange={(value) => {
+                          handleSelectedOption(value, onChange);
                         }}
                         // isDisabled={!control_format_documental_type._formValues.item.value}
                         options={options}
@@ -418,7 +433,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                       <Autocomplete
                         multiple
                         fullWidth
-                        className="autocomplete"
+                        id="autocomplete"
                         value={value}
                         size="medium"
                         options={list_format_documental_type ?? []}
@@ -504,7 +519,11 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 color="success"
                 // sx={{ ml: '10px' }}
                 onClick={() => {
-                  resetBusquedaTipologiasDocumentales();
+                  resetBusquedaTipologiasDocumentales({
+                    nombre: '',
+                    cod_tipo_medio_doc: '',
+                    formatos: []
+                  });
                   clearAutocomplete();
                   dispatch(get_current_tipologia_documental_action(null));
                   set_title_button_administrar_tipologias('Guardar');

@@ -250,7 +250,7 @@ const CrearSubSerieCcdDialog = ({
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 {...register('nombre', { required: true })}
                 size="small"
@@ -263,7 +263,7 @@ const CrearSubSerieCcdDialog = ({
 
             <Grid item xs={12} sm={6}>
               <TextField
-                margin="dense"
+               //  margin="dense"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"
