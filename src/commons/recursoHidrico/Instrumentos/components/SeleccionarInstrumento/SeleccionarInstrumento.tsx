@@ -12,8 +12,12 @@ import {
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { v4 as uuidv4 } from 'uuid';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
+import { BusquedaCuencas } from '../BusquedaCuencas';
+import { BusquedaPozos } from '../BusquedaPozos';
 import { Controller } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
 import { agregar_instrumento } from '../../request/request';
@@ -23,14 +27,126 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
 import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
-import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
+import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 
-export const EditarInstrumento: React.FC = (): JSX.Element => {
+export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
   // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
 
+  const columns_aforo: GridColDef[] = [
+    // ...columns_result_lab,
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {/* <IconButton
+                        onClick={() => {
+                          set_id_seccion(params.row.id_seccion);
+                          set_info_seccion(params.row);
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                          }}
+                          variant="rounded"
+                        >
+                          <ChecklistIcon
+                            titleAccess="Seleccionar Sección"
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton> */}
+        </>
+      ),
+    },
+  ];
+  const columns_prueba_bombeo: GridColDef[] = [
+    // ...columns_result_lab,
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {/* <IconButton
+                        onClick={() => {
+                          set_id_seccion(params.row.id_seccion);
+                          set_info_seccion(params.row);
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                          }}
+                          variant="rounded"
+                        >
+                          <ChecklistIcon
+                            titleAccess="Seleccionar Sección"
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton> */}
+        </>
+      ),
+    },
+  ];
+  const columns_laboratorio: GridColDef[] = [
+    // ...columns_result_lab,
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {/* <IconButton
+                        onClick={() => {
+                          set_id_seccion(params.row.id_seccion);
+                          set_info_seccion(params.row);
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                          }}
+                          variant="rounded"
+                        >
+                          <ChecklistIcon
+                            titleAccess="Seleccionar Sección"
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton> */}
+        </>
+      ),
+    },
+  ];
+
   const {
-    // reset_instrumento,
+    reset_instrumento,
     pozos_selected,
     cuenca,
     id_pozo_selected,
@@ -43,8 +159,13 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
     fecha_vigencia,
     current_date,
     tipo_agua_selected,
+    row_cartera_aforo,
+    row_prueba_bombeo,
+    row_result_laboratorio,
     is_loading_submit,
     set_is_loading_submit,
+    set_is_open_cuenca,
+    set_is_open_pozos,
     handle_date_change,
     handle_change_autocomplete,
     register,
@@ -53,12 +174,25 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
     fetch_data_pozo,
     control,
     formErrors,
+    limpiar_formulario,
+    // watch_instrumento,
   } = useRegisterInstrumentoHook();
-  const { nombre_subseccion, nombre_seccion } = useContext(DataContext);
+  const { nombre_subseccion, nombre_seccion, info_instrumentos } =
+    useContext(DataContext);
 
   const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (info_instrumentos) {
+      reset_instrumento({
+        nombre: info_instrumentos.nombre,
+        fecha_creacion_instrumento: info_instrumentos.fecha_creacion,
+        fecha_fin_vigencia: info_instrumentos.fecha_vigencia,
+        nombre_seccion: info_instrumentos.nombre_seccion,
+      });
+    }
+  }, [info_instrumentos]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -113,7 +247,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       );
       control_success('Se agregó instrumento correctamente');
       set_is_loading_submit(false);
-      console.log('datos_instrumento', datos_instrumento);
+      limpiar_formulario();
     } catch (error: any) {
       set_is_loading_submit(false);
       control_error(error.response.data.detail);
@@ -309,6 +443,19 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   />
                 </Grid>
               )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      set_is_open_cuenca(true);
+                    }}
+                  >
+                    Buscar Cuenca
+                  </Button>
+                </Grid>
+              </Grid>
             </>
           ) : null}
           {tipo_agua_selected === 'SUB' ? (
@@ -344,10 +491,34 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      set_is_open_pozos(true);
+                    }}
+                  >
+                    Buscar Pozo
+                  </Button>
+                </Grid>
+              </Grid>
             </>
           ) : null}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="warning"
+                onClick={() => {
+                  limpiar_formulario();
+                }}
+              >
+                Limpiar
+              </Button>
+            </Grid>
             <Grid item>
               <LoadingButton
                 variant="contained"
@@ -386,6 +557,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               </Typography>
               <Divider />
             </Grid>
+            {row_cartera_aforo.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <DataGrid
+                    autoHeight
+                    rows={row_cartera_aforo}
+                    columns={columns_aforo}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </Grid>
+              </>
+            )}
             <Grid item spacing={2} justifyContent="end" container>
               <Grid item>
                 <Button
@@ -414,6 +599,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               </Typography>
               <Divider />
             </Grid>
+            {row_prueba_bombeo.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <DataGrid
+                    autoHeight
+                    rows={row_prueba_bombeo}
+                    columns={columns_prueba_bombeo}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </Grid>
+              </>
+            )}
             <Grid item spacing={2} justifyContent="end" container>
               <Grid item>
                 <LoadingButton
@@ -441,6 +640,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
           </Typography>
           <Divider />
         </Grid>
+        {row_result_laboratorio.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <DataGrid
+                autoHeight
+                rows={row_result_laboratorio}
+                columns={columns_laboratorio}
+                getRowId={(row) => uuidv4()}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            </Grid>
+          </>
+        )}
         <Grid item spacing={2} justifyContent="end" container>
           <Grid item>
             <LoadingButton
@@ -461,6 +674,8 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
           </Grid>
         </Grid>
       </Grid>
+      <BusquedaCuencas />
+      <BusquedaPozos />
     </>
   );
 };

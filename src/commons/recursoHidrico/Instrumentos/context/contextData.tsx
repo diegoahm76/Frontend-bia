@@ -7,8 +7,42 @@ import { control_error } from '../../../../helpers';
 import { get_cuencas, get_pozo } from '../../configuraciones/Request/request';
 import type { Cuenca, Pozo } from '../../configuraciones/interfaces/interfaces';
 import type { IpropsPozos, ValueProps } from '../interfaces/interface';
+import { type AxiosError } from 'axios';
+import {
+  type Archivos,
+  type CuencasInstrumentos,
+} from '../../ConsultaBiblioteca/interfaces/interfaces';
+import {
+  get_archivos,
+  get_data_cuenca_instrumentos,
+  get_instrumento_id,
+} from '../../ConsultaBiblioteca/request/request';
 
 interface UserContext {
+  // *modos instrumentos
+  register_instrumento: boolean;
+  edit_instrumento: boolean;
+  select_instrumento: boolean;
+  set_register_instrumento: (register_instrumento: boolean) => void;
+  set_edit_instrumento: (edit_instrumento: boolean) => void;
+  set_select_instrumento: (select_instrumento: boolean) => void;
+
+  // * seleccionar instrumento(información)
+  id_instrumento: number | null;
+  info_instrumentos: any;
+  rows_cuencas_instrumentos: CuencasInstrumentos[];
+  rows_anexos: Archivos[];
+  set_id_instrumento: (id_instrumento: number | null) => void;
+  set_info_instrumentos: (info_instrumentos: any) => void;
+  set_rows_cuencas_instrumentos: (
+    rows_cuencas_instrumentos: CuencasInstrumentos[]
+  ) => void;
+  set_rows_anexos: (rows_anexos: Archivos[]) => void;
+
+  fetch_data_instrumento: (id_instrumento: number) => void;
+  fetch_data_cuencas_instrumentos: (id_instrumento: number) => void;
+  fetch_data_anexos: (id_instrumento: number) => void;
+
   pozos_selected: ValueProps[];
   mode: string;
   nombre_subseccion: string;
@@ -49,6 +83,28 @@ interface UserContext {
 // <--------------------- Data context --------------------->
 
 export const DataContext = createContext<UserContext>({
+  // *set modos instrumentos
+  register_instrumento: false,
+  edit_instrumento: false,
+  select_instrumento: false,
+  set_register_instrumento: () => {},
+  set_edit_instrumento: () => {},
+  set_select_instrumento: () => {},
+
+  // * seleccionar instrumento(información)
+
+  id_instrumento: null,
+  info_instrumentos: {},
+  rows_cuencas_instrumentos: [],
+  rows_anexos: [],
+  set_id_instrumento: () => {},
+  set_info_instrumentos: () => {},
+  set_rows_cuencas_instrumentos: () => {},
+  set_rows_anexos: () => {},
+  fetch_data_instrumento: () => {},
+  fetch_data_cuencas_instrumentos: () => {},
+  fetch_data_anexos: () => {},
+
   pozos_selected: [],
   mode: '',
   nombre_subseccion: '',
@@ -118,10 +174,29 @@ export const UserProvider = ({
     null
   );
 
+  // modos instrumentos
+  const [register_instrumento, set_register_instrumento] = React.useState(true);
+  const [edit_instrumento, set_edit_instrumento] = React.useState(false);
+  const [select_instrumento, set_select_instrumento] = React.useState(false);
+
   const [mode, set_mode] = React.useState('');
 
-  const [nombre_subseccion, set_nombre_subseccion] = React.useState('');
-  const [nombre_seccion, set_nombre_seccion] = React.useState('');
+  if (mode === 'register_instrumento') {
+    set_mode('');
+    set_register_instrumento(true);
+    set_edit_instrumento(false);
+    set_select_instrumento(false);
+  } else if (mode === 'edit_instrumento') {
+    set_mode('');
+    set_edit_instrumento(true);
+    set_register_instrumento(false);
+    set_select_instrumento(false);
+  } else if (mode === 'select_instrumento') {
+    set_mode('');
+    set_select_instrumento(true);
+    set_register_instrumento(false);
+    set_edit_instrumento(false);
+  }
 
   const [row_cartera_aforo, set_row_cartera_aforo] = React.useState<any>({});
   const [row_prueba_bombeo, set_row_prueba_bombeo] = React.useState<any>({});
@@ -135,7 +210,64 @@ export const UserProvider = ({
     {}
   );
 
+  // select instruemnto
+  const [id_instrumento, set_id_instrumento] = React.useState<number | null>(
+    null
+  );
+  const [info_instrumentos, set_info_instrumentos] = React.useState<any>();
+  const [rows_cuencas_instrumentos, set_rows_cuencas_instrumentos] =
+    React.useState<CuencasInstrumentos[]>([]);
+  const [rows_anexos, set_rows_anexos] = React.useState<Archivos[]>([]);
+  const [nombre_seccion, set_nombre_seccion] = React.useState('');
+  const [nombre_subseccion, set_nombre_subseccion] = React.useState('');
+
   const [pozos_selected, set_pozos_selected] = React.useState<ValueProps[]>([]);
+
+  const fetch_data_cuencas_instrumentos = async (): Promise<void> => {
+    try {
+      set_rows_cuencas_instrumentos([]);
+      if (id_instrumento) {
+        const response = await get_data_cuenca_instrumentos(id_instrumento);
+        console.log(response);
+        set_rows_cuencas_instrumentos(response);
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+
+  const fetch_data_instrumento = async (): Promise<void> => {
+    try {
+      set_info_instrumentos({});
+      if (id_instrumento) {
+        const response = await get_instrumento_id(id_instrumento);
+        set_info_instrumentos(response.data);
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+
+  const fetch_data_anexos = async (): Promise<void> => {
+    try {
+      set_rows_anexos([]);
+      if (id_instrumento) {
+        const response = await get_archivos(id_instrumento);
+        set_rows_anexos(response);
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
 
   const fetch_data_cuencas = async (): Promise<void> => {
     try {
@@ -178,6 +310,29 @@ export const UserProvider = ({
   };
 
   const value = {
+    // *modos instrumentos
+    register_instrumento,
+    edit_instrumento,
+    select_instrumento,
+    set_register_instrumento,
+    set_edit_instrumento,
+    set_select_instrumento,
+
+    // * seleccionar instrumento(información)
+
+    id_instrumento,
+    info_instrumentos,
+    rows_cuencas_instrumentos,
+    rows_anexos,
+    set_id_instrumento,
+    set_info_instrumentos,
+    set_rows_cuencas_instrumentos,
+    set_rows_anexos,
+    fetch_data_cuencas_instrumentos,
+    fetch_data_instrumento,
+    fetch_data_anexos,
+    
+
     pozos_selected,
     mode,
     nombre_subseccion,

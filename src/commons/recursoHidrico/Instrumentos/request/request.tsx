@@ -1,6 +1,10 @@
 import { type AxiosResponse } from 'axios';
 import { api } from '../../../../api/axios';
 import { type ResponseServer } from '../../../../interfaces/globalModels';
+import type {
+  BusquedaInstrumentos,
+  IpropsInstrumentos,
+} from '../interfaces/interface';
 
 export const search_seccion_subseccion = async ({
   nombre_seccion,
@@ -17,4 +21,18 @@ export const agregar_instrumento = async (datos: FormData): Promise<any> => {
     datos
   );
   return response.data;
+};
+export const search_instrumento = async ({
+  nombre_seccion,
+  nombre_subseccion,
+  nombre_instrumento,
+}: IpropsInstrumentos): Promise<
+  AxiosResponse<ResponseServer<BusquedaInstrumentos[]>>
+> => {
+  const url = `hidrico/bibliotecas/instrumentos/get-busqueda-avanzada/?nombre_seccion=${String(
+    nombre_seccion ?? ''
+  )}&nombre_subseccion=${String(
+    nombre_subseccion ?? ''
+  )}&nombre_instrumento=${String(nombre_instrumento ?? '')}`;
+  return await api.get<ResponseServer<BusquedaInstrumentos[]>>(url);
 };
