@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { type Dispatch, type SetStateAction } from "react";
 import WarningIcon from '@mui/icons-material/Warning';
 import CloseIcon from '@mui/icons-material/Close';
@@ -43,8 +43,9 @@ export const RequisitosModal = ({ open_requisitos_modal, set_open_requisitos_mod
             fontSize: '1.2em',
           }}
         >
-          <Typography variant="h6">Requisitos:</Typography>
-          <Typography variant="subtitle1">{requisitos}</Typography>
+          Requisitos:
+          <br />
+          {requisitos}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
