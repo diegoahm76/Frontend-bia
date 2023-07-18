@@ -179,7 +179,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    margin="dense"
+                   // margin="dense"
                     fullWidth
                     size="small"
                     label="Ingrese número de expediente"

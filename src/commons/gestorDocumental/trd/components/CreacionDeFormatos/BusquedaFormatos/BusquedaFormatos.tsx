@@ -321,7 +321,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    margin="dense"
+                    // margin="dense"
                     fullWidth
                     // name="version"
                     label="Nombre tipo de formato"

@@ -258,7 +258,7 @@ const CrearSeriesCcdDialog = ({
               }}
             >
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 {...register('nombre', { required: true })}
                 size="small"
@@ -277,7 +277,7 @@ const CrearSeriesCcdDialog = ({
               }}
             >
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"

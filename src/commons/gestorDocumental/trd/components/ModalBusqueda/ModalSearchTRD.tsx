@@ -212,7 +212,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       label="Nombre del TRD"
                       size="small"
@@ -244,7 +244,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       label="Versión del TRD"
                       size="small"

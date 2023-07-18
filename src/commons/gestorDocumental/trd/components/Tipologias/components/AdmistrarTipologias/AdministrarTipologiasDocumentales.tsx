@@ -233,7 +233,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                     // margin="dense"
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
