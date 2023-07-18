@@ -41,7 +41,10 @@ import { use_trd } from '../../../../hooks/use_trd';
 
 // * react select
 import Select from 'react-select';
-import { get_formatos_documentales_by_code } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {
+  create_tipologia_documental_service,
+  get_formatos_documentales_by_code
+} from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { get_data_format_documental_type } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
@@ -58,7 +61,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     // ? form create or edit documental typology
     controlBusquedaTipologiasDocumentales,
     resetBusquedaTipologiasDocumentales,
-    // form_data_searched_tipologia_documental,
+    form_data_searched_tipologia_documental,
 
     // ? update list of documental formats in the autocomplete element
     set_list_format_documental_type,
@@ -73,7 +76,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   const {
     closeModalAdministracionTipologiasDocumentales,
     modalAdministracionTipologiasDocumentales,
-    openModalBusquedaTipologiasDocumentales,
+    openModalBusquedaTipologiasDocumentales
   } = useContext(ModalContextTRD);
 
   //* useForm
@@ -98,12 +101,20 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            console.log('administrando tipologias documentales');
-            /* dispatch(
-              get_tipologias_documentales_by_name(
-                form_data_searched_tipologia_documental.nombre
-              )
-            ); */
+            const dataToSend = {
+              nombre: form_data_searched_tipologia_documental.nombre,
+              formatos: form_data_searched_tipologia_documental.formatos.map(
+                (item: any) => item.value
+              ),
+              cod_tipo_medio_doc:
+                form_data_searched_tipologia_documental.cod_tipo_medio_doc.value
+            };
+
+            dispatch(create_tipologia_documental_service(dataToSend)).then(
+              (res: any) => {
+                console.log(res);
+              }
+            );
           }}
         >
           <DialogTitle>Administración de Tipologias Documentales</DialogTitle>
@@ -369,6 +380,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
             >
               <Button
                 variant="contained"
+                type="submit"
                 startIcon={
                   title_button_administrar_tipologias === 'Guardar' ? (
                     <SaveIcon />
@@ -378,10 +390,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 }
                 color="primary"
                 // sx={{ ml: '10px' }}
-                onClick={() => {
-                  resetBusquedaTipologiasDocumentales();
-                  console.log('GUARDANDO TIPOLOGÍAS DOCUMENTALES TRD');
-                }}
               >
                 {title_button_administrar_tipologias === 'Guardar'
                   ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
@@ -409,6 +417,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 // sx={{ ml: '10px' }}
                 onClick={() => {
                   resetBusquedaTipologiasDocumentales();
+                  set_list_format_documental_type([]);
                   console.log(
                     'limpiando admistrador de tipologías documentales'
                   );

@@ -318,7 +318,7 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post(
-        'gestor/trd/tipologia-documental/create/',
+        'gestor/trd/crear/tipologia/documental/',
         bodyPost
       );
       control_success(data.detail);
