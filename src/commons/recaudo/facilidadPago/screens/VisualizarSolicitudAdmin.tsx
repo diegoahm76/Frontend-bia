@@ -27,10 +27,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
-  const [existe] = useState(true); // Mientras nos conectamos con el Backend
-  const [modal, set_modal] = useState(false);
+  const [existe] = useState(false); // Mientras nos conectamos con el Backend
   const [modal_anular, set_modal_anular] = useState(false);
-  const [modal_option, set_modal_option] = useState('');
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
@@ -38,8 +36,6 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
   const handle_open_anular = () => { set_modal_anular(true) };
   const handle_close_anular = () => { set_modal_anular(false) };
 
@@ -203,30 +199,30 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               {
                 plan_pagos === "si" ? (
                   <>
-                    <Grid item>
-                      <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={() => {
-                          if(existe){
-                            set_modal_option('pago')
-                            handle_open()
-                          } else {
-                            navigate('../amortizacion')
-                          }
-                        }}
-                      >
-                        Crear Plan de Pagos
-                      </Button>
-                    </Grid>
-                    <Grid item sm={5}>
-                      <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={() => {}}
-                      >
-                        Ver Plan de Pagos
-                      </Button>
+                    <Grid item xs={12} sm={3}>
+                      {
+                        existe ? (
+                          <Button
+                            fullWidth
+                            color='primary'
+                            variant='contained'
+                            onClick={() => {}}
+                          >
+                            Ver Plan de Pagos
+                          </Button>
+                        ) : (
+                          <Button
+                            fullWidth
+                            color='primary'
+                            variant='contained'
+                            onClick={() => {
+                              navigate('../amortizacion')
+                            }}
+                          >
+                            Crear Plan de Pagos
+                          </Button>
+                        )
+                      }
                     </Grid>
                   </>
                 ) : null
@@ -250,30 +246,30 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               {
                 resolucion === "si" ? (
                   <>
-                    <Grid item>
-                      <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={() => {
-                          if(existe){
-                            set_modal_option('resolucion')
-                            handle_open()
-                          } else {
-                            navigate('../resolucion')
-                          }
-                        }}
-                      >
-                        Crear Resolución
-                      </Button>
-                    </Grid>
-                    <Grid item sm={5}>
-                      <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={() => {}}
-                      >
-                        Ver Resolución
-                      </Button>
+                    <Grid item xs={12} sm={3}>
+                      {
+                        existe ? (
+                          <Button
+                            fullWidth
+                            color='primary'
+                            variant='contained'
+                            onClick={() => {}}
+                          >
+                            Ver Resolución
+                          </Button>
+                        ) : (
+                          <Button
+                            fullWidth
+                            color='primary'
+                            variant='contained'
+                            onClick={() => {
+                              navigate('../resolucion')
+                            }}
+                          >
+                            Crear Resolución
+                          </Button>
+                        )
+                      }
                     </Grid>
                   </>
                 ) : null
@@ -338,32 +334,6 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle>
-            {
-              modal_option === 'pago' ? `El radicado nro. ${'#RadicadoActual'} tiene Plan de Pagos creado, consulte presionando el botón Ver Plan de Pagos.` : `El radicado nro. ${'#RadicadoActual'} tiene Resolución creada, consulte presionando el botón Ver Resolución.`
-            }
-          </DialogTitle>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={() => {
-                handle_close()
-            }}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
     </>
   )
 }
