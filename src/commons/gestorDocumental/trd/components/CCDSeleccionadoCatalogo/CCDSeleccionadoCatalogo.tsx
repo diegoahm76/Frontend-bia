@@ -41,7 +41,7 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
             <IconButton
               aria-label="delete"
               size="large"
-              title='Administrar catalogo TRD'
+              title='Administrar TRD en base a relación'
               onClick={() => {
                 // ? this is the function to delete the ccd
                 // delete_ccd(params.row.id_cat_serie_und);

@@ -421,6 +421,7 @@ export const delete_tipologia_documental_service = (id: any): any => {
 
 //! ---------- At this point I start the develop of: catalogo TRD (administrate TRD) ----------->
 
+// ? get  catalogo trd by id_trd -------------------------------------->
 export const get_catalogo_trd = (id_trd: number): any => {
   return async (
     dispatch: Dispatch<any>
@@ -436,6 +437,23 @@ export const get_catalogo_trd = (id_trd: number): any => {
       dispatch(get_catalogo_trd_action(data.data));
       return data;
     } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? delete item from catalogo TRD by id item catalogo ------------------------------>
+export const delete_item_catalogo_trd = (id_item_catalogo_trd: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/trd/catalogo-trd/delete/${id_item_catalogo_trd}/`
+      );
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -463,7 +481,6 @@ export const finish_trd_service = (id_trd: number, setFlag: any): any => {
 // ? resume TRD
 export const resume_trd_service = (id_trd: number, setFlag: any): any => {
   return async (dispatch: Dispatch<any>) => {
-    
     try {
       if (!id_trd) return control_error('No se ha podido realizar la acción');
       const url = `gestor/trd/reanudar/trd/${id_trd}/`;
