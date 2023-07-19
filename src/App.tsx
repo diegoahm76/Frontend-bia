@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Offline, Online } from 'react-detect-offline';
+import { Offline /* , Online */ } from 'react-detect-offline';
 import { AppRouter } from './router/AppRouter';
 import { AppTheme } from './theme';
 
@@ -13,11 +13,10 @@ import { OfflineScreen } from './utils/OffLineScreen/OffLineScreen';
 export const App = () => {
   return (
     <>
-      <Online>
-        <AppTheme>
-          <AppRouter />
-        </AppTheme>
-      </Online>
+      <AppTheme>
+        <AppRouter />
+      </AppTheme>
+
       <Offline>
         <OfflineScreen />
       </Offline>

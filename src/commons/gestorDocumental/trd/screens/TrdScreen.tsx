@@ -26,7 +26,9 @@ import { use_trd } from '../hooks/use_trd';
 //* thunks
 import {
   create_trd_service,
+  finish_trd_service,
   getServiceSeriesSubseriesXUnidadOrganizacional,
+  resume_trd_service,
   update_trd_service
 } from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -191,7 +193,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                     // margin="dense"
+                      // margin="dense"
                       fullWidth
                       // name="nombre"
                       label="Nombre del TRD"
@@ -206,7 +208,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        console.log(e.target.value);
+                        // console.log(e.target.value);
                       }}
                       // error={!!error}
                       /* helperText={
@@ -244,7 +246,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        console.log(e.target.value);
+                        // console.log(e.target.value);
                       }}
                     />
                   )}
@@ -290,7 +292,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
-                  console.log('reset_create_trd_modal');
+                  // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
                 }}
               >
@@ -359,10 +361,10 @@ export const TrdScreen: FC = (): JSX.Element => {
           startIcon={<SaveIcon />}
           onClick={() => {
             if (flag_finish_or_or_edit_trd) {
-              set_flag_finish_or_edit_trd(false);
+              dispatch(resume_trd_service(trd_current?.id_trd, set_flag_finish_or_edit_trd))
               console.log('TRD reanudado');
             } else {
-              set_flag_finish_or_edit_trd(true);
+              dispatch(finish_trd_service(trd_current?.id_trd, set_flag_finish_or_edit_trd))
               console.log('TRD finalizado');
             }
           }}

@@ -122,7 +122,7 @@ export const BusquedaTipologias = (): JSX.Element => {
                 );
               });
 
-              console.log('params edit formato', params.row);
+              // console.log('params edit formato', params.row);
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -184,7 +184,7 @@ export const BusquedaTipologias = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            console.log('buscando tipologias documentales');
+            // console.log('buscando tipologias documentales');
             dispatch(
               get_tipologias_documentales_by_name(
                 form_data_searched_tipologia_documental.nombre

@@ -332,7 +332,7 @@ export const get_formatos_documentales_by_id_tipologia = (
             data.detail || 'proceso exitoso, se encontró la siguiente data'
           )
         : control_error('No se encontró data relacionada');
-          console.log(data.data, 'data.data');
+      console.log(data.data, 'data.data');
       return data.data;
     } catch (error: any) {
       control_error('Ha ocurrido un error, no se han encontrado data');
@@ -435,6 +435,40 @@ export const get_catalogo_trd = (id_trd: number): any => {
       dispatch(get_catalogo_trd_action(data.data));
       return data;
     } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+// ! finish and resume TRD ------------------------------>
+
+// ? finish TRD
+export const finish_trd_service = (id_trd: number, setFlag: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const url = `gestor/trd/finish/${id_trd}/`;
+      const { data } = await api.put(url);
+      control_success(data.detail);
+      setFlag(true);
+      return data.data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? resume TRD
+export const resume_trd_service = (id_trd: number, setFlag: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const url = `gestor/trd/reanudar/trd/${id_trd}/`;
+      const { data } = await api.put(url);
+      control_success(data.detail);
+      setFlag(false);
+      return data.data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
