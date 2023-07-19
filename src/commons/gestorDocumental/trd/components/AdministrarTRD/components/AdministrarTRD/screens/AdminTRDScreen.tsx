@@ -1,16 +1,22 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Button, Grid, Stack } from '@mui/material';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { Title } from '../../../../../../../../components';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
-  const { ccd_current_catalogo_ser_sub_unid } = useAppSelector(
+  const { ccd_current_catalogo_ser_sub_unid, trd_current } = useAppSelector(
     (state: any) => state.finished_ccd_slice
   );
-//* crear modal open y close para administrar trd
-  if (ccd_current_catalogo_ser_sub_unid === null || ccd_current_catalogo_ser_sub_unid === undefined) return null;
+  //* crear modal open y close para administrar trd
+  if (
+    ccd_current_catalogo_ser_sub_unid === null ||
+    ccd_current_catalogo_ser_sub_unid === undefined
+  )
+    return null;
 
   console.log(
     'ccd_current_catalogo_ser_sub_unid',
@@ -49,16 +55,16 @@ export const AdminTRDScreen = (): JSX.Element | null => {
             sx={{ m: '20px 0' }}
           >
             {/* buttons start */}
-            {/* <Button
-          // color="info"
-          color="warning"
-          variant="contained"
-          disabled={!trd_current}
-          startIcon={<AdminPanelSettingsIcon />}
-          onClick={() => console.log('ABRIR ADMINISTRACIÓN DE TRD')}
-        >
-          ADMINISTRAR CATÁLOGO TRD
-        </Button> */}
+            <Button
+              // color="info"
+              color="warning"
+              variant="contained"
+              disabled={!trd_current}
+              startIcon={<AdminPanelSettingsIcon />}
+              onClick={() => console.log('ABRIR ADMINISTRACIÓN DE TRD')}
+            >
+              ADMINISTRAR CATÁLOGO TRD
+            </Button>
           </Stack>
         </Box>
       </Grid>

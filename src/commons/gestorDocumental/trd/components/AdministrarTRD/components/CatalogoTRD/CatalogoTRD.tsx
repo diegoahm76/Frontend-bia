@@ -8,7 +8,7 @@ import {
   // Divider,
   // TextField,
   Stack,
-  IconButton
+  // IconButton
   // ButtonGroup,
   // Button,
 } from '@mui/material';
@@ -16,22 +16,22 @@ import {
 import { Title } from '../../../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-  useAppDispatch,
+  // useAppDispatch,
   /* useAppDispatch, */ useAppSelector
 } from '../../../../../../../hooks';
 import { columns } from './utils/columsCatalogoTRD';
 
 // import { Avatar, IconButton } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { delete_item_catalogo_trd, get_catalogo_trd } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+/* import DeleteIcon from '@mui/icons-material/Delete';
+import { delete_item_catalogo_trd, get_catalogo_trd } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks'; */
 
 export const CatalogoTRD = (): JSX.Element => {
 
   //* dispatch element
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   // ? useSelector declaration, states from store
-  const { catalogo_trd, trd_current } = useAppSelector(
+  const { catalogo_trd, /* trd_current */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
@@ -52,7 +52,7 @@ export const CatalogoTRD = (): JSX.Element => {
       headerName: 'Descripción Procedimiento',
       width: 240
     },
-    {
+   /* {
       field: 'acciones',
       headerName: 'Acciones',
       width: 180,
@@ -64,8 +64,6 @@ export const CatalogoTRD = (): JSX.Element => {
               size="large"
               title="Eliminar relación TRD"
               onClick={() => {
-                // ? this is the function to delete the ccd
-                // delete_ccd(params.row.id_cat_serie_und);
                 dispatch(delete_item_catalogo_trd(params.row.id_catserie_unidadorg)).then(
                   () => {
                     dispatch(get_catalogo_trd(trd_current.id_trd));
@@ -80,7 +78,7 @@ export const CatalogoTRD = (): JSX.Element => {
         ) : (
           <></>
         )
-    }
+    } */
   ];
 
   return (
