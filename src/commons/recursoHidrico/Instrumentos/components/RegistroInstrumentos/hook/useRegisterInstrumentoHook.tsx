@@ -13,6 +13,9 @@ import {
 } from '@mui/material';
 import { control_error } from '../../../../../../helpers';
 import { get_cuencas } from '../../../../configuraciones/Request/request';
+import { get_data_cuenca_instrumentos } from '../../../../ConsultaBiblioteca/request/request';
+import type { AxiosError } from 'axios';
+import { set } from 'date-fns';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 export const useRegisterInstrumentoHook = () => {
@@ -51,6 +54,7 @@ export const useRegisterInstrumentoHook = () => {
     id_subseccion,
     pozos_selected,
     is_loading_submit,
+    id_instrumento,
     set_is_loading_submit,
     set_is_open_cuenca,
     set_is_open_pozos,
@@ -95,8 +99,33 @@ export const useRegisterInstrumentoHook = () => {
 
   //  autocomplete y select pozos
   const [cuenca, set_cuenca] = useState<ValueProps[]>([]);
+  const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
+  const [originalCuencaValues, setOriginalCuencaValues] = useState<
+    ValueProps[]
+  >([]);
 
   const data_id_cuencas = watch('id_cuencas') ?? [];
+
+  const fetch_data_cuencas_instrumentos_select = async (): Promise<void> => {
+    try {
+      if (id_instrumento) {
+        const response = await get_data_cuenca_instrumentos(id_instrumento);
+        if (response?.length > 0) {
+          const data_cuenca = response.map((item: IpropsCuenca) => ({
+            value: item.id_cuenca,
+            label: item.cuenca ?? '',
+          }));
+          set_cuenca_select(data_cuenca);
+          setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+        }
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
 
   const fetch_data_cuencas = async (): Promise<void> => {
     try {
@@ -104,14 +133,25 @@ export const useRegisterInstrumentoHook = () => {
       if (response?.length > 0) {
         const data_cuenca = response.map((item: IpropsCuenca) => ({
           value: item.id_cuenca,
-          label: item.nombre,
+          label: item.nombre ?? '',
         }));
         // setValue('id_cuencas', data_cuenca.map((e) => e.value) as never[]);
+        setOriginalCuencaValues(data_cuenca);
         set_cuenca(data_cuenca);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
+  };
+
+  const handle_change_autocomplete_edit = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: ValueProps[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<ValueProps>
+  ): void => {
+    setValue('id_cuencas', value.map((e) => e.value) as never[]);
+    set_cuenca_select(value);
   };
 
   const handle_change_autocomplete = (
@@ -163,6 +203,7 @@ export const useRegisterInstrumentoHook = () => {
     set_is_open_pozos,
     handle_date_change,
     handle_change_autocomplete,
+    handle_change_autocomplete_edit,
     fetch_data_cuencas,
     fetch_data_pozo,
 
@@ -184,5 +225,10 @@ export const useRegisterInstrumentoHook = () => {
 
     // * limpia formulario
     limpiar_formulario,
+
+    //* data cuenca
+
+    fetch_data_cuencas_instrumentos_select,
+    cuenca_select,
   };
 };

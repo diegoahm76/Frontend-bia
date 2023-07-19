@@ -5,6 +5,7 @@ import type {
   BusquedaInstrumentos,
   IpropsInstrumentos,
 } from '../interfaces/interface';
+import type { Pozo } from '../../configuraciones/interfaces/interfaces';
 
 export const search_seccion_subseccion = async ({
   nombre_seccion,
@@ -35,4 +36,11 @@ export const search_instrumento = async ({
     nombre_subseccion ?? ''
   )}&nombre_instrumento=${String(nombre_instrumento ?? '')}`;
   return await api.get<ResponseServer<BusquedaInstrumentos[]>>(url);
+};
+export const get_pozo_id = async (id_pozo: number): Promise<Pozo[]> => {
+  const response = await api.get(
+    `/hidrico/bibliotecas/pozos/get-id/${id_pozo}`
+  );
+  const data = response.data.data;
+  return data ?? [];
 };

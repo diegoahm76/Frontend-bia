@@ -5,7 +5,8 @@ export interface ValueProps {
 
 export interface IpropsCuenca {
   id_cuenca: number;
-  nombre: string;
+  nombre?: string;
+  cuenca?: string;
 }
 export interface IpropsPozos {
   id_pozo: number;

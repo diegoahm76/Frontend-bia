@@ -6,7 +6,11 @@ import React, { createContext } from 'react';
 import { control_error } from '../../../../helpers';
 import { get_cuencas, get_pozo } from '../../configuraciones/Request/request';
 import type { Cuenca, Pozo } from '../../configuraciones/interfaces/interfaces';
-import type { BusquedaInstrumentos, IpropsPozos, ValueProps } from '../interfaces/interface';
+import type {
+  BusquedaInstrumentos,
+  IpropsPozos,
+  ValueProps,
+} from '../interfaces/interface';
 import { type AxiosError } from 'axios';
 import {
   type Archivos,
@@ -17,6 +21,7 @@ import {
   get_data_cuenca_instrumentos,
   get_instrumento_id,
 } from '../../ConsultaBiblioteca/request/request';
+import { get_pozo_id } from '../request/request';
 
 interface UserContext {
   // *modos instrumentos
@@ -34,16 +39,19 @@ interface UserContext {
   rows_cuencas_instrumentos: CuencasInstrumentos[];
   rows_anexos: Archivos[];
   set_id_instrumento: (id_instrumento: number | null) => void;
-  set_info_busqueda_instrumentos: (info_busqueda_instrumentos: BusquedaInstrumentos) => void;
+  set_info_busqueda_instrumentos: (
+    info_busqueda_instrumentos: BusquedaInstrumentos
+  ) => void;
   set_info_instrumentos: (info_instrumentos: any) => void;
   set_rows_cuencas_instrumentos: (
     rows_cuencas_instrumentos: CuencasInstrumentos[]
   ) => void;
   set_rows_anexos: (rows_anexos: Archivos[]) => void;
 
-  fetch_data_instrumento: (id_instrumento: number) => void;
-  fetch_data_cuencas_instrumentos: (id_instrumento: number) => void;
-  fetch_data_anexos: (id_instrumento: number) => void;
+  fetch_data_cuencas_instrumentos: () => Promise<void>;
+  fetch_data_instrumento: () => Promise<void>;
+  fetch_data_anexos: () => Promise<void>;
+  fetch_data_pozo_id: () => Promise<void>;
 
   pozos_selected: ValueProps[];
   mode: string;
@@ -97,19 +105,19 @@ export const DataContext = createContext<UserContext>({
 
   id_instrumento: null,
   info_busqueda_instrumentos: {
-    id_instrumento:             0,
-    id_seccion:                 0,
-    nombre_seccion:             '',
-    id_subseccion:              0,
-    nombre_subseccion:          '',
-    nombre:                     '',
-    id_resolucion:              0,
-    fecha_registro:             '',
+    id_instrumento: 0,
+    id_seccion: 0,
+    nombre_seccion: '',
+    id_subseccion: 0,
+    nombre_subseccion: '',
+    nombre: '',
+    id_resolucion: 0,
+    fecha_registro: '',
     fecha_creacion_instrumento: '',
-    fecha_fin_vigencia:         '',
-    cod_tipo_agua:              '',
-    id_persona_registra:        0,
-    id_pozo:                    0,
+    fecha_fin_vigencia: '',
+    cod_tipo_agua: '',
+    id_persona_registra: 0,
+    id_pozo: 0,
   },
   info_instrumentos: {},
   rows_cuencas_instrumentos: [],
@@ -119,9 +127,10 @@ export const DataContext = createContext<UserContext>({
   set_info_instrumentos: () => {},
   set_rows_cuencas_instrumentos: () => {},
   set_rows_anexos: () => {},
-  fetch_data_instrumento: () => {},
-  fetch_data_cuencas_instrumentos: () => {},
-  fetch_data_anexos: () => {},
+  fetch_data_cuencas_instrumentos: async () => {},
+  fetch_data_instrumento: async () => {},
+  fetch_data_anexos: async () => {},
+  fetch_data_pozo_id: async () => {},
 
   pozos_selected: [],
   mode: '',
@@ -232,7 +241,8 @@ export const UserProvider = ({
   const [id_instrumento, set_id_instrumento] = React.useState<number | null>(
     null
   );
-  const [info_busqueda_instrumentos, set_info_busqueda_instrumentos] = React.useState<BusquedaInstrumentos>()
+  const [info_busqueda_instrumentos, set_info_busqueda_instrumentos] =
+    React.useState<BusquedaInstrumentos>();
   const [info_instrumentos, set_info_instrumentos] = React.useState<any>();
   const [rows_cuencas_instrumentos, set_rows_cuencas_instrumentos] =
     React.useState<CuencasInstrumentos[]>([]);
@@ -247,7 +257,6 @@ export const UserProvider = ({
       set_rows_cuencas_instrumentos([]);
       if (id_instrumento) {
         const response = await get_data_cuenca_instrumentos(id_instrumento);
-        console.log(response);
         set_rows_cuencas_instrumentos(response);
       }
     } catch (err: any) {
@@ -327,6 +336,32 @@ export const UserProvider = ({
       control_error(error.response.data.detail);
     }
   };
+  const fetch_data_pozo_id = async (): Promise<void> => {
+    try {
+      const response = await get_pozo_id(
+        info_busqueda_instrumentos?.id_pozo ?? 0
+      );
+      const datos_pozo = response.map((datos: Pozo) => ({
+        id_pozo: datos.id_pozo,
+        cod_pozo: datos.cod_pozo,
+        nombre: datos.nombre,
+        descripcion: datos.descripcion,
+        precargado: datos.precargado,
+        activo: datos.activo,
+        item_ya_usado: datos.item_ya_usado,
+      }));
+      set_rows_register_pozos(datos_pozo);
+      if (response?.length > 0) {
+        const data_pozo: ValueProps[] = response.map((item: IpropsPozos) => ({
+          value: item.id_pozo,
+          label: ` ${item.cod_pozo} - ${item.nombre} `,
+        }));
+        set_pozos_selected(data_pozo);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
 
   const value = {
     // *modos instrumentos
@@ -352,7 +387,7 @@ export const UserProvider = ({
     fetch_data_cuencas_instrumentos,
     fetch_data_instrumento,
     fetch_data_anexos,
-    
+    fetch_data_pozo_id,
 
     pozos_selected,
     mode,

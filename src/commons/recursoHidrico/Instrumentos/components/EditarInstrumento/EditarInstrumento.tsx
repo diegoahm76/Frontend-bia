@@ -30,7 +30,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
   // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
 
   const {
-    // reset_instrumento,
+    reset_instrumento,
     pozos_selected,
     cuenca,
     id_pozo_selected,
@@ -44,17 +44,30 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
     current_date,
     tipo_agua_selected,
     is_loading_submit,
+    set_fecha_creacion,
+    set_fecha_vigencia,
     set_is_loading_submit,
     handle_date_change,
-    handle_change_autocomplete,
+    fetch_data_cuencas_instrumentos_select,
+    cuenca_select,
+    handle_change_autocomplete_edit,
     register,
     handleSubmit,
     fetch_data_cuencas,
     fetch_data_pozo,
+    setValue,
     control,
     formErrors,
   } = useRegisterInstrumentoHook();
-  const { nombre_subseccion, nombre_seccion } = useContext(DataContext);
+  const {
+    nombre_subseccion,
+    nombre_seccion,
+    id_instrumento,
+    info_busqueda_instrumentos,
+    fetch_data_instrumento,
+    fetch_data_pozo_id,
+    fetch_data_anexos,
+  } = useContext(DataContext);
 
   const navigate = useNavigate();
 
@@ -113,12 +126,54 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       );
       control_success('Se agregó instrumento correctamente');
       set_is_loading_submit(false);
-      console.log('datos_instrumento', datos_instrumento);
     } catch (error: any) {
       set_is_loading_submit(false);
       control_error(error.response.data.detail);
     }
   });
+
+  useEffect(() => {
+    if (id_instrumento) {
+      void fetch_data_cuencas_instrumentos_select();
+      void fetch_data_instrumento();
+      void fetch_data_anexos();
+    }
+  }, [id_instrumento]);
+
+  useEffect(() => {
+    if (info_busqueda_instrumentos) {
+      console.log('info_busqueda_instrumentos', info_busqueda_instrumentos);
+      reset_instrumento({
+        nombre: info_busqueda_instrumentos.nombre,
+        fecha_creacion_instrumento:
+          info_busqueda_instrumentos.fecha_creacion_instrumento,
+        fecha_fin_vigencia: info_busqueda_instrumentos.fecha_fin_vigencia,
+      });
+      setValue('nombre', info_busqueda_instrumentos.nombre);
+      setValue(
+        'fecha_creacion_instrumento',
+        info_busqueda_instrumentos.fecha_creacion_instrumento
+      );
+      setValue(
+        'fecha_fin_vigencia',
+        info_busqueda_instrumentos.fecha_fin_vigencia
+      );
+      setValue('cod_tipo_agua', info_busqueda_instrumentos.cod_tipo_agua);
+      set_fecha_creacion(
+        info_busqueda_instrumentos.fecha_creacion_instrumento
+          ? dayjs(info_busqueda_instrumentos.fecha_creacion_instrumento)
+          : null
+      );
+      set_fecha_vigencia(
+        info_busqueda_instrumentos.fecha_fin_vigencia
+          ? dayjs(info_busqueda_instrumentos.fecha_fin_vigencia)
+          : null
+      );
+      if (info_busqueda_instrumentos.id_pozo) {
+        void fetch_data_pozo_id();
+      }
+    }
+  }, [info_busqueda_instrumentos]);
 
   useEffect(() => {
     void fetch_data_cuencas();
@@ -170,7 +225,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   label="Nombre"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required
                   error={!!formErrors.nombre}
@@ -208,7 +263,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required
                   error={!!formErrors.cod_tipo_agua}
@@ -231,12 +286,14 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               <DatePicker
                 label="Fecha de creación del instrumento"
                 value={fecha_creacion}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_creacion', value);
                 }}
                 renderInput={(params: any) => (
                   <TextField
                     fullWidth
+                    disabled={true}
                     size="small"
                     {...params}
                     {...register('fecha_creacion_instrumento', {
@@ -296,16 +353,23 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                     isOptionEqualToValue={(option: any, value) =>
                       option?.value === value?.value
                     }
+                    value={cuenca_select}
                     renderInput={(params) => (
                       <TextField
                         key={params.id}
                         {...params}
-                        label="Asociar Cuenca"
-                        placeholder="Asociar Cuenca"
+                        label="Cuencas Asociadas"
+                        placeholder="Cuencas Asociadas"
                       />
                     )}
-                    {...register('id_cuencas')}
-                    onChange={handle_change_autocomplete}
+                    onChange={(event, value, reason, details) => {
+                      handle_change_autocomplete_edit(
+                        event,
+                        value,
+                        reason,
+                        details
+                      );
+                    }}
                   />
                 </Grid>
               )}
@@ -356,13 +420,12 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                 loading={is_loading_submit}
                 disabled={is_loading_submit}
               >
-                Guardar
+                Actualizar
               </LoadingButton>
             </Grid>
           </Grid>
         </Grid>
       </form>
-
       <Grid
         container
         spacing={2}
