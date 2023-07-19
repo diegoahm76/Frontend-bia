@@ -29,6 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import {
   delete_tipologia_documental_service,
+  get_formatos_documentales_by_id_tipologia,
   get_tipologias_documentales_by_name
 } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columns } from './utils/columns';
@@ -107,7 +108,20 @@ export const BusquedaTipologias = (): JSX.Element => {
             onClick={() => {
               closeModalBusquedaTipologiasDocumentales();
               openModalAdministracionTipologiasDocumentales();
-              dispatch(get_current_tipologia_documental_action(params.row));
+
+              dispatch(
+                get_formatos_documentales_by_id_tipologia(
+                  params.row.id_tipologia_documental
+                )
+              ).then((res: any) => {
+                dispatch(
+                  get_current_tipologia_documental_action({
+                    ...params.row,
+                    formatos: res
+                  })
+                );
+              });
+
               console.log('params edit formato', params.row);
             }}
           >
@@ -212,7 +226,7 @@ export const BusquedaTipologias = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                     // margin="dense"
+                      // margin="dense"
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"

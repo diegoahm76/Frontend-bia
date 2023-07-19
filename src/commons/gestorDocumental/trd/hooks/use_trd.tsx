@@ -86,10 +86,10 @@ export const use_trd = (): any => {
   });
   const form_data_searched_tipologia_documental =
     watchBusquedaTipologiasDocumentales();
-  console.log(
+  /* console.log(
     form_data_searched_tipologia_documental,
     'form_data_searched_tipologia_documental'
-  );
+  ); */
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -141,13 +141,13 @@ export const use_trd = (): any => {
 
   // ? try to edit trd --------------------->
   useEffect(() => {
-    console.log(data_create_trd_modal, 'data_create_trd');
-    console.log(trd_current, 'trd_current');
+    // console.log(data_create_trd_modal, 'data_create_trd');
+    // console.log(trd_current, 'trd_current');
     if (trd_current !== null) {
       const result_name = ccd_finished.filter((item: any) => {
         return item.id_ccd === trd_current.id_ccd;
       });
-      console.log('result_name', result_name);
+      // console.log('result_name', result_name);
       const obj: any = {
         id_ccd: {
           label: result_name[0].nombre,
@@ -157,7 +157,7 @@ export const use_trd = (): any => {
         version: trd_current.version,
         id_trd: trd_current.id_trd
       };
-      console.log(obj, 'obj');
+      // console.log(obj, 'obj');
       reset_create_trd_modal(obj);
     }
   }, [trd_current]);

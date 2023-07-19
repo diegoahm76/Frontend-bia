@@ -129,18 +129,17 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
         item_ya_usado: tipologias_documental_current.item_ya_usado
           ? tipologias_documental_current.item_ya_usado
-          : false
+          : false,
+        formatos: tipologias_documental_current.formatos.map(
+          (item: any) =>
+            ({
+              item,
+              label: item.nombre,
+              value: item.id_formato_tipo_medio
+            } as any)
+        )
       });
-      const formatos = tipologias_documental_current.formatos?.map(
-        (item: any) => {
-          return {
-            format: item,
-            label: item.nombre,
-            value: item.id_formato_tipo_medio
-          };
-        }
-      );
-      console.log('formatos de la tipologia documental current', formatos);
+      // dispatch(get_data_format_documental_type([]));
       set_title_button_administrar_tipologias('Actualizar');
     }
   }, [tipologias_documental_current]);
@@ -190,7 +189,11 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
       .then((response: any) => {
         if (response?.success) {
           clearAutocomplete();
-          resetBusquedaTipologiasDocumentales();
+          resetBusquedaTipologiasDocumentales({
+            nombre: '',
+            cod_tipo_medio_doc: '',
+            formatos: []
+          });
         }
         // Handle success response
       })
@@ -217,7 +220,11 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
       .then((response: any) => {
         if (response?.success) {
           clearAutocomplete();
-          resetBusquedaTipologiasDocumentales();
+          resetBusquedaTipologiasDocumentales({
+            nombre: '',
+            cod_tipo_medio_doc: '',
+            formatos: []
+          });
           set_title_button_administrar_tipologias('Guardar');
           dispatch(get_current_tipologia_documental_action(null));
         }
@@ -294,70 +301,68 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               {/* pending to define active checkbox (especially it's interaction */}
               {title_button_administrar_tipologias === 'Actualizar' && (
                 <Grid item xs={4} sm={3}>
-                  {Boolean(5) ? (
-                    <Controller
-                      name="activo"
-                      control={controlBusquedaTipologiasDocumentales}
-                      defaultValue=""
-                      // rules={{ required: false }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error }
-                      }) => (
-                        <FormControl fullWidth>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={value}
-                                onChange={(e) => {
-                                  onChange(e.target.checked);
-                                }}
-                                // name="checkedB"
-                                color="primary"
-                              />
-                            }
-                            label={
-                              value ? (
-                                <Typography variant="body2">
-                                  Activa
-                                  <Tooltip
-                                    title="Tipología documental activa"
-                                    placement="right"
-                                  >
-                                    <InfoIcon
-                                      sx={{
-                                        width: '1.2rem',
-                                        height: '1.2rem',
-                                        ml: '0.5rem',
-                                        color: 'green'
-                                      }}
-                                    />
-                                  </Tooltip>
-                                </Typography>
-                              ) : (
-                                <Typography variant="body2">
-                                  Inactiva
-                                  <Tooltip
-                                    title="Tipología documental inactiva"
-                                    placement="right"
-                                  >
-                                    <InfoIcon
-                                      sx={{
-                                        width: '1.2rem',
-                                        height: '1.2rem',
-                                        ml: '0.5rem',
-                                        color: 'orange'
-                                      }}
-                                    />
-                                  </Tooltip>
-                                </Typography>
-                              )
-                            }
-                          />
-                        </FormControl>
-                      )}
-                    />
-                  ) : null}
+                  <Controller
+                    name="activo"
+                    control={controlBusquedaTipologiasDocumentales}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <FormControl fullWidth>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={value}
+                              onChange={(e) => {
+                                onChange(e.target.checked);
+                              }}
+                              // name="checkedB"
+                              color="primary"
+                            />
+                          }
+                          label={
+                            value ? (
+                              <Typography variant="body2">
+                                Activa
+                                <Tooltip
+                                  title="Tipología documental activa"
+                                  placement="right"
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      width: '1.2rem',
+                                      height: '1.2rem',
+                                      ml: '0.5rem',
+                                      color: 'green'
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Typography>
+                            ) : (
+                              <Typography variant="body2">
+                                Inactiva
+                                <Tooltip
+                                  title="Tipología documental inactiva"
+                                  placement="right"
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      width: '1.2rem',
+                                      height: '1.2rem',
+                                      ml: '0.5rem',
+                                      color: 'orange'
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Typography>
+                            )
+                          }
+                        />
+                      </FormControl>
+                    )}
+                  />
                 </Grid>
               )}
 

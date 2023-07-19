@@ -312,6 +312,36 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
   };
 };
 
+// ? get formatos documentales by id documentary type -------------------------------------->
+export const get_formatos_documentales_by_id_tipologia = (
+  id_tipologia_documental: number
+): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError | any> => {
+    try {
+      if (!id_tipologia_documental) {
+        return;
+      }
+
+      const url = `gestor/trd/tipologias/get-formatos/${id_tipologia_documental}`;
+      const { data } = await api.get(url);
+
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('No se encontró data relacionada');
+          console.log(data.data, 'data.data');
+      return data.data;
+    } catch (error: any) {
+      control_error('Ha ocurrido un error, no se han encontrado data');
+
+      return error as AxiosError;
+    }
+  };
+};
+
 // ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
 
 export const create_tipologia_documental_service = (bodyPost: any): any => {
