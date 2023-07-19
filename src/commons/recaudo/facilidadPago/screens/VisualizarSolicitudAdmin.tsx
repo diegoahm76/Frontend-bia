@@ -15,6 +15,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { get_datos_contacto } from '../slices/CalidadPersonasSlice';
+import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
+import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
+import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
+import { VistaProyeccionPagos } from '../componentes/VistaProyeccionPagos';
 
 interface RootState {
   solicitud_facilidad: {
@@ -27,8 +31,9 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
-  const [existe] = useState(false); // Mientras nos conectamos con el Backend
+  const [existe] = useState(true); // Mientras nos conectamos con el Backend
   const [modal_anular, set_modal_anular] = useState(false);
+  const [modal_plan_pagos, set_modal_plan_pagos] = useState(false);
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
@@ -38,6 +43,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
 
   const handle_open_anular = () => { set_modal_anular(true) };
   const handle_close_anular = () => { set_modal_anular(false) };
+  const handle_close_plan_pagos = () => { set_modal_plan_pagos(false) };
 
   const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected_file =
@@ -206,7 +212,9 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                             fullWidth
                             color='primary'
                             variant='contained'
-                            onClick={() => {}}
+                            onClick={() => {
+                              set_modal_plan_pagos(true)
+                            }}
                           >
                             Ver Plan de Pagos
                           </Button>
@@ -288,9 +296,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     variant='outlined'
                     color="primary"
                     startIcon={<Close />}
-                    onClick={() => {
-                      handle_close_anular()
-                  }}
+                    onClick={handle_close_anular}
                   >
                     No
                   </Button>
@@ -298,12 +304,50 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     variant="contained"
                     color="primary"
                     startIcon={<SaveIcon />}
-                    onClick={()=>{
+                    onClick={() => {
                       navigate('../incumplimiento')
                   }}
                   >
                     Si
                   </Button>
+                </DialogActions>
+              </Box>
+            </Dialog>
+            <Dialog
+              open={modal_plan_pagos}
+              onClose={handle_close_plan_pagos}
+              maxWidth="lg"
+            >
+              <Box component="form"
+                onSubmit={()=>{}}>
+                <DialogTitle><Title title='Liquidación de la Facilidad de Pago - Usuario Cormacarena' /></DialogTitle>
+                <DialogActions>
+                  <Stack
+                    direction="column"
+                    justifyContent="center"
+                    spacing={2}
+                    sx={{ mb: '20px' }}
+                  >
+                    <TablaLiquidacion />
+                    <TablaLiquidacionResumen />
+                    <ResumenLiquidacionFacilidad />
+                    <VistaProyeccionPagos />
+                    <Stack
+                      direction="row"
+                      justifyContent="right"
+                      spacing={2}
+                      sx={{ mt: '40px' }}
+                    >
+                      <Button
+                        variant='outlined'
+                        color="primary"
+                        startIcon={<Close />}
+                        onClick={handle_close_plan_pagos}
+                      >
+                        Cerrar
+                      </Button>
+                    </Stack>
+                  </Stack>
                 </DialogActions>
               </Box>
             </Dialog>
