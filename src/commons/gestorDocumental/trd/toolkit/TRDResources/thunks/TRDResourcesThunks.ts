@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -446,6 +447,7 @@ export const get_catalogo_trd = (id_trd: number): any => {
 export const finish_trd_service = (id_trd: number, setFlag: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      if (!id_trd) return control_error('No se ha podido realizar la acción');
       const url = `gestor/trd/finish/${id_trd}/`;
       const { data } = await api.put(url);
       control_success(data.detail);
@@ -461,7 +463,9 @@ export const finish_trd_service = (id_trd: number, setFlag: any): any => {
 // ? resume TRD
 export const resume_trd_service = (id_trd: number, setFlag: any): any => {
   return async (dispatch: Dispatch<any>) => {
+    
     try {
+      if (!id_trd) return control_error('No se ha podido realizar la acción');
       const url = `gestor/trd/reanudar/trd/${id_trd}/`;
       const { data } = await api.put(url);
       control_success(data.detail);
