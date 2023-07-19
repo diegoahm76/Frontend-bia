@@ -14,8 +14,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
-import { BusquedaCuencas } from '../BusquedaCuencas';
-import { BusquedaPozos } from '../BusquedaPozos';
 import { Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
@@ -210,10 +208,10 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     rows_cuencas_instrumentos,
     rows_anexos,
     id_instrumento,
+    rows_edit_pozo,
     fetch_data_cuencas_instrumentos,
     fetch_data_instrumento,
     fetch_data_anexos,
-    rows_register_pozos,
     fetch_data_pozo_id,
   } = useContext(DataContext);
 
@@ -475,7 +473,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                   <Divider />
                   <DataGrid
                     autoHeight
-                    rows={rows_register_pozos}
+                    rows={rows_edit_pozo}
                     columns={colums_pozos}
                     getRowId={(row) => uuidv4()}
                     pageSize={5}
@@ -641,8 +639,6 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
           </Grid>
         </Grid>
       </Grid>
-      <BusquedaCuencas />
-      <BusquedaPozos />
     </>
   );
 };

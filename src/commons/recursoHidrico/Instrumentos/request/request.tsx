@@ -16,9 +16,23 @@ export const search_seccion_subseccion = async ({
   )}&nombre_subseccion=${String(nombre_subseccion ?? '')}`;
   return await api.get<ResponseServer<any[]>>(url);
 };
+// agregar instrumento
 export const agregar_instrumento = async (datos: FormData): Promise<any> => {
   const response = await api.post(
     `hidrico/bibliotecas/instrumentos/create/`,
+    datos
+  );
+  return response.data;
+};
+
+// editar instrumento
+
+export const editar_instrumento = async (
+  id_instrumento: number,
+  datos: FormData
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/instrumentos/update/${id_instrumento}/`,
     datos
   );
   return response.data;

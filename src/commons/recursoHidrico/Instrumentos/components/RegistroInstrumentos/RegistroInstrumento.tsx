@@ -201,7 +201,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
       const datos_instrumento = new FormData();
       datos_instrumento.append('nombre', data.nombre);
       datos_instrumento.append('fecha_creacion_instrumento', fecha_crea);
-      if (fecha_vigencia) {
+      if (fecha_vigencia && data.fecha_fin_vigencia) {
         datos_instrumento.append('fecha_fin_vigencia', fecha_vigencia);
       }
       datos_instrumento.append('cod_tipo_agua', tipo_agua_selected);

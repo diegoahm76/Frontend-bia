@@ -3,9 +3,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Autocomplete,
+  Avatar,
   Button,
   Divider,
   Grid,
+  IconButton,
   MenuItem,
   TextField,
   Typography,
@@ -16,7 +18,7 @@ import { LoadingButton } from '@mui/lab';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { Controller } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
-import { agregar_instrumento } from '../../request/request';
+import { editar_instrumento } from '../../request/request';
 import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,15 +27,192 @@ import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
 import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
+import { v4 as uuidv4 } from 'uuid';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
 
 export const EditarInstrumento: React.FC = (): JSX.Element => {
   // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+  const columns_aforo: GridColDef[] = [
+    // ...columns_result_lab,
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {/* <IconButton
+                        onClick={() => {
+                          set_id_seccion(params.row.id_seccion);
+                          set_info_seccion(params.row);
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                          }}
+                          variant="rounded"
+                        >
+                          <ChecklistIcon
+                            titleAccess="Seleccionar Sección"
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton> */}
+        </>
+      ),
+    },
+  ];
+  const columns_prueba_bombeo: GridColDef[] = [
+    // ...columns_result_lab,
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {/* <IconButton
+                        onClick={() => {
+                          set_id_seccion(params.row.id_seccion);
+                          set_info_seccion(params.row);
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                          }}
+                          variant="rounded"
+                        >
+                          <ChecklistIcon
+                            titleAccess="Seleccionar Sección"
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton> */}
+        </>
+      ),
+    },
+  ];
+  const columns_laboratorio: GridColDef[] = [
+    // ...columns_result_lab,
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {/* <IconButton
+                        onClick={() => {
+                          set_id_seccion(params.row.id_seccion);
+                          set_info_seccion(params.row);
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                          }}
+                          variant="rounded"
+                        >
+                          <ChecklistIcon
+                            titleAccess="Seleccionar Sección"
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton> */}
+        </>
+      ),
+    },
+  ];
+  const colums_pozos: GridColDef[] = [
+    {
+      field: 'cod_pozo',
+      headerName: 'CÓDIGO POZO',
+      width: 200,
+    },
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE POZO',
+      width: 200,
+    },
+  ];
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ANEXO',
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'Acciones',
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <IconButtonDownLoad
+            fileUrl={params.value}
+            fileName={params.row.nombre}
+            condition={false}
+          />
+          <IconButton
+            onClick={() => {
+              set_is_open_edit_archivos(true);
+              setValue('nombre_actualizar', params.row.nombre_archivo);
+              set_id_archivo(params.row.id_archivo_instrumento);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar nombre de archivo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
   const {
-    reset_instrumento,
-    pozos_selected,
+    // * Editar Archivos
+    is_open_edit_archivos,
+    id_archivo,
+    set_is_open_edit_archivos,
+    set_id_archivo,
+
     cuenca,
-    id_pozo_selected,
     data_id_cuencas,
     id_seccion,
     id_subseccion,
@@ -44,18 +223,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
     current_date,
     tipo_agua_selected,
     is_loading_submit,
+    cuenca_select,
+    limpiar_archivos,
+    handle_change_autocomplete_edit,
     set_fecha_creacion,
     set_fecha_vigencia,
     set_is_loading_submit,
     handle_date_change,
     fetch_data_cuencas_instrumentos_select,
-    cuenca_select,
-    handle_change_autocomplete_edit,
     register,
     handleSubmit,
     fetch_data_cuencas,
     fetch_data_pozo,
     setValue,
+    reset_instrumento,
     control,
     formErrors,
   } = useRegisterInstrumentoHook();
@@ -64,6 +245,12 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
     nombre_seccion,
     id_instrumento,
     info_busqueda_instrumentos,
+    rows_edit_pozo,
+    row_cartera_aforo,
+    row_prueba_bombeo,
+    row_result_laboratorio,
+    rows_anexos,
+    set_rows_anexos,
     fetch_data_instrumento,
     fetch_data_pozo_id,
     fetch_data_anexos,
@@ -92,7 +279,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       const datos_instrumento = new FormData();
       datos_instrumento.append('nombre', data.nombre);
       datos_instrumento.append('fecha_creacion_instrumento', fecha_crea);
-      if (fecha_vigencia) {
+      if (fecha_vigencia && data.fecha_fin_vigencia) {
         datos_instrumento.append('fecha_fin_vigencia', fecha_vigencia);
       }
       datos_instrumento.append('cod_tipo_agua', tipo_agua_selected);
@@ -100,8 +287,11 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
         datos_instrumento.append('id_seccion', id_seccion.toString());
         datos_instrumento.append('id_subseccion', id_subseccion.toString());
       }
-      if (id_pozo_selected) {
-        datos_instrumento.append('id_pozo', id_pozo_selected.toString());
+      if (info_busqueda_instrumentos?.id_pozo) {
+        datos_instrumento.append(
+          'id_pozo',
+          info_busqueda_instrumentos?.id_pozo.toString()
+        );
       }
       if (id_cuencas.length > 0) {
         datos_instrumento.append(
@@ -116,7 +306,26 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
         }
       });
 
-      await agregar_instrumento(datos_instrumento);
+      if (!data.nombre_actualizar && !id_archivo) {
+        datos_instrumento.append(
+          'nombre_actualizar',
+          JSON.stringify([]) as any
+        );
+      } else {
+        const nombre_actualizar = [
+          {
+            id_archivo: id_archivo as number,
+            nombre_archivo: data.nombre_actualizar,
+          },
+        ];
+        datos_instrumento.append(
+          'nombre_actualizar',
+          JSON.stringify(nombre_actualizar) as any
+        );
+      }
+
+      await editar_instrumento(id_instrumento as number, datos_instrumento);
+
       dispatch(
         setCurrentInstrumento({
           nombre: data.nombre,
@@ -124,11 +333,26 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
           nombre_subseccion,
         })
       );
-      control_success('Se agregó instrumento correctamente');
+      control_success('Se actualizó instrumento correctamente');
       set_is_loading_submit(false);
+      set_is_open_edit_archivos(false);
+      void fetch_data_anexos();
+
+      const update_rows_anexos = rows_anexos.map((row) => {
+        if (row.id_archivo_instrumento === id_archivo) {
+          return {
+            ...row,
+            nombre_archivo: data.nombre_actualizar,
+          };
+        }
+        return row;
+      });
+      set_rows_anexos(update_rows_anexos);
+      limpiar_archivos();
     } catch (error: any) {
       set_is_loading_submit(false);
       control_error(error.response.data.detail);
+      set_is_loading_submit(false);
     }
   });
 
@@ -142,7 +366,6 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (info_busqueda_instrumentos) {
-      console.log('info_busqueda_instrumentos', info_busqueda_instrumentos);
       reset_instrumento({
         nombre: info_busqueda_instrumentos.nombre,
         fecha_creacion_instrumento:
@@ -343,7 +566,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
           {tipo_agua_selected === 'SUP' ? (
             <>
               {cuenca.length > 0 && (
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
                     fullWidth
@@ -377,39 +600,62 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
           ) : null}
           {tipo_agua_selected === 'SUB' ? (
             <>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="id_pozo"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Seleccione un pozo"
-                      select
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                      fullWidth
-                      // required
-                      // error={!!formErrors.cod_tipo_agua}
-                      // helperText={
-                      //   formErrors?.cod_tipo_agua?.type === 'required' &&
-                      //   'Este campo es obligatorio'
-                      // }
-                    >
-                      {pozos_selected.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
+              {info_busqueda_instrumentos?.id_pozo ? (
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    Pozo asociado al instrumento:
+                  </Typography>
+                  <Divider />
+                  <DataGrid
+                    autoHeight
+                    rows={rows_edit_pozo}
+                    columns={colums_pozos}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </Grid>
+              ) : null}
             </>
           ) : null}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Anexos asociados al instrumento:
+            </Typography>
+            <Divider />
+            <DataGrid
+              autoHeight
+              rows={rows_anexos}
+              columns={columns_anexos}
+              getRowId={(row) => uuidv4()}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+            />
+          </Grid>{' '}
+          {is_open_edit_archivos && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  // label="Nombre a actualizar"
+                  placeholder="Nombre a actualizar"
+                  size="small"
+                  margin="dense"
+                  multiline
+                  fullWidth
+                  autoFocus
+                  required
+                  {...register('nombre_actualizar', { required: true })}
+                  error={!!formErrors.nombre_actualizar}
+                  helperText={
+                    formErrors?.nombre_actualizar?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                />
+              </Grid>{' '}
+              <Grid item xs={12} sm={6}></Grid>
+            </>
+          )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
@@ -449,6 +695,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               </Typography>
               <Divider />
             </Grid>
+            {row_cartera_aforo.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <DataGrid
+                    autoHeight
+                    rows={row_cartera_aforo}
+                    columns={columns_aforo}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </Grid>
+              </>
+            )}
             <Grid item spacing={2} justifyContent="end" container>
               <Grid item>
                 <Button
@@ -477,6 +737,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               </Typography>
               <Divider />
             </Grid>
+            {row_prueba_bombeo.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <DataGrid
+                    autoHeight
+                    rows={row_prueba_bombeo}
+                    columns={columns_prueba_bombeo}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </Grid>
+              </>
+            )}
             <Grid item spacing={2} justifyContent="end" container>
               <Grid item>
                 <LoadingButton
@@ -504,6 +778,20 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
           </Typography>
           <Divider />
         </Grid>
+        {row_result_laboratorio.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <DataGrid
+                autoHeight
+                rows={row_result_laboratorio}
+                columns={columns_laboratorio}
+                getRowId={(row) => uuidv4()}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            </Grid>
+          </>
+        )}
         <Grid item spacing={2} justifyContent="end" container>
           <Grid item>
             <LoadingButton

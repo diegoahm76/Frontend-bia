@@ -62,6 +62,7 @@ interface UserContext {
   row_result_laboratorio: any;
   rows_register_cuencas: any;
   rows_register_pozos: any;
+  rows_edit_pozo: any;
   id_seccion: number | null;
   id_subseccion: number | null;
   is_open_cuenca: boolean;
@@ -77,6 +78,7 @@ interface UserContext {
   set_row_prueba_bombeo: (row_prueba_bombeo: any) => void;
   set_row_result_laboratorio: (row_result_laboratorio: any) => void;
   set_rows_register_cuencas: (rows_register_cuencas: any) => void;
+  set_rows_edit_pozo: (rows_edit_pozo: any) => void;
   set_rows_register_pozos: (rows_register_pozos: any) => void;
   set_id_seccion: (id_seccion: number | null) => void;
   set_id_subseccion: (id_subseccion: number | null) => void;
@@ -141,6 +143,7 @@ export const DataContext = createContext<UserContext>({
   row_result_laboratorio: {},
   rows_register_cuencas: {},
   rows_register_pozos: {},
+  rows_edit_pozo: {},
 
   id_seccion: null,
   id_subseccion: null,
@@ -160,6 +163,7 @@ export const DataContext = createContext<UserContext>({
   set_row_prueba_bombeo: () => {},
   set_row_result_laboratorio: () => {},
   set_rows_register_cuencas: () => {},
+  set_rows_edit_pozo: () => {},
   set_rows_register_pozos: () => {},
 
   set_id_seccion: () => {},
@@ -234,6 +238,9 @@ export const UserProvider = ({
     React.useState<any>({});
 
   const [rows_register_pozos, set_rows_register_pozos] = React.useState<any>(
+    {}
+  );
+  const [rows_edit_pozo, set_rows_edit_pozo] = React.useState<any>(
     {}
   );
 
@@ -350,7 +357,7 @@ export const UserProvider = ({
         activo: datos.activo,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows_register_pozos(datos_pozo);
+      set_rows_edit_pozo(datos_pozo);
       if (response?.length > 0) {
         const data_pozo: ValueProps[] = response.map((item: IpropsPozos) => ({
           value: item.id_pozo,
@@ -398,6 +405,7 @@ export const UserProvider = ({
     row_result_laboratorio,
     rows_register_cuencas,
     rows_register_pozos,
+    rows_edit_pozo,
     id_seccion,
     id_subseccion,
     archivos,
@@ -414,6 +422,7 @@ export const UserProvider = ({
     set_row_result_laboratorio,
     set_rows_register_cuencas,
     set_rows_register_pozos,
+    set_rows_edit_pozo,
     set_id_seccion,
     set_id_subseccion,
     set_archivos,

@@ -39,6 +39,7 @@ export const useRegisterInstrumentoHook = () => {
       fecha_fin_vigencia: '',
       id_cuencas: [],
       id_pozo: '',
+      nombre_actualizar: '',
     },
   });
 
@@ -172,11 +173,21 @@ export const useRegisterInstrumentoHook = () => {
     set_nombres_archivos([]);
   };
 
+  const limpiar_archivos = (): void => {
+    set_archivos([]);
+    set_nombres_archivos([]);
+  };
+
   // <-------------------> ver cartera de aforo o prueba de bombeo <------------------->
 
   const [is_open_cartera_aforo, set_is_open_cartera_aforo] =
     useState<boolean>(false);
   const [is_open_prueba_bombeo, set_is_open_prueba_bombeo] =
+    useState<boolean>(false);
+
+  // * Editar Archivos
+  const [id_archivo, set_id_archivo] = useState<number | null>(null);
+  const [is_open_edit_archivos, set_is_open_edit_archivos] =
     useState<boolean>(false);
 
   return {
@@ -213,6 +224,12 @@ export const useRegisterInstrumentoHook = () => {
     set_is_open_cartera_aforo,
     set_is_open_prueba_bombeo,
 
+    // * Editar Archivos
+    is_open_edit_archivos,
+    set_is_open_edit_archivos,
+    id_archivo,
+    set_id_archivo,
+
     // *use form
     register,
     reset_instrumento,
@@ -225,6 +242,7 @@ export const useRegisterInstrumentoHook = () => {
 
     // * limpia formulario
     limpiar_formulario,
+    limpiar_archivos,
 
     //* data cuenca
 
