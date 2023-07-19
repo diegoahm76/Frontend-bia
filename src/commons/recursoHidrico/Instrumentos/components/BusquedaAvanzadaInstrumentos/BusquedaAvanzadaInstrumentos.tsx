@@ -24,7 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
-  const { set_mode } = useContext(DataContext);
+  const { set_mode, set_id_instrumento, set_nombre_seccion, set_nombre_subseccion, set_info_busqueda_instrumentos} = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
@@ -58,6 +58,10 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
+                set_info_busqueda_instrumentos(params.row)
+                set_id_instrumento(params.row.id_instrumento);
+                set_nombre_seccion(params.row.nombre_seccion);
+                set_nombre_subseccion(params.row.nombre_subseccion);
                 set_mode('select_instrumento')
                 handle_close();
               }}
@@ -70,6 +74,10 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
               size="small"
               startIcon={<EditIcon />}
               onClick={() => {
+                set_info_busqueda_instrumentos(params.row)
+                set_id_instrumento(params.row.id_instrumento);
+                set_nombre_seccion(params.row.nombre_seccion);
+                set_nombre_subseccion(params.row.nombre_subseccion);
                 set_mode('edit_instrumento')
                 handle_close();
               }}

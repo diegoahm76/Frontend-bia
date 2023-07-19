@@ -177,6 +177,7 @@ export const useRegisterInstrumentoHook = () => {
     reset_instrumento,
     handleSubmit,
     watch,
+    setValue,
     watch_instrumento,
     control,
     formErrors,

@@ -6,7 +6,7 @@ import React, { createContext } from 'react';
 import { control_error } from '../../../../helpers';
 import { get_cuencas, get_pozo } from '../../configuraciones/Request/request';
 import type { Cuenca, Pozo } from '../../configuraciones/interfaces/interfaces';
-import type { IpropsPozos, ValueProps } from '../interfaces/interface';
+import type { BusquedaInstrumentos, IpropsPozos, ValueProps } from '../interfaces/interface';
 import { type AxiosError } from 'axios';
 import {
   type Archivos,
@@ -30,9 +30,11 @@ interface UserContext {
   // * seleccionar instrumento(información)
   id_instrumento: number | null;
   info_instrumentos: any;
+  info_busqueda_instrumentos: BusquedaInstrumentos | undefined;
   rows_cuencas_instrumentos: CuencasInstrumentos[];
   rows_anexos: Archivos[];
   set_id_instrumento: (id_instrumento: number | null) => void;
+  set_info_busqueda_instrumentos: (info_busqueda_instrumentos: BusquedaInstrumentos) => void;
   set_info_instrumentos: (info_instrumentos: any) => void;
   set_rows_cuencas_instrumentos: (
     rows_cuencas_instrumentos: CuencasInstrumentos[]
@@ -94,10 +96,26 @@ export const DataContext = createContext<UserContext>({
   // * seleccionar instrumento(información)
 
   id_instrumento: null,
+  info_busqueda_instrumentos: {
+    id_instrumento:             0,
+    id_seccion:                 0,
+    nombre_seccion:             '',
+    id_subseccion:              0,
+    nombre_subseccion:          '',
+    nombre:                     '',
+    id_resolucion:              0,
+    fecha_registro:             '',
+    fecha_creacion_instrumento: '',
+    fecha_fin_vigencia:         '',
+    cod_tipo_agua:              '',
+    id_persona_registra:        0,
+    id_pozo:                    0,
+  },
   info_instrumentos: {},
   rows_cuencas_instrumentos: [],
   rows_anexos: [],
   set_id_instrumento: () => {},
+  set_info_busqueda_instrumentos: () => {},
   set_info_instrumentos: () => {},
   set_rows_cuencas_instrumentos: () => {},
   set_rows_anexos: () => {},
@@ -214,6 +232,7 @@ export const UserProvider = ({
   const [id_instrumento, set_id_instrumento] = React.useState<number | null>(
     null
   );
+  const [info_busqueda_instrumentos, set_info_busqueda_instrumentos] = React.useState<BusquedaInstrumentos>()
   const [info_instrumentos, set_info_instrumentos] = React.useState<any>();
   const [rows_cuencas_instrumentos, set_rows_cuencas_instrumentos] =
     React.useState<CuencasInstrumentos[]>([]);
@@ -321,10 +340,12 @@ export const UserProvider = ({
     // * seleccionar instrumento(información)
 
     id_instrumento,
+    info_busqueda_instrumentos,
     info_instrumentos,
     rows_cuencas_instrumentos,
     rows_anexos,
     set_id_instrumento,
+    set_info_busqueda_instrumentos,
     set_info_instrumentos,
     set_rows_cuencas_instrumentos,
     set_rows_anexos,

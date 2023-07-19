@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -157,12 +158,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     nombres_archivos,
     fecha_creacion,
     fecha_vigencia,
-    current_date,
     tipo_agua_selected,
     row_cartera_aforo,
     row_prueba_bombeo,
     row_result_laboratorio,
     is_loading_submit,
+    set_fecha_creacion,
+    set_fecha_vigencia,
     set_is_loading_submit,
     set_is_open_cuenca,
     set_is_open_pozos,
@@ -174,25 +176,51 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     fetch_data_pozo,
     control,
     formErrors,
-    limpiar_formulario,
+    setValue,
     // watch_instrumento,
   } = useRegisterInstrumentoHook();
-  const { nombre_subseccion, nombre_seccion, info_instrumentos } =
-    useContext(DataContext);
+
+  const {
+    nombre_subseccion,
+    nombre_seccion,
+    info_instrumentos,
+    info_busqueda_instrumentos,
+  } = useContext(DataContext);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (info_instrumentos) {
+    if (info_busqueda_instrumentos) {
+      console.log('info_busqueda_instrumentos', info_busqueda_instrumentos);
       reset_instrumento({
-        nombre: info_instrumentos.nombre,
-        fecha_creacion_instrumento: info_instrumentos.fecha_creacion,
-        fecha_fin_vigencia: info_instrumentos.fecha_vigencia,
-        nombre_seccion: info_instrumentos.nombre_seccion,
+        nombre: info_busqueda_instrumentos.nombre,
+        fecha_creacion_instrumento:
+          info_busqueda_instrumentos.fecha_creacion_instrumento,
+        fecha_fin_vigencia: info_busqueda_instrumentos.fecha_fin_vigencia,
       });
+      setValue('nombre', info_busqueda_instrumentos.nombre);
+      setValue(
+        'fecha_creacion_instrumento',
+        info_busqueda_instrumentos.fecha_creacion_instrumento
+      );
+      setValue(
+        'fecha_fin_vigencia',
+        info_busqueda_instrumentos.fecha_fin_vigencia
+      );
+      setValue('cod_tipo_agua', info_busqueda_instrumentos.cod_tipo_agua);
+      set_fecha_creacion(
+        info_busqueda_instrumentos.fecha_creacion_instrumento
+          ? dayjs(info_busqueda_instrumentos.fecha_creacion_instrumento)
+          : null
+      );
+      set_fecha_vigencia(
+        info_busqueda_instrumentos.fecha_fin_vigencia
+          ? dayjs(info_busqueda_instrumentos.fecha_fin_vigencia)
+          : null
+      );
     }
-  }, [info_instrumentos]);
+  }, [info_busqueda_instrumentos]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -247,7 +275,6 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       );
       control_success('Se agregó instrumento correctamente');
       set_is_loading_submit(false);
-      limpiar_formulario();
     } catch (error: any) {
       set_is_loading_submit(false);
       control_error(error.response.data.detail);
@@ -293,6 +320,27 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
             <Divider />
           </Grid>
           <Grid item xs={12} sm={6}>
+            <TextField
+              label="Sección"
+              size="small"
+              value={nombre_seccion}
+              fullWidth
+              multiline
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Subsección"
+              size="small"
+              value={nombre_subseccion}
+              multiline
+              fullWidth
+              disabled
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
             <Controller
               name="nombre"
               control={control}
@@ -325,7 +373,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               type="date"
               size="small"
               fullWidth
-              value={current_date}
+              value={info_busqueda_instrumentos?.fecha_registro}
               disabled
             />
           </Grid>
@@ -508,17 +556,6 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
           ) : null}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="warning"
-                onClick={() => {
-                  limpiar_formulario();
-                }}
-              >
-                Limpiar
-              </Button>
-            </Grid>
             <Grid item>
               <LoadingButton
                 variant="contained"
