@@ -7,7 +7,7 @@ interface TRD {
 
   //! catalogo de series y subseries por Unidad organizacional
   catalado_series_subseries_unidad_organizacional: any[];
-  ccd_current_catalogo: any;
+  ccd_current_catalogo_ser_sub_unid: any;
 
   //! data formatos tipos medios creados
   data_format_documental_type_current: any;
@@ -27,7 +27,7 @@ const initial_state: TRD = {
   trd_current: null,
   //! catalogo de series y subseries por Unidad organizacional
   catalado_series_subseries_unidad_organizacional: [],
-  ccd_current_catalogo: null,
+  ccd_current_catalogo_ser_sub_unid: null,
   //! data formatos tipos medios creados
   data_format_documental_type_current: null,
   data_format_documental_type: [],
@@ -58,8 +58,8 @@ export const trd_slice = createSlice({
       state.catalado_series_subseries_unidad_organizacional = action.payload;
     },
     //! ccd current catalogo
-    get_ccd_current_catalogo: (state: any, action: PayloadAction<any>) => {
-      state.ccd_current_catalogo = action.payload;
+    get_ccd_current_catalogo_ser_sub_unid: (state: any, action: PayloadAction<any>) => {
+      state.ccd_current_catalogo_ser_sub_unid = action.payload;
     },
 
     //! data formatos tipos medios creados
@@ -105,6 +105,7 @@ export const {
   get_trd_current,
   //* -------------------------------->
   get_catalogo_series_subseries_unidad_organizacional,
+  get_ccd_current_catalogo_ser_sub_unid,
   //* -------------------------------->
   get_data_format_documental_type_current,
   get_data_format_documental_type,

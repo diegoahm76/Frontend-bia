@@ -10,16 +10,20 @@ import {
   // ButtonGroup,
   // Button,
 } from '@mui/material';
-import { useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { Title } from '../../../../../components';
 import { columns } from './colums/colums';
 
 // import { Avatar, IconButton } from "@mui/material";
 // import DeleteIcon from "@mui/icons-material/Delete";
 import  AdminPanelSettingsIcon  from '@mui/icons-material/AdminPanelSettings';
+import { get_ccd_current_catalogo_ser_sub_unid } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 
 export const CCDSeleccionadoCatalogo = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch()
+
   // ? this is the neccesary state to show the "catalogo by unidad organizacional"
   const { catalado_series_subseries_unidad_organizacional } = useAppSelector(
     (state: any) => state.trd_slice
@@ -37,9 +41,11 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
             <IconButton
               aria-label="delete"
               size="large"
+              title='Administrar catalogo TRD'
               onClick={() => {
                 // ? this is the function to delete the ccd
                 // delete_ccd(params.row.id_cat_serie_und);
+                dispatch(get_ccd_current_catalogo_ser_sub_unid(params.row))
                 console.log(params.row);
               }}
             >

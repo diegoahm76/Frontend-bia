@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Box, Grid, Stack } from '@mui/material';
@@ -5,11 +6,16 @@ import { useAppSelector } from '../../../../../../../../hooks';
 import { Title } from '../../../../../../../../components';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
-  const { catalado_series_subseries_unidad_organizacional } = useAppSelector(
+  const { ccd_current_catalogo_ser_sub_unid } = useAppSelector(
     (state: any) => state.finished_ccd_slice
   );
+//* crear modal open y close para administrar trd
+  if (ccd_current_catalogo_ser_sub_unid === null || ccd_current_catalogo_ser_sub_unid === undefined) return null;
 
-  if (catalado_series_subseries_unidad_organizacional.length === 0) return null;
+  console.log(
+    'ccd_current_catalogo_ser_sub_unid',
+    ccd_current_catalogo_ser_sub_unid
+  );
 
   return (
     <>
