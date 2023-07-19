@@ -102,10 +102,14 @@ export const use_trd = (): any => {
 
   } = useForm({
     defaultValues: {
-      nombre: '',
-      activo: true,
-      cod_tipo_medio_doc: '',
-      formatos: []
+      cod_disposicion_final: '',
+      digitalizacion_dis_final: true,
+      tiempo_retencion_ag: '',
+      tiempo_retencion_ac: '',
+      descripcion_procedimiento: '',
+      justificacion_cambio: '',
+      tipologias: [],
+      ruta_archivo_cambio: '',
     },
     mode: 'onBlur',
     reValidateMode: 'onChange'
