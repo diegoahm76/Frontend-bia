@@ -1,6 +1,6 @@
 import { type GridColDef } from '@mui/x-data-grid';
 
-export const columns_catalogo: GridColDef[] = [
+export const columns: GridColDef[] = [
  /* {
     headerName: 'ID Un. Org',
     field: 'id_unidad_organizacional',

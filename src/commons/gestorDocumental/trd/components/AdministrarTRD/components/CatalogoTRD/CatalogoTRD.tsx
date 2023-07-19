@@ -4,14 +4,14 @@
 import {
   Grid,
   Box,
-  Button,
+  // Button,
   // Divider,
   // TextField,
   Stack
   // ButtonGroup,
   // Button,
 } from '@mui/material';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+// import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { Title } from '../../../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -24,7 +24,7 @@ import { columns } from './utils/columsCatalogoTRD';
 
 export const CatalogoTRD = (): JSX.Element => {
   // ? useSelector declaration, states from store
-  const { catalogo_trd, trd_current } = useAppSelector(
+  const { catalogo_trd, /* trd_current */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
@@ -79,7 +79,7 @@ export const CatalogoTRD = (): JSX.Element => {
             sx={{ m: '20px 0' }}
           >
             {/* buttons start */}
-            <Button
+            {/* <Button
               // color="info"
               color="warning"
               variant="contained"
@@ -87,9 +87,8 @@ export const CatalogoTRD = (): JSX.Element => {
               startIcon={<AdminPanelSettingsIcon />}
               onClick={() => console.log('ABRIR ADMINISTRACIÓN DE TRD')}
             >
-              {/* this button must be part of the TRD administration */}
               ADMINISTRAR CATÁLOGO TRD
-            </Button>
+            </Button> */}
           </Stack>
         </Box>
       </Grid>

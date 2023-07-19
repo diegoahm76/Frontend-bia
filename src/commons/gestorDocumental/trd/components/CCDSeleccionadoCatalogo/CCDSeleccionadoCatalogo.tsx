@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   Grid,
   Box,
+  IconButton,
   // Divider,
   // TextField,
   // Stack,
@@ -11,10 +12,11 @@ import {
 } from '@mui/material';
 import { useAppSelector } from '../../../../../hooks';
 import { Title } from '../../../../../components';
-import { columns_catalogo } from './colums/colums';
+import { columns } from './colums/colums';
 
 // import { Avatar, IconButton } from "@mui/material";
 // import DeleteIcon from "@mui/icons-material/Delete";
+import  AdminPanelSettingsIcon  from '@mui/icons-material/AdminPanelSettings';
 
 
 export const CCDSeleccionadoCatalogo = (): JSX.Element => {
@@ -22,6 +24,32 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
   const { catalado_series_subseries_unidad_organizacional } = useAppSelector(
     (state: any) => state.trd_slice
   );
+
+  const columns_catalogo = [
+    ...columns,
+    {
+      headerName: 'Acciones',
+      field: 'acciones',
+      width: 180,
+      renderCell: (params: { row: { id_cat_serie_und: string } }) => {
+        return (
+          <>
+            <IconButton
+              aria-label="delete"
+              size="large"
+              onClick={() => {
+                // ? this is the function to delete the ccd
+                // delete_ccd(params.row.id_cat_serie_und);
+                console.log(params.row);
+              }}
+            >
+              <AdminPanelSettingsIcon />
+            </IconButton>
+          </>
+        );
+      }
+    },
+  ]
 
   return (
     <>

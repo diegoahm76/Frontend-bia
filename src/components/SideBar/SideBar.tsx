@@ -436,7 +436,9 @@ export const SideBar: FC<SideBarProps> = ({
               key={indexStore}
             >
               <ListItemButton
-                sx={{ borderRadius: '10px' }}
+                sx={{ borderRadius: '10px',
+              
+              }}
                 onClick={() => {
                   open_collapse(elementStore, indexStore);
                 }}
@@ -572,6 +574,12 @@ export const SideBar: FC<SideBarProps> = ({
                                                       (mo: any, km2: any) => {
                                                         return (
                                                           <ListItemButton
+                                                            sx={{
+                                                              pl: '10px',
+                                                              borderRadius:
+                                                                '10px',
+                                                                color: mod_dark ? '#fafafa' : '#141415'
+                                                            }}
                                                             key={km2}
                                                             href={
                                                               mo.ruta_formulario

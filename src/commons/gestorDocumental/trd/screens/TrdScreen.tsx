@@ -38,6 +38,7 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
+import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -326,6 +327,15 @@ export const TrdScreen: FC = (): JSX.Element => {
           <CatalogoTRD />
         </Grid>
         {/* CATALOGO TRD */}
+
+        {/* ------------------ */}
+        {/* Administración de TRD  */}
+
+        <Grid item xs={12}>
+          <AdminTRDScreen/>
+        </Grid>
+
+        {/* ------------------ */}
       </Grid>
       {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
 
@@ -355,31 +365,10 @@ export const TrdScreen: FC = (): JSX.Element => {
         spacing={2}
         sx={{ m: '20px 0' }}
       >
-        <Button
-          color="success"
-          variant="contained"
-          startIcon={<SaveIcon />}
-          onClick={() => {
-            if (flag_finish_or_or_edit_trd) {
-              dispatch(resume_trd_service(trd_current?.id_trd, set_flag_finish_or_edit_trd))
-              console.log('TRD reanudado');
-            } else {
-              dispatch(finish_trd_service(trd_current?.id_trd, set_flag_finish_or_edit_trd))
-              console.log('TRD finalizado');
-            }
-          }}
-        >
-          {
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
-          }
-        </Button>
-
         {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
 
         <Button
-          // color="info"
-          color="primary"
+          color="warning"
           variant="contained"
           startIcon={<AddCircleIcon />}
           onClick={openModalCreacionFormatoTipo}
@@ -388,6 +377,33 @@ export const TrdScreen: FC = (): JSX.Element => {
         </Button>
 
         {/* buttons end */}
+        <Button
+          color="success"
+          variant="contained"
+          startIcon={<SaveIcon />}
+          onClick={() => {
+            if (flag_finish_or_or_edit_trd) {
+              dispatch(
+                resume_trd_service(
+                  trd_current?.id_trd,
+                  set_flag_finish_or_edit_trd
+                )
+              );
+            } else {
+              dispatch(
+                finish_trd_service(
+                  trd_current?.id_trd,
+                  set_flag_finish_or_edit_trd
+                )
+              );
+            }
+          }}
+        >
+          {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
+          }
+        </Button>
       </Stack>
 
       {/* -- this modal allow us to do the TRD search  -- */}
