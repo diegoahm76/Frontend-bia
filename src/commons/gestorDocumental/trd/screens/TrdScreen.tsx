@@ -38,7 +38,7 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
-import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
+// import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -329,11 +329,11 @@ export const TrdScreen: FC = (): JSX.Element => {
         {/* CATALOGO TRD */}
 
         {/* ------------------ */}
-        {/* Administración de TRD  */}
+        {/* Administración de TRD, va a estar en otra ruta  */}
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <AdminTRDScreen/>
-        </Grid>
+        </Grid> */}
 
         {/* ------------------ */}
       </Grid>

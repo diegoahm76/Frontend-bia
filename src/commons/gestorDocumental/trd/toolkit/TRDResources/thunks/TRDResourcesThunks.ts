@@ -434,9 +434,13 @@ export const get_catalogo_trd = (id_trd: number): any => {
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         data
       ); */
+      console.log(data.data, 'data.data');
+
       dispatch(get_catalogo_trd_action(data.data));
+
       return data;
     } catch (error: any) {
+      dispatch(get_catalogo_trd_action([]));
       return error as AxiosError;
     }
   };

@@ -35,6 +35,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import  SyncIcon  from '@mui/icons-material/Sync';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContextTRD } from '../../../context/ModalsContextTrd';
@@ -51,6 +52,7 @@ import {
 import { columsTRD } from './utils/colums';
 import { options_search_trd } from './utils/options';
 import InfoIcon from '@mui/icons-material/Info';
+
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -449,7 +451,9 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   type="submit"
                   color="primary"
                   variant="contained"
-                  startIcon={<SaveIcon />}
+                  startIcon={
+                    title_button === 'Actualizar' ? <SyncIcon /> : <SaveIcon />
+                  }
                 >
                   {title_button}
                 </Button>

@@ -249,7 +249,7 @@ export const BusquedaTipologias = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={5.5}>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
                   color="primary"

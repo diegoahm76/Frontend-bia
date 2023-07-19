@@ -30,7 +30,11 @@ const ModalContextTRD = createContext<ModalContextState>({
   //*
   modalAdministracionTipologiasDocumentales: false,
   openModalAdministracionTipologiasDocumentales: () => {},
-  closeModalAdministracionTipologiasDocumentales: () => {}
+  closeModalAdministracionTipologiasDocumentales: () => {},
+  //* -------------------------------------> MODAL ADMINISTRACION TRD
+  modalAdministracionTRD: false,
+  openModalAdministracionTRD: () => {},
+  closeModalAdministracionTRD: () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -80,6 +84,15 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES' });
   }, []);
 
+  //* -------------------------------------> MODAL ADMINISTRACION TRD
+  const openModalAdministracionTRD = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_ADMINISTRACION_TRD' });
+  }, []);
+
+  const closeModalAdministracionTRD = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_ADMINISTRACION_TRD' });
+  }, []);
+
   //* -------------------------------------> loading button create TRD
   const setCreateTRDLoadingButton = useCallback((value: boolean) => {
     dispatch({ type: 'SET_CREATE_TRD_LOADING_BUTTON', payload: value });
@@ -110,6 +123,10 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
           state.modalAdministracionTipologiasDocumentales,
         openModalAdministracionTipologiasDocumentales,
         closeModalAdministracionTipologiasDocumentales,
+        //* -------------------------------------> MODAL ADMINISTRACION TRD
+        modalAdministracionTRD: state.modalAdministracionTRD,
+        openModalAdministracionTRD,
+        closeModalAdministracionTRD,
 
         //* -------------------------------------> loading button create TRD
         createTRDLoadingButton: state.createTRDLoadingButton,

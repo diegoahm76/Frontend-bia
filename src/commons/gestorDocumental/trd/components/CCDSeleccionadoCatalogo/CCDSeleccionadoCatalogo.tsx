@@ -1,28 +1,29 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { DataGrid } from '@mui/x-data-grid';
 import {
   Grid,
   Box,
-  IconButton,
+  // IconButton,
   // Divider,
   // TextField,
   // Stack,
   // ButtonGroup,
   // Button,
 } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { /* useAppDispatch, */ useAppSelector } from '../../../../../hooks';
 import { Title } from '../../../../../components';
-import { columns } from './colums/colums';
+import { columnsCCD } from './colums/colums';
 
 // import { Avatar, IconButton } from "@mui/material";
 // import DeleteIcon from "@mui/icons-material/Delete";
-import  AdminPanelSettingsIcon  from '@mui/icons-material/AdminPanelSettings';
-import { get_ccd_current_catalogo_ser_sub_unid } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
+// import  AdminPanelSettingsIcon  from '@mui/icons-material/AdminPanelSettings';
+// import { get_ccd_current_catalogo_ser_sub_unid } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 
 export const CCDSeleccionadoCatalogo = (): JSX.Element => {
   //* dispatch declaration
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
   // ? this is the neccesary state to show the "catalogo by unidad organizacional"
   const { catalado_series_subseries_unidad_organizacional } = useAppSelector(
@@ -30,31 +31,7 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
   );
 
   const columns_catalogo = [
-    ...columns,
-    {
-      headerName: 'Acciones',
-      field: 'acciones',
-      width: 180,
-      renderCell: (params: { row: { id_cat_serie_und: string } }) => {
-        return (
-          <>
-            <IconButton
-              aria-label="delete"
-              size="large"
-              title='Administrar TRD en base a relación'
-              onClick={() => {
-                // ? this is the function to delete the ccd
-                // delete_ccd(params.row.id_cat_serie_und);
-                dispatch(get_ccd_current_catalogo_ser_sub_unid(params.row))
-                console.log(params.row);
-              }}
-            >
-              <AdminPanelSettingsIcon />
-            </IconButton>
-          </>
-        );
-      }
-    },
+    ...columnsCCD,
   ]
 
   return (
@@ -73,7 +50,7 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
             }}
             density="compact"
             autoHeight
-            rows={catalado_series_subseries_unidad_organizacional}
+            rows={catalado_series_subseries_unidad_organizacional || []}
             columns={columns_catalogo}
             pageSize={5}
             rowsPerPageOptions={[5]}

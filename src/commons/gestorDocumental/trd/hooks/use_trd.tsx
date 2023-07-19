@@ -91,6 +91,27 @@ export const use_trd = (): any => {
     'form_data_searched_tipologia_documental'
   ); */
 
+  // ? administracion de TRD
+
+  const {
+    control: control_administrar_trd,
+    // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
+    // formState: { errors },
+    reset: reset_administrar_trd,
+    watch: watch_administrar_trd
+
+  } = useForm({
+    defaultValues: {
+      nombre: '',
+      activo: true,
+      cod_tipo_medio_doc: '',
+      formatos: []
+    },
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
+  });
+  const form_data_administrar_trd = watch_administrar_trd();
+
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
 
@@ -161,23 +182,6 @@ export const use_trd = (): any => {
       reset_create_trd_modal(obj);
     }
   }, [trd_current]);
-
-  // ? try to edit format type x --------------------->
-  /*   useEffect(() => {
-    console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
-    console.log(data_format_documental_type_current, 'data_format_documental_type_current');
-    if (data_format_documental_type_current !== null) {
-      const result_name = ccd_finished.filter((item: any) => {
-        return item.id_ccd === trd_current.id_ccd;
-      });
-      console.log('result_name', result_name);
-      const obj: any = {
-        nombre: data_format_documental_type_current.nombre,
-      };
-      console.log(obj, 'obj');
-      reset_format_documental_type(obj);
-    }
-  }, [data_format_documental_type_current]); */
 
   //! reset functions that I will use in different components --------------------->
 
@@ -251,6 +255,11 @@ export const use_trd = (): any => {
     controlBusquedaTipologiasDocumentales,
     form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales,
+
+    // ? administrar trd --------------------------------------------->
+    control_administrar_trd,
+    form_data_administrar_trd,
+    reset_administrar_trd,
 
     // ? reset functions data trd --------------------------------------------->
     reset_all_trd,

@@ -121,10 +121,12 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 id_ccd: params?.row?.id_ccd,
                 id_organigrama: params?.row?.id_organigrama
               };
-              void dispatch(
+              dispatch(
                 getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
-              );
-              void dispatch(get_catalogo_trd(params.row.id_trd));
+              ).then((res: any) => {
+                // console.log(res);
+              dispatch(get_catalogo_trd(params.row.id_trd));
+              });
               // reset_searched_trd_modal();
               // console.log(params.row);
             }}
@@ -267,7 +269,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
                   // sx={{ mt: '15px' }}

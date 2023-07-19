@@ -15,6 +15,9 @@ export enum Modal {
   //*
   OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
   CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
+  //* modal administracion de TRD
+  OPEN_MODAL_ADMINISTRACION_TRD = 'OPEN_MODAL_ADMINISTRACION_TRD',
+  CLOSE_MODAL_ADMINISTRACION_TRD = 'CLOSE_MODAL_ADMINISTRACION_TRD',
   // ? buttons, loading, etc
   CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON'
 }
@@ -25,6 +28,7 @@ export const initialState = {
   modalCreacionFormatoTipo: false,
   modalBusquedaTipologiasDocumentales: false,
   modalAdministracionTipologiasDocumentales: false,
+  modalAdministracionTRD: false,
   // ? buttons, loading, etc
   createTRDLoadingButton: false
 };

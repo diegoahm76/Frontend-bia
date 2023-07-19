@@ -148,9 +148,15 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   const resetOnCloseModal = (): any => {
     closeModalAdministracionTipologiasDocumentales();
     dispatch(get_data_format_documental_type([]));
-    dispatch(get_current_tipologia_documental_action(null));
     set_list_format_documental_type([]);
-    resetBusquedaTipologiasDocumentales();
+    resetBusquedaTipologiasDocumentales({
+      nombre: '',
+      cod_tipo_medio_doc: '',
+      formatos: []
+    });
+    clearAutocomplete();
+    dispatch(get_current_tipologia_documental_action(null));
+    set_title_button_administrar_tipologias('Guardar');
   };
 
   //* clear autcomplete function
