@@ -90,10 +90,10 @@ export const SideBar: FC<SideBarProps> = ({
   const handle_click = (): void => set_open(!open);
 
   const open_collapse = (obj: Menu, key: number): void => {
-    console.log('open_collapse000', /* obj, */ key);
+   // console.log('open_collapse000', /* obj, */ key);
     set_permisos((prevPermisos) =>
       prevPermisos.map((menu, index) => {
-        console.log('menu', /* menu, */ 'index', index);
+        // console.log('menu', /* menu, */ 'index', index);
         return index === key ? { ...menu, expanded: !menu.expanded } : menu;
       })
     );
@@ -104,15 +104,15 @@ export const SideBar: FC<SideBarProps> = ({
     key: number,
     key_modulo: number
   ): void => {
-    console.log('open_collapse_sbm1111', /* obj, */ key, key_modulo);
+    // console.log('open_collapse_sbm1111', /* obj, */ key, key_modulo);
     set_permisos((prevPermisos) =>
       prevPermisos.map((modulo, index) => {
-        console.log('modulo', /* modulo, */ 'index', index);
+        // console.log('modulo', /* modulo, */ 'index', index);
         return index === key_modulo
           ? {
               ...modulo,
               menus: modulo.menus.map((menu: any, menuIndex: any) => {
-                console.log('menu', /* menu, */ 'menuIndex', menuIndex);
+                // console.log('menu', /* menu, */ 'menuIndex', menuIndex);
                 return menuIndex === key
                   ? { ...menu, expanded: !menu.expanded }
                   : menu;
@@ -129,31 +129,31 @@ export const SideBar: FC<SideBarProps> = ({
     key_modulo: number,
     key_submenu: number
   ): void => {
-    console.log(
+   /* console.log(
       'open_collapse_sbm22222',
-      /* obj, */ key,
+      obj, key,
       key_modulo,
       key_submenu
-    );
+    ); */
     set_permisos((prevPermisos) =>
       prevPermisos.map((modulo, moduloIndex) => {
-        console.log('modulo', /* modulo, */ 'moduloIndex', moduloIndex);
+        // console.log('modulo', /* modulo, */ 'moduloIndex', moduloIndex);
         return moduloIndex === key_modulo
           ? {
               ...modulo,
               menus: modulo.menus.map((menu: any, menuIndex: any) => {
-                console.log('menu', /* menu, */ 'menuIndex', menuIndex);
+                // console.log('menu', /* menu, */ 'menuIndex', menuIndex);
                 return menuIndex === key_submenu
                   ? {
                       ...menu,
                       submenus: menu.submenus.map(
                         (submenu: any, submenuIndex: any) => {
-                          console.log(
+                          /* console.log(
                             'submenu',
-                            // submenu,
+                            submenu,
                             'submenuIndex',
                             submenuIndex
-                          );
+                          ); */
                           return submenuIndex === key
                             ? { ...submenu, expanded: !submenu.expanded }
                             : submenu;
@@ -175,44 +175,44 @@ export const SideBar: FC<SideBarProps> = ({
     key_submenu: number,
     key_submenu2: number
   ): void => {
-    console.log(
+   /* console.log(
       'open_collapse_sbm3333',
-      // obj,
+      obj,
       key,
       key_modulo,
       key_submenu,
       key_submenu2
-    );
+    ); */
     set_permisos((prevPermisos) =>
       prevPermisos.map((modulo, moduloIndex) => {
-        console.log('modulo', /* modulo */ 'moduloIndex', moduloIndex);
+       // console.log('modulo', /* modulo */ 'moduloIndex', moduloIndex);
         return moduloIndex === key_modulo
           ? {
               ...modulo,
               menus: modulo.menus.map((menu: any, menuIndex: any) => {
-                console.log('menu', /* menu, */ 'menuIndex', menuIndex);
+               // console.log('menu', /* menu, */ 'menuIndex', menuIndex);
                 return menuIndex === key_submenu
                   ? {
                       ...menu,
                       submenus: menu.submenus.map(
                         (submenu: any, submenuIndex: any) => {
-                          console.log(
-                            /* 'submenu',
-                        submenu, */
+                         /* console.log(
+                           'submenu',
+                        submenu,
                             'submenuIndex',
                             submenuIndex
-                          );
+                          ); */
                           return submenuIndex === key_submenu2
                             ? {
                                 ...submenu,
                                 submenus: submenu.submenus.map(
                                   (submenu2: any, submenu2Index: any) => {
-                                    console.log(
+                                  /*  console.log(
                                       'submenu2',
-                                      /* submenu2, */
+                                      submenu2,
                                       'submenu2Index',
                                       submenu2Index
-                                    );
+                                    ); */
                                     return submenu2Index === key
                                       ? {
                                           ...submenu2,
@@ -240,7 +240,7 @@ export const SideBar: FC<SideBarProps> = ({
   useEffect(() => {
     setTimeout(() => {
       set_permisos(permisos_store);
-      console.log('permisos', permisos);
+     // console.log('permisos', permisos);
       set_is_loading(false);
     }, 800);
   }, [permisos_store]);

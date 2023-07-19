@@ -511,9 +511,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 onClick={() => {
                   resetOnCloseModal();
                   openModalBusquedaTipologiasDocumentales();
-                  console.log(
-                    'REDIRECCIONANDO A BUSCADOR DE TIPOLOGÍAS DOCUMENTALES'
-                  );
                 }}
               >
                 BUSCAR TIPLOGÍAS
@@ -532,9 +529,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                   clearAutocomplete();
                   dispatch(get_current_tipologia_documental_action(null));
                   set_title_button_administrar_tipologias('Guardar');
-                  console.log(
-                    'limpiando admistrador de tipologías documentales'
-                  );
                 }}
               >
                 LIMPIAR CAMPOS

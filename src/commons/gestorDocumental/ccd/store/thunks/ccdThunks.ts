@@ -120,7 +120,7 @@ export const to_resume_ccds_service: any = (
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(`gestor/ccd/resume/${id_ccd}/`);
-      console.log(data, 'data');
+      // console.log(data, 'data');
       /* dispatch(
         get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
       ); */
@@ -154,7 +154,7 @@ export const to_finished_ccds_service: any = (
       }
 
       const id_ccd: number = ccd_current.id_ccd;
-      console.log(id_ccd, 'id_ccd');
+      // console.log(id_ccd, 'id_ccd');
       const { data } = await api.put(`gestor/ccd/finish/${id_ccd}/`);
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
@@ -165,7 +165,7 @@ export const to_finished_ccds_service: any = (
       set_flag_btn_finish(true);
       return data;
     } catch (error: any) {
-      console.log(error);
+     // console.log(error);
       control_error(error.response.data.detail);
       // return error as AxiosError;
     }
@@ -187,12 +187,12 @@ export const create_ccds_service: any = (
       // console.log('🚀 ~ file: ccds.ts ~ line 139 ~ return ~ data', data);
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
-      console.log(data.detail, 'success');
+      // console.log(data.detail, 'success');
       set_save_ccd(true);
       openModalBusquedaCreacionCCD();
       return data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail ?? 'ha ocurrido un error');
       return error as AxiosError;
     } finally {
@@ -218,7 +218,7 @@ export const update_ccds_service: any = (
         `gestor/ccd/update/${id_ccd}/`,
         formData
       );
-      console.log('🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data', data);
+      // console.log('🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data', data);
       // console.log(data_create_ccd, 'data_create_ccd')
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);

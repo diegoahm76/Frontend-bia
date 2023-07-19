@@ -103,7 +103,7 @@ export const create_or_delete_assignments_service: any = (
 
       return data;
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       control_error(error.response?.data?.detail);
       dispatch(get_assignments_service(ccd_current));
 

@@ -128,7 +128,7 @@ const SearchCcdModal = ({
         <>
           <IconButton
             onClick={() => {
-              console.log('params para ver ccd en el icono del ojito', params);
+              // console.log('params para ver ccd en el icono del ojito', params);
               void dispatch(
                 get_classification_ccds_service(
                   params.row.nombre,
@@ -138,7 +138,7 @@ const SearchCcdModal = ({
               );
               openModalBusquedaCreacionCCD();
               // dispatch(get_assignments_service(params.row.id_ccd));
-              console.log('params para ver ccd en el icono del ojito', params);
+              // console.log('params para ver ccd en el icono del ojito', params);
               // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
             }}
@@ -199,7 +199,7 @@ const SearchCcdModal = ({
               marginTop: '20px'
             }}
             onSubmit={(e: any) => {
-              console.log('onSubmit');
+              // console.log('onSubmit');
               e.preventDefault();
               void dispatch(
                 get_classification_ccds_service(
@@ -208,7 +208,7 @@ const SearchCcdModal = ({
                 )
               ).then((data: any) => {
                 openModalBusquedaCreacionCCD();
-                console.log(data);
+                // console.log(data);
                 if (
                   data.data.length > 0 &&
                   control_search_ccd._formValues.nombre_ccd !== '' &&

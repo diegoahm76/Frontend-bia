@@ -139,7 +139,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       await dispatch(
         get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
       );
-      console.log(`format deleted: ${id_formato_tipo_medio}`);
     } catch (err) {
       console.log(err);
     }
@@ -177,8 +176,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
     {
       headerName: 'Activo',
       field: 'activo',
-      minWidth: 100,
-      maxWidth: 105,
+      minWidth: 80,
+      maxWidth: 95,
       flex: 1,
       renderCell: (params: any) =>
         params.row.activo ? (
@@ -210,7 +209,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   id_formato_tipo_medio: params.row.id_formato_tipo_medio
                 });
                 set_title_button('Actualizar');
-                console.log('params edit formato', params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -434,7 +432,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }
                   title={'Buscar datos de los formatos relacionados'}
                   onClick={() => {
-                    console.log('buscando datos de los formatos relacionados');
+
                     void dispatch(
                       get_formatos_by_tipo_medio_by_format_and_name(
                         data_format_documental_type_watch_form.nombre,
@@ -461,9 +459,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     reset_all_format_documental_type_modal();
-                    console.log(
-                      'hello from clean button, Im going to clean all fields'
-                    );
                   }}
                 >
                   LIMPIAR

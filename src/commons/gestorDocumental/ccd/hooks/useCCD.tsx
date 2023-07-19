@@ -170,23 +170,23 @@ const use_ccd = () => {
     formState: { errors: errors_create_ccd }
   } = useForm<ICCDForm>({ defaultValues: initial_state });
   const data_create_ccd = watch_create_ccd();
-  console.log(data_create_ccd, 'data_create_ccd');
+  // console.log(data_create_ccd, 'data_create_ccd');
 
   //  UseEffect para obtener organigramas
   useEffect(() => {
-    console.log(data_create_ccd, 'data_create_ccd');
-    console.log(ccd_current, 'ccd_current');
+    // console.log(data_create_ccd, 'data_create_ccd');
+    // console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item) => {
         return item.id_organigrama === ccd_current.id_organigrama;
       });
 
-      const result_unity = unity_organigram.filter(
+      /* const result_unity = unity_organigram.filter(
         (item) => item.id_organigrama === ccd_current.id_organigrama
-      );
+      ); */
 
-      console.log('result_name', result_name);
-      console.log('result_unity', result_unity);
+      // console.log('result_name', result_name);
+      // console.log('result_unity', result_unity);
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd ? ccd_current.id_ccd : 0,
         nombre_ccd: ccd_current.nombre ? ccd_current.nombre : '',
@@ -234,7 +234,7 @@ const use_ccd = () => {
           value: assignments_ccd_current.id_unidad_organizacional
         }
       };
-      console.log(obj, 'obj');
+      // console.log(obj, 'obj');
       reset(obj);
       set_title_button_asing('Editar relación');
     }
@@ -322,7 +322,7 @@ const use_ccd = () => {
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
     e.preventDefault();
-    console.log(data_create_ccd, 'data_create_ccd');
+    // console.log(data_create_ccd, 'data_create_ccd');
     // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
       update_ccd(data_create_ccd);
@@ -350,7 +350,7 @@ const use_ccd = () => {
       }
     }
 
-    console.log('new_ccd', new_ccd);
+    // console.log('new_ccd', new_ccd);
     void dispatch(
       create_ccds_service(
         formData,
@@ -398,18 +398,6 @@ const use_ccd = () => {
     ) {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
-
-    /*  for (const key in updatedCCD) {
-      if (updatedCCD[key] !== null) {
-        formData.append(key, updatedCCD[key]);
-      }
-    } */
-
-    console.log(formData, 'formData');
-
-    console.log('udpated ccd', updatedCCD);
-    // void dispatch(create_ccds_service(formData, set_save_ccd));
-    // clean_after_update();
     void dispatch(
       update_ccds_service(
         formData,
@@ -488,11 +476,11 @@ const use_ccd = () => {
       }
     );
 
-    console.log(itemSend, 'itemSend');
+    // console.log(itemSend, 'itemSend');
 
     const itemSendDef = [...assignments_ccd, ...itemSend];
 
-    console.log(itemSendDef, 'itemSendDef');
+    // console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
       create_or_delete_assignments_service(itemSendDef, ccd_current)
@@ -504,7 +492,7 @@ const use_ccd = () => {
   // Funcion para eliminar Asignaciones
   const delete_asing = (id: any): void => {
     const new_items = assignments_ccd.filter((item) => item.id !== id);
-    console.log(new_items, 'new_items');
+    // console.log(new_items, 'new_items');
     /* const item_final = new_items.map((item: any) => {
       return {
         id_unidad_organizacional: item?.id_unidad_organizacional,
@@ -565,9 +553,9 @@ const use_ccd = () => {
           <>
             <IconButton
               onClick={() => {
-                console.log('elimaniando relación');
+                // console.log('elimaniando relación');
                 delete_asing(params.row.id);
-                console.log(params.row);
+                // console.log(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

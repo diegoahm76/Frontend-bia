@@ -126,7 +126,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               );
               void dispatch(get_catalogo_trd(params.row.id_trd));
               // reset_searched_trd_modal();
-              console.log(params.row);
+              // console.log(params.row);
             }}
           >
             <Avatar
@@ -169,7 +169,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(form_data_searched_trd_modal);
+            // console.log(form_data_searched_trd_modal);
             dispatch(
               get_searched_trd(
                 form_data_searched_trd_modal.nombre,
@@ -221,7 +221,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        console.log(e.target.value);
+                        // console.log(e.target.value);
                       }}
                       error={!!error}
                       /* helperText={
@@ -253,7 +253,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        console.log(e.target.value);
+                        // console.log(e.target.value);
                       }}
                       error={!!error}
                       /* helperText={
@@ -300,7 +300,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 onClick={() => {
-                  console.log('cerrando');
+                  // console.log('cerrando');
                   reset_searched_trd_modal();
                 }}
                 startIcon={<CleanIcon />}

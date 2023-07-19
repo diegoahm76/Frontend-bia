@@ -85,10 +85,10 @@ export const CcdScreen: React.FC = () => {
         ccd_current?.fecha_terminado !== '' &&
         ccd_current?.fecha_terminado !== undefined
     );
-    console.log(
+   /* console.log(
       '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ ccd_current?.fecha_terminado',
       ccd_current?.fecha_terminado
-    );
+    ); */
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
@@ -396,11 +396,11 @@ export const CcdScreen: React.FC = () => {
                           type="file"
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
-                            console.log('valueeee', value);
+                            // console.log('valueeee', value);
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
                               onChange(files[0]);
-                              console.log(files[0]);
+                              // console.log(files[0]);
                             }
                           }}
                         />
@@ -526,10 +526,10 @@ export const CcdScreen: React.FC = () => {
                               dispatch(
                                 get_serie_ccd_current(selectedOption.value)
                               );
-                              console.log(
+                            /*  console.log(
                                 'Valor seleccionado:',
                                 selectedOption
-                              );
+                              ); */
                             }}
                             options={list_sries}
                             // isSearchable
@@ -680,7 +680,7 @@ export const CcdScreen: React.FC = () => {
                       variant="outlined"
                       disabled={ccd_current === null}
                       onClick={() => {
-                        console.log('ver catalogo de series y subseries');
+                        // console.log('ver catalogo de series y subseries');
                         openModalModalSeriesAndSubseries();
                         dispatch(
                           getCatalogoSeriesYSubseries(ccd_current.id_ccd)

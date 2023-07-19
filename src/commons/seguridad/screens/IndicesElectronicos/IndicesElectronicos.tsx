@@ -87,7 +87,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         ? control_success('Se ha encontrado el siguiente expediente')
         : control_error('No se ha encontrado un expediente que coincida');
 
-      console.log('data_electronic_index_watch', firstObject);
+      // console.log('data_electronic_index_watch', firstObject);
     } catch (error) {
       console.error(error);
       control_error('No se ha encontrado un expediente que coincida');
@@ -215,7 +215,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   color="success"
                   startIcon={<CleanIcon />}
                   onClick={() => {
-                    console.log('Limpiando campos de índices electrónicos');
+                    // console.log('Limpiando campos de índices electrónicos');
                     reset_electronic_index({
                       id_ccd: ''
                     });
@@ -291,7 +291,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
               disabled={Object.keys(xmlToJsonisTrue ?? {}).length == 0}
               onClick={() => {
                 const xml = xmlFromJson(xmlToJsonisTrue);
-                console.log('res', xml);
+                // console.log('res', xml);
 
                 const blob = new Blob([xml], {
                   type: 'text/xml;charset=utf-8'
