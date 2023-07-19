@@ -177,8 +177,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
     {
       headerName: 'Activo',
       field: 'activo',
-      minWidth: 130,
-      maxWidth: 135,
+      minWidth: 100,
+      maxWidth: 105,
       flex: 1,
       renderCell: (params: any) =>
         params.row.activo ? (
