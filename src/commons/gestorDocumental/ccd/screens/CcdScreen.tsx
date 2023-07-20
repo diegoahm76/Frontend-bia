@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // Components Material UI
 import {
   Grid,
@@ -33,7 +33,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
-  get_classification_ccds_service
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -50,7 +49,6 @@ import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton'
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
-  create_or_delete_assignments_service,
   get_assignments_service
 } from '../store/thunks/assignmentsThunks';
 
@@ -59,7 +57,6 @@ export const CcdScreen: React.FC = () => {
   const {
     openModalModalSeriesAndSubseries,
     busquedaCreacionCCDModal,
-    openModalBusquedaCreacionCCD,
     loadingButton
   } = useContext(ModalContext);
 
