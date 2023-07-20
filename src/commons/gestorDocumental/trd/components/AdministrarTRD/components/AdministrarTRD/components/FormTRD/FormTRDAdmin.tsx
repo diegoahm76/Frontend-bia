@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -23,6 +25,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
 
 const options_dispocision_final = [
   { value: 'C', label: 'Conservación Total' },
@@ -45,8 +48,15 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   return (
     <>
-      <Grid xs={12} md={12}>
-        <Box sx={{ width: '100%' }}>
+      <Grid xs={12}>
+        <Box
+          component="form"
+          onSubmit={(e: any) => {
+            e.preventDefault();
+            console.log('form', control_administrar_trd._formValues);
+          }}
+          sx={{ width: '100%' }}
+        >
           <Title title="Agregrar Características" />
 
           <Grid container spacing={2}>
@@ -278,7 +288,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <Controller
                 name="ruta_archivo_cambio"
                 control={control_administrar_trd}
@@ -297,8 +307,9 @@ export const FormTRDAdmin = (): JSX.Element => {
                       }
                       component="label"
                       style={{
-                        marginTop: '.15rem',
-                        width: '100%'
+                       // marginTop: '.15rem',
+                        width: '100%',
+                        height: '56px'
                       }}
                       startIcon={<CloudUploadIcon />}
                     >
@@ -341,6 +352,66 @@ export const FormTRDAdmin = (): JSX.Element => {
                 )}
               />
             </Grid>
+            {/* tipologias */}
+            <Grid item xs={12} sm={7}>
+                <Controller
+                  name="formatos"
+                  control={control_administrar_trd}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <>
+                      <Autocomplete
+                        multiple
+                        fullWidth
+                        id="autocomplete"
+                        value={value}
+                        size="medium"
+                        options={[
+                          { label: 'Tipologia 1', value: 1 },
+                          { label: 'Tipologia 2', value: 2 },
+                          { label: 'Tipologia 3', value: 3 },
+                          { label: 'Tipologia 4', value: 4 },
+                          { label: 'Tipologia 5', value: 5 },
+                        ]}
+                        getOptionLabel={(option: any) => option.label}
+                        isOptionEqualToValue={(option: any, value) =>
+                          option?.value === value?.value
+                        }
+                        onChange={(event: any, value: any) => onChange(value)}
+                        renderInput={(params) => (
+                          <TextField
+                            className="autocomplete_tipologias"
+                            key={params.id}
+                            {...params}
+                            // label="Formatos para el medio documental seleccionado"
+                            placeholder="Tipologias asociadas"
+                          />
+                        )}
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem'
+                          }}
+                        >
+                          Tipologías asociadas al TRD seleccionado
+                          {/* {trd_current != null
+                        ? `CCD seleccionado`
+                        : `CDD's no usados en otro TRD`} */}
+                        </small>
+                      </label>
+                    </>
+                  )}
+                />
+              </Grid>
+            {/* establecer tipologias */}
 
             {/*  <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
                 <DownloadButton
@@ -364,7 +435,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               startIcon={<SaveIcon />}
               // disabled={ccd_current?.actual}
             >
-              Guardar
+              GUARDAR
             </Button>
             <Button
               variant="outlined"
@@ -386,6 +457,15 @@ export const FormTRDAdmin = (): JSX.Element => {
               }}
             >
               SALIR Y CANCELAR
+            </Button>
+            <Button
+              variant="contained"
+              color="warning"
+              // type="submit"
+              startIcon={<SaveAsIcon />}
+              // disabled={ccd_current?.actual}
+            >
+              ESTABLECER TIPOLOGIAS
             </Button>
           </Stack>
         </Box>
