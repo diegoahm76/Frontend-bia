@@ -12,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { use_form } from '../../../../../hooks/useForm';
 import { post_notificacion_fisica, post_notificacion_email_edicto, get_datos_remitente } from '../requests/requests';
+import { ModuloDireccion } from './ModuloDireccion';
 
 export const Email: React.FC = () => {
   const [file_name, set_file_name] = useState('');
@@ -260,7 +261,7 @@ export const Fisico: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   disabled
                   label="Nombre o Razón Social"
@@ -269,7 +270,7 @@ export const Fisico: React.FC = () => {
                   value={``}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   disabled
                   label="Identificación"
@@ -282,6 +283,7 @@ export const Fisico: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+      <ModuloDireccion />
       <Grid
         container
         sx={{
@@ -301,17 +303,7 @@ export const Fisico: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2} mb='20px'>
-            <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Dirección de Entrega"
-                  size="small"
-                  fullWidth
-                  required
-                  name='direccion_entrega'
-                  onChange={on_input_change}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <FormControl fullWidth>
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
@@ -333,7 +325,7 @@ export const Fisico: React.FC = () => {
                   </LocalizationProvider>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   label="Empresa Entrega"
                   size="small"
@@ -343,7 +335,7 @@ export const Fisico: React.FC = () => {
                   onChange={on_input_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   label="Funcionario Entrega"
                   size="small"
@@ -353,7 +345,7 @@ export const Fisico: React.FC = () => {
                   onChange={on_input_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Button
                   variant="outlined"
                   fullWidth

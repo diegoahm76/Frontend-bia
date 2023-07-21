@@ -1,45 +1,56 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, TextField, Stack, Tooltip, IconButton, Avatar } from '@mui/material';
-import { Preview } from '@mui/icons-material';
+import { Grid, Box, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaPlanPagosUsuarioExterno: React.FC = () => {
+export const VistaProyeccionPagos: React.FC = () => {
+  const [capital, set_capital] = useState(0);
+  const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
-  const navigate = useNavigate();
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
     currency: "COP",
   }).format(total)
 
+  const capital_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(capital)
+
+  const intereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(intereses)
+
   const lista = [
     {
+      cuota: '',
+      fecha_pago: 'Abono Inicial',
+      monto_inicial: '417000',
+      valor_intereses: '150000',
+      valor_total: '567000',
+    },
+    {
       cuota: 1,
-      fecha_pago: '25 de enero de 2023',
-      valor_total: '85000000',
-      estado: 'Pagada',
+      fecha_pago: '25 de febrero de 2023',
+      monto_inicial: '50000',
+      valor_intereses: '35000',
+      valor_total: '85000',
     },
     {
       cuota: 2,
-      fecha_pago: '25 de febrero de 2023',
-      valor_total: '85000000',
-      estado: 'Vencida',
-    },
-    {
-      cuota: 3,
       fecha_pago: '25 de marzo de 2023',
-      valor_total: '85000000',
-      estado: 'Pendiente',
+      monto_inicial: '50000',
+      valor_intereses: '35000',
+      valor_total: '85000',
     }
   ]
 
   const columns: GridColDef[] = [
     {
       field: 'cuota',
-      headerName: 'No Cuotas',
+      headerName: 'No Cuota',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -50,7 +61,7 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
     {
       field: 'fecha_pago',
       headerName: 'Fechas de Pago',
-      width: 250,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -58,9 +69,9 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
       ),
     },
     {
-      field: 'valor_total',
-      headerName: 'Cuota',
-      width: 200,
+      field: 'monto_inicial',
+      headerName: 'Capital',
+      width: 150,
       renderCell: (params) => {
         const precio_cop = new Intl.NumberFormat("es-ES", {
           style: "currency",
@@ -74,65 +85,51 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
       },
     },
     {
-      field: 'recibo',
-      headerName: 'Recibo',
+      field: 'valor_intereses',
+      headerName: 'Intereses',
       width: 150,
       renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
         return (
-          <Tooltip title="Ver / Generar">
-            <IconButton
-              onClick={() => {
-                navigate('../recibo');
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <Preview
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-
-              </Avatar>
-            </IconButton>
-          </Tooltip>
-        )
-      }
-    },
-    {
-      field: 'pse',
-      headerName: 'Pagar',
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Link to=''>Pagar en Linea</Link>
-        )
-      }
-    },
-    {
-      field: 'estado',
-      headerName: 'Estado',
-      width: 150,
-      renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
+    },
+    {
+      field: 'valor_total',
+      headerName: 'Cuota',
+      width: 150,
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {precio_cop}
+        </div>
+        )
+      },
     },
   ];
 
   useEffect(() => {
-    let cuotas = 0
+    let sub_capital = 0
+    let sub_intereses = 0
     for(let i=0; i< lista.length; i++){
-      cuotas = cuotas + parseFloat(lista[i].valor_total)
-      set_total(cuotas)
+      sub_capital = sub_capital + parseFloat(lista[i].monto_inicial)
+      sub_intereses = sub_intereses + parseFloat(lista[i].valor_intereses)
+      set_capital(sub_capital)
+      set_intereses(sub_intereses)
     }
-  }, [lista])
+
+    set_total(capital + intereses)
+  }, [capital, intereses])
 
   return (
     <>
@@ -150,6 +147,7 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
+              <h3>4. Proyección de Pagos</h3>
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
@@ -168,9 +166,25 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
             spacing={2}
             sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
-                label={<strong>Total Cuotas</strong>}
+                label="Total Capital"
+                size="small"
+                fullWidth
+                value={capital_cop}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2.5}>
+              <TextField
+                label="Total Intereses"
+                size="small"
+                fullWidth
+                value={intereses_cop}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2.5}>
+              <TextField
+                label="Total Cuotas"
                 size="small"
                 fullWidth
                 value={total_cop}

@@ -1,26 +1,13 @@
 import { Title } from '../../../../components/Title';
-import { TablaCarteraDetallada } from '../componentes/TablaCarteraDetallada';
-import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { get_cartera_detallada } from '../slices/ReportesSlice';
 import { Box, Grid } from '@mui/material';
+import { TablaFacilidadPagoVencimiento } from '../componentes/TablaFacilidadPagoVencimiento';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CarteraDetallada: React.FC = () => {
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-  useEffect(() => {
-    try {
-      void dispatch(get_cartera_detallada());
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }, [])
+export const FacilidadPagoVencimiento: React.FC = () => {
 
   return (
     <>
-      <Title title='Reporte General de Cartera con Detalle'/>
+      <Title title='Informe de Facilidades de Pago por Vencimiento'/>
       <Grid
         container
         sx={{
@@ -39,7 +26,7 @@ export const CarteraDetallada: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-            <TablaCarteraDetallada />
+            <TablaFacilidadPagoVencimiento />
           </Box>
         </Grid>
       </Grid>
