@@ -8,6 +8,7 @@ const initialState = {
     nombre: '',
     nombre_seccion: '',
     nombre_subseccion: '',
+    cod_tipo_agua: '',
     /* cod_tipo_agua: '',
     fecha_creacion_instrumento: '',
     fecha_fin_vigencia: '',
@@ -29,6 +30,7 @@ export const instrumentos_slice = createSlice({
       state.instrumentos.nombre = action.payload.nombre;
       state.instrumentos.nombre_seccion = action.payload.nombre_seccion;
       state.instrumentos.nombre_subseccion = action.payload.nombre_subseccion;
+      state.instrumentos.cod_tipo_agua = action.payload.cod_tipo_agua;
       /* state.instrumentos.cod_tipo_agua = action.payload.cod_tipo_agua;
       state.instrumentos.fecha_creacion_instrumento =
         action.payload.fecha_creacion_instrumento;

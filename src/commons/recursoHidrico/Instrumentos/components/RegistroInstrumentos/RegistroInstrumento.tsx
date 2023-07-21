@@ -231,6 +231,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
           nombre: data.nombre,
           nombre_seccion,
           nombre_subseccion,
+          cod_tipo_agua: tipo_agua_selected,
         })
       );
       control_success('Se agregó instrumento correctamente');

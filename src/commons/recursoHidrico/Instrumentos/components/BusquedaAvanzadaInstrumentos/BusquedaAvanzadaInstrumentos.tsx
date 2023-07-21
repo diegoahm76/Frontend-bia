@@ -73,6 +73,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     nombre: params.row.nombre,
                     nombre_seccion: params.row.nombre_seccion,
                     nombre_subseccion: params.row.nombre_subseccion,
+                    cod_tipo_agua: params.row.cod_tipo_agua,
                   })
                 );
                 set_info_busqueda_instrumentos(params.row);
@@ -96,6 +97,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     nombre: params.row.nombre,
                     nombre_seccion: params.row.nombre_seccion,
                     nombre_subseccion: params.row.nombre_subseccion,
+                    cod_tipo_agua: params.row.cod_tipo_agua,
                   })
                 );
                 set_info_busqueda_instrumentos(params.row);

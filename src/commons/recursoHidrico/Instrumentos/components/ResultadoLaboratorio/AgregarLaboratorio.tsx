@@ -17,7 +17,6 @@ import { use_register_laboratorio_hook } from './hook/useRegisterLaboratorioHook
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { columns_result_lab } from './utils/colums/comlums';
 import {
-  clase_muestra_choices,
   parametro,
   tipo_parametro_choices,
   unidad_medida_choices,
@@ -29,6 +28,7 @@ import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegi
 import { useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
+import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarLaboratorio: React.FC = () => {
@@ -83,11 +83,11 @@ export const AgregarLaboratorio: React.FC = () => {
       nombre: instrumentos.nombre,
       nombre_seccion: instrumentos.nombre_seccion,
       nombre_subseccion: instrumentos.nombre_subseccion,
+      cod_tipo_agua: instrumentos.cod_tipo_agua,
     });
   }, [instrumentos]);
 
   const {
-    clase_muestra_value,
     tipo_parametro_value,
     unidad_medida_value,
     parametro_value,
@@ -207,23 +207,30 @@ export const AgregarLaboratorio: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Analisis realizado en aguas "
-            select
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={clase_muestra_value}
-            name="clase_muestra"
-            onChange={handle_change_inputs}
-          >
-            {clase_muestra_choices.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Controller
+            name="cod_tipo_agua"
+            control={control}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Tipo de agua"
+                select
+                size="small"
+                margin="dense"
+                disabled={true}
+                fullWidth
+                required
+              >
+                {tipo_agua.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
