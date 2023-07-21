@@ -44,6 +44,10 @@ import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSe
 import { type EstablecerTipologiasProps } from './types/types';
 import Swal from 'sweetalert2';
 
+
+//* css file
+import './css/Swal.css'
+
 export const colums_tipologias_asociadas = [
   {
     field: 'nombre',
@@ -139,8 +143,12 @@ export const EstablecerTipologias = ({
                 'Recuerde finalizar el proceso para que los cambios se vean reflejados',
               icon: 'info',
               confirmButtonText: 'Ok',
-              confirmButtonColor: '#042F4A'
+              confirmButtonColor: '#042F4A',
+              customClass: {
+                container: 'my-swal'
+              }
             });
+            closeModalEstablecerTipologiaDocumentalATRD();
           }}
         >
           <DialogTitle>

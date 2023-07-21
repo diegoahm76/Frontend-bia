@@ -20,6 +20,9 @@ interface TRD {
 
   //! catalogo TRD
   catalogo_trd: any[];
+
+  //! selected_item_from_catalogo_trd
+  selected_item_from_catalogo_trd: any;
 }
 
 const initial_state: TRD = {
@@ -37,7 +40,10 @@ const initial_state: TRD = {
   tipologias_asociadas_a_trd: [],
   tipologias_documental_current: null,
   //! catalogo TRD
-  catalogo_trd: []
+  catalogo_trd: [],
+
+  //! selected_item_from_catalogo_trd
+  selected_item_from_catalogo_trd: null
 };
 
 export const trd_slice = createSlice({
@@ -60,7 +66,10 @@ export const trd_slice = createSlice({
       state.catalado_series_subseries_unidad_organizacional = action.payload;
     },
     //! ccd current catalogo
-    get_ccd_current_catalogo_ser_sub_unid: (state: any, action: PayloadAction<any>) => {
+    get_ccd_current_catalogo_ser_sub_unid: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
       state.ccd_current_catalogo_ser_sub_unid = action.payload;
     },
 
@@ -103,6 +112,14 @@ export const trd_slice = createSlice({
     //! catalogo TRD --- I need this information to show the data in the table and administre the data (catalogo)
     get_catalogo_trd_action: (state: any, action: PayloadAction<any>) => {
       state.catalogo_trd = action.payload;
+    },
+
+    //! selected_item_from_catalogo_trd
+    set_selected_item_from_catalogo_trd_action: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.selected_item_from_catalogo_trd = action.payload;
     }
   }
 });
@@ -122,5 +139,7 @@ export const {
   get_current_tipologia_documental_action,
   get_tipologias_asociadas_a_trd,
   //* -------------------------------->
-  get_catalogo_trd_action
+  get_catalogo_trd_action,
+  //* -------------------------------->
+  set_selected_item_from_catalogo_trd_action,
 } = trd_slice.actions;

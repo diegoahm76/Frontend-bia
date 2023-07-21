@@ -38,12 +38,9 @@ const options_dispocision_final = [
   { value: 'S', label: 'Selección' }
 ];
 
-
 export const FormTRDAdmin = (): JSX.Element => {
-
   //* necccesary states
   const [nuevasTipologias, setNuevasTipologias] = useState<any>([]);
-
 
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -62,9 +59,7 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   return (
     <>
-
-        <ItemSeleccionado/>
-      
+      <ItemSeleccionado />
 
       <Grid xs={12}>
         <Box
@@ -278,126 +273,133 @@ export const FormTRDAdmin = (): JSX.Element => {
               />
             </Grid>
             {/* new spaces */}
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="justificacion_cambio"
-                control={control_administrar_trd}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <TextField
-                    // margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Justificación del cambio"
-                    /* sx={{
+
+            {/* justificación del cambio, solo aparece para trd actual */}
+                      {/* SOLO TRD ACTUAL */}
+            {trd_current.actual ? (
+              <>
+                <Grid item xs={12} sm={12}>
+                  <Controller
+                    name="justificacion_cambio"
+                    control={control_administrar_trd}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <TextField
+                        // margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Justificación del cambio"
+                        /* sx={{
                         color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
                       }} */
 
-                    disabled={false}
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar una justificación del cambio'
-                        : 'Cambio'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={5}>
-              <Controller
-                name="ruta_archivo_cambio"
-                control={control_administrar_trd}
-                defaultValue=""
-                rules={{ required: false }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <>
-                    <Button
-                      variant={
-                        value === '' || value === null
-                          ? 'outlined'
-                          : 'contained'
-                      }
-                      component="label"
-                      style={{
-                        // marginTop: '.15rem',
-                        width: '100%'
-                        // height: '56px'
-                      }}
-                      startIcon={<CloudUploadIcon />}
-                    >
-                      {value === '' || value === null
-                        ? 'Subir archivo justificación cambio'
-                        : 'Archivo subido justificación cambio'}
-                      <input
-                        style={{ display: 'none' }}
-                        type="file"
-                        // disabled={control_administrar_trd?.actual}
-                        onChange={(e) => {
-                          // console.log('valueeee', value);
-                          const files = (e.target as HTMLInputElement).files;
-                          if (files && files.length > 0) {
-                            onChange(files[0]);
-                            // console.log(files[0]);
-                          }
-                        }}
+                        disabled={false}
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar una justificación del cambio'
+                            : 'Cambio'
+                        }
                       />
-                    </Button>
-                    <label htmlFor="">
-                      <small
-                        style={{
-                          color: 'rgba(0, 0, 0, 0.6)',
-                          fontWeight: 'thin',
-                          fontSize: '0.75rem'
-                        }}
-                      >
-                        {control_administrar_trd._formValues.ruta_archivo_cambio
-                          ? control_administrar_trd._formValues
-                              .ruta_archivo_cambio.name ??
-                            control_administrar_trd._formValues.ruta_soporte.replace(
-                              /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
-                              ''
-                            )
-                          : 'Seleccione archivo'}
-                      </small>
-                    </label>
-                  </>
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={2}>
-              <DownloadButton
-                fileName="ruta_archivo_cambio"
-                condition={
-                  true
-                  // control_administrar_trd._formValues.ruta_archivo_cambio
-                  
-                }
-                fileUrl={trd_current?.ruta_archivo_cambio}
-              />
-            </Grid>
-
+                    )}
+                  />
+                </Grid>
+                {/* justificación del cambio, solo aparece para trd actual */}
+                {/* ruta archivo soporte de cambio, solo aparece en trd actual */}
+                <Grid item xs={12} sm={5}>
+                  <Controller
+                    name="ruta_archivo_cambio"
+                    control={control_administrar_trd}
+                    defaultValue=""
+                    rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <>
+                        <Button
+                          variant={
+                            value === '' || value === null
+                              ? 'outlined'
+                              : 'contained'
+                          }
+                          component="label"
+                          style={{
+                            // marginTop: '.15rem',
+                            width: '100%'
+                            // height: '56px'
+                          }}
+                          startIcon={<CloudUploadIcon />}
+                        >
+                          {value === '' || value === null
+                            ? 'Subir archivo justificación cambio'
+                            : 'Archivo subido justificación cambio'}
+                          <input
+                            style={{ display: 'none' }}
+                            type="file"
+                            // disabled={control_administrar_trd?.actual}
+                            onChange={(e) => {
+                              // console.log('valueeee', value);
+                              const files = (e.target as HTMLInputElement)
+                                .files;
+                              if (files && files.length > 0) {
+                                onChange(files[0]);
+                                // console.log(files[0]);
+                              }
+                            }}
+                          />
+                        </Button>
+                        <label htmlFor="">
+                          <small
+                            style={{
+                              color: 'rgba(0, 0, 0, 0.6)',
+                              fontWeight: 'thin',
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            {control_administrar_trd._formValues
+                              .ruta_archivo_cambio
+                              ? control_administrar_trd._formValues
+                                  .ruta_archivo_cambio.name ??
+                                control_administrar_trd._formValues.ruta_soporte.replace(
+                                  /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                                  ''
+                                )
+                              : 'Seleccione archivo'}
+                          </small>
+                        </label>
+                      </>
+                    )}
+                  />
+                </Grid>
+                {/* boton descarga justifacion del cambio en trd actual */}
+                <Grid item xs={12} sm={2}>
+                  <DownloadButton
+                    fileName="ruta_archivo_cambio"
+                    condition={
+                      true
+                      // control_administrar_trd._formValues.ruta_archivo_cambio
+                    }
+                    fileUrl={trd_current?.ruta_archivo_cambio}
+                  />
+                </Grid>
+                {/* boton descarga justifacion del cambio en trd actual - fin */}
+                {/* ruta archivo soporte de cambio, solo aparece en trd actual - fin */}
+              </>
+            ) : null}
 
             {/* tipologias asociadas a trd inicio */}
 
-           <TipologiasAsociadasATRD/>
+            <TipologiasAsociadasATRD />
 
             {/* tipologias asociadas a trd fin */}
-
-
-            
           </Grid>
           <Stack direction="row" spacing={2} sx={{ marginTop: '.15rem' }}>
             <Button
@@ -434,14 +436,13 @@ export const FormTRDAdmin = (): JSX.Element => {
         </Box>
       </Grid>
 
-
       {/* establecer tipologias */}
-                  {/* poner modal de manejo para establecer tipologias */}
-                  <EstablecerTipologias
-                    setNuevasTipologias={setNuevasTipologias}
-                    nuevasTipologias={nuevasTipologias}
-                  />
-            {/* end new spaces */}
+      {/* poner modal de manejo para establecer tipologias a un TRD */}
+      <EstablecerTipologias
+        setNuevasTipologias={setNuevasTipologias}
+        nuevasTipologias={nuevasTipologias}
+      />
+      {/* end new spaces */}
     </>
   );
 };
