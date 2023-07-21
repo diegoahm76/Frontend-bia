@@ -60,6 +60,7 @@ export interface IObjBienEntrega {
     cantidad_despachada?: number | null;
     numero_posicion_despacho?: number | null;
     observacion?: string | null;
+    id_bien?: number | null;
 }
 
 export interface TipoEntrada {
@@ -76,11 +77,25 @@ export interface IObjBienesEntrada {
     cantidad_entrante?: number | null;
     tiene_cantidad_disponible?: boolean | null;
     cantidad_disponible?: number | null;
-    codigo_bien?: number | null;
+    codigo_bien?: string | null;
     nombre_bien?: string | null;
     observaciones?: string | null;
+    cantidad_faltante?: number | null;
+    cantidad_despachada?: number | null;
 }
 
+export interface IObjBienesEntradaAux {
+    id_entrada_almacen?: number | null;
+    id_bien?: number | null;
+    cantidad_entrante?: number | null;
+    tiene_cantidad_disponible: boolean | null;
+    cantidad_disponible?: number | null;
+    codigo_bien?: string | null;
+    nombre_bien?: string | null;
+    observaciones?: string | null;
+    cantidad_faltante?: number | null;
+    cantidad_despachada?: number | null;
+}
 
 export interface IObjEntrada {
     id_entrada_almacen?: number | null;
@@ -103,16 +118,3 @@ export interface IObjEntrada {
     id_persona_anula?: number | null;
 }
 
-
-export interface IObjBienesEntradaAux {
-    id_entrada_almacen?: number | null;
-    id_bien?: number | null;
-    cantidad_entrante?: number | null;
-    tiene_cantidad_disponible: boolean | null;
-    cantidad_disponible?: number | null;
-    codigo_bien?: number | null;
-    nombre_bien?: string | null;
-    observaciones?: string | null;
-    cantidad_faltante?: number | null;
-    cantidad_despachada?: number | null;
-}

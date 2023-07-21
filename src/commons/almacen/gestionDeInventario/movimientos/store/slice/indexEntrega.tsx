@@ -34,6 +34,7 @@ export const initial_state_bien_entrega: IObjBienEntrega = {
     cantidad_despachada: null,
     numero_posicion_despacho: null,
     observacion: null,
+    id_bien: null,
 }
 
 export const initial_state_entrada: IObjEntrada = {
@@ -139,7 +140,6 @@ export const entrega_slice = createSlice({
             state: IEntrega,
             action: PayloadAction<IObjEntrada[]>
         ) => {
-            console.log('Entradas recibidas:', action.payload);
             state.entradas = action.payload;
         },
         set_current_entrada: (
@@ -163,12 +163,6 @@ export const entrega_slice = createSlice({
             state.bienes_entrada_aux = action.payload;
 
         },
-
-
-
-
-
-
     }
 })
 

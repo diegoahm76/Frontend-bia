@@ -12,12 +12,16 @@ interface IProps {
     title?: string;
     control_solicitud_aprobacion_vivero: any;
     get_values: any
+    open_modal: boolean;
+    set_open_modal: any;
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudAprobadaVivero = ({
     title,
     control_solicitud_aprobacion_vivero,
-    get_values
+    get_values, open_modal,
+    set_open_modal,
 }: IProps) => {
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -38,27 +42,7 @@ const SeleccionarSolicitudAprobadaVivero = ({
             ),
 
         },
-        {
-            field: 'persona_solicita',
-            headerName: 'Solicitud elaborada por:',
-            width: 300,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-
-        },
-        {
-            field: 'persona_responsable',
-            headerName: 'Nombre del responsable',
-            width: 300,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
+    
         {
             field: 'observacion',
             headerName: 'Observación',
@@ -101,7 +85,9 @@ const SeleccionarSolicitudAprobadaVivero = ({
                     models={solicitudes}
                     get_filters_models={get_solicitudes_filtro}
                     set_models={set_solicitudes}
-                    button_submit_label='Buscar solicitud'
+                    show_search_button={false}
+                    open_search_modal={open_modal}
+                    set_open_search_modal={set_open_modal}
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -111,8 +97,8 @@ const SeleccionarSolicitudAprobadaVivero = ({
 
                         {
                             datum_type: "input_controller",
-                            xs: 5,
-                            md: 2,
+                            xs: 12,
+                            md: 6,
                             control_form: control_solicitud_aprobacion_vivero,
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
@@ -123,18 +109,21 @@ const SeleccionarSolicitudAprobadaVivero = ({
                             helper_text: "",
                             on_blur_function: search_solicitud
                         },
+
                         {
-                            datum_type: "input_controller",
+                            datum_type: 'date_picker_controller',
                             xs: 12,
-                            md: 8,
+                            md: 6,
                             control_form: control_solicitud_aprobacion_vivero,
-                            control_name: "fecha_solicitud",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Fecha de creación de la solicitud",
-                            type: "text",
+                            control_name: 'fecha_solicitud',
+                            default_value: '',
+                            rules: {
+
+                            },
+                            label: 'Fecha de entrega',
                             disabled: true,
-                            helper_text: ""
+                            helper_text: '',
+                            format: 'YYYY-MM-DD',
                         },
                         {
                             datum_type: "input_controller",

@@ -16,6 +16,7 @@ import SeleccionarEntrada from '../components/SeleccionarEntrada';
 import SeleccionarBodega from '../components/SeleccionarBodega';
 import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
 import Seccion from '../components/SeccionPrimera';
+import SeleccionarBienEntrega from '../components/SeleccionarBienEntrega';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -126,6 +127,10 @@ const EntregaScreen = () => {
             <Grid item xs={12} marginY={2}>
 
                 <ListadoBienesEntrega />
+            </Grid>
+            <Grid item xs={12} marginY={2}>
+
+                <SeleccionarBienEntrega />
             </Grid>
             <Grid
                 container

@@ -49,7 +49,7 @@ const SeleccionarBienConsumoVivero = () => {
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 350,flex:1,
+            width: 350, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -59,7 +59,7 @@ const SeleccionarBienConsumoVivero = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 350,flex:1,
+            width: 350, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -352,8 +352,6 @@ const SeleccionarBienConsumoVivero = () => {
                             rules: { required_rule: { rule: true, message: "Observación requerido" } },
                             label: "Observación",
                             type: "text",
-                            multiline_text: true,
-                            rows_text: 4,
                             disabled: false,
                             helper_text: ""
                         },
