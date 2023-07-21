@@ -7,6 +7,7 @@ import type {
 } from '../interfaces/interface';
 import type { Pozo } from '../../configuraciones/interfaces/interfaces';
 
+
 export const search_seccion_subseccion = async ({
   nombre_seccion,
   nombre_subseccion,

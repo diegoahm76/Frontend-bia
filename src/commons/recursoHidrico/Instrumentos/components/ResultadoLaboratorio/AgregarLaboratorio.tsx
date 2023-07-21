@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
+  Autocomplete,
   Box,
   Button,
   Divider,
@@ -103,382 +107,528 @@ export const AgregarLaboratorio: React.FC = () => {
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
+
+    // * Autocomplete
+    cuenca_select,
+    pozos_selected,
+    id_instrumento_slice,
+    fetch_data_cuencas_instrumentos_select,
+    fetch_data_pozo_instrumentos_select,
+
+    // * Use Form
+    handleSubmit_laboratorio,
+    register_laboratorio,
+    reset_laboratorio,
+    control_registro_laboratorio,
+    set_value_laboratorio,
+    watch_laboratorio,
+    formErrors_laboratorio,
   } = use_register_laboratorio_hook();
+
+  const onSubmit = handleSubmit_laboratorio((data) => {
+    console.log(data);
+  });
+
+  useEffect(() => {
+    if (id_instrumento_slice) {
+      void fetch_data_cuencas_instrumentos_select();
+    }
+  }, [id_instrumento_slice]);
+
+  useEffect(() => {
+    if (instrumentos.id_pozo) {
+      void fetch_data_pozo_instrumentos_select(instrumentos.id_pozo);
+    }
+  }, [instrumentos.id_pozo]);
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
+      <form
+        onSubmit={onSubmit}
+        style={{
+          width: '100%',
+          height: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Grid item xs={12}>
-          <Title title=" REGISTRO DE LABORATORIO " />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Datos Generales
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Sección"
-            fullWidth
-            size="small"
-            margin="dense"
-            value={instrumentos.nombre_seccion}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Subsección"
-            fullWidth
-            value={instrumentos.nombre_subseccion}
-            size="small"
-            margin="dense"
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="nombre"
-            control={control}
-            defaultValue=""
-            // rules={{ required: false }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                label="Instrumento Asociado"
-                size="small"
-                variant="outlined"
-                disabled={true}
-                value={value}
-                InputLabelProps={{ shrink: true }}
-                onChange={(e) => {
-                  onChange(e.target.value);
-                  console.log(e.target.value);
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          <Grid item xs={12}>
+            <Title title=" REGISTRO DE LABORATORIO " />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Datos Generales
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Sección"
+              fullWidth
+              size="small"
+              margin="dense"
+              value={instrumentos.nombre_seccion}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Subsección"
+              fullWidth
+              value={instrumentos.nombre_subseccion}
+              size="small"
+              margin="dense"
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre"
+              control={control}
+              defaultValue=""
+              // rules={{ required: false }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  label="Instrumento Asociado"
+                  size="small"
+                  variant="outlined"
+                  disabled={true}
+                  value={value}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => {
+                    onChange(e.target.value);
+                    console.log(e.target.value);
+                  }}
+                  error={!!error}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de toma de muestra"
+                value={fecha_toma_muestra}
+                onChange={(value) => {
+                  handle_date_change('fecha_toma_muestra', value);
                 }}
-                error={!!error}
-                /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    required
+                    {...register_laboratorio('fecha_toma_muestra', {
+                      required: true,
+                    })}
+                    error={!!formErrors_laboratorio.fecha_toma_muestra}
+                    helperText={
+                      formErrors_laboratorio?.fecha_toma_muestra?.type ===
+                        'required' && 'Este campo es obligatorio'
+                    }
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha de toma de muestra"
-              value={fecha_toma_muestra}
-              onChange={(value) => {
-                handle_date_change('fecha_toma_muestra', value);
-              }}
-              renderInput={(params: any) => (
-                <TextField fullWidth size="small" {...params} />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Lugar de la muestra"
+              fullWidth
+              required
+              size="small"
+              margin="dense"
+              disabled={false}
+              {...register_laboratorio('lugar_muestra', { required: true })}
+              error={!!formErrors_laboratorio.lugar_muestra}
+              helperText={
+                formErrors_laboratorio?.lugar_muestra?.type === 'required' &&
+                'Este campo es obligatorio'
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="cod_tipo_agua"
+              control={control}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Tipo de agua"
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={true}
+                  fullWidth
+                  required
+                >
+                  {tipo_agua.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               )}
             />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Lugar de la muestra"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="cod_tipo_agua"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Tipo de agua"
-                select
-                size="small"
-                margin="dense"
-                disabled={true}
-                fullWidth
-                required
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Enviado a laboratorio el día"
+                value={fecha_envio}
+                onChange={(value) => {
+                  handle_date_change('fecha_envio', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    required
+                    size="small"
+                    {...register_laboratorio('fecha_envio_lab', {
+                      required: true,
+                    })}
+                    error={!!formErrors_laboratorio.fecha_envio_lab}
+                    helperText={
+                      formErrors_laboratorio?.fecha_envio_lab?.type ===
+                        'required' && 'Este campo es obligatorio'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="resultados de laboratorio"
+                value={fecha_resultado}
+                onChange={(value) => {
+                  handle_date_change('fecha_resultado', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    required
+                    size="small"
+                    {...register_laboratorio('fecha_resultados_lab', {
+                      required: true,
+                    })}
+                    error={!!formErrors_laboratorio.fecha_resultados_lab}
+                    helperText={
+                      formErrors_laboratorio?.fecha_resultados_lab?.type ===
+                        'required' && 'Este campo es obligatorio'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Coordenadas
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Latitud"
+              size="small"
+              fullWidth
+              margin="dense"
+              disabled={false}
+              required
+              {...register_laboratorio('latitud', { required: true })}
+              error={!!formErrors_laboratorio.latitud}
+              helperText={
+                formErrors_laboratorio?.latitud?.type === 'required' &&
+                'Este campo es obligatorio'
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Longitud"
+              size="small"
+              fullWidth
+              margin="dense"
+              disabled={false}
+              required
+              {...register_laboratorio('longitud', { required: true })}
+              error={!!formErrors_laboratorio.longitud}
+              helperText={
+                formErrors_laboratorio?.longitud?.type === 'required' &&
+                'Este campo es obligatorio'
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Descripción"
+              fullWidth
+              multiline
+              size="small"
+              margin="dense"
+              disabled={false}
+              rows={2}
+              {...register_laboratorio('descripcion', { required: true })}
+              error={!!formErrors_laboratorio.descripcion}
+              helperText={
+                formErrors_laboratorio?.descripcion?.type === 'required' &&
+                'Este campo es obligatorio'
+              }
+            />
+          </Grid>
+          {instrumentos.cod_tipo_agua === 'SUP' ? (
+            <>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="id_cuenca"
+                  control={control_registro_laboratorio}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Seleccione una cuenca"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required
+                      error={!!formErrors_laboratorio.id_cuenca}
+                      helperText={
+                        formErrors_laboratorio?.id_cuenca?.type ===
+                          'required' && 'Este campo es obligatorio'
+                      }
+                    >
+                      {cuenca_select.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+            </>
+          ) : null}
+          {instrumentos.cod_tipo_agua === 'SUB' ? (
+            <>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="id_pozo"
+                  control={control_registro_laboratorio}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Seleccione un pozo"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required
+                      error={!!formErrors_laboratorio.id_pozo}
+                      helperText={
+                        formErrors_laboratorio?.id_pozo?.type === 'required' &&
+                        'Este campo es obligatorio'
+                      }
+                    >
+                      {pozos_selected.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+            </>
+          ) : null}
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Registro de medición
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              label="Tipo parámetro "
+              select
+              fullWidth
+              size="small"
+              value={tipo_parametro_value}
+              margin="dense"
+              disabled={false}
+              name="tipo_parametro"
+              onChange={handle_change_inputs}
+            >
+              {tipo_parametro_choices.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              label="Parámetro "
+              select
+              fullWidth
+              size="small"
+              value={parametro_value}
+              margin="dense"
+              disabled={false}
+              name="parametro"
+              onChange={handle_change_inputs}
+            >
+              {parametro.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              label="unidad de medida"
+              select
+              fullWidth
+              size="small"
+              margin="dense"
+              value={unidad_medida_value}
+              disabled={false}
+              name="unidad_medida"
+              onChange={handle_change_inputs}
+            >
+              {unidad_medida_choices.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Método de análisis"
+              fullWidth
+              size="small"
+              margin="dense"
+              disabled={false}
+              value={metodo}
+              onChange={(e) => {
+                set_metodo(e.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de análisis"
+                value={fecha_analisis}
+                onChange={(value) => {
+                  handle_date_change('fecha_analisis', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Resultado"
+              fullWidth
+              size="small"
+              margin="dense"
+              disabled={false}
+              value={resultado}
+              onChange={(e) => {
+                set_resultado(e.target.value);
+              }}
+            />
+          </Grid>
+          <Box sx={{ flexGrow: 1 }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="flex-end"
+              sx={{ mt: '10px' }}
+            >
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handle_agregar}
               >
-                {tipo_agua.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Enviado a laboratorio el día"
-              value={fecha_envio}
-              onChange={(value) => {
-                handle_date_change('fecha_envio', value);
-              }}
-              renderInput={(params: any) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="resultados de laboratorio"
-              value={fecha_resultado}
-              onChange={(value) => {
-                handle_date_change('fecha_resultado', value);
-              }}
-              renderInput={(params: any) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Coordenadas
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Latitud"
-            size="small"
-            fullWidth
-            margin="dense"
-            disabled={false}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Longitud"
-            size="small"
-            fullWidth
-            margin="dense"
-            disabled={false}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Descripción"
-            fullWidth
-            multiline
-            size="small"
-            margin="dense"
-            disabled={false}
-            rows={2}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={1}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Cuenca / Pozo:
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Cuenca / Pozo"
-            size="small"
-            margin="dense"
-            disabled={true}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Button variant="contained" color="primary">
-            Buscar
-          </Button>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Registro de medición
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Tipo parámetro "
-            select
-            fullWidth
-            size="small"
-            value={tipo_parametro_value}
-            margin="dense"
-            disabled={false}
-            name="tipo_parametro"
-            onChange={handle_change_inputs}
-          >
-            {tipo_parametro_choices.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Parámetro "
-            select
-            fullWidth
-            size="small"
-            value={parametro_value}
-            margin="dense"
-            disabled={false}
-            name="parametro"
-            onChange={handle_change_inputs}
-          >
-            {parametro.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="unidad de medida"
-            select
-            fullWidth
-            size="small"
-            margin="dense"
-            value={unidad_medida_value}
-            disabled={false}
-            name="unidad_medida"
-            onChange={handle_change_inputs}
-          >
-            {unidad_medida_choices.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Método de análisis"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={metodo}
-            onChange={(e) => {
-              set_metodo(e.target.value);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha de análisis"
-              value={fecha_analisis}
-              onChange={(value) => {
-                handle_date_change('fecha_analisis', value);
-              }}
-              renderInput={(params: any) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Resultado"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={resultado}
-            onChange={(e) => {
-              set_resultado(e.target.value);
-            }}
-          />
-        </Grid>
-        <Box sx={{ flexGrow: 1 }}>
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="flex-end"
-            sx={{ mt: '10px' }}
-          >
-            <Button variant="outlined" color="primary" onClick={handle_agregar}>
-              Agregar
-            </Button>
-          </Stack>
-        </Box>
-        {rows_laboratorio.length > 0 && (
-          <>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Datos Aforo:
-              </Typography>
-              <Divider />
-              <DataGrid
-                autoHeight
-                rows={rows_laboratorio}
-                columns={colums_resultado}
-                getRowId={(row) => uuidv4()}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-              />
+                Agregar
+              </Button>
+            </Stack>
+          </Box>
+          {rows_laboratorio.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Datos Aforo:
+                </Typography>
+                <Divider />
+                <DataGrid
+                  autoHeight
+                  rows={rows_laboratorio}
+                  columns={colums_resultado}
+                  getRowId={(row) => uuidv4()}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </Grid>
+            </>
+          )}
+          <AgregarArchivo multiple={false} />
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonSalir />
             </Grid>
-          </>
-        )}
-        <AgregarArchivo multiple={false} />
-        <Grid item spacing={2} justifyContent="end" container>
-          <Grid item>
-            <ButtonSalir />
-          </Grid>
-          <Grid item>
-            <LoadingButton variant="contained" color="success" type="submit">
-              Guardar
-            </LoadingButton>
+            <Grid item>
+              <LoadingButton variant="contained" color="success" type="submit">
+                Guardar
+              </LoadingButton>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </form>
     </>
   );
 };

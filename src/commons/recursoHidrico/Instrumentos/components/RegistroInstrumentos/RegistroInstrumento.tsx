@@ -25,7 +25,10 @@ import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
-import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
+import {
+  setCurrentInstrumento,
+  set_current_id_instrumento,
+} from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
 
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
@@ -176,6 +179,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     formErrors,
     limpiar_formulario,
   } = useRegisterInstrumentoHook();
+  
   const { nombre_subseccion, nombre_seccion } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -225,22 +229,31 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
         }
       });
 
-      await agregar_instrumento(datos_instrumento);
+      await agregar_instrumento(datos_instrumento).then((response) => {
+        const {
+          data: {
+            instrumento: { id_instrumento },
+          },
+        } = response;
+        dispatch(set_current_id_instrumento(id_instrumento));
+      });
       dispatch(
         setCurrentInstrumento({
           nombre: data.nombre,
           nombre_seccion,
           nombre_subseccion,
           cod_tipo_agua: tipo_agua_selected,
+          id_cuencas,
+          id_pozo: id_pozo_selected,
         })
       );
       control_success('Se agregó instrumento correctamente');
       set_is_open_result_laboratorio(true);
-      set_is_loading_submit(false);
       limpiar_formulario();
     } catch (error: any) {
-      set_is_loading_submit(false);
       control_error(error.response.data.detail);
+    } finally {
+      set_is_loading_submit(false);
     }
   });
 
@@ -433,7 +446,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   />
                 </Grid>
               )}
-              <Grid item spacing={2} justifyContent="end" container></Grid>
             </>
           ) : null}
           {tipo_agua_selected === 'SUB' ? (
@@ -469,7 +481,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item spacing={2} justifyContent="end" container></Grid>
             </>
           ) : null}
           <AgregarArchivo multiple={true} />

@@ -16,6 +16,7 @@ import { get_cuencas } from '../../../../configuraciones/Request/request';
 import { get_data_cuenca_instrumentos } from '../../../../ConsultaBiblioteca/request/request';
 import type { AxiosError } from 'axios';
 import { set } from 'date-fns';
+import { useAppSelector } from '../../../../../../hooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 export const useRegisterInstrumentoHook = () => {
@@ -99,6 +100,10 @@ export const useRegisterInstrumentoHook = () => {
   };
 
   //  autocomplete y select pozos
+  const { id_instrumento: id_instrumento_slice } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
+
   const [cuenca, set_cuenca] = useState<ValueProps[]>([]);
   const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
   const [originalCuencaValues, setOriginalCuencaValues] = useState<
@@ -110,14 +115,16 @@ export const useRegisterInstrumentoHook = () => {
   const fetch_data_cuencas_instrumentos_select = async (): Promise<void> => {
     try {
       if (id_instrumento) {
-        const response = await get_data_cuenca_instrumentos(id_instrumento);
+        const response = await get_data_cuenca_instrumentos(
+          id_instrumento || id_instrumento_slice
+        );
         if (response?.length > 0) {
           const data_cuenca = response.map((item: IpropsCuenca) => ({
             value: item.id_cuenca,
             label: item.cuenca ?? '',
           }));
           set_cuenca_select(data_cuenca);
-          setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
       }
     } catch (err: any) {
