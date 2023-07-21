@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {
-  Autocomplete,
+  // Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -25,7 +25,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
+
+import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
+import { useAppSelector } from '../../../../../../../../../hooks';
+import { ItemSeleccionado } from './components/ItemSeleccionado/ItemSeleccionado';
+import { TipologiasAsociadasATRD } from './components/TipologiasAsociadasATRD/TipologiasAsociadasATRD';
+import { EstablecerTipologias } from './components/EstablecerTipologias/EstablecerTipologias';
 
 const options_dispocision_final = [
   { value: 'C', label: 'Conservación Total' },
@@ -33,10 +38,14 @@ const options_dispocision_final = [
   { value: 'S', label: 'Selección' }
 ];
 
+
 export const FormTRDAdmin = (): JSX.Element => {
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { closeModalAdministracionTRD } = useContext(ModalContextTRD);
+
+  // * state from trd_slice
+  const { trd_current } = useAppSelector((state) => state.trd_slice);
 
   const {
     control_administrar_trd,
@@ -48,6 +57,10 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   return (
     <>
+
+        <ItemSeleccionado/>
+      
+
       <Grid xs={12}>
         <Box
           component="form"
@@ -59,7 +72,13 @@ export const FormTRDAdmin = (): JSX.Element => {
         >
           <Title title="Agregrar Características" />
 
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              marginTop: '1.5rem'
+            }}
+          >
             <Grid
               item
               xs={12}
@@ -92,9 +111,9 @@ export const FormTRDAdmin = (): JSX.Element => {
                         style={{
                           color: 'rgba(0, 0, 0, 0.6)',
                           fontWeight: 'thin',
-                          fontSize: '0.75rem',
-                          marginTop: '0.25rem',
-                          marginLeft: '0.25rem'
+                          fontSize: '0.75rem'
+                          // marginTop: '0.25rem',
+                          // marginLeft: '0.25rem'
                         }}
                       >
                         Dispocisión final
@@ -307,15 +326,15 @@ export const FormTRDAdmin = (): JSX.Element => {
                       }
                       component="label"
                       style={{
-                       // marginTop: '.15rem',
-                        width: '100%',
-                        height: '56px'
+                        // marginTop: '.15rem',
+                        width: '100%'
+                        // height: '56px'
                       }}
                       startIcon={<CloudUploadIcon />}
                     >
                       {value === '' || value === null
-                        ? 'Subir archivo'
-                        : 'Archivo subido'}
+                        ? 'Subir archivo justificación cambio'
+                        : 'Archivo subido justificación cambio'}
                       <input
                         style={{ display: 'none' }}
                         type="file"
@@ -352,80 +371,28 @@ export const FormTRDAdmin = (): JSX.Element => {
                 )}
               />
             </Grid>
-            {/* tipologias */}
-            <Grid item xs={12} sm={7}>
-                <Controller
-                  name="formatos"
-                  control={control_administrar_trd}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <>
-                      <Autocomplete
-                        multiple
-                        fullWidth
-                        id="autocomplete"
-                        value={value}
-                        size="medium"
-                        options={[
-                          { label: 'Tipologia 1', value: 1 },
-                          { label: 'Tipologia 2', value: 2 },
-                          { label: 'Tipologia 3', value: 3 },
-                          { label: 'Tipologia 4', value: 4 },
-                          { label: 'Tipologia 5', value: 5 },
-                        ]}
-                        getOptionLabel={(option: any) => option.label}
-                        isOptionEqualToValue={(option: any, value) =>
-                          option?.value === value?.value
-                        }
-                        onChange={(event: any, value: any) => onChange(value)}
-                        renderInput={(params) => (
-                          <TextField
-                            className="autocomplete_tipologias"
-                            key={params.id}
-                            {...params}
-                            // label="Formatos para el medio documental seleccionado"
-                            placeholder="Tipologias asociadas"
-                          />
-                        )}
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem'
-                          }}
-                        >
-                          Tipologías asociadas al TRD seleccionado
-                          {/* {trd_current != null
-                        ? `CCD seleccionado`
-                        : `CDD's no usados en otro TRD`} */}
-                        </small>
-                      </label>
-                    </>
-                  )}
-                />
-              </Grid>
-            {/* establecer tipologias */}
 
-            {/*  <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
-                <DownloadButton
-                  fileName="ruta_soporte"
-                  condition={
-                    ccd_current === null ||
-                    ccd_current?.ruta_soporte === null ||
-                    ccd_current?.ruta_soporte === ''
-                  }
-                  fileUrl={ccd_current?.ruta_soporte}
-                />
-              </Grid>
-*/}
-            {/* end new spaces */}
+            <Grid item xs={12} sm={2}>
+              <DownloadButton
+                fileName="ruta_archivo_cambio"
+                condition={
+                  true
+                  // control_administrar_trd._formValues.ruta_archivo_cambio
+                  
+                }
+                fileUrl={trd_current?.ruta_archivo_cambio}
+              />
+            </Grid>
+
+
+            {/* tipologias asociadas a trd inicio */}
+
+           <TipologiasAsociadasATRD/>
+
+            {/* tipologias asociadas a trd fin */}
+
+
+            
           </Grid>
           <Stack direction="row" spacing={2} sx={{ marginTop: '.15rem' }}>
             <Button
@@ -458,18 +425,15 @@ export const FormTRDAdmin = (): JSX.Element => {
             >
               SALIR Y CANCELAR
             </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              // type="submit"
-              startIcon={<SaveAsIcon />}
-              // disabled={ccd_current?.actual}
-            >
-              ESTABLECER TIPOLOGIAS
-            </Button>
           </Stack>
         </Box>
       </Grid>
+
+
+      {/* establecer tipologias */}
+                  {/* poner modal de manejo para establecer tipologias */}
+                  <EstablecerTipologias/>
+            {/* end new spaces */}
     </>
   );
 };

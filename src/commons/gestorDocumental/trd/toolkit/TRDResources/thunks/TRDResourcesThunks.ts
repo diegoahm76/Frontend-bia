@@ -12,7 +12,8 @@ import {
   get_catalogo_series_subseries_unidad_organizacional,
   get_data_format_documental_type,
   get_data_tipologias_documentales,
-  get_catalogo_trd_action
+  get_catalogo_trd_action,
+  get_tipologias_asociadas_a_trd
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 
@@ -253,6 +254,34 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
 
 // ! ------------------------------->  SERVICIOS TIPOLOGIAS DOCUMENTALES <--------------------------------------
 
+// ? get tipologias documentales asociadas a un TRD -------------------------------------->
+
+export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const url = `gestor/trd/catalogo-trd/get-tipologias/${id_trd}/`;
+      const { data } = await api.get(url);
+
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('Sin tipologías asociadas a este TRD');
+      dispatch(get_tipologias_asociadas_a_trd(data.data));
+      console.log(data.data, 'data.data');
+      return data.data;
+    } catch (error: any) {
+      control_error(
+        `${error.response.data.detail} que coincida` ||
+          'Ha ocurrido un error, no se han encontrado data'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
 // ? get documentary typologies by name -------------------------------------->
 
 export const get_tipologias_documentales_by_name = (name?: string): any => {
@@ -312,6 +341,25 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
     }
   };
 };
+
+
+/* export const get_tipologias_list = () => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError | any> => {
+    try {
+      const url = `gestor/trd/tipologias/get-list/`;
+      const { data } = await api.get(url);
+      return data.data;
+    } catch (error: any) {
+      control_error('Ha ocurrido un error, no se han encontrado data');
+
+      return error as AxiosError;
+    }
+  };
+};
+*/
+// ! ------------------------------->  SERVICIOS FORMATOS DOCUMENTALES <--------------------------------------
 
 // ? get formatos documentales by id documentary type -------------------------------------->
 export const get_formatos_documentales_by_id_tipologia = (
@@ -434,8 +482,6 @@ export const get_catalogo_trd = (id_trd: number): any => {
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         data
       ); */
-      console.log(data.data, 'data.data');
-
       dispatch(get_catalogo_trd_action(data.data));
 
       return data;

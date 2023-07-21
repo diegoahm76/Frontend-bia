@@ -9,6 +9,7 @@ import { AppTheme } from './theme';
 import 'react-toastify/dist/ReactToastify.css';
 import './css/App.css';
 // import { OfflineScreen } from './utils/OffLineScreen/OffLineScreen';
+// import { Offline, Online } from 'react-detect-offline';
 
 export const App = () => {
   return (
@@ -16,13 +17,13 @@ export const App = () => {
       <AppTheme>
         <AppRouter />
       </AppTheme>
-      {/*  <Online>
-      <AppTheme>
-        <AppRouter />
-      </AppTheme>
-      </Online>
-     <Offline>
+      {/* <Online>
         <OfflineScreen />
+      </Online>
+      <Offline>
+        <AppTheme>
+          <AppRouter />
+        </AppTheme>
       </Offline> */}
     </>
   );

@@ -15,6 +15,7 @@ interface TRD {
 
   //! data tipologias documentales
   tipologias: any[];
+  tipologias_asociadas_a_trd: any[];
   tipologias_documental_current: any;
 
   //! catalogo TRD
@@ -33,6 +34,7 @@ const initial_state: TRD = {
   data_format_documental_type: [],
   //! data tipologias documentales
   tipologias: [],
+  tipologias_asociadas_a_trd: [],
   tipologias_documental_current: null,
   //! catalogo TRD
   catalogo_trd: []
@@ -85,6 +87,12 @@ export const trd_slice = createSlice({
     ) => {
       state.tipologias = action.payload;
     },
+    get_tipologias_asociadas_a_trd: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.tipologias_asociadas_a_trd = action.payload;
+    },
     get_current_tipologia_documental_action: (
       state: any,
       action: PayloadAction<any>
@@ -112,6 +120,7 @@ export const {
   //* -------------------------------->
   get_data_tipologias_documentales,
   get_current_tipologia_documental_action,
+  get_tipologias_asociadas_a_trd,
   //* -------------------------------->
   get_catalogo_trd_action
 } = trd_slice.actions;

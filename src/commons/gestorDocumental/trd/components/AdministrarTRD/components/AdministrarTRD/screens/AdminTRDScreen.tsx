@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Avatar, Box, Button, Grid, IconButton, Stack } from '@mui/material';
-import { useAppSelector } from '../../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Title } from '../../../../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
 import { columns } from '../../CatalogoTRD/utils/columsCatalogoTRD';
@@ -18,13 +18,20 @@ import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDi
 import { FormTRDAdmin } from '../components/FormTRD/FormTRDAdmin';
 import { useContext } from 'react';
 import { ModalContextTRD } from '../../../../../context/ModalsContextTrd';
+import { get_tipologia_doc_asociadas_trd } from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
-
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* context declaration
-  const { modalAdministracionTRD, openModalAdministracionTRD, closeModalAdministracionTRD } = useContext(ModalContextTRD);
   const {
-    /* ccd_current_catalogo_ser_sub_unid, */ /* trd_current, */ catalado_series_subseries_unidad_organizacional,
+    modalAdministracionTRD,
+    openModalAdministracionTRD,
+    closeModalAdministracionTRD
+  } = useContext(ModalContextTRD);
+  const {
+    /* ccd_current_catalogo_ser_sub_unid, */ trd_current,
+    catalado_series_subseries_unidad_organizacional,
     catalogo_trd
   } = useAppSelector((state: any) => state.trd_slice);
   //* crear modal open y close para administrar trd
@@ -47,9 +54,8 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               size="large"
               title="Editar relación catalogo TRD"
               onClick={() => {
-                // ? this is the function to delete the ccd
-                // delete_ccd(params.row.id_cat_serie_und);
-                // dispatch(get_ccd_current_catalogo_ser_sub_unid(params.row));
+                // ? this is the function to get data asociated to trd
+                dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd))
                 openModalAdministracionTRD();
                 console.log(params.row);
               }}
@@ -84,9 +90,8 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
-                // ? this is the function to delete the ccd
-                // delete_ccd(params.row.id_cat_serie_und);
-                // dispatch(get_ccd_current_catalogo_ser_sub_unid(params.row));
+                // ? this is the function to get data asociated to trd
+                // dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd));
                 openModalAdministracionTRD();
                 console.log(params.row);
               }}
@@ -228,6 +233,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
             <FormTRDAdmin />
           </Grid>
         ) : null}
+
 
         {/* <Stack
           direction="row"
