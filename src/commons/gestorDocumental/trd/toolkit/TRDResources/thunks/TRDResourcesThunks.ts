@@ -282,6 +282,7 @@ export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
   };
 };
 
+
 // ? get documentary typologies by name -------------------------------------->
 
 export const get_tipologias_documentales_by_name = (name?: string): any => {

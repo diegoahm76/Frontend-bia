@@ -115,8 +115,6 @@ export const FormTRDAdmin = (): JSX.Element => {
                           color: 'rgba(0, 0, 0, 0.6)',
                           fontWeight: 'thin',
                           fontSize: '0.75rem'
-                          // marginTop: '0.25rem',
-                          // marginLeft: '0.25rem'
                         }}
                       >
                         Dispocisión final

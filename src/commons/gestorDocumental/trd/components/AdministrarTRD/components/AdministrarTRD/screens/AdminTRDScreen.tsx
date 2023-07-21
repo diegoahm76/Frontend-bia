@@ -13,12 +13,13 @@ import { Link } from 'react-router-dom';
 //* Icons
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { FormTRDAdmin } from '../components/FormTRD/FormTRDAdmin';
 import { useContext } from 'react';
 import { ModalContextTRD } from '../../../../../context/ModalsContextTrd';
-import { get_tipologia_doc_asociadas_trd } from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {/* delete_item_catalogo_trd, get_catalogo_trd, */ get_tipologia_doc_asociadas_trd } from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { set_selected_item_from_catalogo_trd_action } from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
@@ -30,20 +31,19 @@ export const AdminTRDScreen = (): JSX.Element | null => {
     openModalAdministracionTRD,
     closeModalAdministracionTRD
   } = useContext(ModalContextTRD);
+
   const {
-    /* ccd_current_catalogo_ser_sub_unid, */ trd_current,
+    trd_current,
     catalado_series_subseries_unidad_organizacional,
-    catalogo_trd,
+    catalogo_trd
   } = useAppSelector((state: any) => state.trd_slice);
   //* crear modal open y close para administrar trd
 
-
-  const columns_catalogo_trd = [
-    ...columns,
+const columns_catalogo_trd = [
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 180,
+      width: 120,
       renderCell: (params: any) => {
         return (
           <>
@@ -53,8 +53,10 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               title="Editar relación catalogo TRD"
               onClick={() => {
                 // ? this is the function to get data asociated to trd
-                dispatch(set_selected_item_from_catalogo_trd_action(params.row));
-                dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd))
+                dispatch(
+                  set_selected_item_from_catalogo_trd_action(params.row)
+                );
+                dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd));
                 openModalAdministracionTRD();
                 console.log(params.row);
               }}
@@ -69,23 +71,50 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 />
               </Avatar>
             </IconButton>
+
+            <IconButton
+              aria-label="delete"
+              size="large"
+              title="Eliminar relación catalogo TRD"
+              onClick={() => {
+
+                // ? pendiente de revision esta funcion
+               /* dispatch(
+                  delete_item_catalogo_trd(params.row.id_catserie_unidadorg)
+                ).then(() => {
+                  dispatch(get_catalogo_trd(trd_current.id_trd));
+                });
+*/
+                console.log(params.row);
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <DeleteIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px'
+                  }}
+                />
+              </Avatar>
+            </IconButton>
           </>
         );
       }
-    }
-  ];
+    },
+    ...columns
+];
 
-  const columns_catalogo_ccd = [
-    ...columnsCCD,
+const columns_catalogo_ccd = [
     {
       headerName: 'Acciones',
       field: 'acciones',
-      width: 180,
+      width: 80,
       renderCell: (params: { row: { id_cat_serie_und: string } }) => {
         return (
           <>
             <IconButton
-              aria-label="delete"
+              aria-label="admin"
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
@@ -93,7 +122,9 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 // dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd));
                 openModalAdministracionTRD();
                 console.log(params.row);
-                dispatch(set_selected_item_from_catalogo_trd_action(params.row));
+                dispatch(
+                  set_selected_item_from_catalogo_trd_action(params.row)
+                );
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -109,8 +140,9 @@ export const AdminTRDScreen = (): JSX.Element | null => {
           </>
         );
       }
-    }
-  ];
+    },
+    ...columnsCCD,
+];
 
   return (
     <>
@@ -130,10 +162,8 @@ export const AdminTRDScreen = (): JSX.Element | null => {
           {/* buttons start */}
           <Link to="/app/gestor_documental/trd/">
             <Button
-              // color="info"
               color="success"
               variant="contained"
-              // disabled={!trd_current}
               startIcon={<ArrowBackIcon />}
               onClick={closeModalAdministracionTRD}
             >
@@ -142,11 +172,6 @@ export const AdminTRDScreen = (): JSX.Element | null => {
           </Link>
         </Stack>
 
-        {/* <Box
-          sx={{ width: '100%', marginBotton: '1rem', justifyContent: 'center' }}
-        >
-          <Title title="Administración de TRD" />
-        </Box> */}
         <Grid
           item
           container
@@ -233,27 +258,6 @@ export const AdminTRDScreen = (): JSX.Element | null => {
             <FormTRDAdmin />
           </Grid>
         ) : null}
-
-
-        {/* <Stack
-          direction="row"
-          justifyContent="flex-start"
-          spacing={2}
-          sx={{ m: '20px 0' }}
-        >
-           buttons start 
-          <Link to="/app/gestor_documental/trd/">
-            <Button
-              color="success"
-              variant="contained"
-              disabled={!trd_current}
-              startIcon={<ArrowBackIcon />}
-              onClick={() => console.log('ABRIR ADMINISTRACIÓN DE TRD')}
-            >
-              REGRESAR
-            </Button>
-          </Link>
-        </Stack> */}
       </Grid>
     </>
   );
