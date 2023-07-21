@@ -16,7 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ModalContextTRD } from '../../../../../../context/ModalsContextTrd';
 import { Controller } from 'react-hook-form';
 import { use_trd } from '../../../../../../hooks/use_trd';
@@ -40,6 +40,11 @@ const options_dispocision_final = [
 
 
 export const FormTRDAdmin = (): JSX.Element => {
+
+  //* necccesary states
+  const [nuevasTipologias, setNuevasTipologias] = useState<any>([]);
+
+
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { closeModalAdministracionTRD } = useContext(ModalContextTRD);
@@ -402,7 +407,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               startIcon={<SaveIcon />}
               // disabled={ccd_current?.actual}
             >
-              GUARDAR
+              FINALIZAR
             </Button>
             <Button
               variant="outlined"
@@ -432,7 +437,10 @@ export const FormTRDAdmin = (): JSX.Element => {
 
       {/* establecer tipologias */}
                   {/* poner modal de manejo para establecer tipologias */}
-                  <EstablecerTipologias/>
+                  <EstablecerTipologias
+                    setNuevasTipologias={setNuevasTipologias}
+                    nuevasTipologias={nuevasTipologias}
+                  />
             {/* end new spaces */}
     </>
   );

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 
-import { useContext /* useState */, useState } from 'react';
+import { useContext } from 'react';
 import {
   Avatar,
   // Autocomplete,
@@ -41,6 +41,8 @@ import { useAppSelector } from '../../../../../../../../../../../hooks';
 import { v4 as uuidv4 } from 'uuid';
 import AddIcon from '@mui/icons-material/Add';
 import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import { type EstablecerTipologiasProps } from './types/types';
+import Swal from 'sweetalert2';
 
 export const colums_tipologias_asociadas = [
   {
@@ -55,21 +57,23 @@ export const colums_tipologias_asociadas = [
   }
 ];
 
-export const EstablecerTipologias = (): JSX.Element => {
+export const EstablecerTipologias = ({
+  nuevasTipologias,
+  setNuevasTipologias
+}: EstablecerTipologiasProps): JSX.Element => {
   //* context values
   const {
     modalEstablecerTipologiaDocumentalATRD,
     closeModalEstablecerTipologiaDocumentalATRD
   } = useContext(ModalContextTRD);
+
+  //* get element from store
+  const { tipologias_asociadas_a_trd, trd_current, tipologias } =
+    useAppSelector((state) => state.trd_slice);
   /*
   const {
     control: controlEstablecerTipologiasDocumentales,
   } = useForm() */
-
-  const [tipologiasMix, setTipologiasMix] = useState<any>({
-    tipologias_asociadas_a_trd: [],
-    tipologias: []
-  });
 
   const colums_tipologias = [
     {
@@ -94,14 +98,11 @@ export const EstablecerTipologias = (): JSX.Element => {
             title="Añadir tipología a TRD"
             onClick={() => {
               // ? añdir y actualizar tipologias asociadas a trd
-              setTipologiasMix({
-                ...tipologiasMix,
-                ...tipologias_asociadas_a_trd,
-                tipologias_asociadas_a_trd: [
-                  ...tipologiasMix.tipologias_asociadas_a_trd,
-                  params.row
-                ]
-              });
+              setNuevasTipologias(
+                nuevasTipologias.length > 0
+                  ? [...nuevasTipologias, params.row]
+                  : [...tipologias_asociadas_a_trd, params.row]
+              );
               console.log(params.row);
             }}
           >
@@ -120,10 +121,6 @@ export const EstablecerTipologias = (): JSX.Element => {
     }
   ];
 
-  //* get element from store
-  const { tipologias_asociadas_a_trd, trd_current, tipologias } =
-    useAppSelector((state) => state.trd_slice);
-
   return (
     <>
       <Dialog
@@ -137,6 +134,13 @@ export const EstablecerTipologias = (): JSX.Element => {
           onSubmit={(e: any) => {
             e.preventDefault();
             console.log('estableciendo tipologias documentales');
+            void Swal.fire({
+              title:
+                'Recuerde finalizar el proceso para que los cambios se vean reflejados',
+              icon: 'info',
+              confirmButtonText: 'Ok',
+              confirmButtonColor: '#042F4A'
+            });
           }}
         >
           <DialogTitle>
@@ -191,15 +195,26 @@ export const EstablecerTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      tipologiasMix.tipologias_asociadas_a_trd.length > 0
-                        ? tipologiasMix.tipologias_asociadas_a_trd
+                      nuevasTipologias.length > 0
+                        ? nuevasTipologias.filter(
+                            (item: any, index: any, self: any) => {
+                              return (
+                                index ===
+                                self.findIndex(
+                                  (t: any) =>
+                                    t.id_tipologia_documental ===
+                                    item.id_tipologia_documental
+                                )
+                              );
+                            }
+                          )
                         : tipologias_asociadas_a_trd
                     }
                     columns={colums_tipologias_asociadas}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => uuidv4()}
+                    getRowId={(row) => row.id_tipologia_documental}
                   />
                 </Box>
               </Grid>
