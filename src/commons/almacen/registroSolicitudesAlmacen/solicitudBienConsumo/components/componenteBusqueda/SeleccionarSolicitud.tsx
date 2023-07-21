@@ -1,9 +1,7 @@
 
 import { Chip, Grid, } from '@mui/material';
-
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { get_solicitud_service, get_solicitudes_id_persona_service } from '../../store/solicitudBienConsumoThunks';
 import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
@@ -16,12 +14,16 @@ interface IProps {
     title: string;
     control_solicitud: any;
     get_values: any
+    open_modal: boolean;
+    set_open_modal: any;
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitud = ({
     title,
     control_solicitud,
-    get_values
+    get_values, open_modal,
+    set_open_modal,
 }: IProps) => {
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -99,7 +101,9 @@ const SeleccionarSolicitud = ({
                     models={solicitudes}
                     get_filters_models={get_solicitudes_filtro}
                     set_models={set_solicitudes}
-                    button_submit_label='Buscar solicitud'
+                    show_search_button={false}
+                    open_search_modal={open_modal}
+                    set_open_search_modal={set_open_modal}
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -109,22 +113,8 @@ const SeleccionarSolicitud = ({
 
                         {
                             datum_type: "input_controller",
-                            xs: 5,
-                            md: 2,
-                            control_form: control_solicitud,
-                            control_name: "id_solicitud_consumibles",
-                            default_value: "",
-                            rules: {},
-                            label: "ID",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            on_blur_function: search_solicitud
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 5,
-                            md: 2,
+                            xs: 12,
+                            md: 6,
                             control_form: control_solicitud,
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
@@ -135,19 +125,23 @@ const SeleccionarSolicitud = ({
                             helper_text: "",
                             on_blur_function: search_solicitud
                         },
+
                         {
-                            datum_type: "input_controller",
+                            datum_type: 'date_picker_controller',
                             xs: 12,
-                            md: 8,
+                            md: 6,
                             control_form: control_solicitud,
-                            control_name: "fecha_solicitud",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Fecha de ingreso",
-                            type: "text",
+                            control_name: 'fecha_solicitud',
+                            default_value: '',
+                            rules: {
+
+                            },
+                            label: 'Fecha de entrega',
                             disabled: true,
-                            helper_text: ""
+                            helper_text: '',
+                            format: 'YYYY-MM-DD',
                         },
+
                         {
                             datum_type: "input_controller",
                             xs: 12,
@@ -198,7 +192,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud,
                             control_name: "persona_solicita",
                             default_value: "",

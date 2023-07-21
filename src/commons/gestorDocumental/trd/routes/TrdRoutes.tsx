@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { TrdScreen } from '../screens/TrdScreen';
 import { Page404 } from '../../../../screens/404';
 import { ModalProviderTRD } from '../context/ModalsContextTrd';
+import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TrdRoutes: React.FC = () => {
@@ -13,6 +14,10 @@ export const TrdRoutes: React.FC = () => {
     {
       path: '/*',
       element: () => <Page404 />
+    },
+    {
+      path: '/administrar-trd',
+      element: () => <AdminTRDScreen />
     }
   ];
 

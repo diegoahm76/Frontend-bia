@@ -1,14 +1,27 @@
-import { Box, Grid } from '@mui/material';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { Title } from '../../../../components/Title';
 import { TablaObligacionesAdminAsignadas } from '../componentes/TablaObligacionesAdminAsignadas';
 import { get_facilidades_asignadas } from '../slices/FacilidadesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { type FacilidadPago } from '../interfaces/interfaces';
+
+interface RootState {
+  facilidades: {
+    facilidades: FacilidadPago[];
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ObligacionesAdminAsignadas: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { facilidades } = useSelector((state: RootState) => state.facilidades);
+  const [modal, set_modal] = useState(facilidades.length === 0);
+
+  const handle_close = () => { set_modal(false) };
 
   useEffect(() => {
     try {
@@ -39,12 +52,37 @@ export const ObligacionesAdminAsignadas: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-            <p>Buzón de facilidades de pago asignadas:</p>
-            <TablaObligacionesAdminAsignadas />
+            {
+              facilidades.length !== 0 ? (
+                <>
+                  <p>Buzón de facilidades de pago asignadas:</p>
+                  <TablaObligacionesAdminAsignadas />
+                </>
+              ) : (
+                <Dialog
+                  open={modal}
+                  onClose={handle_close}
+                  maxWidth="xs"
+                >
+                  <Box component="form">
+                    <DialogTitle>Usted no tiene facilidades de pago asignadas.</DialogTitle>
+                    <DialogActions>
+                      <Button
+                        variant='outlined'
+                        color="primary"
+                        startIcon={<Close />}
+                        onClick={handle_close}
+                      >
+                        Cerrar
+                      </Button>
+                    </DialogActions>
+                  </Box>
+                </Dialog>
+              )
+            }
           </Box>
         </Grid>
       </Grid>
-
     </>
   )
 }

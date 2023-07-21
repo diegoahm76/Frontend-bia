@@ -18,8 +18,6 @@ import { LoadingButton } from '@mui/lab';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { tipo_agua } from './choices/choices';
 import { useRegisterInstrumentoHook } from './hook/useRegisterInstrumentoHook';
-import { BusquedaCuencas } from '../BusquedaCuencas';
-import { BusquedaPozos } from '../BusquedaPozos';
 import { Controller } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
 import { agregar_instrumento } from '../../request/request';
@@ -27,7 +25,10 @@ import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
-import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
+import {
+  setCurrentInstrumento,
+  set_current_id_instrumento,
+} from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
 
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
@@ -146,6 +147,10 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   ];
 
   const {
+    // * agregar resultado de laboratorio
+
+    is_open_result_laboratorio,
+    set_is_open_result_laboratorio,
     // reset_instrumento,
     pozos_selected,
     cuenca,
@@ -164,8 +169,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     row_result_laboratorio,
     is_loading_submit,
     set_is_loading_submit,
-    set_is_open_cuenca,
-    set_is_open_pozos,
     handle_date_change,
     handle_change_autocomplete,
     register,
@@ -176,6 +179,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     formErrors,
     limpiar_formulario,
   } = useRegisterInstrumentoHook();
+  
   const { nombre_subseccion, nombre_seccion } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -201,7 +205,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
       const datos_instrumento = new FormData();
       datos_instrumento.append('nombre', data.nombre);
       datos_instrumento.append('fecha_creacion_instrumento', fecha_crea);
-      if (fecha_vigencia) {
+      if (fecha_vigencia && data.fecha_fin_vigencia) {
         datos_instrumento.append('fecha_fin_vigencia', fecha_vigencia);
       }
       datos_instrumento.append('cod_tipo_agua', tipo_agua_selected);
@@ -225,20 +229,31 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
         }
       });
 
-      await agregar_instrumento(datos_instrumento);
+      await agregar_instrumento(datos_instrumento).then((response) => {
+        const {
+          data: {
+            instrumento: { id_instrumento },
+          },
+        } = response;
+        dispatch(set_current_id_instrumento(id_instrumento));
+      });
       dispatch(
         setCurrentInstrumento({
           nombre: data.nombre,
           nombre_seccion,
           nombre_subseccion,
+          cod_tipo_agua: tipo_agua_selected,
+          id_cuencas,
+          id_pozo: id_pozo_selected,
         })
       );
       control_success('Se agregó instrumento correctamente');
-      set_is_loading_submit(false);
+      set_is_open_result_laboratorio(true);
       limpiar_formulario();
     } catch (error: any) {
-      set_is_loading_submit(false);
       control_error(error.response.data.detail);
+    } finally {
+      set_is_loading_submit(false);
     }
   });
 
@@ -431,19 +446,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   />
                 </Grid>
               )}
-              <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      set_is_open_cuenca(true);
-                    }}
-                  >
-                    Buscar Cuenca
-                  </Button>
-                </Grid>
-              </Grid>
             </>
           ) : null}
           {tipo_agua_selected === 'SUB' ? (
@@ -479,19 +481,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      set_is_open_pozos(true);
-                    }}
-                  >
-                    Buscar Pozo
-                  </Button>
-                </Grid>
-              </Grid>
             </>
           ) : null}
           <AgregarArchivo multiple={true} />
@@ -521,149 +510,152 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
           </Grid>
         </Grid>
       </form>
-
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        {tipo_agua_selected === 'SUP' ? (
-          <>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Carteras de aforo
-              </Typography>
-              <Divider />
-            </Grid>
-            {row_cartera_aforo.length > 0 && (
-              <>
-                <Grid item xs={12}>
-                  <DataGrid
-                    autoHeight
-                    rows={row_cartera_aforo}
-                    columns={columns_aforo}
-                    getRowId={(row) => uuidv4()}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                  />
-                </Grid>
-              </>
-            )}
-            <Grid item spacing={2} justifyContent="end" container>
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    navigate(
-                      '/app/recurso_hidrico/instrumentos/cartera_aforo',
-                      {
-                        replace: true,
-                      }
-                    );
-                  }}
-                >
-                  Agregar nueva cartera de aforo
-                </Button>
-              </Grid>
-            </Grid>
-          </>
-        ) : null}
-        {tipo_agua_selected === 'SUB' ? (
-          <>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Pruebas de bombeo
-              </Typography>
-              <Divider />
-            </Grid>
-            {row_prueba_bombeo.length > 0 && (
-              <>
-                <Grid item xs={12}>
-                  <DataGrid
-                    autoHeight
-                    rows={row_prueba_bombeo}
-                    columns={columns_prueba_bombeo}
-                    getRowId={(row) => uuidv4()}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                  />
-                </Grid>
-              </>
-            )}
-            <Grid item spacing={2} justifyContent="end" container>
-              <Grid item>
-                <LoadingButton
-                  variant="outlined"
-                  color="primary"
-                  type="submit"
-                  onClick={() => {
-                    navigate(
-                      '/app/recurso_hidrico/instrumentos/prueba_bombeo',
-                      {
-                        replace: true,
-                      }
-                    );
-                  }}
-                >
-                  Agregar nueva prueba de bombeo
-                </LoadingButton>
-              </Grid>
-            </Grid>
-          </>
-        ) : null}
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Resultados de laboratorio
-          </Typography>
-          <Divider />
-        </Grid>
-        {row_result_laboratorio.length > 0 && (
-          <>
-            <Grid item xs={12}>
-              <DataGrid
-                autoHeight
-                rows={row_result_laboratorio}
-                columns={columns_laboratorio}
-                getRowId={(row) => uuidv4()}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-              />
-            </Grid>
-          </>
-        )}
-        <Grid item spacing={2} justifyContent="end" container>
-          <Grid item>
-            <LoadingButton
-              variant="outlined"
-              color="primary"
-              type="submit"
-              onClick={() => {
-                navigate(
-                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
-                  {
-                    replace: true,
-                  }
-                );
+      {is_open_result_laboratorio ? (
+        <>
+          {tipo_agua_selected !== 'OTR' ? (
+            <Grid
+              container
+              spacing={2}
+              m={2}
+              p={2}
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                m: '10px 0 20px 0',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-              Agregar nuevo resultado de laboratorio
-            </LoadingButton>
-          </Grid>
-        </Grid>
-      </Grid>
-      <BusquedaCuencas />
-      <BusquedaPozos />
+              {tipo_agua_selected === 'SUP' ? (
+                <>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Carteras de aforo
+                    </Typography>
+                    <Divider />
+                  </Grid>
+                  {row_cartera_aforo.length > 0 && (
+                    <>
+                      <Grid item xs={12}>
+                        <DataGrid
+                          autoHeight
+                          rows={row_cartera_aforo}
+                          columns={columns_aforo}
+                          getRowId={(row) => uuidv4()}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                  <Grid item spacing={2} justifyContent="end" container>
+                    <Grid item>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                          navigate(
+                            '/app/recurso_hidrico/instrumentos/cartera_aforo',
+                            {
+                              replace: true,
+                            }
+                          );
+                        }}
+                      >
+                        Agregar nueva cartera de aforo
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </>
+              ) : null}
+              {tipo_agua_selected === 'SUB' ? (
+                <>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Pruebas de bombeo
+                    </Typography>
+                    <Divider />
+                  </Grid>
+                  {row_prueba_bombeo.length > 0 && (
+                    <>
+                      <Grid item xs={12}>
+                        <DataGrid
+                          autoHeight
+                          rows={row_prueba_bombeo}
+                          columns={columns_prueba_bombeo}
+                          getRowId={(row) => uuidv4()}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                  <Grid item spacing={2} justifyContent="end" container>
+                    <Grid item>
+                      <LoadingButton
+                        variant="outlined"
+                        color="primary"
+                        type="submit"
+                        onClick={() => {
+                          navigate(
+                            '/app/recurso_hidrico/instrumentos/prueba_bombeo',
+                            {
+                              replace: true,
+                            }
+                          );
+                        }}
+                      >
+                        Agregar nueva prueba de bombeo
+                      </LoadingButton>
+                    </Grid>
+                  </Grid>
+                </>
+              ) : null}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Resultados de laboratorio
+                </Typography>
+                <Divider />
+              </Grid>
+              {row_result_laboratorio.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <DataGrid
+                      autoHeight
+                      rows={row_result_laboratorio}
+                      columns={columns_laboratorio}
+                      getRowId={(row) => uuidv4()}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </Grid>
+                </>
+              )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    variant="outlined"
+                    color="primary"
+                    type="submit"
+                    onClick={() => {
+                      navigate(
+                        '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                        {
+                          replace: true,
+                        }
+                      );
+                    }}
+                  >
+                    Agregar nuevo resultado de laboratorio
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+            </Grid>
+          ) : null}
+        </>
+      ) : null}
     </>
   );
 };

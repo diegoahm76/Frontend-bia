@@ -12,7 +12,7 @@ interface IProps {
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarEntrega = ({ control_entrada_entrega, get_values }: IProps) => {
+const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => {
 
     const dispatch = useAppDispatch();
 
@@ -124,6 +124,6 @@ const SeleccionarEntrega = ({ control_entrada_entrega, get_values }: IProps) => 
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarEntrega;
+export default SeleccionarEntrada;
 
 
