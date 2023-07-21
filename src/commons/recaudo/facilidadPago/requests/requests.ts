@@ -63,7 +63,7 @@ export const get_funcionarios = async (): Promise<any> => {
 
 // Asignar la facilidad de pago a un funcionario desde Pag. Usuario Interno
 export const put_asignacion_funcionario = async (id: number, id_funcionario: Funcionario): Promise<any> => {
-  const data = await api.put(`recaudo/pagos/asignar-facilidad-pago/${id}/`, id_funcionario)
+  const data = await api.put(`recaudo/facilidades-pagos/asignar-funcionario/put/${id}/`, id_funcionario)
   return data
 }
 
@@ -91,7 +91,7 @@ export const get_bienes_deudor = async (id: number): Promise<any> => {
 
 // Crear Facilidad de Pago desde Pag. Usuario Externo
 export const post_registro_fac_pago = async (registro: RegistroFacilidadPago): Promise<any> => {
-  const data = await api.post(`recaudo/pagos/crear-facilidad-pago/`, registro)
+  const data = await api.post(`recaudo/facilidades-pagos/create/`, registro)
   return data
 }
 

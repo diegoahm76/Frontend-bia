@@ -64,7 +64,7 @@ const CrearSubSerieCcdDialog = ({
     defaultValues: initial_state
   });
   const data = watch();
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     const { codigo, nombre, id_subserie_doc, id_serie_doc } =
@@ -144,14 +144,14 @@ const CrearSubSerieCcdDialog = ({
     /* const new_subseries = subseries_ccd.filter(
       (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
     ); */
-    console.log(params);
+    // console.log(params);
     dispatch(delete_sub_series_service(params, () => ({}))).then(() => {
       dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
     });
   };
 
   const handleOnClick_prepareEdit = (params: any) => {
-    console.log(params);
+    // console.log(params);
     dispatch(get_subseries_ccd_current(params.row));
   };
 
@@ -250,7 +250,7 @@ const CrearSubSerieCcdDialog = ({
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 {...register('nombre', { required: true })}
                 size="small"
@@ -263,7 +263,7 @@ const CrearSubSerieCcdDialog = ({
 
             <Grid item xs={12} sm={6}>
               <TextField
-                margin="dense"
+               //  margin="dense"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"

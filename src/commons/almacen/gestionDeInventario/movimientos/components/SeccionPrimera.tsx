@@ -71,7 +71,7 @@ const Seccion = ({ control_entrega, get_values }: IProps) => {
                             rules: {
 
                             },
-                            label: 'Fecha de despacho',
+                            label: 'Fecha de entrega',
                             disabled: true,
                             helper_text: '',
                             format: 'YYYY-MM-DD',
@@ -84,11 +84,11 @@ const Seccion = ({ control_entrega, get_values }: IProps) => {
                             control_name: 'motivo',
                             default_value: '',
                             rules: { required_rule: { rule: false, message: 'requerido' } },
-                            label: 'Motivo de solicitud',
+                            label: 'Motivo',
                             type: 'text',
                             multiline_text: true,
                             rows_text: 4,
-                            disabled: true,
+                            disabled: false,
                             helper_text: '',
                         },
 

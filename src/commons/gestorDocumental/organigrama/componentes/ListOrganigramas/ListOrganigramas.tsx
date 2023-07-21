@@ -191,10 +191,6 @@ export function ListOrganigramas({
                   params.row.id_persona_cargo !== userinfo.id_persona
                 }
                 onClick={() => {
-                  console.log('hi')
-                  console.log(params.row)
-                  console.log(userinfo.id_persona)
-                  console.log(organigram)
                   dispatch(current_organigram(params.row));
                   set_position_tab_organigrama('2');
                 }}
@@ -229,7 +225,6 @@ export function ListOrganigramas({
             <Tooltip title="Delegación">
               <IconButton
                 onClick={() => {
-                  console.log(params.row);
                   // Permitir delegar organigrama si es superusuario o si es el usuario delegado para ese organigrama
                   if (
                     params.row.id_persona_cargo === userinfo.id_persona ||

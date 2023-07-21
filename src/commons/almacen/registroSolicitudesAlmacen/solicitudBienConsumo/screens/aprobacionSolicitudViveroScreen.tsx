@@ -3,7 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
-import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
+import SaveIcon from '@mui/icons-material/Save';
 import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
@@ -14,16 +14,15 @@ import SeleccionarSolicitudAprobadaVivero from '../components/componentesAprobac
 import SeleccionarBienAprobacionVivero from '../components/componentesAprobacion/SeleccionBIenAprobadoVivero';
 import PersonaResponsableVivero from '../components/componentesAprobacion/SeleccionarPersonaAprobadoVivero';
 import Aprobacion from '../components/componentesAprobacion/Aprobacion';
-
-
-
+import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AprobacionSolicitudViveroScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_aprobacion_vivero, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
     const [action] = useState<string>("Guardar");
     const { nro_solicitud, current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state) => state.solic_consumo);
-
+    const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+    const handle_open_select_model = (): void => { set_open_search_modal(true); };
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -92,11 +91,14 @@ const AprobacionSolicitudViveroScreen = () => {
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudAprobadaVivero
                     title={"Aprobación de solicitudes Vivero"} control_solicitud_aprobacion_vivero={control_solicitud_aprobacion_vivero} get_values={get_values}
+                    open_modal={open_search_modal}
+                    set_open_modal={set_open_search_modal}
                 />
                 <PersonaResponsableVivero get_values_solicitud={get_values} />
 
                 <SeleccionarBienAprobacionVivero />
-                <Aprobacion control_solicitud_aprobacion={control_solicitud_aprobacion_vivero} get_values={get_values} />
+                <Aprobacion control_solicitud_aprobacion={control_solicitud_aprobacion_vivero} get_values={get_values}
+                    title={"Información del estado de la solicitud"} />
 
 
             </Grid>
@@ -107,14 +109,24 @@ const AprobacionSolicitudViveroScreen = () => {
                 spacing={2}
             >
 
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={2}>
 
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit_aprobacion)}
-                        icon_class={<LibraryAddCheckIcon />}
+                        icon_class={<SaveIcon />}
                         label={action}
                         type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_open_select_model}
+                        icon_class={<SearchIcon />}
+                        label={'Buscar solicitud'}
+                        type_button="button"
+                        disabled={false}
                     />
                 </Grid>
 
