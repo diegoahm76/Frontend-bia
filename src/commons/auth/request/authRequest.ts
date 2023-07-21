@@ -1,4 +1,4 @@
-import { api } from '../../../api/axios';
+import { api } from "../../../api/axios";
 import type {
   ResponseAuth,
   LoginUser,
@@ -12,37 +12,39 @@ import type {
   Menu,
   User,
   DataRegisterPersonaJ,
-  RecoverUser
-} from '../interfaces/authModels';
+  RecoverUser,
+} from "../interfaces/authModels";
 import type {
   ResponseServer,
-  ResponseThunks
-} from '../../../interfaces/globalModels';
-import type { AxiosResponse, AxiosError } from 'axios';
-import { control_error } from '../../../helpers/controlError';
+  ResponseThunks,
+} from "../../../interfaces/globalModels";
+import type { AxiosResponse, AxiosError } from "axios";
+import { control_error } from "../../../helpers/controlError";
 
 export const login_post = async (
   loginUser: LoginUser
 ): Promise<ResponseThunks<IUserInfo>> => {
   try {
     const {
-      data: { userinfo }
-    } = await api.post<ResponseAuth>('users/login/', loginUser);
+      data: { userinfo },
+    } = await api.post<ResponseAuth>("users/login/", loginUser);
 
     return {
       ok: true,
-      data: { ...userinfo }
+      data: { ...userinfo },
     };
-  } catch (error: any) {
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { response } = error as AxiosError;
     console.error(error);
     const {
-      response: { data }
-    } = error;
+      response: { data },
+    } = error as any;
+
     return {
       ok: false,
       error_message: data.detail,
-      is_blocked: data.detail.includes("bloqueado")
+      is_blocked: response?.status === 403,
     };
   }
 };
@@ -53,26 +55,25 @@ export const permissions_request = async (
 ): Promise<ResponseThunks<Menu[]>> => {
   try {
     const {
-      data: { data }
+      data: { data },
     } = await api.get<ResponseServer<Menu[]>>(
       `permisos/permisos-rol/get-estructura-menu/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
     );
 
     return {
       ok: true,
-      data
+      data,
     };
-
-  } catch (error: any) {
+  } catch (error) {
     const { response } = error as AxiosError<AxiosResponse>;
 
-    const { data } = response as unknown as ResponseThunks;
+    const { data } = (response as unknown) as ResponseThunks;
 
     control_error(data.detail);
 
     return {
       ok: false,
-      error_message: data.detail
+      error_message: data.detail,
     };
   }
 };
@@ -86,19 +87,19 @@ export const get_info_person_by_document = async (
 export const crear_persona_natural_and_user = async (
   data: DataRegisterPersonaN
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
-  return await api.post('personas/persona-natural-and-usuario/create/', data);
+  return await api.post("personas/persona-natural-and-usuario/create/", data);
 };
 
 export const crear_persona_juridica_and_user = async (
   data: DataRegisterPersonaJ
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
-  return await api.post('personas/persona-juridica-and-usuario/create/', data);
+  return await api.post("personas/persona-juridica-and-usuario/create/", data);
 };
 
 export const desbloquer_usuario = async (
   desbloqueoModel: DataUnlockUser
 ): Promise<any> => {
-  return await api.post('users/unblock/', desbloqueoModel);
+  return await api.post("users/unblock/", desbloqueoModel);
 };
 
 export const verify_account = async (
@@ -122,17 +123,17 @@ export const password_unblock_complete = async (
 export const recover_password = async (
   data: RecoverPassword
 ): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
-  return await api.post('users/request-reset-email/', data);
+  return await api.post("users/request-reset-email/", data);
 };
 
 export const recover_user = async (
   data: RecoverUser
 ): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
-  return await api.put('users/recuperar-nombre-usuario/', data);
+  return await api.put("users/recuperar-nombre-usuario/", data);
 };
 
 export const create_user = async (
   data: User
 ): Promise<AxiosResponse<ResponseServer<User>>> => {
-  return await api.post<ResponseServer<User>>('users/register-externo/', data);
+  return await api.post<ResponseServer<User>>("users/register-externo/", data);
 };

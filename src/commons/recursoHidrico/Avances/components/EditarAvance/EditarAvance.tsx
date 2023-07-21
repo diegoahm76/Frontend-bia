@@ -87,7 +87,6 @@ export const EditarAvance: React.FC = () => {
   useEffect(() => {
     if (info_avance) {
       set_value('accion', info_avance.accion);
-      console.log(info_avance.descripcion, 'descripcion');
       set_value('descripcion', info_avance.descripcion);
       set_rows_evidencia(info_avance.evidencias);
       set_fecha_reporte(info_avance.fecha_reporte as any);
@@ -261,6 +260,7 @@ export const EditarAvance: React.FC = () => {
               disabled={is_select_avance}
               required={is_editar_avance}
               autoFocus
+              multiline
               {...register('descripcion', { required: true })}
               error={Boolean(errors.descripcion)}
               helperText={

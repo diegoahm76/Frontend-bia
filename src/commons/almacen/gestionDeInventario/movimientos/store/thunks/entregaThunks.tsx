@@ -1,16 +1,9 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { toast, type ToastContent } from 'react-toastify';
-
 import { api } from '../../../../../../api/axios';
-// import { type AxiosError } from 'axios';
-
-
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { set_bienes_entrada, set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
-// import { log } from 'console';
-
+import { set_bienes_entrada, set_entradas, set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -82,7 +75,7 @@ export const get_entregas_service = (): any => {
 };
 
 // obtener entradas disponibles
-export const get_entregas_disponible = (): any => {
+export const get_entradas_disponible = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/entregas/get-entradas-entregas/`);
@@ -90,7 +83,7 @@ export const get_entregas_disponible = (): any => {
 
 
             if (data.success === true) {
-                dispatch(set_entregas(data.data));
+                dispatch(set_entradas(data.data));
                 console.log(data);
                 control_success(data.detail);
             } else {

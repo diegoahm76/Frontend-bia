@@ -3,6 +3,7 @@
 
 import React, { createContext } from 'react';
 import type {
+  BusquedaPorhI,
   GetActividades,
   GetPrograma,
   GetProyectos,
@@ -26,6 +27,7 @@ interface UserContext {
   data_actividad: GetActividades | undefined;
   data_programa: GetPrograma | undefined;
   info_programa: InfoPorh | undefined;
+  info_instrumento: BusquedaPorhI | undefined;
   rows_programas: GetPrograma[];
   rows_proyectos: GetProyectos[];
   rows_proyectos_register: GetProyectos[];
@@ -44,6 +46,7 @@ interface UserContext {
   is_seleccionar_proyecto: boolean;
   is_consulta: boolean;
   mode: string;
+  id_instrumento: number | null;
   id_programa: number | null;
   id_proyecto: number | null;
   id_actividad: number | null;
@@ -51,6 +54,7 @@ interface UserContext {
   set_fecha_inicial: (value: Dayjs | null) => void;
   set_fecha_fin: (value: Dayjs | null) => void;
   set_info_programa: (value: InfoPorh) => void;
+  set_info_instrumento: (value: BusquedaPorhI) => void;
   set_rows_programas: (rows: GetPrograma[]) => void;
   set_rows_proyectos: (rows: GetProyectos[]) => void;
   set_rows_proyectos_register: (rows: GetProyectos[]) => void;
@@ -69,6 +73,7 @@ interface UserContext {
   set_is_seleccionar_proyecto: (value: boolean) => void;
   set_is_consulta: (value: boolean) => void;
   set_mode: (value: string) => void;
+  set_id_instrumento: (value: number | null) => void;
   set_id_programa: (value: number | null) => void;
   set_id_proyecto: (value: number | null) => void;
   set_id_actividad: (value: number | null) => void;
@@ -117,6 +122,13 @@ export const DataContext = createContext<UserContext>({
     fecha_registro: '',
     id_programa: 0,
   },
+  info_instrumento: {
+    id_instrumento: 0,
+    nombre: '',
+    fecha_inicio: '',
+    fecha_fin: '',
+    nombre_PORH: '',
+  },
   rows_programas: [],
   rows_proyectos: [],
   rows_proyectos_register: [],
@@ -135,6 +147,7 @@ export const DataContext = createContext<UserContext>({
   is_consulta: false,
   is_general: false,
   mode: '',
+  id_instrumento: null,
   id_programa: null,
   id_proyecto: null,
   id_actividad: null,
@@ -159,10 +172,12 @@ export const DataContext = createContext<UserContext>({
   set_is_general: () => {},
   set_is_consulta: () => {},
   set_mode: () => {},
+  set_id_instrumento: () => {},
   set_id_programa: () => {},
   set_id_proyecto: () => {},
   set_id_actividad: () => {},
   set_info_programa: () => {},
+  set_info_instrumento: () => {},
   fetch_data_programas: async () => {},
   fetch_data_proyectos: async () => {},
   fetch_data_actividades: async () => {},
@@ -195,8 +210,11 @@ export const UserProvider = ({
     setError,
   } = useForm();
 
-    const [is_saving, set_is_saving] = React.useState(false);
+  const [is_saving, set_is_saving] = React.useState(false);
 
+  const [id_instrumento, set_id_instrumento] = React.useState<number | null>(
+    null
+  );
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
   const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
@@ -208,20 +226,21 @@ export const UserProvider = ({
   const [rows_proyectos, set_rows_proyectos] = React.useState<GetProyectos[]>(
     []
   );
-  const [rows_proyectos_register, set_rows_proyectos_register] = React.useState<GetProyectos[]>(
-    []
-  );
+  const [rows_proyectos_register, set_rows_proyectos_register] = React.useState<
+    GetProyectos[]
+  >([]);
   const [rows_actividades, set_rows_actividades] = React.useState<
     GetActividades[]
   >([]);
-  const [rows_actividades_register, set_rows_actividades_register] = React.useState<
-    GetActividades[]
-  >([]);
+  const [rows_actividades_register, set_rows_actividades_register] =
+    React.useState<GetActividades[]>([]);
 
   const [data_programa, set_data_programa] = React.useState<GetPrograma>();
   const [data_actividad, set_data_actividad] = React.useState<GetActividades>();
 
   const [info_programa, set_info_programa] = React.useState<InfoPorh>();
+  const [info_instrumento, set_info_instrumento] =
+    React.useState<BusquedaPorhI>();
 
   const [is_general, set_is_general] = React.useState(true);
   const [is_consulta, set_is_consulta] = React.useState(false);
@@ -248,7 +267,19 @@ export const UserProvider = ({
   const [mode, set_mode] = React.useState('');
 
   React.useEffect(() => {
-    if (mode === 'select_programa') {
+    if(mode === 'set_is_general'){
+      set_is_general(true)
+      set_is_seleccionar_programa(false);
+      set_is_agregar_programa(false);
+      set_is_editar_programa(false);
+      set_is_seleccionar_proyecto(false);
+      set_is_agregar_proyecto(false);
+      set_is_editar_proyecto(false);
+      set_is_seleccionar_actividad(false);
+      set_is_agregar_actividad(false);
+      set_is_editar_actividad(false);
+    }
+    else if (mode === 'select_programa') {
       set_mode('');
       set_is_seleccionar_programa(true);
       set_is_agregar_programa(false);
@@ -360,7 +391,9 @@ export const UserProvider = ({
   const fetch_data_programas = async (): Promise<void> => {
     try {
       set_rows_programas([]);
-      await get_data_id(1, set_rows_programas, 'get/programas');
+      if (id_instrumento) {
+        await get_data_id(id_instrumento, set_rows_programas, 'get/programas');
+      }
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
@@ -382,9 +415,13 @@ export const UserProvider = ({
     // Restablecer otros valores del formulario si es necesario
   };
 
-  // validaciones 
+  // validaciones
 
   const value = {
+    id_instrumento,
+    set_id_instrumento,
+    info_instrumento,
+    set_info_instrumento,
     set_is_saving,
     is_saving,
     rows_proyectos_register,

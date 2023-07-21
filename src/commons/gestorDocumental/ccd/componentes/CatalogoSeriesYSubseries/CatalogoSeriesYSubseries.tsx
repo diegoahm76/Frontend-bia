@@ -24,7 +24,10 @@ import { ModalContext } from '../../context/ModalContext';
 import { AvatarStyles } from '../crearSeriesCcdDialog/utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { delete_independiente_serie_service, getCatalogoSeriesYSubseries } from './services/CatalogoSeriesYSubseries.service';
+import {
+  delete_independiente_serie_service,
+  getCatalogoSeriesYSubseries
+} from './services/CatalogoSeriesYSubseries.service';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const CatalogoSeriesYSubseries = () => {
@@ -38,11 +41,12 @@ export const CatalogoSeriesYSubseries = () => {
   const { closeModalModalSeriesAndSubseries, modalSeriesAndSubseries } =
     useContext(ModalContext);
 
-    const delete_independente_series = (id_serie_doc: number) => {
-      console.log('delete_independente_series', id_serie_doc);
-      void dispatch(delete_independiente_serie_service(id_serie_doc, ccd_current));
-    };
-
+  const delete_independente_series = (id_serie_doc: number) => {
+    console.log('delete_independente_series', id_serie_doc);
+    void dispatch(
+      delete_independiente_serie_service(id_serie_doc, ccd_current)
+    );
+  };
 
   const columns: GridColDef[] = [
     {
@@ -83,6 +87,10 @@ export const CatalogoSeriesYSubseries = () => {
         return params.row.codigo_subserie === null ? (
           <>
             <IconButton
+              sx={{
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                visibility: ccd_current?.actual ? ' hidden ' : ''
+              }}
               onClick={() => {
                 console.log('params', params);
                 delete_independente_series(params.row.id_catalogo_serie);
@@ -90,7 +98,6 @@ export const CatalogoSeriesYSubseries = () => {
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DeleteIcon
-
                   titleAccess="Eliminar serie independiente"
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />

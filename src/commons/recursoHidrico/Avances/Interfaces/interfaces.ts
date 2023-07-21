@@ -45,6 +45,7 @@ export interface GetAvances {
     fecha_registro:      string;
     id_proyecto:         number;
     id_persona_registra: number;
+    evidencias?: []
     
 }
 export interface InfoPorh {
