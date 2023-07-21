@@ -48,7 +48,6 @@ const SeleccionarCuarentena = () => {
     useState<boolean>(false);
 
   const columns_cuarentena: GridColDef[] = [
-    { field: 'id_cuarentena_mat_vegetal', headerName: 'ID', width: 20 },
     {
       field: 'consec_cueren_por_lote_etapa',
       headerName: 'Consecutivo',

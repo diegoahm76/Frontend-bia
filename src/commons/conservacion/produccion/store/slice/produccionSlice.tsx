@@ -74,7 +74,7 @@ const initial_statate_current_vegetal_material: IObjVegetalMaterial = {
   cantidad_disponible: null,
 };
 
-const initial_state_current_nursery = {
+export const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',
   cod_municipio: '',
@@ -135,6 +135,7 @@ export const initial_state_current_material_vegetal: IObjSiembraMV = {
 };
 export const initial_state_current_incidencia: IObjIncidencia = {
   id_incidencia: null,
+  id_incidencias_mat_vegetal: null,
   agno_lote: null,
   nro_lote: null,
   cod_etapa_lote: null,
@@ -167,6 +168,7 @@ const initial_state: IProduccion = {
   mezclas: [],
   current_mezcla: initial_state_current_mezcla,
   bienes: [],
+  bienes_aux: [],
   current_bien: initial_state_current_bien,
   preparaciones: [],
   current_preparacion: initial_state_current_preparacion,
@@ -245,6 +247,12 @@ export const produccion_slice = createSlice({
     },
     set_bienes: (state: IProduccion, action: PayloadAction<IObjBienes[]>) => {
       state.bienes = action.payload;
+    },
+    set_bienes_aux: (
+      state: IProduccion,
+      action: PayloadAction<IObjBienes[]>
+    ) => {
+      state.bienes_aux = action.payload;
     },
     set_current_bien: (
       state: IProduccion,
@@ -336,6 +344,7 @@ export const {
   set_mezclas,
   set_current_mezcla,
   set_bienes,
+  set_bienes_aux,
   set_current_bien,
   set_preparaciones,
   set_current_preparacion,
