@@ -4,6 +4,39 @@ import { DataGrid } from '@mui/x-data-grid';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     const roles = [
         { field: "nrosucursal", headerName: "Nro Sucursal", width: 150 },
         { field: "banana", headerName: "Descripcion de la Sucursal", width: 150 },
@@ -30,7 +63,7 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
         }}
         >
             <Grid item xs={12}>
-                <Title title="Lineres de Unidades Organizacionales" />
+                <Title title="Lideres de Unidades Organizacionales" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <DataGrid
                         density="compact"
