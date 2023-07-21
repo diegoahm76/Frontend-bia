@@ -30,7 +30,8 @@ import {
 //* icons
 import CloseIcon from '@mui/icons-material/Close';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
-import SaveIcon from '@mui/icons-material/Save';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DeleteIcon from '@mui/icons-material/Delete';
 // import SearchIcon from '@mui/icons-material/Search';
 
 import { ModalContextTRD } from '../../../../../../../../context/ModalsContextTrd';
@@ -44,22 +45,10 @@ import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSe
 import { type EstablecerTipologiasProps } from './types/types';
 import Swal from 'sweetalert2';
 
-
 //* css file
-import './css/Swal.css'
+import './css/Swal.css';
 
-export const colums_tipologias_asociadas = [
-  {
-    field: 'nombre',
-    headerName: 'Nombre',
-    width: 200
-  },
-  {
-    field: 'cod_tipo_medio_doc',
-    headerName: 'Cód. tipo medio doc',
-    width: 200
-  }
-];
+
 
 export const EstablecerTipologias = ({
   nuevasTipologias,
@@ -125,6 +114,52 @@ export const EstablecerTipologias = ({
     }
   ];
 
+  const colums_tipologias_asociadas = [
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 200
+    },
+    {
+      field: 'cod_tipo_medio_doc',
+      headerName: 'Cód. tipo medio doc',
+      width: 200
+    },
+    {
+      headerName: 'Acciones',
+      field: 'acciones',
+      width: 180,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            aria-label="edit"
+            size="large"
+            title="Eliminar"
+            onClick={() => {
+              setNuevasTipologias(
+                nuevasTipologias.filter(
+                  (item: any) =>
+                    item.id_tipologia_documental !==
+                    params.row.id_tipologia_documental
+                )
+              );
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <DeleteIcon
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px'
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
+    }
+  ];
+
   return (
     <>
       <Dialog
@@ -139,8 +174,7 @@ export const EstablecerTipologias = ({
             e.preventDefault();
             console.log('estableciendo tipologias documentales');
             void Swal.fire({
-              title:
-                'Recuerde finalizar el proceso para que los cambios se vean reflejados',
+              title: 'Recuerde guardar para que los cambios se vean reflejados',
               icon: 'info',
               confirmButtonText: 'Ok',
               confirmButtonColor: '#042F4A',
@@ -231,10 +265,10 @@ export const EstablecerTipologias = ({
               <Button
                 variant="contained"
                 type="submit"
-                startIcon={<SaveIcon />}
+                startIcon={<DoneAllIcon />}
                 color="primary"
               >
-                GUARDAR
+                ACEPTAR
               </Button>
               {/* <Button
                 variant="contained"

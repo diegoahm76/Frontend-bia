@@ -19,6 +19,7 @@ import { FormTRDAdmin } from '../components/FormTRD/FormTRDAdmin';
 import { useContext } from 'react';
 import { ModalContextTRD } from '../../../../../context/ModalsContextTrd';
 import { get_tipologia_doc_asociadas_trd } from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import { set_selected_item_from_catalogo_trd_action } from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
   //* dispatch declaration
@@ -32,13 +33,10 @@ export const AdminTRDScreen = (): JSX.Element | null => {
   const {
     /* ccd_current_catalogo_ser_sub_unid, */ trd_current,
     catalado_series_subseries_unidad_organizacional,
-    catalogo_trd
+    catalogo_trd,
   } = useAppSelector((state: any) => state.trd_slice);
   //* crear modal open y close para administrar trd
 
-  /* console.log('--', catalado_series_subseries_unidad_organizacional);
-
-  console.log('catalogo_trd', catalogo_trd); */
 
   const columns_catalogo_trd = [
     ...columns,
@@ -55,6 +53,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               title="Editar relación catalogo TRD"
               onClick={() => {
                 // ? this is the function to get data asociated to trd
+                dispatch(set_selected_item_from_catalogo_trd_action(params.row));
                 dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd))
                 openModalAdministracionTRD();
                 console.log(params.row);
@@ -94,6 +93,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 // dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd));
                 openModalAdministracionTRD();
                 console.log(params.row);
+                dispatch(set_selected_item_from_catalogo_trd_action(params.row));
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

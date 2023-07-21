@@ -31,6 +31,7 @@ import { useAppSelector } from '../../../../../../../../../hooks';
 import { ItemSeleccionado } from './components/ItemSeleccionado/ItemSeleccionado';
 import { TipologiasAsociadasATRD } from './components/TipologiasAsociadasATRD/TipologiasAsociadasATRD';
 import { EstablecerTipologias } from './components/EstablecerTipologias/EstablecerTipologias';
+import SyncIcon from '@mui/icons-material/Sync';
 
 const options_dispocision_final = [
   { value: 'C', label: 'Conservación Total' },
@@ -47,7 +48,9 @@ export const FormTRDAdmin = (): JSX.Element => {
   const { closeModalAdministracionTRD } = useContext(ModalContextTRD);
 
   // * state from trd_slice
-  const { trd_current } = useAppSelector((state) => state.trd_slice);
+  const { trd_current, selected_item_from_catalogo_trd } = useAppSelector(
+    (state) => state.trd_slice
+  );
 
   const {
     control_administrar_trd,
@@ -275,7 +278,7 @@ export const FormTRDAdmin = (): JSX.Element => {
             {/* new spaces */}
 
             {/* justificación del cambio, solo aparece para trd actual */}
-                      {/* SOLO TRD ACTUAL */}
+            {/* SOLO TRD ACTUAL */}
             {trd_current.actual ? (
               <>
                 <Grid item xs={12} sm={12}>
@@ -406,10 +409,18 @@ export const FormTRDAdmin = (): JSX.Element => {
               variant="contained"
               color="primary"
               type="submit"
-              startIcon={<SaveIcon />}
+              startIcon={
+                selected_item_from_catalogo_trd.nombre_unidad ? (
+                  <SyncIcon />
+                ) : (
+                  <SaveIcon />
+                )
+              }
               // disabled={ccd_current?.actual}
             >
-              FINALIZAR
+              {selected_item_from_catalogo_trd.nombre_unidad
+                ? 'Actualizar'
+                : 'Guardar'}
             </Button>
             <Button
               variant="outlined"

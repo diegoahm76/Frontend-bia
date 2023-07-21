@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Box, TextField } from '@mui/material';
 
@@ -5,7 +6,9 @@ import { useAppSelector } from '../../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../../components';
 export const ItemSeleccionado = (): JSX.Element => {
   // * state from trd_slice
-  const { trd_current } = useAppSelector((state)  => state.trd_slice);
+  const { selected_item_from_catalogo_trd } = useAppSelector(
+    (state) => state.trd_slice
+  );
 
   return (
     <Grid xs={12}>
@@ -19,15 +22,18 @@ export const ItemSeleccionado = (): JSX.Element => {
             justifyContent: 'center'
           }}
         >
+          {/* codigo unidad organizacional || id unidad organizacional */}
           <Grid item xs={12} sm={3}>
             <TextField
               // margin="dense"
               fullWidth
-              // disabled={ccd_current?.actual}
               size="small"
               label="Cód. Unidad Organizacional"
               variant="outlined"
-              value={trd_current?.nombre}
+              value={
+                selected_item_from_catalogo_trd.id_unidad_organizacional ||
+                selected_item_from_catalogo_trd.cod_unidad_org
+              }
               disabled
             />
             <label htmlFor="">
@@ -43,6 +49,7 @@ export const ItemSeleccionado = (): JSX.Element => {
             </label>
           </Grid>
 
+          {/* nombre unidad organizacional */}
           <Grid item xs={12} sm={3}>
             <TextField
               // margin="dense"
@@ -51,7 +58,10 @@ export const ItemSeleccionado = (): JSX.Element => {
               size="small"
               label="Nombre Unidad Organizacional"
               variant="outlined"
-              value={trd_current?.nombre}
+              value={
+                selected_item_from_catalogo_trd?.nombre_unidad ||
+                selected_item_from_catalogo_trd?.nombreUnidad
+              }
               disabled
             />
             <label htmlFor="">
@@ -67,6 +77,7 @@ export const ItemSeleccionado = (): JSX.Element => {
             </label>
           </Grid>
 
+          {/* codigo serie */}
           <Grid item xs={12} sm={3}>
             <TextField
               // margin="dense"
@@ -75,7 +86,10 @@ export const ItemSeleccionado = (): JSX.Element => {
               size="small"
               label="Cod. Serie"
               variant="outlined"
-              value={trd_current?.version}
+              value={
+                selected_item_from_catalogo_trd?.cod_serie ||
+                selected_item_from_catalogo_trd?.codigo_serie
+              }
               disabled
             />
             <label htmlFor="">
@@ -91,6 +105,7 @@ export const ItemSeleccionado = (): JSX.Element => {
             </label>
           </Grid>
 
+          {/* nombre serie */}
           <Grid item xs={12} sm={3}>
             <TextField
               // margin="dense"
@@ -99,7 +114,10 @@ export const ItemSeleccionado = (): JSX.Element => {
               size="small"
               label="Nombre Serie"
               variant="outlined"
-              value={trd_current?.version}
+              value={
+                selected_item_from_catalogo_trd?.nombre_serie ||
+                selected_item_from_catalogo_trd?.nombre_serie
+              }
               disabled
             />
             <label htmlFor="">
@@ -123,7 +141,11 @@ export const ItemSeleccionado = (): JSX.Element => {
               size="small"
               label="Cod. Subserie"
               variant="outlined"
-              value={trd_current?.version}
+              value={
+                (selected_item_from_catalogo_trd?.codigo_subserie ||
+                  selected_item_from_catalogo_trd?.cod_subserie) ??
+                '----'
+              }
               disabled
             />
             <label htmlFor="">
@@ -147,7 +169,7 @@ export const ItemSeleccionado = (): JSX.Element => {
               size="small"
               label="Nombre Subserie"
               variant="outlined"
-              value={trd_current?.version}
+              value={selected_item_from_catalogo_trd?.nombre_subserie ?? '----'}
               disabled
             />
             <label htmlFor="">
