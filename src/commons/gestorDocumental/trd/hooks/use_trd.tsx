@@ -115,7 +115,7 @@ export const use_trd = (): any => {
     reValidateMode: 'onChange'
   });
   const form_data_administrar_trd = watch_administrar_trd();
-  // console.log(form_data_administrar_trd, 'form_data_administrar_trd');
+  console.log(form_data_administrar_trd, 'form_data_administrar_trd');
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
