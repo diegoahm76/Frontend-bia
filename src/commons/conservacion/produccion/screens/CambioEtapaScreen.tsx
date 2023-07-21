@@ -7,6 +7,7 @@ import {
   set_current_stage_change,
   set_current_nursery,
   reset_state,
+  initial_state_current_nursery,
 } from '../store/slice/produccionSlice';
 import { useEffect, useState } from 'react';
 // import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/produccionThunks";
@@ -83,7 +84,6 @@ export function CambioEtapaScreen(): JSX.Element {
     reset_cambio(current_stage_change);
     if (current_stage_change.id_cambio_de_etapa !== null) {
       set_action('editar');
-      console.log(current_stage_change);
       // sdispatch(set_current_vegetal_material({ id_bien: current_stage_change.id_bien, codigo_bien: (current_stage_change.codigo??""), nombre: (current_stage_change.nombre??""), agno_lote: current_stage_change.agno_lote, nro_lote: current_stage_change.nro_lote, cod_etapa_lote: current_stage_change.cod_etapa_lote_origen, etapa_lote: (current_stage_change.desc_etapa_lote_origen??""), cantidad_disponible: current_stage_change.cantidad_disponible_al_crear }))
     }
   }, [current_stage_change]);
@@ -120,7 +120,11 @@ export function CambioEtapaScreen(): JSX.Element {
           })
         );
         dispatch(set_current_nursery(vivero));
+      } else {
+        dispatch(set_current_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch_cambio('id_vivero')]);
 
@@ -166,8 +170,6 @@ export function CambioEtapaScreen(): JSX.Element {
       form_data.append('observaciones', data.observaciones);
       form_data.append('id_persona_cambia', Number(data.id_persona_cambia));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
-      console.log(data);
-
       void dispatch(add_stage_change_service(form_data));
     }
   };
@@ -200,22 +202,21 @@ export function CambioEtapaScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Cambios de etapa material vegetal"></Title>
+          <Title title="Cambio de etapa"></Title>
         </Grid>
 
+        <SeleccionarMaterialVegetal
+          control_material_vegetal={control_material}
+          get_values={get_values_material}
+        />
         <SeleccionarCambio
           control_cambio={control_cambio}
           get_values={get_values_cambio}
           open_modal={open_search_modal}
           set_open_modal={set_open_search_modal}
         />
-        {current_nursery.id_vivero !== null && (
-          <SeleccionarMaterialVegetal
-            control_material_vegetal={control_material}
-            get_values={get_values_material}
-          />
-        )}
-        <PersonaCambia title={'Persona que realiza el cambio'} />
+
+        <PersonaCambia title={'Persona que realiza el cambio de etapa'} />
         <Grid container direction="row" padding={2} spacing={2}>
           {!(current_stage_change.cambio_anulado === true) && (
             <Grid item xs={12} md={3}>

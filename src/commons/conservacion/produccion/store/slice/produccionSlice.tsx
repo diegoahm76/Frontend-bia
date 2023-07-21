@@ -74,7 +74,7 @@ const initial_statate_current_vegetal_material: IObjVegetalMaterial = {
   cantidad_disponible: null,
 };
 
-const initial_state_current_nursery = {
+export const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',
   cod_municipio: '',

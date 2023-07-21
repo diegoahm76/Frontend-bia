@@ -181,6 +181,7 @@ export const get_person_document_service = (
       const { data } = await api.get(
         `personas/get-personas-by-document/${type}/${document}/`
       );
+      console.log(data);
       if ('data' in data) {
         if (data.data.length > 0) {
           dispatch(set_changing_person(data.data));
