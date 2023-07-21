@@ -48,12 +48,15 @@ export const FormTRDAdmin = (): JSX.Element => {
   const { closeModalAdministracionTRD } = useContext(ModalContextTRD);
 
   // * state from trd_slice
-  const { trd_current, selected_item_from_catalogo_trd } = useAppSelector(
-    (state) => state.trd_slice
-  );
+  const {
+    trd_current,
+    selected_item_from_catalogo_trd,
+    tipologias_asociadas_a_trd
+  } = useAppSelector((state) => state.trd_slice);
 
   const {
     control_administrar_trd,
+    form_data_administrar_trd,
     // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
     // formState: { errors },
     reset_administrar_trd
@@ -69,7 +72,30 @@ export const FormTRDAdmin = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            console.log('form', control_administrar_trd._formValues);
+            const elementsToSendCreate = {
+              id_trd: trd_current.id_trd,
+              id_cat_serie_und:
+                selected_item_from_catalogo_trd.id_cat_serie_und,
+              cod_disposicion_final:
+                form_data_administrar_trd.cod_disposicion_final.value,
+              digitalizacion_dis_final:
+                form_data_administrar_trd.digitalizacion_dis_final,
+              tiempo_retencion_ag:
+                form_data_administrar_trd.tiempo_retencion_ag,
+              tiempo_retencion_ac:
+                form_data_administrar_trd.tiempo_retencion_ac,
+              descripcion_procedimiento:
+                form_data_administrar_trd.descripcion_procedimiento,
+              tipologias:
+                nuevasTipologias.length > 0
+                  ? nuevasTipologias.map(
+                      (el: any) => el.id_tipologia_documental
+                    )
+                  : tipologias_asociadas_a_trd.map(
+                      (el: any) => el.id_tipologia_documental
+                    )
+            };
+            console.log('elementsToSendCreate', elementsToSendCreate);
           }}
           sx={{ width: '100%' }}
         >

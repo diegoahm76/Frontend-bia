@@ -122,7 +122,6 @@ export const CatalogoTRD = (): JSX.Element => {
                 variant="contained"
                 disabled={!trd_current}
                 startIcon={<AdminPanelSettingsIcon />}
-                onClick={() => console.log('ABRIR ADMINISTRACIÓN DE TRD')}
               >
                 ADMINISTRAR CATÁLOGO TRD
               </Button>

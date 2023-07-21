@@ -282,7 +282,6 @@ export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
   };
 };
 
-
 // ? get documentary typologies by name -------------------------------------->
 
 export const get_tipologias_documentales_by_name = (name?: string): any => {
@@ -343,23 +342,6 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
   };
 };
 
-
-/* export const get_tipologias_list = () => {
-  return async (
-    dispatch: Dispatch<any>
-  ): Promise<AxiosResponse | AxiosError | any> => {
-    try {
-      const url = `gestor/trd/tipologias/get-list/`;
-      const { data } = await api.get(url);
-      return data.data;
-    } catch (error: any) {
-      control_error('Ha ocurrido un error, no se han encontrado data');
-
-      return error as AxiosError;
-    }
-  };
-};
-*/
 // ! ------------------------------->  SERVICIOS FORMATOS DOCUMENTALES <--------------------------------------
 
 // ? get formatos documentales by id documentary type -------------------------------------->
@@ -493,6 +475,38 @@ export const get_catalogo_trd = (id_trd: number): any => {
   };
 };
 
+// ? create item catalogo TRD ---------------------------------------------->
+export const create_item_catalogo_trd = (bodyPost: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    const { id_trd, id_ccd, id_organigrama } = bodyPost;
+
+    try {
+      const { data } = await api.post(
+        `gestor/trd/catalogo-trd/add/${id_trd}/`,
+        bodyPost
+      );
+
+      const otherPeticiones = [
+        get_catalogo_trd(id_trd),
+        get_tipologia_doc_asociadas_trd(id_trd),
+        getServiceSeriesSubseriesXUnidadOrganizacional({
+          id_ccd,
+          id_organigrama
+        })
+      ];
+
+      await Promise.all(otherPeticiones);
+
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // ? delete item from catalogo TRD by id item catalogo ------------------------------>
 export const delete_item_catalogo_trd = (id_item_catalogo_trd: number): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -510,7 +524,7 @@ export const delete_item_catalogo_trd = (id_item_catalogo_trd: number): any => {
   };
 };
 
-// ! finish and resume TRD ------------------------------>
+// ! finish and resume TRD --------------------------------------------->
 
 // ? finish TRD
 export const finish_trd_service = (id_trd: number, setFlag: any): any => {

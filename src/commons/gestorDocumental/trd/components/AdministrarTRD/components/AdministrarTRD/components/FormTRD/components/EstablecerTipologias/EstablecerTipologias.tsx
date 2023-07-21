@@ -172,7 +172,6 @@ export const EstablecerTipologias = ({
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            console.log('estableciendo tipologias documentales');
             void Swal.fire({
               title: 'Recuerde guardar para que los cambios se vean reflejados',
               icon: 'info',
