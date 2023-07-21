@@ -9,9 +9,9 @@ import { DataGrid, GridToolbar, type GridColDef } from '@mui/x-data-grid';
 import type { AtributoEtapa, EtapaProceso, Proceso } from '../interfaces/proceso';
 import EditIcon from '@mui/icons-material/Edit';
 import type { FlujoProceso } from '../interfaces/flujoProceso';
-import { control_error, control_success } from '../../../helpers';
 import { api } from '../../../api/axios';
 import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosModal';
+import { NotificationModal } from '../components/NotificationModal';
 
 interface RowProceso {
   id: number;
@@ -46,10 +46,12 @@ export const GestionCarteraScreen: React.FC = () => {
   const [flujos_destino, set_flujos_destino] = useState<FlujoProceso[]>([]);
   const [id_flujo, set_id_flujo] = useState('');
   const [requisitos, set_requisitos] = useState('');
-  const [atributos_etapa, set_atributos_etapa] = useState<AtributoEtapa[]>([]);
+  const [atributos_etapa, set_atributos_etapa] = useState<AtributoEtapa[][]>([]);
   const [input_values, set_input_values] = useState<Record<string, string>>({});
   const [input_files, set_input_files] = useState<Record<string, File>>({});
   const [open_requisitos_modal, set_open_requisitos_modal] = useState(false);
+  const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
+  const [notification_info, set_notification_info] = useState({ type: '', message: '' });
 
   const columns_procesos: GridColDef[] = [
     {
@@ -223,13 +225,47 @@ export const GestionCarteraScreen: React.FC = () => {
       const etapa_destino_actual = flujos_proceso.filter(flujo => flujo.id === Number(id_flujo))[0]?.id_etapa_destino.id;
       api.get(`recaudo/procesos/atributos/${etapa_destino_actual}`)
         .then((response) => {
-          set_atributos_etapa(response.data.data);
-          set_input_values({});
+          set_values(response.data.data);
+          group_atributos(response.data.data);
         })
         .catch((error) => {
           console.log(error);
         });
     }
+  };
+
+  const set_values = (atributos: AtributoEtapa[]): void => {
+    const new_input_values: Record<string, string> = {};
+    const new_input_files: Record<string, File> = {};
+
+    atributos.forEach(objeto => {
+      if (objeto.id_tipo.tipo === 'Documento') {
+        const key: string = `${objeto.id}-${objeto.id_tipo.tipo}`;
+        new_input_files[key] = new File([''], '');
+      } else {
+        const key: string = `${objeto.id}-${objeto.id_tipo.tipo}`;
+        new_input_values[key] = '';
+      }
+    });
+
+    set_input_files(new_input_files);
+    set_input_values(new_input_values);
+  };
+
+  const group_atributos = (atributos: AtributoEtapa[]): void => {
+    const categorias_agrupadas: Record<string, AtributoEtapa[]> = {};
+
+    atributos.forEach(objeto => {
+      const categoria = objeto.id_categoria.categoria;
+      if (categorias_agrupadas[categoria]) {
+        categorias_agrupadas[categoria].push(objeto);
+      } else {
+        categorias_agrupadas[categoria] = [objeto];
+      }
+    });
+
+    const nuevo_arreglo = Object.values(categorias_agrupadas);
+    set_atributos_etapa(nuevo_arreglo);
   };
 
   const handle_post_valores_sin_archivo = (id_atributo: string, value: string): void => {
@@ -240,11 +276,13 @@ export const GestionCarteraScreen: React.FC = () => {
     })
       .then((response) => {
         console.log(response);
-        control_success(response.statusText);
+        set_notification_info({ type: 'success', message: `Se ha guardado correctamente el valor "${value}".` });
+        set_open_notification_modal(true);
       })
       .catch((error) => {
         console.log(error);
-        control_error(error);
+        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        set_open_notification_modal(true);
       });
   };
 
@@ -256,26 +294,28 @@ export const GestionCarteraScreen: React.FC = () => {
     })
       .then((response) => {
         console.log(response);
-        control_success(response.statusText);
+        set_notification_info({ type: 'success', message: `Se ha guardado correctamente el archivo "${value.name}".` });
+        set_open_notification_modal(true);
       })
       .catch((error) => {
         console.log(error);
-        control_error(error);
+        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        set_open_notification_modal(true);
       });
   };
 
-  const handle_post_valores_proceso = (): void => {
-    if (input_values) {
-      for (const [key, value] of Object.entries(input_values)) {
-        handle_post_valores_sin_archivo(key.split('-')[0], value);
-      }
-    }
-    if (input_files) {
-      for (const [key, value] of Object.entries(input_files)) {
-        handle_post_valores_con_archivo(key.split('-')[0], value);
-      }
-    }
-  };
+  // const handle_post_valores_proceso = (): void => {
+  //   if (input_values) {
+  //     for (const [key, value] of Object.entries(input_values)) {
+  //       handle_post_valores_sin_archivo(key.split('-')[0], value);
+  //     }
+  //   }
+  //   if (input_files) {
+  //     for (const [key, value] of Object.entries(input_files)) {
+  //       handle_post_valores_con_archivo(key.split('-')[0], value);
+  //     }
+  //   }
+  // };
 
   const handle_file_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
     if (event.target.files) {
@@ -349,9 +389,12 @@ export const GestionCarteraScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           <CobroCoactivo
             rows_atributos={atributos_etapa}
+            input_values={input_values}
+            input_files={input_files}
             handle_input_change={handle_input_change}
             handle_file_change={handle_file_change}
-            handle_post_valores_proceso={handle_post_valores_proceso}
+            handle_post_valores_sin_archivo={handle_post_valores_sin_archivo}
+            handle_post_valores_con_archivo={handle_post_valores_con_archivo}
           />
         </TabPanel>
       </TabContext>
@@ -361,6 +404,12 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_requisitos_modal={set_open_requisitos_modal}
         requisitos={requisitos}
         mover_estado_actual={mover_estado_actual}
+      />
+
+      <NotificationModal
+        open_notification_modal={open_notification_modal}
+        set_open_notification_modal={set_open_notification_modal}
+        notification_info={notification_info}
       />
     </>
   )
