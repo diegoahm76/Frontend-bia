@@ -21,10 +21,20 @@ import { DataContext } from '../../context/contextData';
 import type { BusquedaInstrumentos } from '../../interfaces/interface';
 import { search_instrumento } from '../../request/request';
 import EditIcon from '@mui/icons-material/Edit';
+import { useAppDispatch } from '../../../../../hooks';
+import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
-  const { set_mode, set_id_instrumento, set_nombre_seccion, set_nombre_subseccion, set_info_busqueda_instrumentos} = useContext(DataContext);
+  const {
+    set_mode,
+    set_id_instrumento,
+    set_nombre_seccion,
+    set_nombre_subseccion,
+    set_info_busqueda_instrumentos,
+  } = useContext(DataContext);
+
+  const dispatch = useAppDispatch();
 
   const columns: GridColDef[] = [
     {
@@ -58,11 +68,18 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
-                set_info_busqueda_instrumentos(params.row)
+                dispatch(
+                  setCurrentInstrumento({
+                    nombre: params.row.nombre,
+                    nombre_seccion: params.row.nombre_seccion,
+                    nombre_subseccion: params.row.nombre_subseccion,
+                  })
+                );
+                set_info_busqueda_instrumentos(params.row);
                 set_id_instrumento(params.row.id_instrumento);
                 set_nombre_seccion(params.row.nombre_seccion);
                 set_nombre_subseccion(params.row.nombre_subseccion);
-                set_mode('select_instrumento')
+                set_mode('select_instrumento');
                 handle_close();
               }}
             />
@@ -74,11 +91,18 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
               size="small"
               startIcon={<EditIcon />}
               onClick={() => {
-                set_info_busqueda_instrumentos(params.row)
+                dispatch(
+                  setCurrentInstrumento({
+                    nombre: params.row.nombre,
+                    nombre_seccion: params.row.nombre_seccion,
+                    nombre_subseccion: params.row.nombre_subseccion,
+                  })
+                );
+                set_info_busqueda_instrumentos(params.row);
                 set_id_instrumento(params.row.id_instrumento);
                 set_nombre_seccion(params.row.nombre_seccion);
                 set_nombre_subseccion(params.row.nombre_subseccion);
-                set_mode('edit_instrumento')
+                set_mode('edit_instrumento');
                 handle_close();
               }}
             />

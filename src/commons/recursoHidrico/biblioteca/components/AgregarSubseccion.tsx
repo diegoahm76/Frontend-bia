@@ -111,6 +111,7 @@ export const AgregarSubseccion: React.FC = () => {
     rows_resgister_subseccion,
     fetch_data_subseccion_por_seccion,
     set_rows_register_subseccion,
+    set_mode,
   } = useContext(DataContext);
 
   // watch
@@ -129,7 +130,9 @@ export const AgregarSubseccion: React.FC = () => {
     const is_nombre_subseccion_valid = nombre_subseccion !== '';
     const is_descripcion_subseccion_valid = descripcion_subseccion !== '';
 
-    set_is_form_valid(is_nombre_subseccion_valid && is_descripcion_subseccion_valid);
+    set_is_form_valid(
+      is_nombre_subseccion_valid && is_descripcion_subseccion_valid
+    );
   };
 
   const handle_aceptar = (): void => {
@@ -275,7 +278,19 @@ export const AgregarSubseccion: React.FC = () => {
         <Grid item>
           <LoadingButton
             variant="outlined"
-            color="primary"
+            color="error"
+            onClick={() => {
+              set_mode('register_seccion');
+            }}
+            // startIcon={<SaveIcon />}
+          >
+            Descartar
+          </LoadingButton>
+        </Grid>
+        <Grid item>
+          <LoadingButton
+            variant="outlined"
+            color="warning"
             onClick={() => {
               limpiar();
             }}
@@ -284,10 +299,9 @@ export const AgregarSubseccion: React.FC = () => {
             Limpiar
           </LoadingButton>
         </Grid>
-
         <Grid item>
           <LoadingButton
-            variant="contained"
+            variant="outlined"
             color="success"
             onClick={handle_aceptar}
             disabled={!is_form_valid}

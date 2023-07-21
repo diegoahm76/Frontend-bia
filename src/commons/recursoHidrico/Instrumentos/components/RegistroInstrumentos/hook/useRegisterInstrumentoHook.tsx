@@ -190,6 +190,11 @@ export const useRegisterInstrumentoHook = () => {
   const [is_open_edit_archivos, set_is_open_edit_archivos] =
     useState<boolean>(false);
 
+  // * agregar resultado de laboratorio
+
+  const [is_open_result_laboratorio, set_is_open_result_laboratorio] =
+    useState(false);
+
   return {
     is_loading_submit,
     pozos_selected,
@@ -248,5 +253,10 @@ export const useRegisterInstrumentoHook = () => {
 
     fetch_data_cuencas_instrumentos_select,
     cuenca_select,
+
+    // * agregar resultado de laboratorio
+
+    is_open_result_laboratorio,
+    set_is_open_result_laboratorio,
   };
 };

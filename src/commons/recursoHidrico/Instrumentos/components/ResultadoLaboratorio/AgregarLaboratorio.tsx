@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
   Box,
   Button,
@@ -24,6 +25,10 @@ import {
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
+import { useAppSelector } from '../../../../../hooks';
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarLaboratorio: React.FC = () => {
@@ -64,6 +69,22 @@ export const AgregarLaboratorio: React.FC = () => {
       ),
     },
   ];
+
+  const {
+    // watch_instrumento,
+    reset_instrumento,
+    control,
+  } = useRegisterInstrumentoHook();
+
+  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+
+  useEffect(() => {
+    reset_instrumento({
+      nombre: instrumentos.nombre,
+      nombre_seccion: instrumentos.nombre_seccion,
+      nombre_subseccion: instrumentos.nombre_subseccion,
+    });
+  }, [instrumentos]);
 
   const {
     clase_muestra_value,
@@ -118,6 +139,7 @@ export const AgregarLaboratorio: React.FC = () => {
             fullWidth
             size="small"
             margin="dense"
+            value={instrumentos.nombre_seccion}
             disabled={true}
           />
         </Grid>
@@ -125,18 +147,40 @@ export const AgregarLaboratorio: React.FC = () => {
           <TextField
             label="Subsección"
             fullWidth
+            value={instrumentos.nombre_subseccion}
             size="small"
             margin="dense"
             disabled={true}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Instrumento Asociado"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={true}
+          <Controller
+            name="nombre"
+            control={control}
+            defaultValue=""
+            // rules={{ required: false }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                label="Instrumento Asociado"
+                size="small"
+                variant="outlined"
+                disabled={true}
+                value={value}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => {
+                  onChange(e.target.value);
+                  console.log(e.target.value);
+                }}
+                error={!!error}
+                /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
