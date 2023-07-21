@@ -49,10 +49,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
   >([]);
 
   const advanced_user_search_data_form = watch();
-  console.log(
-    'advanced_user_search_data_form : ',
-    advanced_user_search_data_form
-  );
+  
 
   const handle_close_busqueda_avanzada_usuario = (): void => {
     set_is_modal_active(false);
@@ -115,11 +112,10 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
         
         )
       );
-      console.log(response.data);
       set_data_search_result(response.data);
     } catch (error) {
       // Handle the error here
-      console.error('An error occurred:', error);
+      // console.error('An error occurred:', error);
       // Optionally, you can set a default value for set_data_search_result or handle the error in another way
     }
   };

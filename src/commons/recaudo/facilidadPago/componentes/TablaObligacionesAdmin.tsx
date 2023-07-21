@@ -128,7 +128,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
       width: 300,
       renderCell: (params) => {
         return modal_asignacion ? (
-          <FormControl sx={{ minWidth: 110 }}>
+          <FormControl fullWidth sx={{ minWidth: 110 }}>
             <InputLabel>Seleccionar</InputLabel>
               <Select
                 size='small'

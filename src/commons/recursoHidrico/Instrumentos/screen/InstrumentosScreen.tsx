@@ -6,10 +6,20 @@ import { RegistroInstrumentos } from '../components/RegistroInstrumentos/Registr
 import { useContext } from 'react';
 import { DataContext } from '../context/contextData';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaAvanzadaInstrumentos } from '../components/BusquedaAvanzadaInstrumentos/BusquedaAvanzadaInstrumentos';
+import { EditarInstrumento } from '../components/EditarInstrumento/EditarInstrumento';
+import { SeleccionarInstrumento } from '../components/SeleccionarInstrumento/SeleccionarInstrumento';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InstrumentosScreen: React.FC = () => {
-  const { id_seccion, id_subseccion } = useContext(DataContext);
+  const {
+    id_seccion,
+    id_subseccion,
+    register_instrumento,
+    edit_instrumento,
+    select_instrumento,
+    set_mode,
+  } = useContext(DataContext);
 
   return (
     <>
@@ -28,18 +38,55 @@ export const InstrumentosScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Title title="ADMINISTRACIÓN DE INSTRUMENTOS EN BIBLIOTECA" />
-        </Grid>
+        {edit_instrumento && (
+          <Grid item xs={12}>
+            <Title title="EDICIÓN DE INSTRUMENTOS EN BIBLIOTECA" />
+          </Grid>
+        )}
+        {select_instrumento && (
+          <Grid item xs={12}>
+            <Title title="ADMINISTRACIÓN DE INSTRUMENTOS EN BIBLIOTECA" />
+          </Grid>
+        )}
+        {register_instrumento && (
+          <Grid item xs={12}>
+            <Title title="REGISTRO DE INSTRUMENTOS EN BIBLIOTECA" />
+          </Grid>
+        )}
       </Grid>
-      <BusquedaSeccionSubseccion />
-      {id_seccion && id_subseccion ? <RegistroInstrumentos /> : null}
+      {register_instrumento && (
+        <>
+          <BusquedaSeccionSubseccion />
+          {id_seccion && id_subseccion ? <RegistroInstrumentos /> : null}
+        </>
+      )}
+      {edit_instrumento && (
+        <>
+          {' '}
+          <EditarInstrumento />{' '}
+        </>
+      )}
+      {select_instrumento && (
+        <>
+          {' '}
+          <SeleccionarInstrumento />{' '}
+        </>
+      )}
       <Grid item spacing={2} justifyContent="end" container>
-        <Grid item>
-          <Button variant="outlined" color="primary">
-            BUSCAR
-          </Button>
-        </Grid>
+        {!register_instrumento ? (
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                set_mode('register_instrumento');
+              }}
+            >
+              AGREGAR NUEVO INSTRUMENTO
+            </Button>
+          </Grid>
+        ) : null}
+        <BusquedaAvanzadaInstrumentos />
         <Grid item>
           <ButtonSalir />
         </Grid>

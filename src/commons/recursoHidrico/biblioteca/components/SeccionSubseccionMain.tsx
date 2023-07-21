@@ -50,6 +50,7 @@ export const SeccionSubseccionMain: React.FC = () => {
       reset();
       set_rows_register_subseccion([]);
       await fetch_data_seccion();
+      await fetch_data_subseccion_por_seccion();
       set_is_saving(false);
     } catch (error: any) {
       set_is_saving(false);
@@ -74,6 +75,7 @@ export const SeccionSubseccionMain: React.FC = () => {
       await fetch_data_subseccion_por_seccion();
       set_is_saving(false);
     } catch (error: any) {
+      set_is_saving(false);
       control_error(error.response.data.detail);
       set_is_saving(false);
     }

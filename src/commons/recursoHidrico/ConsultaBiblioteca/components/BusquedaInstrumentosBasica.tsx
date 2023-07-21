@@ -91,7 +91,11 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
     try {
       if (id_seccion && id_subseccion) {
         const response = await get_busqueda_basica(id_seccion, id_subseccion);
-        console.log(response, 'response');
+        if (response.length === 0) {
+          control_error(
+            'No se encontraron resultados, recuerda que aqui puedes ver los instrumentos que se encuentran en la biblioteca y tengan cuencas asociadas '
+          );
+        }
         set_rows(response);
       }
     } catch (err: any) {

@@ -23,7 +23,7 @@ export const get_subseries_service: any = (id_serie_doc?: string | number) => {
         `gestor/ccd/subseries/get-by-id-serie-doc/${id_serie_doc ?? id_ccd_serie_doc}/`
         // gestor/ccd/subseries/get-by-id-serie-doc/65/
       );
-      console.log(data)
+      // console.log(data)
       dispatch(get_subseries_ccd(data.data));
       return data;
     } catch (error: any) {
@@ -42,7 +42,7 @@ export const create_sub_series_service = (body: any, clean: () => void): any => 
       const { data } = await api.post(`gestor/ccd/subseries/create/`, body);
       dispatch(get_subseries_service(body.id_serie_doc));
       clean();
-      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      // console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -68,7 +68,7 @@ export const update_sub_series_service: any = (
       );
       dispatch(get_subseries_service(dataForm.id_serie_doc));
       clean();
-      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      // console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -92,7 +92,7 @@ export const delete_sub_series_service: any = (
       );
       dispatch(get_subseries_service(params_ccd_info.row.id_serie_doc));
       clean();
-      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      // console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
 
       control_success(data.detail);
       return data;

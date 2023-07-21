@@ -99,33 +99,35 @@ const SeleccionarSolicitudDespacho = ({
               title_label: title ?? 'hh',
             },
 
-
-
             {
-              datum_type: 'input_controller',
+              datum_type: 'date_picker_controller',
               xs: 12,
               md: 6,
               control_form: control_solicitud_despacho,
               control_name: 'fecha_solicitud',
               default_value: '',
-              rules: { required_rule: { rule: false, message: 'requerido' } },
-              label: 'Fecha de creación de la solicitud',
-              type: 'text',
+              rules: {
+
+              },
+              label: 'Fecha de solicitud',
               disabled: true,
               helper_text: '',
+              format: 'YYYY-MM-DD',
             },
             {
-              datum_type: 'input_controller',
+              datum_type: 'date_picker_controller',
               xs: 12,
               md: 6,
               control_form: control_solicitud_despacho,
               control_name: 'fecha_aprobacion_responsable',
               default_value: '',
-              rules: { required_rule: { rule: false, message: 'requerido' } },
-              label: 'Fecha de aprobación de la solicitud',
-              type: 'text',
+              rules: {
+
+              },
+              label: 'Fecha de aprobación',
               disabled: true,
               helper_text: '',
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_controller',
