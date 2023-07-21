@@ -245,7 +245,10 @@ const SeleccionarCambio = ({
               control_name: 'id_vivero',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar vivero',
+                },
               },
               label: 'Vivero',
               disabled: current_stage_change.id_cambio_de_etapa !== null,
@@ -258,7 +261,7 @@ const SeleccionarCambio = ({
             {
               datum_type: 'date_picker_controller',
               xs: 12,
-              md: 2,
+              md: 4,
               control_form: control_cambio,
               control_name: 'fecha_cambio',
               default_value: '',
@@ -339,7 +342,7 @@ const SeleccionarCambio = ({
                       },
                       max_rule: {
                         rule: current_vegetal_material.cantidad_disponible ?? 0,
-                        message: `La cantidad debe ser menor a ${
+                        message: `La cantidad debe ser maximo ${
                           current_vegetal_material.cantidad_disponible ?? 0
                         }`,
                       },
@@ -413,7 +416,7 @@ const SeleccionarCambio = ({
               },
               label: 'Codigo de material vegetal',
               type: 'string',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
             {
@@ -428,7 +431,7 @@ const SeleccionarCambio = ({
               },
               label: 'Nombre de material vegetal',
               type: 'string',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
             {
@@ -460,7 +463,7 @@ const SeleccionarCambio = ({
               },
               label: 'Año de lote',
               type: 'number',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
           ]}

@@ -16,6 +16,7 @@ import {
 } from '../interfaces/produccion';
 import {
   initial_state_current_bien,
+  initial_state_current_nursery,
   reset_state,
   set_current_bien,
   set_current_nursery,
@@ -26,8 +27,10 @@ import { type AuthSlice } from '../../../auth/interfaces';
 import {
   add_preparacion_service,
   annul_preparacion_service,
+  control_error,
   edit_preparacion_service,
   get_bien_preparacion_id_service,
+  get_bienes_aux_service,
   get_mezclas_service,
   get_nurseries_service,
   get_person_id_service,
@@ -126,6 +129,9 @@ export function PreparacionMezclaScreen(): JSX.Element {
   useEffect(() => {
     dispatch(set_preparacion_bienes([]));
     dispatch(set_current_bien(initial_state_current_bien));
+    if (current_nursery.id_vivero !== null) {
+      void dispatch(get_bienes_aux_service(current_nursery.id_vivero));
+    }
   }, [current_nursery]);
 
   useEffect(() => {
@@ -135,7 +141,11 @@ export function PreparacionMezclaScreen(): JSX.Element {
       );
       if (vivero !== undefined) {
         dispatch(set_current_nursery(vivero));
+      } else {
+        dispatch(set_current_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero')]);
 
@@ -165,23 +175,34 @@ export function PreparacionMezclaScreen(): JSX.Element {
       current_preparacion.id_preparacion_mezcla !== null &&
       current_preparacion.id_preparacion_mezcla !== undefined
     ) {
-      set_action('editar');
-      const data_edit = {
-        ...data,
-        cantidad_creada: Number(data.cantidad_creada),
-      };
-      const aux_items: IObjPreparacionBienes[] = [];
-      preparacion_bienes.forEach(
-        (element: IObjPreparacionBienes, index: number) => {
-          aux_items.push({ ...element, nro_posicion: index });
-        }
-      );
-      const data_update = {
-        info_preparacion: data_edit,
-        items_preparacion: aux_items,
-      };
-      console.log(data_update);
-      void dispatch(edit_preparacion_service(data_update));
+      const fecha_actual = new Date();
+      const fecha_preparacion = new Date(data.fecha_preparacion ?? '');
+      const diferencia_ms =
+        fecha_actual.getTime() - fecha_preparacion.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
+        const data_edit = {
+          ...data,
+          cantidad_creada: Number(data.cantidad_creada),
+        };
+        const aux_items: IObjPreparacionBienes[] = [];
+        preparacion_bienes.forEach(
+          (element: IObjPreparacionBienes, index: number) => {
+            aux_items.push({ ...element, nro_posicion: index });
+          }
+        );
+        const data_update = {
+          info_preparacion: data_edit,
+          items_preparacion: aux_items,
+        };
+        console.log(data_update);
+        void dispatch(edit_preparacion_service(data_update));
+      } else {
+        control_error(
+          'Solo se pueden editar preparaciones hasta 30 dias despues de la fecha de preparación'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_preparacion ?? '').toISOString();
@@ -210,12 +231,23 @@ export function PreparacionMezclaScreen(): JSX.Element {
       current_preparacion.id_preparacion_mezcla !== null &&
       current_preparacion.id_preparacion_mezcla !== undefined
     ) {
-      void dispatch(
-        annul_preparacion_service(
-          current_preparacion.id_preparacion_mezcla,
-          data
-        )
-      );
+      const fecha_actual = new Date();
+      const fecha_preparacion = new Date(data.fecha_preparacion ?? '');
+      const diferencia_ms =
+        fecha_actual.getTime() - fecha_preparacion.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 2) {
+        void dispatch(
+          annul_preparacion_service(
+            current_preparacion.id_preparacion_mezcla,
+            data
+          )
+        );
+      } else {
+        control_error(
+          'Solo se pueden anular preparaciones hasta 2 dias despues de la fecha de preparación'
+        );
+      }
     }
   };
 
@@ -241,7 +273,7 @@ export function PreparacionMezclaScreen(): JSX.Element {
           open_modal={open_search_modal}
           set_open_modal={set_open_search_modal}
         />
-        {current_nursery.id_vivero !== null && <SeleccionarBienPreparacion />}
+        <SeleccionarBienPreparacion />
         <Grid container direction="row" padding={2} spacing={2}>
           {!(current_preparacion.preparacion_anulada === true) && (
             <Grid item xs={12} md={3}>
@@ -261,7 +293,7 @@ export function PreparacionMezclaScreen(): JSX.Element {
               icon_class={<SearchIcon />}
               label={'Buscar preparación'}
               type_button="button"
-              disabled={false}
+              disabled={current_nursery.id_vivero === null}
             />
           </Grid>
           <Grid item xs={12} md={3}>

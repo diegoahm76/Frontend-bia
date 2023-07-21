@@ -64,7 +64,7 @@ const SeleccionarMaterialVegetal = ({
     },
 
     {
-      field: 'etapa_lote',
+      field: 'cod_etapa_lote',
       headerName: 'Etapa lote',
       width: 100,
       renderCell: (params) => (
