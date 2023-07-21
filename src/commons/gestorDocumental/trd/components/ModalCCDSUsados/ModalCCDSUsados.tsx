@@ -101,7 +101,6 @@ export const ModalCCDUsados: FC = (): JSX.Element => {
           <IconButton
             aria-label="close"
             onClick={() => {
-              console.log('cerrando');
               closeModalCCDUsados();
             }}
             sx={{
@@ -143,7 +142,6 @@ export const ModalCCDUsados: FC = (): JSX.Element => {
             <Button
               variant="outlined"
               onClick={() => {
-                console.log('cerrando');
                 closeModalCCDUsados();
               }}
               startIcon={<CloseIcon />}

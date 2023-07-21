@@ -97,7 +97,7 @@ export const EditarOrganigrama = ({
   };
 
   useEffect(() => {
-    console.log(organigram_current.fecha_terminado);
+    // console.log(organigram_current.fecha_terminado);
     if (organigram_current.id_organigrama === null) {
       set_position_tab_organigrama('1');
     }
