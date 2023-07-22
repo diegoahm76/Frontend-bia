@@ -535,7 +535,6 @@ export const update_item_catalogo_trd = (
       const id_ccd = formData.get('id_ccd') || '';
       const id_organigrama = formData.get('id_organigrama') || '';
       const id_trd = formData.get('id_trd') || '';
-      const id_cat_serie_und = formData.get('id_cat_serie_und') || ''; // Asignar un valor predeterminado o un valor adecuado si es necesario
       const cod_disposicion_final = formData.get('cod_disposicion_final') || '';
       const digitalizacion_dis_final =
         formData.get('digitalizacion_dis_final') || '';
@@ -544,11 +543,10 @@ export const update_item_catalogo_trd = (
       const descripcion_procedimiento =
         formData.get('descripcion_procedimiento') || '';
       const tipologias = formData.getAll('tipologias[]') || [];
-      const tipologiasObj = tipologias.map((tipologia: any) => JSON.parse(tipologia));
-      const dataForm: Record<string, any> = {};
-      for (const [key, value] of formData.entries()) {
-        dataForm[key] = value;
-      }
+      //* parse tipologias, SERVER doesn't accept array of strings - It wants array of objects
+      const tipologiasObj = tipologias.map((tipologia: any) =>
+        JSON.parse(tipologia)
+      );
 
       const obj = {
         cod_disposicion_final,
@@ -556,17 +554,14 @@ export const update_item_catalogo_trd = (
         tiempo_retencion_ag,
         tiempo_retencion_ac,
         descripcion_procedimiento,
-        tipologias: JSON.stringify(tipologiasObj),
-        justificacion_cambio: '',
+        tipologias: JSON.stringify(tipologiasObj)
+        // justificacion_cambio: '',
         // ruta_archivo_cambio: ''
-
       };
 
       const { data } = await api.put(
-        // id_cat_unidadorg
-
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
-        obj,
+        obj
       );
 
       dispatch(get_catalogo_trd(id_trd));
@@ -581,7 +576,6 @@ export const update_item_catalogo_trd = (
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -598,7 +592,6 @@ export const delete_item_catalogo_trd = (id_item_catalogo_trd: number): any => {
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
