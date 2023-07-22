@@ -39,6 +39,10 @@ const ModalContextTRD = createContext<ModalContextState>({
   modalEstablecerTipologiaDocumentalATRD: false,
   openModalEstablecerTipologiaDocumentalATRD: () => {},
   closeModalEstablecerTipologiaDocumentalATRD: () => {},
+  //* -----------------------------------> MODAL HISTORIAL DE CAMBIOS
+  modalHistorialCambios: false,
+  openModalHistorialCambios: () => {},
+  closeModalHistorialCambios: () => {},
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -108,6 +112,17 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
   }
   , []);
 
+  // * -----------------------------------> MODAL HISTORIAL DE CAMBIOS
+  const openModalHistorialCambios = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_HISTORIAL_CAMBIOS' });
+  }
+  , []);
+
+  const closeModalHistorialCambios = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_HISTORIAL_CAMBIOS' });
+  }
+  , []);
+
   //* -------------------------------------> loading button create TRD
   const setCreateTRDLoadingButton = useCallback((value: boolean) => {
     dispatch({ type: 'SET_CREATE_TRD_LOADING_BUTTON', payload: value });
@@ -147,6 +162,10 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
           state.modalEstablecerTipologiaDocumentalATRD,
         openModalEstablecerTipologiaDocumentalATRD,
         closeModalEstablecerTipologiaDocumentalATRD,
+        //* -----------------------------------> MODAL HISTORIAL DE CAMBIOS
+        modalHistorialCambios: state.modalHistorialCambios,
+        openModalHistorialCambios,
+        closeModalHistorialCambios,
 
         //* -------------------------------------> loading button create TRD
         createTRDLoadingButton: state.createTRDLoadingButton,

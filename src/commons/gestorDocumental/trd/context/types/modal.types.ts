@@ -27,6 +27,10 @@ export interface ModalContextState {
   modalEstablecerTipologiaDocumentalATRD: boolean;
   openModalEstablecerTipologiaDocumentalATRD: () => void;
   closeModalEstablecerTipologiaDocumentalATRD: () => void;
+  //* historial de cambios
+  modalHistorialCambios: boolean;
+  openModalHistorialCambios: () => void;
+  closeModalHistorialCambios: () => void;
   // ? booleans to admins buttons, loading, etc
   createTRDLoadingButton: boolean;
   setCreateTRDLoadingButton: (value: boolean) => void;

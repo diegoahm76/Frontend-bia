@@ -639,9 +639,14 @@ export const get_historical_trd = (id_trd: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       if (!id_trd) return control_error('No se ha podido realizar la acción');
-      const url = `gestor/trd/historico/${id_trd}/`;
+      const url = `gestor/trd/historico/?id_trd=${id_trd}/`;
       const { data } = await api.get(url);
-      console.log(data, 'data');
+      
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('No hay histórico de datos relacionados aún');
       return data.data;
     } catch (error: any) {
       control_error(error.response.data.detail);

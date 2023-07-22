@@ -80,6 +80,17 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalAdministracionTRD: payload || false
       };
+      //* historial de cambios
+    case Modal.OPEN_MODAL_HISTORIAL_CAMBIOS:
+      return {
+        ...state,
+        modalHistorialCambios: payload || true
+      };
+    case Modal.CLOSE_MODAL_HISTORIAL_CAMBIOS:
+      return {
+        ...state,
+        modalHistorialCambios: payload || false
+      };
     // ? buttons, loading, etc
     case Modal.CREATE_TRD_LOADING_BUTTON:
       return {
