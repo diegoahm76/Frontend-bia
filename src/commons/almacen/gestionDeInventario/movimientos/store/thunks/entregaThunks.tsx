@@ -3,7 +3,7 @@ import { toast, type ToastContent } from 'react-toastify';
 import { api } from '../../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { set_bien_selected, set_bienes_entrada, set_entradas, set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
+import { set_bienes_entrada, set_current_bien_entrega, set_entradas, set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -194,7 +194,7 @@ export const get_bien_code_service = (
 
             if (data.data.length > 0) {
                 if (data.data.length === 1) {
-                    dispatch(set_bien_selected(data.data[0]));
+                    dispatch(set_current_bien_entrega(data.data[0]));
                     control_success('Se selecciono el bien');
                 } else {
                     dispatch(set_bienes_entrada(data.data));

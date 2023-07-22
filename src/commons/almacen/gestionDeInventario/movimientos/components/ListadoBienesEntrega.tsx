@@ -73,12 +73,14 @@ const ListadoBienesEntrega = () => {
   };
 
   const select_model = (): void => {
+    console.log("ajajaj")
     const model: IObjBienesEntrada | undefined = bienes_entrada_aux.find(
       (p) => p.id_bien === selected_row[0]
     );
     if (model !== undefined) {
       dispatch(set_bien_selected(model));
     }
+
   };
 
   return (
