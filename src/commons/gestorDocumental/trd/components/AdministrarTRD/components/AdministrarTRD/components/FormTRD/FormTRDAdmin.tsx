@@ -40,6 +40,7 @@ import { TipologiasAsociadasATRD } from './components/TipologiasAsociadasATRD/Ti
 import { EstablecerTipologias } from './components/EstablecerTipologias/EstablecerTipologias';
 import {
   create_item_catalogo_trd,
+  get_historical_trd,
   update_item_catalogo_trd
 } from '../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { options_dispocision_final } from './choices/choices';
@@ -588,6 +589,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               // disabled={ccd_current?.actual}
               onClick={() => {
                 console.log('viendo historial de cambios');
+                dispatch(get_historical_trd(trd_current.id_trd))
               }}
             >
               VER HISTORIAL DE CAMBIOS

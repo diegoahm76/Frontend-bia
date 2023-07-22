@@ -633,3 +633,19 @@ export const resume_trd_service = (id_trd: number, setFlag: any): any => {
   };
 };
 
+// ! get historical data from TRD 
+
+export const get_historical_trd = (id_trd: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if (!id_trd) return control_error('No se ha podido realizar la acción');
+      const url = `gestor/trd/historico/${id_trd}/`;
+      const { data } = await api.get(url);
+      console.log(data, 'data');
+      return data.data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+}
