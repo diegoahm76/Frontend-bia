@@ -8,8 +8,9 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import type { IObjBienEntrega, IObjBienesEntrada } from '../interfaces/entregas';
-import { set_bienes_entrada, set_bienes_entrega, set_current_bien_entrega, set_current_entrega } from '../store/slice/indexEntrega';
+import { initial_state_bien_entrega, set_bienes_entrada, set_bienes_entrega, set_current_bien_entrega, } from '../store/slice/indexEntrega';
 import { get_bien_code_service } from '../store/thunks/entregaThunks';
+
 ;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -186,7 +187,7 @@ const SeleccionarBienEntrega = () => {
                     fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
                 )
             );
-            console.log(data);
+            console.log("cjdjb");
             set_bienes_aux(data);
         } catch (error) {
             console.error(error);
@@ -219,13 +220,15 @@ const SeleccionarBienEntrega = () => {
         }
     }, [current_entrega]);
 
-    // useEffect(() => {
-    //     if (bien_selected.id_bien !== null) {
-    //         console.log(bien_selected);
-    //         dispatch(set_current_bien(initial_state_current_bien));
-    //         search_bien();
-    //     }
-    // }, [bien_selected]);
+    useEffect(() => {
+        console.log("hshs")
+        if (bien_selected.id_bien !== null) {
+            console.log(bien_selected);
+            dispatch(set_current_bien_entrega(initial_state_bien_entrega));
+            search_bien();
+        }
+        console.log(bien_selected)
+    }, [bien_selected]);
 
     useEffect(() => {
         set_aux_insumos(bienes_entrega);
@@ -346,10 +349,10 @@ const SeleccionarBienEntrega = () => {
         <>
             <Grid container direction="row" padding={2} borderRadius={2}>
                 <BuscarModelo
-                    set_current_model={set_current_entrega}
+                    set_current_model={set_current_bien_entrega}
                     row_id={'id_bien'}
                     columns_model={columns_bienes}
-                    models={bienes}
+                    models={bienes_entrega}
                     get_filters_models={null}
                     set_models={set_bienes_entrada}
                     show_search_button={false}
