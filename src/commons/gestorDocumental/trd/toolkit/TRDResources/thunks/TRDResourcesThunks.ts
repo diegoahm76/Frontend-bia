@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -16,6 +17,7 @@ import {
   get_tipologias_asociadas_a_trd
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
+import { type AnyAction } from '@reduxjs/toolkit';
 
 // ? Obtener TRD's ------------------------------>
 export const get_searched_trd = (
@@ -256,7 +258,9 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
 
 // ? get tipologias documentales asociadas a un TRD -------------------------------------->
 
-export const get_tipologia_doc_asociadas_trd = (id_cat_series_und_org: number): any => {
+export const get_tipologia_doc_asociadas_trd = (
+  id_cat_series_und_org: number
+): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
@@ -475,7 +479,10 @@ export const get_catalogo_trd = (id_trd: number): any => {
 };
 
 // ? create item catalogo TRD ---------------------------------------------->
-export const create_item_catalogo_trd = (bodyPost: any, nuevasTipologias: any): any => {
+export const create_item_catalogo_trd = (
+  bodyPost: any,
+  nuevasTipologias: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
     try {
@@ -487,7 +494,9 @@ export const create_item_catalogo_trd = (bodyPost: any, nuevasTipologias: any): 
         tiempo_retencion_ag: bodyPost.tiempo_retencion_ag,
         tiempo_retencion_ac: bodyPost.tiempo_retencion_ac,
         descripcion_procedimiento: bodyPost.descripcion_procedimiento,
-        tipologias: nuevasTipologias.map((item: any) => item.id_tipologia_documental),
+        tipologias: nuevasTipologias.map(
+          (item: any) => item.id_tipologia_documental
+        )
       };
       console.log(obj, 'obj');
       const { data } = await api.post(
@@ -502,6 +511,66 @@ export const create_item_catalogo_trd = (bodyPost: any, nuevasTipologias: any): 
           id_organigrama
         })
       );
+
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? edit item catalogo TRD --------------------------------->
+
+export const update_item_catalogo_trd = (
+  formData: any,
+  id_catserie_unidadorg: number
+): any => {
+  return async (
+    dispatch: Dispatch<AnyAction | any>
+  ): Promise<AxiosResponse | AxiosError | any> => {
+    try {
+      const id_ccd = formData.get('id_ccd') || '';
+      const id_organigrama = formData.get('id_organigrama') || '';
+      const id_trd = formData.get('id_trd') || '';
+      const id_cat_serie_und = formData.get('id_cat_serie_und') || ''; // Asignar un valor predeterminado o un valor adecuado si es necesario
+      const cod_disposicion_final = formData.get('cod_disposicion_final') || '';
+      const digitalizacion_dis_final =
+        formData.get('digitalizacion_dis_final') || '';
+      const tiempo_retencion_ag = formData.get('tiempo_retencion_ag') || '';
+      const tiempo_retencion_ac = formData.get('tiempo_retencion_ac') || '';
+      const descripcion_procedimiento =
+        formData.get('descripcion_procedimiento') || '';
+      const tipologias = formData.getAll('tipologias[]') || [];
+      const dataForm: Record<string, any> = {};
+      for (const [key, value] of formData.entries()) {
+        dataForm[key] = value;
+      }
+
+      const { data } = await api.put(
+        // id_cat_unidadorg
+
+        `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
+        {
+          cod_disposicion_final,
+          digitalizacion_dis_final,
+          tiempo_retencion_ag,
+          tiempo_retencion_ac,
+          descripcion_procedimiento,
+          tipologias
+        }
+      );
+
+      dispatch(get_catalogo_trd(id_trd));
+      dispatch(
+        getServiceSeriesSubseriesXUnidadOrganizacional({
+          id_ccd,
+          id_organigrama
+        })
+      );
+      dispatch(get_tipologias_asociadas_a_trd(id_catserie_unidadorg));
 
       control_success(data.detail);
       return data;
