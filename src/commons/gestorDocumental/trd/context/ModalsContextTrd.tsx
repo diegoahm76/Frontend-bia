@@ -42,7 +42,7 @@ const ModalContextTRD = createContext<ModalContextState>({
   //* -----------------------------------> MODAL HISTORIAL DE CAMBIOS
   modalHistorialCambios: false,
   openModalHistorialCambios: () => {},
-  closeModalHistorialCambios: () => {},
+  closeModalHistorialCambios: () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -104,24 +104,20 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
   //* -------------------------------------> MODAL ESTABLECER TIPOLOGIAS DOCUMENTALES A TRD
   const openModalEstablecerTipologiaDocumentalATRD = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD' });
-  }
-  , []);
+  }, []);
 
   const closeModalEstablecerTipologiaDocumentalATRD = useCallback(() => {
     dispatch({ type: 'CLOSE_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD' });
-  }
-  , []);
+  }, []);
 
   // * -----------------------------------> MODAL HISTORIAL DE CAMBIOS
   const openModalHistorialCambios = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_HISTORIAL_CAMBIOS' });
-  }
-  , []);
+  }, []);
 
   const closeModalHistorialCambios = useCallback(() => {
     dispatch({ type: 'CLOSE_MODAL_HISTORIAL_CAMBIOS' });
-  }
-  , []);
+  }, []);
 
   //* -------------------------------------> loading button create TRD
   const setCreateTRDLoadingButton = useCallback((value: boolean) => {

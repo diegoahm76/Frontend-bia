@@ -14,7 +14,8 @@ import {
   get_data_format_documental_type,
   get_data_tipologias_documentales,
   get_catalogo_trd_action,
-  get_tipologias_asociadas_a_trd
+  get_tipologias_asociadas_a_trd,
+  get_historial_cambios_action
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 import { type AnyAction } from '@reduxjs/toolkit';
@@ -633,7 +634,7 @@ export const resume_trd_service = (id_trd: number, setFlag: any): any => {
   };
 };
 
-// ! get historical data from TRD 
+// ! get historical data from TRD
 
 export const get_historical_trd = (id_trd: number): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -641,16 +642,19 @@ export const get_historical_trd = (id_trd: number): any => {
       if (!id_trd) return control_error('No se ha podido realizar la acción');
       const url = `gestor/trd/historico/?id_trd=${id_trd}/`;
       const { data } = await api.get(url);
-      
-      data.data.length > 0
-        ? control_success(
-            data.detail || 'proceso exitoso, se encontró la siguiente data'
-          )
-        : control_error('No hay histórico de datos relacionados aún');
+
+      if (data.data.length > 0) {
+        dispatch(get_historial_cambios_action(data.data));
+        control_success(
+          data.detail || 'Proceso exitoso, se encontró la siguiente data'
+        );
+      } else {
+        control_error('No hay histórico de datos relacionados aún');
+      }
       return data.data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
-}
+};

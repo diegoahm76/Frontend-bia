@@ -26,6 +26,8 @@ interface TRD {
 
   //! add tipologia documental to trd
   nuevasTipologias: any[];
+  // ! historial de cambios
+  historialCambios: any[];
 }
 
 const initial_state: TRD = {
@@ -49,7 +51,9 @@ const initial_state: TRD = {
   selected_item_from_catalogo_trd: null,
 
   //! add tipologia documental to trd
-  nuevasTipologias: []
+  nuevasTipologias: [],
+  // ! historial de cambios
+  historialCambios: [],
 };
 
 export const trd_slice = createSlice({
@@ -131,7 +135,13 @@ export const trd_slice = createSlice({
     //! add tipologia documental to trd
     add_tipologia_documental_to_trd: (state: any, action: PayloadAction<any>) => {
       state.nuevasTipologias = action.payload;
+    },
+
+    //! historial de cambios
+    get_historial_cambios_action: (state: any, action: PayloadAction<any>) => {
+      state.historialCambios = action.payload;
     }
+
 
   }
 });
@@ -156,4 +166,5 @@ export const {
   set_selected_item_from_catalogo_trd_action,
   //* -------------------------------->
   add_tipologia_documental_to_trd,
+  get_historial_cambios_action,
 } = trd_slice.actions;

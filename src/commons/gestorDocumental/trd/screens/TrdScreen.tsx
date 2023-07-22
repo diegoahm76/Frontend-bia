@@ -38,6 +38,7 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
+// import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
 // import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 export const TrdScreen: FC = (): JSX.Element => {
@@ -97,7 +98,7 @@ export const TrdScreen: FC = (): JSX.Element => {
       control_error('datos requeridos');
       return;
     }
-    trd_current != null
+    trd_current !== null
       ? dispatch(update_trd_service(data_create_trd_modal))
       : dispatch(create_trd_service(data_create_trd_modal));
   };
@@ -293,6 +294,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
+                  // dispatch(set_selected_item_from_catalogo_trd_action(null));
                   // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
                 }}

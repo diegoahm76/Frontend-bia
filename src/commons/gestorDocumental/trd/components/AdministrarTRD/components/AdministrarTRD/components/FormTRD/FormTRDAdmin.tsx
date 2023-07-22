@@ -44,6 +44,8 @@ import {
   update_item_catalogo_trd
 } from '../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { options_dispocision_final } from './choices/choices';
+import { HistorialDeCambios } from '../HistorialDeCambios/HistorialDeCambios';
+import { add_tipologia_documental_to_trd, set_selected_item_from_catalogo_trd_action } from '../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const FormTRDAdmin = (): JSX.Element => {
   //* dispatch declaration
@@ -51,8 +53,8 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { closeModalAdministracionTRD } = useContext(ModalContextTRD);
-
+  const { closeModalAdministracionTRD, openModalHistorialCambios } =
+    useContext(ModalContextTRD);
   // * state from trd_slice
   const {
     trd_current,
@@ -122,6 +124,7 @@ export const FormTRDAdmin = (): JSX.Element => {
         tipologias: [],
         ruta_archivo_cambio: ''
       });
+      dispatch(add_tipologia_documental_to_trd([]));
     });
   };
 
@@ -191,6 +194,7 @@ export const FormTRDAdmin = (): JSX.Element => {
         tipologias: [],
         ruta_archivo_cambio: ''
       });
+      dispatch(add_tipologia_documental_to_trd([]));
     });
   };
 
@@ -573,6 +577,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   ruta_archivo_cambio: ''
                 });
                 closeModalAdministracionTRD();
+                dispatch(set_selected_item_from_catalogo_trd_action(null));
               }}
             >
               SALIR Y CANCELAR
@@ -589,7 +594,8 @@ export const FormTRDAdmin = (): JSX.Element => {
               // disabled={ccd_current?.actual}
               onClick={() => {
                 console.log('viendo historial de cambios');
-                dispatch(get_historical_trd(trd_current.id_trd))
+                dispatch(get_historical_trd(trd_current.id_trd));
+                openModalHistorialCambios();
               }}
             >
               VER HISTORIAL DE CAMBIOS
@@ -610,8 +616,12 @@ export const FormTRDAdmin = (): JSX.Element => {
         </Box>
       </Grid>
 
+      {/* Modal historial de cambios TRD ACTUAL */}
+      <HistorialDeCambios />
+      {/* Modal historial de cambios TRD ACTUAL */}
+
       {/* establecer tipologias */}
-      {/* poner modal de manejo para establecer tipologias a un TRD */}
+
       <EstablecerTipologias />
       {/* end new spaces */}
     </>

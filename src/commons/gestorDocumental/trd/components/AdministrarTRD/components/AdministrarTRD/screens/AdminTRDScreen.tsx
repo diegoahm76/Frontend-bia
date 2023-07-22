@@ -202,7 +202,10 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               color="success"
               variant="contained"
               startIcon={<ArrowBackIcon />}
-              onClick={closeModalAdministracionTRD}
+              onClick={() => {
+                dispatch(set_selected_item_from_catalogo_trd_action(null));
+                closeModalAdministracionTRD();
+              }}
             >
               REGRESAR A TRD
             </Button>
