@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -171,21 +172,23 @@ export const FormTRDAdmin = (): JSX.Element => {
       form_data_administrar_trd.descripcion_procedimiento
     );
 
-    if (nuevasTipologias.length > 0) {
-      nuevasTipologias.forEach((el: any) => {
-        formData.append('tipologias[]', JSON.stringify({
-          id_tipologia_documental: el.id_tipologia_documental,
-          activo: el.activo,
-        }));
-      });
-    } else {
-      tipologias_asociadas_a_trd.forEach((el: any) => {
-        formData.append('tipologias[]', JSON.stringify({
-          id_tipologia_documental: el.id_tipologia_documental,
-          activo: el.activo,
-        }));
-      });
-    }
+   if (nuevasTipologias.length > 0) {
+  nuevasTipologias.forEach((el: any) => {
+    const elSend = {
+      id_tipologia_documental: el.id_tipologia_documental,
+      activo: el.activo,
+    };
+    formData.append('tipologias[]', JSON.stringify(elSend));
+  });
+} else {
+  tipologias_asociadas_a_trd.forEach((el: any) => {
+    const elSend = {
+      id_tipologia_documental: el.id_tipologia_documental,
+      activo: el.activo,
+    };
+    formData.append('tipologias[]', JSON.stringify(elSend));
+  });
+}
     // console.log('formData', formData);
     // console.log('nuevasTipologias', nuevasTipologias);
     dispatch(

@@ -544,23 +544,29 @@ export const update_item_catalogo_trd = (
       const descripcion_procedimiento =
         formData.get('descripcion_procedimiento') || '';
       const tipologias = formData.getAll('tipologias[]') || [];
+      const tipologiasObj = tipologias.map((tipologia: any) => JSON.parse(tipologia));
       const dataForm: Record<string, any> = {};
       for (const [key, value] of formData.entries()) {
         dataForm[key] = value;
       }
 
+      const obj = {
+        cod_disposicion_final,
+        digitalizacion_dis_final,
+        tiempo_retencion_ag,
+        tiempo_retencion_ac,
+        descripcion_procedimiento,
+        tipologias: JSON.stringify(tipologiasObj),
+        justificacion_cambio: '',
+        // ruta_archivo_cambio: ''
+
+      };
+
       const { data } = await api.put(
         // id_cat_unidadorg
 
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
-        {
-          cod_disposicion_final,
-          digitalizacion_dis_final,
-          tiempo_retencion_ag,
-          tiempo_retencion_ac,
-          descripcion_procedimiento,
-          tipologias
-        }
+        obj,
       );
 
       dispatch(get_catalogo_trd(id_trd));
