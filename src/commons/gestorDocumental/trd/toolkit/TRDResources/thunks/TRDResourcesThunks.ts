@@ -378,7 +378,6 @@ export const get_formatos_documentales_by_id_tipologia = (
 };
 
 // ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-
 export const create_tipologia_documental_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
