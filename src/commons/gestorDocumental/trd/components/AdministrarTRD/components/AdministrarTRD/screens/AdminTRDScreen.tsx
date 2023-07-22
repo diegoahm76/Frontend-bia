@@ -19,8 +19,14 @@ import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDi
 import { FormTRDAdmin } from '../components/FormTRD/FormTRDAdmin';
 import { useContext } from 'react';
 import { ModalContextTRD } from '../../../../../context/ModalsContextTrd';
-import {/* delete_item_catalogo_trd, get_catalogo_trd, */ get_tipologia_doc_asociadas_trd } from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {
+  delete_item_catalogo_trd,
+  getServiceSeriesSubseriesXUnidadOrganizacional,
+  get_catalogo_trd,
+  get_tipologia_doc_asociadas_trd
+} from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { set_selected_item_from_catalogo_trd_action } from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { use_trd } from '../../../../../hooks/use_trd';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
   //* dispatch declaration
@@ -39,7 +45,10 @@ export const AdminTRDScreen = (): JSX.Element | null => {
   } = useAppSelector((state: any) => state.trd_slice);
   //* crear modal open y close para administrar trd
 
-const columns_catalogo_trd = [
+  //* use_trd
+  const { reset_administrar_trd } = use_trd();
+
+  const columns_catalogo_trd = [
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -56,7 +65,11 @@ const columns_catalogo_trd = [
                 dispatch(
                   set_selected_item_from_catalogo_trd_action(params.row)
                 );
-                dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd));
+                dispatch(
+                  get_tipologia_doc_asociadas_trd(
+                    params.row.id_catserie_unidadorg
+                  )
+                );
                 openModalAdministracionTRD();
                 console.log(params.row);
               }}
@@ -77,14 +90,33 @@ const columns_catalogo_trd = [
               size="large"
               title="Eliminar relación catalogo TRD"
               onClick={() => {
-
                 // ? pendiente de revision esta funcion
-               /* dispatch(
+                dispatch(
                   delete_item_catalogo_trd(params.row.id_catserie_unidadorg)
-                ).then(() => {
-                  dispatch(get_catalogo_trd(trd_current.id_trd));
-                });
-*/
+                )
+                  .then(() => {
+                    dispatch(get_catalogo_trd(trd_current.id_trd));
+                  })
+                  .then(() => {
+                    dispatch(
+                      getServiceSeriesSubseriesXUnidadOrganizacional({
+                        id_ccd: trd_current.id_ccd,
+                        id_organigrama: trd_current.id_organigrama
+                      })
+                    );
+                    closeModalAdministracionTRD();
+                    reset_administrar_trd({
+                      cod_disposicion_final: '',
+                      digitalizacion_dis_final: true,
+                      tiempo_retencion_ag: '',
+                      tiempo_retencion_ac: '',
+                      descripcion_procedimiento: '',
+                      justificacion_cambio: '',
+                      tipologias: [],
+                      ruta_archivo_cambio: ''
+                    });
+                  });
+
                 console.log(params.row);
               }}
             >
@@ -103,9 +135,9 @@ const columns_catalogo_trd = [
       }
     },
     ...columns
-];
+  ];
 
-const columns_catalogo_ccd = [
+  const columns_catalogo_ccd = [
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -119,7 +151,7 @@ const columns_catalogo_ccd = [
               title="Administrar TRD en base a relación"
               onClick={() => {
                 // ? this is the function to get data asociated to trd
-                // dispatch(get_tipologia_doc_asociadas_trd(trd_current.id_trd));
+                // dispatch(get_tipologia_doc_asociadas_trd(params.row.id_cat_serie_und));
                 openModalAdministracionTRD();
                 console.log(params.row);
                 dispatch(
@@ -141,8 +173,8 @@ const columns_catalogo_ccd = [
         );
       }
     },
-    ...columnsCCD,
-];
+    ...columnsCCD
+  ];
 
   return (
     <>

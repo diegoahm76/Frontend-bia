@@ -23,6 +23,9 @@ interface TRD {
 
   //! selected_item_from_catalogo_trd
   selected_item_from_catalogo_trd: any;
+
+  //! add tipologia documental to trd
+  nuevasTipologias: any[];
 }
 
 const initial_state: TRD = {
@@ -43,7 +46,10 @@ const initial_state: TRD = {
   catalogo_trd: [],
 
   //! selected_item_from_catalogo_trd
-  selected_item_from_catalogo_trd: null
+  selected_item_from_catalogo_trd: null,
+
+  //! add tipologia documental to trd
+  nuevasTipologias: []
 };
 
 export const trd_slice = createSlice({
@@ -120,7 +126,13 @@ export const trd_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.selected_item_from_catalogo_trd = action.payload;
+    },
+
+    //! add tipologia documental to trd
+    add_tipologia_documental_to_trd: (state: any, action: PayloadAction<any>) => {
+      state.nuevasTipologias = action.payload;
     }
+
   }
 });
 
@@ -142,4 +154,6 @@ export const {
   get_catalogo_trd_action,
   //* -------------------------------->
   set_selected_item_from_catalogo_trd_action,
+  //* -------------------------------->
+  add_tipologia_documental_to_trd,
 } = trd_slice.actions;

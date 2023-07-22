@@ -256,12 +256,12 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
 
 // ? get tipologias documentales asociadas a un TRD -------------------------------------->
 
-export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
+export const get_tipologia_doc_asociadas_trd = (id_cat_series_und_org: number): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-      const url = `gestor/trd/catalogo-trd/get-tipologias/${id_trd}/`;
+      const url = `gestor/trd/catalogo-trd/get-tipologias/${id_cat_series_und_org}/`;
       const { data } = await api.get(url);
 
       data.data.length > 0
@@ -476,26 +476,33 @@ export const get_catalogo_trd = (id_trd: number): any => {
 };
 
 // ? create item catalogo TRD ---------------------------------------------->
-export const create_item_catalogo_trd = (bodyPost: any): any => {
+export const create_item_catalogo_trd = (bodyPost: any, nuevasTipologias: any): any => {
   return async (dispatch: Dispatch<any>) => {
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
-
     try {
+      const obj = {
+        id_trd,
+        id_cat_serie_und: bodyPost.id_cat_serie_und,
+        cod_disposicion_final: bodyPost.cod_disposicion_final,
+        digitalizacion_dis_final: bodyPost.digitalizacion_dis_final,
+        tiempo_retencion_ag: bodyPost.tiempo_retencion_ag,
+        tiempo_retencion_ac: bodyPost.tiempo_retencion_ac,
+        descripcion_procedimiento: bodyPost.descripcion_procedimiento,
+        tipologias: nuevasTipologias.map((item: any) => item.id_tipologia_documental),
+      };
+      console.log(obj, 'obj');
       const { data } = await api.post(
         `gestor/trd/catalogo-trd/add/${id_trd}/`,
-        bodyPost
+        obj
       );
 
-      const otherPeticiones = [
-        get_catalogo_trd(id_trd),
-        get_tipologia_doc_asociadas_trd(id_trd),
+      dispatch(get_catalogo_trd(id_trd));
+      dispatch(
         getServiceSeriesSubseriesXUnidadOrganizacional({
           id_ccd,
           id_organigrama
         })
-      ];
-
-      await Promise.all(otherPeticiones);
+      );
 
       control_success(data.detail);
       return data;

@@ -6,7 +6,10 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../../../../../../../components';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../../../hooks';
 import { ModalContextTRD } from '../../../../../../../../context/ModalsContextTrd';
 import { get_tipologias_documentales_by_name } from '../../../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 
@@ -51,12 +54,12 @@ export const colums_tipologias_asociadas = [
 ];
 
 export const TipologiasAsociadasATRD = (): JSX.Element => {
-
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* context declaration
-  const { openModalEstablecerTipologiaDocumentalATRD } = useContext(ModalContextTRD);
+  const { openModalEstablecerTipologiaDocumentalATRD } =
+    useContext(ModalContextTRD);
 
   //* get element from store
   const { tipologias_asociadas_a_trd } = useAppSelector(
@@ -68,18 +71,27 @@ export const TipologiasAsociadasATRD = (): JSX.Element => {
       <Grid item xs={12} sm={12}>
         <Grid item>
           <Box /* sx={{ width: '100%' }} */>
-            <Title title="Tipologías Asociadas" />
-            <DataGrid
-              sx={{ marginTop: '1.5rem' }}
-              density="compact"
-              autoHeight
-              rows={tipologias_asociadas_a_trd || []}
-              columns={colums_tipologias_asociadas}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => uuidv4()}
+            <Title
+              title={
+                tipologias_asociadas_a_trd.length > 0
+                  ? 'Tipologias asociadas a TRD'
+                  : 'No hay tipologias asociadas a TRD'
+              }
             />
+
+            {tipologias_asociadas_a_trd.length > 0 ? (
+              <DataGrid
+                sx={{ marginTop: '1.5rem' }}
+                density="compact"
+                autoHeight
+                rows={tipologias_asociadas_a_trd || []}
+                columns={colums_tipologias_asociadas}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => uuidv4()}
+              />
+            ) : null}
           </Box>
         </Grid>
         <Stack
@@ -94,7 +106,7 @@ export const TipologiasAsociadasATRD = (): JSX.Element => {
             // type="submit"
             onClick={() => {
               openModalEstablecerTipologiaDocumentalATRD();
-            dispatch(get_tipologias_documentales_by_name());
+              dispatch(get_tipologias_documentales_by_name());
             }}
             startIcon={<SaveAsIcon />}
             // disabled={ccd_current?.actual}

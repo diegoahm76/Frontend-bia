@@ -99,7 +99,6 @@ export const use_trd = (): any => {
     // formState: { errors },
     reset: reset_administrar_trd,
     watch: watch_administrar_trd
-
   } = useForm({
     defaultValues: {
       cod_disposicion_final: '',
@@ -109,13 +108,13 @@ export const use_trd = (): any => {
       descripcion_procedimiento: '',
       justificacion_cambio: '',
       tipologias: [],
-      ruta_archivo_cambio: '',
+      ruta_archivo_cambio: ''
     },
     mode: 'onBlur',
     reValidateMode: 'onChange'
   });
   const form_data_administrar_trd = watch_administrar_trd();
-  console.log(form_data_administrar_trd, 'form_data_administrar_trd');
+  // console.log(form_data_administrar_trd, 'form_data_administrar_trd');
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -145,6 +144,10 @@ export const use_trd = (): any => {
     title_button_administrar_tipologias,
     set_title_button_administrar_tipologias
   ] = useState('Guardar');
+
+  // ? manage tipolgies asociated to trd --------------------->
+  //* necccesary states
+
   //* -------------------------------------------------------------------------->
   //! useEffects that I will use in different components --------------------->
 
@@ -274,6 +277,9 @@ export const use_trd = (): any => {
     list_finished_ccd,
     // ? list of formats by documental type --------------------------------------------->
     set_list_format_documental_type,
-    list_format_documental_type
+    list_format_documental_type,
+
+    // ? tipologias documentales --------------------------------------------->
+    // ? tipologias documentales --------------------------------------------->
   };
 };

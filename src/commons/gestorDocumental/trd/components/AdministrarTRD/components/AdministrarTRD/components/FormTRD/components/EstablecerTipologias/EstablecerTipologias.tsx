@@ -38,22 +38,22 @@ import { ModalContextTRD } from '../../../../../../../../context/ModalsContextTr
 // import { Controller, useForm } from 'react-hook-form';
 import { Title } from '../../../../../../../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
-import { useAppSelector } from '../../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../../../hooks';
 import { v4 as uuidv4 } from 'uuid';
 import AddIcon from '@mui/icons-material/Add';
 import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
-import { type EstablecerTipologiasProps } from './types/types';
 import Swal from 'sweetalert2';
 
 //* css file
 import './css/Swal.css';
+import { add_tipologia_documental_to_trd } from '../../../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
-
-
-export const EstablecerTipologias = ({
-  nuevasTipologias,
-  setNuevasTipologias
-}: EstablecerTipologiasProps): JSX.Element => {
+export const EstablecerTipologias = (): JSX.Element => {
+  //* useAppDispatch
+  const dispatch = useAppDispatch();
   //* context values
   const {
     modalEstablecerTipologiaDocumentalATRD,
@@ -61,12 +61,12 @@ export const EstablecerTipologias = ({
   } = useContext(ModalContextTRD);
 
   //* get element from store
-  const { tipologias_asociadas_a_trd, trd_current, tipologias } =
-    useAppSelector((state) => state.trd_slice);
-  /*
   const {
-    control: controlEstablecerTipologiasDocumentales,
-  } = useForm() */
+    tipologias_asociadas_a_trd,
+    trd_current,
+    tipologias,
+    nuevasTipologias
+  } = useAppSelector((state) => state.trd_slice);
 
   const colums_tipologias = [
     {
@@ -91,10 +91,12 @@ export const EstablecerTipologias = ({
             title="Añadir tipología a TRD"
             onClick={() => {
               // ? añdir y actualizar tipologias asociadas a trd
-              setNuevasTipologias(
-                nuevasTipologias.length > 0
-                  ? [...nuevasTipologias, params.row]
-                  : [...tipologias_asociadas_a_trd, params.row]
+              dispatch(
+                add_tipologia_documental_to_trd(
+                  nuevasTipologias.length > 0
+                    ? [...nuevasTipologias, params.row]
+                    : [...tipologias_asociadas_a_trd, params.row]
+                )
               );
               console.log(params.row);
             }}
@@ -136,11 +138,13 @@ export const EstablecerTipologias = ({
             size="large"
             title="Eliminar"
             onClick={() => {
-              setNuevasTipologias(
-                nuevasTipologias.filter(
-                  (item: any) =>
-                    item.id_tipologia_documental !==
-                    params.row.id_tipologia_documental
+              dispatch(
+                add_tipologia_documental_to_trd(
+                  nuevasTipologias.filter(
+                    (item: any) =>
+                      item.id_tipologia_documental !==
+                      params.row.id_tipologia_documental
+                  )
                 )
               );
             }}
@@ -237,18 +241,21 @@ export const EstablecerTipologias = ({
                     autoHeight
                     rows={
                       nuevasTipologias.length > 0
-                        ? nuevasTipologias.filter(
-                            (item: any, index: any, self: any) => {
-                              return (
-                                index ===
-                                self.findIndex(
-                                  (t: any) =>
-                                    t.id_tipologia_documental ===
-                                    item.id_tipologia_documental
-                                )
+                        ? nuevasTipologias.reduce((acc, current) => {
+                            const x = acc.find(
+                              (item: any) =>
+                                item.id_tipologia_documental ===
+                                current.id_tipologia_documental
+                            );
+                            if (!x) {
+                              return acc.concat([current]);
+                            } else {
+                              alert(
+                                `La tipología ${current.nombre} ya ha sido agregada.`
                               );
+                              return acc;
                             }
-                          )
+                          }, [])
                         : tipologias_asociadas_a_trd
                     }
                     columns={colums_tipologias_asociadas}

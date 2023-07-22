@@ -16,7 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { ModalContextTRD } from '../../../../../../context/ModalsContextTrd';
 import { Controller } from 'react-hook-form';
 import { use_trd } from '../../../../../../hooks/use_trd';
@@ -27,11 +27,15 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
 
 import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../hooks';
 import { ItemSeleccionado } from './components/ItemSeleccionado/ItemSeleccionado';
 import { TipologiasAsociadasATRD } from './components/TipologiasAsociadasATRD/TipologiasAsociadasATRD';
 import { EstablecerTipologias } from './components/EstablecerTipologias/EstablecerTipologias';
 import SyncIcon from '@mui/icons-material/Sync';
+import { create_item_catalogo_trd } from '../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 
 const options_dispocision_final = [
   { value: 'C', label: 'Conservación Total' },
@@ -40,8 +44,8 @@ const options_dispocision_final = [
 ];
 
 export const FormTRDAdmin = (): JSX.Element => {
-  //* necccesary states
-  const [nuevasTipologias, setNuevasTipologias] = useState<any>([]);
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,7 +55,8 @@ export const FormTRDAdmin = (): JSX.Element => {
   const {
     trd_current,
     selected_item_from_catalogo_trd,
-    tipologias_asociadas_a_trd
+    nuevasTipologias,
+    // tipologias_asociadas_a_trd
   } = useAppSelector((state) => state.trd_slice);
 
   const {
@@ -59,7 +64,7 @@ export const FormTRDAdmin = (): JSX.Element => {
     form_data_administrar_trd,
     // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
     // formState: { errors },
-    reset_administrar_trd
+    reset_administrar_trd,
     // watch_administrar_trd
   } = use_trd();
 
@@ -73,6 +78,8 @@ export const FormTRDAdmin = (): JSX.Element => {
           onSubmit={(e: any) => {
             e.preventDefault();
             const elementsToSendCreate = {
+              id_ccd: trd_current.id_ccd,
+              id_organigrama: trd_current.id_organigrama,
               id_trd: trd_current.id_trd,
               id_cat_serie_und:
                 selected_item_from_catalogo_trd.id_cat_serie_und,
@@ -86,16 +93,37 @@ export const FormTRDAdmin = (): JSX.Element => {
                 form_data_administrar_trd.tiempo_retencion_ac,
               descripcion_procedimiento:
                 form_data_administrar_trd.descripcion_procedimiento,
-              tipologias:
-                nuevasTipologias.length > 0
-                  ? nuevasTipologias.map(
-                      (el: any) => el.id_tipologia_documental
-                    )
-                  : tipologias_asociadas_a_trd.map(
-                      (el: any) => el.id_tipologia_documental
-                    )
             };
-            console.log('elementsToSendCreate', elementsToSendCreate);
+            /* tipologias:
+                nuevasTipologias.length > 0
+                  ? nuevasTipologias.map((el: any) => {
+                      return {
+                        id_tipologia_documental: el.id_tipologia_documental,
+                        activo: el.activo
+                      };
+                    })
+                  : tipologias_asociadas_a_trd.map((el: any) => {
+                      return {
+                        id_tipologia_documental: el.id_tipologia_documental,
+                        activo: el.activo
+                      };
+                    }) */
+           // console.log('elementsToSendCreate', elementsToSendCreate);
+            dispatch(create_item_catalogo_trd(elementsToSendCreate, nuevasTipologias)).then(
+              (res: any) => {
+                closeModalAdministracionTRD();
+                reset_administrar_trd({
+                  cod_disposicion_final: '',
+                  digitalizacion_dis_final: true,
+                  tiempo_retencion_ag: '',
+                  tiempo_retencion_ac: '',
+                  descripcion_procedimiento: '',
+                  justificacion_cambio: '',
+                  tipologias: [],
+                  ruta_archivo_cambio: ''
+                });
+              }
+            );
           }}
           sx={{ width: '100%' }}
         >
@@ -473,10 +501,7 @@ export const FormTRDAdmin = (): JSX.Element => {
 
       {/* establecer tipologias */}
       {/* poner modal de manejo para establecer tipologias a un TRD */}
-      <EstablecerTipologias
-        setNuevasTipologias={setNuevasTipologias}
-        nuevasTipologias={nuevasTipologias}
-      />
+      <EstablecerTipologias />
       {/* end new spaces */}
     </>
   );
