@@ -632,3 +632,4 @@ export const resume_trd_service = (id_trd: number, setFlag: any): any => {
     }
   };
 };
+

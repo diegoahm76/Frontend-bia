@@ -26,6 +26,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
+import SyncIcon from '@mui/icons-material/Sync';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
 import {
@@ -35,17 +38,11 @@ import {
 import { ItemSeleccionado } from './components/ItemSeleccionado/ItemSeleccionado';
 import { TipologiasAsociadasATRD } from './components/TipologiasAsociadasATRD/TipologiasAsociadasATRD';
 import { EstablecerTipologias } from './components/EstablecerTipologias/EstablecerTipologias';
-import SyncIcon from '@mui/icons-material/Sync';
 import {
   create_item_catalogo_trd,
   update_item_catalogo_trd
 } from '../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
-
-const options_dispocision_final = [
-  { value: 'C', label: 'Conservación Total' },
-  { value: 'E', label: 'Eliminación' },
-  { value: 'S', label: 'Selección' }
-];
+import { options_dispocision_final } from './choices/choices';
 
 export const FormTRDAdmin = (): JSX.Element => {
   //* dispatch declaration
@@ -110,21 +107,6 @@ export const FormTRDAdmin = (): JSX.Element => {
       descripcion_procedimiento:
         form_data_administrar_trd.descripcion_procedimiento
     };
-    /* tipologias:
-        nuevasTipologias.length > 0
-          ? nuevasTipologias.map((el: any) => {
-              return {
-                id_tipologia_documental: el.id_tipologia_documental,
-                activo: el.activo
-              };
-            })
-          : tipologias_asociadas_a_trd.map((el: any) => {
-              return {
-                id_tipologia_documental: el.id_tipologia_documental,
-                activo: el.activo
-              };
-            }) */
-    // console.log('elementsToSendCreate', elementsToSendCreate);
     dispatch(
       create_item_catalogo_trd(elementsToSendCreate, nuevasTipologias)
     ).then((res: any) => {
@@ -172,23 +154,23 @@ export const FormTRDAdmin = (): JSX.Element => {
       form_data_administrar_trd.descripcion_procedimiento
     );
 
-   if (nuevasTipologias.length > 0) {
-  nuevasTipologias.forEach((el: any) => {
-    const elSend = {
-      id_tipologia_documental: el.id_tipologia_documental,
-      activo: el.activo,
-    };
-    formData.append('tipologias[]', JSON.stringify(elSend));
-  });
-} else {
-  tipologias_asociadas_a_trd.forEach((el: any) => {
-    const elSend = {
-      id_tipologia_documental: el.id_tipologia_documental,
-      activo: el.activo,
-    };
-    formData.append('tipologias[]', JSON.stringify(elSend));
-  });
-}
+    if (nuevasTipologias.length > 0) {
+      nuevasTipologias.forEach((el: any) => {
+        const elSend = {
+          id_tipologia_documental: el.id_tipologia_documental,
+          activo: el.activo
+        };
+        formData.append('tipologias[]', JSON.stringify(elSend));
+      });
+    } else {
+      tipologias_asociadas_a_trd.forEach((el: any) => {
+        const elSend = {
+          id_tipologia_documental: el.id_tipologia_documental,
+          activo: el.activo
+        };
+        formData.append('tipologias[]', JSON.stringify(elSend));
+      });
+    }
     // console.log('formData', formData);
     // console.log('nuevasTipologias', nuevasTipologias);
     dispatch(
@@ -555,7 +537,7 @@ export const FormTRDAdmin = (): JSX.Element => {
 
             {/* tipologias asociadas a trd fin */}
           </Grid>
-          <Stack direction="row" spacing={2} sx={{ marginTop: '.15rem' }}>
+          <Stack direction="row" spacing={2} sx={{ marginTop: '1.5rem' }}>
             <Button
               variant="contained"
               color="primary"
@@ -593,6 +575,34 @@ export const FormTRDAdmin = (): JSX.Element => {
               }}
             >
               SALIR Y CANCELAR
+            </Button>
+
+            {/* {trd_current.actual ? (
+
+            ) : null } */}
+
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<VisibilityIcon />}
+              // disabled={ccd_current?.actual}
+              onClick={() => {
+                console.log('viendo historial de cambios');
+              }}
+            >
+              VER HISTORIAL DE CAMBIOS
+            </Button>
+
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<AutoFixHighIcon />}
+              // disabled={ccd_current?.actual}
+              onClick={() => {
+                console.log('viendo historial de cambios');
+              }}
+            >
+              EDICION ESPECIAL
             </Button>
           </Stack>
         </Box>
