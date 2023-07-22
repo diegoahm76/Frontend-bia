@@ -93,8 +93,8 @@ export const AgregarLaboratorio: React.FC = () => {
 
   const {
     tipo_parametro_value,
-    unidad_medida_value,
-    parametro_value,
+    // unidad_medida_value,
+    // parametro_value,
     rows_laboratorio,
     fecha_toma_muestra,
     fecha_analisis,
@@ -108,10 +108,13 @@ export const AgregarLaboratorio: React.FC = () => {
     handle_change_inputs,
     handle_agregar,
 
-    // * Autocomplete
+    // *Autocomplete
     cuenca_select,
     pozos_selected,
+    parametros_select,
+    undidad_medida_select,
     id_instrumento_slice,
+    fetch_data_parametros_laboratorios_select,
     fetch_data_cuencas_instrumentos_select,
     fetch_data_pozo_instrumentos_select,
 
@@ -140,6 +143,12 @@ export const AgregarLaboratorio: React.FC = () => {
       void fetch_data_pozo_instrumentos_select(instrumentos.id_pozo);
     }
   }, [instrumentos.id_pozo]);
+
+  useEffect(() => {
+    if (tipo_parametro_value) {
+      void fetch_data_parametros_laboratorios_select();
+    }
+  }, [tipo_parametro_value]);
 
   return (
     <>
@@ -505,23 +514,35 @@ export const AgregarLaboratorio: React.FC = () => {
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="Parámetro "
-              select
-              fullWidth
-              size="small"
-              value={parametro_value}
-              margin="dense"
-              disabled={false}
-              name="parametro"
-              onChange={handle_change_inputs}
-            >
-              {parametro.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            <Controller
+              name="id_parametro"
+              control={control_registro_laboratorio}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Seleccione un parametro"
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required
+                  error={!!formErrors_laboratorio.id_parametro}
+                  helperText={
+                    formErrors_laboratorio?.id_parametro?.type === 'required' &&
+                    'Este campo es obligatorio'
+                  }
+                >
+                  {parametros_select.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField
@@ -530,16 +551,16 @@ export const AgregarLaboratorio: React.FC = () => {
               fullWidth
               size="small"
               margin="dense"
-              value={unidad_medida_value}
+              value={undidad_medida_select}
               disabled={false}
               name="unidad_medida"
               onChange={handle_change_inputs}
             >
-              {unidad_medida_choices.map((option) => (
+              {/* {unidad_medida_choices.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
-              ))}
+              ))} */}
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>

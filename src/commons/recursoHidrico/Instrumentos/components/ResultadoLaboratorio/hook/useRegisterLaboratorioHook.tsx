@@ -11,12 +11,14 @@ import {
 import { useAppSelector } from '../../../../../../hooks';
 import type {
   IpropsCuenca,
+  IpropsParametros,
   IpropsPozos,
   ValueProps,
 } from '../../../interfaces/interface';
 import { type AxiosError } from 'axios';
 import { control_error } from '../../../../../../helpers';
 import { useForm } from 'react-hook-form';
+import { get_parametros_laboratorio } from '../../../request/request';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const use_register_laboratorio_hook = () => {
@@ -37,10 +39,12 @@ export const use_register_laboratorio_hook = () => {
       fecha_toma_muestra: '',
       fecha_resultados_lab: '',
       fecha_envio_lab: '',
+      fecha_analisis: '',
       latitud: '',
       longitud: '',
       id_cuenca: '',
       id_pozo: '',
+      id_parametro: '',
     },
   });
   // Datos GGenerales
@@ -60,15 +64,31 @@ export const use_register_laboratorio_hook = () => {
   const handle_date_change = (fieldName: string, value: Dayjs | null): void => {
     switch (fieldName) {
       case 'fecha_toma_muestra':
+        set_value_laboratorio(
+          'fecha_toma_muestra',
+          value?.format('YYYY-MM-DD') ?? ''
+        );
         set_fecha_toma_muestra(value);
         break;
       case 'fecha_envio':
+        set_value_laboratorio(
+          'fecha_envio_lab',
+          value?.format('YYYY-MM-DD') ?? ''
+        );
         set_fecha_envio(value);
         break;
       case 'fecha_resultado':
+        set_value_laboratorio(
+          'fecha_resultados_lab',
+          value?.format('YYYY-MM-DD') ?? ''
+        );
         set_fecha_resultado(value);
         break;
       case 'fecha_analisis':
+        set_value_laboratorio(
+          'fecha_analisis',
+          value?.format('YYYY-MM-DD') ?? ''
+        );
         set_fecha_analisis(value);
         break;
     }
@@ -100,6 +120,8 @@ export const use_register_laboratorio_hook = () => {
 
   const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
   const [pozos_selected, set_pozos_selected] = useState<ValueProps[]>([]);
+  const [parametros_select, set_parametros_select] = useState<ValueProps[]>([]);
+  const [undidad_medida_select, set_undidad_medida_select] = useState('');
 
   const fetch_data_cuencas_instrumentos_select = async (): Promise<void> => {
     try {
@@ -135,6 +157,31 @@ export const use_register_laboratorio_hook = () => {
             label: ` ${item.cod_pozo} - ${item.nombre} `,
           }));
           set_pozos_selected(data_pozo);
+          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+        }
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+
+  const fetch_data_parametros_laboratorios_select = async (): Promise<void> => {
+    try {
+      if (tipo_parametro_value) {
+        const response = await get_parametros_laboratorio(tipo_parametro_value);
+        if (response?.length > 0) {
+          const data_parametros = response.map((item: IpropsParametros) => ({
+            value: item.id_parametro,
+            label: item.nombre ?? '',
+          }));
+          set_parametros_select(data_parametros);
+          const data_unidad_medida = response.map(
+            (item: IpropsParametros) => item.unidad_de_medida ?? ''
+          );
+          set_undidad_medida_select(data_unidad_medida.join(', '));
           // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
       }
@@ -190,7 +237,10 @@ export const use_register_laboratorio_hook = () => {
     // *Autocomplete
     cuenca_select,
     pozos_selected,
+    parametros_select,
+    undidad_medida_select,
     id_instrumento_slice,
+    fetch_data_parametros_laboratorios_select,
     fetch_data_cuencas_instrumentos_select,
     fetch_data_pozo_instrumentos_select,
 
