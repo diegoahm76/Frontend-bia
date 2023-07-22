@@ -25,7 +25,10 @@ import {
   get_catalogo_trd,
   get_tipologia_doc_asociadas_trd
 } from '../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
-import { set_selected_item_from_catalogo_trd_action } from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import {
+  get_tipologias_asociadas_a_trd,
+  set_selected_item_from_catalogo_trd_action
+} from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../../hooks/use_trd';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
@@ -105,6 +108,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                       })
                     );
                     closeModalAdministracionTRD();
+                    dispatch(get_tipologias_asociadas_a_trd([]));
                     reset_administrar_trd({
                       cod_disposicion_final: '',
                       digitalizacion_dis_final: true,
@@ -157,6 +161,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 dispatch(
                   set_selected_item_from_catalogo_trd_action(params.row)
                 );
+                dispatch(get_tipologias_asociadas_a_trd([]));
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -216,7 +221,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
             boxShadow: '0px 3px 6px #042F4A26'
           }}
         >
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <Title title="Cuadro de clasificación documental Seleccionado - (Administración TRD)" />
               <DataGrid

@@ -50,6 +50,8 @@ import Swal from 'sweetalert2';
 //* css file
 import './css/Swal.css';
 import { add_tipologia_documental_to_trd } from '../../../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { control_success } from '../../../../../../../../../../../helpers';
+import { use_trd } from '../../../../../../../../hooks/use_trd';
 
 export const EstablecerTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -67,6 +69,11 @@ export const EstablecerTipologias = (): JSX.Element => {
     tipologias,
     nuevasTipologias
   } = useAppSelector((state) => state.trd_slice);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty-pattern
+  const {
+   // reset_administrar_trd,
+  } = use_trd();
 
   const colums_tipologias = [
     {
@@ -98,7 +105,12 @@ export const EstablecerTipologias = (): JSX.Element => {
                     : [...tipologias_asociadas_a_trd, params.row]
                 )
               );
+              control_success('Tipología añadida a la relación TRD');
               console.log(params.row);
+              /* reset_administrar_trd({
+                
+
+              }); */
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -147,6 +159,7 @@ export const EstablecerTipologias = (): JSX.Element => {
                   )
                 )
               );
+              control_success('Tipología eliminada de la relación TRD');
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -220,7 +233,18 @@ export const EstablecerTipologias = (): JSX.Element => {
                     sx={{ marginTop: '1.5rem' }}
                     density="compact"
                     autoHeight
-                    rows={tipologias.filter((item) => item.activo) || []}
+                    rows={
+                      tipologias
+                        .filter((item) => item.activo)
+                        .filter(
+                          (item) =>
+                            !nuevasTipologias.find(
+                              (item2) =>
+                                item2.id_tipologia_documental ===
+                                item.id_tipologia_documental
+                            )
+                        ) || []
+                    }
                     columns={colums_tipologias}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -250,9 +274,6 @@ export const EstablecerTipologias = (): JSX.Element => {
                             if (!x) {
                               return acc.concat([current]);
                             } else {
-                              alert(
-                                `La tipología ${current.nombre} ya ha sido agregada.`
-                              );
                               return acc;
                             }
                           }, [])

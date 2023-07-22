@@ -16,7 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ModalContextTRD } from '../../../../../../context/ModalsContextTrd';
 import { Controller } from 'react-hook-form';
 import { use_trd } from '../../../../../../hooks/use_trd';
@@ -55,7 +55,7 @@ export const FormTRDAdmin = (): JSX.Element => {
   const {
     trd_current,
     selected_item_from_catalogo_trd,
-    nuevasTipologias,
+    nuevasTipologias
     // tipologias_asociadas_a_trd
   } = useAppSelector((state) => state.trd_slice);
 
@@ -64,9 +64,85 @@ export const FormTRDAdmin = (): JSX.Element => {
     form_data_administrar_trd,
     // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
     // formState: { errors },
-    reset_administrar_trd,
+    reset_administrar_trd
     // watch_administrar_trd
   } = use_trd();
+
+  // ? use effect acceso datos desde button edit para editar administrar trd
+  useEffect(() => {
+    console.log(
+      'selected_item_from_catalogo_trd',
+      selected_item_from_catalogo_trd
+    );
+    reset_administrar_trd({
+      cod_disposicion_final: {
+        value: selected_item_from_catalogo_trd.cod_disposicion_final,
+        label: selected_item_from_catalogo_trd.cod_disposicion_final
+      },
+      digitalizacion_dis_final:
+        selected_item_from_catalogo_trd.digitalizacion_dis_final,
+      tiempo_retencion_ag: selected_item_from_catalogo_trd.tiempo_retencion_ag,
+      tiempo_retencion_ac: selected_item_from_catalogo_trd.tiempo_retencion_ac,
+      descripcion_procedimiento:
+        selected_item_from_catalogo_trd.descripcion_procedimiento
+      // justificacion_cambio: '',
+      // tipologias: [],
+      // ruta_archivo_cambio: ''
+    });
+  }, [selected_item_from_catalogo_trd]);
+
+
+  const create_item_onSubmit_trd_catalogo = (): any => {
+    const elementsToSendCreate = {
+      id_ccd: trd_current.id_ccd,
+      id_organigrama: trd_current.id_organigrama,
+      id_trd: trd_current.id_trd,
+      id_cat_serie_und:
+        selected_item_from_catalogo_trd.id_cat_serie_und,
+      cod_disposicion_final:
+        form_data_administrar_trd.cod_disposicion_final.value,
+      digitalizacion_dis_final:
+        form_data_administrar_trd.digitalizacion_dis_final,
+      tiempo_retencion_ag:
+        form_data_administrar_trd.tiempo_retencion_ag,
+      tiempo_retencion_ac:
+        form_data_administrar_trd.tiempo_retencion_ac,
+      descripcion_procedimiento:
+        form_data_administrar_trd.descripcion_procedimiento
+    };
+    /* tipologias:
+        nuevasTipologias.length > 0
+          ? nuevasTipologias.map((el: any) => {
+              return {
+                id_tipologia_documental: el.id_tipologia_documental,
+                activo: el.activo
+              };
+            })
+          : tipologias_asociadas_a_trd.map((el: any) => {
+              return {
+                id_tipologia_documental: el.id_tipologia_documental,
+                activo: el.activo
+              };
+            }) */
+    // console.log('elementsToSendCreate', elementsToSendCreate);
+    dispatch(
+      create_item_catalogo_trd(elementsToSendCreate, nuevasTipologias)
+    ).then((res: any) => {
+      closeModalAdministracionTRD();
+      reset_administrar_trd({
+        cod_disposicion_final: '',
+        digitalizacion_dis_final: true,
+        tiempo_retencion_ag: '',
+        tiempo_retencion_ac: '',
+        descripcion_procedimiento: '',
+        justificacion_cambio: '',
+        tipologias: [],
+        ruta_archivo_cambio: ''
+      });
+    });
+  }
+
+
 
   return (
     <>
@@ -77,53 +153,7 @@ export const FormTRDAdmin = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            const elementsToSendCreate = {
-              id_ccd: trd_current.id_ccd,
-              id_organigrama: trd_current.id_organigrama,
-              id_trd: trd_current.id_trd,
-              id_cat_serie_und:
-                selected_item_from_catalogo_trd.id_cat_serie_und,
-              cod_disposicion_final:
-                form_data_administrar_trd.cod_disposicion_final.value,
-              digitalizacion_dis_final:
-                form_data_administrar_trd.digitalizacion_dis_final,
-              tiempo_retencion_ag:
-                form_data_administrar_trd.tiempo_retencion_ag,
-              tiempo_retencion_ac:
-                form_data_administrar_trd.tiempo_retencion_ac,
-              descripcion_procedimiento:
-                form_data_administrar_trd.descripcion_procedimiento,
-            };
-            /* tipologias:
-                nuevasTipologias.length > 0
-                  ? nuevasTipologias.map((el: any) => {
-                      return {
-                        id_tipologia_documental: el.id_tipologia_documental,
-                        activo: el.activo
-                      };
-                    })
-                  : tipologias_asociadas_a_trd.map((el: any) => {
-                      return {
-                        id_tipologia_documental: el.id_tipologia_documental,
-                        activo: el.activo
-                      };
-                    }) */
-           // console.log('elementsToSendCreate', elementsToSendCreate);
-            dispatch(create_item_catalogo_trd(elementsToSendCreate, nuevasTipologias)).then(
-              (res: any) => {
-                closeModalAdministracionTRD();
-                reset_administrar_trd({
-                  cod_disposicion_final: '',
-                  digitalizacion_dis_final: true,
-                  tiempo_retencion_ag: '',
-                  tiempo_retencion_ac: '',
-                  descripcion_procedimiento: '',
-                  justificacion_cambio: '',
-                  tipologias: [],
-                  ruta_archivo_cambio: ''
-                });
-              }
-            );
+            create_item_onSubmit_trd_catalogo()
           }}
           sx={{ width: '100%' }}
         >

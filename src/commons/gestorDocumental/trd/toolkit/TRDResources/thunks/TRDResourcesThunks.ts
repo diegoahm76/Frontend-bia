@@ -270,7 +270,6 @@ export const get_tipologia_doc_asociadas_trd = (id_cat_series_und_org: number): 
           )
         : control_error('Sin tipologías asociadas a este TRD');
       dispatch(get_tipologias_asociadas_a_trd(data.data));
-      console.log(data.data, 'data.data');
       return data.data;
     } catch (error: any) {
       control_error(
