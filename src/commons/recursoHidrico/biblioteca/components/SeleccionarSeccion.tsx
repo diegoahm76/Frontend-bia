@@ -21,7 +21,7 @@ import { Title } from '../../../../components/Title';
 import { AgregarSubseccion } from './AgregarSubseccion';
 import { SeleccionarSubseccion } from './SeleccionarSubseccion';
 import { LoadingButton } from '@mui/lab';
-import { delete_seccion_id } from '../request/request';
+import { delete_seccion_id, delete_subseccion_id } from '../request/request';
 import Swal from 'sweetalert2';
 import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
@@ -109,7 +109,7 @@ export const SeleccionarSeccion: React.FC = () => {
           </IconButton>
           <IconButton
             onClick={() => {
-              handle_eliminar(params.row);
+              void handle_eliminar(params.row);
             }}
           >
             <Avatar
@@ -217,23 +217,24 @@ export const SeleccionarSeccion: React.FC = () => {
     set_value('descripcion_subseccion', '');
   };
 
-  const handle_eliminar_subseccion = (row: any): void => {
-    set_rows_to_delete_subseecion([
-      ...rows_to_delete_subseecion,
-      row.id_subseccion,
-    ]);
-    const updated_rows = rows_subseccion.filter(
-      (r) => r.id_subseccion !== row.id_subseccion
-    );
-    set_rows_subseccion(updated_rows);
-  };
+  // const handle_eliminar_subseccion = (row: any): void => {
+  //   set_rows_to_delete_subseecion([
+  //     ...rows_to_delete_subseecion,
+  //     row.id_subseccion,
+  //   ]);
+  //   const updated_rows = rows_subseccion.filter(
+  //     (r) => r.id_subseccion !== row.id_subseccion
+  //   );
+  //   set_rows_subseccion(updated_rows);
+  // };
 
   useEffect(() => {
     console.log(rows_to_delete_subseecion, 'rows_to_delete_subseecion');
+    console.log(rows_subseccion, 'rows_subseccion');
   }, [rows_to_delete_subseecion]);
 
-  const handle_eliminar = (row: any): void => {
-    void Swal.fire({
+  const handle_eliminar = async (row: any): Promise<void> => {
+    const result = await Swal.fire({
       customClass: {
         confirmButton: 'square-btn',
         cancelButton: 'square-btn',
@@ -246,13 +247,19 @@ export const SeleccionarSeccion: React.FC = () => {
       cancelButtonColor: '#DE1616',
       confirmButtonText: 'Si, elminar!',
       cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handle_eliminar_subseccion(row);
-      }
     });
-  };
 
+    if (result.isConfirmed) {
+      try {
+        await delete_subseccion_id(row.id_subseccion);
+        await fetch_data_subseccion_por_seccion();
+        control_success('Se eliminó correctamente');
+        // handle_eliminar_subseccion(row);
+      } catch (error: any) {
+        control_error(error.response.data.detail);
+      }
+    }
+  };
   const confirmar_eliminar = (id_seccion: number): void => {
     void Swal.fire({
       customClass: {
@@ -260,7 +267,7 @@ export const SeleccionarSeccion: React.FC = () => {
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estás seguro?',
+      text: '¿Estás seguro de eliminar esta sección?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',

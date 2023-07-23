@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
@@ -21,7 +22,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataContext } from '../../context/contextData';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { DataGrid, type GridValueFormatterParams, type GridColDef } from '@mui/x-data-grid';
 import { EditarProyecto } from '../ActualizarProyecto/EditarProyectos';
 import type { GetProyectos } from '../../Interfaces/interfaces';
 import ChecklistIcon from '@mui/icons-material/Checklist';
@@ -72,6 +73,17 @@ export const SeleccionarPrograma: React.FC = () => {
       headerName: 'INVERSIÓN',
       sortable: true,
       width: 250,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
     },
     {
       field: 'ACCIONES',

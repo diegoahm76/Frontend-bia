@@ -2,19 +2,11 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import {
-  Button,
-  Divider,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, Divider, Grid, TextField, Typography } from '@mui/material';
 import { DataContext } from '../context/contextData';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { AgregarSubseccion } from './AgregarSubseccion';
-import { row } from '../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeccion: React.FC = () => {
@@ -32,8 +24,8 @@ export const AgregarSeccion: React.FC = () => {
   } = useContext(DataContext);
 
   // watch
-  const nombre_seccion = watch('nombre_seccion');
-  const descripcion_seccion = watch('descripcion_seccion');
+  const nombre_seccion = watch('nombre_seccion') ?? '';
+  const descripcion_seccion = watch('descripcion_seccion') ?? '';
 
   const [current_date, set_current_date] = useState(
     dayjs().format('YYYY-MM-DD')
@@ -112,30 +104,11 @@ export const AgregarSeccion: React.FC = () => {
           {...register('descripcion_seccion', { required: true })}
         />
       </Grid>
-      <Stack
-        justifyContent="flex-end"
-        sx={{ m: '20px 20px 20px 20px' }}
-        direction="row"
-        spacing={2}
-      >
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={!is_form_valid}
-          onClick={() => {
-            set_id_seccion(null);
-            set_mode('register_subseccion');
-          }}
-        >
-          Registrar nueva subsección
-        </Button>
-      </Stack>
-      {is_register_subseccion && <AgregarSubseccion />}
       <Grid item spacing={2} justifyContent="end" container>
         <Grid item>
           <LoadingButton
             variant="outlined"
-            color="primary"
+            color="warning"
             onClick={() => {
               reset();
             }}
@@ -143,7 +116,22 @@ export const AgregarSeccion: React.FC = () => {
             Limpiar
           </LoadingButton>
         </Grid>
-
+        <Grid item>
+          <Button
+            variant="outlined"
+            color="primary"
+            disabled={!is_form_valid}
+            onClick={() => {
+              set_id_seccion(null);
+              set_mode('register_subseccion');
+            }}
+          >
+            Registrar nueva subsección
+          </Button>
+        </Grid>
+      </Grid>
+      {is_register_subseccion && <AgregarSubseccion />}
+      <Grid item spacing={2} justifyContent="end" container>
         <Grid item>
           <LoadingButton
             type="submit"

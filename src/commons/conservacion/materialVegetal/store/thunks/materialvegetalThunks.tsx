@@ -25,6 +25,9 @@ import {
   set_plant_quarantine_lifting,
   set_plant_quarantine_mortalities,
   set_current_good,
+  initial_satate_current_plant_seed_lot,
+  initial_satate_current_plant_quarantine,
+  set_goods_aux,
 } from '../slice/materialvegetalSlice';
 import { api } from '../../../../../api/axios';
 
@@ -166,6 +169,24 @@ export const get_goods_service = (
       // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`);
 
       dispatch(set_goods(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_planting_goods_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener bienes vivero
+export const get_goods_aux_service = (id_vivero: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`
+      );
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`);
+      console.log(data);
+      dispatch(set_goods_aux(data.data));
       return data;
     } catch (error: any) {
       console.log('get_planting_goods_service');
@@ -554,6 +575,14 @@ export const add_plant_quarantine_service = (quarantine: any): any => {
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
+        dispatch(
+          set_current_plant_seed_lot(initial_satate_current_plant_seed_lot)
+        );
+        dispatch(set_plant_seed_lots([]));
+        dispatch(
+          set_current_plant_quarantine(initial_satate_current_plant_quarantine)
+        );
+        dispatch(set_plant_quarantines([]));
         control_success(data.detail);
       } else {
         control_error(data.detail);
@@ -581,6 +610,7 @@ export const edit_plant_quarantine_service = (
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
+        dispatch(set_plant_quarantines([]));
         control_success(data.detail);
       } else {
         control_error(data.detail);
