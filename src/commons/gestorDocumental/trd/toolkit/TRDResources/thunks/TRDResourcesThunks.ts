@@ -23,12 +23,14 @@ import { type AnyAction } from '@reduxjs/toolkit';
 // ? Obtener TRD's ------------------------------>
 export const get_searched_trd = (
   nombre: string,
-  version: string
+  version: string,
+  setCreateTRDLoadingButton: any
 ): ((dispatch: Dispatch<any>) => Promise<AxiosResponse<any> | AxiosError>) => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse<any> | AxiosError> => {
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/buscar/trd/nombre-version/?nombre=${nombre}&version=${version}`;
       const { data } = await api.get(url);
       /* console.log(
@@ -47,6 +49,8 @@ export const get_searched_trd = (
       // dispatch(get_assignments_service(ccd_current));
 
       return error;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -57,8 +61,8 @@ export const create_trd_service: any = (
   setCreateTRDLoadingButton: any
 ) => {
   return async (dispatch: Dispatch<any>) => {
-    setCreateTRDLoadingButton(true);
     try {
+      setCreateTRDLoadingButton(true);
       // console.log(bodyPost, 'bodyPost');
       const { data } = await api.post('gestor/trd/create/', {
         id_ccd: bodyPost.id_ccd.item.id_ccd,
@@ -75,16 +79,19 @@ export const create_trd_service: any = (
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
-      setCreateTRDLoadingButton(false)
+      setCreateTRDLoadingButton(false);
     }
   };
 };
 
 // ? Actualizar TRD ------------------------------>
-export const update_trd_service = (bodyPost: any, setCreateTRDLoadingButton: any): any => {
+export const update_trd_service = (
+  bodyPost: any,
+  setCreateTRDLoadingButton: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
-    setCreateTRDLoadingButton(true);
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/update/${bodyPost.id_trd}/`;
 
       const { nombre, version } = bodyPost;
@@ -107,7 +114,7 @@ export const update_trd_service = (bodyPost: any, setCreateTRDLoadingButton: any
       // console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
-    }finally{
+    } finally {
       setCreateTRDLoadingButton(false);
     }
   };
@@ -287,11 +294,15 @@ export const get_tipologia_doc_asociadas_trd = (
 
 // ? get documentary typologies by name -------------------------------------->
 
-export const get_tipologias_documentales_by_name = (name?: string): any => {
+export const get_tipologias_documentales_by_name = (
+  setCreateTRDLoadingButton: any,
+  name?: string,
+): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/buscar/tipologia/documental/?nombre=${
         name ?? ''
       }`;
@@ -311,6 +322,8 @@ export const get_tipologias_documentales_by_name = (name?: string): any => {
           'Ha ocurrido un error, no se han encontrado data'
       );
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -378,7 +391,9 @@ export const get_formatos_documentales_by_id_tipologia = (
 };
 
 // ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-export const create_tipologia_documental_service = (bodyPost: any): any => {
+export const create_tipologia_documental_service = (bodyPost: any,
+  setCreateTRDLoadingButton: any
+  ): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
       !bodyPost.nombre ||
@@ -390,6 +405,7 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
     }
 
     try {
+      setCreateTRDLoadingButton(true);
       const { data } = await api.post(
         'gestor/trd/crear/tipologia/documental/',
         bodyPost
@@ -400,12 +416,16 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
 
 // ? update documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-export const update_tipologia_documental_service = (bodyPost: any): any => {
+export const update_tipologia_documental_service = (bodyPost: any,
+  setCreateTRDLoadingButton: any
+  ): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
       !bodyPost.nombre ||
@@ -416,6 +436,7 @@ export const update_tipologia_documental_service = (bodyPost: any): any => {
       return;
     }
     try {
+      setCreateTRDLoadingButton(true);
       const { data } = await api.put(
         `gestor/trd/update/tipologia/documental/${bodyPost.id_tipologia_documental}/`,
         {
@@ -431,6 +452,8 @@ export const update_tipologia_documental_service = (bodyPost: any): any => {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };

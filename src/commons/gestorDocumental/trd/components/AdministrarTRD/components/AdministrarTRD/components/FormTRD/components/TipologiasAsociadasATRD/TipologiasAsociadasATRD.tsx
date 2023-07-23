@@ -58,7 +58,7 @@ export const TipologiasAsociadasATRD = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* context declaration
-  const { openModalEstablecerTipologiaDocumentalATRD } =
+  const { openModalEstablecerTipologiaDocumentalATRD, setCreateTRDLoadingButton } =
     useContext(ModalContextTRD);
 
   //* get element from store
@@ -106,7 +106,9 @@ export const TipologiasAsociadasATRD = (): JSX.Element => {
             // type="submit"
             onClick={() => {
               openModalEstablecerTipologiaDocumentalATRD();
-              dispatch(get_tipologias_documentales_by_name());
+              dispatch(
+                get_tipologias_documentales_by_name(setCreateTRDLoadingButton)
+              );
             }}
             startIcon={<SaveAsIcon />}
             // disabled={ccd_current?.actual}

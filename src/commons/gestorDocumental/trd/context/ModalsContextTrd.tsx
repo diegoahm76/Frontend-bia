@@ -123,7 +123,7 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
 
   //* -------------------------------------> loading button create TRD
   const setCreateTRDLoadingButton = useCallback((value: boolean) => {
-    dispatch({ type: 'SET_CREATE_TRD_LOADING_BUTTON', payload: value });
+    dispatch({ type: 'CREATE_TRD_LOADING_BUTTON', payload: value });
   }, []);
 
   return (
