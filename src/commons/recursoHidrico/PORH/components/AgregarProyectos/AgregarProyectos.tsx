@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import Grid from '@mui/material/Grid';
@@ -11,7 +12,11 @@ import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DataContext } from '../../context/contextData';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridValueFormatterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs, { type Dayjs } from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
@@ -46,6 +51,17 @@ export const AgregarProyectos: React.FC = () => {
       headerName: 'INVERSIÓN',
       sortable: true,
       width: 250,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
     },
     {
       field: 'ACCIONES',
@@ -138,6 +154,15 @@ export const AgregarProyectos: React.FC = () => {
       headerName: 'DESCRIPCIÓN',
       sortable: true,
       width: 300,
+    },
+    {
+      field: 'fecha_actual',
+      headerName: 'FECHA DE REGISTRO',
+      width: 200,
+      renderCell: () => {
+        const fechaActual = new Date().toLocaleDateString();
+        return <span>{fechaActual}</span>;
+      },
     },
     {
       field: 'ACCIONES',
@@ -441,6 +466,26 @@ export const AgregarProyectos: React.FC = () => {
       <Grid item xs={12}>
         <Title title="INFORMACIÓN DE PROYECTO" />
       </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Fecha de inicio programa"
+          fullWidth
+          size="small"
+          margin="dense"
+          disabled
+          value={fecha_inicial?.format('DD/MM/YYYY')}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Fecha de final programa"
+          fullWidth
+          size="small"
+          margin="dense"
+          disabled
+          value={fecha_fin?.format('DD/MM/YYYY')}
+        />
+      </Grid>
       {rows_proyectos_register.length > 0 && (
         <Grid item xs={12}>
           <DataGrid
@@ -658,7 +703,9 @@ export const AgregarProyectos: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving || proyecto_seleccionado.actividades.length === 0}
+                disabled={
+                  is_saving || proyecto_seleccionado.actividades.length === 0
+                }
                 loading={is_saving}
               >
                 Guardar

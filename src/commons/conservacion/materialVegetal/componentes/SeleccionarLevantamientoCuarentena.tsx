@@ -6,6 +6,7 @@ import {
   set_current_lifting,
   set_plant_quarantine_lifting,
 } from '../store/slice/materialvegetalSlice';
+import { useEffect } from 'react';
 
 interface IProps {
   control_levantamiento: any;
@@ -13,6 +14,10 @@ interface IProps {
   open_modal: boolean;
   set_open_modal: any;
 }
+const max_date = new Date();
+const min_date = new Date();
+min_date.setDate(min_date.getDate() - 1);
+let dias: number;
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarLevantamientoCuarentena = ({
   control_levantamiento,
@@ -82,6 +87,14 @@ const SeleccionarLevantamientoCuarentena = ({
     },
   ];
 
+  useEffect(() => {
+    const fecha_levantamiento = new Date(
+      current_lifting.fecha_levantamiento ?? ''
+    );
+    const diferencia_ms = max_date.getTime() - fecha_levantamiento.getTime();
+    dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+  }, [current_lifting]);
+
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
@@ -97,11 +110,14 @@ const SeleccionarLevantamientoCuarentena = ({
           show_search_button={false}
           open_search_modal={open_modal}
           set_open_search_modal={set_open_modal}
+          button_submit_disabled={
+            current_plant_quarantine.id_cuarentena_mat_vegetal === null
+          }
           form_inputs={[
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 2,
+              md: 3,
               control_form: control_levantamiento,
               control_name: 'consec_levan_por_cuaren',
               default_value: '',
@@ -112,17 +128,44 @@ const SeleccionarLevantamientoCuarentena = ({
               type: 'number',
               disabled: true,
               helper_text: '',
-              hidden_text: current_lifting.id_item_levanta_cuarentena === null,
+            },
+            {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_levantamiento,
+              control_name: 'fecha_leventamiento',
+              default_value: '',
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+                min_rule: {
+                  rule: new Date().setDate(new Date().getDate() - 30),
+                  message: `La fecha minima posible es 
+                  ${min_date.toString().slice(0, 16)}`,
+                },
+                max_rule: {
+                  rule: new Date(),
+                  message: `La fecha maxima posible es ${max_date
+                    .toString()
+                    .slice(0, 16)}`,
+                },
+              },
+              label: 'Fecha de leventamiento',
+              disabled: current_lifting.id_item_levanta_cuarentena !== null,
+              helper_text: '',
+              min_date,
+              max_date,
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: current_lifting.id_item_levanta_cuarentena !== null ? 7 : 8,
+              md: 6,
               control_form: control_levantamiento,
-              control_name: 'fecha_levantamiento',
+              control_name: 'realizado_por',
               default_value: '',
-              rules: { required_rule: { rule: true, message: 'requerido' } },
-              label: 'Fecha de levantamiento',
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
+              label: 'Levantamiento realizado por:',
               type: 'text',
               disabled: true,
               helper_text: '',
@@ -130,10 +173,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md:
-                current_plant_quarantine.id_cuarentena_mat_vegetal === null
-                  ? 3
-                  : 4,
+              md: 2,
               control_form: control_levantamiento,
               control_name: 'Cantidad_cuarentena',
               default_value: '',
@@ -148,7 +188,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_levantamiento,
               control_name: 'cantidad_levantada',
               default_value: '',
@@ -163,7 +203,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_levantamiento,
               control_name: 'cantidad_mortalidad',
               default_value: '',
@@ -178,7 +218,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_levantamiento,
               control_name: 'cantidad_disponible',
               default_value: '',
@@ -193,7 +233,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_levantamiento,
               control_name: 'cantidad_a_levantar',
               default_value: '',
@@ -212,7 +252,7 @@ const SeleccionarLevantamientoCuarentena = ({
               },
               label: 'Cantidad a levantar',
               type: 'number',
-              disabled: false,
+              disabled: dias > 2,
               helper_text: '',
             },
 
@@ -231,20 +271,6 @@ const SeleccionarLevantamientoCuarentena = ({
               multiline_text: true,
               rows_text: 4,
               disabled: false,
-              helper_text: '',
-            },
-
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 7,
-              control_form: control_levantamiento,
-              control_name: 'realizado_por',
-              default_value: '',
-              rules: { required_rule: { rule: true, message: 'Requerido' } },
-              label: 'Levantamiento realizado por:',
-              type: 'text',
-              disabled: true,
               helper_text: '',
             },
           ]}

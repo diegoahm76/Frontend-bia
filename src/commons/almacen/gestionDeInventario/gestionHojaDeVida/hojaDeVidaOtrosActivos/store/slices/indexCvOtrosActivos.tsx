@@ -4,7 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type Icv, type IMarca, type IOthers, type IcvOthers, } from "../../interfaces/CvOtrosActivos";
 
 const initial_state_current_other = {
-    id_bien: 0,
+    id_bien: null,
     codigo_bien: null,
     nro_elemento_bien: null,
     nombre: "",
@@ -36,12 +36,17 @@ const initial_state_current_cv_other = {
     especificaciones_tecnicas: "",
     caracteristicas_fisicas: "",
     observaciones_adicionales: "",
-    id_bien: 0,
-    id_marca: 0,
+    id_bien: null,
+    id_marca: null,
     marca: "",
     cod_tipo_bien: "",
     doc_identificador_nro: "",
     estado: "",
+    nombre: "",
+    codigo_bien: "",
+    id_articulo: null,
+    id_hoja_de_vida: null
+
 }
 
 
@@ -70,13 +75,13 @@ export const cv_others_slice = createSlice({
         ) => {
             state.current_other = action.payload;
         },
-        get_cv_others: (
+        set_cv_others: (
             state: Icv,
             action: PayloadAction<IcvOthers[]>
         ) => {
             state.cv_other = action.payload;
         },
-        current_cv_others: (
+        set_current_cv_others: (
             state: Icv,
             action: PayloadAction<IcvOthers>
         ) => {
@@ -98,5 +103,5 @@ export const cv_others_slice = createSlice({
     }
 })
 
-export const { current_cv_others, get_cv_others, get_marks, set_others, set_current_others } = cv_others_slice.actions;
+export const { set_current_cv_others, set_cv_others, get_marks, set_others, set_current_others } = cv_others_slice.actions;
 

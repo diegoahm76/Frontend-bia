@@ -9,6 +9,7 @@ export interface IMaterialVegetal {
   current_germination_beds: IObjGerminationBed[];
   planting_goods: IObjPlantingGoods[];
   goods: IObjGoods[];
+  goods_aux: IObjGoods[];
   current_good: IObjGoods;
   plantings: IObjPlanting[];
   current_planting: IObjPlanting;

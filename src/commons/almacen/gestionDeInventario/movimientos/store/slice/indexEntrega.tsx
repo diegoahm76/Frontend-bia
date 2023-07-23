@@ -1,6 +1,6 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IObjEntrega, IEntrega, IObjBienEntrega, TipoEntrada, IObjBienesEntrada } from '../../interfaces/entregas';
+import type { IObjEntrega, IEntrega, IObjBienEntrega, TipoEntrada, IObjBienesEntrada, IObjEntrada, IObjBienesEntradaAux } from '../../interfaces/entregas';
 import { type Persona } from '../../../../../../interfaces/globalModels';
 
 const initial_state_person: Persona = {
@@ -34,6 +34,37 @@ export const initial_state_bien_entrega: IObjBienEntrega = {
     cantidad_despachada: null,
     numero_posicion_despacho: null,
     observacion: null,
+    id_bien: null,
+}
+
+export const initial_state_entrada: IObjEntrada = {
+    id_entrada_almacen: null,
+    tipo_entrada: null,
+    numero_entrada_almacen: null,
+    fecha_entrada: (new Date().toString()),
+    fecha_real_registro: (new Date().toString()),
+    motivo: "",
+    observacion: "",
+    valor_total_entrada: null,
+    fecha_ultima_actualizacion_diferente_creador: (new Date().toString()),
+    entrada_anulada: false,
+    justificacion_anulacion: "",
+    fecha_anulacion: (new Date().toString()),
+    id_proveedor: null,
+    id_tipo_entrada: null,
+    id_bodega: null,
+    id_creador: null,
+    id_persona_ult_act_dif_creador: null,
+    id_persona_anula: null,
+
+}
+
+export const initial_state_bien_selected: IObjBienesEntrada = {
+    id_entrada_almacen: null,
+    id_bien: null,
+    cantidad_entrante: null,
+    codigo_bien: null,
+    nombre_bien: null,
 }
 
 export const initial_state: IEntrega = {
@@ -45,7 +76,10 @@ export const initial_state: IEntrega = {
     bienes_entrega: [],
     tipo_entrada: [],
     bienes_entrada: [],
+    current_entrada: initial_state_entrada,
     entradas: [],
+    bien_selected: initial_state_bien_selected,
+    bienes_entrada_aux: []
 
 
 }
@@ -102,13 +136,35 @@ export const entrega_slice = createSlice({
         ) => {
             state.tipo_entrada = action.payload;
         },
+        set_entradas: (
+            state: IEntrega,
+            action: PayloadAction<IObjEntrada[]>
+        ) => {
+            state.entradas = action.payload;
+        },
+        set_current_entrada: (
+            state: IEntrega,
+            action: PayloadAction<IObjEntrada>
+        ) => {
+            state.current_entrada = action.payload;
 
+        },
+        set_bien_selected: (
+            state: IEntrega,
+            action: PayloadAction<IObjBienesEntrada>
+        ) => {
+            state.bien_selected = action.payload;
 
+        },
+        set_bienes_entrada_aux: (
+            state: IEntrega,
+            action: PayloadAction<IObjBienesEntradaAux[]>
+        ) => {
+            state.bienes_entrada_aux = action.payload;
 
-
-
+        },
     }
 })
 
 export const {
-    set_persona_entrega, set_nro_entrega, set_entregas, set_current_entrega, set_bienes_entrega, set_current_bien_entrega, set_tipo_entrada, set_bienes_entrada } = entrega_slice.actions;
+    set_persona_entrega, set_nro_entrega, set_entregas, set_current_entrega, set_bienes_entrega, set_current_bien_entrega, set_tipo_entrada, set_bienes_entrada, set_current_entrada, set_entradas, set_bienes_entrada_aux, set_bien_selected } = entrega_slice.actions;

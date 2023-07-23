@@ -155,7 +155,7 @@ const PersonaResponsableVivero = ({
                     form_inputs={[
                         {
                             datum_type: "title",
-                            title_label: title ?? "hh"
+                            title_label: title ?? "Funcionario responsable"
 
                         },
                         {

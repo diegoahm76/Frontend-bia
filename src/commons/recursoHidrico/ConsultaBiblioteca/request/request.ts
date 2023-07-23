@@ -2,6 +2,7 @@ import { type AxiosResponse } from "axios";
 import { api } from "../../../../api/axios";
 import { type ResponseServer } from "../../../../interfaces/globalModels";
 import type { Archivos, BusquedaArchivo, BusquedaBasica, CuencasInstrumentos } from "../interfaces/interfaces";
+import type { Pozo } from "../../configuraciones/interfaces/interfaces";
 
 
 
@@ -20,6 +21,14 @@ export const get_data_cuenca_instrumentos = async (
 ): Promise<CuencasInstrumentos[]> => {
     const response: AxiosResponse<ResponseServer<CuencasInstrumentos[]>> = await api.get<ResponseServer<CuencasInstrumentos[]>>(
         `hidrico/bibliotecas/cuencas/get-cuencas-instrumento/${id_instrumento}/`
+    );
+    return response.data.data;
+};
+export const get_data_pozo_id = async (
+    id_pozo: number
+): Promise<Pozo[]> => {
+    const response: AxiosResponse<ResponseServer<Pozo[]>> = await api.get<ResponseServer<Pozo[]>>(
+        `hidrico/bibliotecas/pozos/get-id/${id_pozo}/`
     );
     return response.data.data;
 };

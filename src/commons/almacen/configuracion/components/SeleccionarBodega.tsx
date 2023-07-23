@@ -16,10 +16,13 @@ import type { IList } from '../../../../interfaces/globalModels';
 interface IProps {
   control_bodega: any;
   reset_bodega: any;
+  open_modal: boolean;
+  set_open_modal: any;
 }
 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
+const SeleccionarBodega = ({ control_bodega, reset_bodega, open_modal, set_open_modal, }: IProps) => {
   const { bodegas, bodega_seleccionada } = useAppSelector(
     (state: { bodegas: any }) => state.bodegas
   );
@@ -64,13 +67,13 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,flex:1,
+      width: 200, flex: 1,
     },
 
     {
       field: 'direccion',
       headerName: 'Dirección',
-      width: 350,flex:1,
+      width: 350, flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -81,7 +84,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
     {
       field: 'es_principal',
       headerName: 'Bodega principal',
-      width: 150,flex:1,
+      width: 150, flex: 1,
       renderCell: (params) => {
         return params.row.es_principal === true ? (
           <Chip size="small" label="Sí" color="success" variant="outlined" />
@@ -107,7 +110,9 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
           get_filters_models={get_bodegas_filtro}
           set_models={get_bodega}
           reset_values={reset_bodega}
-          button_submit_label="Buscar bodega"
+          open_search_modal={open_modal}
+          show_search_button={false}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'input_controller',
@@ -142,7 +147,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 3,
+              md: 6,
               control_form: control_bodega,
               control_name: 'cod_municipio',
               default_value: '',
@@ -157,7 +162,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 3,
+              md: 6,
               control_form: control_bodega,
               control_name: 'es_principal',
               default_value: '',
