@@ -167,13 +167,15 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
 
 // ? get formatos por tipo de medio - busqueda por nombre y codigo tipo de medio ------------------------------>
 export const get_formatos_by_tipo_medio_by_format_and_name = (
+  setCreateTRDLoadingButton: any,
   name?: string,
-  cod_tipo_medio?: string
+  cod_tipo_medio?: string,
 ): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/formatos/get-by-params/?nombre=${
         name ?? ''
       }&cod-tipo-medio=${cod_tipo_medio ?? ''}`;
@@ -193,6 +195,8 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
           'Ha ocurrido un error, no se han encontrado data'
       );
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };

@@ -194,7 +194,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         form_data_searched_tipologia_documental.cod_tipo_medio_doc.value
     };
 
-    dispatch(create_tipologia_documental_service(data, setCreateTRDLoadingButton))
+    dispatch(
+      create_tipologia_documental_service(data, setCreateTRDLoadingButton)
+    )
       .then((response: any) => {
         if (response?.success) {
           clearAutocomplete();
@@ -225,7 +227,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         form_data_searched_tipologia_documental.id_tipologia_documental
     };
 
-    dispatch(update_tipologia_documental_service(data, setCreateTRDLoadingButton))
+    dispatch(
+      update_tipologia_documental_service(data, setCreateTRDLoadingButton)
+    )
       .then((response: any) => {
         if (response?.success) {
           clearAutocomplete();
