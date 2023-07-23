@@ -53,15 +53,11 @@ export const get_searched_trd = (
 
 // ? crear TRD ------------------------------>
 export const create_trd_service: any = (
-  /* ccd: any,
-  set_save_ccd: (arg0: boolean) => void,
-  openModalBusquedaCreacionCCD: any,
-  activateLoadingButton: any,
-  desactivateLoadingButton: any */
-  bodyPost: any
+  bodyPost: any,
+  setCreateTRDLoadingButton: any
 ) => {
   return async (dispatch: Dispatch<any>) => {
-    // activateLoadingButton();
+    setCreateTRDLoadingButton(true);
     try {
       // console.log(bodyPost, 'bodyPost');
       const { data } = await api.post('gestor/trd/create/', {
@@ -79,14 +75,15 @@ export const create_trd_service: any = (
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
-      // desactivateLoadingButton();
+      setCreateTRDLoadingButton(false)
     }
   };
 };
 
 // ? Actualizar TRD ------------------------------>
-export const update_trd_service = (bodyPost: any): any => {
+export const update_trd_service = (bodyPost: any, setCreateTRDLoadingButton: any): any => {
   return async (dispatch: Dispatch<any>) => {
+    setCreateTRDLoadingButton(true);
     try {
       const url = `gestor/trd/update/${bodyPost.id_trd}/`;
 
@@ -110,6 +107,8 @@ export const update_trd_service = (bodyPost: any): any => {
       // console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
+    }finally{
+      setCreateTRDLoadingButton(false);
     }
   };
 };

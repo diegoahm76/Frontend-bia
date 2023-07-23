@@ -25,9 +25,6 @@ const ModalContextTRD = createContext<ModalContextState>({
   openModalBusquedaTipologiasDocumentales: () => {},
   closeModalBusquedaTipologiasDocumentales: () => {},
   //*
-  createTRDLoadingButton: false,
-  setCreateTRDLoadingButton: () => {},
-  //*
   modalAdministracionTipologiasDocumentales: false,
   openModalAdministracionTipologiasDocumentales: () => {},
   closeModalAdministracionTipologiasDocumentales: () => {},
@@ -42,7 +39,12 @@ const ModalContextTRD = createContext<ModalContextState>({
   //* -----------------------------------> MODAL HISTORIAL DE CAMBIOS
   modalHistorialCambios: false,
   openModalHistorialCambios: () => {},
-  closeModalHistorialCambios: () => {}
+  closeModalHistorialCambios: () => {},
+
+  // ! -------------------------------------> loading buttons
+  // ? loading button create - update TRD
+  createTRDLoadingButton: false,
+  setCreateTRDLoadingButton: () => {},
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {

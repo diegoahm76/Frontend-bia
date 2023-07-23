@@ -87,53 +87,54 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 />
               </Avatar>
             </IconButton>
-
-            <IconButton
-              aria-label="delete"
-              size="large"
-              title="Eliminar relación catalogo TRD"
-              onClick={() => {
-                // ? pendiente de revision esta funcion
-                dispatch(
-                  delete_item_catalogo_trd(params.row.id_catserie_unidadorg)
-                )
-                  .then(() => {
-                    dispatch(get_catalogo_trd(trd_current.id_trd));
-                  })
-                  .then(() => {
-                    dispatch(
-                      getServiceSeriesSubseriesXUnidadOrganizacional({
-                        id_ccd: trd_current.id_ccd,
-                        id_organigrama: trd_current.id_organigrama
-                      })
-                    );
-                    closeModalAdministracionTRD();
-                    dispatch(get_tipologias_asociadas_a_trd([]));
-                    reset_administrar_trd({
-                      cod_disposicion_final: '',
-                      digitalizacion_dis_final: true,
-                      tiempo_retencion_ag: '',
-                      tiempo_retencion_ac: '',
-                      descripcion_procedimiento: '',
-                      justificacion_cambio: '',
-                      tipologias: [],
-                      ruta_archivo_cambio: ''
+            {trd_current.actual ? null : (
+              <IconButton
+                aria-label="delete"
+                size="large"
+                title="Eliminar relación catalogo TRD"
+                onClick={() => {
+                  // ? pendiente de revision esta funcion
+                  dispatch(
+                    delete_item_catalogo_trd(params.row.id_catserie_unidadorg)
+                  )
+                    .then(() => {
+                      dispatch(get_catalogo_trd(trd_current.id_trd));
+                    })
+                    .then(() => {
+                      dispatch(
+                        getServiceSeriesSubseriesXUnidadOrganizacional({
+                          id_ccd: trd_current.id_ccd,
+                          id_organigrama: trd_current.id_organigrama
+                        })
+                      );
+                      closeModalAdministracionTRD();
+                      dispatch(get_tipologias_asociadas_a_trd([]));
+                      reset_administrar_trd({
+                        cod_disposicion_final: '',
+                        digitalizacion_dis_final: true,
+                        tiempo_retencion_ag: '',
+                        tiempo_retencion_ac: '',
+                        descripcion_procedimiento: '',
+                        justificacion_cambio: '',
+                        tipologias: [],
+                        ruta_archivo_cambio: ''
+                      });
                     });
-                  });
 
-                console.log(params.row);
-              }}
-            >
-              <Avatar sx={AvatarStyles} variant="rounded">
-                <DeleteIcon
-                  sx={{
-                    color: 'primary.main',
-                    width: '18px',
-                    height: '18px'
-                  }}
-                />
-              </Avatar>
-            </IconButton>
+                  console.log(params.row);
+                }}
+              >
+                <Avatar sx={AvatarStyles} variant="rounded">
+                  <DeleteIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            )}
           </>
         );
       }

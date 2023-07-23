@@ -88,7 +88,9 @@ export const TrdScreen: FC = (): JSX.Element => {
   const {
     openModalModalSearchTRD,
     openModalCCDUsados,
-    openModalCreacionFormatoTipo
+    openModalCreacionFormatoTipo,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -99,8 +101,12 @@ export const TrdScreen: FC = (): JSX.Element => {
       return;
     }
     trd_current !== null
-      ? dispatch(update_trd_service(data_create_trd_modal))
-      : dispatch(create_trd_service(data_create_trd_modal));
+      ? dispatch(
+          update_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        )
+      : dispatch(
+          create_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        );
   };
 
   return (
@@ -279,7 +285,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 BUSCAR TRD
               </Button>
               <LoadingButton
-                // loading={loadingButton}
+                loading={createTRDLoadingButton}
                 type="submit"
                 color="primary"
                 variant="contained"
