@@ -32,10 +32,8 @@ export const HistorialDeCambios = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   // * -------------------------------------------------------> MODAL HISTORIAL DE CAMBIOS
-  const {
-    modalHistorialCambios,
-    closeModalHistorialCambios
-  } = useContext(ModalContextTRD);
+  const { modalHistorialCambios, closeModalHistorialCambios } =
+    useContext(ModalContextTRD);
 
   //* neccesarie states
   const { historialCambios } = useAppSelector((state) => state.trd_slice);
@@ -44,7 +42,6 @@ export const HistorialDeCambios = (): JSX.Element => {
     closeModalHistorialCambios();
     dispatch(get_historial_cambios_action([]));
   };
-
 
   const columns = [
     ...columsHistoricoCambiosTrd,
@@ -83,28 +80,31 @@ export const HistorialDeCambios = (): JSX.Element => {
     {
       headerName: 'Digitalización',
       field: 'digitalizacion_disp_final',
-      minWidth: 180,
-      maxWidth: 220,
+      width: 180,
       renderCell: (params: any) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.digitalizacion_disp_final  ? (
-          <Chip
-            size="small"
-            label="SI"
-            color="success"
-            variant="outlined"
-          />
+        return params.row.digitalizacion_disp_final ? (
+          <Chip size="small" label="SI" color="success" variant="outlined" />
         ) : (
-          <Chip
-            size="small"
-            label="NO"
-            color="warning"
-            variant="outlined"
-          />
+          <Chip size="small" label="NO" color="warning" variant="outlined" />
         );
       }
     },
-  ]
+
+    {
+      headerName: 'Fecha de registro histórico',
+      field: 'fecha_registro_historico',
+      width: 220,
+      renderCell: (params: any) => (
+        <Chip
+          size="medium"
+          label={params.row.fecha_registro_historico}
+          color="success"
+          variant="outlined"
+        />
+      )
+    }
+  ];
 
   return (
     <>
