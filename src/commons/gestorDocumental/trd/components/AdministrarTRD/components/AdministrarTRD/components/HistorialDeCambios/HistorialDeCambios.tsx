@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -6,6 +7,7 @@ import { ModalContextTRD } from '../../../../../../context/ModalsContextTrd';
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -43,12 +45,73 @@ export const HistorialDeCambios = (): JSX.Element => {
     dispatch(get_historial_cambios_action([]));
   };
 
+
+  const columns = [
+    ...columsHistoricoCambiosTrd,
+    {
+      headerName: 'Tiempo retención AG',
+      field: 'tiempo_retencion_ag',
+      width: 180,
+      renderCell: (params: any) => {
+        return (
+          <div>
+            {params.row.tiempo_retencion_ag === '0' ? (
+              <div>Indefinido</div>
+            ) : (
+              <div>{params.row.tiempo_retencion_ag} año(s)</div>
+            )}
+          </div>
+        );
+      }
+    },
+    {
+      headerName: 'Tiempo retención AC',
+      field: 'tiempo_retencion_ac',
+      width: 180,
+      renderCell: (params: any) => {
+        return (
+          <div>
+            {params.row.tiempo_retencion_ac === '0' ? (
+              <div>Indefinido</div>
+            ) : (
+              <div>{params.row.tiempo_retencion_ac} año(s)</div>
+            )}
+          </div>
+        );
+      }
+    },
+    {
+      headerName: 'Digitalización',
+      field: 'digitalizacion_disp_final',
+      minWidth: 180,
+      maxWidth: 220,
+      renderCell: (params: any) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.digitalizacion_disp_final  ? (
+          <Chip
+            size="small"
+            label="SI"
+            color="success"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            size="small"
+            label="NO"
+            color="warning"
+            variant="outlined"
+          />
+        );
+      }
+    },
+  ]
+
   return (
     <>
       {' '}
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
         open={modalHistorialCambios}
         onClose={cleanDataCloseModal}
       >
@@ -83,7 +146,7 @@ export const HistorialDeCambios = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={historialCambios || []}
-                    columns={columsHistoricoCambiosTrd}
+                    columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}

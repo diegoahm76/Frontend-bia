@@ -45,7 +45,10 @@ import {
 } from '../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { options_dispocision_final } from './choices/choices';
 import { HistorialDeCambios } from '../HistorialDeCambios/HistorialDeCambios';
-import { add_tipologia_documental_to_trd, set_selected_item_from_catalogo_trd_action } from '../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import {
+  add_tipologia_documental_to_trd,
+  set_selected_item_from_catalogo_trd_action
+} from '../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const FormTRDAdmin = (): JSX.Element => {
   //* dispatch declaration
@@ -587,31 +590,35 @@ export const FormTRDAdmin = (): JSX.Element => {
 
             ) : null } */}
 
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<VisibilityIcon />}
-              // disabled={ccd_current?.actual}
-              onClick={() => {
-                console.log('viendo historial de cambios');
-                dispatch(get_historical_trd(trd_current.id_trd));
-                openModalHistorialCambios();
-              }}
-            >
-              VER HISTORIAL DE CAMBIOS
-            </Button>
+            {trd_current.actual ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<VisibilityIcon />}
+                  // disabled={ccd_current?.actual}
+                  onClick={() => {
+                    console.log('viendo historial de cambios');
+                    dispatch(get_historical_trd(trd_current.id_trd));
+                    openModalHistorialCambios();
+                  }}
+                >
+                  VER HISTORIAL DE CAMBIOS
+                </Button>
 
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<AutoFixHighIcon />}
-              // disabled={ccd_current?.actual}
-              onClick={() => {
-                console.log('viendo historial de cambios');
-              }}
-            >
-              EDICION ESPECIAL
-            </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<AutoFixHighIcon />}
+                  // disabled={ccd_current?.actual}
+                  onClick={() => {
+                    console.log('viendo historial de cambios');
+                  }}
+                >
+                  EDICION ESPECIAL
+                </Button>
+              </>
+            ) : null}
           </Stack>
         </Box>
       </Grid>

@@ -445,9 +445,8 @@ const use_ccd = () => {
   }, [dispatch, reset, set_title_button_asing]);
 
   const create_or_delete_relation_unidad = (): void => {
-    // console.log(data_asing, 'data_asing');
-    // console.log('epa la patria', ccd_current);
-
+    console.log(data_asing, 'data_asing');
+    console.log('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
       (item: {
         item: {
@@ -475,8 +474,6 @@ const use_ccd = () => {
         };
       }
     );
-
-    // console.log(itemSend, 'itemSend');
 
     const itemSendDef = [...assignments_ccd, ...itemSend];
 
@@ -550,6 +547,7 @@ const use_ccd = () => {
       maxWidth: 120,
       renderCell: (params: any) => {
         return (
+          ccd_current?.actual ? null :
           <>
             <IconButton
               onClick={() => {

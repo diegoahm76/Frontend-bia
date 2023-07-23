@@ -120,7 +120,7 @@ export const CcdScreen: React.FC = () => {
     set_consulta_ccd_is_active,
     // // Functions
     on_submit_create_ccd,
-    on_submit_create_or_delete_relation_unidad,
+    // on_submit_create_or_delete_relation_unidad,
     create_or_delete_relation_unidad,
     clean_ccd
   } = use_ccd() as any;
@@ -814,7 +814,9 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       onClick={() => {
                         void dispatch(create_or_delete_relation_unidad);
-                        void dispatch(get_assignments_service(ccd_current));
+                        // void dispatch(get_assignments_service(ccd_current));
+
+                        
                       }}
                       color="primary"
                       variant="contained"
