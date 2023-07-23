@@ -33,6 +33,8 @@ import { useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
+import { row } from '../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarLaboratorio: React.FC = () => {
@@ -82,6 +84,16 @@ export const AgregarLaboratorio: React.FC = () => {
 
   const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!instrumentos) {
+      console.log('instrumentos', instrumentos);
+      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+        replace: true,
+      });
+    }
+  }, []);
   useEffect(() => {
     reset_instrumento({
       nombre: instrumentos.nombre,
@@ -93,17 +105,11 @@ export const AgregarLaboratorio: React.FC = () => {
 
   const {
     tipo_parametro_value,
-    // unidad_medida_value,
-    // parametro_value,
     rows_laboratorio,
     fecha_toma_muestra,
     fecha_analisis,
     fecha_envio,
     fecha_resultado,
-    metodo,
-    resultado,
-    set_metodo,
-    set_resultado,
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
@@ -119,18 +125,14 @@ export const AgregarLaboratorio: React.FC = () => {
     fetch_data_pozo_instrumentos_select,
 
     // * Use Form
-    handleSubmit_laboratorio,
     register_laboratorio,
-    reset_laboratorio,
     control_registro_laboratorio,
-    set_value_laboratorio,
-    watch_laboratorio,
     formErrors_laboratorio,
-  } = use_register_laboratorio_hook();
 
-  const onSubmit = handleSubmit_laboratorio((data) => {
-    console.log(data);
-  });
+    // * Onsubmit
+    onSubmit,
+    is_saving,
+  } = use_register_laboratorio_hook();
 
   useEffect(() => {
     if (id_instrumento_slice) {
@@ -147,6 +149,7 @@ export const AgregarLaboratorio: React.FC = () => {
   useEffect(() => {
     if (tipo_parametro_value) {
       void fetch_data_parametros_laboratorios_select();
+      console.log(undidad_medida_select, 'undidad_medida_select');
     }
   }, [tipo_parametro_value]);
 
@@ -502,7 +505,7 @@ export const AgregarLaboratorio: React.FC = () => {
               size="small"
               value={tipo_parametro_value}
               margin="dense"
-              disabled={false}
+              disabled={rows_laboratorio.length > 0}
               name="tipo_parametro"
               onChange={handle_change_inputs}
             >
@@ -518,7 +521,7 @@ export const AgregarLaboratorio: React.FC = () => {
               name="id_parametro"
               control={control_registro_laboratorio}
               defaultValue=""
-              rules={{ required: true }}
+              rules={{ required: rows_laboratorio.length === 0 }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -526,9 +529,9 @@ export const AgregarLaboratorio: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={tipo_parametro_value === ''}
                   fullWidth
-                  required
+                  required={rows_laboratorio.length === 0}
                   error={!!formErrors_laboratorio.id_parametro}
                   helperText={
                     formErrors_laboratorio?.id_parametro?.type === 'required' &&
@@ -547,12 +550,12 @@ export const AgregarLaboratorio: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <TextField
               label="unidad de medida"
-              select
+              // select
               fullWidth
               size="small"
               margin="dense"
-              value={undidad_medida_select}
-              disabled={false}
+              value={undidad_medida_select || ''}
+              disabled={true}
               name="unidad_medida"
               onChange={handle_change_inputs}
             >
@@ -564,16 +567,22 @@ export const AgregarLaboratorio: React.FC = () => {
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Método de análisis"
-              fullWidth
-              size="small"
-              margin="dense"
-              disabled={false}
-              value={metodo}
-              onChange={(e) => {
-                set_metodo(e.target.value);
-              }}
+            <Controller
+              name="metodo"
+              control={control_registro_laboratorio}
+              defaultValue=""
+              rules={{ required: rows_laboratorio.length === 0 }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Método de análisis"
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required={rows_laboratorio.length === 0}
+                ></TextField>
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -585,22 +594,33 @@ export const AgregarLaboratorio: React.FC = () => {
                   handle_date_change('fecha_analisis', value);
                 }}
                 renderInput={(params: any) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_laboratorio('fecha_analisis')}
+                  />
                 )}
               />
             </LocalizationProvider>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Resultado"
-              fullWidth
-              size="small"
-              margin="dense"
-              disabled={false}
-              value={resultado}
-              onChange={(e) => {
-                set_resultado(e.target.value);
-              }}
+            <Controller
+              name="resultado"
+              control={control_registro_laboratorio}
+              defaultValue=""
+              rules={{ required: rows_laboratorio.length === 0 }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Resultado"
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required={rows_laboratorio.length === 0}
+                ></TextField>
+              )}
             />
           </Grid>
           <Box sx={{ flexGrow: 1 }}>
@@ -637,13 +657,19 @@ export const AgregarLaboratorio: React.FC = () => {
               </Grid>
             </>
           )}
-          <AgregarArchivo multiple={false} />
+          <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <ButtonSalir />
             </Grid>
             <Grid item>
-              <LoadingButton variant="contained" color="success" type="submit">
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                disabled={is_saving}
+                loading={is_saving}
+              >
                 Guardar
               </LoadingButton>
             </Grid>

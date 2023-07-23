@@ -90,6 +90,13 @@ interface UserContext {
 
   fetch_data_cuencas: () => void;
   fetch_data_pozo: () => void;
+
+  // * Parametros de laboratorio
+
+  id_resultado_laboratorio: number | null;
+  set_id_resultado_laboratorio: (
+    id_resultado_laboratorio: number | null
+  ) => void;
 }
 
 // <--------------------- Data context --------------------->
@@ -178,6 +185,10 @@ export const DataContext = createContext<UserContext>({
 
   fetch_data_cuencas: () => {},
   fetch_data_pozo: () => {},
+
+  // * parametros de laboratorio
+  id_resultado_laboratorio: null,
+  set_id_resultado_laboratorio: () => {},
 });
 
 export const UserProvider = ({
@@ -240,9 +251,7 @@ export const UserProvider = ({
   const [rows_register_pozos, set_rows_register_pozos] = React.useState<any>(
     {}
   );
-  const [rows_edit_pozo, set_rows_edit_pozo] = React.useState<any>(
-    {}
-  );
+  const [rows_edit_pozo, set_rows_edit_pozo] = React.useState<any>({});
 
   // select instruemnto
   const [id_instrumento, set_id_instrumento] = React.useState<number | null>(
@@ -370,6 +379,11 @@ export const UserProvider = ({
     }
   };
 
+  // * parametros de laboratorio
+
+  const [id_resultado_laboratorio, set_id_resultado_laboratorio] =
+    React.useState<number | null>(null);
+
   const value = {
     // *modos instrumentos
     register_instrumento,
@@ -432,6 +446,10 @@ export const UserProvider = ({
     set_is_loading_submit,
     fetch_data_cuencas,
     fetch_data_pozo,
+
+    // * parametros de laboratorio
+    id_resultado_laboratorio,
+    set_id_resultado_laboratorio,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

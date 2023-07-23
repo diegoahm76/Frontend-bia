@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import {
@@ -18,10 +18,20 @@ import type {
 import { type AxiosError } from 'axios';
 import { control_error } from '../../../../../../helpers';
 import { useForm } from 'react-hook-form';
-import { get_parametros_laboratorio } from '../../../request/request';
+import {
+  get_parametros_laboratorio,
+  post_resultado_laboratorio,
+} from '../../../request/request';
+import { control_success } from '../../../../requets/Request';
+import { DataContext } from '../../../context/contextData';
+import { data } from '../../../../../almacen/gestionDeInventario/catalogoBienes/interfaces/Nodo';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const use_register_laboratorio_hook = () => {
+  // * context
+  const { id_resultado_laboratorio, set_id_resultado_laboratorio } =
+    useContext(DataContext);
+
   // * Use Form
   const {
     handleSubmit: handleSubmit_laboratorio,
@@ -45,8 +55,12 @@ export const use_register_laboratorio_hook = () => {
       id_cuenca: '',
       id_pozo: '',
       id_parametro: '',
+      metodo: '',
+      resultado: '',
     },
   });
+
+  const data_watch = watch_laboratorio();
   // Datos GGenerales
 
   const [fecha_toma_muestra, set_fecha_toma_muestra] = useState<Dayjs | null>(
@@ -198,21 +212,67 @@ export const use_register_laboratorio_hook = () => {
   const [resultado, set_resultado] = useState('');
 
   const handle_agregar = (): void => {
+    console.log(data_watch, 'data_watch');
     const new_row = {
-      parametro: parametro_value,
-      unidad: unidad_medida_value,
-      metodo,
-      fecha_analisas: (fecha_analisis ?? dayjs()).format('DD/MM/YYYY'),
-      resultado,
+      id_parametro: data_watch.id_parametro,
+      parametro: tipo_parametro_value,
+      unidad: undidad_medida_select,
+      metodo: data_watch.metodo,
+      fecha_analisis: (fecha_analisis ?? dayjs()).format('YYYY-MM-DD'),
+      resultado: data_watch.resultado,
     };
     set_rows_laboratorio([...rows_laboratorio, new_row]);
 
-    set_unidad_medida_value('');
-    set_parametro_value('');
-    set_metodo('');
-    set_resultado('');
+    set_undidad_medida_select('');
+    set_parametros_select([]);
+    set_value_laboratorio('metodo', '');
+    set_value_laboratorio('resultado', '');
     set_fecha_analisis(null);
   };
+
+  const reset_formulario = (): void => {
+    reset_laboratorio();
+    set_fecha_toma_muestra(null);
+    set_fecha_envio(null);
+    set_fecha_resultado(null);
+    set_fecha_analisis(null);
+    set_clase_muestra_value('');
+    set_tipo_parametro_value('');
+    set_unidad_medida_value('');
+    set_parametro_value('');
+    set_cuenca_select([]);
+    set_pozos_selected([]);
+    set_parametros_select([]);
+    set_undidad_medida_select('');
+    set_rows_laboratorio([]);
+    set_metodo('');
+    set_resultado('');
+  };
+
+  // * Onsubmit
+  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+  const [is_saving, set_is_saving] = useState(false);
+
+  const onSubmit = handleSubmit_laboratorio(async (data: any) => {
+    try {
+      set_is_saving(true);
+      set_id_resultado_laboratorio(null);
+      console.log(data);
+      data.id_instrumento = id_instrumento_slice;
+      data.id_resultado_laboratorio = id_resultado_laboratorio;
+      data.cod_clase_muestra = instrumentos?.cod_tipo_agua;
+      data.fecha_toma_muestra = dayjs(fecha_toma_muestra).format('YYYY-MM-DD');
+      data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
+      data.fecha_envio_lab = dayjs(fecha_envio).format('YYYY-MM-DD');
+      await post_resultado_laboratorio(data, rows_laboratorio);
+      reset_formulario();
+      control_success('Registro de laboratorio creado exitosamente');
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    } finally {
+      set_is_saving(false);
+    }
+  });
 
   // medición
 
@@ -252,5 +312,9 @@ export const use_register_laboratorio_hook = () => {
     set_value_laboratorio,
     watch_laboratorio,
     formErrors_laboratorio,
+
+    // * Onsubmit
+    onSubmit,
+    is_saving,
   };
 };

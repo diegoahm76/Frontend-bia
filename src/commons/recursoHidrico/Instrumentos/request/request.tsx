@@ -9,6 +9,7 @@ import type {
   Parametros,
   Pozo,
 } from '../../configuraciones/interfaces/interfaces';
+import dayjs from 'dayjs';
 
 export const search_seccion_subseccion = async ({
   nombre_seccion,
@@ -102,4 +103,55 @@ export const get_parametros_laboratorio = async (
   );
   const data = response.data.data;
   return data ?? [];
+};
+
+export const post_resultado_laboratorio = async (
+  form: any,
+  rows_registro_laboratorio: any
+): Promise<any> => {
+  const new_array = [
+    ...rows_registro_laboratorio,
+
+    form.id_registro_laboratorio === null ||
+    form.id_parametro === null ||
+    form.metodo === '' ||
+    form.resultado === '' ||
+    form.fecha_analisis === ''
+      ? null
+      : {
+          id_registro_laboratorio: form.id_registro_laboratorio,
+          id_parametro: form.id_parametro,
+          metodo: form.metodo,
+          resultado: form.resultado,
+          fecha_analisis: dayjs(form.fecha_analisis).format('YYYY-MM-DD'),
+        },
+  ];
+
+  const filtered_array = new_array.filter((item: any) => item !== null);
+
+  const response = await api.post(
+    'hidrico/bibliotecas/resultados_laboratorio/create/',
+    {
+      ...form,
+      id_resultado_laboratorio: form.id_resultado_laboratorio,
+      id_instrumento: form.id_instrumento,
+      id_cuenca: form.id_cuenca,
+      id_pozo: form.id_pozo,
+      descripcion: form.descripcion,
+      lugar_muestra: form.lugar_muestra,
+      cod_clase_muestra: form.cod_clase_muestra,
+      fecha_analisis: dayjs(form.fecha_analisis).format('YYYY-MM-DD'),
+      fecha_toma_muestra: dayjs(form.fecha_toma_muestra).format('YYYY-MM-DD'),
+      fecha_resultados_lab: dayjs(form.fecha_resultados_lab).format(
+        'YYYY-MM-DD'
+      ),
+      fecha_envio_lab: dayjs(form.fecha_envio_lab).format('YYYY-MM-DD'),
+      latitud: form.latitud,
+      longitud: form.longitud,
+      datos_registro_laboratorio:
+        rows_registro_laboratorio.length === 0 ? [] : filtered_array,
+    }
+  );
+    console.log(response.data, 'response.data');
+  return response.data;
 };
