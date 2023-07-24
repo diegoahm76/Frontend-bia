@@ -141,7 +141,12 @@ export const AdminTRDScreen = (): JSX.Element | null => {
         );
       }
     },
-    ...columns
+    ...columns,
+    {
+      headerName: 'Justificación cambio',
+      field: 'justificacion_cambio',
+      width: 180,
+    }
   ];
 
   const columns_catalogo_ccd = [

@@ -508,18 +508,20 @@ export const get_catalogo_trd = (id_trd: number): any => {
 };
 
 // ? create item catalogo TRD ---------------------------------------------->
-export const create_item_catalogo_trd = (bodyPost: any, tipologias: any): any => {
+export const create_item_catalogo_trd = (
+  bodyPost: any,
+  tipologias: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
 
-    const tipologiasPost =
-      tipologias.length > 0 ? tipologias : [];
-/*
+    const tipologiasPost = tipologias.length > 0 ? tipologias : [];
+    /*
     if (tipologiasPost.length <= 0) {
       control_error('Debe seleccionar al menos una tipología documental');
       return;
     } */
-    
+
     try {
       const obj: any = {
         id_trd,
@@ -531,11 +533,11 @@ export const create_item_catalogo_trd = (bodyPost: any, tipologias: any): any =>
         descripcion_procedimiento: bodyPost.descripcion_procedimiento,
         tipologias: tipologiasPost
       };
-     /* 
+      /* 
       if (tipologiasPost.length > 0) {
         obj.tipologias = tipologiasPost;
       } */
-      
+
       console.log(obj, 'obj');
       const { data } = await api.post(
         `gestor/trd/catalogo-trd/add/${id_trd}/`,
@@ -555,7 +557,7 @@ export const create_item_catalogo_trd = (bodyPost: any, tipologias: any): any =>
     } catch (error: any) {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
-      dispatch(set_selected_item_from_catalogo_trd_action(null))
+      dispatch(set_selected_item_from_catalogo_trd_action(null));
       return error as AxiosError;
     }
   };
@@ -570,7 +572,7 @@ export const update_item_catalogo_trd = (
   return async (
     dispatch: Dispatch<AnyAction | any>
   ): Promise<AxiosResponse | AxiosError | any> => {
-/*
+    /*
     if(formData.getAll('tipologias[]').length <= 2){
       control_error('Debe seleccionar al menos una tipología documental');
       return;
@@ -595,19 +597,27 @@ export const update_item_catalogo_trd = (
 
       const justificacion_cambio = formData.get('justificacion_cambio') || '';
 
+      /*  const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as Blob | File; */
+
       const obj: any = {
         cod_disposicion_final,
         digitalizacion_dis_final,
         tiempo_retencion_ag,
         tiempo_retencion_ac,
         descripcion_procedimiento,
-        tipologias: JSON.stringify(tipologiasObj)
-        // justificacion_cambio: '',
-        // ruta_archivo_cambio: ''
+        tipologias: JSON.stringify(tipologiasObj),
+        // justificacion_cambio,
+        // ruta_archivo_cambio,
       };
 
-      if(justificacion_cambio){
+     if (justificacion_cambio) {
         obj.justificacion_cambio = justificacion_cambio;
+      }
+
+      if (formData.has('ruta_archivo_cambio')) {
+        const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as File;
+        console.log(ruta_archivo_cambio);
+        obj.ruta_archivo_cambio = ruta_archivo_cambio;
       }
 
       const { data } = await api.put(
@@ -625,7 +635,7 @@ export const update_item_catalogo_trd = (
       dispatch(get_tipologias_asociadas_a_trd(id_catserie_unidadorg));
 
       control_success(data.detail);
-      dispatch(set_selected_item_from_catalogo_trd_action(null))
+      dispatch(set_selected_item_from_catalogo_trd_action(null));
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

@@ -95,8 +95,9 @@ export const FormTRDAdmin = (): JSX.Element => {
       tiempo_retencion_ag: selected_item_from_catalogo_trd?.tiempo_retencion_ag,
       tiempo_retencion_ac: selected_item_from_catalogo_trd?.tiempo_retencion_ac,
       descripcion_procedimiento:
-        selected_item_from_catalogo_trd?.descripcion_procedimiento
-      // justificacion_cambio: '',
+        selected_item_from_catalogo_trd?.descripcion_procedimiento,
+      justificacion_cambio:
+        selected_item_from_catalogo_trd?.justificacion_cambio
       // tipologias: [],
       // ruta_archivo_cambio: ''
     });
@@ -140,6 +141,7 @@ export const FormTRDAdmin = (): JSX.Element => {
           ruta_archivo_cambio: ''
         });
         dispatch(add_tipologia_documental_to_trd([]));
+        setButtonSpecialEditionActualTRD(false);
         // dispatch(set_selected_item_from_catalogo_trd_action(null))
       }
     );
@@ -192,18 +194,18 @@ export const FormTRDAdmin = (): JSX.Element => {
         formData.append('tipologias[]', JSON.stringify(elSend));
       });
     }
-   
-    if(buttonSpecialEditionActualTRD){
+
+    if (buttonSpecialEditionActualTRD) {
       formData.append(
         'justificacion_cambio',
         form_data_administrar_trd.justificacion_cambio
       );
       formData.append(
         'ruta_archivo_cambio',
-        form_data_administrar_trd.ruta_archivo_cambio
+        form_data_administrar_trd.ruta_archivo_cambio,
+        form_data_administrar_trd.name
       );
     }
-
 
     dispatch(
       update_item_catalogo_trd(
@@ -223,6 +225,7 @@ export const FormTRDAdmin = (): JSX.Element => {
         ruta_archivo_cambio: ''
       });
       dispatch(add_tipologia_documental_to_trd([]));
+      setButtonSpecialEditionActualTRD(false);
       // dispatch(set_selected_item_from_catalogo_trd_action(null))
     });
   };
@@ -550,7 +553,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   />
                 </Grid>
 
-               {/* <Grid item xs={12} sm={2}>
+                {/* <Grid item xs={12} sm={2}>
                   <DownloadButton
                     fileName="ruta_archivo_cambio"
                     condition={
