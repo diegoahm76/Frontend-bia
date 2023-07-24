@@ -17,7 +17,7 @@ import type {
   GridColDef,
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { containerStyles } from './utils/constants';
+import { containerStyles } from './utils/constants/constants';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import  VisibilityIcon  from '@mui/icons-material/Visibility';
@@ -321,6 +321,9 @@ export const TcaScreen: React.FC = (): JSX.Element => {
           </form>
         </Grid>
       </Grid>
+
+
+
       <Grid
         container
         sx={containerStyles}
@@ -335,7 +338,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={2}>
-                <TextField
+               {/* <TextField
                   name="tipoUnidad"
                   select
                   label="Series"
@@ -349,17 +352,15 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                       {option.label}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField> */}
               </Grid>
               <Grid item xs={12} sm={4}>
-                <ButtonGroup
+                {/* <ButtonGroup
                   variant="contained"
                   aria-label=" primary button group"
                 >
                   <Button>CREAR</Button>
-                  {/* <Button>CLONAR</Button>
-                  <Button>PREVISUALIZAR</Button> */}
-                </ButtonGroup>
+                </ButtonGroup> */}
               </Grid>
               <Grid item xs={12} sm={2}>
                 <TextField
@@ -384,8 +385,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                   aria-label=" primary button group"
                 >
                   <Button>CREAR</Button>
-                  {/* <Button>CLONAR</Button>
-                  <Button>PREVISUALIZAR</Button> */}
+
                 </ButtonGroup>
               </Grid>
             </Grid>

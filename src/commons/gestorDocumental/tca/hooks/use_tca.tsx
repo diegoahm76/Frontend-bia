@@ -16,18 +16,16 @@ export const use_tca = () => {
   } = useForm()
 
   const watch_create_update_tca_value = watch_create_update_tca()
+  console.log('watch_create_update_tca_value', watch_create_update_tca_value)
 
 
   return {
-
     // ? initial useForm - create and update tca
     control_create_update_tca,
     handleSubmit_create_update_tca,
     formState_create_update_tca,
     reset_create_update_tca,
     watch_create_update_tca_value
-    
-
   }
 
 }
