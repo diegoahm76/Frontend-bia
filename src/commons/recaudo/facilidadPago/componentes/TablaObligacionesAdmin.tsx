@@ -34,6 +34,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [sub_modal, set_sub_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('no');
   const [modal_asignacion, set_modal_asignacion] = useState(false);
+  const [asignacion, set_asignacion] = useState(true);
   const [funcionario_selected, set_funcionario_selected] = useState(0);
   const [facilidad_selected, set_facilidad_selected] = useState(0);
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
@@ -154,10 +155,11 @@ export const TablaObligacionesAdmin: React.FC = () => {
           </FormControl>
         ) : (
           <>
-            <Tooltip title="Reasignar">
+            <Tooltip title={params.row.asignar as boolean ? "Asignar" : "Reasignar"}>
               <IconButton
                 onClick={() => {
                   set_modal_asignacion(true)
+                  set_asignacion(params.row.asignar)
                 }}
               >
                 <Avatar
@@ -286,7 +288,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
         maxWidth="xs"
       >
         <Box component="form">
-          <DialogTitle>¿Está seguro de realizar la reasignación de usuario?</DialogTitle>
+          <DialogTitle>{asignacion ? '¿Está seguro de realizar la asignación de usuario?' : '¿Está seguro de realizar la reasignación de usuario?'}</DialogTitle>
           <DialogActions>
             <Button
               variant='outlined'
@@ -330,7 +332,17 @@ export const TablaObligacionesAdmin: React.FC = () => {
         maxWidth="xs"
       >
         <Box component="form">
-          <DialogTitle>{modal_option === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</DialogTitle>
+          {
+            modal_option === 'si' && asignacion ? (
+              <DialogTitle>Asignación ejecutada con éxito</DialogTitle>
+            ) : modal_option === 'no' && asignacion ? (
+              <DialogTitle>Asignación cancelada</DialogTitle>
+            ) : modal_option === 'si' && !asignacion ? (
+              <DialogTitle>Reasignación ejecutada con éxito</DialogTitle>
+            ) : modal_option === 'no' && !asignacion ? (
+              <DialogTitle>Reasignación cancelada</DialogTitle>
+            ) : null
+          }
           <DialogActions>
             <Button
               variant='outlined'

@@ -29,13 +29,13 @@ export const get_obligaciones_deudores = async (identificacion: string): Promise
 
 // Listar facilidades de pago ingresadas desde Pag. Usuario Admin
 export const get_fac_pago_ingresadas = async (): Promise<any> => {
-  const data = await api.get(`recaudo/pagos/listado-facilidades-pagos/`)
+  const data = await api.get(`recaudo/facilidades-pagos/listado-administrador/list/`)
   return data.data
 }
 
 // Filtrar facilidades de pago ingresadas desde Pag. Usuario Admin
 export const get_filtro_fac_pago_ingresadas = async (parametro: string, valor: string): Promise<any> => {
-  const data = await api.get(`recaudo/pagos/listado-facilidades-pagos/?${parametro}=${valor}`)
+  const data = await api.get(`recaudo/facilidades-pagos/listado-administrador/list/?${parametro}=${valor}`)
   return data.data
 }
 
@@ -57,7 +57,7 @@ export const get_fac_pago_solicitud = async (id: number): Promise<any> => {
 
 // Listar funcionarios desde Pag. Usuario Interno
 export const get_funcionarios = async (): Promise<any> => {
-  const data = await api.get('recaudo/pagos/funcionarios/')
+  const data = await api.get('recaudo/facilidades-pagos/funcionarios/')
   return data.data
 }
 
