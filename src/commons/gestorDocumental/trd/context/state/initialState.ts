@@ -25,7 +25,8 @@ export enum Modal {
   OPEN_MODAL_HISTORIAL_CAMBIOS = 'OPEN_MODAL_HISTORIAL_CAMBIOS',
   CLOSE_MODAL_HISTORIAL_CAMBIOS = 'CLOSE_MODAL_HISTORIAL_CAMBIOS',
   // ? buttons, loading, etc
-  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON'
+  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON',
+  SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL = 'SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL',
 }
 
 export const initialState = {
@@ -38,5 +39,6 @@ export const initialState = {
   modalEstablecerTipologiaDocumentalATRD: false,
   modalHistorialCambios: false,
   // ? buttons, loading, etc
-  createTRDLoadingButton: false
+  createTRDLoadingButton: false,
+  buttonAddNewTRDRelationActual: false,
 };

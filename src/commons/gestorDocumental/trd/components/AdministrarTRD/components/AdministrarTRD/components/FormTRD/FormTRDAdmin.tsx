@@ -83,27 +83,37 @@ export const FormTRDAdmin = (): JSX.Element => {
     );
     reset_administrar_trd({
       cod_disposicion_final: {
-        value: selected_item_from_catalogo_trd.cod_disposicion_final,
-        label: selected_item_from_catalogo_trd.cod_disposicion_final
+        value: selected_item_from_catalogo_trd?.cod_disposicion_final,
+        label: selected_item_from_catalogo_trd?.cod_disposicion_final
       },
       digitalizacion_dis_final:
-        selected_item_from_catalogo_trd.digitalizacion_dis_final,
-      tiempo_retencion_ag: selected_item_from_catalogo_trd.tiempo_retencion_ag,
-      tiempo_retencion_ac: selected_item_from_catalogo_trd.tiempo_retencion_ac,
+        selected_item_from_catalogo_trd?.digitalizacion_dis_final,
+      tiempo_retencion_ag: selected_item_from_catalogo_trd?.tiempo_retencion_ag,
+      tiempo_retencion_ac: selected_item_from_catalogo_trd?.tiempo_retencion_ac,
       descripcion_procedimiento:
-        selected_item_from_catalogo_trd.descripcion_procedimiento
+        selected_item_from_catalogo_trd?.descripcion_procedimiento
       // justificacion_cambio: '',
       // tipologias: [],
       // ruta_archivo_cambio: ''
     });
   }, [selected_item_from_catalogo_trd]);
 
+
   const create_item_onSubmit_trd_catalogo = (): any => {
+    const tipologias =
+      nuevasTipologias.length > 0
+        ? nuevasTipologias.map((el: any) => {
+            return el.id_tipologia_documental;
+          })
+        : tipologias_asociadas_a_trd.map((el: any) => {
+            return el.id_tipologia_documental;
+          }) ?? [];
+
     const elementsToSendCreate = {
       id_ccd: trd_current.id_ccd,
       id_organigrama: trd_current.id_organigrama,
       id_trd: trd_current.id_trd,
-      id_cat_serie_und: selected_item_from_catalogo_trd.id_cat_serie_und,
+      id_cat_serie_und: selected_item_from_catalogo_trd?.id_cat_serie_und,
       cod_disposicion_final:
         form_data_administrar_trd.cod_disposicion_final.value,
       digitalizacion_dis_final:
@@ -113,22 +123,23 @@ export const FormTRDAdmin = (): JSX.Element => {
       descripcion_procedimiento:
         form_data_administrar_trd.descripcion_procedimiento
     };
-    dispatch(
-      create_item_catalogo_trd(elementsToSendCreate, nuevasTipologias)
-    ).then((res: any) => {
-      closeModalAdministracionTRD();
-      reset_administrar_trd({
-        cod_disposicion_final: '',
-        digitalizacion_dis_final: true,
-        tiempo_retencion_ag: '',
-        tiempo_retencion_ac: '',
-        descripcion_procedimiento: '',
-        justificacion_cambio: '',
-        tipologias: [],
-        ruta_archivo_cambio: ''
-      });
-      dispatch(add_tipologia_documental_to_trd([]));
-    });
+    dispatch(create_item_catalogo_trd(elementsToSendCreate, tipologias)).then(
+      (res: any) => {
+        closeModalAdministracionTRD();
+        reset_administrar_trd({
+          cod_disposicion_final: '',
+          digitalizacion_dis_final: true,
+          tiempo_retencion_ag: '',
+          tiempo_retencion_ac: '',
+          descripcion_procedimiento: '',
+          justificacion_cambio: '',
+          tipologias: [],
+          ruta_archivo_cambio: ''
+        });
+        dispatch(add_tipologia_documental_to_trd([]));
+        // dispatch(set_selected_item_from_catalogo_trd_action(null))
+      }
+    );
   };
 
   const edit_item_onSubmit_trd_catalogo = (): any => {
@@ -138,7 +149,7 @@ export const FormTRDAdmin = (): JSX.Element => {
     formData.append('id_trd', trd_current.id_trd);
     formData.append(
       'id_cat_serie_und',
-      selected_item_from_catalogo_trd.id_cat_serie_und
+      selected_item_from_catalogo_trd?.id_cat_serie_und
     );
     formData.append(
       'cod_disposicion_final',
@@ -183,7 +194,7 @@ export const FormTRDAdmin = (): JSX.Element => {
     dispatch(
       update_item_catalogo_trd(
         formData,
-        selected_item_from_catalogo_trd.id_catserie_unidadorg
+        selected_item_from_catalogo_trd?.id_catserie_unidadorg
       )
     ).then((res: any) => {
       closeModalAdministracionTRD();
@@ -198,6 +209,7 @@ export const FormTRDAdmin = (): JSX.Element => {
         ruta_archivo_cambio: ''
       });
       dispatch(add_tipologia_documental_to_trd([]));
+      // dispatch(set_selected_item_from_catalogo_trd_action(null))
     });
   };
 
@@ -210,7 +222,7 @@ export const FormTRDAdmin = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            selected_item_from_catalogo_trd.nombre_unidad
+            selected_item_from_catalogo_trd?.nombre_unidad
               ? edit_item_onSubmit_trd_catalogo()
               : create_item_onSubmit_trd_catalogo();
           }}
@@ -551,7 +563,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               color="primary"
               type="submit"
               startIcon={
-                selected_item_from_catalogo_trd.nombre_unidad ? (
+                selected_item_from_catalogo_trd?.nombre_unidad ? (
                   <SyncIcon />
                 ) : (
                   <SaveIcon />
@@ -559,7 +571,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               }
               // disabled={ccd_current?.actual}
             >
-              {selected_item_from_catalogo_trd.nombre_unidad
+              {selected_item_from_catalogo_trd?.nombre_unidad
                 ? 'Actualizar'
                 : 'Guardar'}
             </Button>

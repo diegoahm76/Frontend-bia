@@ -34,4 +34,7 @@ export interface ModalContextState {
   // ? booleans to admins buttons, loading, etc
   createTRDLoadingButton: boolean;
   setCreateTRDLoadingButton: (value: boolean) => void;
+
+  buttonAddNewTRDRelationActual: boolean;
+  setButtonAddNewTRDRelationActual: (value: boolean) => void;
 }

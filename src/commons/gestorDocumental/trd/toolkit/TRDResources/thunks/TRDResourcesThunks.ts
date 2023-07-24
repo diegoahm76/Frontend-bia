@@ -15,7 +15,8 @@ import {
   get_data_tipologias_documentales,
   get_catalogo_trd_action,
   get_tipologias_asociadas_a_trd,
-  get_historial_cambios_action
+  get_historial_cambios_action,
+  set_selected_item_from_catalogo_trd_action
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 import { type AnyAction } from '@reduxjs/toolkit';
@@ -169,7 +170,7 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
 export const get_formatos_by_tipo_medio_by_format_and_name = (
   setCreateTRDLoadingButton: any,
   name?: string,
-  cod_tipo_medio?: string,
+  cod_tipo_medio?: string
 ): any => {
   return async (
     dispatch: Dispatch<any>
@@ -300,7 +301,7 @@ export const get_tipologia_doc_asociadas_trd = (
 
 export const get_tipologias_documentales_by_name = (
   setCreateTRDLoadingButton: any,
-  name?: string,
+  name?: string
 ): any => {
   return async (
     dispatch: Dispatch<any>
@@ -395,9 +396,10 @@ export const get_formatos_documentales_by_id_tipologia = (
 };
 
 // ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-export const create_tipologia_documental_service = (bodyPost: any,
+export const create_tipologia_documental_service = (
+  bodyPost: any,
   setCreateTRDLoadingButton: any
-  ): any => {
+): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
       !bodyPost.nombre ||
@@ -427,9 +429,10 @@ export const create_tipologia_documental_service = (bodyPost: any,
 };
 
 // ? update documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-export const update_tipologia_documental_service = (bodyPost: any,
+export const update_tipologia_documental_service = (
+  bodyPost: any,
   setCreateTRDLoadingButton: any
-  ): any => {
+): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
       !bodyPost.nombre ||
@@ -505,14 +508,20 @@ export const get_catalogo_trd = (id_trd: number): any => {
 };
 
 // ? create item catalogo TRD ---------------------------------------------->
-export const create_item_catalogo_trd = (
-  bodyPost: any,
-  nuevasTipologias: any
-): any => {
+export const create_item_catalogo_trd = (bodyPost: any, tipologias: any): any => {
   return async (dispatch: Dispatch<any>) => {
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
+
+    const tipologiasPost =
+      tipologias.length > 0 ? tipologias : [];
+/*
+    if (tipologiasPost.length <= 0) {
+      control_error('Debe seleccionar al menos una tipología documental');
+      return;
+    } */
+    
     try {
-      const obj = {
+      const obj: any = {
         id_trd,
         id_cat_serie_und: bodyPost.id_cat_serie_und,
         cod_disposicion_final: bodyPost.cod_disposicion_final,
@@ -520,10 +529,13 @@ export const create_item_catalogo_trd = (
         tiempo_retencion_ag: bodyPost.tiempo_retencion_ag,
         tiempo_retencion_ac: bodyPost.tiempo_retencion_ac,
         descripcion_procedimiento: bodyPost.descripcion_procedimiento,
-        tipologias: nuevasTipologias.map(
-          (item: any) => item.id_tipologia_documental
-        )
+        tipologias: tipologiasPost
       };
+     /* 
+      if (tipologiasPost.length > 0) {
+        obj.tipologias = tipologiasPost;
+      } */
+      
       console.log(obj, 'obj');
       const { data } = await api.post(
         `gestor/trd/catalogo-trd/add/${id_trd}/`,
@@ -543,6 +555,7 @@ export const create_item_catalogo_trd = (
     } catch (error: any) {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
+      dispatch(set_selected_item_from_catalogo_trd_action(null))
       return error as AxiosError;
     }
   };
@@ -557,6 +570,12 @@ export const update_item_catalogo_trd = (
   return async (
     dispatch: Dispatch<AnyAction | any>
   ): Promise<AxiosResponse | AxiosError | any> => {
+/*
+    if(formData.getAll('tipologias[]').length <= 2){
+      control_error('Debe seleccionar al menos una tipología documental');
+      return;
+    } */
+
     try {
       const id_ccd = formData.get('id_ccd') || '';
       const id_organigrama = formData.get('id_organigrama') || '';
@@ -600,6 +619,7 @@ export const update_item_catalogo_trd = (
       dispatch(get_tipologias_asociadas_a_trd(id_catserie_unidadorg));
 
       control_success(data.detail);
+      dispatch(set_selected_item_from_catalogo_trd_action(null))
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

@@ -69,7 +69,7 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalEstablecerTipologiaDocumentalATRD: payload || false
       };
-      //* modal administracion de TRD
+    //* modal administracion de TRD
     case Modal.OPEN_MODAL_ADMINISTRACION_TRD:
       return {
         ...state,
@@ -80,7 +80,7 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalAdministracionTRD: payload || false
       };
-      //* historial de cambios
+    //* historial de cambios
     case Modal.OPEN_MODAL_HISTORIAL_CAMBIOS:
       return {
         ...state,
@@ -97,6 +97,12 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         createTRDLoadingButton: payload || false
       };
+    case Modal.SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL:
+      return {
+        ...state,
+        buttonAddNewTRDRelationActual: payload || false
+      };
+
     default:
       return state;
   }

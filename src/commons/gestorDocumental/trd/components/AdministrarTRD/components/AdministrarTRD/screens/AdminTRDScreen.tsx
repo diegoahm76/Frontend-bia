@@ -38,7 +38,9 @@ export const AdminTRDScreen = (): JSX.Element | null => {
   const {
     modalAdministracionTRD,
     openModalAdministracionTRD,
-    closeModalAdministracionTRD
+    closeModalAdministracionTRD,
+    buttonAddNewTRDRelationActual,
+    setButtonAddNewTRDRelationActual
   } = useContext(ModalContextTRD);
 
   const {
@@ -228,27 +230,95 @@ export const AdminTRDScreen = (): JSX.Element | null => {
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <Title title="Cuadro de clasificación documental Seleccionado - (Administración TRD)" />
-              <DataGrid
-                sx={{
-                  marginTop: '.5rem'
-                }}
-                density="compact"
-                autoHeight
-                rows={
-                  catalado_series_subseries_unidad_organizacional.filter(
-                    (item: any) =>
-                      !catalogo_trd.some(
-                        (otherItem: any) =>
-                          otherItem.id_cat_serie_und === item.id_cat_serie_und
-                      )
-                  ) || []
-                }
-                columns={columns_catalogo_ccd}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_cat_serie_und ?? 0}
-              />
+
+              {trd_current?.actual ? null : (
+                <DataGrid
+                  sx={{
+                    marginTop: '.5rem'
+                  }}
+                  density="compact"
+                  autoHeight
+                  rows={
+                    catalado_series_subseries_unidad_organizacional.filter(
+                      (item: any) =>
+                        !catalogo_trd.some(
+                          (otherItem: any) =>
+                            otherItem.id_cat_serie_und === item.id_cat_serie_und
+                        )
+                    ) || []
+                  }
+                  columns={columns_catalogo_ccd}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id_cat_serie_und ?? 0}
+                />
+              )}
+
+              {trd_current?.actual &&
+              catalado_series_subseries_unidad_organizacional.filter(
+                (item: any) =>
+                  !catalogo_trd.some(
+                    (otherItem: any) =>
+                      otherItem.id_cat_serie_und === item.id_cat_serie_und
+                  )
+              ).length > 0 &&
+              !buttonAddNewTRDRelationActual ? (
+                <Button
+                  sx= {{
+                    marginTop: '1rem'
+                  }}
+                  variant="contained"
+                  color="warning"
+                  onClick={() => {
+                    // setButton(true);
+                    setButtonAddNewTRDRelationActual(true);
+                    console.log('agregar nueva relacion ccd');
+                  }}
+                >
+                  AGREGAR NUEVA RELACION CCD
+                </Button>
+              ) : null}
+
+              {buttonAddNewTRDRelationActual && trd_current?.actual ? (
+                <>
+                  <DataGrid
+                    sx={{
+                      marginTop: '.5rem'
+                    }}
+                    density="compact"
+                    autoHeight
+                    rows={
+                      catalado_series_subseries_unidad_organizacional.filter(
+                        (item: any) =>
+                          !catalogo_trd.some(
+                            (otherItem: any) =>
+                              otherItem.id_cat_serie_und ===
+                              item.id_cat_serie_und
+                          )
+                      ) || []
+                    }
+                    columns={columns_catalogo_ccd}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => row.id_cat_serie_und ?? 0}
+                  />
+                  <Button
+                    sx= {{
+                      marginTop: '1rem'
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      setButtonAddNewTRDRelationActual(false);
+                      console.log('agregar nueva relacion ccd');
+                    }}
+                  >
+                    CANCELAR AGREGAR NUEVA RELACION CCD
+                  </Button>
+                </>
+              ) : null}
             </Box>
           </Grid>
         </Grid>
