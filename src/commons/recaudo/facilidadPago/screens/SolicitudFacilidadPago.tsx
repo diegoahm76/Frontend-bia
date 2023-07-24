@@ -15,6 +15,7 @@ import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
 import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
 interface RootState {
   deudores: {
@@ -872,7 +873,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   onClick={() => {
-                    void post_registro_bienes({...form_text, cod_deudor: deudores.codigo})
+                    void post_registro_bienes({...form_text, cod_deudor: deudores.id})
                     set_rows_bienes(rows_bienes.concat({...form_text, id: faker.database.mongodbObjectId()}))
                   }}
                 >
@@ -972,8 +973,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   onClick={() => {
                     void post_registro_fac_pago({
                       ...form_state,
-                      fecha_generacion: Date(),
-                      id_deudor_actuacion: deudores.codigo,
+                      fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
+                      id_deudor: deudores.id,
                       id_tipo_actuacion: persona,
                       periodicidad: num_periodicidad,
                       cuotas: plazo,
@@ -1005,7 +1006,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
               <p><strong>Número de radicación:</strong> {'WQEQ123154'}</p>
-              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('YYYY-MM-DD LT')}</p>
             </Grid>
           </DialogContent>
           <DialogActions>

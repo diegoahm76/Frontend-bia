@@ -6,6 +6,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useState } from 'react';
 import { EditorTexto } from '../componentes/EditorTexto/EditorTexto';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
@@ -150,7 +151,7 @@ export const ResolucionRespuesta: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('YYYY-MM-DD LT')}</p>
             </Grid>
           </DialogContent>
           <DialogActions>

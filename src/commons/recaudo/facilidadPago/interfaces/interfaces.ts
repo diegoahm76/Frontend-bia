@@ -81,7 +81,7 @@ export interface Contribuyente {
 }
 
 export interface Deudor {
-  codigo: number;
+  id: number;
   identificacion: string;
   nombres: string;
   apellidos: string;
@@ -96,14 +96,13 @@ export interface Contacto {
 }
 
 export interface RegistroFacilidadPago {
-  id_deudor_actuacion: number;
+  id_deudor: number;
   id_tipo_actuacion: number;
   id_funcionario: number;
   fecha_generacion: string;
   observaciones: string;
   periodicidad: number;
   cuotas: number;
-  id_tasas_interes: number;
   documento_soporte: string;
   consignacion_soporte: string;
   documento_garantia: string;

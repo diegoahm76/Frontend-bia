@@ -20,13 +20,13 @@ export const get_filtro_fac_pago_ingresadas = createAsyncThunk('facilidades_pago
 
 // Listar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_facilidades_asignadas = createAsyncThunk('facilidades_pago/funcionario', async () => {
-  const { data } = await api.get(`recaudo/pagos/listado-facilidades-funcionarios/`)
+  const { data } = await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/`)
   return data.data
 })
 
 // Filtrar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_filtro_fac_pago_asignadas = createAsyncThunk('facilidades_pago/filtro_asignadas', async (filtro: Filtro) => {
-  const { data } = await api.get(`recaudo/pagos/listado-facilidades-funcionarios/?${filtro.parametro}=${filtro.valor}`)
+  const { data } = await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/?${filtro.parametro}=${filtro.valor}`)
   return data.data
 })
 

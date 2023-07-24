@@ -41,12 +41,12 @@ export const get_filtro_fac_pago_ingresadas = async (parametro: string, valor: s
 
 // Listar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_fac_pago_asignadas = async (): Promise<any> => {
-  return await api.get(`recaudo/pagos/listado-facilidades-funcionarios/`)
+  return await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/`)
 }
 
 // Filtrar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_filtro_fac_pago_asignadas = async (parametro: string, valor: string): Promise<any> => {
-  return await api.get(`recaudo/pagos/listado-facilidades-funcionarios/?${parametro}=${valor}`)
+  return await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/?${parametro}=${valor}`)
 }
 
 // Ver la información de la facilidad de pago desde Pag. Usuario Interno
