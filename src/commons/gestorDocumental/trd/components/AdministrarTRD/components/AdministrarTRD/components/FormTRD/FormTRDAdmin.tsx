@@ -203,7 +203,6 @@ export const FormTRDAdmin = (): JSX.Element => {
       formData.append(
         'ruta_archivo_cambio',
         form_data_administrar_trd.ruta_archivo_cambio,
-        form_data_administrar_trd.name
       );
     }
 

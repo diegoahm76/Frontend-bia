@@ -1,3 +1,4 @@
+/* eslint-disable no-unneeded-ternary */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
@@ -597,7 +598,7 @@ export const update_item_catalogo_trd = (
 
       const justificacion_cambio = formData.get('justificacion_cambio') || '';
 
-      /*  const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as Blob | File; */
+       const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as Blob | File;
 
       const obj: any = {
         cod_disposicion_final,
@@ -606,23 +607,27 @@ export const update_item_catalogo_trd = (
         tiempo_retencion_ac,
         descripcion_procedimiento,
         tipologias: JSON.stringify(tipologiasObj),
-        // justificacion_cambio,
-        // ruta_archivo_cambio,
+        justificacion_cambio: '',
+        ruta_archivo_cambio: null,
       };
 
      if (justificacion_cambio) {
         obj.justificacion_cambio = justificacion_cambio;
       }
 
-      if (formData.has('ruta_archivo_cambio')) {
+      /* if (formData.has('ruta_archivo_cambio')) {
         const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as File;
         console.log(ruta_archivo_cambio);
         obj.ruta_archivo_cambio = ruta_archivo_cambio;
-      }
+      } */
 
       const { data } = await api.put(
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
-        obj
+        {
+          ...obj,
+          ruta_archivo_cambio: ruta_archivo_cambio ? ruta_archivo_cambio : null
+
+        }
       );
 
       dispatch(get_catalogo_trd(id_trd));

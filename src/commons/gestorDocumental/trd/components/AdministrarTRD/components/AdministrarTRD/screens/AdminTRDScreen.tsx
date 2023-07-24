@@ -30,6 +30,7 @@ import {
   set_selected_item_from_catalogo_trd_action
 } from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../../hooks/use_trd';
+import { DownloadButton } from '../../../../../../../../utils/DownloadButton/DownLoadButton';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
   //* dispatch declaration
@@ -145,7 +146,19 @@ export const AdminTRDScreen = (): JSX.Element | null => {
     {
       headerName: 'Justificación cambio',
       field: 'justificacion_cambio',
-      width: 180,
+      width: 180
+    },
+    {
+      headerName: 'Archivo cambio',
+      field: 'ruta_archivo_cambio',
+      renderCell: (params: any) => (
+        params.row.ruta_archivo_cambio &&
+        <DownloadButton
+          fileName="ruta_archivo_cambio"
+          condition={false}
+          fileUrl={params.row.ruta_archivo_cambio}
+        />
+      )
     }
   ];
 
@@ -270,7 +283,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               ).length > 0 &&
               !buttonAddNewTRDRelationActual ? (
                 <Button
-                  sx= {{
+                  sx={{
                     marginTop: '1rem'
                   }}
                   variant="contained"
@@ -285,7 +298,9 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 </Button>
               ) : null}
 
-              {buttonAddNewTRDRelationActual && trd_current?.actual && catalado_series_subseries_unidad_organizacional.filter(
+              {buttonAddNewTRDRelationActual &&
+              trd_current?.actual &&
+              catalado_series_subseries_unidad_organizacional.filter(
                 (item: any) =>
                   !catalogo_trd.some(
                     (otherItem: any) =>
@@ -316,7 +331,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                     getRowId={(row) => row.id_cat_serie_und ?? 0}
                   />
                   <Button
-                    sx= {{
+                    sx={{
                       marginTop: '1rem'
                     }}
                     variant="contained"
@@ -330,7 +345,6 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                   </Button>
                 </>
               ) : null}
-
             </Box>
           </Grid>
         </Grid>
