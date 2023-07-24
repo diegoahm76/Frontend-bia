@@ -1,28 +1,29 @@
 // Components Material UI
+import { type FC } from 'react';
 import {
   Grid,
   Box,
   TextField,
-  MenuItem,
+  // MenuItem,
   Stack,
-  ButtonGroup,
-  Button,
+  // ButtonGroup,
+  Button
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../components/Title';
 
-import type {
-  GridColDef,
-} from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { containerStyles } from './utils/constants/constants';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
+
+// ? hooks
 import { use_tca } from '../hooks/use_tca';
 
 // Graficas
@@ -33,30 +34,30 @@ const columns: GridColDef[] = [
     field: 'firstName',
     headerName: 'First name',
     width: 150,
-    editable: true,
+    editable: true
   },
   {
     field: 'lastName',
     headerName: 'Last name',
     width: 150,
-    editable: true,
+    editable: true
   },
   {
     field: 'age',
     headerName: 'Age',
     type: 'number',
     width: 110,
-    editable: true,
+    editable: true
   },
   {
     field: 'fullName',
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 160,
+    width: 160
     // valueGetter: (params: GridValueGetterParams) =>
     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
+  }
 ];
 
 const rows = [
@@ -68,53 +69,42 @@ const rows = [
   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
 ];
 
-const tipos_unidades = [
+/* const tipos_unidades = [
   {
     value: '1',
-    label: 'Test',
+    label: 'Test'
   },
   {
     value: 'EUR',
-    label: 'Test',
+    label: 'Test'
   },
   {
     value: 'BTC',
-    label: '฿',
+    label: '฿'
   },
   {
     value: 'JPY',
-    label: '¥',
-  },
-];
+    label: '¥'
+  }
+]; */
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TcaScreen: React.FC = (): JSX.Element => {
-
+export const TcaScreen: FC<any> = (props): JSX.Element => {
   // ? useForm create and update tca
   const {
-    control_create_update_tca,
+    control_create_update_tca
     // handleSubmit_create_update_tca,
     // formState_create_update_tca,
     // reset_create_update_tca,
     // watch_create_update_tca_value
-  } =use_tca()
+  } = use_tca();
 
   return (
     <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
-        }}
-      >
+      <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title="TCA - ( Tabla de control de acceso )" />
           <form
@@ -142,7 +132,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                 </label> */}
                 {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
                 <Controller
-                  name="id_ccd"
+                  name="id_trd"
                   control={control_create_update_tca}
                   rules={{ required: true }}
                   render={({
@@ -152,7 +142,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
+                        // name="id_trd"
                         onChange={(selectedOption) => {
                           /* dispatch(
                             getServiceSeriesSubseriesXUnidadOrganizacional(
@@ -162,7 +152,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                           console.log(selectedOption);
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
+                        // isDisabled={tca_current != null}
                         options={[]}
                         placeholder="Seleccionar"
                       />
@@ -179,7 +169,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                           {/* {trd_current != null
                             ? `CCD seleccionado`
                             : `CDD's no usados en otro TRD`} */}
-                            TRD seleccionado
+                          TRD seleccionado
                         </small>
                       </label>
                     </div>
@@ -197,7 +187,6 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       // name="nombre"
                       label="Nombre del TCA"
@@ -217,7 +206,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                       // error={!!error}
                       /* helperText={
                         error
-                          ? 'Es obligatorio subir un archivo'
+                          ? 'Es obligatorio este campo'
                           : 'Seleccione un archivo'
                       } */
                     />
@@ -239,7 +228,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                       fullWidth
                       // name="version"
                       label="Versión del TCA"
-                     /* helperText={
+                      /* helperText={
                         trd_current != null
                           ? 'Actualice la versión'
                           : 'Ingrese versión'
@@ -280,7 +269,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
               >
                 BUSCAR TRD
               </Button>
-             {/* <LoadingButton
+              {/* <LoadingButton
                 disabled={trd_current != null}
                 
                 loading={false}
@@ -293,7 +282,6 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                 CREAR TCA
               </LoadingButton> */}
 
-
               <Button
                 color="primary"
                 variant="contained"
@@ -303,13 +291,12 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                 CREAR TCA
               </Button>
 
-
               <Button
                 color="success"
                 variant="contained"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  console.log('cleaning')
+                  console.log('cleaning');
                   // reset_all_trd();
                   // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
@@ -322,28 +309,37 @@ export const TcaScreen: React.FC = (): JSX.Element => {
         </Grid>
       </Grid>
 
-
-
-      <Grid
-        container
-        sx={containerStyles}
-      >
+      <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="Registro de series y subseries" />
+          <Title title="Catálogo Tabla de retención documental seleccionado" />
           <Box
-            component="form"
             sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={2}>
-               {/* <TextField
+                {/* <TextField
                   name="tipoUnidad"
                   select
                   label="Series"
                   defaultValue="Seleccione"
                   helperText="Seleccione series"
+                  size="small"
+                  fullWidth
+                >
+                  {tipos_unidades.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField> */}
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                {/* <TextField
+                  name="tipoUnidad"
+                  select
+                  label="Subseries"
+                  defaultValue="Seleccione"
+                  helperText="Seleccione subserie"
                   size="small"
                   fullWidth
                 >
@@ -360,44 +356,16 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                   aria-label=" primary button group"
                 >
                   <Button>CREAR</Button>
-                </ButtonGroup> */}
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <TextField
-                  name="tipoUnidad"
-                  select
-                  label="Subseries"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione subserie"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <ButtonGroup
-                  variant="contained"
-                  aria-label=" primary button group"
-                >
-                  <Button>CREAR</Button>
 
-                </ButtonGroup>
+                </ButtonGroup> */}
               </Grid>
             </Grid>
           </Box>
         </Grid>
       </Grid>
-      <Grid
-        container
-        sx={containerStyles}
-      >
+      <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="Asignaciones" />
+          <Title title="Catálogo de la TCA ( Tabla control de acceso )" />
           <Box
             component="form"
             sx={{ mt: '20px', mb: '20px' }}
@@ -406,24 +374,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  name="tipoUnidad"
-                  select
-                  label="Unidades"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione Unidad"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
+                {/*   <TextField
                   name="tipoUnidad"
                   select
                   label="Series"
@@ -437,10 +388,10 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                       {option.label}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField> */}
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
+                {/*   <TextField
                   name="tipoUnidad"
                   select
                   label="Subseries"
@@ -454,7 +405,7 @@ export const TcaScreen: React.FC = (): JSX.Element => {
                       {option.label}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Button
@@ -490,9 +441,13 @@ export const TcaScreen: React.FC = (): JSX.Element => {
             <Button
               color="success"
               variant="contained"
-              startIcon={<SaveIcon />}
+              startIcon={
+                //* -- <SaveIcon /> : <SyncIcon />
+                <SaveIcon />
+              }
             >
-              REANUDAR
+              {/*  condicional de terminación de tca necesarua  */}
+              TERMINAR TCA
             </Button>
           </Stack>
         </Grid>
