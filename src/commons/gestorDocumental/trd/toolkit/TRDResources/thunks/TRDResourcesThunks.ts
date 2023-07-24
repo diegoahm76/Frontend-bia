@@ -568,7 +568,8 @@ export const create_item_catalogo_trd = (
 
 export const update_item_catalogo_trd = (
   formData: any,
-  id_catserie_unidadorg: number
+  id_catserie_unidadorg: number,
+  trd_current: any,
 ): any => {
   return async (
     dispatch: Dispatch<AnyAction | any>
@@ -580,9 +581,12 @@ export const update_item_catalogo_trd = (
     } */
 
     try {
-      const id_ccd = formData.get('id_ccd') || '';
+    /*  const id_ccd = formData.get('id_ccd') || '';
       const id_organigrama = formData.get('id_organigrama') || '';
       const id_trd = formData.get('id_trd') || '';
+
+
+
       const cod_disposicion_final = formData.get('cod_disposicion_final') || '';
       const digitalizacion_dis_final =
         formData.get('digitalizacion_dis_final') || '';
@@ -591,7 +595,6 @@ export const update_item_catalogo_trd = (
       const descripcion_procedimiento =
         formData.get('descripcion_procedimiento') || '';
       const tipologias = formData.getAll('tipologias[]') || [];
-      //* parse tipologias, SERVER doesn't accept array of strings - It wants array of objects
       const tipologiasObj = tipologias.map((tipologia: any) =>
         JSON.parse(tipologia)
       );
@@ -615,26 +618,27 @@ export const update_item_catalogo_trd = (
         obj.justificacion_cambio = justificacion_cambio;
       }
 
-      /* if (formData.has('ruta_archivo_cambio')) {
-        const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as File;
-        console.log(ruta_archivo_cambio);
-        obj.ruta_archivo_cambio = ruta_archivo_cambio;
-      } */
+      if (formData.ruta_archivo_cambio) {
+        obj.ruta_archivo_cambio = formData.ruta_archivo_cambio;
+      } 
+*/
+
+/*            const tipologias = formData.getAll('tipologias[]') || [];
+      const tipologiasObj = tipologias.map((tipologia: any) =>
+        JSON.parse(tipologia)
+      ); */
+
 
       const { data } = await api.put(
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
-        {
-          ...obj,
-          ruta_archivo_cambio: ruta_archivo_cambio ? ruta_archivo_cambio : null
-
-        }
+        formData
       );
 
-      dispatch(get_catalogo_trd(id_trd));
+      dispatch(get_catalogo_trd(trd_current.id_trd));
       dispatch(
         getServiceSeriesSubseriesXUnidadOrganizacional({
-          id_ccd,
-          id_organigrama
+          id_ccd: trd_current.id_ccd,
+          id_organigrama: trd_current.id_organigrama
         })
       );
       dispatch(get_tipologias_asociadas_a_trd(id_catserie_unidadorg));

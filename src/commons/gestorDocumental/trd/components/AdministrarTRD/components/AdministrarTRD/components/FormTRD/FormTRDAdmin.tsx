@@ -149,13 +149,13 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   const edit_item_onSubmit_trd_catalogo = (): any => {
     const formData = new FormData();
-    formData.append('id_ccd', trd_current.id_ccd);
+    /*    formData.append('id_ccd', trd_current.id_ccd);
     formData.append('id_organigrama', trd_current.id_organigrama);
-    formData.append('id_trd', trd_current.id_trd);
-    formData.append(
+    formData.append('id_trd', trd_current.id_trd); */
+    /*   formData.append(
       'id_cat_serie_und',
       selected_item_from_catalogo_trd?.id_cat_serie_und
-    );
+    ); */
     formData.append(
       'cod_disposicion_final',
       form_data_administrar_trd.cod_disposicion_final.value
@@ -178,38 +178,42 @@ export const FormTRDAdmin = (): JSX.Element => {
     );
 
     if (nuevasTipologias.length > 0) {
-      nuevasTipologias.forEach((el: any) => {
-        const elSend = {
+      const o = nuevasTipologias.map((el: any) => {
+        return {
           id_tipologia_documental: el.id_tipologia_documental,
           activo: el.activo
         };
-        formData.append('tipologias[]', JSON.stringify(elSend));
       });
+     formData.append('tipologias', JSON.stringify(o));
     } else {
-      tipologias_asociadas_a_trd.forEach((el: any) => {
-        const elSend = {
+      const t = tipologias_asociadas_a_trd.map((el: any) => {
+        return {
           id_tipologia_documental: el.id_tipologia_documental,
           activo: el.activo
         };
-        formData.append('tipologias[]', JSON.stringify(elSend));
       });
+      formData.append('tipologias', JSON.stringify(t));
     }
 
-    if (buttonSpecialEditionActualTRD) {
+    if (form_data_administrar_trd.justificacion_cambio) {
       formData.append(
         'justificacion_cambio',
         form_data_administrar_trd.justificacion_cambio
       );
+    }
+
+    if (form_data_administrar_trd.ruta_archivo_cambio) {
       formData.append(
         'ruta_archivo_cambio',
-        form_data_administrar_trd.ruta_archivo_cambio,
+        form_data_administrar_trd.ruta_archivo_cambio
       );
     }
 
     dispatch(
       update_item_catalogo_trd(
         formData,
-        selected_item_from_catalogo_trd?.id_catserie_unidadorg
+        selected_item_from_catalogo_trd?.id_catserie_unidadorg,
+        trd_current
       )
     ).then((res: any) => {
       closeModalAdministracionTRD();
