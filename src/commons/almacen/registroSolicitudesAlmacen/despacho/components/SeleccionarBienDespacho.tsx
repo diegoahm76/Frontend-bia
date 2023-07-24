@@ -431,43 +431,6 @@ const SeleccionarBienDespacho = () => {
     }
   };
 
-  // const delete_bien_despacho = (item: IObjBienDespacho): void => {
-  //   let bien: IObjBienConsumo | undefined;
-
-  //     bien = bienes.find(
-  //       (p: IObjBienConsumo) =>
-  //         p.id_bien === item.id_bien_solicitado && p.id_bodega === item.id_bodega
-  //     );
-
-  //   console.log(bien);
-
-  //   if (bien !== undefined) {
-  //     dispatch(set_current_bien(bien));
-  //   }
-  //   reset_despacho({
-  //     id_bien: bien?.id_bien,
-  //     cantidad_despachada: null,
-  //     observacion_del_despacho: null,
-  //   });
-  //   const aux_items: IObjBienDespacho[] = [];
-  //   aux_insumos.forEach((option) => {
-  //     if (item.cod_tipo_elemento_vivero === 'IN') {
-  //       if (option.id_bien !== item.id_bien) {
-  //         aux_items.push(option);
-  //       }
-  //     } else {
-  //       if (
-  //         !(
-  //           option.id_bien === item.id_bien && option.nro_lote === item.nro_lote
-  //         )
-  //       ) {
-  //         aux_items.push(option);
-  //       }
-  //     }
-  //   });
-  //   set_aux_insumos(aux_items);
-  // };
-
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>

@@ -90,18 +90,21 @@ const RechazoSolicitud = ({
                             title_label: title ?? "hh"
                         },
 
+
                         {
-                            datum_type: "input_controller",
+                            datum_type: 'date_picker_controller',
                             xs: 12,
                             md: 12,
                             control_form: control_solicitud_despacho,
-                            control_name: "fecha_rechazo_almacen",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Fecha de ingreso",
-                            type: "text",
+                            control_name: 'fecha_rechazo_almacen',
+                            default_value: '',
+                            rules: {
+
+                            },
+                            label: 'Fecha de entrega',
                             disabled: true,
-                            helper_text: ""
+                            helper_text: '',
+                            format: 'YYYY-MM-DD',
                         },
                         {
                             datum_type: "input_controller",
