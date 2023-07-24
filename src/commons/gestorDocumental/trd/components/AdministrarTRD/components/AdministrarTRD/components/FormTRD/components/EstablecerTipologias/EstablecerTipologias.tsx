@@ -72,7 +72,7 @@ export const EstablecerTipologias = (): JSX.Element => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty-pattern
   const {
-   // reset_administrar_trd,
+    // reset_administrar_trd,
   } = use_trd();
 
   const colums_tipologias = [
@@ -152,11 +152,24 @@ export const EstablecerTipologias = (): JSX.Element => {
             onClick={() => {
               dispatch(
                 add_tipologia_documental_to_trd(
-                  nuevasTipologias.filter(
-                    (item: any) =>
-                      item.id_tipologia_documental !==
-                      params.row.id_tipologia_documental
-                  )
+                  nuevasTipologias.length > 0
+                    ? nuevasTipologias.filter(
+                        (item: any) => {
+                          console.log(item);
+                          console.log(params.row);
+                          return (
+                            item.id_tipologia_documental !==
+                            params.row.id_tipologia_documental
+                          );
+                        }
+                        /* item.id_tipologia_documental !==
+                      params.row.id_tipologia_documental */
+                      )
+                    : tipologias_asociadas_a_trd.filter(
+                        (item: any) =>
+                          item.id_tipologia_documental !==
+                          params.row.id_tipologia_documental
+                      )
                 )
               );
               control_success('Tipología eliminada de la relación TRD');
@@ -234,16 +247,28 @@ export const EstablecerTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      tipologias
-                        .filter((item) => item.activo)
-                        .filter(
-                          (item) =>
-                            !nuevasTipologias.find(
-                              (item2) =>
-                                item2.id_tipologia_documental ===
-                                item.id_tipologia_documental
-                            )
-                        ) || []
+                      nuevasTipologias.length > 0
+                        ? tipologias
+                            .filter((item) => item.activo)
+                            .filter(
+                              (item) =>
+                                !nuevasTipologias.find(
+                                  (item2) =>
+                                    item2?.id_tipologia_documental ===
+                                    item.id_tipologia_documental
+                                )
+                            ) || []
+                        : tipologias
+                            .filter((item) => item.activo)
+                            .filter(
+                              (item) =>
+                                !Array.isArray(tipologias_asociadas_a_trd) ||
+                                !tipologias_asociadas_a_trd.find(
+                                  (item2) =>
+                                    item2?.id_tipologia_documental ===
+                                    item.id_tipologia_documental
+                                )
+                            ) || []
                     }
                     columns={colums_tipologias}
                     pageSize={5}
