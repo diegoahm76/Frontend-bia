@@ -20,6 +20,7 @@ import { containerStyles } from './utils/constants/constants';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
 
@@ -379,14 +380,16 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
               />
             </Box>
           </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}
+                sx={{marginTop: '20px'}}
+              >
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   variant="contained"
-                  startIcon={<SaveIcon />}
+                  startIcon={<AdminPanelSettingsIcon />}
                 >
-                  ADMINISTRAR TCA
+                  ADMINISTRAR CATÁLOGO TCA
                 </Button>
               </Grid>
           <Stack
