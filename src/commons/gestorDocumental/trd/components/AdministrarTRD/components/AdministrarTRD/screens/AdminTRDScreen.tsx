@@ -280,7 +280,13 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 </Button>
               ) : null}
 
-              {buttonAddNewTRDRelationActual && trd_current?.actual ? (
+              {buttonAddNewTRDRelationActual && trd_current?.actual && catalado_series_subseries_unidad_organizacional.filter(
+                (item: any) =>
+                  !catalogo_trd.some(
+                    (otherItem: any) =>
+                      otherItem.id_cat_serie_und === item.id_cat_serie_und
+                  )
+              ).length > 0 ? (
                 <>
                   <DataGrid
                     sx={{
