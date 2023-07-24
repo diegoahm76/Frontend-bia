@@ -30,7 +30,7 @@ import SyncIcon from '@mui/icons-material/Sync';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
-import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
+// import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
 import {
   useAppDispatch,
   useAppSelector
@@ -192,8 +192,19 @@ export const FormTRDAdmin = (): JSX.Element => {
         formData.append('tipologias[]', JSON.stringify(elSend));
       });
     }
-    // console.log('formData', formData);
-    // console.log('nuevasTipologias', nuevasTipologias);
+   
+    if(buttonSpecialEditionActualTRD){
+      formData.append(
+        'justificacion_cambio',
+        form_data_administrar_trd.justificacion_cambio
+      );
+      formData.append(
+        'ruta_archivo_cambio',
+        form_data_administrar_trd.ruta_archivo_cambio
+      );
+    }
+
+
     dispatch(
       update_item_catalogo_trd(
         formData,
@@ -538,19 +549,17 @@ export const FormTRDAdmin = (): JSX.Element => {
                     )}
                   />
                 </Grid>
-                {/* boton descarga justifacion del cambio en trd actual */}
-                <Grid item xs={12} sm={2}>
+
+               {/* <Grid item xs={12} sm={2}>
                   <DownloadButton
                     fileName="ruta_archivo_cambio"
                     condition={
                       true
-                      // control_administrar_trd._formValues.ruta_archivo_cambio
+                      control_administrar_trd._formValues.ruta_archivo_cambio
                     }
                     fileUrl={trd_current?.ruta_archivo_cambio}
                   />
-                </Grid>
-                {/* boton descarga justifacion del cambio en trd actual - fin */}
-                {/* ruta archivo soporte de cambio, solo aparece en trd actual - fin */}
+                </Grid> */}
               </>
             ) : null}
 

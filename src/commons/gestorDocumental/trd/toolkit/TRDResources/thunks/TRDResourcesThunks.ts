@@ -593,7 +593,9 @@ export const update_item_catalogo_trd = (
         JSON.parse(tipologia)
       );
 
-      const obj = {
+      const justificacion_cambio = formData.get('justificacion_cambio') || '';
+
+      const obj: any = {
         cod_disposicion_final,
         digitalizacion_dis_final,
         tiempo_retencion_ag,
@@ -603,6 +605,10 @@ export const update_item_catalogo_trd = (
         // justificacion_cambio: '',
         // ruta_archivo_cambio: ''
       };
+
+      if(justificacion_cambio){
+        obj.justificacion_cambio = justificacion_cambio;
+      }
 
       const { data } = await api.put(
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
