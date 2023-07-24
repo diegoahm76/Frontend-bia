@@ -320,23 +320,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
                 {/* <TextField
                   name="tipoUnidad"
                   select
-                  label="Series"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione series"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField> */}
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                {/* <TextField
-                  name="tipoUnidad"
-                  select
                   label="Subseries"
                   defaultValue="Seleccione"
                   helperText="Seleccione subserie"
@@ -349,15 +332,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
                     </MenuItem>
                   ))}
                 </TextField> */}
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                {/* <ButtonGroup
-                  variant="contained"
-                  aria-label=" primary button group"
-                >
-                  <Button>CREAR</Button>
-
-                </ButtonGroup> */}
               </Grid>
             </Grid>
           </Box>
@@ -377,23 +351,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
                 {/*   <TextField
                   name="tipoUnidad"
                   select
-                  label="Series"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione Serie"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField> */}
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                {/*   <TextField
-                  name="tipoUnidad"
-                  select
                   label="Subseries"
                   defaultValue="Seleccione subseries"
                   helperText="Seleccione CCD"
@@ -406,16 +363,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
                     </MenuItem>
                   ))}
                 </TextField> */}
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                >
-                  GUARDAR SELECCIÓN
-                </Button>
               </Grid>
             </Grid>
           </Box>
@@ -432,6 +379,16 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
               />
             </Box>
           </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                >
+                  ADMINISTRAR TCA
+                </Button>
+              </Grid>
           <Stack
             direction="row"
             justifyContent="flex-end"
