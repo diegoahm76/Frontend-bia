@@ -56,8 +56,12 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { closeModalAdministracionTRD, openModalHistorialCambios } =
-    useContext(ModalContextTRD);
+  const {
+    closeModalAdministracionTRD,
+    openModalHistorialCambios,
+    buttonSpecialEditionActualTRD,
+    setButtonSpecialEditionActualTRD
+  } = useContext(ModalContextTRD);
   // * state from trd_slice
   const {
     trd_current,
@@ -97,7 +101,6 @@ export const FormTRDAdmin = (): JSX.Element => {
       // ruta_archivo_cambio: ''
     });
   }, [selected_item_from_catalogo_trd]);
-
 
   const create_item_onSubmit_trd_catalogo = (): any => {
     const tipologias =
@@ -432,7 +435,7 @@ export const FormTRDAdmin = (): JSX.Element => {
 
             {/* justificación del cambio, solo aparece para trd actual */}
             {/* SOLO TRD ACTUAL */}
-            {trd_current.actual ? (
+            {trd_current.actual && buttonSpecialEditionActualTRD ? (
               <>
                 <Grid item xs={12} sm={12}>
                   <Controller
@@ -602,7 +605,8 @@ export const FormTRDAdmin = (): JSX.Element => {
 
             ) : null } */}
 
-            {trd_current.actual ? (
+            {trd_current.actual &&
+            selected_item_from_catalogo_trd?.nombre_unidad ? (
               <>
                 <Button
                   variant="contained"
@@ -624,10 +628,15 @@ export const FormTRDAdmin = (): JSX.Element => {
                   startIcon={<AutoFixHighIcon />}
                   // disabled={ccd_current?.actual}
                   onClick={() => {
+                    buttonSpecialEditionActualTRD
+                      ? setButtonSpecialEditionActualTRD(false)
+                      : setButtonSpecialEditionActualTRD(true);
                     console.log('viendo historial de cambios');
                   }}
                 >
-                  EDICION ESPECIAL
+                  {buttonSpecialEditionActualTRD
+                    ? 'CANCELAR EDICIÓN ESPECIAL'
+                    : 'EDICIÓN ESPECIAL'}
                 </Button>
               </>
             ) : null}

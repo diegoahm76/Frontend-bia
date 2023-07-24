@@ -27,6 +27,7 @@ export enum Modal {
   // ? buttons, loading, etc
   CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON',
   SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL = 'SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL',
+  SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD = 'SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD'
 }
 
 export const initialState = {
@@ -41,4 +42,5 @@ export const initialState = {
   // ? buttons, loading, etc
   createTRDLoadingButton: false,
   buttonAddNewTRDRelationActual: false,
+  buttonSpecialEditionActualTRD: false
 };

@@ -47,7 +47,10 @@ const ModalContextTRD = createContext<ModalContextState>({
   setCreateTRDLoadingButton: () => {},
 
   buttonAddNewTRDRelationActual: false,
-  setButtonAddNewTRDRelationActual: () => {}
+  setButtonAddNewTRDRelationActual: () => {},
+
+  buttonSpecialEditionActualTRD : false,
+  setButtonSpecialEditionActualTRD : () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -133,6 +136,11 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL', payload: value });
   }, []);
 
+  const setButtonSpecialEditionActualTRD = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD', payload: value });
+  }
+  , []);
+
   return (
     <ModalContextTRD.Provider
       value={{
@@ -176,7 +184,9 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
         createTRDLoadingButton: state.createTRDLoadingButton,
         setCreateTRDLoadingButton,
         buttonAddNewTRDRelationActual: state.buttonAddNewTRDRelationActual,
-        setButtonAddNewTRDRelationActual
+        setButtonAddNewTRDRelationActual,
+        buttonSpecialEditionActualTRD: state.buttonSpecialEditionActualTRD,
+        setButtonSpecialEditionActualTRD,
       }}
     >
       {children}

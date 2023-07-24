@@ -37,4 +37,7 @@ export interface ModalContextState {
 
   buttonAddNewTRDRelationActual: boolean;
   setButtonAddNewTRDRelationActual: (value: boolean) => void;
+
+  buttonSpecialEditionActualTRD: boolean;
+  setButtonSpecialEditionActualTRD: (value: boolean) => void;
 }

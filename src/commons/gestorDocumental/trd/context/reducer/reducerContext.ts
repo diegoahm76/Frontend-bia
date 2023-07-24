@@ -102,6 +102,11 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         buttonAddNewTRDRelationActual: payload || false
       };
+    case Modal.SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD:
+      return {
+        ...state,
+        buttonSpecialEditionActualTRD: payload || false
+      };
 
     default:
       return state;
