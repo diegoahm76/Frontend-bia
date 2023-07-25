@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 // Components Material UI
 import { type FC } from 'react';
 import {
@@ -12,11 +13,11 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { Title } from '../../../../components/Title';
+import { Title } from '../../../../../components/Title';
 
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { containerStyles } from './utils/constants/constants';
+import { containerStyles } from '../utils/constants/constants';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -25,7 +26,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 // import  SyncIcon  from '@mui/icons-material/Sync';
 
 // ? hooks
-import { use_tca } from '../hooks/use_tca';
+import { use_tca } from '../../hooks/use_tca';
 
 // Graficas
 
@@ -256,6 +257,15 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
             >
               <Button
                 color="warning"
+                variant="outlined"
+                startIcon={<VisibilityIcon />}
+                // onClick={openModalCCDUsados}
+              >
+                {`VER TCA'S TERMINADOS`}
+              </Button>
+
+              <Button
+                color="warning"
                 variant="contained"
                 startIcon={<VisibilityIcon />}
                 // onClick={openModalCCDUsados}
@@ -268,7 +278,7 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
                 startIcon={<SearchIcon />}
                 // onClick={openModalModalSearchTRD}
               >
-                BUSCAR TRD
+                BUSCAR TCA
               </Button>
               {/* <LoadingButton
                 disabled={trd_current != null}
@@ -282,7 +292,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
                  {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'} 
                 CREAR TCA
               </LoadingButton> */}
-
               <Button
                 color="primary"
                 variant="contained"
@@ -310,108 +319,108 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
         </Grid>
       </Grid>
 
+      {/* parte 2. catalogo TRD seleccionado */}
+
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title="Catálogo Tabla de retención documental seleccionado" />
-          <Box
-            sx={{ mt: '20px' }}
-          >
+          <Box sx={{ mt: '20px', mb: '20px' }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={2}>
-                {/* <TextField
-                  name="tipoUnidad"
-                  select
-                  label="Subseries"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione subserie"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField> */}
+              <Grid item xs={12}>
+                <Box sx={{ width: '100%' }}>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                  />
+                </Box>
               </Grid>
             </Grid>
           </Box>
         </Grid>
       </Grid>
+      {/* fin parte 2 */}
+
+      {/* parte 3. catalogo TCA */}
+
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title="Catálogo de la TCA ( Tabla control de acceso )" />
-          <Box
-            component="form"
-            sx={{ mt: '20px', mb: '20px' }}
-            noValidate
-            autoComplete="off"
-          >
+          <Box sx={{ mt: '20px', mb: '20px' }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-                {/*   <TextField
-                  name="tipoUnidad"
-                  select
-                  label="Subseries"
-                  defaultValue="Seleccione subseries"
-                  helperText="Seleccione CCD"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField> */}
+              <Grid item xs={12}>
+                <Box sx={{ width: '100%' }}>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                  />
+                </Box>
               </Grid>
             </Grid>
           </Box>
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
-            </Box>
-          </Grid>
-              <Grid item xs={12} sm={4}
-                sx={{marginTop: '20px'}}
-              >
-                <Button
-                  fullWidth
-                  color="warning"
-                  variant="contained"
-                  startIcon={<AdminPanelSettingsIcon />}
-                >
-                  ADMINISTRAR CATÁLOGO TCA
-                </Button>
-              </Grid>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mt: '20px' }}
-          >
-            <Button
-              color="success"
-              variant="contained"
-              startIcon={
-                //* -- <SaveIcon /> : <SyncIcon />
-                <SaveIcon />
-              }
+          <Grid item xs={12} sm={3.2} sx={{ marginTop: '20px' }}>
+
+
+          <Link
+              to="/app/gestor_documental/tca/administrar-tca/"
             >
-              {/*  condicional de terminación de tca necesarua  */}
-              TERMINAR TCA
-            </Button>
-          </Stack>
+              <Button
+                // color="info"
+                color="warning"
+                variant="contained"
+                // disabled={!trd_current}
+                startIcon={<AdminPanelSettingsIcon />}
+              >
+                ADMINISTRAR CATÁLOGO TCA
+              </Button>
+            </Link>
+
+
+           {/* <Button
+              fullWidth
+              color="warning"
+              variant="contained"
+              startIcon={<AdminPanelSettingsIcon />}
+            >
+              ADMINISTRAR CATÁLOGO TCA
+            </Button> */}
+          </Grid>
         </Grid>
       </Grid>
+
+      {/* fin parte 3 */}
+
+      {/* parte 4 - finalizar TCA  */}
+
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        spacing={2}
+        sx={{ mt: '20px' }}
+      >
+        <Button
+          color="success"
+          variant="contained"
+          startIcon={
+            //* -- <SaveIcon /> : <SyncIcon />
+            <SaveIcon />
+          }
+        >
+          {/*  condicional de terminación de tca necesarua  */}
+          TERMINAR TCA
+        </Button>
+      </Stack>
+
+      {/* fin parte 4 */}
     </>
   );
 };
