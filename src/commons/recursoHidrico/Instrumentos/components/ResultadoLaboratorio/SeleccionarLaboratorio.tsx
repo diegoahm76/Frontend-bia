@@ -29,6 +29,8 @@ import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
@@ -76,27 +78,6 @@ export const SeleccionarLaboratorio: React.FC = () => {
     control,
   } = useRegisterInstrumentoHook();
 
-  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!instrumentos) {
-      console.log('instrumentos', instrumentos);
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
-        replace: true,
-      });
-    }
-  }, []);
-  useEffect(() => {
-    reset_instrumento({
-      nombre: instrumentos.nombre,
-      nombre_seccion: instrumentos.nombre_seccion,
-      nombre_subseccion: instrumentos.nombre_subseccion,
-      cod_tipo_agua: instrumentos.cod_tipo_agua,
-    });
-  }, [instrumentos]);
-
   const {
     tipo_parametro_value,
     rows_laboratorio,
@@ -104,6 +85,10 @@ export const SeleccionarLaboratorio: React.FC = () => {
     fecha_analisis,
     fecha_envio,
     fecha_resultado,
+    set_fecha_toma_muestra,
+    // set_fecha_analisis,
+    set_fecha_envio,
+    set_fecha_resultado,
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
@@ -126,7 +111,46 @@ export const SeleccionarLaboratorio: React.FC = () => {
     // * Onsubmit
     onSubmit,
     is_saving,
+    reset_laboratorio,
   } = use_register_laboratorio_hook();
+
+  const { instrumentos, info_laboratorio } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!instrumentos) {
+      console.log('instrumentos', instrumentos);
+      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+        replace: true,
+      });
+    }
+  }, []);
+  useEffect(() => {
+    reset_instrumento({
+      nombre: instrumentos.nombre,
+      nombre_seccion: instrumentos.nombre_seccion,
+      nombre_subseccion: instrumentos.nombre_subseccion,
+      cod_tipo_agua: instrumentos.cod_tipo_agua,
+    });
+  }, [instrumentos]);
+
+  useEffect(() => {
+    reset_laboratorio({
+      descripcion: info_laboratorio.descripcion,
+      lugar_muestra: info_laboratorio.lugar_muestra,
+      cod_clase_muestra: info_laboratorio.cod_clase_muestra,
+      fecha_toma_muestra: info_laboratorio.fecha_toma_muestra,
+      fecha_resultados_lab: info_laboratorio.fecha_resultados_lab,
+      latitud: info_laboratorio.latitud,
+      longitud: info_laboratorio.longitud,
+    });
+    set_fecha_toma_muestra(dayjs(info_laboratorio.fecha_toma_muestra));
+    set_fecha_envio(dayjs(info_laboratorio.fecha_envio_lab));
+    set_fecha_resultado(dayjs(info_laboratorio.fecha_resultados_lab));
+  }, [info_laboratorio]);
 
   useEffect(() => {
     if (id_instrumento_slice) {

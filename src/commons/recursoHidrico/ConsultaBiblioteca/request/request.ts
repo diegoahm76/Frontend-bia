@@ -8,8 +8,9 @@ import type {
   CuencasInstrumentos,
   DataGeneralLaboratorio,
   IntrumentosId,
+  Laboratorio,
   ParametrosId,
-  Resultadolaboratorio,
+  // Resultadolaboratorio,
 } from '../interfaces/interfaces';
 import type { Pozo } from '../../configuraciones/interfaces/interfaces';
 
@@ -85,20 +86,20 @@ export const get_data_laboratorio_id = async (
 };
 export const get_data_resulatado_laboratorio_id = async (
   id_dato_registro_laboratorio: number,
-  tipo_parametro: string,
-): Promise<Resultadolaboratorio[]> => {
-  const response: AxiosResponse<ResponseServer<Resultadolaboratorio[]>> =
-    await api.get<ResponseServer<Resultadolaboratorio[]>>(
-      `hidrico/bibliotecas/dato_registro_laboratorio/get-by-resultado/${id_dato_registro_laboratorio}/${tipo_parametro}/}`
+  parametro: string
+): Promise<Laboratorio[]> => {
+  const response: AxiosResponse<ResponseServer<Laboratorio[]>> =
+    await api.get<ResponseServer<Laboratorio[]>>(
+      `hidrico/bibliotecas/dato_registro_laboratorio/get-by-resultado/${id_dato_registro_laboratorio}/?tipo=${parametro}`
     );
   return response.data.data;
 };
-export const get_data_resulatado_pozo_id = async (
-  id_pozo: number,
+export const get_data_parametro_id = async (
+  id_parametro: number,
 ): Promise<ParametrosId[]> => {
   const response: AxiosResponse<ResponseServer<ParametrosId[]>> =
     await api.get<ResponseServer<ParametrosId[]>>(
-      `hidrico/bibliotecas/pozos/get-id/${id_pozo}/}`
+      `hidrico/bibliotecas/parametros_laboratorio/get-id/${id_parametro}/}`
     );
   return response.data.data;
 };

@@ -88,3 +88,14 @@ export interface ParametrosId {
     registro_precargado: boolean;
 }
 
+export interface Laboratorio {
+    cod_clase:                    string;
+    parametro:                    string;
+    unidad:                       string;
+    id_dato_registro_laboratorio: number;
+    id_registro_laboratorio:      number;
+    id_parametro:                 number;
+    metodo:                       string;
+    resultado:                    string;
+    fecha_analisis:               string;
+}

@@ -17,7 +17,7 @@ import {
   get_data_cuenca_instrumentos,
   get_data_laboratorio_id,
   get_data_resulatado_laboratorio_id,
-  get_data_resulatado_pozo_id,
+  get_data_parametro_id,
   get_instrumento_id,
 } from '../request/request';
 import type {
@@ -25,6 +25,7 @@ import type {
   CuencasInstrumentos,
   DataGeneralLaboratorio,
   IntrumentosId,
+  Laboratorio,
   ParametrosId,
   Resultadolaboratorio,
 } from '../interfaces/interfaces';
@@ -70,13 +71,13 @@ interface UserContext {
   set_id_resultado_laboratorio: (value: number | null) => void;
   set_id_parametro: (value: number | null) => void;
   set_rows_laboratorio: (rows: DataGeneralLaboratorio[]) => void;
-  set_rows_resultado_laboratorio: (rows: Resultadolaboratorio[]) => void;
+  set_rows_resultado_laboratorio: (rows: Laboratorio[]) => void;
   set_rows_parametro: (rows: ParametrosId[]) => void;
   set_info_laboratorio: (info_laboratorio: DataGeneralLaboratorio) => void;
   set_info_parametro: (info_parametro: ParametrosId) => void;
   set_tipo_parametro: (value: string) => void;
-  fetch_data_laboratorio: () => Promise<void>;
-  fetch_data_resultado_laboratorio: () => Promise<void>;
+  fetch_data_laboratorio: () => Promise<any>;
+  fetch_data_resultado_laboratorio: () => Promise<any>;
   fetch_data_parametros: () => Promise<void>;
 }
 
@@ -184,7 +185,7 @@ export const UserProvider = ({
     DataGeneralLaboratorio[]
   >([]);
   const [rows_resultado_laboratorio, set_rows_resultado_laboratorio] =
-    React.useState<Resultadolaboratorio[]>([]);
+    React.useState<Laboratorio[]>([]);
   const [rows_parametro, set_rows_parametro] = React.useState<ParametrosId[]>(
     []
   );
@@ -292,36 +293,40 @@ export const UserProvider = ({
 
   // * fetch resultado de laboratorio
 
-  const fetch_data_laboratorio = async (): Promise<void> => {
+  const fetch_data_laboratorio = async (): Promise<any> => {
     try {
       set_rows_laboratorio([]);
       if (id_instrumento) {
         const response = await get_data_laboratorio_id(id_instrumento);
         set_rows_laboratorio(response);
+        return response;
       }
     } catch (err: any) {
       control_error(err.response.data.detail);
     }
   };
-  const fetch_data_resultado_laboratorio = async (): Promise<void> => {
+
+  const fetch_data_resultado_laboratorio = async (): Promise<any> => {
     try {
       set_rows_resultado_laboratorio([]);
-      if (id_resultado_laboratorio) {
+      if (id_resultado_laboratorio && tipo_parametro) {
         const response = await get_data_resulatado_laboratorio_id(
           id_resultado_laboratorio,
           tipo_parametro
         );
         set_rows_resultado_laboratorio(response);
+        return response;
       }
     } catch (err: any) {
       control_error(err.response.data.detail);
     }
   };
+
   const fetch_data_parametros = async (): Promise<void> => {
     try {
       set_rows_parametro([]);
       if (id_parametro) {
-        const response = await get_data_resulatado_pozo_id(id_parametro);
+        const response = await get_data_parametro_id(id_parametro);
         set_rows_parametro(response);
       }
     } catch (err: any) {

@@ -24,7 +24,6 @@ import {
 } from '../../../request/request';
 import { control_success } from '../../../../requets/Request';
 import { DataContext } from '../../../context/contextData';
-import { data } from '../../../../../almacen/gestionDeInventario/catalogoBienes/interfaces/Nodo';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const use_register_laboratorio_hook = () => {
@@ -224,27 +223,42 @@ export const use_register_laboratorio_hook = () => {
     set_rows_laboratorio([...rows_laboratorio, new_row]);
 
     set_undidad_medida_select('');
-    set_parametros_select([]);
+    // set_parametros_select([]);
     set_value_laboratorio('metodo', '');
     set_value_laboratorio('resultado', '');
     set_fecha_analisis(null);
   };
 
   const reset_formulario = (): void => {
-    reset_laboratorio();
+    reset_laboratorio({
+      descripcion: '',
+      lugar_muestra: '',
+      // cod_clase_muestra: '',
+      fecha_toma_muestra: '',
+      fecha_resultados_lab: '',
+      fecha_envio_lab: '',
+      // fecha_analisis: '',
+      latitud: '',
+      longitud: '',
+      // id_cuenca: '',
+      // id_pozo: '',
+      // id_parametro: '',
+      // metodo: '',
+      // resultado: '',
+    });
     set_fecha_toma_muestra(null);
     set_fecha_envio(null);
     set_fecha_resultado(null);
     set_fecha_analisis(null);
-    set_clase_muestra_value('');
-    set_tipo_parametro_value('');
-    set_unidad_medida_value('');
-    set_parametro_value('');
-    set_cuenca_select([]);
-    set_pozos_selected([]);
-    set_parametros_select([]);
-    set_undidad_medida_select('');
-    set_rows_laboratorio([]);
+    // set_clase_muestra_value('');
+    // set_tipo_parametro_value('');
+    // set_unidad_medida_value('');
+    // set_parametro_value('');
+    // set_cuenca_select([]);
+    // set_pozos_selected([]);
+    // set_parametros_select([]);
+    // set_undidad_medida_select('');
+    // set_rows_laboratorio([]);
     set_metodo('');
     set_resultado('');
   };
@@ -288,6 +302,9 @@ export const use_register_laboratorio_hook = () => {
     fecha_resultado,
     metodo,
     resultado,
+    set_fecha_toma_muestra,
+    set_fecha_envio,
+    set_fecha_resultado,
     set_metodo,
     set_resultado,
     handle_date_change,

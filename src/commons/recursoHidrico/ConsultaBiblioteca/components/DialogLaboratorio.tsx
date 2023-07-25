@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  MenuItem,
   TextField,
   Tooltip,
   Typography,
@@ -26,6 +27,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
+import { tipo_parametro_choices } from '../../Instrumentos/components/ResultadoLaboratorio/utils/choices/choices';
 
 interface IProps {
   is_modal_active: boolean;
@@ -78,22 +80,16 @@ export const DialogLaboratorio: React.FC<IProps> = ({
   ];
   const colums_parametros: GridColDef[] = [
     {
-      field: 'nombre',
-      headerName: 'NOMBRE DE PARAMETRO',
+      field: 'parametro',
+      headerName: 'PARAMETRO',
       sortable: true,
-      width: 150,
+      width: 200,
     },
     {
-      field: 'cod_tipo_parametro',
-      headerName: 'CODIGO DE PARAMETRO',
-      sortable: true,
-      width: 150,
-    },
-    {
-      field: 'unidad_de_medida',
+      field: 'unidad',
       headerName: 'UNIDAD DE MEDIDA',
       sortable: true,
-      width: 150,
+      width: 200,
     },
   ];
   const colums_resultado_laboratorio: GridColDef[] = [
@@ -102,19 +98,19 @@ export const DialogLaboratorio: React.FC<IProps> = ({
       field: 'metodo',
       headerName: 'METODO',
       sortable: true,
-      width: 300,
+      width: 200,
     },
     {
       field: 'fecha_analisis',
       headerName: 'FECHA DE ANALISIS',
       sortable: true,
-      width: 300,
+      width: 200,
     },
     {
       field: 'resultado',
       headerName: 'RESULTADO',
       sortable: true,
-      width: 300,
+      width: 150,
     },
   ];
   const {
@@ -123,13 +119,11 @@ export const DialogLaboratorio: React.FC<IProps> = ({
     id_resultado_laboratorio,
     rows_laboratorio,
     rows_resultado_laboratorio,
-    rows_parametro,
-    id_parametro,
-    set_id_parametro,
+    tipo_parametro,
     set_tipo_parametro,
+    fetch_data_laboratorio,
     set_id_resultado_laboratorio,
     set_info_laboratorio,
-    fetch_data_laboratorio,
     fetch_data_resultado_laboratorio,
   } = useContext(DataContext);
 
@@ -144,10 +138,11 @@ export const DialogLaboratorio: React.FC<IProps> = ({
   }, [id_instrumento, is_modal_active]);
 
   useEffect(() => {
-    if (id_resultado_laboratorio && id_parametro) {
+    if (id_resultado_laboratorio && tipo_parametro) {
       void fetch_data_resultado_laboratorio();
     }
-  }, [id_resultado_laboratorio, id_parametro]);
+    // void fetch_data_laboratorio();
+  }, [id_resultado_laboratorio, tipo_parametro]);
 
   return (
     <Dialog
@@ -169,12 +164,12 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                 <Grid item xs={12}>
                   <>
                     <DataGrid
-                    autoHeight
-                    rows={rows_laboratorio}
-                    columns={colums_laboratorio}
-                    getRowId={(row) => uuidv4()}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
+                      autoHeight
+                      rows={rows_laboratorio}
+                      columns={colums_laboratorio}
+                      getRowId={(row) => uuidv4()}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
                     />
                   </>
                 </Grid>
@@ -263,6 +258,46 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         disabled
                         multiline
                       />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        label="Tipo parámetro "
+                        select
+                        fullWidth
+                        size="small"
+                        value={tipo_parametro}
+                        margin="dense"
+                        disabled={false}
+                        name="tipo_parametro"
+                        onChange={(e) => {
+                          set_tipo_parametro(e.target.value);
+                        }}
+                      >
+                        {tipo_parametro_choices.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                  </>
+                )}
+                {rows_resultado_laboratorio.length > 0 && (
+                  <>
+                    <Grid item xs={12}>
+                      <Title title="Analisis de laboratorio" />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <>
+                        <DataGrid
+                          autoHeight
+                          rows={rows_resultado_laboratorio}
+                          columns={colums_resultado_laboratorio}
+                          getRowId={(row) => uuidv4()}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                        />
+                      </>
                     </Grid>
                   </>
                 )}

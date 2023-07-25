@@ -13,12 +13,14 @@ import type {
 } from '../interfaces/interface';
 import { type AxiosError } from 'axios';
 import {
+  type DataGeneralLaboratorio,
   type Archivos,
   type CuencasInstrumentos,
 } from '../../ConsultaBiblioteca/interfaces/interfaces';
 import {
   get_archivos,
   get_data_cuenca_instrumentos,
+  get_data_laboratorio_id,
   get_instrumento_id,
 } from '../../ConsultaBiblioteca/request/request';
 import { get_pozo_id } from '../request/request';
@@ -97,6 +99,12 @@ interface UserContext {
   set_id_resultado_laboratorio: (
     id_resultado_laboratorio: number | null
   ) => void;
+
+  // * informacion de laboratorio
+  rows_laboratorio: DataGeneralLaboratorio[];
+  set_rows_laboratorio: (rows_laboratorio: DataGeneralLaboratorio[]) => void;
+  fetch_data_laboratorio: () => Promise<any>;
+
 }
 
 // <--------------------- Data context --------------------->
@@ -189,6 +197,12 @@ export const DataContext = createContext<UserContext>({
   // * parametros de laboratorio
   id_resultado_laboratorio: null,
   set_id_resultado_laboratorio: () => {},
+
+  // * informacion de laboratorio
+  rows_laboratorio: [],
+  set_rows_laboratorio: () => {},
+  fetch_data_laboratorio: async () => {},
+
 });
 
 export const UserProvider = ({
@@ -384,6 +398,24 @@ export const UserProvider = ({
   const [id_resultado_laboratorio, set_id_resultado_laboratorio] =
     React.useState<number | null>(null);
 
+  // * Traer data de labororAtorio
+  const [rows_laboratorio, set_rows_laboratorio] = React.useState<
+    DataGeneralLaboratorio[]
+  >([]);
+
+  const fetch_data_laboratorio = async (): Promise<any> => {
+    try {
+      set_rows_laboratorio([]);
+      if (id_instrumento) {
+        const response = await get_data_laboratorio_id(id_instrumento);
+        set_rows_laboratorio(response);
+        return response;
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+
   const value = {
     // *modos instrumentos
     register_instrumento,
@@ -450,6 +482,11 @@ export const UserProvider = ({
     // * parametros de laboratorio
     id_resultado_laboratorio,
     set_id_resultado_laboratorio,
+
+    // * informacion de laboratorio
+    rows_laboratorio,
+    set_rows_laboratorio,
+    fetch_data_laboratorio,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
