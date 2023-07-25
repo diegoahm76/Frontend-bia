@@ -36,7 +36,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
               <Grid item  xs={12}>
                 <Title title='Listado de Obligaciones del Usuario Externo'/>
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.5}>
                 <TextField
                   disabled
                   label="Nombres"
@@ -45,7 +45,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   value={`${obligaciones.nombre_completo}`}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.5}>
                 <TextField
                   disabled
                   label="Identificación"
@@ -54,7 +54,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   value={`${obligaciones.numero_identificacion}`}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.5}>
                 <TextField
                   disabled
                   label="Correo Electrónico"

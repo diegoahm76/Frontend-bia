@@ -46,41 +46,44 @@ const dialog_busqueda_avanzada_usuario = ({
   } = useForm<FormValuesSearchUser>();
 
   const columns_users: GridColDef[] = [
+    // {
+    //   headerName: 'ID usuario',
+    //   field: 'id_usuario',
+    // },
+    // {
+    //   headerName: 'ID persona',
+    //   field: 'persona',
+    // },
     {
-      headerName: 'ID usuario',
-      field: 'id_usuario',
-    },
-    {
-      headerName: 'ID persona',
-      field: 'persona',
-    },
-    {
-      headerName: 'Tipo de persona',
+      headerName: 'Tipo persona',
       field: 'tipo_persona',
+      renderCell: (params) => {
+        return params.row.tipo_persona === 'N' ? 'NATURAL' : params.row.tipo_persona === 'J' ? 'JURÍDICO' : '';
+      },
     },
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
-      width: 250,
+      width: 250,flex: 1,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      width: 150,
+      width: 150,flex: 1,
     },
     {
       headerName: 'Nombre de usuario',
       field: 'nombre_de_usuario',
-      width: 150,
+      width: 150,flex: 1,
     },
     {
       headerName: 'Razón social',
       field: 'razon_social',
-      width: 150,
+      width: 150,flex: 1,
     },
     {
       headerName: 'Super usuario',
-      field: 'is_superuser',
+      field: 'is_superuser',flex: 1,
       renderCell: (params) => {
         return params.row.is_superuser === true ? (
           <Chip size="small" label="Si" color="success" variant="outlined" />
@@ -91,7 +94,7 @@ const dialog_busqueda_avanzada_usuario = ({
     },
     {
       headerName: 'Acciones',
-      field: 'accion',
+      field: 'accion',flex: 1,
       renderCell: (params: any) => (
         <>
           <Tooltip title="Editar">
@@ -146,23 +149,7 @@ const dialog_busqueda_avanzada_usuario = ({
         <Toolbar>
 
     <Title title="Busqueda avanzada por Usuario  " />
-        </Toolbar>
-        {/* <Grid
-          container
-          spacing={2}
-          sx={{
-            position: 'relative',
-            // background: '#FAFAFA',
-            borderRadius: '15px',
-            // p: '20px', mb: '20px',
-            // boxShadow: '0px 3px 6px #042F4A26',
-            marginTop: '0px',
-            marginLeft: '-5px',
-            width: '99%',
-          }}
-        > */}
-        {/* </Grid> */}
-       
+        </Toolbar> 
         <IconButton
           aria-label="close"
           onClick={() => {

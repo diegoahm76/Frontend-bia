@@ -11,6 +11,13 @@ interface TRD {
   //! data formatos tipos medios creados
   data_format_documental_type_current: any;
   data_format_documental_type: any[];
+
+  //! data tipologias documentales
+  tipologias: any[];
+  tipologias_documental_current: any;
+
+  //! catalogo TRD
+  catalogo_trd: any[];
 }
 
 const initial_state: TRD = {
@@ -21,7 +28,12 @@ const initial_state: TRD = {
   catalado_series_subseries_unidad_organizacional: [],
   //! data formatos tipos medios creados
   data_format_documental_type_current: null,
-  data_format_documental_type: []
+  data_format_documental_type: [],
+  //! data tipologias documentales
+  tipologias: [],
+  tipologias_documental_current: null,
+  //! catalogo TRD
+  catalogo_trd: []
 };
 
 export const trd_slice = createSlice({
@@ -58,6 +70,25 @@ export const trd_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.data_format_documental_type = action.payload;
+    },
+
+    //! data tipologias documentales
+    get_data_tipologias_documentales: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.tipologias = action.payload;
+    },
+    get_current_tipologia_documental_action: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.current_tipologia_documental = action.payload;
+    },
+
+    //! catalogo TRD --- I need this information to show the data in the table and administre the data (catalogo)
+    get_catalogo_trd_action: (state: any, action: PayloadAction<any>) => {
+      state.catalogo_trd = action.payload;
     }
   }
 });
@@ -70,5 +101,10 @@ export const {
   get_catalogo_series_subseries_unidad_organizacional,
   //* -------------------------------->
   get_data_format_documental_type_current,
-  get_data_format_documental_type
+  get_data_format_documental_type,
+  //* -------------------------------->
+  get_data_tipologias_documentales,
+  get_current_tipologia_documental_action,
+  //* -------------------------------->
+  get_catalogo_trd_action
 } = trd_slice.actions;

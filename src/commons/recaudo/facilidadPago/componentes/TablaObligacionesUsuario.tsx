@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Grid, Box, Checkbox, TextField, Stack, Button, DialogActions, Dialog, DialogTitle } from '@mui/material';
+import { Add, Close } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
 
 interface RootState {
   obligaciones: {
@@ -22,14 +23,14 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
+  const [modal, set_modal] = useState(false);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    set_lista_obligaciones(obligaciones.obligaciones)
-  }, [obligaciones.obligaciones])
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
 
   const handle_submit = async () => {
     const arr_registro = []
@@ -47,6 +48,65 @@ export const TablaObligacionesUsuario: React.FC = () => {
       throw new Error(error);
     }
   };
+
+  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
+    const selected_index = selected.indexOf(name);
+    let new_selected: readonly string[] = [];
+
+    if (selected_index === -1) {
+      new_selected = new_selected.concat(selected, name);
+    } else if (selected_index === 0) {
+      new_selected = new_selected.concat(selected.slice(1));
+    } else if (selected_index === selected.length - 1) {
+      new_selected = new_selected.concat(selected.slice(0, -1));
+    } else if (selected_index > 0) {
+      new_selected = new_selected.concat(
+        selected.slice(0, selected_index),
+        selected.slice(selected_index + 1),
+      );
+    }
+
+    set_selected(new_selected);
+  };
+
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
+  const intereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(intereses)
+
+  const capital_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(capital)
+
+  useEffect(() => {
+    set_lista_obligaciones(obligaciones.obligaciones)
+  }, [obligaciones.obligaciones])
+
+  useEffect(() => {
+    let sub_capital = 0
+    let sub_intereses = 0
+    for(let i=0; i< lista_obligaciones.length; i++){
+      for(let j=0; j< selected.length; j++){
+        if(lista_obligaciones[i].nombre === selected[j]){
+          sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
+          sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
+          set_capital(sub_capital)
+          set_intereses(sub_intereses)
+        }
+      }
+    }
+    if(selected.length === 0){
+      set_capital(0)
+      set_intereses(0)
+    }
+    set_total(capital + intereses)
+  }, [selected, capital, intereses])
 
   const columns: GridColDef[] = [
     {
@@ -107,21 +167,33 @@ export const TablaObligacionesUsuario: React.FC = () => {
       field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'valor_intereses',
       headerName: 'Valor Intereses',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'dias_mora',
@@ -134,46 +206,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
   ];
-
-  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
-    const selected_index = selected.indexOf(name);
-    let new_selected: readonly string[] = [];
-
-    if (selected_index === -1) {
-      new_selected = new_selected.concat(selected, name);
-    } else if (selected_index === 0) {
-      new_selected = new_selected.concat(selected.slice(1));
-    } else if (selected_index === selected.length - 1) {
-      new_selected = new_selected.concat(selected.slice(0, -1));
-    } else if (selected_index > 0) {
-      new_selected = new_selected.concat(
-        selected.slice(0, selected_index),
-        selected.slice(selected_index + 1),
-      );
-    }
-
-    set_selected(new_selected);
-  };
-
-  useEffect(() => {
-    let sub_capital = 0
-    let sub_intereses = 0
-    for(let i=0; i< lista_obligaciones.length; i++){
-      for(let j=0; j< selected.length; j++){
-        if(lista_obligaciones[i].nombre === selected[j]){
-          sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
-          sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
-          set_capital(sub_capital)
-          set_intereses(sub_intereses)
-        }
-      }
-    }
-    if(selected.length === 0){
-      set_capital(0)
-      set_intereses(0)
-    }
-    set_total(capital + intereses)
-  }, [selected, capital, intereses])
 
   return (
     <>
@@ -199,7 +231,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.nro_expediente}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>
@@ -209,28 +241,28 @@ export const TablaObligacionesUsuario: React.FC = () => {
             spacing={2}
             sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Capital"
                 size="small"
                 fullWidth
-                value={capital}
+                value={capital_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Intereses"
                 size="small"
                 fullWidth
-                value={intereses}
+                value={intereses_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"
                 fullWidth
-                value={total}
+                value={total_cop}
               />
             </Grid>
         </Stack>
@@ -246,8 +278,12 @@ export const TablaObligacionesUsuario: React.FC = () => {
             startIcon={<Add />}
             sx={{ marginTop: '30px' }}
             onClick={() => {
-              navigate('../registro')
-              void handle_submit()
+              if(obligaciones.tiene_facilidad){
+                handle_open();
+              } else {
+                navigate('../registro');
+                void handle_submit();
+              }
             }}
           >
             Crear Facilidad de Pago
@@ -255,6 +291,25 @@ export const TablaObligacionesUsuario: React.FC = () => {
         </Stack>
         </Grid>
       </Grid>
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
+      >
+        <Box component="form">
+          <DialogTitle>{`El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`}</DialogTitle>
+          <DialogActions>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={handle_close}
+            >
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   );
 }

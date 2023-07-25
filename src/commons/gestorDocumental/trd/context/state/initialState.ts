@@ -1,23 +1,30 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-
 export enum Modal {
   OPEN_MODAL_SEARCH_TRD = 'OPEN_MODAL_SEARCH_TRD',
   CLOSE_MODAL_SEARCH_TRD = 'CLOSE_MODAL_SEARCH_TRD',
+  //*
   OPEN_MODAL_CCD_USADOS = 'OPEN_MODAL_CCD_USADOS',
   CLOSE_MODAL_CCD_USADOS = 'CLOSE_MODAL_CCD_USADOS',
-
-
+  //*
   OPEN_MODAL_CREACION_FORMATO_TIPO = 'OPEN_MODAL_CREACION_FORMATO_TIPO',
   CLOSE_MODAL_CREACION_FORMATO_TIPO = 'CLOSE_MODAL_CREACION_FORMATO_TIPO',
-  // busquedaCreacionCCDModal = 'busquedaCreacionCCDModal',
-  // loadingButton = 'loadingButton',
+  //*
+  OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES = 'OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES',
+  CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES = 'CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES',
+  //*
+  OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
+  CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
+  // ? buttons, loading, etc
+  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON'
 }
 
 export const initialState = {
   modalSearchTRD: false,
   modalCCDUsados: false,
   modalCreacionFormatoTipo: false,
-  // busquedaCreacionCCDModal: false,
-  // loadingButton: false,
+  modalBusquedaTipologiasDocumentales: false,
+  modalAdministracionTipologiasDocumentales: false,
+  // ? buttons, loading, etc
+  createTRDLoadingButton: false
 };

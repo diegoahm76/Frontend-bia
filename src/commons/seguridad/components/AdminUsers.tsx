@@ -5,7 +5,7 @@ import {
   Stack,
   Button,
   Input,
-  InputLabel,
+  // InputLabel,
   Autocomplete,
   Avatar,
   Skeleton,
@@ -19,6 +19,7 @@ import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstadoUser';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { useEffect } from 'react';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsers: React.FC = () => {
@@ -230,21 +231,49 @@ export const AdminUsers: React.FC = () => {
                         onChange={handle_change}
                       />
                     </Grid>
+                    {/* <Grid item xs={12} sm={6} md={6}>
+                    <InputLabel htmlFor="imagen_usuario">
+                      Subir imagen de usuario
+                    </InputLabel>
+                    <Input
+                      id="imagen_usuario"
+                      type="file"
+                      autoFocus
+                      // value={data_register.imagen_usuario}
+                      {...register_admin_user('imagen_usuario')}
+                      error={Boolean(errors_admin_users.imagen_usuario)}
+                      inputProps={{ accept: 'image/*' }}
+                      onChange={handle_image_select}
+                    />
+                  </Grid> */}
+
                     <Grid item xs={12} sm={6} md={6}>
-                      <InputLabel htmlFor="imagen_usuario">
-                        Subir imagen de usuario
-                      </InputLabel>
-                      <Input
-                        id="imagen_usuario"
-                        type="file"
-                        autoFocus
-                        // value={data_register.imagen_usuario}
-                        {...register_admin_user('imagen_usuario')}
-                        error={Boolean(errors_admin_users.imagen_usuario)}
-                        inputProps={{ accept: 'image/*' }}
-                        onChange={handle_image_select}
-                      />
+                      <Button
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        startIcon={<CloudUploadIcon />}
+                        style={{ height: "40px" }}
+                      >
+                        <Input
+                          type="file"
+                          style={{
+                            opacity: 0,
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            cursor: 'pointer',
+                          }}
+                          {...register_admin_user('imagen_usuario')}
+                          error={Boolean(errors_admin_users.imagen_usuario)}
+                          inputProps={{ accept: 'image/*' }}
+                          onChange={handle_image_select}
+                        />subir imagen de usuario
+                      </Button>
                     </Grid>
+
                     <Grid item xs={12} sm={3} md={3}>
                       {selected_image != null && (
                         <Avatar

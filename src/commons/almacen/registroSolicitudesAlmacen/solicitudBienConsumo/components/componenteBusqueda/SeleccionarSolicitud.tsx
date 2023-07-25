@@ -129,7 +129,7 @@ const SeleccionarSolicitud = ({
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
                             rules: {},
-                            label: "Numero solicitud",
+                            label: "Número solicitud",
                             type: "number",
                             disabled: true,
                             helper_text: "",

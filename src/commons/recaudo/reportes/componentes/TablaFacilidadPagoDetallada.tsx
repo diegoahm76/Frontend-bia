@@ -38,6 +38,21 @@ export const TablaFacilidadPagoDetallada: React.FC = () => {
     }
   }, [visible_rows])
 
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
+  const total_coactivo_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total_coactivo)
+
+  const total_persuasivo_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total_persuasivo)
+
   const columns: GridColDef[] = [
     {
       field: 'tipo_cobro',
@@ -113,11 +128,17 @@ export const TablaFacilidadPagoDetallada: React.FC = () => {
       field: 'valor_sancion',
       headerName: 'Total',
       width: 170,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
   ];
 
@@ -160,28 +181,28 @@ export const TablaFacilidadPagoDetallada: React.FC = () => {
                 display='flex'
                 justifyContent='flex-end'
               >
-                <Grid item xs={12} sm={2} mt='30px'>
+                <Grid item xs={12} sm={2.5} mt='30px'>
                   <TextField
                     label={<strong>Total Cobro Coactivo</strong>}
                     size="small"
                     fullWidth
-                    value={total_coactivo}
+                    value={total_coactivo_cop}
                   />
                 </Grid>
-                <Grid item xs={12} sm={2} mt='30px'>
+                <Grid item xs={12} sm={2.5} mt='30px'>
                   <TextField
                     label={<strong>Total Cobro Persuasivo</strong>}
                     size="small"
                     fullWidth
-                    value={total_persuasivo}
+                    value={total_persuasivo_cop}
                   />
                 </Grid>
-                <Grid item xs={12} sm={2} mt='30px'>
+                <Grid item xs={12} sm={2.5} mt='30px'>
                   <TextField
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total}
+                    value={total_cop}
                   />
                 </Grid>
             </Stack>

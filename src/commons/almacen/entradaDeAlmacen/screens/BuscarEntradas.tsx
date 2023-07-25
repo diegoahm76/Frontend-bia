@@ -77,7 +77,7 @@ const BuscarEntradasComponent = (props: IProps) => {
 
   const selected_entrada_grid: any = () => {
     if (selected_entrada !== null) {
-      dispatch(obtener_entrada_items(selected_entrada.id_entrada_almacen)).then((response: any) =>{
+      dispatch(obtener_entrada_items(selected_entrada.id_entrada_almacen)).then((response: any) => {
         props.set_articulo(response.data);
         props.set_is_modal_active(false);
       })

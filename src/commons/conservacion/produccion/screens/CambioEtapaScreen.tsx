@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   set_current_stage_change,
   set_current_nursery,
+  reset_state,
 } from '../store/slice/produccionSlice';
 import { useEffect, useState } from 'react';
 // import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/produccionThunks";
@@ -19,9 +20,15 @@ import {
   add_stage_change_service,
   annul_stage_change_service,
   edit_stage_change_service,
+  get_nurseries_service,
+  get_person_id_service,
 } from '../store/thunks/produccionThunks';
 import AnularEliminar from '../../componentes/AnularEliminar';
 import Block from '@mui/icons-material/Block';
+import Limpiar from '../../componentes/Limpiar';
+import { useSelector } from 'react-redux';
+import { type AuthSlice } from '../../../auth/interfaces';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CambioEtapaScreen(): JSX.Element {
@@ -44,9 +51,19 @@ export function CambioEtapaScreen(): JSX.Element {
     reset: reset_material_vegetal,
     getValues: get_values_material,
   } = useForm<IObjChange>();
-  const [action, set_action] = useState<string>('Crear');
   const dispatch = useAppDispatch();
 
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => {
+    set_open_search_modal(true);
+  };
+  const [action, set_action] = useState<string>('Crear');
+  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const initial_values = (): void => {
+    void dispatch(get_nurseries_service());
+    void dispatch(get_person_id_service(userinfo.id_persona));
+    set_action('crear');
+  };
   useEffect(() => {
     dispatch(
       set_current_stage_change({
@@ -189,6 +206,8 @@ export function CambioEtapaScreen(): JSX.Element {
         <SeleccionarCambio
           control_cambio={control_cambio}
           get_values={get_values_cambio}
+          open_modal={open_search_modal}
+          set_open_modal={set_open_search_modal}
         />
         {current_nursery.id_vivero !== null && (
           <SeleccionarMaterialVegetal
@@ -209,100 +228,122 @@ export function CambioEtapaScreen(): JSX.Element {
               />
             </Grid>
           )}
-
           <Grid item xs={12} md={3}>
-            <AnularEliminar
-              action={
-                current_stage_change.cambio_anulado === true
-                  ? 'Detalle anulación'
-                  : 'Anular'
-              }
-              button_icon_class={<Block />}
-              button_disabled={false}
-              modal_title={
-                current_stage_change.cambio_anulado === true
-                  ? 'Detalle anulación'
-                  : 'Anular cambio de etapa'
-              }
-              button_submit_label={'Anular'}
-              button_submit_disabled={current_stage_change.cambio_anulado}
-              button_submit_icon_class={<Block />}
-              button_submit_action={handle_submit(on_submit_annul)}
-              modal_inputs={[
-                {
-                  datum_type: 'select_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_cambio,
-                  control_name: 'id_vivero',
-                  default_value: current_stage_change.id_vivero,
-                  rules: {
-                    required_rule: { rule: true, message: 'Vivero requerido' },
-                  },
-                  label: 'Vivero',
-                  disabled: true,
-                  helper_text: '',
-                  select_options: nurseries,
-                  option_label: 'nombre',
-                  option_key: 'id_vivero',
-                },
-                {
-                  datum_type: 'input_controller',
-                  person: true,
-                  xs: 12,
-                  md: 4,
-                  control_form: control_cambio,
-                  control_name: 'persona_anula',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Debe seleccionar la personas que la creó',
-                    },
-                  },
-                  label: 'Preparación realizada por',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'date_picker_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_cambio,
-                  control_name: 'fecha_anula',
-                  default_value: new Date().toString(),
-                  rules: {
-                    required_rule: { rule: true, message: 'requerido' },
-                  },
-                  label: 'Fecha actual',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_cambio,
-                  control_name: 'justificacion_anulacion',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Justificación requerida',
-                    },
-                  },
-                  label: 'Justificación',
-                  type: 'text',
-                  multiline_text: true,
-                  rows_text: 4,
-                  disabled: false,
-                  helper_text: '',
-                },
-              ]}
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_open_select_model}
+              icon_class={<SearchIcon />}
+              label={'Buscar cambio de etapa'}
+              type_button="button"
+              disabled={false}
             />
           </Grid>
+          <Grid item xs={12} md={3}>
+            <Limpiar
+              dispatch={dispatch}
+              reset_state={reset_state}
+              set_initial_values={initial_values}
+              variant_button={'outlined'}
+            />
+          </Grid>
+          {current_stage_change.id_cambio_de_etapa !== null && (
+            <Grid item xs={12} md={3}>
+              <AnularEliminar
+                action={
+                  current_stage_change.cambio_anulado === true
+                    ? 'Detalle anulación'
+                    : 'Anular'
+                }
+                button_icon_class={<Block />}
+                button_disabled={false}
+                modal_title={
+                  current_stage_change.cambio_anulado === true
+                    ? 'Detalle anulación'
+                    : 'Anular cambio de etapa'
+                }
+                button_submit_label={'Anular'}
+                button_submit_disabled={current_stage_change.cambio_anulado}
+                button_submit_icon_class={<Block />}
+                button_submit_action={handle_submit(on_submit_annul)}
+                modal_inputs={[
+                  {
+                    datum_type: 'select_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_cambio,
+                    control_name: 'id_vivero',
+                    default_value: current_stage_change.id_vivero,
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Vivero requerido',
+                      },
+                    },
+                    label: 'Vivero',
+                    disabled: true,
+                    helper_text: '',
+                    select_options: nurseries,
+                    option_label: 'nombre',
+                    option_key: 'id_vivero',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    person: true,
+                    xs: 12,
+                    md: 4,
+                    control_form: control_cambio,
+                    control_name: 'persona_anula',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Debe seleccionar la personas que la creó',
+                      },
+                    },
+                    label: 'Preparación realizada por',
+                    type: 'text',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'date_picker_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_cambio,
+                    control_name: 'fecha_anula',
+                    default_value: new Date().toString(),
+                    rules: {
+                      required_rule: { rule: true, message: 'requerido' },
+                    },
+                    label: 'Fecha actual',
+                    type: 'text',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_cambio,
+                    control_name: 'justificacion_anulacion',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Justificación requerida',
+                      },
+                    },
+                    label: 'Justificación',
+                    type: 'text',
+                    multiline_text: true,
+                    rows_text: 4,
+                    disabled: false,
+                    helper_text: '',
+                  },
+                ]}
+              />
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </>

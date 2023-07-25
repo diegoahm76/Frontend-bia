@@ -72,6 +72,7 @@ export const SeleccionarSeccion: React.FC = () => {
       width: 300,
       renderCell: (params) => <div className="container">{params.value}</div>,
     },
+    { field: 'instrumentos_count', headerName: 'No. INSTRUMENTOS', width: 100 },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',

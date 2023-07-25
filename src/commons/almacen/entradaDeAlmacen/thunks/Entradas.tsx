@@ -49,7 +49,7 @@ export const crear_entrada_bien: any = (form_data: crear_entrada) => {
 };
 
 // Actualizar entrada
-export const actualizar_entrada_bien: any = (id_entrada_almacen:number,form_data: crear_entrada) => {
+export const actualizar_entrada_bien: any = (id_entrada_almacen: number, form_data: crear_entrada) => {
   return async () => {
     try {
       const { data } = await api.put(`almacen/bienes/entradas/update/${id_entrada_almacen}/`, form_data);
@@ -185,7 +185,7 @@ export const obtener_estados: any = () => {
 };
 
 // Anular mantenimiento
-export const anular_entradas: any = (id_entrada: number,form_data: anular_entrada) => {
+export const anular_entradas: any = (id_entrada: number, form_data: anular_entrada) => {
   return async () => {
     try {
       const { data } = await api.put(`almacen/bienes/entradas/anular/${id_entrada}/`, form_data);

@@ -1,61 +1,72 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
-import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
 import { crear_estacion } from '../../requets/Request';
 import { municipios_meta } from '../interfaces/interfaces';
 import { Title } from '../../../../components/Title';
 
 interface IProps {
-    is_modal_active: boolean;
-    set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    estacion: () => Promise<void>
+  is_modal_active: boolean;
+  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  estacion: () => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, estacion }) => {
+export const CrearEstacionDialog: React.FC<IProps> = ({
+  is_modal_active,
+  set_is_modal_active,
+  estacion,
+}) => {
+  const handle_close = (): void => {
+    set_is_modal_active(false);
+  };
+  const {
+    register,
+    reset,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-
-    const handle_close = (): void => {
-        set_is_modal_active(false);
-    }
-    const {
-        register,
-        reset,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-
-    const on_sumbit_estacion: SubmitHandler<FieldValues> = (data): void => {
-
-        const nueva_estacion = {
-
-            nombre_estacion: data.nombre_estacion,
-            cod_tipo_estacion: data.cod_tipo_estacion,
-            latitud: data.latitud,
-            longitud: data.longitud,
-            cod_municipio: data.cod_municipio,
-            indicaciones_ubicacion: data.indicaciones_ubicacion,
-        };
-
-        void crear_estacion(nueva_estacion);
-        set_is_modal_active(!is_modal_active);
-        void estacion()
-        reset();
+  const on_sumbit_estacion: SubmitHandler<FieldValues> = (data): void => {
+    const nueva_estacion = {
+      nombre_estacion: data.nombre_estacion,
+      cod_tipo_estacion: data.cod_tipo_estacion,
+      latitud: data.latitud,
+      longitud: data.longitud,
+      cod_municipio: data.cod_municipio,
+      indicaciones_ubicacion: data.indicaciones_ubicacion,
     };
 
-    const tipo_estacion = [
-        {
-            value: 'AG',
-            label: 'Agua'
-        },
-        {
-            value: 'AI',
-            label: 'Aire',
-        },
-    ]
+    void crear_estacion(nueva_estacion);
+    set_is_modal_active(!is_modal_active);
+    void estacion();
+    reset();
+  };
+
+  const tipo_estacion = [
+    {
+      value: 'AG',
+      label: 'Agua',
+    },
+    {
+      value: 'AI',
+      label: 'Aire',
+    },
+  ];
 
     return (
         <Dialog open={is_modal_active}
