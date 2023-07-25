@@ -132,12 +132,12 @@ export const MostrarEditables: React.FC = () => {
                 boxShadow: "0px 3px 6px #042F4A26",
             }}
         >
-            <Grid item md={12} xs={12}>
+            <Grid item xs={12}>
                 {/* Title */}
                 <Title title="Editar Cargos" />
             </Grid>
             <Box component="form" sx={{ mt: "5px", padding: 3 }} noValidate autoComplete="off">
-                <Grid item container spacing={7}>
+                <Grid item container spacing={0}>
                     <Grid item xs={12} sm={6}>
                         {/* TextField for the Director */}
                         <TextField

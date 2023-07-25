@@ -45,8 +45,9 @@ import {
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 // // Slices
 import { current_nursery, get_nurseries } from '../store/slice/viveroSlice';
-import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+
 
 const initial_state_current_nursery = {
   id_vivero: null,
@@ -405,24 +406,7 @@ export function AdministrarViveroScreen(): JSX.Element {
 
 
 
-  // eslint-disable-next-line object-shorthand
-  const handle_clickxls = (): void => { download_xls({ nurseries: nurseries, columns: columns }); };
-  // eslint-disable-next-line object-shorthand
-  const handle_clickpdf = (): void => { download_pdf({ nurseries: nurseries, columns: columns }); };
-
-  const button_style = {
-    color: 'white',
-    backgroundColor: '#335B1E',
-    // border: '3px solid black',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: '10px'
-  };
-
+ 
   return (
     <>
       <Grid
