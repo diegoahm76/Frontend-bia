@@ -16,6 +16,7 @@ export const CatalogoTCAAdministracionScreen: FC<any> = ({
   columns,
   title
 }: any): JSX.Element => {
+
   const newColums = [
     {
       field: 'acciones',
