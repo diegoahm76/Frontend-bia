@@ -16,6 +16,7 @@ import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsa
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 import SearchIcon from '@mui/icons-material/Search';
 import PrintIcon from '@mui/icons-material/Print';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoScreen = () => {
@@ -203,6 +204,11 @@ const SolicitudConsumoScreen = () => {
                     >
                         ANULACIÓN DE SOLICITUDES DE CONSUMO
                     </Button>
+                </Grid>
+                <Grid item xs={6} md={5}>
+                    <ButtonSalir
+                    />
+
                 </Grid>
 
 

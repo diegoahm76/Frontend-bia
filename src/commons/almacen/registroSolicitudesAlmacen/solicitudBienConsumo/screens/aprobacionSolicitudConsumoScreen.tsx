@@ -13,6 +13,7 @@ import SeleccionarBienAprobado from '../components/componentesAprobacion/Selecci
 import FuncionarioAprobacion from '../components/componentesAprobacion/SeleccionarPersonaAprobada';
 import Aprobacion from '../components/componentesAprobacion/Aprobacion';
 import SearchIcon from '@mui/icons-material/Search';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 
 
@@ -145,6 +146,11 @@ const AprobacionSolicitudConsumoScreen = () => {
                         type_button="button"
                         disabled={false}
                     />
+                </Grid>
+                <Grid item xs={6} md={5}>
+                    <ButtonSalir
+                    />
+
                 </Grid>
 
 

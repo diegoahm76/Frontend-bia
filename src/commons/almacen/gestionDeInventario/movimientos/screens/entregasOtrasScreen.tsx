@@ -1,4 +1,4 @@
-import { useEffect, } from 'react';
+import { useEffect, useState, } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
@@ -9,14 +9,15 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { set_current_entrega, set_persona_entrega, } from '../store/slice/indexEntrega';
-import { get_bienes_entrada, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
+import { crear_entrega, editar_entrega, get_bienes_entrada, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
 import { get_uni_organizacional } from '../../../registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
-import type { IObjEntrada, IObjEntrega } from '../interfaces/entregas';
+import type { IEntrega, IObjBienEntrega, IObjEntrada, IObjEntrega } from '../interfaces/entregas';
 import SeleccionarEntrada from '../components/SeleccionarEntrada';
 import SeleccionarBodega from '../components/SeleccionarBodega';
 import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
 import Seccion from '../components/SeccionPrimera';
 import SeleccionarBienEntrega from '../components/SeleccionarBienEntrega';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -24,9 +25,11 @@ import SeleccionarBienEntrega from '../components/SeleccionarBienEntrega';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EntregaScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-    const { control: control_entrega, reset: reset_entrega, getValues: get_values } = useForm<IObjEntrega>();
+    const { control: control_entrega, reset: reset_entrega, getValues: get_values, handleSubmit: handle_submit } = useForm<IObjEntrega>();
     const { control: control_entrada_entrega, reset: reset_entrada_entrega } = useForm<IObjEntrada>();
-    const { nro_entrega, current_entrega, persona_entrega, current_entrada } = useAppSelector((state) => state.entrega_otros);
+    const [action, set_action] = useState<string>('Guardar');
+    const { nro_entrega, current_entrega, persona_entrega, current_entrada, bienes_entrega, current_bien } = useAppSelector((state: { entrega_otros: IEntrega; }) => state.entrega_otros);
+
 
     const dispatch = useAppDispatch();
 
@@ -89,6 +92,63 @@ const EntregaScreen = () => {
     },
         [current_entrada]);
 
+    const on_submit = (data: IObjEntrega): void => {
+        const form_data: any = new FormData();
+        if (
+            current_entrega.id_despacho_consumo !== null &&
+            current_entrega.id_despacho_consumo !== undefined
+        ) {
+            set_action('editar');
+
+            const aux_items: IObjBienEntrega[] = [];
+            bienes_entrega.forEach((element: IObjBienEntrega, index: number) => {
+                aux_items.push({ ...element, numero_posicion_despacho: index });
+            });
+
+            form_data.append('data_entrega', JSON.stringify({ ...data }));
+            form_data.append('ruta_archivo_doc_con_recibido', data.ruta_archivo_doc_con_recibido);
+            form_data.append('data_items_entrega', JSON.stringify(aux_items));
+
+            void dispatch(
+                editar_entrega(
+                    current_entrega.id_despacho_consumo,
+                    form_data)
+            );
+        } else {
+            set_action('crear');
+            const fecha = new Date(data.fecha_despacho ?? '').toISOString();
+
+            const data_edit: IObjEntrega = {
+                ...data,
+                id_bodega_general: current_bien.id_bodega,
+                fecha_despacho: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
+                id_entrada_almacen_cv: current_entrada.id_entrada_almacen,
+                // ruta_archivo_doc_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
+
+            };
+            const aux_items: IObjBienEntrega[] = [];
+            bienes_entrega.forEach((element: IObjBienEntrega, index: number) => {
+                aux_items.push({ ...element, numero_posicion_despacho: index });
+            });
+            const aux = {
+                data_entrega: {
+                    ...data_edit,
+                },
+                ruta_archivo_doc_con_recibido: data.ruta_archivo_doc_con_recibido,
+                data_items_entrega: aux_items,
+            };
+            console.log(aux);
+            form_data.append('data_entrega', JSON.stringify({ ...data_edit }));
+            form_data.append(
+                'ruta_archivo_doc_con_recibido',
+                data.ruta_archivo_doc_con_recibido
+            );
+            form_data.append('data_items_entrega', JSON.stringify(aux_items));
+            void dispatch(
+                crear_entrega(form_data)
+            );
+        }
+    };
 
 
     return (
@@ -138,7 +198,7 @@ const EntregaScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={6} md={3}>
+                <Grid item xs={6} md={2}>
 
                     <FormButton
                         variant_button="outlined"
@@ -148,13 +208,18 @@ const EntregaScreen = () => {
                         type_button="button"
                     />
                 </Grid>
-                <Grid item xs={6} md={3}>
+                <Grid item xs={12} md={2}>
                     <FormButton
                         variant_button="contained"
-                        //   on_click_function={handle_submit(null)}
+                        on_click_function={handle_submit(on_submit)}
                         icon_class={<SaveIcon />}
-                        // label={null}
-                        type_button="button" on_click_function={undefined} label={''} />
+                        label={action}
+                        type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <ButtonSalir
+                    />
                 </Grid>
 
 

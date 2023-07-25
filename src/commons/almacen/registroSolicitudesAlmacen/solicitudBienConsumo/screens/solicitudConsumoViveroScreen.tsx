@@ -24,6 +24,7 @@ import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularS
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoViveroScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -236,18 +237,9 @@ const SolicitudConsumoViveroScreen = () => {
 
         </Grid>
 
-        {/* <Grid item xs={6} md={2}>
-          <FormButton
-            variant_button="outlined"
-            on_click_function={reset_solicitud}
-            icon_class={<CloseIcon />}
-            label={'Cancelar'}
-            type_button="button"
-          />
-        </Grid> */}
 
 
-        <Grid item xs={12} md={5}>
+        <Grid item xs={6} md={5}>
           <Button
             variant="outlined"
             onClick={() => {
@@ -257,7 +249,15 @@ const SolicitudConsumoViveroScreen = () => {
           >
             ANULACIÓN DE SOLICITUDES DE CONSUMO
           </Button>
+
         </Grid>
+
+        <Grid item xs={12} md={2}>
+          <ButtonSalir
+          />
+
+        </Grid>
+
         <AnularSolicitudModal
           is_modal_active={anular_solicitud}
           set_is_modal_active={set_anular_solicitud}
