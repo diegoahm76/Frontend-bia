@@ -27,13 +27,18 @@ export const ConfiguracionEntidad: React.FC = () => {
             <br />
             <TablaLineresUnidadesOrganizacionales />
 
-
-            <Button style={{ margin: 3, marginTop: 10, marginRight: 10 }}
-                color="primary"
-                variant="contained" onClick={handleChangeEmail}>
-                Guardar
-            </Button>
-
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button
+                    style={{ margin: 3 }}
+                    type="submit"
+                    variant="contained"
+                    color="success"
+                    onClick={handleChangeEmail}
+                >
+                    Guardar
+                </Button>
+            </div>
+       
         </>
     );
 };

@@ -2,44 +2,38 @@ import { Box, Grid, TextField } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { api } from "../../../../../../api/axios";
 import { useEffect, useState } from "react";
+import { control_error, control_success } from "../../../SucursalEntidad/utils/control_error_or_success";
+import { IDataentidad } from "../../interfaces/interfacesConEntidad";
 
-interface IDataentidad {
-    id_persona: number;
-    tipo_documento: string;
-    numero_documento: string;
-    digito_verificacion: string;
-    razon_social: string;
-}
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MostrarEntidad: React.FC = () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const initialStateArray: IDataentidad = {
+    const initial_state_array: IDataentidad = {
         id_persona: 0,
-        tipo_documento: "",
+        nombre_tipo_documento: "",
         numero_documento: "",
         digito_verificacion: "",
         razon_social: "",
     };
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [dataEntidad, setdataEntidad] = useState(initialStateArray);
+    const [data_entidad, setdata_entidad] = useState(initial_state_array);
 
-    const { numero_documento, digito_verificacion, tipo_documento, razon_social } = dataEntidad;
+    const { numero_documento, digito_verificacion, razon_social, nombre_tipo_documento } = data_entidad;
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const fetchData = async (): Promise<void> => {
+    const fetch_data = async (): Promise<void> => {
         const url = "transversal/configuracion/entidad/get/";
         try {
             const res = await api.get(url);
-            setdataEntidad(res.data.data);
-        } catch (error) {
-            console.error(error);
+            setdata_entidad(res.data.data);
+            control_success("Datos actualizados correctamente");
+        } catch (error: any) {
+            control_error(error.response.data.detail);
         }
     };
 
     useEffect(() => {
-        fetchData().catch((error) => {
+        fetch_data().catch((error) => {
             console.error(error);
         });
     }, []);
@@ -61,18 +55,18 @@ export const MostrarEntidad: React.FC = () => {
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
                     <Grid item container spacing={5}>
                         <Grid item xs={12} sm={6} md={3}>
-                           
+
                             <TextField
                                 label="   Tipo Documento ID"
                                 variant="outlined"
                                 size="small"
                                 disabled
                                 fullWidth
-                                value={tipo_documento.toString()}
+                                value={nombre_tipo_documento.toString()}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
-                       
+
                             <TextField
                                 label=" Num Documento ID"
                                 variant="outlined"
@@ -83,7 +77,7 @@ export const MostrarEntidad: React.FC = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
-                            
+
                             <TextField
                                 label="DV"
                                 variant="outlined"
@@ -94,7 +88,7 @@ export const MostrarEntidad: React.FC = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
-                          
+
                             <TextField
                                 label="Nombre"
                                 variant="outlined"

@@ -38,7 +38,7 @@ export const ModalAtom: React.FC<ModalProps> = ({
   );
 
   return (
-    <div className={`modal ${selectedModal != null ? 'show' : ''}`} style={{ width: '60%', height: '54%' }}>
+    <div className={`modal ${selectedModal != null ? 'show' : ''}`} style={{ width: '60%', height: '60%' }}>
       {selectedModal != null && (
         <div className="modal-content" style={{ width: '100%', height: '100%' }}>
           <Title title="Información de Translado" />

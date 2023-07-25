@@ -1,55 +1,42 @@
 import { Box, Grid, Button } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState } from "react";
+import { api } from "../../../../../../api/axios";
+import type { ItablaUnidades } from "../../interfaces/interfacesConEntidad";
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
 
+    const datos_asignacion: ItablaUnidades[] = [];
 
+    const [data_lideres, setdata_lideres] = useState<ItablaUnidades[]>(datos_asignacion);
 
+    const fetch_data_get = async (): Promise<void> => {
+        try {
+            const url = "/transversal/lideres/get-list-actual/";
+            const res = await api.get(url);
+            const facilidad_pago_data = res.data.data;
+            setdata_lideres(facilidad_pago_data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    useEffect(() => {
+        fetch_data_get().catch((error) => {
+            console.error(error);
+        });
+    }, []);
 
+    const columns = [
 
+        { field: "codigo_unidad_org", headerName: "Código Unidad Org", width: 200, flex: 1 },
+        { field: "nombre_unidad_org", headerName: "Nombre Unidad Org", width: 200, flex: 1 },
+        { field: "nombre_completo", headerName: "Nombre Completo", width: 200, flex: 1 },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    const roles = [
-        { field: "nrosucursal", headerName: "Nro Sucursal", width: 150 },
-        { field: "banana", headerName: "Descripcion de la Sucursal", width: 150 },
-        { field: "orange", headerName: "principal", width: 150 },
-        
-    ];
-
-    const rows = [
-        { id: 1, nrosucursal: "1", descripcionsucursal: "Sucursal del departamento 1", principal: "Principal 1"}, 
-        { id: 2, nrosucursal: "2", descripcionsucursal: "Sucursal del departamento 2", principal: "Principal 2"}, 
-        { id: 3, nrosucursal: "3", descripcionsucursal: "Sucursal del departamento 3", principal: "Principal 3"}, 
-        { id: 4, nrosucursal: "5", descripcionsucursal: "Sucursal del departamento 5", principal: "Principal 2"}, 
-        { id: 5, nrosucursal: "3", descripcionsucursal: "Sucursal del departamento 3", principal: "Orange 3"}, 
     ];
 
     return (
@@ -68,11 +55,11 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
                     <DataGrid
                         density="compact"
                         autoHeight
-                        columns={roles}
-                        rows={rows}
+                        columns={columns}
+                        rows={data_lideres}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
-                        getRowId={(row) => row.id}
+                        getRowId={(row) => row.id_persona}
                     />
                 </Box>
             </Grid>

@@ -5,6 +5,7 @@ import { type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { crear_estacion } from '../../requets/Request';
 import { municipios_meta } from '../interfaces/interfaces';
+import { Title } from '../../../../components/Title';
 
 interface IProps {
     is_modal_active: boolean;
@@ -62,7 +63,10 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
             maxWidth="xs">
             <Box component="form"
                 onSubmit={handleSubmit(on_sumbit_estacion)}>
-                <DialogTitle>Crear Estación</DialogTitle>
+                <DialogTitle>
+                    
+                    <Title title="Crear Estación" />
+                    </DialogTitle>
                 <Divider />
                 <DialogContent sx={{ mb: '0px' }}>
                     <Grid container spacing={1}>

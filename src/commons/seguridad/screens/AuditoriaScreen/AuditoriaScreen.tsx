@@ -8,7 +8,7 @@ import {
   Typography,
   Stack,
   Button,
-  TextField,
+  TextField
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -32,6 +32,7 @@ import { form_values } from './types/types';
 import type { IFormValues } from './types/types';
 import { get_info } from './services/api.services';
 import { TablaGeneral } from '../../../../components/TablaGeneral/TablaGeneral';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AuditoriaScreen = (): JSX.Element => {
@@ -228,6 +229,8 @@ export const AuditoriaScreen = (): JSX.Element => {
             
                 </LocalizationProvider>
               </Grid>
+
+         
               
             </Grid>
             {tipo_documento_filter && (

@@ -2,9 +2,7 @@
 import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // Componentes de download_xlsterial UI
-import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import ButtonGroup from '@mui/material/ButtonGroup';
+
 
 import {
   Grid,
@@ -16,6 +14,7 @@ import {
   Chip,
   Tooltip,
   Divider,
+  ButtonGroup,
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
@@ -42,6 +41,8 @@ import { activate_deactivate_nursery_service, delete_nursery_service, get_nurser
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 // // Slices
 import { current_nursery, get_nurseries } from '../store/slice/viveroSlice';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 const initial_state_current_nursery = {
   id_vivero: null,
@@ -353,63 +354,64 @@ export function AdministrarViveroScreen(): JSX.Element {
         }} spacing={2}
       >
         <Grid item xs={12}  >
-          <Grid container spacing={2} sx={{marginTop:"-30px"}}>
+          <Grid container spacing={2} sx={{ marginTop: "-30px" }}>
             <Grid item xs={12} spacing={2}>
               <Title title="Viveros"></Title>
             </Grid>
             <Grid item xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-  <Button
-    variant="outlined"
-    startIcon={<AddIcon />}
-    onClick={() => {
-      dispatch(current_nursery(initial_state_current_nursery));
-      set_action("create");
-      set_add_nursery_is_active(true);
-    }}
-    // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
-  >
-    Crear vivero
-  </Button>
-</Grid>
-  <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
-  <Grid container>
-  <Grid item xs={6}>
-              <TextField
-                label="Buscar"
-                value={searchtext}
-                onChange={(e) => {
-                  setsearchtext(e.target.value)
-                }}
-                variant="outlined"
-                size="small"
-                style={{ marginBottom: '10px' }}
-              />
               <Button
-                variant="contained"
-                style={{ marginLeft: '4px', top: '2px' }}
+                variant="outlined"
+                startIcon={<AddIcon />}
                 onClick={() => {
-                  const filterednurseries = nurseries.filter((nursery: { nombre: string; }) =>
-                    nursery.nombre.toLowerCase().includes(searchtext.toLowerCase())
-                  );
-                  dispatch(get_nurseries(filterednurseries));
-                  // setfilterednurseries(filterednurseries);
+                  dispatch(current_nursery(initial_state_current_nursery));
+                  set_action("create");
+                  set_add_nursery_is_active(true);
                 }}
+              // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
               >
-                <SearchIcon />
+                Crear vivero
               </Button>
             </Grid>
-            {/* <Divider /> */}
-            <Grid item  xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ButtonGroup >
-                  {download_xls({ nurseries, columns })}
-                  {download_pdf({ nurseries, columns })}
-              </ButtonGroup> 
-                </Grid>
-                </Grid>
-          
+            <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px', marginLeft: 'auto' }} />
+            <Grid container>
+              <Grid item xs={6}>
+                <TextField
+                  label="Buscar"
+                  value={searchtext}
+                  onChange={(e) => {
+                    setsearchtext(e.target.value)
+                  }}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginBottom: '10px' }}
+                />
+                <Button
+                  variant="contained"
+                  style={{ marginLeft: '4px', top: '2px' }}
+                  onClick={() => {
+                    const filterednurseries = nurseries.filter((nursery: { nombre: string; }) =>
+                      nursery.nombre.toLowerCase().includes(searchtext.toLowerCase())
+                    );
+                    dispatch(get_nurseries(filterednurseries));
+                    // setfilterednurseries(filterednurseries);
+                  }}
+                >
+                  <SearchIcon />
+                </Button>
+              </Grid>
+              {/* <Divider /> */}
+
+            </Grid>
+
           </Grid>
 
           <Divider />
+          <ButtonGroup style={{ margin: 7, display: "flex", justifyContent: "flex-end" }}  >
+
+            {download_xls({ nurseries, columns })}
+            {download_pdf({ nurseries, columns })}
+
+          </ButtonGroup>
 
           <Grid item sx={{ marginTop: '20px', }}>
             <Box sx={{ width: '100%' }}>
@@ -429,10 +431,10 @@ export function AdministrarViveroScreen(): JSX.Element {
               set_is_modal_active={set_add_nursery_is_active}
               action={action}
             />
-          </Grid>           
           </Grid>
         </Grid>
-      
-      </>
-      );
+      </Grid>
+
+    </>
+  );
 }

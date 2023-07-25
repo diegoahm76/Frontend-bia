@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, Stack, Button, FormControl, FormHelperText, Typography } from '@mui/material';
+import { Grid, Box, Stack, Button, FormControl, FormHelperText, Typography, ButtonGroup } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,6 +23,8 @@ import { Title } from '../../../../components/Title';
 import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
 import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
 import type { AxiosError } from 'axios';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -215,19 +217,19 @@ export const UsuariosScreen: React.FC = () => {
           <Grid
             item
             className={`border px-4 text-white fs-5 p-1`}
-            // sx={{
-            //   display: 'grid',
-            //   background:
-            //     'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-            //   width: '100%',
-            //   height: '40px',
+          // sx={{
+          //   display: 'grid',
+          //   background:
+          //     'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
+          //   width: '100%',
+          //   height: '40px',
 
-            //   borderRadius: '10px',
-            //   pl: '20px',
-            //   fontSize: '17px',
-            //   fontWeight: 'bold',
-            //   alignContent: 'center',
-            // }}
+          //   borderRadius: '10px',
+          //   pl: '20px',
+          //   fontSize: '17px',
+          //   fontWeight: 'bold',
+          //   alignContent: 'center',
+          // }}
           >
             <Title title="Partes interesadas"></Title>
           </Grid>
@@ -307,11 +309,19 @@ export const UsuariosScreen: React.FC = () => {
                 //   fontWeight: 'bold',
                 //   alignContent: 'center',
                 // }}
-                 spacing={2}
+                spacing={2}
               >
                 <Title title="Información general"></Title>
               </Grid>
-              <Grid item spacing={2} sx={{marginTop:"10px", }}>
+
+              <ButtonGroup style={{ margin: 7, display: "flex", justifyContent: "flex-end" }}  >
+
+                {download_xls({ nurseries: estaciones_meteologicas, columns })}
+                {download_pdf({ nurseries: estaciones_meteologicas, columns })}
+
+              </ButtonGroup>
+
+              <Grid item spacing={2} sx={{ marginTop: "10px", }}>
                 <Box>
                   <DataGrid
                     density="compact"
