@@ -4,7 +4,7 @@ import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
+import { TablaObligacionesUsuarioConsulta } from './TablaObligacionesUsuarioConsulta';
 import { type event, type ObligacionesUsuario, type Contribuyente } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -235,8 +235,8 @@ export const TablaConsultaAdmin: React.FC = () => {
               {
                 obligaciones.length !== 0 ? (
                   <>
-                    <p>Las obligaciones pendientes por pago son las siguientes:</p>
-                    <TablaObligacionesUsuario />
+
+                    <TablaObligacionesUsuarioConsulta />
                   </>
                 ): <p>El usuario no tiene obligaciones pendientes por pago.</p>
               }

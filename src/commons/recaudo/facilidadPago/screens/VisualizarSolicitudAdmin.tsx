@@ -368,7 +368,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     id_facilidades_pago: solicitud_facilidad.id,
                     id_funcionario: solicitud_facilidad.id_funcionario,
                     reportado_dbme: check_dbme,
-                    consulta_dbme: file
+                    informe_dbme: file
                   })
                 }}
               >

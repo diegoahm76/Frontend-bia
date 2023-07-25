@@ -72,7 +72,8 @@ export interface RespuestaFacilidadPago {
   estado : string;
   aprobacion : boolean;
   observacion : string;
-  consulta_dbme : string;
+  informe_dbme : File;
+  reportado_dbme: boolean;
 }
 
 export interface Contribuyente {
@@ -98,16 +99,24 @@ export interface Contacto {
 export interface RegistroFacilidadPago {
   id_deudor: number;
   id_tipo_actuacion: number;
-  id_funcionario: number;
   fecha_generacion: string;
   observaciones: string;
   periodicidad: number;
   cuotas: number;
-  documento_soporte: string;
-  consignacion_soporte: string;
-  documento_garantia: string;
-  documento_no_enajenacion: string;
+  documento_no_enajenacion: File;
+  consignacion_soporte: File;
+  documento_soporte: File;
+  id_funcionario: number;
   notificaciones: boolean;
+  documento_garantia: File;
+  id_rol: number;
+  documento_deudor: File;
+  descripcion: string;
+  direccion: string;
+  id_tipo_bien: number;
+  id_ubicacion: number;
+  valor: string;
+  documento_soporte_bien: File;
 }
 
 export interface Bien {

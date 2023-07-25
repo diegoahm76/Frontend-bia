@@ -13,7 +13,7 @@ import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
-import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
+import { post_registro_fac_pago, post_registro_bienes, get_tipo_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -973,18 +973,27 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   onClick={() => {
                     void post_registro_fac_pago({
                       ...form_state,
-                      fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
                       id_deudor: deudores.id,
                       id_tipo_actuacion: persona,
+                      fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
                       periodicidad: num_periodicidad,
                       cuotas: plazo,
-                      notificaciones: notificacion,
-                      documento_soporte: form_files.documento_soporte,
-                      consignacion_soporte: form_files.consignacion_soporte,
-                      documento_garantia: form_files.documento_garantia,
                       documento_no_enajenacion: form_files.documento_no_enajenacion,
-                      id_funcionario: 1
+                      consignacion_soporte: form_files.consignacion_soporte,
+                      documento_soporte: form_files.documento_soporte,
+                      id_funcionario: 1,
+                      notificaciones: notificacion,
+                      documento_garantia: form_files.documento_soporte,
+                      id_rol: 1,
+                      documento_deudor: form_files.documento_soporte,
+                      descripcion: 'CASA',
+                      direccion: 'calle',
+                      id_tipo_bien: 1,
+                      id_ubicacion: 1,
+                      valor: '3000000',
+                      documento_soporte_bien: form_files.documento_soporte,
                     })
+                    void get_tipo_bienes()
                     handle_open()
                   }}
                 >
