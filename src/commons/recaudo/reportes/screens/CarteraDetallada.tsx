@@ -43,7 +43,6 @@ export const CarteraDetallada: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-
     </>
   )
 }

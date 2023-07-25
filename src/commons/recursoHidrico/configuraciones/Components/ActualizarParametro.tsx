@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
@@ -44,33 +45,31 @@ export const ActualizarParametro: React.FC<IProps> = ({
     watch,
     setValue: set_value,
     formState: { errors },
-  } = useForm<EditarParametros>();
+  } = useForm<EditarParametros>({
+    defaultValues: {
+      nombre: '',
+      activo: false,
+      cod_tipo_parametro: '',
+      unidad_de_medida: '',
+    },
+  });
 
   const [is_loading, set_is_loading] = useState(false);
 
-  const activo = watch('activo') ?? false;
-  const tipo_patametro_value = watch('cod_tipo_parametro');
-
-  const handle_change_checkbox = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const { checked } = event.target;
-    set_value('activo', checked);
-  };
+  const {
+    // nombre,
+    activo,
+    cod_tipo_parametro: tipo_parametro_value,
+  } = watch();
 
   useEffect(() => {
-    set_value('nombre', data?.nombre);
-    set_value('activo', data?.activo);
-    set_value('cod_tipo_parametro', data?.cod_tipo_parametro);
-    set_value('unidad_de_medida', data?.unidad_de_medida);
-  }, []);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (is_modal_active && data) {
-      reset(data);
-    }
-  }, [is_modal_active, data, reset]);
+    setTimeout(() => {
+      set_value('nombre', data?.nombre);
+      set_value('activo', data?.activo);
+      set_value('cod_tipo_parametro', data?.cod_tipo_parametro);
+      set_value('unidad_de_medida', data?.unidad_de_medida);
+    }, 100);
+  }, [data, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
@@ -104,7 +103,7 @@ export const ActualizarParametro: React.FC<IProps> = ({
                 select
                 fullWidth
                 size="small"
-                value={tipo_patametro_value}
+                value={tipo_parametro_value}
                 margin="dense"
                 disabled={false}
                 {...register('cod_tipo_parametro', { required: true })}
@@ -168,10 +167,13 @@ export const ActualizarParametro: React.FC<IProps> = ({
                     <Checkbox
                       {...register('activo', {})}
                       checked={activo}
-                      onChange={handle_change_checkbox}
+                      onChange={(e) => {
+                        // onchange(e.target.checked)
+                        set_value('activo', e.target.checked);
+                      }}
                     />
                   }
-                  label="Activo *"
+                  label={activo ? 'Activo' : 'Inactivo'}
                 />
               </FormControl>
             </Grid>

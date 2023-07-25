@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import SaveIcon from '@mui/icons-material/Save';
-import { Grid} from '@mui/material';
+import { Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { create_cv_computers_service, delete_cv_computers_service, get_marca_service, update_cv_computers_service, } from '../store/thunks/cvComputoThunks';
 import { useForm } from 'react-hook-form';
@@ -17,7 +17,7 @@ import FormButton from '../../../../../../components/partials/form/FormButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
-  const [action, set_action] = useState<string>("crear");
+  const [action, set_action] = useState<string>("guardar");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -32,7 +32,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if(current_cv_computer.id_hoja_de_vida !== null){
+    if (current_cv_computer.id_hoja_de_vida !== null) {
       set_action("editar")
     }
   }, [current_cv_computer]);
@@ -59,8 +59,8 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     form_data.append('otras_aplicaciones', data.otras_aplicaciones);
     form_data.append('id_marca', data.id_marca ?? null);
     form_data.append('id_articulo', (data.id_articulo ?? "").toString());
-    form_data.append('ruta_imagen_foto',data.ruta_imagen_foto);
-    if(data.id_hoja_de_vida === null){
+    form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+    if (data.id_hoja_de_vida === null) {
       void dispatch(create_cv_computers_service(form_data, navigate));
     } else {
       void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
@@ -70,10 +70,10 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
   };
   const delete_hoja_vida = (): void => {
-    
+
     if (current_cv_computer.id_hoja_de_vida !== null && current_cv_computer.id_hoja_de_vida !== undefined) {
       void dispatch(delete_cv_computers_service(current_cv_computer.id_hoja_de_vida));
-    } 
+    }
   };
 
   useEffect(() => {
@@ -96,20 +96,20 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-          <SeleccionarComputer />
+        <SeleccionarComputer />
 
-          <Especificaciones
-            control_computo={control_cv_computo}
-            get_values={get_values}
-            title="ESPECIFICACIONES FÍSICAS" />
-          <EspecificacionesTec
-            control_computo={control_cv_computo}
-            get_values={get_values}
-            title="ESPECIFICACIONES TECNICAS" />
-          <Caracteristicas
-            control_computo={control_cv_computo}
-            get_values={get_values}
-            title="CARACTERISTÍCAS" />
+        <Especificaciones
+          control_computo={control_cv_computo}
+          get_values={get_values}
+          title="ESPECIFICACIONES FÍSICAS" />
+        <EspecificacionesTec
+          control_computo={control_cv_computo}
+          get_values={get_values}
+          title="ESPECIFICACIONES TECNICAS" />
+        <Caracteristicas
+          control_computo={control_cv_computo}
+          get_values={get_values}
+          title="CARACTERISTÍCAS" />
 
 
         <Grid
@@ -118,17 +118,17 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           padding={2}
           spacing={2}
         >
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             <FormButton
               variant_button="contained"
               on_click_function={handle_submit(on_submit)}
-              icon_class={action === "create"?<SaveIcon />:<EditIcon/>}
+              icon_class={action === "create" ? <EditIcon /> : <SaveIcon />}
               label={action}
               type_button="button"
             />
           </Grid>
-          
-          <Grid item xs={12} md={3}>
+
+          <Grid item xs={12} md={2}>
             <FormButton
               variant_button="outlined"
               on_click_function={delete_hoja_vida}
@@ -138,7 +138,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
             />
           </Grid>
         </Grid>
-        
+
 
 
 

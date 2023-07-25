@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 import { type Dispatch } from 'react';
-import { get_cv_others, get_marks, set_others } from '../slices/indexCvOtrosActivos';
+import { set_cv_others, get_marks, set_others } from '../slices/indexCvOtrosActivos';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -69,7 +69,7 @@ export const get_cv_others_service: (id: any) => any = (id: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/hoja-de-vida/otros/get-by-id/${id}/`);
-            dispatch(get_cv_others(data.Elementos));
+            dispatch(set_cv_others(data.Elementos));
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);

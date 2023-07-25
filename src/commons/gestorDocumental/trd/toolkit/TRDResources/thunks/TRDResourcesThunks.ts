@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -11,7 +12,8 @@ import {
   get_catalogo_series_subseries_unidad_organizacional,
   get_data_format_documental_type,
   get_data_tipologias_documentales,
-  get_catalogo_trd_action
+  get_catalogo_trd_action,
+  get_tipologias_asociadas_a_trd
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 
@@ -37,7 +39,7 @@ export const get_searched_trd = (
         : control_success(data.detail);
       return data.data;
     } catch (error: AxiosError | any) {
-      console.log(error);
+      // console.log(error);
       control_error(error.response?.data?.detail);
       // dispatch(get_assignments_service(ccd_current));
 
@@ -70,7 +72,7 @@ export const create_trd_service: any = (
       openModalBusquedaCreacionCCD(); */
       return data.data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
@@ -102,7 +104,7 @@ export const update_trd_service = (bodyPost: any): any => {
       control_success(updatedData.detail);
       return updatedData;
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -167,10 +169,10 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
         name ?? ''
       }&cod-tipo-medio=${cod_tipo_medio ?? ''}`;
       const { data } = await api.get(url);
-      console.log(
+      /* console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 159 ~ return ~ data',
         data
-      );
+      ); */
       control_success(
         data.detail || 'proceso exitoso, se encontró la siguiente data'
       );
@@ -194,7 +196,7 @@ export const create_formato_by_tipo_medio_service = (bodyPost: any): any => {
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -211,8 +213,8 @@ export const edit_formato_by_tipo_medio_service = ({
 }: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(id_formato_tipo_medio, 'id_formato_tipo_medio');
-      console.log(nombre, 'nombre');
+      // console.log(id_formato_tipo_medio, 'id_formato_tipo_medio');
+      // console.log(nombre, 'nombre');
       const url = `gestor/trd/formatos/update/${id_formato_tipo_medio}/`;
       const { data } = await api.put(url, {
         nombre,
@@ -222,7 +224,7 @@ export const edit_formato_by_tipo_medio_service = ({
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -240,7 +242,7 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
       control_success(data.detail || 'Formato eliminado correctamente');
       return data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      // console.log(error.response.data, 'error');
       control_error(
         error.response.data.detail ||
           'Error, no se ha podido eliminar el formato'
@@ -251,6 +253,34 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
 };
 
 // ! ------------------------------->  SERVICIOS TIPOLOGIAS DOCUMENTALES <--------------------------------------
+
+// ? get tipologias documentales asociadas a un TRD -------------------------------------->
+
+export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const url = `gestor/trd/catalogo-trd/get-tipologias/${id_trd}/`;
+      const { data } = await api.get(url);
+
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('Sin tipologías asociadas a este TRD');
+      dispatch(get_tipologias_asociadas_a_trd(data.data));
+      console.log(data.data, 'data.data');
+      return data.data;
+    } catch (error: any) {
+      control_error(
+        `${error.response.data.detail} que coincida` ||
+          'Ha ocurrido un error, no se han encontrado data'
+      );
+      return error as AxiosError;
+    }
+  };
+};
 
 // ? get documentary typologies by name -------------------------------------->
 
@@ -312,19 +342,108 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
   };
 };
 
+// ! ------------------------------->  SERVICIOS FORMATOS DOCUMENTALES <--------------------------------------
+
+// ? get formatos documentales by id documentary type -------------------------------------->
+export const get_formatos_documentales_by_id_tipologia = (
+  id_tipologia_documental: number
+): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError | any> => {
+    try {
+      if (!id_tipologia_documental) {
+        return;
+      }
+
+      const url = `gestor/trd/tipologias/get-formatos/${id_tipologia_documental}`;
+      const { data } = await api.get(url);
+
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('No se encontró data relacionada');
+      console.log(data.data, 'data.data');
+      return data.data;
+    } catch (error: any) {
+      control_error('Ha ocurrido un error, no se han encontrado data');
+
+      return error as AxiosError;
+    }
+  };
+};
+
 // ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
 
 export const create_tipologia_documental_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
+    if (
+      !bodyPost.nombre ||
+      !bodyPost.cod_tipo_medio_doc ||
+      !bodyPost.formatos
+    ) {
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
+
     try {
       const { data } = await api.post(
-        'gestor/trd/tipologia-documental/create/',
+        'gestor/trd/crear/tipologia/documental/',
         bodyPost
       );
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? update documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
+export const update_tipologia_documental_service = (bodyPost: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    if (
+      !bodyPost.nombre ||
+      !bodyPost.cod_tipo_medio_doc ||
+      !bodyPost.formatos
+    ) {
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
+    try {
+      const { data } = await api.put(
+        `gestor/trd/update/tipologia/documental/${bodyPost.id_tipologia_documental}/`,
+        {
+          nombre: bodyPost.nombre,
+          cod_tipo_medio_doc: bodyPost.cod_tipo_medio_doc,
+          formatos: bodyPost.formatos,
+          activo: bodyPost.activo
+        }
+      );
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? delete documentary typologies (id) -------------------------------------->
+export const delete_tipologia_documental_service = (id: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/trd/eliminar/tipologia/documental/${id}/`
+      );
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -333,6 +452,7 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
 
 //! ---------- At this point I start the develop of: catalogo TRD (administrate TRD) ----------->
 
+// ? get  catalogo trd by id_trd -------------------------------------->
 export const get_catalogo_trd = (id_trd: number): any => {
   return async (
     dispatch: Dispatch<any>
@@ -341,13 +461,100 @@ export const get_catalogo_trd = (id_trd: number): any => {
       const { data } = await api.get(
         `gestor/trd/catalogo-trd/get-list/${id_trd}/`
       );
-      console.log(
+      /* console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         data
-      );
+      ); */
       dispatch(get_catalogo_trd_action(data.data));
+
       return data;
     } catch (error: any) {
+      dispatch(get_catalogo_trd_action([]));
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? create item catalogo TRD ---------------------------------------------->
+export const create_item_catalogo_trd = (bodyPost: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    const { id_trd, id_ccd, id_organigrama } = bodyPost;
+
+    try {
+      const { data } = await api.post(
+        `gestor/trd/catalogo-trd/add/${id_trd}/`,
+        bodyPost
+      );
+
+      const otherPeticiones = [
+        get_catalogo_trd(id_trd),
+        get_tipologia_doc_asociadas_trd(id_trd),
+        getServiceSeriesSubseriesXUnidadOrganizacional({
+          id_ccd,
+          id_organigrama
+        })
+      ];
+
+      await Promise.all(otherPeticiones);
+
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? delete item from catalogo TRD by id item catalogo ------------------------------>
+export const delete_item_catalogo_trd = (id_item_catalogo_trd: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/trd/catalogo-trd/delete/${id_item_catalogo_trd}/`
+      );
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      // console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ! finish and resume TRD --------------------------------------------->
+
+// ? finish TRD
+export const finish_trd_service = (id_trd: number, setFlag: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if (!id_trd) return control_error('No se ha podido realizar la acción');
+      const url = `gestor/trd/finish/${id_trd}/`;
+      const { data } = await api.put(url);
+      control_success(data.detail);
+      setFlag(true);
+      return data.data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? resume TRD
+export const resume_trd_service = (id_trd: number, setFlag: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if (!id_trd) return control_error('No se ha podido realizar la acción');
+      const url = `gestor/trd/reanudar/trd/${id_trd}/`;
+      const { data } = await api.put(url);
+      control_success(data.detail);
+      setFlag(false);
+      return data.data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
