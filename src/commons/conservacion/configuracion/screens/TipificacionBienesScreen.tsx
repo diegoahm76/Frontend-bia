@@ -32,7 +32,7 @@ import { current_bien, reset_state } from '../store/slice/configuracionSlice';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+
 import Limpiar from '../../componentes/Limpiar';
 
 
