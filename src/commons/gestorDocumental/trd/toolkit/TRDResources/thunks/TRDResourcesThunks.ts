@@ -494,10 +494,6 @@ export const get_catalogo_trd = (id_trd: number): any => {
       const { data } = await api.get(
         `gestor/trd/catalogo-trd/get-list/${id_trd}/`
       );
-      /* console.log(
-        '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
-        data
-      ); */
       dispatch(get_catalogo_trd_action(data.data));
 
       return data;
@@ -517,11 +513,6 @@ export const create_item_catalogo_trd = (
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
 
     const tipologiasPost = tipologias.length > 0 ? tipologias : [];
-    /*
-    if (tipologiasPost.length <= 0) {
-      control_error('Debe seleccionar al menos una tipología documental');
-      return;
-    } */
 
     try {
       const obj: any = {
@@ -534,10 +525,6 @@ export const create_item_catalogo_trd = (
         descripcion_procedimiento: bodyPost.descripcion_procedimiento,
         tipologias: tipologiasPost
       };
-      /* 
-      if (tipologiasPost.length > 0) {
-        obj.tipologias = tipologiasPost;
-      } */
 
       console.log(obj, 'obj');
       const { data } = await api.post(
@@ -574,61 +561,7 @@ export const update_item_catalogo_trd = (
   return async (
     dispatch: Dispatch<AnyAction | any>
   ): Promise<AxiosResponse | AxiosError | any> => {
-    /*
-    if(formData.getAll('tipologias[]').length <= 2){
-      control_error('Debe seleccionar al menos una tipología documental');
-      return;
-    } */
-
     try {
-    /*  const id_ccd = formData.get('id_ccd') || '';
-      const id_organigrama = formData.get('id_organigrama') || '';
-      const id_trd = formData.get('id_trd') || '';
-
-
-
-      const cod_disposicion_final = formData.get('cod_disposicion_final') || '';
-      const digitalizacion_dis_final =
-        formData.get('digitalizacion_dis_final') || '';
-      const tiempo_retencion_ag = formData.get('tiempo_retencion_ag') || '';
-      const tiempo_retencion_ac = formData.get('tiempo_retencion_ac') || '';
-      const descripcion_procedimiento =
-        formData.get('descripcion_procedimiento') || '';
-      const tipologias = formData.getAll('tipologias[]') || [];
-      const tipologiasObj = tipologias.map((tipologia: any) =>
-        JSON.parse(tipologia)
-      );
-
-      const justificacion_cambio = formData.get('justificacion_cambio') || '';
-
-       const ruta_archivo_cambio = formData.get('ruta_archivo_cambio') as Blob | File;
-
-      const obj: any = {
-        cod_disposicion_final,
-        digitalizacion_dis_final,
-        tiempo_retencion_ag,
-        tiempo_retencion_ac,
-        descripcion_procedimiento,
-        tipologias: JSON.stringify(tipologiasObj),
-        justificacion_cambio: '',
-        ruta_archivo_cambio: null,
-      };
-
-     if (justificacion_cambio) {
-        obj.justificacion_cambio = justificacion_cambio;
-      }
-
-      if (formData.ruta_archivo_cambio) {
-        obj.ruta_archivo_cambio = formData.ruta_archivo_cambio;
-      } 
-*/
-
-/*            const tipologias = formData.getAll('tipologias[]') || [];
-      const tipologiasObj = tipologias.map((tipologia: any) =>
-        JSON.parse(tipologia)
-      ); */
-
-
       const { data } = await api.put(
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
         formData

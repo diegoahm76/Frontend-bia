@@ -1,9 +1,7 @@
-import { Link } from 'react-router-dom';
 // Components Material UI
 import { type FC } from 'react';
 import {
   Grid,
-  Box,
   TextField,
   // MenuItem,
   Stack,
@@ -15,83 +13,22 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../../components/Title';
 
-import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
 import { containerStyles } from '../utils/constants/constants';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
 
+// ? colums and rows for the table
+import { columsCatalogoTRD, rowsCatalogoTRD } from '../utils/columnasCatalogos/CatalogoTRD/CatalogoTRD';
+import { columsCatalogoTCA, rowsCatalogoTCA } from '../utils/columnasCatalogos/CatalogoTCA/CatalogoTCA';
+
 // ? hooks
 import { use_tca } from '../../hooks/use_tca';
-
-// Graficas
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true
-  },
-  {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true
-  },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 110,
-    editable: true
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  }
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
-];
-
-/* const tipos_unidades = [
-  {
-    value: '1',
-    label: 'Test'
-  },
-  {
-    value: 'EUR',
-    label: 'Test'
-  },
-  {
-    value: 'BTC',
-    label: '฿'
-  },
-  {
-    value: 'JPY',
-    label: '¥'
-  }
-]; */
+import { CatalogoTRDSeleccionado } from '../../components/MainScreenComponents/CatalogoTRDSeleccionado/CatalogoTRDSeleccionado';
+import { CatalogoTCASeleccionado } from '../../components/MainScreenComponents/CatalogoTCASeleccionado/CatalogoTCASeleccionado';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TcaScreen: FC<any> = (props): JSX.Element => {
@@ -106,6 +43,8 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
 
   return (
     <>
+      {/* parte 1. crear, actualizar TCA - ver TRD's usados, ver TCA's Terminados - busqueda de tca */}
+
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title="TCA - ( Tabla de control de acceso )" />
@@ -319,84 +258,22 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
         </Grid>
       </Grid>
 
-      {/* parte 2. catalogo TRD seleccionado */}
+      {/* fin parte 1 */}
 
-      <Grid container sx={containerStyles}>
-        <Grid item xs={12}>
-          <Title title="Catálogo Tabla de retención documental seleccionado" />
-          <Box sx={{ mt: '20px', mb: '20px' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Box sx={{ width: '100%' }}>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Grid>
-      </Grid>
+      {/* parte 2. catalogo TRD seleccionado */}
+      <CatalogoTRDSeleccionado
+        rows={rowsCatalogoTRD}
+        columns={columsCatalogoTRD}
+        title="Catálogo TRD seleccionado"
+      />
       {/* fin parte 2 */}
 
       {/* parte 3. catalogo TCA */}
-
-      <Grid container sx={containerStyles}>
-        <Grid item xs={12}>
-          <Title title="Catálogo de la TCA ( Tabla control de acceso )" />
-          <Box sx={{ mt: '20px', mb: '20px' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Box sx={{ width: '100%' }}>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-          <Grid item xs={12} sm={3.2} sx={{ marginTop: '20px' }}>
-
-
-          <Link
-              to="/app/gestor_documental/tca/administrar-tca/"
-            >
-              <Button
-                // color="info"
-                color="warning"
-                variant="contained"
-                // disabled={!trd_current}
-                startIcon={<AdminPanelSettingsIcon />}
-              >
-                ADMINISTRAR CATÁLOGO TCA
-              </Button>
-            </Link>
-
-
-           {/* <Button
-              fullWidth
-              color="warning"
-              variant="contained"
-              startIcon={<AdminPanelSettingsIcon />}
-            >
-              ADMINISTRAR CATÁLOGO TCA
-            </Button> */}
-          </Grid>
-        </Grid>
-      </Grid>
-
+      <CatalogoTCASeleccionado
+        rows={rowsCatalogoTCA}
+        columns={columsCatalogoTCA}
+        title="Catálogo TCA ( Tabla control de acceso )"
+      />
       {/* fin parte 3 */}
 
       {/* parte 4 - finalizar TCA  */}
