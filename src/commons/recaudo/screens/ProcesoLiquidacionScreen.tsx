@@ -95,8 +95,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   useEffect(() => {
     const new_rows = liquidaciones.map((liquidacion) => ({
       id: liquidacion.id,
-      deudor: liquidacion.cod_deudor.nombres.concat(' ', liquidacion.cod_deudor.apellidos),
-      identificacion: liquidacion.cod_deudor.identificacion,
+      deudor: liquidacion.id_deudor.nombres.concat(' ', liquidacion.id_deudor.apellidos),
+      identificacion: liquidacion.id_deudor.identificacion,
       monto_inicial: liquidacion.valor,
       fecha_liquidacion: liquidacion.fecha_liquidacion,
       periodo: liquidacion.periodo_liquidacion,
