@@ -5,6 +5,18 @@ import { Link } from 'react-router-dom';
 
 //* icons
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {
+  columsCatalogoTCA,
+  rowsCatalogoTCA
+} from '../utils/columnasCatalogos/CatalogoTCA/CatalogoTCA';
+import {
+  columsCatalogoTRD,
+  rowsCatalogoTRD
+} from '../utils/columnasCatalogos/CatalogoTRD/CatalogoTRD';
+
+//* components
+import { CatalogoTRDAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTRDAdministracionScreen/CatalogoTRDAdministracionScreen';
+import { CatalogoTCAAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTCAAdministracionScreen/CatalogoTCAAdministracionScreen';
 
 export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   return (
@@ -37,6 +49,22 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
             </Button>
           </Link>
         </Stack>
+
+        {/* parte 2. catalogo TRD Administracion screen */}
+        <CatalogoTRDAdministracionScreen
+          rows={rowsCatalogoTRD}
+          columns={columsCatalogoTRD}
+          title="Catálogo TRD - ( Administración TCA )"
+        />
+        {/* fin parte 2 */}
+
+        {/* parte 3. catalogo TCA Administracion Screen */}
+        <CatalogoTCAAdministracionScreen
+          rows={rowsCatalogoTCA}
+          columns={columsCatalogoTCA}
+          title="Catálogo TCA - ( Administración TCA )"
+        />
+        {/* fin parte 3 */}
 
         {/*    <Grid
           item
@@ -184,6 +212,8 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
             </Box>
           </Grid>
         </Grid> */}
+
+        {/* parte formulario */}
 
         {/* {modalAdministracionTRD ? (
           <Grid

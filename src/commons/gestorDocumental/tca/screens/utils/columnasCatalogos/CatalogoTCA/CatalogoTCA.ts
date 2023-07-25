@@ -11,12 +11,12 @@ export const columsCatalogoTCA: GridColDef[] = [
   {
     headerName: 'Nombre Serie',
     field: 'nombre_serie',
-    width: 200
+    width: 180
   },
   {
     headerName: 'Nombre Subserie',
     field: 'nombre_subserie',
-    width: 250
+    width: 180
   },
   {
     headerName: 'Cod. Clasificación Expediente',
@@ -37,7 +37,9 @@ export const rowsCatalogoTCA = [
     nombre_serie: 'nombre_serie',
     nombre_subserie: 'nombre_subserie',
     cod_clas_expediente: 'cod_clas_expediente',
-    fecha_registro: 'fecha_registro'
+    fecha_registro: 'fecha_registro',
+    justificacion_cambio: 'justificacion_cambio',
+    ruta_archivo_cambio: 'ruta_archivo_cambio',
   },
   {
     id: 2,
@@ -45,7 +47,9 @@ export const rowsCatalogoTCA = [
     nombre_serie: 'nombre_serie',
     nombre_subserie: 'nombre_subserie',
     cod_clas_expediente: 'cod_clas_expediente',
-    fecha_registro: 'fecha_registro'
+    fecha_registro: 'fecha_registro',
+    justificacion_cambio: 'justificacion_cambio',
+    ruta_archivo_cambio: 'ruta_archivo_cambio',
   },
   {
     id: 3,
@@ -53,7 +57,9 @@ export const rowsCatalogoTCA = [
     nombre_serie: 'nombre_serie',
     nombre_subserie: 'nombre_subserie',
     cod_clas_expediente: 'cod_clas_expediente',
-    fecha_registro: 'fecha_registro'
+    fecha_registro: 'fecha_registro',
+    justificacion_cambio: 'justificacion_cambio',
+    ruta_archivo_cambio: 'ruta_archivo_cambio',
   },
   {
     id: 4,
@@ -61,7 +67,9 @@ export const rowsCatalogoTCA = [
     nombre_serie: 'nombre_serie',
     nombre_subserie: 'nombre_subserie',
     cod_clas_expediente: 'cod_clas_expediente',
-    fecha_registro: 'fecha_registro'
+    fecha_registro: 'fecha_registro',
+    justificacion_cambio: 'justificacion_cambio',
+    ruta_archivo_cambio: 'ruta_archivo_cambio',
   },
   {
     id: 5,
@@ -69,6 +77,8 @@ export const rowsCatalogoTCA = [
     nombre_serie: 'nombre_serie',
     nombre_subserie: 'nombre_subserie',
     cod_clas_expediente: 'cod_clas_expediente',
-    fecha_registro: 'fecha_registro'
+    fecha_registro: 'fecha_registro',
+    justificacion_cambio: 'justificacion_cambio',
+    ruta_archivo_cambio: 'ruta_archivo_cambio',
   }
 ];

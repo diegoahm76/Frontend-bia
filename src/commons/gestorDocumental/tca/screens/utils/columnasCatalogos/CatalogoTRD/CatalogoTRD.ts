@@ -11,12 +11,12 @@ export const columsCatalogoTRD: GridColDef[] = [
   {
     headerName: 'Nombre Serie',
     field: 'nombre_serie',
-    width: 200
+    width: 180
   },
   {
     headerName: 'Nombre Subserie',
     field: 'nombre_subserie',
-    width: 250
+    width: 180
   },
   {
     headerName: 'Cod. Disposición Final',
