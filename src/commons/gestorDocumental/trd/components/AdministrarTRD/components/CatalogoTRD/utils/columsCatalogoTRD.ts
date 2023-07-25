@@ -4,11 +4,11 @@ export const columns = [
     headerName: 'Nombre Unidad',
     width: 160,
   },
-  {
+/*  {
     field: 'cod_unidad_org',
     headerName: 'Cód. Unidad',
     width: 110,
-  },
+  }, */
   {
     field: 'nombre_serie',
     headerName: 'Serie',
@@ -34,9 +34,13 @@ export const columns = [
     headerName: 'Disposición Final',
     width: 160
   },
-  {
+  /* {
     field: 'digitalizacion_dis_final',
     headerName: 'Digitalización Disposición Final',
-    width: 230
-  },
+    width: 230,
+    renderCell: (params) => (
+        {params.value === 1 ? 'Si' : 'No'}
+    )
+
+  }, */
 ];

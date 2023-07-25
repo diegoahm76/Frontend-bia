@@ -344,7 +344,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
             <Grid item xs={12} sm={6}></Grid>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" fontWeight="bold">
-                Cuencas Asociadas:
+                Cuencas Asociadas al instrumento:
               </Typography>
               <Divider />
               <DataGrid
@@ -358,7 +358,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" fontWeight="bold">
-                Anexos:
+                Anexos asociados al instrumento:
               </Typography>
               <Divider />
               <DataGrid

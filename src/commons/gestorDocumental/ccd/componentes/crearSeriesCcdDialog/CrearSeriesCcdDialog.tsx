@@ -77,7 +77,7 @@ const CrearSeriesCcdDialog = ({
         id_serie_doc: serie_ccd_current.id_serie_doc
       });
       set_title_button('Actualizar');
-      console.log('serie_ccd_current.id_serie_doc', serie_ccd_current);
+      // console.log('serie_ccd_current.id_serie_doc', serie_ccd_current);
       dispatch(get_subseries_service(serie_ccd_current));
     } else {
       reset(initial_state);
@@ -244,7 +244,6 @@ const CrearSeriesCcdDialog = ({
           onSubmit={(e) => {
             e.preventDefault();
             manage_series();
-            console.log('hello from series');
           }}
           autoComplete="off"
         >
@@ -258,7 +257,7 @@ const CrearSeriesCcdDialog = ({
               }}
             >
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 {...register('nombre', { required: true })}
                 size="small"
@@ -277,7 +276,7 @@ const CrearSeriesCcdDialog = ({
               }}
             >
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"

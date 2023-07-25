@@ -24,6 +24,7 @@ import {
   set_nro_mortalidad,
   set_persona_anula,
   set_incidencias,
+  set_bienes_aux,
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -158,9 +159,9 @@ export const get_persons_service = (
       );
       dispatch(set_persons(data.data));
       if (data.data.length > 0) {
-        control_success('Se selecciono persona');
+        control_success('Se encontrarón personas');
       } else {
-        control_error('No se encontro persona');
+        control_error('No se encontrarón personas');
       }
       return data;
     } catch (error: any) {
@@ -181,13 +182,10 @@ export const get_person_document_service = (
       const { data } = await api.get(
         `personas/get-personas-by-document/${type}/${document}/`
       );
+      console.log(data);
       if ('data' in data) {
-        if (data.data.length > 0) {
-          dispatch(set_changing_person(data.data));
-          control_success('Se selecciono la persona ');
-        } else {
-          control_error('No se encontro la persona');
-        }
+        dispatch(set_changing_person(data.data));
+        control_success('Se selecciono la persona ');
       } else {
         control_error(data.detail);
       }
@@ -506,6 +504,36 @@ export const annul_preparacion_service = (
   };
 };
 
+// Obtener bienes incidencia
+export const get_bienes_incidencia_service = (
+  id_vivero: string | number,
+  codigo_bien: string | null,
+  nombre: string | null,
+  tipo: string | null
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(
+        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${
+          tipo ?? 'IN'
+        }=&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
+      );
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+      const { data } = await api.get(
+        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${
+          tipo ?? 'IN'
+        }&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
+      );
+      console.log(data);
+      dispatch(set_bienes(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_bienes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Obtener bienes preparacion
 export const get_bienes_service = (
   id_vivero: string | number,
@@ -520,9 +548,25 @@ export const get_bienes_service = (
           codigo_bien ?? ''
         }&nombre=${nombre ?? ''}`
       );
-
-      console.log(data);
       dispatch(set_bienes(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_bienes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener bienes preparacion aux
+export const get_bienes_aux_service = (id_vivero: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+      const { data } = await api.get(
+        `conservacion/mezclas/get-insumo-por-codigo-y-nombre/?id_vivero=${id_vivero}`
+      );
+      dispatch(set_bienes_aux(data.data));
       return data;
     } catch (error: any) {
       console.log('get_bienes_service');
@@ -779,18 +823,14 @@ export const get_incidencias_service = (nro: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/incidencia/get-incidencia-by-nro/?nro_registro_incidencia=${
-          nro ?? ''
-        }`
+        `conservacion/incidencias/get-incidencia-by-vivero/${nro ?? ''}/`
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data);
       if (data.success === true) {
         dispatch(set_incidencias(data.data));
-        control_success(data.detail);
-      } else {
-        control_error(data.detail);
+        // control_success(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -884,9 +924,9 @@ export const get_bien_incidencia_id_service = (id: number): any => {
       );
       console.log(data);
       if ('data' in data) {
-        // dispatch (set_items_incidencia(data.data))
+        dispatch(set_preparacion_bienes(data.data));
       } else {
-        // control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {

@@ -267,7 +267,19 @@ export const UserProvider = ({
   const [mode, set_mode] = React.useState('');
 
   React.useEffect(() => {
-    if (mode === 'select_programa') {
+    if(mode === 'set_is_general'){
+      set_is_general(true)
+      set_is_seleccionar_programa(false);
+      set_is_agregar_programa(false);
+      set_is_editar_programa(false);
+      set_is_seleccionar_proyecto(false);
+      set_is_agregar_proyecto(false);
+      set_is_editar_proyecto(false);
+      set_is_seleccionar_actividad(false);
+      set_is_agregar_actividad(false);
+      set_is_editar_actividad(false);
+    }
+    else if (mode === 'select_programa') {
       set_mode('');
       set_is_seleccionar_programa(true);
       set_is_agregar_programa(false);

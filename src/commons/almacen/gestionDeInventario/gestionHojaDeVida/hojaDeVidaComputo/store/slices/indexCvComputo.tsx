@@ -44,7 +44,7 @@ const initial_state_current_cv_computer = {
   antivirus: "",
   capacidad_almacenamiento: "",
   color: "",
-  id_articulo: 0,
+  id_articulo: null,
   memoria_ram: "",
   observaciones_adicionales: "",
   otras_aplicaciones: "",
@@ -59,7 +59,7 @@ const initial_state_current_cv_computer = {
   estado: "",
   marca: "",
   nombre: "",
-  id_marca: 0,
+  id_marca: null,
   id_hoja_de_vida: null,
 }
 

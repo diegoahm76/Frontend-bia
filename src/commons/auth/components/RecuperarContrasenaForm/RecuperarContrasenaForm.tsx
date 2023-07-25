@@ -92,7 +92,7 @@ export const RecuperarContrasena: React.FC = () => {
       const error = temp_err.response?.data as any;
       // set_error(error.detail);
       console.log(error);
-      console.log(e);
+      // console.log(e);
       set_open_alert(true);
     } finally {
       set_tipo_envio('');

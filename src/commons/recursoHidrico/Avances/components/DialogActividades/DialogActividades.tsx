@@ -65,7 +65,7 @@ export const DialogActividades: React.FC<IProps> = ({
         open={is_modal_active}
         onClose={handle_close}
         fullWidth
-        maxWidth={'lg'}
+        maxWidth={'md'}
       >
         <DialogTitle>
           <Title title="ACTIVIDADES DEL PROYECTO" />

@@ -37,19 +37,19 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
       field: 'nombre_PORH',
       headerName: 'NOMBRE PORH',
       sortable: true,
-      width: 170,
+      width: 220,
     },
     {
       field: 'nombre_programa',
       headerName: 'NOMBRE PROGRAMA',
       sortable: true,
-      width: 170,
+      width: 220,
     },
     {
       field: 'nombre',
       headerName: 'NOMBRE PROYECTO',
       sortable: true,
-      width: 170,
+      width: 220,
     },
     {
       field: 'ACCIONES',

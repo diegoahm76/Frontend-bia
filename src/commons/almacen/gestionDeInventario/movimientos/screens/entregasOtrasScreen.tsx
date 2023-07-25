@@ -12,10 +12,11 @@ import { set_current_entrega, set_persona_entrega, } from '../store/slice/indexE
 import { get_bienes_entrada, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
 import { get_uni_organizacional } from '../../../registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
 import type { IObjEntrada, IObjEntrega } from '../interfaces/entregas';
-import SeleccionarEntrega from '../components/SeleccionarEntrega';
+import SeleccionarEntrada from '../components/SeleccionarEntrada';
 import SeleccionarBodega from '../components/SeleccionarBodega';
 import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
 import Seccion from '../components/SeccionPrimera';
+import SeleccionarBienEntrega from '../components/SeleccionarBienEntrega';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -24,7 +25,7 @@ import Seccion from '../components/SeccionPrimera';
 const EntregaScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_entrega, reset: reset_entrega, getValues: get_values } = useForm<IObjEntrega>();
-    const { control: control_entrada_entrega } = useForm<IObjEntrada>();
+    const { control: control_entrada_entrega, reset: reset_entrada_entrega } = useForm<IObjEntrada>();
     const { nro_entrega, current_entrega, persona_entrega, current_entrada } = useAppSelector((state) => state.entrega_otros);
 
     const dispatch = useAppDispatch();
@@ -76,7 +77,6 @@ const EntregaScreen = () => {
                 persona_crea: persona_entrega.nombre_completo ?? '',
             })
         );
-        console.log(nro_entrega)
     }, [nro_entrega]);
 
     // entrada 
@@ -85,8 +85,9 @@ const EntregaScreen = () => {
             void dispatch(get_bienes_entrada(current_entrada.id_entrada_almacen));
             console.log(current_entrada)
         }
+        reset_entrada_entrega(current_entrada)
     },
-        [current_entrada.id_entrada_almacen]);
+        [current_entrada]);
 
 
 
@@ -113,7 +114,7 @@ const EntregaScreen = () => {
                 />
             </Grid>
             <Grid item xs={12} marginY={2}>
-                <SeleccionarEntrega
+                <SeleccionarEntrada
                     control_entrada_entrega={control_entrada_entrega}
                     get_values={get_values}
 
@@ -126,6 +127,10 @@ const EntregaScreen = () => {
             <Grid item xs={12} marginY={2}>
 
                 <ListadoBienesEntrega />
+            </Grid>
+            <Grid item xs={12} marginY={2}>
+
+                <SeleccionarBienEntrega />
             </Grid>
             <Grid
                 container

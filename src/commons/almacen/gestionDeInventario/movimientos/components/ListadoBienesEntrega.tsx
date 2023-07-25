@@ -4,25 +4,27 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../../components/Title';
-import { set_bienes_entrada, } from '../store/slice/indexEntrega';
+import { set_bien_selected, set_bienes_entrada, } from '../store/slice/indexEntrega';
+import FormButton from '../../../../../components/partials/form/FormButton';
+import type { IObjBienesEntrada } from '../interfaces/entregas';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesEntrega = () => {
   const [selected_row, set_selected_row] = useState([]);
-  const { bienes_entrada } = useAppSelector((state) => state.entrega_otros);
+  const { bienes_entrada, bienes_entrada_aux } = useAppSelector((state) => state.entrega_otros);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log(bienes_entrada);
     if (bienes_entrada.length > 0) {
-      // Aquí se utiliza set_bienes_entrega en lugar de set_bienes_entrada
+
       dispatch(set_bienes_entrada(bienes_entrada));
     }
   }, [bienes_entrada]);
 
   const columns_bienes_entrega: GridColDef[] = [
-    // Define las columnas según tus necesidades
-    // Ejemplo:
+
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
@@ -70,6 +72,15 @@ const ListadoBienesEntrega = () => {
     set_selected_row(selection);
   };
 
+  const select_model = (): void => {
+    const model: IObjBienesEntrada | undefined = bienes_entrada_aux.find(
+      (p) => p.id_bien === selected_row[0]
+    );
+    if (model !== undefined) {
+      dispatch(set_bien_selected(model));
+    }
+  };
+
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
@@ -92,9 +103,18 @@ const ListadoBienesEntrega = () => {
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={(row) => row.id_bien}
               selectionModel={selected_row}
-              rows={bienes_entrada} // Pasa bienes_entrega como prop rows
+              rows={bienes_entrada}
 
             />
+            <Grid item xs={12} md={12}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={select_model}
+                icon_class={<SearchIcon />}
+                label={'Buscar bien seleccionado'}
+                type_button="button"
+              />
+            </Grid>
           </Box>
         </Grid>
       </Grid>
