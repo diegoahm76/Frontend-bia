@@ -1,18 +1,323 @@
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Avatar, Button, Grid, TextField, Tooltip } from '@mui/material';
 import { Title } from '../../../components/Title';
-import { TablaIncumplimiento } from '../components/HistorialProceso/TablaIncumplimiento';
+// import { TablaIncumplimiento } from '../components/HistorialProceso/TablaIncumplimiento';
 import { Encabezado } from '../components/HistorialProceso/Encabezado';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import type { Proceso, ValoresProceso } from '../interfaces/proceso';
+import { api } from '../../../api/axios';
+import { CollapsibleButton } from '../components/CollapsibleButton';
+import { DataGrid, type GridColDef, GridToolbar } from '@mui/x-data-grid';
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ArticleIcon from '@mui/icons-material/Article';
+import TuneIcon from '@mui/icons-material/Tune';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import SaveIcon from '@mui/icons-material/Save';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const HistorialProceso: React.FC = () => {
-  const [modal_incumplimiento, set_modal_incumplimiento] = useState(false);
-  const [modal_medidas, set_modal_medidas] = useState(false);
-  const [modal_cobro, set_modal_cobro] = useState(false);
+  const [rows_valores_proceso, set_rows_valores_proceso] = useState<ValoresProceso[][]>([]);
+  const [input_values, set_input_values] = useState<Record<string, string>>({});
+  const [input_files, set_input_files] = useState<Record<string, File>>({});
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as { editar: number, proceso: Proceso };
+
+  useEffect(() => {
+    if (state) {
+      api.get(`recaudo/procesos/valores-proceso/${state?.proceso?.id}`)
+        .then((response) => {
+          set_values(response.data.data);
+          group_valores_proceso(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      navigate('../visor_procesos');
+    }
+  }, []);
+
+  const group_valores_proceso = (valores_proceso: ValoresProceso[]): void => {
+    const categorias_agrupadas: Record<string, ValoresProceso[]> = {};
+
+    valores_proceso.forEach(objeto => {
+      const categoria = objeto.id_atributo.id_categoria.categoria;
+      if (categorias_agrupadas[categoria]) {
+        categorias_agrupadas[categoria].push(objeto);
+      } else {
+        categorias_agrupadas[categoria] = [objeto];
+      }
+    });
+
+    const nuevo_arreglo = Object.values(categorias_agrupadas);
+    set_rows_valores_proceso(nuevo_arreglo);
+  };
+
+  const get_atributo_icon = (tipo_atributo: string): JSX.Element => {
+    const icon_styles = {
+      color: 'primary.main',
+      width: '18px',
+      height: '18px'
+    };
+    switch (tipo_atributo) {
+      case 'Documento':
+        return <InsertDriveFileOutlinedIcon sx={icon_styles} />;
+      case 'Fecha':
+        return <CalendarMonthIcon sx={icon_styles} />;
+      case 'Texto':
+        return <ArticleIcon sx={icon_styles} />;
+      case 'Opciones':
+        return <TuneIcon sx={icon_styles} />;
+      default:
+        return <></>;
+    }
+  };
+
+  const get_span_link = (valor_proceso: ValoresProceso): JSX.Element => {
+    if (valor_proceso.id_atributo.id_tipo.tipo === 'Documento') {
+      const nombre_documento: string = valor_proceso?.documento?.split('/')[2] ?? '';
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      return <Link to={`http://back-end-bia-beta.up.railway.app${valor_proceso?.documento}`}>{nombre_documento}</Link>
+    }
+    return <span>{valor_proceso?.valor}</span>;
+  };
+
+  const get_input = (tipo_atributo: string, id: number): JSX.Element => {
+    switch (tipo_atributo) {
+      case 'Documento':
+        return <Grid item xs={12}>
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<FileUploadIcon />}
+            fullWidth
+            component='label'
+          >
+            Subir archivo
+            <input
+              type="file"
+              name={`${id}-${tipo_atributo}`}
+              style={{ display: 'none' }}
+              required
+              onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+                handle_file_change(event, `${id}-${tipo_atributo}`);
+              }}
+            />
+          </Button>
+        </Grid>;
+      case 'Fecha':
+        return <>
+          <TextField
+            type="date"
+            size="small"
+            fullWidth
+            required
+            onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+              handle_input_change(event, `${id}-${tipo_atributo}`);
+            }}
+          />
+        </>;
+      case 'Texto':
+        return <>
+          <TextField
+            size="small"
+            fullWidth
+            onKeyDown={(event) => {
+              event.stopPropagation();
+            }}
+            required
+            onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+              handle_input_change(event, `${id}-${tipo_atributo}`);
+            }}
+          />
+        </>;
+      case 'Opciones':
+        return <>
+          <TextField
+            size="small"
+            fullWidth
+            onKeyDown={(event) => {
+              event.stopPropagation();
+            }}
+            required
+            onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+              handle_input_change(event, `${id}-${tipo_atributo}`);
+            }}
+          />
+        </>;
+      default:
+        return <>
+          <span>Not input file</span>
+        </>;
+    }
+  };
+
+  const set_values = (valores_proceso: ValoresProceso[]): void => {
+    const new_input_values: Record<string, string> = {};
+    const new_input_files: Record<string, File> = {};
+
+    valores_proceso.forEach(objeto => {
+      if (objeto.id_atributo.id_tipo.tipo === 'Documento') {
+        const key: string = `${objeto.id_atributo.id}-${objeto.id_atributo.id_tipo.tipo}`;
+        new_input_files[key] = new File([''], '');
+      } else {
+        const key: string = `${objeto.id_atributo.id}-${objeto.id_atributo.id_tipo.tipo}`;
+        new_input_values[key] = '';
+      }
+    });
+
+    set_input_files(new_input_files);
+    set_input_values(new_input_values);
+  };
+
+  const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
+    const { value } = event.target;
+    set_input_values((prevInputValues) => ({
+      ...prevInputValues,
+      [name]: value,
+    }));
+  };
+
+  const handle_file_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      set_input_files((prevState) => ({
+        ...prevState,
+        [name]: file,
+      }));
+    }
+  };
+
+  const handle_put_valores_sin_archivo = (value: string): void => {
+    api.put(`recaudo/procesos/valores-proceso/${state?.proceso.id}/`, {
+      valor: value,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handle_put_valores_con_archivo = (value: File): void => {
+    api.putForm(`recaudo/procesos/valores-proceso/${state?.proceso.id}/`, {
+      documento: value,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const columns_valores_proceso: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID Valor',
+      minWidth: 90
+    },
+    {
+      field: 'id_atributo',
+      headerName: 'Tipo de Atributo',
+      minWidth: 130,
+      flex: 0.5,
+      renderCell: (params) => {
+        return (
+          <Tooltip title={params.value.id_tipo.tipo}>
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              {get_atributo_icon(params.value.id_tipo.tipo)}
+            </Avatar>
+          </Tooltip>
+        );
+      }
+    },
+    {
+      field: 'descripcion',
+      headerName: 'Descripción',
+      minWidth: 200,
+      flex: 0.7,
+      valueGetter: (params) => {
+        return params.row.id_atributo.descripcion;
+      }
+    },
+    {
+      field: 'datos',
+      headerName: 'Datos',
+      minWidth: 100,
+      flex: 1,
+      renderCell: (params) => {
+        const valor_proceso = rows_valores_proceso.flat().find(valor => valor.id_atributo.id === params.row.id_atributo.id);
+        if (valor_proceso) {
+          return state?.editar ?
+            get_input(valor_proceso?.id_atributo.id_tipo.tipo, valor_proceso?.id_atributo.id) :
+            get_span_link(valor_proceso);
+        }
+        return <></>;
+      }
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      minWidth: 200,
+      flex: 0.5,
+      renderCell: (params) => {
+        if (state?.editar) {
+          if (params.row.id_atributo.id_tipo.tipo === 'Documento') {
+            return (
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                startIcon={<SaveIcon />}
+                fullWidth
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                disabled={input_files[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]?.name === ''}
+                onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  handle_put_valores_con_archivo(input_files[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]);
+                }}
+              >
+                Guardar
+              </Button>
+            );
+          }
+          return (
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              fullWidth
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              disabled={input_values[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`] === ''}
+              onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                handle_put_valores_sin_archivo(input_values[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]);
+              }}
+            >
+              Guardar
+            </Button>
+          );
+        }
+      }
+    },
+  ];
 
   return (
     <>
-      <Encabezado />
+      <Encabezado proceso={state?.proceso} />
       <Title title='Historial del Proceso' />
       <Grid
         container
@@ -24,138 +329,23 @@ export const HistorialProceso: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
-        <Box
-          className={`border px-4 text-white fs-5 p-1`}
-          sx={{
-            display: 'grid',
-            background:
-              'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-            width: '100%',
-            height: '40px',
-            color: '#fff',
-            borderRadius: '10px',
-            pl: '20px',
-            fontSize: '17px',
-            fontWeight: '900',
-            alignContent: 'center',
-            marginTop: '10px',
-          }}
-        >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ mb: '20px', mt: '20px' }}
-          >
-            <Typography>{`Incumplimiento de pago ${'21-04-2022'}`}</Typography>
-            <Button
-              size='small'
-              color='secondary'
-              variant='text'
-              onClick={() => {
-                if(modal_incumplimiento){
-                  set_modal_incumplimiento(false)
-                } else {
-                  set_modal_incumplimiento(true)
-                }
-            }}
-            >
-              {
-                modal_incumplimiento ? 'Cerrar' : 'Abrir'
-              }
-            </Button>
-          </Stack>
-        </Box>
-        {
-          modal_incumplimiento ? <TablaIncumplimiento /> : null
-        }
-        <Box
-          className={`border px-4 text-white fs-5 p-1`}
-          sx={{
-            display: 'grid',
-            background:
-              'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-            width: '100%',
-            height: '40px',
-            color: '#fff',
-            borderRadius: '10px',
-            pl: '20px',
-            fontSize: '17px',
-            fontWeight: '900',
-            alignContent: 'center',
-            marginTop: '10px',
-          }}
-        >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ mb: '20px', mt: '20px' }}
-          >
-            <Typography>{`Medidas Cautelares ${'25-06-2022'}`} </Typography>
-            <Button
-              size='small'
-              color='secondary'
-              variant='text'
-              onClick={() => {
-                if(modal_medidas){
-                  set_modal_medidas(false)
-                } else {
-                  set_modal_medidas(true)
-                }
-            }}
-            >
-              {
-                modal_medidas ? 'Cerrar' : 'Abrir'
-              }
-            </Button>
-          </Stack>
-        </Box>
-        {
-          modal_medidas ? 'Información Medidas Cautelares' : null
-        }
-        <Box
-          className={`border px-4 text-white fs-5 p-1`}
-          sx={{
-            display: 'grid',
-            background:
-              'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-            width: '100%',
-            height: '40px',
-            color: '#fff',
-            borderRadius: '10px',
-            pl: '20px',
-            fontSize: '17px',
-            fontWeight: '900',
-            alignContent: 'center',
-            marginTop: '10px',
-          }}
-        >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ mb: '20px', mt: '20px' }}
-          >
-            <Typography>{`Cobro Coactivo ${'11-04-2023'}`}</Typography>
-            <Button
-              size='small'
-              color='secondary'
-              variant='text'
-              onClick={() => {
-                if(modal_cobro){
-                  set_modal_cobro(false)
-                } else {
-                  set_modal_cobro(true)
-                }
-            }}
-            >
-              {
-                modal_cobro ? 'Cerrar' : 'Abrir'
-              }
-            </Button>
-          </Stack>
-        </Box>
-        {
-          modal_cobro ? 'Información Cobro Coactivo' : null
-        }
+        <CollapsibleButton texto_boton={state?.proceso?.id_etapa?.etapa}>
+          {rows_valores_proceso.map((arreglo_objetos, index) => (
+            <CollapsibleButton key={index} texto_boton={arreglo_objetos[0].id_atributo.id_categoria.categoria}>
+              <DataGrid
+                density={state?.editar ? 'standard' : 'compact'}
+                autoHeight
+                rows={arreglo_objetos}
+                columns={columns_valores_proceso}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id}
+                components={{ Toolbar: GridToolbar }}
+              />
+            </CollapsibleButton>
+          ))}
+        </CollapsibleButton>
       </Grid>
     </>
   )
