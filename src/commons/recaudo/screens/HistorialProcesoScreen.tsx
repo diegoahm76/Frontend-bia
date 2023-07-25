@@ -14,12 +14,15 @@ import ArticleIcon from '@mui/icons-material/Article';
 import TuneIcon from '@mui/icons-material/Tune';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import SaveIcon from '@mui/icons-material/Save';
+import { NotificationModal } from '../components/NotificationModal';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const HistorialProceso: React.FC = () => {
   const [rows_valores_proceso, set_rows_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [input_values, set_input_values] = useState<Record<string, string>>({});
   const [input_files, set_input_files] = useState<Record<string, File>>({});
+  const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
+  const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { editar: number, proceso: Proceso };
@@ -190,27 +193,35 @@ export const HistorialProceso: React.FC = () => {
     }
   };
 
-  const handle_put_valores_sin_archivo = (value: string): void => {
-    api.put(`recaudo/procesos/valores-proceso/${state?.proceso.id}/`, {
+  const handle_put_valores_sin_archivo = (id_valor_proceso: number, value: string): void => {
+    api.put(`recaudo/procesos/valores-proceso/${id_valor_proceso}/`, {
       valor: value,
     })
       .then((response) => {
         console.log(response);
+        set_notification_info({ type: 'success', message: `Se ha actualizado correctamente el valor "${value}".` });
+        set_open_notification_modal(true);
       })
       .catch((error) => {
         console.log(error);
+        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        set_open_notification_modal(true);
       });
   };
 
-  const handle_put_valores_con_archivo = (value: File): void => {
-    api.putForm(`recaudo/procesos/valores-proceso/${state?.proceso.id}/`, {
+  const handle_put_valores_con_archivo = (id_valor_proceso: number, value: File): void => {
+    api.putForm(`recaudo/procesos/valores-proceso/${id_valor_proceso}/`, {
       documento: value,
     })
       .then((response) => {
         console.log(response);
+        set_notification_info({ type: 'success', message: `Se ha actualizado correctamente el archivo "${value.name}".` });
+        set_open_notification_modal(true);
       })
       .catch((error) => {
         console.log(error);
+        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        set_open_notification_modal(true);
       });
   };
 
@@ -286,7 +297,7 @@ export const HistorialProceso: React.FC = () => {
                 disabled={input_files[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]?.name === ''}
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  handle_put_valores_con_archivo(input_files[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]);
+                  handle_put_valores_con_archivo(params.row.id, input_files[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]);
                 }}
               >
                 Guardar
@@ -304,7 +315,7 @@ export const HistorialProceso: React.FC = () => {
               disabled={input_values[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`] === ''}
               onClick={() => {
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                handle_put_valores_sin_archivo(input_values[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]);
+                handle_put_valores_sin_archivo(params.row.id, input_values[`${params.row.id_atributo.id}-${params.row.id_atributo.id_tipo.tipo}`]);
               }}
             >
               Guardar
@@ -347,6 +358,12 @@ export const HistorialProceso: React.FC = () => {
           ))}
         </CollapsibleButton>
       </Grid>
+
+      <NotificationModal
+        open_notification_modal={open_notification_modal}
+        set_open_notification_modal={set_open_notification_modal}
+        notification_info={notification_info}
+      />
     </>
   )
 }
