@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import { TcaScreen } from '../screens/MainScreen/TcaScreen';
 import { Page404 } from '../../../../screens/404';
 import { AdminTcaScreen } from '../screens/SecondScreenAdminTca/AdminTcaScreen';
+import { ModalProviderTCA } from '../context/ModalContextTca';
 
 const routes = [
   {
@@ -25,10 +26,12 @@ const routes = [
 }
 export const TcaRoutes: React.FC = () => {
   return (
-    <Routes>
-      {routes.map((route, index) => (
-        <Route key={index} path={route.path} element={route.element} />
-      ))}
-    </Routes>
+    <ModalProviderTCA>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
+      </Routes>
+    </ModalProviderTCA>
   );
 };
