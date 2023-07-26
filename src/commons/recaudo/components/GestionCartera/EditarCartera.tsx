@@ -11,14 +11,13 @@ import {
   Stack,
   InputLabel
 } from "@mui/material"
-import type { EtapaProceso } from "../../interfaces/proceso";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import type { FlujoProceso } from "../../interfaces/flujoProceso";
+import { type Dispatch, type SetStateAction } from "react";
 
 interface IProps {
-  etapas_destino: EtapaProceso[];
-  etapa_destino: string;
+  id_flujo: string;
   handle_select_change: (event: SelectChangeEvent) => void;
-  mover_estado_actual: () => void;
   selected_proceso: {
     fecha_facturacion: string;
     numero_factura: string;
@@ -28,16 +27,18 @@ interface IProps {
     valor_intereses: string;
     valor_sancion: string;
     etapa: string;
-  }
+  },
+  flujos_destino: FlujoProceso[];
+  set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarCartera: React.FC<IProps> = ({
-  etapas_destino,
-  etapa_destino,
+  id_flujo,
   handle_select_change,
-  mover_estado_actual,
-  selected_proceso
+  selected_proceso,
+  flujos_destino,
+  set_open_requisitos_modal
 }: IProps) => {
   return (
     <>
@@ -259,10 +260,15 @@ export const EditarCartera: React.FC<IProps> = ({
               <InputLabel>Mover a</InputLabel>
               <Select
                 label='Mover a'
-                value={etapa_destino}
+                value={id_flujo}
                 onChange={handle_select_change}
               >
-                {etapas_destino.map(({ id, etapa }) => (
+                {/* {etapas_destino.map(({ id, etapa }) => (
+                  <MenuItem key={id} value={id}>
+                    {etapa}
+                  </MenuItem>
+                ))} */}
+                {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
                   <MenuItem key={id} value={id}>
                     {etapa}
                   </MenuItem>
@@ -276,8 +282,10 @@ export const EditarCartera: React.FC<IProps> = ({
               variant='contained'
               startIcon={<ChangeCircleIcon />}
               fullWidth
-              onClick={mover_estado_actual}
-              disabled={!etapa_destino}
+              onClick={() => {
+                set_open_requisitos_modal(true);
+              }}
+              disabled={!id_flujo}
             >
               Mover estado actual
             </Button>
