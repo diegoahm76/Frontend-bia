@@ -40,19 +40,21 @@ export const NotificationModal = ({ open_notification_modal, set_open_notificati
     return <></>;
   };
 
-  // const get_color = (type: string): string => {
-  //   if (type === 'info') {
-  //     return '#1583a5';
-  //   }
-  //   if (type === 'warning') {
-  //     return '#ffcc00';
-  //   }
-  //   if (type === 'error') {
-  //     return '#ff3333';
-  //   }
-    
-  //   return '#000';
-  // };
+  const get_title_name = (type: string): string => {
+    if (type === 'info') {
+      return 'INFORMACIÓN';
+    }
+    if (type === 'warning') {
+      return 'ADVERTENCIA';
+    }
+    if (type === 'error') {
+      return 'ERROR';
+    }
+    if (type === 'success') {
+      return 'ÉXITO';
+    }
+    return '';
+  };
 
   const get_title = (type: string): JSX.Element => {
     return (
@@ -64,7 +66,7 @@ export const NotificationModal = ({ open_notification_modal, set_open_notificati
           fontSize: '1.7em',
         }}
       >
-        {get_icon(type)} {type.toUpperCase()}
+        {get_icon(type)} {get_title_name(type)}
       </DialogTitle>
     );
   };

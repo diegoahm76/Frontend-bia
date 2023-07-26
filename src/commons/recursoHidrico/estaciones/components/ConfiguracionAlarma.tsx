@@ -2,6 +2,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -24,7 +25,7 @@ export const ConfiguracionAlarma: React.FC = () => {
   const [crear_alerta_is_active, set_crear_alerta_is_active] = useState<boolean>(false);
   const [editar_alerta_is_active, set_editar_alerta_is_active] = useState<boolean>(false);
   const [alerta_editado, set_alerta_editado] = useState(null);
-  const handle_clickxls = (): void => { download_xls({ nurseries: conf_alert_person, columns }); };
+
 
   const handle_open_crear_alerta = (): void => {
     set_crear_alerta_is_active(true);
@@ -207,18 +208,17 @@ export const ConfiguracionAlarma: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton
-            style={{
-              color: 'white',
-              backgroundColor: '#335B1E',
-              margin: 5,
-              width: '30px',
-              height: '30px',
-            }}
-            onClick={handle_clickxls}
-          >
-            <i className="pi pi-file-excel"></i>
-          </IconButton>
+        
+          <ButtonGroup style={{ margin: 7 }}>
+
+            {download_xls({ nurseries: conf_alert_person, columns })}
+           
+
+          </ButtonGroup>
+
+
+
+
         </Grid>
       </Grid>
 

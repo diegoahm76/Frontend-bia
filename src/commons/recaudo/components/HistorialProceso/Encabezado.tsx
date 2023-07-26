@@ -1,8 +1,13 @@
 import { Box, Grid, TextField } from "@mui/material"
+import type { Proceso } from "../../interfaces/proceso"
+
+interface IProps {
+  proceso: Proceso;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Encabezado: React.FC = () => {
-  return(
+export const Encabezado = ({ proceso }: IProps): JSX.Element => {
+  return (
     <Grid
       container
       sx={{
@@ -25,70 +30,79 @@ export const Encabezado: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                label="Deudor"
+                label="Fecha facturación"
                 size="small"
                 fullWidth
-                value={`9007400212 - Aguas de Castilla`}
+                value={proceso?.id_cartera?.fecha_facturacion ?? ''}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                label="Año"
+                label="Número factura"
                 size="small"
                 fullWidth
-                value={`2014`}
+                value={proceso?.id_cartera?.numero_factura ?? ''}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                label="Proceso"
+                label="Código contable"
                 size="small"
                 fullWidth
-                value={`EXP-2039212`}
+                value={proceso?.id_cartera?.codigo_contable ?? ''}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                label="Última Actualización"
+                label="Estado actual"
                 size="small"
                 fullWidth
-                value={`21-02-2023`}
+                value={proceso?.id_etapa?.etapa ?? ''}
+                sx={{
+                  "& .MuiInputBase-input.Mui-disabled": {
+                    WebkitTextFillColor: "red",
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                label="Valor"
+                label="Monto inicial"
                 size="small"
                 fullWidth
-                value={`$ 465.402,00`}
+                value={proceso?.id_cartera?.monto_inicial ?? ''}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                label="Funcionario"
+                label="Días de mora"
                 size="small"
                 fullWidth
-                value={`Luis Perez Gonzalez`}
+                value={proceso?.id_cartera?.dias_mora ?? ''}
               />
             </Grid>
             <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Etapa Actual"
-                  size="small"
-                  fullWidth
-                  value={`EMBARGO`}
-                  disabled
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      WebkitTextFillColor: "red",
-                    },
-                  }}
-                />
+              <TextField
+                disabled
+                label="Valor intereses"
+                size="small"
+                fullWidth
+                value={proceso?.id_cartera?.valor_intereses ?? ''}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                disabled
+                label="Valor sanción"
+                size="small"
+                fullWidth
+                value={proceso?.id_cartera?.valor_sancion ?? ''}
+              />
             </Grid>
           </Grid>
         </Box>

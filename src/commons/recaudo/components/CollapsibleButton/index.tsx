@@ -4,12 +4,12 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 interface IProps {
-  categoria: string;
+  texto_boton: string;
   children: ReactNode;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CollapsibleButton = ({ categoria, children }: IProps): JSX.Element => {
+export const CollapsibleButton = ({ texto_boton, children }: IProps): JSX.Element => {
   const [open, set_open] = useState(false);
   return (
     <Grid
@@ -35,18 +35,19 @@ export const CollapsibleButton = ({ categoria, children }: IProps): JSX.Element 
           set_open(previousState => !previousState);
         }}
       >
-        {categoria}
+        {texto_boton}
       </Button>
       <Grid
         item
         xs={12}
         sx={{
           overflow: 'hidden',
-          transition: '0.2s ease-out',
           maxHeight: open ? 'auto' : '0px',
         }}
       >
-        {children}
+        <Grid item sx={{ m: '20px' }}>
+          {children}
+        </Grid>
       </Grid>
     </Grid >
   );
