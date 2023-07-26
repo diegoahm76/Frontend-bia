@@ -39,3 +39,12 @@ export interface IpropsInstrumentos {
   nombre_seccion?: string;
   nombre_subseccion?: string;
 }
+export interface DataAgregarLaboratorio {
+  id: string;
+  id_parametro: string;
+  parametro: string;
+  unidad: string;
+  metodo: string;
+  fecha_analisis: Date | null;
+  resultado: string;
+}

@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
-  Autocomplete,
   Box,
   Button,
   Divider,
@@ -11,6 +10,7 @@ import {
   MenuItem,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -20,11 +20,7 @@ import { Title } from '../../../../../components/Title';
 import { use_register_laboratorio_hook } from './hook/useRegisterLaboratorioHook';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { columns_result_lab } from './utils/colums/comlums';
-import {
-  parametro,
-  tipo_parametro_choices,
-  unidad_medida_choices,
-} from './utils/choices/choices';
+import { tipo_parametro_choices } from './utils/choices/choices';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
@@ -33,8 +29,9 @@ import { useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
-import { row } from '../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 import { useNavigate } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarLaboratorio: React.FC = () => {
@@ -43,34 +40,31 @@ export const AgregarLaboratorio: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                  onClick={() => {
-                    set_id_seccion(params.row.id_seccion);
-                    set_info_seccion(params.row);
-                  }}
-                >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ChecklistIcon
-                      titleAccess="Seleccionar Sección"
-                      sx={{
-                        color: 'primary.main',
-                        width: '18px',
-                        height: '18px',
-                      }}
-                    />
-                  </Avatar>
-                </IconButton> */}
+          <Tooltip title="Eliminar registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => {
+                handleDelete(params.row.id);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar Registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                handleEdit(params.row);
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
@@ -110,9 +104,11 @@ export const AgregarLaboratorio: React.FC = () => {
     fecha_analisis,
     fecha_envio,
     fecha_resultado,
+    handleEdit,
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
+    handleDelete,
 
     // *Autocomplete
     cuenca_select,
@@ -128,6 +124,7 @@ export const AgregarLaboratorio: React.FC = () => {
     register_laboratorio,
     control_registro_laboratorio,
     formErrors_laboratorio,
+    data_watch,
 
     // * Onsubmit
     onSubmit,
@@ -634,6 +631,14 @@ export const AgregarLaboratorio: React.FC = () => {
                 variant="outlined"
                 color="primary"
                 onClick={handle_agregar}
+                disabled={
+                  !data_watch.id_parametro ||
+                  !tipo_parametro_value ||
+                  !undidad_medida_select ||
+                  !data_watch.metodo ||
+                  !fecha_analisis ||
+                  !data_watch.resultado
+                }
               >
                 Agregar
               </Button>
@@ -650,7 +655,7 @@ export const AgregarLaboratorio: React.FC = () => {
                   autoHeight
                   rows={rows_laboratorio}
                   columns={colums_resultado}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={(row) => row.id || uuidv4()}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                 />

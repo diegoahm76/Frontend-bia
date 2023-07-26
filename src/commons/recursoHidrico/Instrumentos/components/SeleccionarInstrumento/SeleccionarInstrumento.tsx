@@ -27,6 +27,7 @@ import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegi
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch } from '../../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_info_laboratorio,
   set_current_mode,
@@ -126,7 +127,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 80,
+      width: 200,
       renderCell: (params) => (
         <>
           <Tooltip title="Seleccionar">
@@ -142,6 +143,30 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                     ver: true,
                     crear: false,
                     editar: false,
+                  })
+                );
+                navigate(
+                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                  {
+                    replace: true,
+                  }
+                );
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar Registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_current_mode({
+                    ver: false,
+                    crear: false,
+                    editar: true,
                   })
                 );
                 navigate(
@@ -562,6 +587,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                     variant="outlined"
                     color="primary"
                     onClick={() => {
+                      dispatch(
+                        set_current_mode({
+                          ver: false,
+                          crear: true,
+                          editar: false,
+                        })
+                      );
                       navigate(
                         '/app/recurso_hidrico/instrumentos/cartera_aforo',
                         {
@@ -646,6 +678,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 color="primary"
                 type="submit"
                 onClick={() => {
+                  dispatch(
+                    set_current_mode({
+                      ver: false,
+                      crear: true,
+                      editar: false,
+                    })
+                  );
                   navigate(
                     '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
                     {

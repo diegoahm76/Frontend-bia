@@ -31,7 +31,6 @@ import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
   const colums_resultado: GridColDef[] = [
@@ -144,6 +143,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
       cod_clase_muestra: info_laboratorio.cod_clase_muestra,
       fecha_toma_muestra: info_laboratorio.fecha_toma_muestra,
       fecha_resultados_lab: info_laboratorio.fecha_resultados_lab,
+      fecha_envio_lab: info_laboratorio.fecha_envio_lab,
       latitud: info_laboratorio.latitud,
       longitud: info_laboratorio.longitud,
     });
@@ -262,6 +262,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               <DatePicker
                 label="Fecha de toma de muestra"
                 value={fecha_toma_muestra}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_toma_muestra', value);
                 }}
@@ -271,6 +272,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                     fullWidth
                     size="small"
                     required
+                    disabled={true}
                     {...register_laboratorio('fecha_toma_muestra', {
                       required: true,
                     })}
@@ -291,7 +293,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               required
               size="small"
               margin="dense"
-              disabled={false}
+              disabled={true}
               {...register_laboratorio('lugar_muestra', { required: true })}
               error={!!formErrors_laboratorio.lugar_muestra}
               helperText={
@@ -331,6 +333,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               <DatePicker
                 label="Enviado a laboratorio el día"
                 value={fecha_envio}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_envio', value);
                 }}
@@ -340,6 +343,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                     fullWidth
                     required
                     size="small"
+                    disabled={true}
                     {...register_laboratorio('fecha_envio_lab', {
                       required: true,
                     })}
@@ -358,6 +362,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               <DatePicker
                 label="resultados de laboratorio"
                 value={fecha_resultado}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_resultado', value);
                 }}
@@ -370,6 +375,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                     {...register_laboratorio('fecha_resultados_lab', {
                       required: true,
                     })}
+                    disabled={true}
                     error={!!formErrors_laboratorio.fecha_resultados_lab}
                     helperText={
                       formErrors_laboratorio?.fecha_resultados_lab?.type ===
@@ -394,7 +400,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               size="small"
               fullWidth
               margin="dense"
-              disabled={false}
+              disabled={true}
               required
               {...register_laboratorio('latitud', { required: true })}
               error={!!formErrors_laboratorio.latitud}
@@ -406,11 +412,10 @@ export const SeleccionarLaboratorio: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Longitud"
+              disabled={true}
               size="small"
               fullWidth
               margin="dense"
-              disabled={false}
               required
               {...register_laboratorio('longitud', { required: true })}
               error={!!formErrors_laboratorio.longitud}
@@ -427,7 +432,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               multiline
               size="small"
               margin="dense"
-              disabled={false}
+              disabled={true}
               rows={2}
               {...register_laboratorio('descripcion', { required: true })}
               error={!!formErrors_laboratorio.descripcion}

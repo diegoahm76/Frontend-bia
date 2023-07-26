@@ -7,9 +7,11 @@ import dayjs from 'dayjs';
 import {
   get_data_cuenca_instrumentos,
   get_data_pozo_id,
+  get_data_resulatado_laboratorio_id,
 } from '../../../../ConsultaBiblioteca/request/request';
 import { useAppSelector } from '../../../../../../hooks';
 import type {
+  DataAgregarLaboratorio,
   IpropsCuenca,
   IpropsParametros,
   IpropsPozos,
@@ -24,12 +26,20 @@ import {
 } from '../../../request/request';
 import { control_success } from '../../../../requets/Request';
 import { DataContext } from '../../../context/contextData';
+import type { Laboratorio } from '../../../../ConsultaBiblioteca/interfaces/interfaces';
+import { v4 as uuidv4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const use_register_laboratorio_hook = () => {
   // * context
-  const { id_resultado_laboratorio, set_id_resultado_laboratorio } =
-    useContext(DataContext);
+  const {
+    id_resultado_laboratorio,
+    archivos,
+    nombres_archivos,
+    set_id_resultado_laboratorio,
+    set_archivos,
+    set_nombres_archivos,
+  } = useContext(DataContext);
 
   // * Use Form
   const {
@@ -209,20 +219,48 @@ export const use_register_laboratorio_hook = () => {
   const [rows_laboratorio, set_rows_laboratorio] = useState<any[]>([]);
   const [metodo, set_metodo] = useState('');
   const [resultado, set_resultado] = useState('');
+  const [selectedRow, setSelectedRow] = useState<DataAgregarLaboratorio | null>(
+    null
+  );
+
+  const handleEdit = (row: any): void => {
+    setSelectedRow(row);
+    set_value_laboratorio('metodo', row.metodo);
+    set_value_laboratorio('resultado', row.resultado);
+    set_tipo_parametro_value(row.parametro);
+    set_undidad_medida_select(row.unidad);
+    set_fecha_analisis(row.fecha_analisis);
+  };
+
+  const handleDelete = (id: ReturnType<typeof uuidv4>): void => {
+    set_rows_laboratorio(rows_laboratorio.filter((row) => row.id !== id));
+  };
 
   const handle_agregar = (): void => {
     console.log(data_watch, 'data_watch');
     const new_row = {
+      id: uuidv4(),
       id_parametro: data_watch.id_parametro,
       parametro: tipo_parametro_value,
       unidad: undidad_medida_select,
       metodo: data_watch.metodo,
-      fecha_analisis: (fecha_analisis ?? dayjs()).format('YYYY-MM-DD'),
+      fecha_analisis: dayjs(fecha_analisis).format('YYYY-MM-DD') ?? '',
       resultado: data_watch.resultado,
     };
-    set_rows_laboratorio([...rows_laboratorio, new_row]);
+    // set_rows_laboratorio([...rows_laboratorio, new_row]);
+    // Si se está editando una fila, reemplace esa fila en lugar de agregar una nueva
+    if (selectedRow) {
+      set_rows_laboratorio(
+        rows_laboratorio.map((row) =>
+          row.id === selectedRow.id ? new_row : row
+        )
+      );
+      setSelectedRow(null); // Borra la selección
+    } else {
+      set_rows_laboratorio([...rows_laboratorio, new_row]);
+    }
 
-    set_undidad_medida_select('');
+    // set_undidad_medida_select('');
     // set_parametros_select([]);
     set_value_laboratorio('metodo', '');
     set_value_laboratorio('resultado', '');
@@ -246,6 +284,8 @@ export const use_register_laboratorio_hook = () => {
       // metodo: '',
       // resultado: '',
     });
+    set_archivos([]);
+    set_nombres_archivos([]);
     set_fecha_toma_muestra(null);
     set_fecha_envio(null);
     set_fecha_resultado(null);
@@ -258,13 +298,16 @@ export const use_register_laboratorio_hook = () => {
     // set_pozos_selected([]);
     // set_parametros_select([]);
     // set_undidad_medida_select('');
-    // set_rows_laboratorio([]);
+    set_rows_laboratorio([]);
     set_metodo('');
     set_resultado('');
   };
 
   // * Onsubmit
-  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+  const {
+    instrumentos,
+    id_resultado_laboratorio: id_resultado_laboratorio_slice,
+  } = useAppSelector((state) => state.instrumentos_slice);
   const [is_saving, set_is_saving] = useState(false);
 
   const onSubmit = handleSubmit_laboratorio(async (data: any) => {
@@ -278,7 +321,32 @@ export const use_register_laboratorio_hook = () => {
       data.fecha_toma_muestra = dayjs(fecha_toma_muestra).format('YYYY-MM-DD');
       data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
       data.fecha_envio_lab = dayjs(fecha_envio).format('YYYY-MM-DD');
-      await post_resultado_laboratorio(data, rows_laboratorio);
+
+      console.log(archivos, 'archivos');
+      console.log(nombres_archivos, 'nombres_archivos');
+
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
+      const codigo_archivo = 'LAB';
+      const archivos_lab = new FormData();
+
+      archivos.forEach((archivo: any, index: any) => {
+        if (archivo != null) {
+          archivos_lab.append(`ruta_archivo`, archivo);
+          archivos_lab.append(`nombre_archivo`, nombres_archivos[index]);
+        }
+      });
+      archivos_lab.append('id_instrumento', String(id_instrumento_slice));
+      archivos_lab.append('cod_tipo_de_archivo', codigo_archivo);
+      // archivos_lab.append(
+      //   'id_resultado_laboratorio',
+      //   String(id_resultado_laboratorio_slice)
+      // );
+
+      await post_resultado_laboratorio(data, rows_laboratorio, archivos_lab);
       reset_formulario();
       control_success('Registro de laboratorio creado exitosamente');
     } catch (error: any) {
@@ -288,7 +356,33 @@ export const use_register_laboratorio_hook = () => {
     }
   });
 
-  // medición
+  // * ver resultados de laboratorio
+
+  const [rows_resultado_laboratorio, set_rows_resultado_laboratorio] = useState<
+    Laboratorio[]
+  >([]);
+
+  const { info_laboratorio } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
+
+  const [tipo_parametro, set_tipo_parametro] = useState('');
+
+  const fetch_data_resultado_laboratorio = async (): Promise<any> => {
+    try {
+      set_rows_resultado_laboratorio([]);
+      if (info_laboratorio.id_resultado_laboratorio && tipo_parametro) {
+        const response = await get_data_resulatado_laboratorio_id(
+          info_laboratorio.id_resultado_laboratorio,
+          tipo_parametro
+        );
+        set_rows_resultado_laboratorio(response);
+        return response;
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
 
   return {
     clase_muestra_value,
@@ -302,6 +396,7 @@ export const use_register_laboratorio_hook = () => {
     fecha_resultado,
     metodo,
     resultado,
+    setSelectedRow,
     set_fecha_toma_muestra,
     set_fecha_envio,
     set_fecha_resultado,
@@ -310,6 +405,8 @@ export const use_register_laboratorio_hook = () => {
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
+    handleEdit,
+    handleDelete,
 
     // *Autocomplete
     cuenca_select,
@@ -329,9 +426,16 @@ export const use_register_laboratorio_hook = () => {
     set_value_laboratorio,
     watch_laboratorio,
     formErrors_laboratorio,
+    data_watch,
 
     // * Onsubmit
     onSubmit,
     is_saving,
+
+    // * ver resultados de laboratorio
+    rows_resultado_laboratorio,
+    tipo_parametro,
+    set_tipo_parametro,
+    fetch_data_resultado_laboratorio,
   };
 };

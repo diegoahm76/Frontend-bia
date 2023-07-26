@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type AxiosResponse } from 'axios';
 import { api } from '../../../../api/axios';
 import { type ResponseServer } from '../../../../interfaces/globalModels';
@@ -10,6 +11,8 @@ import type {
   Pozo,
 } from '../../configuraciones/interfaces/interfaces';
 import dayjs from 'dayjs';
+// import { useAppDispatch } from '../../../../hooks';
+// import { set_currente_id_resultado_laboratorio } from '../toolkit/slice/instrumentosSlice';
 
 export const search_seccion_subseccion = async ({
   nombre_seccion,
@@ -62,38 +65,6 @@ export const get_pozo_id = async (id_pozo: number): Promise<Pozo[]> => {
   const data = response.data.data;
   return data ?? [];
 };
-export const post_seccion_subscción = async (
-  form: any,
-  rows_resgister_subseccion: any
-): Promise<any> => {
-  const new_array = [
-    ...rows_resgister_subseccion,
-
-    form.nombre_subseccion === '' || form.descripcion_subseccion === ''
-      ? null
-      : {
-          nombre: form.nombre_subseccion,
-          descripcion: form.descripcion_subseccion,
-        },
-  ];
-
-  const filtered_array = new_array.filter((item: any) => item !== null);
-
-  const response = await api.post(
-    'hidrico/bibliotecas/secciones-subsecciones/create/',
-    {
-      ...form,
-      id_seccion: form.id_seccion,
-      nombre: form.nombre_seccion,
-      descripcion: form.descripcion_seccion,
-      fecha_creacion: form.fecha_creacion,
-      subsecciones:
-        rows_resgister_subseccion.length === 0 ? [] : filtered_array,
-    }
-  );
-
-  return response.data;
-};
 
 export const get_parametros_laboratorio = async (
   cod_tipo_parametro: string
@@ -107,7 +78,8 @@ export const get_parametros_laboratorio = async (
 
 export const post_resultado_laboratorio = async (
   form: any,
-  rows_registro_laboratorio: any
+  rows_registro_laboratorio: any,
+  datos: FormData
 ): Promise<any> => {
   const new_array = [
     ...rows_registro_laboratorio,
@@ -152,6 +124,32 @@ export const post_resultado_laboratorio = async (
         rows_registro_laboratorio.length === 0 ? [] : filtered_array,
     }
   );
-    console.log(response.data, 'response.data');
-  return response.data;
+  console.log(
+    response.data.data.resultados_laboratorio.id_resultado_laboratorio
+  );
+
+  // const dispatch = useAppDispatch();
+
+  // Verify that all properties exist
+  if (response.data.data.resultados_laboratorio.id_resultado_laboratorio) {
+    const id_resultado_laboratorio =
+      response.data.data.resultados_laboratorio.id_resultado_laboratorio;
+
+    // dispatch(set_currente_id_resultado_laboratorio(id_resultado_laboratorio));
+
+    // Append id_resultado_laboratorio to datos
+    datos.append('id_resultado_laboratorio', id_resultado_laboratorio);
+
+    const response_archivos = await api.post(
+      `hidrico/bibliotecas/archivos_instrumento/create/`,
+      datos
+    );
+
+    return {
+      reponse_general: response.data,
+      response_archivos: response_archivos.data,
+    };
+  } else {
+    throw new Error('id_resultado_laboratorio is missing in the response');
+  }
 };

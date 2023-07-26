@@ -34,6 +34,9 @@ const initialState = {
     id_cuenca: 0,
     id_pozo: 0,
   },
+
+  id_resultado_laboratorio: 0,
+
   mode: {
     ver: false,
     crear: false,
@@ -84,6 +87,9 @@ export const instrumentos_slice = createSlice({
       state.info_laboratorio.id_cuenca = action.payload.id_cuenca;
       state.info_laboratorio.id_pozo = action.payload.id_pozo;
     },
+    set_currente_id_resultado_laboratorio: (state, action: PayloadAction<number>) => {
+      state.id_resultado_laboratorio = action.payload;
+    },
     set_current_mode: (state, action: PayloadAction<any>) => {
       state.mode.ver = action.payload.ver;
       state.mode.crear = action.payload.crear;
@@ -99,4 +105,5 @@ export const {
   set_current_id_instrumento,
   set_current_info_laboratorio,
   set_current_mode,
+  set_currente_id_resultado_laboratorio,
 } = instrumentos_slice.actions;
