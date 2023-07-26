@@ -137,7 +137,7 @@ export const MostrarEditables: React.FC = () => {
                 <Title title="Editar Cargos" />
             </Grid>
             <Box component="form" sx={{ mt: "5px", padding: 3 }} noValidate autoComplete="off">
-                <Grid item container spacing={0}>
+                <Grid item container spacing={7}>
                     <Grid item xs={12} sm={6}>
                         {/* TextField for the Director */}
                         <TextField
