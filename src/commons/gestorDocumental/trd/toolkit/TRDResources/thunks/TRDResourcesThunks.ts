@@ -170,7 +170,7 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
 
 // ? get formatos por tipo de medio - busqueda por nombre y codigo tipo de medio ------------------------------>
 export const get_formatos_by_tipo_medio_by_format_and_name = (
-  // setCreateTRDLoadingButton: any,
+  setCreateTRDLoadingButton: any,
   name: string,
   cod_tipo_medio: string
 ): any => {
@@ -178,11 +178,11 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-    //  setCreateTRDLoadingButton(true);
+    setCreateTRDLoadingButton(true);
       const url = `gestor/trd/formatos/get-by-params/?nombre=${
         name || ''
       }&cod-tipo-medio=${cod_tipo_medio || ''}`;
-      console.log(url, 'url')
+      // console.log(url, 'url')
 
       const { data } = await api.get(url);
       /* console.log(
@@ -201,7 +201,7 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
       );
       return error as AxiosError;
     } finally {
-     // setCreateTRDLoadingButton(false);
+     setCreateTRDLoadingButton(false);
     }
   };
 };

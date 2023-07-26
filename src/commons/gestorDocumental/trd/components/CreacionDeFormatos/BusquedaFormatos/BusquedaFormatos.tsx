@@ -99,10 +99,12 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         })
       );
 
-      await get_formatos_by_tipo_medio_by_format_and_name(
-       //  setCreateTRDLoadingButton,
-        '',
-        cod_tipo_medio_doc
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
       // reset_all_format_documental_type_modal();
       // set_title_button('Actualizar');
@@ -132,7 +134,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
 
       await dispatch(
         get_formatos_by_tipo_medio_by_format_and_name(
-         //  setCreateTRDLoadingButton,
+          setCreateTRDLoadingButton,
           '',
           cod_tipo_medio_doc
         )
@@ -152,7 +154,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       );
       await dispatch(
         get_formatos_by_tipo_medio_by_format_and_name(
-         // setCreateTRDLoadingButton,
+          setCreateTRDLoadingButton,
           '',
           cod_tipo_medio_doc
         )
@@ -451,7 +453,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   onClick={() => {
                     void dispatch(
                       get_formatos_by_tipo_medio_by_format_and_name(
-                       // setCreateTRDLoadingButton,
+                        setCreateTRDLoadingButton,
                         data_format_documental_type_watch_form.nombre,
                         data_format_documental_type_watch_form[
                           'cod-tipo-medio'
@@ -463,8 +465,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   BUSCAR
                 </LoadingButton>
 
-                <LoadingButton
-                  loading={createTRDLoadingButton}
+                <Button
+                  // loading={createTRDLoadingButton}
                   type="submit"
                   color="primary"
                   variant="contained"
@@ -473,7 +475,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }
                 >
                   {title_button}
-                </LoadingButton>
+                </Button>
                 <Button
                   color="success"
                   variant="contained"
