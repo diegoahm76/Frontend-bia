@@ -7,6 +7,12 @@ export interface EtapaProceso {
 export interface TipoAtributo {
   id: number;
   tipo: string;
+  notificacion: number;
+}
+
+export interface CategoriaAtributo {
+  id: number;
+  categoria: string;
 }
 
 export interface AtributoEtapa {
@@ -14,12 +20,14 @@ export interface AtributoEtapa {
   descripcion: string;
   obligatorio: number;
   id_tipo: TipoAtributo;
+  id_categoria: CategoriaAtributo;
 }
 
 export interface ValoresProceso {
   id: number;
   id_atributo: AtributoEtapa;
-  valor: string;
+  valor: string | null;
+  documento: string | null;
 }
 
 export interface Cartera {
@@ -42,6 +50,7 @@ export interface Proceso {
   id_cartera: Cartera;
   id_etapa: EtapaProceso;
   id_funcionario: number;
+  id_categoria: CategoriaAtributo;
   inicio: string;
   fin: string | null;
 }
