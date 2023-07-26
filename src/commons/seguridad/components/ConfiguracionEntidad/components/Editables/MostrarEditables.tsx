@@ -182,6 +182,7 @@ const [variable,setvariable] = useState<boolean>(false);
                             <label>Registrado desde </label>
                             <InputText
                                 type="text"
+                                disabled
                                 className="p-inputtext-sm"
                                 placeholder={format_date(fecha_inicio_dir_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
@@ -212,6 +213,7 @@ const [variable,setvariable] = useState<boolean>(false);
                             <label>Registrado desde</label>
                             <InputText
                                 type="text"
+                                disabled
                                 className="p-inputtext-sm"
                                 placeholder={format_date(fecha_inicio_coord_alm_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
@@ -243,6 +245,7 @@ const [variable,setvariable] = useState<boolean>(false);
                             <label>Registrado desde</label>
                             <InputText
                                 type="text"
+                                disabled
                                 className="p-inputtext-sm"
                                 placeholder={format_date(fecha_inicio_coord_viv_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
@@ -275,6 +278,7 @@ const [variable,setvariable] = useState<boolean>(false);
                             <InputText
                                 type="text"
                                 className="p-inputtext-sm"
+                                  disabled
                                 placeholder={format_date(fecha_inicio_respon_trans_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
@@ -302,6 +306,7 @@ const [variable,setvariable] = useState<boolean>(false);
                             <InputText
                                 type="text"
                                 className="p-inputtext-sm"
+                                  disabled
                                 placeholder={format_date(fecha_inicio_almacenista)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
