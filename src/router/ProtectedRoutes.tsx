@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
@@ -9,35 +9,80 @@ import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
 import { RecursoHidricoRoutes } from '../commons/recursoHidrico/routers/RecursoHidricoRoutes';
 import { TransversalRoutes } from '../commons/seguridad/routers/TransversalRoutes';
 import { UserRoutes } from '../commons/seguridad/routers/UserRoutes';
+import { useEffect } from 'react';
 
+// * changes
+import { useSelector } from 'react-redux';
+import { type AuthSlice } from '../commons/auth/interfaces';
+//* changes
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
+  //* changes
+
+  const { userinfo, permisos: permisos_store } = useSelector(
+    (state: AuthSlice) => state.auth
+  );
+
+  useEffect(() => {
+    console.log('userinfo', userinfo);
+    console.log('permisos_store', permisos_store);
+  }, [userinfo, permisos_store]);
+
+  const allowed_routes = permisos_store.map(
+    (permission) => permission.subsistema
+  );
+  console.log('allowedRoutes', allowed_routes);
+
+  //* changes
+
   return (
     <Routes>
       <Route path="/*" element={<MainLayout />}>
         {/* Dashboard */}
         <Route path="home/*" element={<HomeRoutes />} />
         {/* Seguridad */}
-        <Route path="seguridad/*" element={<SeguridadRoutes />} />
+
+        {allowed_routes.includes('SEGU') ? (
+          <Route path="seguridad/*" element={<SeguridadRoutes />} />
+        ) : null}
+
         {/* Gestor documental */}
-        <Route
-          path="gestor_documental/*"
-          element={<GestorDocumentalRoutes />}
-        />
+
+        {allowed_routes.includes('GEST') ? (
+          <Route
+            path="gestor_documental/*"
+            element={<GestorDocumentalRoutes />}
+          />
+        ) : null}
+
         {/* Almacen */}
-        <Route path="almacen/*" element={<AlmacenRoutes />} />
+
+        {allowed_routes.includes('ALMA') ? (
+          <Route path="almacen/*" element={<AlmacenRoutes />} />
+        ) : null}
         {/* Conservación */}
-        <Route path="conservacion/*" element={<ConservacionRoutes />} />
+        {allowed_routes.includes('CONS') ? (
+          <Route path="conservacion/*" element={<ConservacionRoutes />} />
+        ) : null}
         {/* Recurso Hidrico */}
-        <Route path="recurso_hidrico/*" element={<RecursoHidricoRoutes />} />
-        {/* Almacen */}
-        <Route path="almacen/*" element={<AlmacenRoutes />} />
+        {allowed_routes.includes('RECU') ? (
+          <Route path="recurso_hidrico/*" element={<RecursoHidricoRoutes />} />
+        ) : null}
+
         {/* Recaudo */}
-        <Route path="recaudo/*" element={<RecaudoRoutes />} />
+
+        {allowed_routes.includes('RECA') ? (
+          <Route path="recaudo/*" element={<RecaudoRoutes />} />
+        ) : null}
         {/* Transversal */}
-        <Route path="transversal/*" element={<TransversalRoutes />} />
+
+        {allowed_routes.includes('TRSV') ? (
+          <Route path="transversal/*" element={<TransversalRoutes />} />
+        ) : null}
         {/* Usuarios */}
         <Route path="usuario/*" element={<UserRoutes />} />
+
+        <Route path="*" element={<Navigate to="/app/home" />} />
       </Route>
     </Routes>
   );
