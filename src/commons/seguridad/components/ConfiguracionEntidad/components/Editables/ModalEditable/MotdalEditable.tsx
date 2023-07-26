@@ -128,7 +128,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     const [dataEntidad, setDataEntidad] = useState<ISucursalEmpresa>(initialState);
     console.log(dataEntidad);
     console.log(1);
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
     const [personaEntidad, setPersonaEntidad] = useState<Persona | undefined>();
 
     // Utilizando el hook useState para crear el estado personaEntidad y su función para actualizarlo
