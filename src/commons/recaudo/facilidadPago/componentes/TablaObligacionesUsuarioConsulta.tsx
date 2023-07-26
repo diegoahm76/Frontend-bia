@@ -227,7 +227,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
-              <p>{`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}</p>
+              <p>
+                {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
+              </p>
               <DataGrid
                 autoHeight
                 disableSelectionOnClick

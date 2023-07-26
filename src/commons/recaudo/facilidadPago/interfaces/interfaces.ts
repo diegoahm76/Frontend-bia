@@ -50,35 +50,13 @@ export interface Funcionario {
   nombre_funcionario: string;
 }
 
-export interface FacilidadPagoSolicitud {
-  id: number;
-  id_funcionario: number;
-  id_deudor: number;
-  fecha_generacion: string;
-  tipo_actuacion: string;
-  periodicidad: number;
-  cuotas: number;
-  consignacion_soporte: string;
+export interface Bien {
+  descripcion: string;
+  direccion: string;
   documento_soporte: string;
-  documento_no_enajenacion: string;
-  documento_garantia: string;
-  observaciones: string;
-  notificaciones: boolean;
-}
-
-export interface RespuestaFacilidadPago {
-  id_funcionario: number;
-  id_facilidades_pago : number;
-  estado : string;
-  aprobacion : boolean;
-  observacion : string;
-  informe_dbme : File;
-  reportado_dbme: boolean;
-}
-
-export interface Contribuyente {
-  identificacion: string;
-  nombre_contribuyente: string;
+  nombre_tipo_bien: string;
+  ubicacion: string;
+  valor: number;
 }
 
 export interface Deudor {
@@ -94,6 +72,55 @@ export interface Contacto {
   direccion_notificaciones: string;
   ciudad: string;
   telefono_celular: string;
+}
+
+export interface DocumentosDeudor {
+  documento: string;
+  id: number;
+  id_facilidad_pago: number;
+  id_requisito_actuacion: number;
+}
+
+export interface FacilidadPagoDetalle {
+  consignacion_soporte: string;
+  cuotas: number;
+  documento_no_enajenacion: string;
+  documento_soporte: string;
+  fecha_generacion: string;
+  id: number;
+  id_deudor: number;
+  id_funcionario: number;
+  id_tipo_actuacion: number;
+  notificaciones: boolean;
+  numero_radicacion: string;
+  observaciones: string;
+  periodicidad: number;
+  tipo_actuacion: string;
+}
+
+
+export interface FacilidadPagoSolicitud {
+  bienes: Bien[];
+  datos_deudor_actuacion: Contacto;
+  deudor: Deudor;
+  documento_garantia: string;
+  documentos_deudor_actuacion: DocumentosDeudor[];
+  facilidad_pago: FacilidadPagoDetalle;
+}
+
+export interface RespuestaFacilidadPago {
+  id_funcionario: number;
+  id_facilidades_pago : number;
+  estado : string;
+  aprobacion : boolean;
+  observacion : string;
+  informe_dbme : File;
+  reportado_dbme: boolean;
+}
+
+export interface Contribuyente {
+  identificacion: string;
+  nombre_contribuyente: string;
 }
 
 export interface RegistroFacilidadPago {
@@ -119,13 +146,3 @@ export interface RegistroFacilidadPago {
   documento_soporte_bien: File;
 }
 
-export interface Bien {
-  cod_deudor : number;
-  id_tipo_bien : number;
-  descripcion : string;
-  direccion : string;
-  estado : string;
-  documento_soporte : string;
-  valor : number;
-  id_ubicacion : string;
-}

@@ -7,11 +7,23 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { type event } from '../interfaces/interfaces';
 import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
 import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
 import { TablaProyeccionPagos } from '../componentes/TablaProyeccionPagos';
 import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
+
+interface RootState {
+  deudores: {
+    deudores: {
+      identificacion: string;
+      nombre: string;
+      apellido: string;
+      numero_facilidad: string;
+    }
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Amortizacion: React.FC = () => {
@@ -21,6 +33,7 @@ export const Amortizacion: React.FC = () => {
   const [tasa_usura, set_tasa_usura] = useState(0);
   const [tasa_diaria, set_tasa_diaria] = useState(0);
   const [modal, set_modal] = useState(false);
+  const { deudores } = useSelector((state: RootState) => state.deudores);
 
   console.log('periodicidad: ', num_periodicidad);
 
@@ -62,7 +75,7 @@ export const Amortizacion: React.FC = () => {
                   label="Nombre Deudor"
                   size="small"
                   fullWidth
-                  value={``}
+                  value={''.concat(deudores.nombre, ' ', deudores.apellido)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -71,7 +84,7 @@ export const Amortizacion: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={``}
+                  value={`${deudores.identificacion}`}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -80,7 +93,7 @@ export const Amortizacion: React.FC = () => {
                   label="Nro. Solicitud Facilidad de Pago"
                   size="small"
                   fullWidth
-                  value={``}
+                  value={`${deudores.numero_facilidad}`}
                 />
               </Grid>
             </Grid>

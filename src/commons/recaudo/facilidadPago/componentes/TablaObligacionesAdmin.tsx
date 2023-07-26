@@ -148,7 +148,9 @@ export const TablaObligacionesAdmin: React.FC = () => {
               >
                 {
                   funcionarios.map((funcionario) => (
-                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>{funcionario.nombre_funcionario}</MenuItem>
+                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>
+                      {funcionario.nombre_funcionario}
+                    </MenuItem>
                   ))
                 }
               </Select>
@@ -288,7 +290,13 @@ export const TablaObligacionesAdmin: React.FC = () => {
         maxWidth="xs"
       >
         <Box component="form">
-          <DialogTitle>{asignacion ? '¿Está seguro de realizar la asignación de usuario?' : '¿Está seguro de realizar la reasignación de usuario?'}</DialogTitle>
+          <DialogTitle>
+            {
+              asignacion ?
+              '¿Está seguro de realizar la asignación de usuario?' :
+              '¿Está seguro de realizar la reasignación de usuario?'
+            }
+          </DialogTitle>
           <DialogActions>
             <Button
               variant='outlined'

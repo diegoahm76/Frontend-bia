@@ -13,7 +13,7 @@ import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
-import { post_registro_fac_pago, post_registro_bienes, get_tipo_bienes } from '../requests/requests';
+import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -712,7 +712,10 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 </FormControl>
               </Grid>
               {
-                periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
+                periodicidad === 'años' && plazo > 1 ||
+                periodicidad === 'semestres' && plazo > 2 ||
+                periodicidad === 'trimestres' && plazo > 4 ||
+                periodicidad === 'meses' && plazo > 12 ? (
                   <>
                     <Grid item xs={12} sm={5} direction="row" rowSpacing={2}>
                       <FormControl size="small" fullWidth>
@@ -778,7 +781,10 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       {
-        periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
+        periodicidad === 'años' && plazo > 1 ||
+        periodicidad === 'semestres' && plazo > 2 ||
+        periodicidad === 'trimestres' && plazo > 4 ||
+        periodicidad === 'meses' && plazo > 12 ? (
           <Grid
           container
           sx={{
@@ -993,7 +999,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       valor: '3000000',
                       documento_soporte_bien: form_files.documento_soporte,
                     })
-                    void get_tipo_bienes()
                     handle_open()
                   }}
                 >
