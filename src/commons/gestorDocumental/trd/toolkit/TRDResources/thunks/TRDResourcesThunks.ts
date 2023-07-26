@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
@@ -169,18 +170,20 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
 
 // ? get formatos por tipo de medio - busqueda por nombre y codigo tipo de medio ------------------------------>
 export const get_formatos_by_tipo_medio_by_format_and_name = (
-  setCreateTRDLoadingButton: any,
-  name?: string,
-  cod_tipo_medio?: string
+  // setCreateTRDLoadingButton: any,
+  name: string,
+  cod_tipo_medio: string
 ): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-      setCreateTRDLoadingButton(true);
+    //  setCreateTRDLoadingButton(true);
       const url = `gestor/trd/formatos/get-by-params/?nombre=${
-        name ?? ''
-      }&cod-tipo-medio=${cod_tipo_medio ?? ''}`;
+        name || ''
+      }&cod-tipo-medio=${cod_tipo_medio || ''}`;
+      console.log(url, 'url')
+
       const { data } = await api.get(url);
       /* console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 159 ~ return ~ data',
@@ -198,7 +201,7 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
       );
       return error as AxiosError;
     } finally {
-      setCreateTRDLoadingButton(false);
+     // setCreateTRDLoadingButton(false);
     }
   };
 };

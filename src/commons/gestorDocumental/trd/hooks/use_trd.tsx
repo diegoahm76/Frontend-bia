@@ -12,6 +12,7 @@ import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFini
 import {
   get_catalogo_series_subseries_unidad_organizacional,
   get_catalogo_trd_action,
+  get_data_format_documental_type,
   // get_data_format_documental_type,
   get_data_format_documental_type_current,
   get_trd_current,
@@ -216,7 +217,7 @@ export const use_trd = (): any => {
   const reset_all_format_documental_type_modal = (): void => {
     //* reset form
     dispatch(get_data_format_documental_type_current(null));
-    // dispatch(get_data_format_documental_type([]));
+    dispatch(get_data_format_documental_type([]));
     reset_format_documental_type({
       'cod-tipo-medio': {
         label: '',

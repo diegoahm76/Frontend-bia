@@ -89,6 +89,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
       nombre
     } = data_format_documental_type_watch_form;
+    console.log('cod_tipo_medio_doc', cod_tipo_medio_doc);
 
     try {
       await dispatch(
@@ -98,10 +99,12 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         })
       );
 
-      await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+      await get_formatos_by_tipo_medio_by_format_and_name(
+       //  setCreateTRDLoadingButton,
+        '',
+        cod_tipo_medio_doc
       );
-      reset_all_format_documental_type_modal();
+      // reset_all_format_documental_type_modal();
       // set_title_button('Actualizar');
     } catch (err) {
       console.log(err);
@@ -128,9 +131,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       );
 
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+         //  setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
-      reset_all_format_documental_type_modal();
+      // reset_all_format_documental_type_modal();
     } catch (err) {
       console.log(err);
     }
@@ -144,7 +151,11 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         delete_formato_by_tipo_medio_service(id_formato_tipo_medio)
       );
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+         // setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
     } catch (err) {
       console.log(err);
@@ -440,7 +451,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   onClick={() => {
                     void dispatch(
                       get_formatos_by_tipo_medio_by_format_and_name(
-                        setCreateTRDLoadingButton,
+                       // setCreateTRDLoadingButton,
                         data_format_documental_type_watch_form.nombre,
                         data_format_documental_type_watch_form[
                           'cod-tipo-medio'
@@ -452,7 +463,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   BUSCAR
                 </LoadingButton>
 
-                <Button
+                <LoadingButton
+                  loading={createTRDLoadingButton}
                   type="submit"
                   color="primary"
                   variant="contained"
@@ -461,7 +473,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }
                 >
                   {title_button}
-                </Button>
+                </LoadingButton>
                 <Button
                   color="success"
                   variant="contained"
