@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Avatar, Button, Grid, TextField, Tooltip } from '@mui/material';
 import { Title } from '../../../components/Title';
 // import { TablaIncumplimiento } from '../components/HistorialProceso/TablaIncumplimiento';
