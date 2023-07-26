@@ -8,26 +8,36 @@ import { Title } from "../../../../../../../components/Title";
 import { BuscadorPersona } from "../../../../../../../components/BuscadorPersona";
 import { control_error, control_success } from "../../../../SucursalEntidad/utils/control_error_or_success";
 import { api } from "../../../../../../../api/axios";
+import type { ISucursalEmpresa } from "../../../interfaces/interfacesConEntidad";
 
 interface ModalEditarCargoProps {
     name: string;
     fecha: string;
     titlee: string;
     cod: number;
+    onClick: () => void; // Prop para la función onClick del botón en el componente hijo
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod }) => {
+export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod, onClick }) => {
 
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const handleGuardarYPoner = ():void => {
+         setVisible(false)
+        onClick();
+    };
 
+ 
+ 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [visible, setVisible] = React.useState<boolean>(false);
 
     const footer_content = (
         <div>
-            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { setVisible(false) }} >Salir</Button>
-            <Button style={{ margin: 3 }} type="submit" variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar  </Button>
+            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { handleGuardarYPoner() }} >Salir</Button>
+            <Button style={{ margin: 3 }} type="submit" variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
+  
         </div>
     );
 
@@ -48,18 +58,8 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         primer_apellido: string;
         segundo_apellido: string;
 
-        // Otras propiedades...
     }
-    // const initialPersona: Persona = {
-    //     id_persona: 0,
-    //     primer_nombre: "",
-    //     segundo_nombre: "",
-    //     primer_apellido: "",
-    //     segundo_apellido: "",
-    //     // Otras propiedades... (si las hay)
-    // };
-
-
+  
     const [persona, set_persona] = useState<Persona | undefined>();
 
     const on_result = async (info_persona: Persona): Promise<void> => {
@@ -81,30 +81,6 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
 
 
-
-
-
-
-    interface ISucursalEmpresa {
-        email_corporativo_sistema: string | null;
-        fecha_inicio_dir_actual: string | null;
-        fecha_inicio_coord_alm_actual: string | null;
-        fecha_inicio_respon_trans_actual: string | null;
-        fecha_inicio_coord_viv_actual: string | null;
-        fecha_inicio_almacenista: string | null;
-        id_persona_director_actual: number;
-        id_persona_coord_almacen_actual: number;
-        id_persona_respon_transporte_actual: number;
-        id_persona_coord_viveros_actual: number;
-        id_persona_almacenista: number;
-        observaciones_de_cambio_director: string;
-        observaciones_de_cambio_coord_almacen: string;
-        observaciones_de_cambio_respon_transporte: string;
-        observaciones_de_cambio_coord_viveros: string;
-        observaciones_de_cambio_almacenista: string;
-    }
-
-    // Inicialización de la variable personaEntidad con valores predeterminados
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const initialState: ISucursalEmpresa = {
 
@@ -172,7 +148,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
               
                 break;
 
-            case 3:
+            case 4:
                 updatedDataEntidad = {
                     ...updatedDataEntidad,
                     id_persona_coord_viveros_actual: id_personaa,
@@ -181,7 +157,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                
                 break;
 
-            case 4:
+            case 3:
                 updatedDataEntidad = {
                     ...updatedDataEntidad,
                     id_persona_respon_transporte_actual: id_personaa,
@@ -219,9 +195,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                     id_persona_almacenista: updatedEmail,
                 };
                 setDataEntidad(datosActualizados);
-
-                control_success("Datos actualizados correctamente");
-                // mensaje();
+                control_success("Cargo actualizado correctamente");
             })
             .catch((error: any) => {
               
@@ -233,6 +207,15 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             console.error(error);
         });
     }, []);
+
+    const format_date = (dateString: string): string => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
 
 
     return (
@@ -246,7 +229,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             >
                 Cambiar
             </Button>
-            <Dialog header={title} visible={visible} style={{ width: '50%' }} onHide={() => { setVisible(false) }} footer={footer_content}>
+            <Dialog header={title} visible={visible} style={{ width: '50%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
                 <Grid container sx={{
                     background: '#FAFAFA',
                     borderRadius: '15px',
@@ -279,7 +262,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                             size="small"
                             disabled
                             fullWidth
-                            value={fecha}
+                            value={format_date(fecha)}
                         />
                     </Grid>
                 </Grid>

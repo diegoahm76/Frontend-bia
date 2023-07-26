@@ -5,6 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Title } from "../../../../../../components/Title";
 import { api } from "../../../../../../api/axios";
 import type { IconfiguracionEntidad } from "../../interfaces/interfacesConEntidad"; // <-- Use import type here
+import {MostrrModalHistorico} from "./ModalHistorico/ModalHistroico";
 
 const initial_state: IconfiguracionEntidad = {
     email_corporativo_sistema: "",
@@ -120,6 +121,29 @@ export const MostrarEditables: React.FC = () => {
     const Coordinadortransporte = data_nombre[3] !== undefined ? data_nombre[3] : "";
     const almacenista = data_nombre[4] !== undefined ? data_nombre[4] : "";
 
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+const [variable,setvariable] = useState<boolean>(false);
+
+       // eslint-disable-next-line @typescript-eslint/naming-convention
+ const handleButtonClick=():void=>{
+        
+        
+        setvariable(true);
+    
+    };
+
+
+    useEffect(() => {
+        fetch_data_get().catch(console.error);
+        setvariable(false);
+    }, [variable]);
+
+    // Update data_nombre whenever data_entidad changes
+    useEffect(() => {
+        void traer_personas_por_id();
+    }, [variable]);
+
+
     return (
         <Grid
             container
@@ -132,8 +156,7 @@ export const MostrarEditables: React.FC = () => {
                 boxShadow: "0px 3px 6px #042F4A26",
             }}
         >
-            <Grid item xs={12}>
-                {/* Title */}
+            <Grid item md={12} xs={12}>
                 <Title title="Editar Cargos" />
             </Grid>
             <Box component="form" sx={{ mt: "5px", padding: 3 }} noValidate autoComplete="off">
@@ -149,7 +172,11 @@ export const MostrarEditables: React.FC = () => {
                             value={director}
                             onClick={(): void => { fetch_data(id_persona_director_actual).then(console.log).catch(console.error) }}
                         />
-                        <ModalEditarCargo name={data_nombre[0]} fecha={fecha_inicio_dir_actual} titlee={"Director"} cod={1}/>
+                        
+                        <Box style={{ display: 'flex'}}>
+                        <ModalEditarCargo name={data_nombre[0]} fecha={fecha_inicio_dir_actual} titlee={"Director"} cod={1} onClick={handleButtonClick} />
+                        <MostrrModalHistorico codi={1}/>
+                        </Box>
 
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde </label>
@@ -173,7 +200,14 @@ export const MostrarEditables: React.FC = () => {
                             value={Coordinadoalmacen}
                             onClick={(): void => { fetch_data(id_persona_coord_almacen_actual).then(console.log).catch(console.error) }}
                         />
-                        <ModalEditarCargo name={data_nombre[1]} fecha={fecha_inicio_coord_alm_actual} titlee={"Coordinador de Almacen"} cod={2} />
+                     
+                        <Box style={{ display: 'flex' }}>
+                            <ModalEditarCargo name={data_nombre[1]} fecha={fecha_inicio_coord_alm_actual} titlee={"Coordinador de Almacen"} cod={2} onClick={handleButtonClick} />
+                            <MostrrModalHistorico codi={2} />
+                        </Box>
+                     
+                     
+                     
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText
@@ -196,7 +230,15 @@ export const MostrarEditables: React.FC = () => {
                             value={Coordinadorviveros}
                             onClick={(): void => { fetch_data(id_persona_coord_viveros_actual).then(console.log).catch(console.error) }}
                         />
-                        <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} cod={3}/>
+
+
+                            <Box style={{ display: 'flex' }}>
+                            <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} cod={3} onClick={handleButtonClick} />
+                            <MostrrModalHistorico codi={3} />
+                        </Box>
+                      
+                      
+                      
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText
@@ -218,7 +260,16 @@ export const MostrarEditables: React.FC = () => {
                             label="Coordinador de Transporte"
                             value={Coordinadortransporte}
                             onClick={(): void => { fetch_data(id_persona_respon_transporte_actual).then(console.log).catch(console.error) }} />
-                        <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} cod={4}/>
+                      
+
+                        <Box style={{ display: 'flex' }}>
+                            <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} cod={4} onClick={handleButtonClick} />
+                            <MostrrModalHistorico codi={4} />
+                        </Box>
+
+                      
+                      
+                      
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText
@@ -240,7 +291,12 @@ export const MostrarEditables: React.FC = () => {
                             label="Almacenista"
                             value={almacenista}
                             onClick={(): void => { fetch_data(id_persona_almacenista).then(console.log).catch(console.error) }} />
-                        <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} cod={5}/>
+                        
+                        <Box style={{ display: 'flex' }}>
+                            <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} cod={5} onClick={handleButtonClick} />
+                            <MostrrModalHistorico codi={5} />
+                        </Box>
+
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText

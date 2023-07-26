@@ -12,7 +12,24 @@ export  interface IconfiguracionEntidad {
     id_persona_coord_viveros_actual: number;
     id_persona_almacenista: number;
 }
-
+export interface ISucursalEmpresa {
+    email_corporativo_sistema: string | null;
+    fecha_inicio_dir_actual: string | null;
+    fecha_inicio_coord_alm_actual: string | null;
+    fecha_inicio_respon_trans_actual: string | null;
+    fecha_inicio_coord_viv_actual: string | null;
+    fecha_inicio_almacenista: string | null;
+    id_persona_director_actual: number;
+    id_persona_coord_almacen_actual: number;
+    id_persona_respon_transporte_actual: number;
+    id_persona_coord_viveros_actual: number;
+    id_persona_almacenista: number;
+    observaciones_de_cambio_director: string;
+    observaciones_de_cambio_coord_almacen: string;
+    observaciones_de_cambio_respon_transporte: string;
+    observaciones_de_cambio_coord_viveros: string;
+    observaciones_de_cambio_almacenista: string;
+}
 
 
 
