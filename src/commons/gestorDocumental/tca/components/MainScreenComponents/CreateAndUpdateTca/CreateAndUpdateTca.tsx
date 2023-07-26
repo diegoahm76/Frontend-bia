@@ -15,6 +15,7 @@ import { use_tca } from '../../../hooks/use_tca';
 import { TCASTerminados } from '../view/TCASTerminados/TCASTerminados';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
 import { TRDSUsados } from '../view/TRDSUsados/TRDSUsados';
+import { BusquedaTCAModal } from '../view/BusquedaTCA/BusquedaTCAModal';
 
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
@@ -30,7 +31,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   } = use_tca();
 
   //* CONTEXT MODALS
-  const { openModalTcaTerminados, openModalTrdsUsados } =
+  const { openModalTcaTerminados, openModalTrdsUsados, openModalBusquedaTca } =
     useContext(ModalContextTCA);
 
   return (
@@ -205,7 +206,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 color="primary"
                 variant="outlined"
                 startIcon={<SearchIcon />}
-                // onClick={openModalModalSearchTRD}
+                onClick={openModalBusquedaTca}
               >
                 BUSCAR TCA
               </Button>
@@ -255,6 +256,8 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
       <TRDSUsados />
 
       {/* MODAL BUSQUEDA TCA */}
+
+      <BusquedaTCAModal />
     </>
   );
 };
