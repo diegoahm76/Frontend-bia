@@ -3,7 +3,7 @@ import { Title } from "../../../../../../components/Title";
 import { api } from "../../../../../../api/axios";
 import { useEffect, useState } from "react";
 import { control_error, control_success } from "../../../SucursalEntidad/utils/control_error_or_success";
-import { IDataentidad } from "../../interfaces/interfacesConEntidad";
+import type { IDataentidad } from "../../interfaces/interfacesConEntidad";
 
 
 
