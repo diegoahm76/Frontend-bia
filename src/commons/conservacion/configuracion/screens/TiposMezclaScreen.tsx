@@ -251,25 +251,6 @@ export function TiposMezclaScreen(): JSX.Element {
     });
   }, [dispatch]);
 
-  const button_style = {
-    color: 'white',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: '10px',
-  };
-
-  // eslint-disable-next-line object-shorthand
-  const handle_clickxls = (): void => {
-    download_xls({ nurseries: mixtures, columns });
-  };
-  // eslint-disable-next-line object-shorthand
-  const handle_clickpdf = (): void => {
-    download_pdf({ nurseries: mixtures, columns });
-  };
 
   return (
     <>
@@ -347,19 +328,11 @@ export function TiposMezclaScreen(): JSX.Element {
               </Button>
             </Grid>
             <Grid item xs={2}>
-              <ButtonGroup style={{ margin: 7 }}>
-                <Button
-                  style={{ ...button_style, backgroundColor: '#335B1E' }}
-                  onClick={handle_clickxls}
-                >
-                  <i className="pi pi-file-excel"></i>
-                </Button>
-                <Button
-                  style={{ ...button_style, backgroundColor: 'red' }}
-                  onClick={handle_clickpdf}
-                >
-                  <i className="pi pi-file-pdf"></i>
-                </Button>
+              <ButtonGroup style={{ margin: 7 }}  >
+                
+                {download_xls({ nurseries: filterednurseries, columns })}
+                {download_pdf({ nurseries: filterednurseries, columns })}
+
               </ButtonGroup>
             </Grid>
           </Grid>
