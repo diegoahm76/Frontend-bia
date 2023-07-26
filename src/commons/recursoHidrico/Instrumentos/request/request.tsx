@@ -153,3 +153,84 @@ export const post_resultado_laboratorio = async (
     throw new Error('id_resultado_laboratorio is missing in the response');
   }
 };
+
+export const post_resultado_aforo = async (
+  form: any,
+  rows_registro_aforo: any,
+  datos: FormData
+): Promise<any> => {
+  const new_array = [
+    ...rows_registro_aforo,
+
+    form.id_cartera_aforos === null ||
+    form.distancia_a_la_orilla === null ||
+    form.profundidad === '' ||
+    form.velocidad_superficial === '' ||
+    form.velocidad_profunda === '' ||
+    form.transecto === '' ||
+    form.profundidad_promedio === '' ||
+    form.velocidad_promedio === '' ||
+    form.velocidad_transecto === '' ||
+    form.caudal === ''
+      ? null
+      : {
+          id_cartera_aforos: form.id_cartera_aforos,
+          distancia_a_la_orilla: form.distancia_a_la_orilla,
+          profundidad: form.profundidad,
+          velocidad_superficial: form.velocidad_superficial,
+          velocidad_profunda: form.velocidad_profunda,
+          transecto: form.transecto,
+          profundidad_promedio: form.profundidad_promedio,
+          velocidad_promedio: form.velocidad_promedio,
+          velocidad_transecto: form.velocidad_transecto,
+          caudal: form.caudal,
+        },
+  ];
+
+  const filtered_array = new_array.filter((item: any) => item !== null);
+
+  const response = await api.post(
+    'hidrico/bibliotecas/carteras_aforo/create/',
+    {
+      ...form,
+      id_cartera_aforos: form.id_cartera_aforos,
+      id_instrumento: form.id_instrumento,
+      id_cuenca: form.id_cuenca,
+      ubicacion_aforo: form.ubicacion_aforo,
+      descripcion: form.descripcion,
+      latitud: form.latitud,
+      longitud: form.longitud,
+      fecha_aforo: dayjs(form.fecha_aforo).format('YYYY-MM-DDTHH:mm:ss'),
+      cod_tipo_aforo: form.cod_tipo_aforo,
+      numero_serie: form.numero_serie,
+      numero_helice: form.numero_helice,
+      datos_cartera_aforo:
+        rows_registro_aforo.length === 0 ? [] : filtered_array,
+    }
+  );
+
+  console.log(
+    response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos,
+    'data.data.cartera_aforo'
+  );
+  // Verify that all properties exist
+  if (response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos) {
+    const id_cartera_aforos =
+      response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos;
+
+    // Append id_cartera_aforos to datos
+    datos.append('id_cartera_aforos', id_cartera_aforos);
+
+    const response_archivos = await api.post(
+      `hidrico/bibliotecas/archivos_instrumento/create/`,
+      datos
+    );
+
+    return {
+      reponse_general: response.data,
+      response_archivos: response_archivos.data,
+    };
+  } else {
+    throw new Error('id_cartera_aforos is missing in the response');
+  }
+};

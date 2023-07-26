@@ -616,7 +616,7 @@ export const AgregarLaboratorio: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required={rows_laboratorio.length === 0}
-                ></TextField>
+                />
               )}
             />
           </Grid>

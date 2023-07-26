@@ -48,3 +48,15 @@ export interface DataAgregarLaboratorio {
   fecha_analisis: Date | null;
   resultado: string;
 }
+export interface Aforo {
+  id: string,
+  distancia_a_la_orilla: number,
+  transecto: number,
+  profundidad: number,
+  profundidad_promedio: number,
+  velocidad_superficial: number,
+  velocidad_profunda: number,
+  velocidad_promedio: number,
+  velocidad_transecto: number,
+  caudal: number
+}
