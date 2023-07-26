@@ -27,7 +27,7 @@ import DialogCrearOrganigrama from '../DialogCrearOrganigrama/DialogCrearOrganig
 import DialogElegirOrganigramaActual from '../DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
 import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarOrganigrama';
 // Slices
-import { current_organigram } from '../../store/slices/organigramSlice';
+import { current_organigram, set_special_edit } from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
 import DialogElegirCcdActual from '../DialogElegirCcdActual/DialogElegirCcdActual';
@@ -280,7 +280,7 @@ export function ListOrganigramas({
 
               console.log('params.row.id_persona_cargo', params.row);
               console.log('userinfo.id_persona', userinfo);
-
+              dispatch(set_special_edit(true));
               dispatch(current_organigram(params.row));
               set_position_tab_organigrama('2');
             }}

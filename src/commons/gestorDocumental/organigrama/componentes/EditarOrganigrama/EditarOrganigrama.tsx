@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { useState, useEffect, type SetStateAction, type Dispatch } from 'react';
@@ -32,6 +33,7 @@ import {
   to_finalize_organigram_service,
   to_resume_organigram_service
 } from '../../store/thunks/organigramThunks';
+import { set_special_edit } from '../../store/slices/organigramSlice';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -46,7 +48,8 @@ export const EditarOrganigrama = ({
     organigram_current,
     levels_organigram,
     unity_organigram,
-    mold_organigram
+    mold_organigram,
+    specialEdit,
   } = useAppSelector((state) => state.organigram);
 
   const {
@@ -93,6 +96,7 @@ export const EditarOrganigrama = ({
   };
 
   const handle_to_go_back = (): void => {
+    dispatch(set_special_edit(false));
     set_position_tab_organigrama('1');
   };
 
@@ -526,7 +530,7 @@ export const EditarOrganigrama = ({
           )}
         </Box>
 
-        {organigram_current.actual && (
+        {organigram_current.actual && specialEdit &&  (
             <Box
               component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -768,6 +772,7 @@ export const EditarOrganigrama = ({
             variant="contained"
             startIcon={<VisibilityIcon />}
             onClick={() => {
+              dispatch(set_special_edit(false));
               set_view_organigram(true);
             }}
           >
