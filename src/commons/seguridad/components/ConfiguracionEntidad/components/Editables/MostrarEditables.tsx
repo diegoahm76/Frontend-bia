@@ -137,7 +137,7 @@ export const MostrarEditables: React.FC = () => {
                 <Title title="Editar Cargos" />
             </Grid>
             <Box component="form" sx={{ mt: "5px", padding: 3 }} noValidate autoComplete="off">
-                <Grid item container spacing={0}>
+                <Grid item container spacing={7}>
                     <Grid item xs={12} sm={6}>
                         {/* TextField for the Director */}
                         <TextField
@@ -149,7 +149,7 @@ export const MostrarEditables: React.FC = () => {
                             value={director}
                             onClick={(): void => { fetch_data(id_persona_director_actual).then(console.log).catch(console.error) }}
                         />
-                        <ModalEditarCargo name={data_nombre[0]} fecha={fecha_inicio_dir_actual} titlee={"Director"} />
+                        <ModalEditarCargo name={data_nombre[0]} fecha={fecha_inicio_dir_actual} titlee={"Director"} cod={1}/>
 
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde </label>
@@ -173,7 +173,7 @@ export const MostrarEditables: React.FC = () => {
                             value={Coordinadoalmacen}
                             onClick={(): void => { fetch_data(id_persona_coord_almacen_actual).then(console.log).catch(console.error) }}
                         />
-                        <ModalEditarCargo name={data_nombre[1]} fecha={fecha_inicio_coord_alm_actual} titlee={"Coordinador de Almacen"} />
+                        <ModalEditarCargo name={data_nombre[1]} fecha={fecha_inicio_coord_alm_actual} titlee={"Coordinador de Almacen"} cod={2} />
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText
@@ -196,7 +196,7 @@ export const MostrarEditables: React.FC = () => {
                             value={Coordinadorviveros}
                             onClick={(): void => { fetch_data(id_persona_coord_viveros_actual).then(console.log).catch(console.error) }}
                         />
-                        <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} />
+                        <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} cod={3}/>
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText
@@ -218,7 +218,7 @@ export const MostrarEditables: React.FC = () => {
                             label="Coordinador de Transporte"
                             value={Coordinadortransporte}
                             onClick={(): void => { fetch_data(id_persona_respon_transporte_actual).then(console.log).catch(console.error) }} />
-                        <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} />
+                        <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} cod={4}/>
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText
@@ -240,7 +240,7 @@ export const MostrarEditables: React.FC = () => {
                             label="Almacenista"
                             value={almacenista}
                             onClick={(): void => { fetch_data(id_persona_almacenista).then(console.log).catch(console.error) }} />
-                        <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} />
+                        <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} cod={5}/>
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <label>Registrado desde</label>
                             <InputText

@@ -13,10 +13,13 @@ interface ModalEditarCargoProps {
     name: string;
     fecha: string;
     titlee: string;
+    cod: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee }) => {
+export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod }) => {
+
+
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [visible, setVisible] = React.useState<boolean>(false);
@@ -65,7 +68,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     }
 
     const {
-        //   id_persona ,
+        id_persona,
         primer_nombre,
         segundo_nombre,
         primer_apellido,
@@ -73,10 +76,9 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     const nombre_completo = `${primer_nombre ?? ""} ${segundo_nombre ?? ""} ${primer_apellido ?? ""} ${segundo_apellido ?? ""}`;
     const nombre = nombre_completo ?? "";
+    const id_personaa: number = id_persona ?? 0;
 
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [value, setValue] = useState<string>('');
 
 
 
@@ -126,13 +128,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [dataEntidad, setDataEntidad] = useState<ISucursalEmpresa>(initialState);
-    console.log(dataEntidad);
-    console.log(1);
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [personaEntidad, setPersonaEntidad] = useState<Persona | undefined>();
 
-    // Utilizando el hook useState para crear el estado personaEntidad y su función para actualizarlo
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const fetchDataGet = async (): Promise<void> => {
         try {
@@ -140,22 +136,73 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             const res = await api.get(url);
             const facilidad_pago_data = res.data.data;
             setDataEntidad(facilidad_pago_data[0]);
+
         } catch (error) {
             console.error(error);
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [value, setValue] = useState<string>("");
+   
 
 
+    const codigo = cod;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleChangeEmail = (): void => {
-
-
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const updatedDataEntidad: ISucursalEmpresa = {
-            ...dataEntidad,
-            email_corporativo_sistema: "jajajaajjaja",
-        };
+        let updatedDataEntidad: ISucursalEmpresa = { ...dataEntidad };
+
+        switch (codigo) {
+            case 1:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_director_actual: id_personaa,
+                    observaciones_de_cambio_director: value,
+                };
+                
+                break;
+
+            case 2:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_coord_almacen_actual: id_personaa,
+                    observaciones_de_cambio_coord_almacen: value,
+                };
+              
+                break;
+
+            case 3:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_coord_viveros_actual: id_personaa,
+                    observaciones_de_cambio_coord_viveros: value,
+                };
+               
+                break;
+
+            case 4:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_respon_transporte_actual: id_personaa,
+                    observaciones_de_cambio_respon_transporte: value,
+                };
+               
+                break;
+
+            case 5:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_almacenista: id_personaa,
+                    observaciones_de_cambio_almacenista: value,
+                };
+             
+                break;
+
+            default:
+                
+                break;
+        }
 
         const payload = {
             ...updatedDataEntidad,
@@ -165,29 +212,24 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             .put("transversal/configuracion/configuracionEntidad/update/3/", payload)
             .then((response) => {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                const updatedEmail = response.data.email_corporativo_sistema;
+                const updatedEmail = response.data.id_persona_almacenista;
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 const datosActualizados: ISucursalEmpresa = {
                     ...updatedDataEntidad,
-                    email_corporativo_sistema: updatedEmail,
+                    id_persona_almacenista: updatedEmail,
                 };
                 setDataEntidad(datosActualizados);
-
 
                 control_success("Datos actualizados correctamente");
                 // mensaje();
             })
             .catch((error: any) => {
-                // console.error("Error al actualizar los datos:", error);
-                control_error(error.response.data.detail)
-
-
+              
+                control_error(error.response.data.detail);
             });
-
     };
-
     useEffect(() => {
-        fetchDataGet().catch((error) => {
+        fetchDataGet().catch((error: any) => {
             console.error(error);
         });
     }, []);

@@ -16,7 +16,7 @@ export const MostrarEmail: React.FC<MostrarEmailProps> = (props: MostrarEmailPro
     // Estado inicial de los datos de la sucursal de la empresa
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const initialState: IconfiguracionEntidad = {
-        email_corporativo_sistema: "",
+     email_corporativo_sistema: "",
         fecha_inicio_dir_actual: "",
         fecha_inicio_coord_alm_actual: "",
         fecha_inicio_respon_trans_actual: "",
@@ -70,7 +70,7 @@ export const MostrarEmail: React.FC<MostrarEmailProps> = (props: MostrarEmailPro
             // eslint-disable-next-line @typescript-eslint/naming-convention
             const updatedDataEntidad: IconfiguracionEntidad = {
                 ...dataEntidad,
-                email_corporativo_sistema: emailValue,
+                id_persona_director_actual: 10,
             };
 
             const payload = {
@@ -81,11 +81,11 @@ export const MostrarEmail: React.FC<MostrarEmailProps> = (props: MostrarEmailPro
                 .put("transversal/configuracion/configuracionEntidad/update/3/", payload)
                 .then((response) => {
                     // eslint-disable-next-line @typescript-eslint/naming-convention
-                    const updatedEmail = response.data.email_corporativo_sistema;
+                    const updatedEmail = response.data.id_persona_director_actual;
                     // eslint-disable-next-line @typescript-eslint/naming-convention
                     const updatedDataEntidadWithUpdatedEmail: IconfiguracionEntidad = {
                         ...updatedDataEntidad,
-                        email_corporativo_sistema: updatedEmail,
+                        id_persona_director_actual: updatedEmail,
                     };
                     setDataEntidad(updatedDataEntidadWithUpdatedEmail);  
                     control_success("Datos actualizados correctamente");
@@ -161,6 +161,8 @@ export const MostrarEmail: React.FC<MostrarEmailProps> = (props: MostrarEmailPro
                                     setEmailValue(e.target.value);
                                     setEmailMismatch(false);
                                 }}
+                                error={emailMismatch} // Agregar el error prop
+                                helperText={emailMismatch ? "Los correos no coinciden o están vacíos" : ""} // Agregar el mensaje de error
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
