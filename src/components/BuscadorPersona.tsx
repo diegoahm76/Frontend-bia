@@ -311,7 +311,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         }}
       >
         <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid item xs={12} sm={6}  lg={3}>
             <CustomSelect
               onChange={handle_change_select}
               label="Tipo de documento *"
@@ -325,7 +325,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid item xs={12} sm={6}  lg={3}>
             {is_loading ? (
               <Skeleton variant="rectangular" width="100%" height={45} />
             ) : (
@@ -346,7 +346,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               </FormControl>
             )}
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid item xs={12} sm={6}  lg={2}>
             <LoadingButton
               aria-label="toggle password visibility"
               variant="contained"
@@ -356,14 +356,16 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               disabled={is_search}
             >
               Buscar
-            </LoadingButton>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handle_click_open}
-            >
-              Búsqueda avanzada
-            </Button>
+            </LoadingButton> </Grid>
+            <  Grid item xs={12} sm={6}  lg={4}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handle_click_open}
+              >
+                Búsqueda avanzada
+              </Button>
+           
           </Grid>
         </Grid>
       </form>

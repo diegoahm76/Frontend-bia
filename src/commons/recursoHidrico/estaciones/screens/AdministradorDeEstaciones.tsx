@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
@@ -17,6 +18,7 @@ import { control_error } from '../../../../helpers/controlError';
 import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
 import Swal from 'sweetalert2';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
@@ -217,9 +219,17 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 >
                     CREAR ESTACIÓN
                 </Button>
-            </Grid>
-            <Grid item xs={12} container justifyContent='center'>
+           
+                <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
+                {download_xls({ nurseries: list_estaciones, columns })}
+
+            </ButtonGroup>
+
+            
+             </Grid>
+            <Grid item xs={12} container justifyContent='center'>
+                
                 {list_estaciones.length > 0 ? (
                     <DataGrid
                         autoHeight

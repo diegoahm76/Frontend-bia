@@ -16,7 +16,8 @@ import Select from "react-select";
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 import type { AxiosError } from 'axios';
-
+import ButtonGroup from '@mui/material/ButtonGroup';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 const columns: GridColDef[] = [
     { field: 'fecha_registro', headerName: 'FECHA REGISTRO', width: 170 },
     { field: 'temperatura_ambiente', headerName: 'TEMPERATURA ', width: 170 },
@@ -278,6 +279,12 @@ export const HistorialDeDatos: React.FC = () => {
             {dato.length > 0 ? (
                 <>
                     <Title title="Historial de datos"></Title>
+                    <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                        {download_xls({ nurseries: dato, columns })}
+                      
+
+                    </ButtonGroup>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight

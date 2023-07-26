@@ -87,7 +87,7 @@ export const CcdScreen: React.FC = () => {
       ccd_current?.fecha_terminado
     ); */
   }, [ccd_current?.fecha_terminado]);
-
+const [isFileSelected, setIsFileSelected] = useState(false);
   useEffect(() => {
     dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
     get_assignments_service(ccd_current?.id_ccd)(dispatch);
