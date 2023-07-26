@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useEffect, type FC, useContext, useState } from 'react';
+import { getTRDsUsados } from './services/TRDUsados.service';
+import { TRDUSadosColumns } from './columns/TRDUSadosColumns';
 import {
   Button,
   Chip,
@@ -11,46 +14,35 @@ import {
   IconButton,
   Stack
 } from '@mui/material';
-import { useContext, type FC, useEffect, useState } from 'react';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-
 import CloseIcon from '@mui/icons-material/Close';
-
-import { v4 as uuidv4 } from 'uuid';
+import { DataGrid } from '@mui/x-data-grid';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
-import { getTcaTerminados } from './services/TcaTerminados.service';
-import { type TcaTerminados } from './types/modalTcaTerminados.types';
-import { columnsTcasterminados } from './columns/columns';
+import { v4 as uuidv4 } from 'uuid';
+import { type TrdsUsados } from './types/modalTRDsTerminados.types';
 
-export const TCASTerminados: FC<any> = (): JSX.Element => {
-  // gestor/trd/get-terminados/ -- usado === true
-  // en la lista de creacion de trd, se debe mostrar los ccd que estan en la lista de terminados y que esten en usado === false
-
-  // gestor/tca/tca-list/get/
+export const TRDSUsados: FC<any> = (): JSX.Element => {
   // ? manage modal
-  const { modalTcaTerminados, closeModalTcaTerminados } =
-    useContext(ModalContextTCA);
+  const { modalTrdsUsados, closeModalTrdsUsados } = useContext(ModalContextTCA);
 
   // ? state to data rows
-  const [rowsTcasTerminados, setrowsTcasTerminados] = useState<TcaTerminados[]>(
-    []
-  );
+  const [rowsTrdsUsados, setrowsTrdsUsados] = useState<TrdsUsados[]>([]);
 
-  //* assign data to rowsTcasTerminados
   useEffect(() => {
-    if (modalTcaTerminados)
-      void getTcaTerminados().then((res) => {
-        // console.log('res', res);
-        const data = res.filter((item: TcaTerminados) => item.fecha_terminado);
-        setrowsTcasTerminados(data);
+    if (modalTrdsUsados) {
+      void getTRDsUsados().then((res) => {
+        const filterRes = res.filter((el: TrdsUsados) => el.usado);
+        setrowsTrdsUsados(filterRes);
+        // console.log('getTRDsUsados');
+        // console.log(res);
       });
+    }
     return () => {
-      setrowsTcasTerminados([]);
-    };
-  }, [modalTcaTerminados]);
+      setrowsTrdsUsados([]);
+    }
+  }, [modalTrdsUsados]);
 
-  const newColums: GridColDef[] = [
-    ...columnsTcasterminados,
+  const newColums = [
+    ...TRDUSadosColumns,
     {
       field: 'fecha_terminado',
       headerName: 'Fecha de terminado',
@@ -119,14 +111,14 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="sm"
-        open={modalTcaTerminados}
-        onClose={closeModalTcaTerminados}
+        open={modalTrdsUsados}
+        onClose={closeModalTrdsUsados}
       >
         <DialogTitle>
-          {`TCA'S TERMINADOS`}
+          {`TRD'S USADOS`}
           <IconButton
             aria-label="close"
-            onClick={closeModalTcaTerminados}
+            onClick={closeModalTrdsUsados}
             sx={{
               position: 'absolute',
               right: 8,
@@ -148,8 +140,8 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
             sx={{ mt: '15px' }}
             density="compact"
             autoHeight
-            rows={rowsTcasTerminados || []}
-            columns={newColums}
+            rows={rowsTrdsUsados || []}
+            columns={newColums || []}
             pageSize={5}
             rowsPerPageOptions={[7]}
             experimentalFeatures={{ newEditingApi: true }}
@@ -165,7 +157,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
           >
             <Button
               variant="outlined"
-              onClick={closeModalTcaTerminados}
+              onClick={closeModalTrdsUsados}
               startIcon={<CloseIcon />}
             >
               CERRAR

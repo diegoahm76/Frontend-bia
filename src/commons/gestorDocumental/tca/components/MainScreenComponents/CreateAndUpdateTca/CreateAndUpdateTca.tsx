@@ -14,6 +14,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { use_tca } from '../../../hooks/use_tca';
 import { TCASTerminados } from '../view/TCASTerminados/TCASTerminados';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
+import { TRDSUsados } from '../view/TRDSUsados/TRDSUsados';
 
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
@@ -29,9 +30,8 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   } = use_tca();
 
   //* CONTEXT MODALS
-  const {
-    openModalTcaTerminados,
-  } = useContext(ModalContextTCA);
+  const { openModalTcaTerminados, openModalTrdsUsados } =
+    useContext(ModalContextTCA);
 
   return (
     <>
@@ -190,16 +190,16 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 startIcon={<VisibilityIcon />}
                 onClick={openModalTcaTerminados}
               >
-                {`VER TCA'S TERMINADOS`}
+                {`TCA'S TERMINADOS`}
               </Button>
 
               <Button
                 color="warning"
                 variant="contained"
                 startIcon={<VisibilityIcon />}
-                // onClick={openModalCCDUsados}
+                onClick={openModalTrdsUsados}
               >
-                {`VER TRD'S USADOS`}
+                {`TRD'S USADOS`}
               </Button>
               <Button
                 color="primary"
@@ -252,6 +252,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
       <TCASTerminados />
 
       {/* MODA TRD'S USADOS */}
+      <TRDSUsados />
 
       {/* MODAL BUSQUEDA TCA */}
     </>

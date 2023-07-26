@@ -8,6 +8,11 @@ import { initialState } from './state/initialState';
 import { reducer } from './reducer/reducerContext';
 
 const ModalContextTCA = createContext<ModalContextState>({
+  //* -------------------------------------------> MODAL TRD TERMINADOS
+  modalTrdsUsados: false,
+  openModalTrdsUsados: () => {},
+  closeModalTrdsUsados: () => {},
+
   //* -------------------------------------------> MODAL TCA TERMINADOS
   modalTcaTerminados: false,
   openModalTcaTerminados: () => {},
@@ -26,13 +31,27 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_TCA_TERMINADOS' });
   }, []);
 
+  //* -------------------------------------------------------> MODAL TRDS USADOS
+  const openModalTrdsUsados = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_TRDS_USADOS' });
+  }, []);
+
+  const closeModalTrdsUsados = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_TRDS_USADOS' });
+  }, []);
+
   return (
     <ModalContextTCA.Provider
       value={{
         //* -------------------------------------------> MODAL TCA TERMINADOS
         modalTcaTerminados: state.modalTcaTerminados,
         openModalTcaTerminados,
-        closeModalTcaTerminados
+        closeModalTcaTerminados,
+
+        //* -------------------------------------------> MODAL TRD USADOS
+        modalTrdsUsados: state.modalTrdsUsados,
+        openModalTrdsUsados,
+        closeModalTrdsUsados
       }}
     >
       {children}
