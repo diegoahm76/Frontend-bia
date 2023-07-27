@@ -4,16 +4,16 @@
 import { api } from '../../../../../../../../api/axios';
 import {
   control_error,
-  control_success
+ //  control_success
 } from '../../../../../../../../helpers';
 
 export const getTRDsUsados = async (): Promise<any> => {
   try {
     const url = 'gestor/trd/get-terminados/';
     const { data } = await api.get(url);
-    control_success(
+   /* control_success(
       "Se encontraron los siguientes TRD's usados" || data.detail
-    );
+    ); */
     return data.data;
   } catch (error: any) {
     control_error(

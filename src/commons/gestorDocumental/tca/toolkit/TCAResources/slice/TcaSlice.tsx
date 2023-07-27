@@ -10,7 +10,7 @@ export interface TCASliceInterface {
 const initialState: TCASliceInterface = {
   //! TCA necesarios para el funcionamiento de la aplicación
   tcas: [],
-  tca_current: {}
+  tca_current: null,
 };
 
 export const TCASlice = createSlice({

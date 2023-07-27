@@ -16,18 +16,32 @@ import { TCASTerminados } from '../view/TCASTerminados/TCASTerminados';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
 import { TRDSUsados } from '../view/TRDSUsados/TRDSUsados';
 import { BusquedaTCAModal } from '../view/BusquedaTCA/BusquedaTCAModal';
+import { useAppSelector } from '../../../../../../hooks';
 
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
+import  SyncIcon  from '@mui/icons-material/Sync';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
+  // ? dispatch declaration
+  // const dispatch = useAppDispatch();
+
+  // ? useSelector declaration
+  const { tca_current } = useAppSelector((state) => state.tca_slice);
+
   // ? useForm create and update tca
   const {
-    control_create_update_tca
+    control_create_update_tca,
     // handleSubmit_create_update_tca,
     // formState_create_update_tca,
     // reset_create_update_tca,
-    // watch_create_update_tca_value
+    // watch_create_update_tca_value,
+
+    // ? list of non used trds
+    list_non_used_trds,
+
+    // ? buytton that manage the name (state (save or update))
+    title_button_create_edit_tca
   } = use_tca();
 
   //* CONTEXT MODALS
@@ -58,10 +72,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                   zIndex: 2
                 }}
               >
-                {/* <label className="text-terciary">
-            Lista de ccds terminadoss
-            <samp className="text-danger">*</samp>
-          </label> */}
                 {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
                 <Controller
                   name="id_trd"
@@ -84,8 +94,8 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                           console.log(selectedOption);
                           onChange(selectedOption);
                         }}
-                        // isDisabled={tca_current != null}
-                        options={[]}
+                        isDisabled={tca_current != null}
+                        options={list_non_used_trds}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -225,10 +235,18 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               <Button
                 color="primary"
                 variant="contained"
-                startIcon={<SaveIcon />}
+                startIcon={
+                  title_button_create_edit_tca === 'Guardar' ? (
+                    <SaveIcon />
+                  ) : (
+                    <SyncIcon />
+                  )
+                }
                 // onClick={openModalModalSearchTRD}
               >
-                CREAR
+                {title_button_create_edit_tca === 'Guardar'
+                  ? 'CREAR'
+                  : 'ACTUALIZAR'}
               </Button>
 
               <Button
