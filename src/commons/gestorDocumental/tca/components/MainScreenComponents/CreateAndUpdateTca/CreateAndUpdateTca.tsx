@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, Stack, TextField } from '@mui/material';
 import { useContext, type FC } from 'react';
@@ -48,16 +49,28 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   const { openModalTcaTerminados, openModalTrdsUsados, openModalBusquedaTca } =
     useContext(ModalContextTCA);
 
-  //* create TCA
-  const createTcaSubmit = (): void => {
-    console.log('createTca');
-    console.log(watch_create_update_tca_value);
-  };
-  // * create TCA
-  const updateTcaSubmit = (): void => {
-    console.log('updateTca');
-  };
+  const onSubmit = (): void => {
+    const dataToSend = {
+      id_trd: watch_create_update_tca_value?.id_trd?.value,
+      nombre: watch_create_update_tca_value?.nombre,
+      version: watch_create_update_tca_value?.version
+    };
 
+    const action =
+      tca_current !== null
+        ? (console.log(dataToSend), console.log('update'))
+        : (console.log(dataToSend), console.log('create'));
+    console.log(action);
+
+    /* trd_current !== null
+    ? dispatch(
+        update_trd_service(watch_create_update_tca_value, setLoadingButton)
+      )
+    : dispatch(
+        create_tca_services(watch_create_update_tca_value, setLoadingButton)
+      );
+  */
+  };
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -66,10 +79,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
           <form
             onSubmit={(w) => {
               w.preventDefault();
-              console.log('submit');
-              title_button_create_edit_tca === 'Guardar'
-                ? createTcaSubmit()
-                : updateTcaSubmit();
+              onSubmit();
             }}
             style={{
               marginTop: '20px'
@@ -247,6 +257,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               <Button
                 color="primary"
                 variant="contained"
+                type="submit"
                 startIcon={
                   title_button_create_edit_tca === 'Guardar' ? (
                     <SaveIcon />

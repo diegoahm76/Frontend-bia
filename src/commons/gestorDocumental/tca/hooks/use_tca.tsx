@@ -63,7 +63,7 @@ export const use_tca = () => {
   // ? get list of finished ccd to list--------------------->
   useEffect(() => {
     void getTRDsUsados().then((res: any[]) => {
-      console.log('res', res);
+      // * console.log('res', res);
       set_list_non_used_trds(
         res
           .filter((trd) => trd.usado === false)

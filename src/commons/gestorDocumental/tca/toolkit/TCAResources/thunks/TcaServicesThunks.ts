@@ -40,10 +40,10 @@ export const get_searched_tcas_service: any = (
 
 // ! --------------------- | CREATE AND UPDATE TCA SERVICES | --------------------- //
 
-export const create_tca_services = (bodyPost: any): any => {
+export const create_tca_services = (bodyPost: any, setLoadingButton: any): any => {
   return async (dispatch: Dispatch<any>): Promise<any> => {
     const { id_trd, nombre, version } = bodyPost;
-
+    // setLoadingButton(true);
     try {
       if (!nombre || !id_trd || !version)
         throw new Error('Todos los campos son obligatorios');
@@ -51,14 +51,21 @@ export const create_tca_services = (bodyPost: any): any => {
       const url = 'gestor/tca/create/';
       const { data } = await api.post(url, bodyPost);
       control_success(data.detail);
+      console.log('data', data);
       return data;
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail || error.message);
 
       throw error;
     }
+    finally {
+      setLoadingButton(false);
+    }
   };
 };
+
+
+
 
 // ! --------- | FINISH AND RESUME TCA SERVICES | --------- ! //
 // ? finish TCA and resume TCA
