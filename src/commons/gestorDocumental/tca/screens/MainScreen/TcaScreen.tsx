@@ -7,6 +7,7 @@ import {
   Button
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 // ? colums and rows for the table
 import {
@@ -21,10 +22,15 @@ import {
 import { CatalogoTRDSeleccionado } from '../../components/MainScreenComponents/CatalogoTRDSeleccionado/CatalogoTRDSeleccionado';
 import { CatalogoTCASeleccionado } from '../../components/MainScreenComponents/CatalogoTCASeleccionado/CatalogoTCASeleccionado';
 import { CreateAndUpdateTca } from '../../components/MainScreenComponents/CreateAndUpdateTca/CreateAndUpdateTca';
-import { useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { finish_resume_tca_service } from '../../toolkit/TCAResources/thunks/TcaServicesThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TcaScreen: FC<any> = (props): JSX.Element => {
+  // ? useDispatch declaration --------------------->
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const dispatch = useAppDispatch();
+
   // ? useSelector declaration --------------------->
   const { tca_current } = useAppSelector((state) => state.tca_slice);
 
@@ -69,32 +75,42 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
       {/* fin parte 3 */}
 
       {/* parte 4 - finalizar TCA  */}
-      <Stack direction="row"
-      
-      
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        spacing={2}
+        sx={{ mt: '20px' }}
       >
         <Button
           color="success"
           variant="contained"
-          startIcon={<SaveIcon />}
+          startIcon={
+            flag_finish_or_or_edit_trd ? <RestartAltIcon /> : <SaveIcon />
+          }
           onClick={() => {
-            if (flag_finish_or_or_edit_trd) {
-              /* dispatch(
+          /*  if (flag_finish_or_or_edit_trd) {
+               dispatch(
               resume_trd_service(
                 trd_current?.id_trd,
                 set_flag_finish_or_edit_trd
               )
-            ); */
+            );
               set_flag_finish_or_edit_trd(false);
             } else {
-              /* dispatch(
+             dispatch(
               finish_trd_service(
                 trd_current?.id_trd,
                 set_flag_finish_or_edit_trd
               )
-            ); */
+            )
               set_flag_finish_or_edit_trd(true);
             }
+*/
+            void finish_resume_tca_service(
+              tca_current?.id_tca,
+              flag_finish_or_or_edit_trd,
+              set_flag_finish_or_edit_trd
+            );
           }}
         >
           {

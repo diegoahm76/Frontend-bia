@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type AxiosResponse, type AxiosError } from 'axios';
 import { type Dispatch } from 'react';
 import { api } from './../../../../../../api/axios';
@@ -34,4 +35,29 @@ export const get_searched_tcas_service: any = (
       setLoadingButton(false);
     }
   };
+};
+
+// ! --------- | FINISH AND RESUME TCA SERVICES | --------- ! //
+// ? finish TCA and resume TCA
+export const finish_resume_tca_service: any = async (
+  id_tca: number,
+  flag: boolean,
+  setFlag: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<any> => {
+  try {
+ /*   if (!id_tca) throw new Error('No se ha podido realizar la acción'); */
+/*
+    const url = flag
+      ? `gestor/tca/finish/${id_tca}/`
+      : `gestor/tca/resume/${id_tca}/`;
+*/
+    // const { data } = await api.put(url);
+    // control_success(data.detail);
+    setFlag(!flag);
+    console.log('flag', flag);
+    // return data;
+  } catch (error: AxiosError | any) {
+    control_error(error.response?.data?.detail || error.message);
+    throw error;
+  }
 };
