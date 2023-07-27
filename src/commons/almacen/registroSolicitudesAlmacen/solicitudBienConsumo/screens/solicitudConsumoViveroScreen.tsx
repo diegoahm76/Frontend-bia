@@ -8,18 +8,13 @@ import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import SearchIcon from '@mui/icons-material/Search';
 import {
-  get_num_solicitud_vivero,
-  get_uni_organizacional,
-  get_medida_service,
-  anular_solicitud_service,
-  crear_solicitud_bien_consumo_vivero,
-  get_person_id_service,
-  get_funcionario_id_service,
-  get_bienes_solicitud,
-  editar_solicitud,
+  get_num_solicitud_vivero, get_uni_organizacional, get_medida_service, anular_solicitud_service,
+  crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service, get_bienes_solicitud, editar_solicitud,
 } from '../store/solicitudBienConsumoThunks';
-import CloseIcon from '@mui/icons-material/Close';
+import PrintIcon from '@mui/icons-material/Print';
+// import CloseIcon from '@mui/icons-material/Close';
 
 import {
   set_current_solicitud_vivero,
@@ -29,28 +24,18 @@ import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularS
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
-// import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoViveroScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const {
-    control: control_solicitud_vivero,
-    handleSubmit: handle_submit,
-    reset: reset_solicitud,
-    getValues: get_values,
-  } = useForm<IObjSolicitudVivero>();
-  const {
-    nro_solicitud_vivero,
-    current_solicitud_vivero,
-    persona_solicita,
-    bienes_solicitud,
-    current_funcionario,
-  } = useAppSelector((state) => state.solic_consumo);
-  const [action, set_action] = useState<string>('Crear solicitud Vivero');
+  const { control: control_solicitud_vivero, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values, } = useForm<IObjSolicitudVivero>();
+  const { nro_solicitud_vivero, current_solicitud_vivero, persona_solicita, bienes_solicitud, current_funcionario, } = useAppSelector((state) => state.solic_consumo);
+  const [action, set_action] = useState<string>('Guardar');
   const [anular, set_anular] = useState<string>('Anular');
   const [anular_solicitud, set_anular_solicitud] = useState<boolean>(false);
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => { set_open_search_modal(true); };
   const dispatch = useAppDispatch();
+
 
   useEffect(() => {
     void dispatch(get_uni_organizacional());
@@ -207,6 +192,8 @@ const SolicitudConsumoViveroScreen = () => {
           control_solicitud_vivero={control_solicitud_vivero}
           get_values={get_values}
           title={'Solicitudes a vivero'}
+          open_modal={open_search_modal}
+          set_open_modal={set_open_search_modal}
         />
 
         <>
@@ -219,7 +206,7 @@ const SolicitudConsumoViveroScreen = () => {
         </>
       </Grid>
       <Grid container direction="row" padding={2} spacing={2}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={2}>
           <FormButton
             variant_button="contained"
             on_click_function={handle_submit(on_submit)}
@@ -228,8 +215,28 @@ const SolicitudConsumoViveroScreen = () => {
             type_button="button"
           />
         </Grid>
+        <Grid item xs={12} md={2}>
+          <FormButton
+            variant_button="contained"
+            on_click_function={handle_open_select_model}
+            icon_class={<SearchIcon />}
+            label={'Buscar solicitud'}
+            type_button="button"
+            disabled={false}
+          />
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <FormButton
 
-        <Grid item xs={6} md={2}>
+            variant_button='outlined'
+            icon_class={<PrintIcon />}
+            on_click_function={() => { window.print(); }}
+            label={'Imprimir'}
+            type_button="button" />
+
+        </Grid>
+
+        {/* <Grid item xs={6} md={2}>
           <FormButton
             variant_button="outlined"
             on_click_function={reset_solicitud}
@@ -237,7 +244,9 @@ const SolicitudConsumoViveroScreen = () => {
             label={'Cancelar'}
             type_button="button"
           />
-        </Grid>
+        </Grid> */}
+
+
         <Grid item xs={12} md={5}>
           <Button
             variant="outlined"

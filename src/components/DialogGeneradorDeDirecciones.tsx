@@ -5,7 +5,7 @@ import {
   TextField,
   MenuItem,
   Dialog,
-  DialogActions,
+  // DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
@@ -454,24 +454,25 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                 disabled
               />
             </Grid>
+              <Divider />
           </Grid>
+        
+          {/* <DialogActions> */}
+            <Grid container spacing={2} padding={2} justifyContent="flex-end">
+              <Grid item xs={12} sm={2} md={2}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  startIcon={<SaveIcon />}
+                >
+                  ACEPTAR
+                </Button>
+              </Grid>
+            </Grid>
+          {/* </DialogActions> */}
           </Grid>
         </DialogContent>
-        <Divider />
-        <DialogActions>
-          <Grid container spacing={2} padding={2} justifyContent="center">
-            <Grid item xs={12} sm={4} md={2}>
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                startIcon={<SaveIcon />}
-              >
-                ACEPTAR
-              </Button>
-            </Grid>
-          </Grid>
-        </DialogActions>
       </form>
     </Dialog>
   );

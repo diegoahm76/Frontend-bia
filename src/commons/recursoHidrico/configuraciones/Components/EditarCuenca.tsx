@@ -55,9 +55,11 @@ export const ActualizarCuenca: React.FC<IProps> = ({
   };
 
   useEffect(() => {
-    set_value('nombre', data_cuencas?.nombre);
-    set_value('activo', data_cuencas?.activo);
-  }, []);
+    setTimeout(() => {
+      set_value('nombre', data_cuencas?.nombre);
+      set_value('activo', data_cuencas?.activo);
+    }, 100);
+  }, [data_cuencas, reset]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

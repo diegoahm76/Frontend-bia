@@ -51,11 +51,11 @@ export const get_marca_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('almacen/marcas/get-list');
-      console.log(data)
+      // console.log(data)
       dispatch(get_marca(data));
       return data;
     } catch (error: any) {
-      console.log('get_marca_service');
+      // console.log('get_marca_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -69,7 +69,7 @@ export const add_marca_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(marca);
+      // console.log(marca);
       const { data } = await api.post(
         'almacen/marcas/create/',
         marca
@@ -81,7 +81,7 @@ export const add_marca_service: any = (
       
       return data;
     } catch (error: any) {
-      console.log('add_marca_service');
+      // console.log('add_marca_service');
       control_error(error.response.data.detail);
       console.log(error.response.data);
       
@@ -130,7 +130,7 @@ export const delete_marca_service: any = (id: string | number) => {
 
       return data;
     } catch (error: any) {
-      console.log('delete nursery service');
+      // console.log('delete nursery service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -163,7 +163,7 @@ export const activate_deactivate_marca_service: any = (id: string | number, marc
 
       return data;
     } catch (error: any) {
-      console.log('activate-deactivate nursery service');
+      // console.log('activate-deactivate nursery service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -182,7 +182,7 @@ export const get_porcentaje_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('almacen/porcentajes/get-list');
-      console.log(data)
+      // console.log(data)
       dispatch(get_porcentaje(data));
       return data;
     } catch (error: any) {
@@ -200,7 +200,7 @@ export const add_porcentaje_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(porcentaje);
+      // console.log(porcentaje);
       const { data } = await api.post(
         'almacen/porcentajes/create/',
         porcentaje
@@ -212,7 +212,7 @@ export const add_porcentaje_service: any = (
       
       return data;
     } catch (error: any) {
-      console.log('add_porcentaje_service');
+      // console.log('add_porcentaje_service');
       control_error(error.response.data.detail);
       console.log(error.response.data);
       
@@ -259,7 +259,7 @@ export const delete_porcentaje_service: any = (id: string | number) => {
 
       return data;
     } catch (error: any) {
-      console.log('delete porentaje service');
+      // console.log('delete porentaje service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

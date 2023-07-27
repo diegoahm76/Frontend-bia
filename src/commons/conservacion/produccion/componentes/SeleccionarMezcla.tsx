@@ -23,6 +23,11 @@ interface IProps {
   open_modal: boolean;
   set_open_modal: any;
 }
+
+const max_date = new Date();
+const min_date = new Date();
+min_date.setDate(min_date.getDate() - 1);
+
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarMezcla = ({
   control_preparacion,
@@ -32,12 +37,21 @@ const SeleccionarMezcla = ({
 }: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
 
-  const { preparaciones, nurseries, mezclas, current_preparacion } =
-    useAppSelector((state) => state.produccion);
+  const {
+    preparaciones,
+    nurseries,
+    mezclas,
+    current_preparacion,
+    current_nursery,
+  } = useAppSelector((state) => state.produccion);
   const dispatch = useAppDispatch();
-
+  const fecha_actual = new Date();
+  const fecha_preparacion = new Date(
+    current_preparacion.fecha_preparacion ?? ''
+  );
+  const diferencia_ms = fecha_actual.getTime() - fecha_preparacion.getTime();
+  const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
   const columns_preparacion: GridColDef[] = [
-    { field: 'id_preparacion_mezcla', headerName: 'ID', width: 20 },
     {
       field: 'consec_vivero_mezclas',
       headerName: 'Consecutivo',
@@ -126,14 +140,18 @@ const SeleccionarMezcla = ({
               control_name: 'id_vivero',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar vivero',
+                },
               },
               label: 'Vivero',
-              disabled: false,
+              disabled: current_nursery.id_vivero !== null,
               helper_text: 'Seleccione Vivero',
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'select_controller',
@@ -186,7 +204,7 @@ const SeleccionarMezcla = ({
               },
               label: 'Cantidad creada',
               type: 'number',
-              disabled: false,
+              disabled: diferencia_dias > 2,
               helper_text: '',
             },
             {
@@ -226,27 +244,37 @@ const SeleccionarMezcla = ({
               helper_text: '',
             },
             {
-              datum_type: 'input_controller',
+              datum_type: 'date_picker_controller',
               xs: 12,
               md: 4,
               control_form: control_preparacion,
               control_name: 'fecha_preparacion',
               default_value: '',
               rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Debe seleccionar fecha',
+                required_rule: { rule: true, message: 'Fecha requerida' },
+                min_rule: {
+                  rule: new Date().setDate(new Date().getDate() - 1),
+                  message: `La fecha minima posible es 
+                  ${min_date.toString().slice(0, 16)}`,
+                },
+                max_rule: {
+                  rule: new Date(),
+                  message: `La fecha maxima posible es ${max_date
+                    .toString()
+                    .slice(0, 16)}`,
                 },
               },
-              label: 'Fecha de preparación',
-              type: 'text',
-              disabled: true,
+              label: 'Fecha de preparacion',
+              disabled: current_preparacion.id_preparacion_mezcla !== null,
               helper_text: '',
+              min_date,
+              max_date,
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 9,
+              md: 12,
               control_form: control_preparacion,
               control_name: 'observaciones',
               default_value: '',

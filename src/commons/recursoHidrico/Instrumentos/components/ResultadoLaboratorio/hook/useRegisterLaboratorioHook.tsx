@@ -1,10 +1,48 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import {
+  get_data_cuenca_instrumentos,
+  get_data_pozo_id,
+} from '../../../../ConsultaBiblioteca/request/request';
+import { useAppSelector } from '../../../../../../hooks';
+import type {
+  IpropsCuenca,
+  IpropsPozos,
+  ValueProps,
+} from '../../../interfaces/interface';
+import { type AxiosError } from 'axios';
+import { control_error } from '../../../../../../helpers';
+import { useForm } from 'react-hook-form';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const use_register_laboratorio_hook = () => {
+  // * Use Form
+  const {
+    handleSubmit: handleSubmit_laboratorio,
+    register: register_laboratorio,
+    reset: reset_laboratorio,
+    control: control_registro_laboratorio,
+    setValue: set_value_laboratorio,
+    watch: watch_laboratorio,
+    formState: { errors: formErrors_laboratorio },
+  } = useForm({
+    defaultValues: {
+      descripcion: '',
+      lugar_muestra: '',
+      cod_clase_muestra: '',
+      fecha_toma_muestra: '',
+      fecha_resultados_lab: '',
+      fecha_envio_lab: '',
+      latitud: '',
+      longitud: '',
+      id_cuenca: '',
+      id_pozo: '',
+    },
+  });
   // Datos GGenerales
 
   const [fecha_toma_muestra, set_fecha_toma_muestra] = useState<Dayjs | null>(
@@ -55,6 +93,58 @@ export const use_register_laboratorio_hook = () => {
         break;
     }
   };
+  // *Autocomplete
+  const { id_instrumento: id_instrumento_slice } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
+
+  const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
+  const [pozos_selected, set_pozos_selected] = useState<ValueProps[]>([]);
+
+  const fetch_data_cuencas_instrumentos_select = async (): Promise<void> => {
+    try {
+      if (id_instrumento_slice) {
+        const response = await get_data_cuenca_instrumentos(
+          id_instrumento_slice
+        );
+        if (response?.length > 0) {
+          const data_cuenca = response.map((item: IpropsCuenca) => ({
+            value: item.id_cuenca,
+            label: item.cuenca ?? '',
+          }));
+          set_cuenca_select(data_cuenca);
+          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+        }
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+  const fetch_data_pozo_instrumentos_select = async (
+    id_pozo: number
+  ): Promise<void> => {
+    try {
+      if (id_pozo) {
+        const response = await get_data_pozo_id(id_pozo);
+        if (response?.length > 0) {
+          const data_pozo = response.map((item: IpropsPozos) => ({
+            value: item.id_pozo,
+            label: ` ${item.cod_pozo} - ${item.nombre} `,
+          }));
+          set_pozos_selected(data_pozo);
+          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+        }
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
 
   const [rows_laboratorio, set_rows_laboratorio] = useState<any[]>([]);
   const [metodo, set_metodo] = useState('');
@@ -96,5 +186,21 @@ export const use_register_laboratorio_hook = () => {
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
+
+    // *Autocomplete
+    cuenca_select,
+    pozos_selected,
+    id_instrumento_slice,
+    fetch_data_cuencas_instrumentos_select,
+    fetch_data_pozo_instrumentos_select,
+
+    // * Use Form
+    handleSubmit_laboratorio,
+    register_laboratorio,
+    reset_laboratorio,
+    control_registro_laboratorio,
+    set_value_laboratorio,
+    watch_laboratorio,
+    formErrors_laboratorio,
   };
 };

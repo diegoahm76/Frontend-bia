@@ -3,7 +3,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid } from '@mui/material';
 import SeleccionarSolicitud from '../components/componenteBusqueda/SeleccionarSolicitud';
 import FormButton from "../../../../../components/partials/form/FormButton";
-import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import SeleccionarBienConsumo from "../components/componenteBusqueda/SeleccionarBienConsumo";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
@@ -12,23 +11,24 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, editar_solicitud, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
-
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
-
-
+import SearchIcon from '@mui/icons-material/Search';
+import PrintIcon from '@mui/icons-material/Print';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values } = useForm<IObjSolicitud>();
     const { nro_solicitud, current_solicitud, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
-    const [action, set_action] = useState<string>("Crear");
+    const [action, set_action] = useState<string>("Guardar");
     const [anular, set_anular] = useState<string>("Anular");
-    const [anular_solicitud, set_anular_solicitud] =
-        useState<boolean>(false);
+    const [anular_solicitud, set_anular_solicitud] = useState<boolean>(false);
     const dispatch = useAppDispatch();
+    const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+    const handle_open_select_model = (): void => { set_open_search_modal(true); };
+
 
     useEffect(() => {
         void dispatch(get_uni_organizacional());
@@ -142,6 +142,8 @@ const SolicitudConsumoScreen = () => {
                     control_solicitud={control_solicitud}
                     get_values={get_values}
                     title={"Solicitudes de consumo"}
+                    open_modal={open_search_modal}
+                    set_open_modal={set_open_search_modal}
 
                 />
 
@@ -161,17 +163,7 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={6} md={3}>
-
-                    <FormButton
-                        variant_button="outlined"
-                        on_click_function={reset_solicitud}
-                        icon_class={<CleaningServicesIcon />}
-                        label={"Limpiar"}
-                        type_button="button"
-                    />
-                </Grid>
-                <Grid item xs={6} md={3}>
+                <Grid item xs={12} md={2}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -180,9 +172,27 @@ const SolicitudConsumoScreen = () => {
                         type_button="button"
                     />
                 </Grid>
+                <Grid item xs={12} md={2}>
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_open_select_model}
+                        icon_class={<SearchIcon />}
+                        label={'Buscar solicitud'}
+                        type_button="button"
+                        disabled={false}
+                    />
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <FormButton
 
+                        variant_button='outlined'
+                        icon_class={<PrintIcon />}
+                        on_click_function={() => { window.print(); }}
+                        label={'Imprimir'}
+                        type_button="button" />
 
-                <Grid item xs={6} md={3}>
+                </Grid>
+                <Grid item xs={12} md={3}>
 
                     <Button
                         variant="outlined"
@@ -190,14 +200,12 @@ const SolicitudConsumoScreen = () => {
                             set_anular("Anular")
                             set_anular_solicitud(true);
                         }}
-
-
                     >
                         ANULACIÓN DE SOLICITUDES DE CONSUMO
                     </Button>
-
-
                 </Grid>
+
+
                 <AnularSolicitudModal
                     is_modal_active={anular_solicitud}
                     set_is_modal_active={set_anular_solicitud}
@@ -206,6 +214,7 @@ const SolicitudConsumoScreen = () => {
                     get_values={get_values}
                     on_submit={handle_submit(on_submit_anular)}
                 />
+
             </Grid>
         </Grid>
 

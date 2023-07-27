@@ -13,6 +13,7 @@ export interface IProduccion {
   mezclas: IObjMezcla [];
   current_mezcla:IObjMezcla;
   bienes : IObjBienes [];
+  bienes_aux : IObjBienes [];
   current_bien : IObjBienes;
   preparaciones : IObjPreparacionMezcla [];
   current_preparacion : IObjPreparacionMezcla;
@@ -33,6 +34,7 @@ export interface IProduccion {
 
 export interface IObjIncidencia {
   id_incidencia: number | null;
+  id_incidencias_mat_vegetal?: number | null;
   id_bien?: number | null;
   agno_lote: number | null;
   nro_lote: number | null;
@@ -45,7 +47,7 @@ export interface IObjIncidencia {
   nombre_incidencia: string | null;
   descripcion: string | null;
   ruta_archivo_soporte?: string | null;
-  id_persona_crea?: number | null;
+  id_persona_registra?: number | null;
   persona_crea?: string | null;
   id_persona_anula?: number | null;
   persona_anula?: string | null;
@@ -208,8 +210,10 @@ export interface IObjPreparacionMezcla{
 }
 
 export interface IObjBienes{
-  id_bien: number|null;
+  id_bien?: number|null;
+  id_mezcla?: number|null;
   unidad_disponible: string | null;
+  unidad_medida?: string | null;
   saldo_disponible?: number | null;
   cantidad_disponible_bien?: number | null;
   codigo_bien : string | null;
@@ -227,6 +231,7 @@ export interface IObjPreparacionBienes {
   nombre_bien?: string | null;
   id_bien_usado?: number | null;
   // incidencia
+  id_consumo_insidenciaMV?: number | null;
   id_bien?: number | null;
   id_mezcla?: number | null;
   id_vivero?: number | null;

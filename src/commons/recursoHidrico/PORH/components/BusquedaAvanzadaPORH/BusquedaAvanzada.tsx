@@ -29,15 +29,10 @@ export const BusquedaAvanzada: React.FC = () => {
     set_is_consulta,
     set_id_programa,
     set_id_proyecto,
+    set_mode,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-    {
-      field: 'id_programa',
-      headerName: 'ID PROGRAMA',
-      sortable: true,
-      width: 170,
-    },
     {
       field: 'nombre_PORH',
       headerName: 'NOMBRE PORH',
@@ -62,7 +57,7 @@ export const BusquedaAvanzada: React.FC = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
+          <Tooltip title="Ver detalle">
             <Button
               variant="outlined"
               color="primary"
@@ -136,7 +131,10 @@ export const BusquedaAvanzada: React.FC = () => {
   return (
     <>
       <Grid item>
-        <Button variant="outlined" color="primary" onClick={handle_click_open}>
+        <Button variant="outlined" color="primary" onClick={() => {
+          handle_click_open();
+          set_mode('set_is_general');
+          }}>
           Buscar
         </Button>
       </Grid>

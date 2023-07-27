@@ -3,6 +3,7 @@ import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, Stack
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { control_error } from '../../../../helpers/controlError';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -16,6 +17,7 @@ import Select from "react-select";
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 import type { AxiosError } from 'axios';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 const columns: GridColDef[] = [
     { field: 'id_alerta_equipo_estacion', headerName: 'NÚMERO', width: 100 },
@@ -184,6 +186,12 @@ export const HistorialEquipos: React.FC = () => {
             {dato.length > 0 ? (
                 <>
                     <Title title="Historial de alertas equipo estación "></Title>
+                    <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                        {download_xls({ nurseries: dato, columns })}
+
+
+                    </ButtonGroup>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight

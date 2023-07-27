@@ -36,19 +36,20 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
   }, []);
 
   return (
-    <Grid
-      container
-      direction={'column'}
-      alignItems={'center'}
-      justifyContent={'center'}
-      padding={2}
-      sx={{
-        minHeight: '100vh',
-        backgroundColor: '#042f4a',
-        backgroundImage: 'url(../image/back_login.svg)',
-        backgroundSize: 'cover',
-      }}
-    >
+   <Grid
+  container
+  direction={'column'}
+  alignItems={'center'}
+  justifyContent={'center'}
+  padding={2}
+  sx={{
+    minHeight: '100vh',
+    backgroundColor: '#042f4a',
+    backgroundImage: `linear-gradient(269deg, rgba(20, 146, 230, 0.7) 0%, rgba(6, 47, 72, 0.7) 34%, rgba(54, 89, 22, 0.7) 100%), url(../image/imagenes/FondoCormaca.jpg)`,
+    backgroundSize: '100% 100%',
+    backgroundRepeat: 'no-repeat',
+  }}
+>
       
       <Grid container justifyContent={'center'}>
         <Grid

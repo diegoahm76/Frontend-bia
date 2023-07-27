@@ -133,7 +133,7 @@ export const ResolucionRespuesta: React.FC = () => {
                   handle_open()
                 }}
               >
-                Guardar Resolución
+                Guardar Resolución Facilidad
               </Button>
             </Stack>
           </Box>

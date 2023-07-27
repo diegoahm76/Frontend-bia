@@ -75,8 +75,8 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                                 : 'Editar hoja de '}
                     </DialogTitle>
 
-                    <SeleccionarOtros control_other={control_other}
-                        get_values={get_values} />
+                    <SeleccionarOtros
+                    />
 
 
                     <EspecificacionesOtros
