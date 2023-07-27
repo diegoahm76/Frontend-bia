@@ -1,5 +1,5 @@
 // Components Material UI
-import { type FC } from 'react';
+import { useState, type FC, useEffect } from 'react';
 import {
   // MenuItem,
   Stack,
@@ -21,15 +21,36 @@ import {
 import { CatalogoTRDSeleccionado } from '../../components/MainScreenComponents/CatalogoTRDSeleccionado/CatalogoTRDSeleccionado';
 import { CatalogoTCASeleccionado } from '../../components/MainScreenComponents/CatalogoTCASeleccionado/CatalogoTCASeleccionado';
 import { CreateAndUpdateTca } from '../../components/MainScreenComponents/CreateAndUpdateTca/CreateAndUpdateTca';
+import { useAppSelector } from '../../../../../hooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TcaScreen: FC<any> = (props): JSX.Element => {
+  // ? useSelector declaration --------------------->
+  const { tca_current } = useAppSelector((state) => state.tca_slice);
+
+  // ? useState declaration --------------------->
+  const [flag_finish_or_or_edit_trd, set_flag_finish_or_edit_trd] =
+    useState<boolean>(false);
+
+  //* neccesary hook useEffect for the code in this module or component
+
+  useEffect(() => {
+    set_flag_finish_or_edit_trd(
+      tca_current?.fecha_terminado !== null &&
+        tca_current?.fecha_terminado !== '' &&
+        tca_current?.fecha_terminado !== undefined
+    );
+    console.log(
+      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ trd_current?.fecha_terminado',
+      tca_current?.fecha_terminado
+    );
+  }, [tca_current?.fecha_terminado]);
+
   return (
     <>
       {/* parte 1. crear, actualizar TCA - ver TRD's usados, ver TCA's Terminados - busqueda de tca */}
       <CreateAndUpdateTca />
       {/* fin parte 1 */}
-
 
       {/* parte 2. catalogo TRD seleccionado */}
       <CatalogoTRDSeleccionado
@@ -39,7 +60,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
       />
       {/* fin parte 2 */}
 
-
       {/* parte 3. catalogo TCA */}
       <CatalogoTCASeleccionado
         rows={rowsCatalogoTCA}
@@ -48,24 +68,39 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
       />
       {/* fin parte 3 */}
 
-
       {/* parte 4 - finalizar TCA  */}
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        spacing={2}
-        sx={{ mt: '20px' }}
+      <Stack direction="row"
+      
+      
       >
         <Button
           color="success"
           variant="contained"
-          startIcon={
-            //* -- <SaveIcon /> : <SyncIcon />
-            <SaveIcon />
-          }
+          startIcon={<SaveIcon />}
+          onClick={() => {
+            if (flag_finish_or_or_edit_trd) {
+              /* dispatch(
+              resume_trd_service(
+                trd_current?.id_trd,
+                set_flag_finish_or_edit_trd
+              )
+            ); */
+              set_flag_finish_or_edit_trd(false);
+            } else {
+              /* dispatch(
+              finish_trd_service(
+                trd_current?.id_trd,
+                set_flag_finish_or_edit_trd
+              )
+            ); */
+              set_flag_finish_or_edit_trd(true);
+            }
+          }}
         >
-          {/*  condicional de terminación de tca necesarua  */}
-          TERMINAR TCA
+          {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
+          }
         </Button>
       </Stack>
       {/* fin parte 4 */}

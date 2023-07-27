@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { useForm } from 'react-hook-form';
-import { default_values_create_update_tca } from './utils/defaultValuesUseForm/defaultValuesUseForm';
+import { default_values_busqueda_tca, default_values_create_update_tca } from './utils/defaultValuesUseForm/defaultValuesUseForm';
 import { useEffect, useState } from 'react';
 import { getTRDsUsados } from '../components/MainScreenComponents/view/TRDSUsados/services/TRDUsados.service';
 import { useAppSelector } from '../../../../hooks';
@@ -36,15 +35,12 @@ export const use_tca = () => {
     reset: reset_search_tca,
     watch: watch_search_tca
   } = useForm({
-    defaultValues: {
-      nombre: '',
-      version: ''
-    },
+    defaultValues: default_values_busqueda_tca,
     mode: 'onBlur',
     reValidateMode: 'onChange'
   });
   const watch_search_tca_value = watch_search_tca();
-  console.log('watch_search_tca_value', watch_search_tca_value);
+  // console.log('watch_search_tca_value', watch_search_tca_value);
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
