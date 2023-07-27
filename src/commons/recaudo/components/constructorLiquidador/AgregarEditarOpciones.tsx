@@ -210,7 +210,7 @@ export const AgregarEditarOpciones = ({
       return;
     }
 
-    if (!form_data.nombre_opcion_liquidacion || !form_data.estado) {
+    if (form_data.nombre_opcion_liquidacion === '' || form_data.estado === '') {
       set_notification_info({
         type: 'warning',
         message: `Estos campos no pueden estar vacíos.

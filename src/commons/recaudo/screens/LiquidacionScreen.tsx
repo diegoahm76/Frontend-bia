@@ -210,6 +210,7 @@ export const LiquidacionScreen = (): JSX.Element => {
                     startIcon={<AddIcon />}
                     onClick={() => {
                       set_id_opcion_liquidacion('');
+                      set_form_data({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
                       set_tab_name('Agregar opciones');
                       set_position_tab('2');
                     }}
