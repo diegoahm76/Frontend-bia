@@ -9,7 +9,7 @@ import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
 import { RecursoHidricoRoutes } from '../commons/recursoHidrico/routers/RecursoHidricoRoutes';
 import { TransversalRoutes } from '../commons/seguridad/routers/TransversalRoutes';
 import { UserRoutes } from '../commons/seguridad/routers/UserRoutes';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 
 // * changes
 import { useSelector } from 'react-redux';
@@ -22,11 +22,10 @@ export const ProtectedRoutes: React.FC = () => {
   const { permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
-/*
+
   useEffect(() => {
-    console.log('userinfo', userinfo);
     console.log('permisos_store', permisos_store);
-  }, [userinfo, permisos_store]); */
+  }, [ permisos_store]);
 
   const allowed_routes = permisos_store.map(
     (permission) => permission.subsistema
