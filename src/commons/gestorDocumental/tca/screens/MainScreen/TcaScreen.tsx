@@ -88,24 +88,6 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
             flag_finish_or_or_edit_trd ? <RestartAltIcon /> : <SaveIcon />
           }
           onClick={() => {
-          /*  if (flag_finish_or_or_edit_trd) {
-               dispatch(
-              resume_trd_service(
-                trd_current?.id_trd,
-                set_flag_finish_or_edit_trd
-              )
-            );
-              set_flag_finish_or_edit_trd(false);
-            } else {
-             dispatch(
-              finish_trd_service(
-                trd_current?.id_trd,
-                set_flag_finish_or_edit_trd
-              )
-            )
-              set_flag_finish_or_edit_trd(true);
-            }
-*/
             void finish_resume_tca_service(
               tca_current?.id_tca,
               flag_finish_or_or_edit_trd,

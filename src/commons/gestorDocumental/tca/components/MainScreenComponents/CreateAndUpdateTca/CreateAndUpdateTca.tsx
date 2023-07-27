@@ -20,7 +20,7 @@ import { useAppSelector } from '../../../../../../hooks';
 
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
-import  SyncIcon  from '@mui/icons-material/Sync';
+import SyncIcon from '@mui/icons-material/Sync';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   // ? dispatch declaration
@@ -35,7 +35,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
     // handleSubmit_create_update_tca,
     // formState_create_update_tca,
     // reset_create_update_tca,
-    // watch_create_update_tca_value,
+    watch_create_update_tca_value,
 
     // ? list of non used trds
     list_non_used_trds,
@@ -48,6 +48,16 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   const { openModalTcaTerminados, openModalTrdsUsados, openModalBusquedaTca } =
     useContext(ModalContextTCA);
 
+  //* create TCA
+  const createTcaSubmit = (): void => {
+    console.log('createTca');
+    console.log(watch_create_update_tca_value);
+  };
+  // * create TCA
+  const updateTcaSubmit = (): void => {
+    console.log('updateTca');
+  };
+
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -57,7 +67,9 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
             onSubmit={(w) => {
               w.preventDefault();
               console.log('submit');
-              // onSubmit();
+              title_button_create_edit_tca === 'Guardar'
+                ? createTcaSubmit()
+                : updateTcaSubmit();
             }}
             style={{
               marginTop: '20px'
