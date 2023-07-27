@@ -204,18 +204,6 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
         >
           <DialogTitle>
             Consultar los TCA que coincidan con el criterio de búsqueda
-            <IconButton
-              aria-label="close"
-              onClick={closeModal}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500]
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -324,14 +312,14 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
               <Button
                 variant="contained"
                 color="success"
-                onClick={closeModal}
+                onClick={cleanSearchTCAS}
                 startIcon={<CleanIcon />}
               >
                 LIMPIAR BÚSQUEDA
               </Button>
               <Button
                 variant="outlined"
-                onClick={closeModalBusquedaTca}
+                onClick={closeModal}
                 startIcon={<CloseIcon />}
               >
                 CERRAR
