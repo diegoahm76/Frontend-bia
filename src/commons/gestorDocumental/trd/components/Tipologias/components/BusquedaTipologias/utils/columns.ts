@@ -2,12 +2,12 @@ export const columns = [
   {
     headerName: 'Nombre',
     field: 'nombre',
-    minWidth: 150,
-    maxWidth: 160
+    minWidth: 130,
+    maxWidth: 140
   },
   {
-    headerName: 'Código tipo medio doc',
+    headerName: 'Cód. tipo medio doc',
     field: 'cod_tipo_medio_doc',
-    width: 170,
+    width: 150,
   }
 ];

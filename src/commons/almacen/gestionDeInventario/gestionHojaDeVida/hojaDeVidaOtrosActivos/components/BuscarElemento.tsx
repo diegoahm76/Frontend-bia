@@ -2,31 +2,40 @@ import { Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_others_all_service } from '../store/thunks/cvOtrosActivosThunks';
-import { set_current_others, set_others } from '../store/slices/indexCvOtrosActivos';
+import { get_cv_others_service, get_others_all_service } from '../store/thunks/cvOtrosActivosThunks';
+import { set_current_cv_others, set_current_others, set_others } from '../store/slices/indexCvOtrosActivos';
+import type { IcvOthers } from '../interfaces/CvOtrosActivos';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 
-interface IProps {
-    control_other: any;
-    get_values: any
-}
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarOtros = ({
-    control_other,
-    get_values
-}: IProps) => {
-
-
-    const { others } = useAppSelector((state) => state.cvo);
+const SeleccionarOtros = () => {
+    const { control: control_other, reset: reset_other, getValues: get_values } = useForm<IcvOthers>();
+    const { others, current_other, current_cv_other } = useAppSelector((state) => state.cvo);
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        dispatch(set_current_cv_others({
+            ...current_cv_other,
+            nombre: current_other.nombre,
+            codigo_bien: current_other.codigo_bien,
+            id_marca: current_other.id_marca
+
+        }))
+        reset_other(current_other);
+        if (current_other.id_bien !== null) {
+            void dispatch(get_cv_others_service(current_other.id_bien))
+        }
+
+    }, [current_other]);
     const columns_solicitudes: GridColDef[] = [
         // { field: 'id_bien', headerName: 'ID', width: 200 },
 
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -37,7 +46,7 @@ const SeleccionarOtros = ({
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -48,7 +57,7 @@ const SeleccionarOtros = ({
         {
             field: 'cod_tipo_activo',
             headerName: 'Tipo de bien',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}

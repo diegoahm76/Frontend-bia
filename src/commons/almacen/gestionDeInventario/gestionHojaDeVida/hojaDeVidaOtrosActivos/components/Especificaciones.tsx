@@ -21,14 +21,10 @@ const EspecificacionesOtros = ({
 }: IProps) => {
 
 
-    const { others, marcas } = useAppSelector((state) => state.cvo);
-
-
-
+    const { others, } = useAppSelector((state) => state.cvo);
     const dispatch = useAppDispatch();
-
     const columns_solicitudes: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 200 },
+
 
         {
             field: 'codigo_bien',
@@ -73,12 +69,7 @@ const EspecificacionesOtros = ({
     })
 
 
-    const search_other: any = (async () => {
-        const cv_computer = get_values("id_bien")
-        if (cv_computer !== null) {
-            void dispatch(get_others_all_service())
-        }
-    })
+
 
 
     return (
@@ -105,89 +96,19 @@ const EspecificacionesOtros = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 12,
                             control_form: control_other,
-                            control_name: "id_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "ID",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            on_blur_function: search_other
-                        },
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "id_marca",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Marcas",
-                            disabled: false,
-                            helper_text: "debe seleccionar campo",
-                            select_options: marcas,
-                            option_label: "nombre",
-                            option_key: "id_marca"
-                        },
-
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "serie",
+                            control_name: "caracteristicas_fisicas",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Serie",
+                            label: "Especificaciones técnicas",
+                            multiline_text: true,
+                            rows_text: 4,
                             type: "text",
                             disabled: true,
                             helper_text: ""
                         },
 
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "estado",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Estado del equipo",
-                            disabled: false,
-                            helper_text: "debe seleccionar campo",
-                            select_options: [{ label: "Óptimo", value: "O" }, { label: "Defectuoso", value: "D" }, { label: "Averiado", value: "A" }],
-                            option_label: "label",
-                            option_key: "value",
-
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "color",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Color",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "tipo_de_equipo",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Tipo de equipo",
-                            type: "text",
-                            disabled: true,
-                            helper_text: "Portatil, Tablet, All-in-on"
-                        },
                     ]}
                     modal_select_model_title='Buscar Computadores'
                     modal_form_filters={[

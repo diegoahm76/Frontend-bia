@@ -1,80 +1,51 @@
-
-
-import { Chip, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
-
 import { useAppDispatch, useAppSelector, } from '../../../../../hooks';
-import { get_entregas_disponible, } from '../store/thunks/entregaThunks';
-import { set_current_entrega, set_entregas } from '../store/slice/indexEntrega';
-
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import EditIcon from '@mui/icons-material/Edit';
+import { get_entradas_disponible, } from '../store/thunks/entregaThunks';
+import { set_current_entrada, set_entradas, } from '../store/slice/indexEntrega';
 
 interface IProps {
-    control_entrega: any;
+    control_entrada_entrega: any;
     get_values: any;
 }
-// interface IList {
-//     value: string | number;
-//     label: string | number;
-// }
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
-    // const [action, set_action] = useState<string>("agregar");
+const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => {
 
     const dispatch = useAppDispatch();
 
-    const { entregas, } = useAppSelector((state) => state.entrega_otros)
+    const { entradas } = useAppSelector((state) => state.entrega_otros)
 
-    const columns_despacho: GridColDef[] = [
+    const columns_entrada: GridColDef[] = [
+        { field: 'numero_entrada_almacen', headerName: 'Número de entrada', width: 250 },
         { field: 'tipo_entrada', headerName: 'Tipo de entrada', width: 250 },
+
         {
             field: 'fecha_entrada',
             headerName: 'Fecha de entrada',
-            width: 200,
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
                 </div>
             ),
         },
+
         {
             field: 'observacion',
             headerName: 'Observación',
-            width: 200,
+            width: 350,
 
         },
-        {
-            field: 'id_tipo_entrada',
-            headerName: 'tipo entrada',
-            width: 150,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
-        {
-            field: 'es_despacho_conservacion',
-            headerName: 'Es despacho de conservación',
-            width: 350,
-            renderCell: (params) => {
-                return params.row.es_despacho_conservacion === true ? (
-                    <Chip size="small" label="SI" color="success" variant="outlined" />
-                ) : (
-                    <Chip size="small" label="NO" color="error" variant="outlined" />
-                );
-            },
-        },
+
     ];
 
-    const get_entregas: any = async () => {
+    const get_entradas: any = async () => {
         console.log("buscar...");
 
-        void dispatch(get_entregas_disponible()
-        );
+        void dispatch(get_entradas_disponible());
 
     };
 
@@ -82,27 +53,23 @@ const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
         <>
             <Grid container direction="row" padding={2} borderRadius={2}>
                 <BuscarModelo
-                    set_current_model={set_current_entrega}
+                    set_current_model={set_current_entrada}
                     row_id={'id_entrada_almacen'}
-                    columns_model={columns_despacho}
-                    models={entregas}
-                    get_filters_models={get_entregas}
-                    set_models={set_entregas}
-                    button_submit_label="Buscar entregas"
+                    columns_model={columns_entrada}
+                    models={entradas}
+                    get_filters_models={get_entradas}
+                    set_models={set_entradas}
+                    button_submit_label="Buscar entradas"
                     form_inputs={[
                         {
                             datum_type: 'title',
-                            title_label: 'INFORMACIÓN DE LA ENTREGA',
+                            title_label: 'Información de entrada',
                         },
-
-
-
-
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 3,
-                            control_form: control_entrega,
+                            md: 4,
+                            control_form: control_entrada_entrega,
                             control_name: 'numero_entrada_almacen',
                             default_value: '',
                             rules: {},
@@ -115,8 +82,8 @@ const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 3,
-                            control_form: control_entrega,
+                            md: 5,
+                            control_form: control_entrada_entrega,
                             control_name: 'tipo_entrada',
                             default_value: '',
                             rules: {},
@@ -124,26 +91,8 @@ const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
                             type: 'text',
                             disabled: true,
                             helper_text: '',
+
                         },
-
-
-
-                        // {
-                        //     datum_type: 'input_controller',
-                        //     xs: 12,
-                        //     md: 4,
-                        //     control_form: control_entrega,
-                        //     control_name: 'persona_crea',
-                        //     default_value: '',
-                        //     rules: {},
-                        //     label: 'Entrega realizada por',
-                        //     type: 'text',
-                        //     disabled: true,
-                        //     helper_text: '',
-                        // },
-
-
-
 
                     ]}
                     modal_select_model_title="Buscar Entregas"
@@ -153,8 +102,8 @@ const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
                             datum_type: "select_controller",
                             xs: 12,
                             md: 2,
-                            control_form: control_entrega,
-                            control_name: "id_tipo_entrada",
+                            control_form: control_entrada_entrega,
+                            control_name: "tipo_entrada",
                             default_value: "",
                             rules: {},
                             label: "Tipo de entrada",
@@ -175,6 +124,6 @@ const SeleccionarEntrega = ({ control_entrega, get_values }: IProps) => {
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarEntrega;
+export default SeleccionarEntrada;
 
 

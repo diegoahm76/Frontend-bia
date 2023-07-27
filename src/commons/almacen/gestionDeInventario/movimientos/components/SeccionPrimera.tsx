@@ -71,10 +71,39 @@ const Seccion = ({ control_entrega, get_values }: IProps) => {
                             rules: {
 
                             },
-                            label: 'Fecha de despacho',
+                            label: 'Fecha de entrega',
                             disabled: true,
                             helper_text: '',
                             format: 'YYYY-MM-DD',
+                        },
+                        {
+                            datum_type: 'input_controller',
+                            xs: 12,
+                            md: 12,
+                            control_form: control_entrega,
+                            control_name: 'motivo',
+                            default_value: '',
+                            rules: { required_rule: { rule: false, message: 'requerido' } },
+                            label: 'Motivo',
+                            type: 'text',
+                            multiline_text: true,
+                            rows_text: 4,
+                            disabled: false,
+                            helper_text: '',
+                        },
+
+                        {
+                            datum_type: 'input_controller',
+                            xs: 12,
+                            md: 12,
+                            control_form: control_entrega,
+                            control_name: 'persona_crea',
+                            default_value: '',
+                            rules: {},
+                            label: 'Entrega realizada por',
+                            type: 'text',
+                            disabled: true,
+                            helper_text: '',
                         },
                     ]}
                     modal_select_model_title="Buscar despacho"

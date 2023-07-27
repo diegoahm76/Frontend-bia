@@ -18,6 +18,9 @@ interface IProps {
   open_modal: boolean;
   set_open_modal: any;
 }
+const max_date = new Date();
+const min_date = new Date();
+min_date.setDate(min_date.getDate() - 30);
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarCambio = ({
   control_cambio,
@@ -37,7 +40,6 @@ const SeleccionarCambio = ({
   const [file_name, set_file_name] = useState<any>('');
 
   const columns_cambios: GridColDef[] = [
-    { field: 'id_cambio_de_etapa', headerName: 'ID', width: 20 },
     {
       field: 'nro_lote',
       headerName: '# lote',
@@ -79,12 +81,28 @@ const SeleccionarCambio = ({
       ),
     },
     {
+      field: 'cantidad_movida',
+      headerName: 'Cantidad movida',
+      width: 350,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
       field: 'desc_etapa_lote_origen',
       headerName: 'Etapa origen',
       width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {params.value === 'P'
+            ? 'Producción'
+            : params.value === 'D'
+            ? 'Distribución'
+            : params.value === 'G'
+            ? 'Germinación'
+            : '-'}
         </div>
       ),
     },
@@ -94,7 +112,13 @@ const SeleccionarCambio = ({
       width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {params.value === 'P'
+            ? 'Producción'
+            : params.value === 'D'
+            ? 'Distribución'
+            : params.value === 'G'
+            ? 'Germinación'
+            : '-'}
         </div>
       ),
     },
@@ -162,6 +186,18 @@ const SeleccionarCambio = ({
     }
   }, [file]);
 
+  useEffect(() => {
+    if (current_stage_change.ruta_archivo_soporte !== null) {
+      if (typeof current_stage_change.ruta_archivo_soporte === 'string') {
+        const name =
+          current_stage_change.ruta_archivo_soporte?.split('/').pop() ?? '';
+        set_file_name(name);
+      }
+    } else {
+      set_file_name('');
+    }
+  }, [current_stage_change]);
+
   const get_cambios: any = async () => {
     console.log('buscando...');
     const code_bien = get_values('codigo');
@@ -198,6 +234,10 @@ const SeleccionarCambio = ({
           set_open_search_modal={set_open_modal}
           form_inputs={[
             {
+              datum_type: 'title',
+              title_label: 'Información de cambio de etapa',
+            },
+            {
               datum_type: 'select_controller',
               xs: 12,
               md: 4,
@@ -205,7 +245,10 @@ const SeleccionarCambio = ({
               control_name: 'id_vivero',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar vivero',
+                },
               },
               label: 'Vivero',
               disabled: current_stage_change.id_cambio_de_etapa !== null,
@@ -213,6 +256,7 @@ const SeleccionarCambio = ({
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'date_picker_controller',
@@ -221,11 +265,26 @@ const SeleccionarCambio = ({
               control_form: control_cambio,
               control_name: 'fecha_cambio',
               default_value: '',
-              rules: { required_rule: { rule: true, message: 'requerido' } },
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+                min_rule: {
+                  rule: new Date().setDate(new Date().getDate() - 30),
+                  message: `La fecha minima posible es 
+                  ${min_date.toString().slice(0, 16)}`,
+                },
+                max_rule: {
+                  rule: new Date(),
+                  message: `La fecha maxima posible es ${max_date
+                    .toString()
+                    .slice(0, 16)}`,
+                },
+              },
               label: 'Fecha de cambio',
-              type: 'text',
-              disabled: true,
+              disabled: current_stage_change.id_cambio_de_etapa !== null,
               helper_text: '',
+              min_date,
+              max_date,
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_file_controller',
@@ -241,8 +300,11 @@ const SeleccionarCambio = ({
               disabled: false,
               helper_text: '',
               set_value: set_file,
-              // eslint-disable-next-line object-shorthand
-              file_name: file_name,
+              file_name,
+              value_file:
+                current_stage_change.id_cambio_de_etapa !== null
+                  ? current_stage_change.ruta_archivo_soporte ?? null
+                  : null,
             },
             {
               datum_type: 'input_controller',
@@ -267,9 +329,34 @@ const SeleccionarCambio = ({
               control_form: control_cambio,
               control_name: 'cantidad_movida',
               default_value: '',
-              rules: {
-                required_rule: { rule: true, message: 'Cantidad requerida' },
-              },
+              rules:
+                current_vegetal_material.cod_etapa_lote !== 'G'
+                  ? {
+                      required_rule: {
+                        rule: true,
+                        message: 'Cantidad requerida',
+                      },
+                      min_rule: {
+                        rule: 0.01,
+                        message: 'La cantidad debe ser mayor a 0',
+                      },
+                      max_rule: {
+                        rule: current_vegetal_material.cantidad_disponible ?? 0,
+                        message: `La cantidad debe ser maximo ${
+                          current_vegetal_material.cantidad_disponible ?? 0
+                        }`,
+                      },
+                    }
+                  : {
+                      required_rule: {
+                        rule: true,
+                        message: 'Cantidad requerida',
+                      },
+                      min_rule: {
+                        rule: 0.01,
+                        message: 'La cantidad debe ser mayor a 0',
+                      },
+                    },
               label:
                 current_vegetal_material.cod_etapa_lote === 'G'
                   ? 'Cantidad movida a producción'
@@ -292,7 +379,7 @@ const SeleccionarCambio = ({
                   message: 'La altura debe ser mayor que 0 cms',
                 },
               },
-              label: 'Altura promedio',
+              label: 'Altura promedio (cm)',
               type: 'number',
               disabled: false,
               helper_text: '',
@@ -329,7 +416,7 @@ const SeleccionarCambio = ({
               },
               label: 'Codigo de material vegetal',
               type: 'string',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
             {
@@ -344,7 +431,7 @@ const SeleccionarCambio = ({
               },
               label: 'Nombre de material vegetal',
               type: 'string',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
             {
@@ -376,7 +463,7 @@ const SeleccionarCambio = ({
               },
               label: 'Año de lote',
               type: 'number',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
           ]}

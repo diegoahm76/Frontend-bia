@@ -15,7 +15,7 @@ api.interceptors.request.use(
         request.headers.Authorization = `Bearer ${token}`;
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
     return request;
   },
