@@ -43,17 +43,18 @@ interface DepartamentoResponse {
     detail: string;
     data: Departamento[];
 };
+
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalDirecciones: FC = () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention 
-
+    // eslint-disable-next-line @typescript-eslint/naming-convention  
     const [selected_pais, setselected_pais] = useState('');
-     const [paises, setpaises] = useState<Paises[]>([]);
+    const [paises, setpaises] = useState<Paises[]>([]);
     const [departamentos, set_departamentos] = useState<Departamento[]>([]);
     const [link, set_link] = useState('');
- 
+    const [selected_departamento, setselected_departamento] = useState('');
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
-
+    const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -94,13 +95,10 @@ export const SucursalDirecciones: FC = () => {
         void fetch_data();
     }, [link]);
 
-
-    
-
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=');
+                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=${selected_departamento}`);
                 const data: MunicipiosResponse = await response.json();
                 if (data.success) {
                     setmunicipios(data.data);
@@ -113,10 +111,9 @@ export const SucursalDirecciones: FC = () => {
         };
 
         void fetch_data();
-    }, []);
+    }, [selected_departamento]);
 
 
-    const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false)
     const set_value_direction = (_value: string, type: string): void => {
 
         switch (type) {
@@ -147,8 +144,6 @@ export const SucursalDirecciones: FC = () => {
                 type={type_direction}
 
             />
-
-
             <Grid
                 container
                 spacing={2}
@@ -183,7 +178,13 @@ export const SucursalDirecciones: FC = () => {
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel>Departamento</InputLabel>
-                        <Select label="Departamento">
+                        <Select
+                            label="Departamento"
+                            value={selected_departamento}
+                            onChange={(event) => {
+                                setselected_departamento(event.target.value);
+                            }}
+                        >
                             {departamentos.map((departamento) => (
                                 <MenuItem key={departamento.value} value={departamento.value}>
                                     {departamento.label}
@@ -192,14 +193,13 @@ export const SucursalDirecciones: FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
-                    <FormControl required size='small' fullWidth>
+                    <FormControl required size="small" fullWidth>
                         <InputLabel>Municipio</InputLabel>
                         <Select label="Municipio">
-                            {municipios.map((Municipios) => (
-                                <MenuItem key={Municipios.value} value={Municipios.value}>
-                                    {Municipios.label}
+                            {municipios.map((municipio) => (
+                                <MenuItem key={municipio.value} value={municipio.value}>
+                                    {municipio.label}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -234,8 +234,6 @@ export const SucursalDirecciones: FC = () => {
                     </Button>
                 </Grid>
             </Grid>
-
-
             <Grid
                 container
                 spacing={2}
@@ -270,10 +268,6 @@ export const SucursalDirecciones: FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
-
-
-
-
                 <Grid item xs={12} sm={4}   >
                     <FormControlLabel control={<Checkbox />} label="Misma dirección física" />
                 </Grid>
