@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+  Avatar,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,14 +26,166 @@ import SearchIcon from '@mui/icons-material/Search';
 import { use_tca } from '../../../../hooks/use_tca';
 import { v4 as uuidv4 } from 'uuid';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
-export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
-  // ? use_tca
+import { get_searched_tcas_service } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import { set_get_tcas_action } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 
-  const { control_search_tca } = use_tca();
+//* icons
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { columnsBusquedaTca } from './columns/BusquedaTcaColums';
+import { LoadingButton } from '@mui/lab';
+
+export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
+  // ? useDispatch
+  const dispatch = useAppDispatch();
+
+  // ? states
+  const { tcas } = useAppSelector((state) => state.tca_slice);
+
+  // ? use_tca
+  const { control_search_tca, watch_search_tca_value, reset_search_tca } =
+    use_tca();
 
   // ? manage modal
-  const { closeModalBusquedaTca, modalBusquedaTca } =
-    useContext(ModalContextTCA);
+
+  const {
+    closeModalBusquedaTca,
+    modalBusquedaTca,
+    loadingButton,
+    setLoadingButton
+  } = useContext(ModalContextTCA);
+
+  const { nombre, version } = watch_search_tca_value;
+
+  const searchTCAS = (): void => {
+    void dispatch(get_searched_tcas_service(nombre, version, setLoadingButton));
+  };
+
+  const cleanSearchTCAS = (): void => {
+    reset_search_tca({
+      nombre: '',
+      version: ''
+    });
+    dispatch(set_get_tcas_action([]));
+  };
+
+  const closeModal = (): void => {
+    closeModalBusquedaTca();
+    cleanSearchTCAS();
+  }
+
+
+  const columns = [
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 70,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            onClick={() => {
+              console.log(params.row);
+              /* dispatch(get_trd_current(params.row));
+            closeModalModalSearchTRD();
+            dispatch(get_trds([]));
+            const ccd_current = {
+              id_ccd: params?.row?.id_ccd,
+              id_organigrama: params?.row?.id_organigrama
+            };
+            dispatch(
+              getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
+            ).then((res: any) => {
+              // console.log(res);
+              dispatch(get_catalogo_trd(params.row.id_trd));
+            }); */
+              // reset_searched_trd_modal();
+              // console.log(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid'
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                titleAccess="Ver TCA"
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
+    },
+    ...columnsBusquedaTca,
+    {
+      field: 'fecha_terminado',
+      headerName: 'Fecha de terminado',
+      width: 200,
+      renderCell: (params: any) =>
+        params.row.fecha_terminado ? (
+          <Chip
+            label={params.value ? new Date(params.value).toLocaleString() : ''}
+            color="success"
+            variant="outlined"
+          />
+        ) : (
+          <Chip label="No se ha terminado" color="warning" variant="outlined" />
+        )
+    },
+    {
+      field: 'actual',
+      headerName: 'Actual',
+      width: 80,
+      renderCell: (params: any) =>
+        params.value.actual ? (
+          <Chip label="SI" color="primary" variant="outlined" />
+        ) : (
+          <Chip label="NO" color="error" variant="outlined" />
+        )
+    },
+    {
+      field: 'fecha_puesta_produccion',
+      headerName: 'Fecha de puesta en producción',
+      width: 200,
+      renderCell: (params: any) =>
+        params.row.fecha_puesta_produccion ? (
+          <Chip
+            label={params.value ? new Date(params.value).toLocaleString() : ''}
+            color="info"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            label="No se ha puesto en producción"
+            color="warning"
+            variant="outlined"
+          />
+        )
+    },
+    {
+      field: 'fecha_retiro_produccion',
+      headerName: 'Fecha de retiro de producción',
+      width: 200,
+      renderCell: (params: any) =>
+        params.row.fecha_retiro_produccion ? (
+          <Chip
+            label={params.value ? new Date(params.value).toLocaleString() : ''}
+            color="info"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            label="No se ha retirado de producción"
+            color="warning"
+            variant="outlined"
+          />
+        )
+    }
+  ];
 
   return (
     <>
@@ -38,30 +193,20 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
         fullWidth
         maxWidth="sm"
         open={modalBusquedaTca}
-        onClose={closeModalBusquedaTca}
+        onClose={closeModal}
       >
         <Box
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            // console.log(form_data_searched_trd_modal);
-
-            console.log('buscando...');
-
-            /*  dispatch(
-              get_searched_trd(
-                form_data_searched_trd_modal.nombre,
-                form_data_searched_trd_modal.version,
-                setCreateTRDLoadingButton
-              )
-            ); */
+            searchTCAS();
           }}
         >
           <DialogTitle>
-            Consultar los TRD que coincidan con el criterio de búsqueda
+            Consultar los TCA que coincidan con el criterio de búsqueda
             <IconButton
               aria-label="close"
-              onClick={closeModalBusquedaTca}
+              onClick={closeModal}
               sx={{
                 position: 'absolute',
                 right: 8,
@@ -93,7 +238,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                     <TextField
                       // margin="dense"
                       fullWidth
-                      label="Nombre del TRD"
+                      label="Nombre del TCA"
                       size="small"
                       variant="outlined"
                       value={value}
@@ -125,7 +270,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                     <TextField
                       // margin="dense"
                       fullWidth
-                      label="Versión del TRD"
+                      label="Versión del TCA"
                       size="small"
                       variant="outlined"
                       value={value}
@@ -145,32 +290,24 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <Button
-                  // loading={createTRDLoadingButton}
+                <LoadingButton
+                  loading={loadingButton}
                   variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
                   color="primary"
                 >
                   BUSCAR
-                </Button>
-                {/* <LoadingButton
-                  loading={createTRDLoadingButton}
-                  variant="outlined"
-                  type="submit"
-                  startIcon={<SearchIcon />}
-                  color="primary"
-                >
-                  BUSCAR
-                </LoadingButton> */}
+                </LoadingButton>
+
               </Grid>
             </Grid>
             <DataGrid
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={[] /*  trds  */}
-              columns={[] /* columns_trd_busqueda */}
+              rows={tcas /*  trds  */}
+              columns={columns /* columns_trd_busqueda */}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
@@ -187,10 +324,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
               <Button
                 variant="contained"
                 color="success"
-                onClick={() => {
-                  // console.log('cerrando');
-                  // reset_searched_trd_modal();
-                }}
+                onClick={closeModal}
                 startIcon={<CleanIcon />}
               >
                 LIMPIAR BÚSQUEDA

@@ -36,6 +36,8 @@ export const use_tca = () => {
     mode: 'onBlur',
     reValidateMode: 'onChange'
   });
+  const watch_search_tca_value = watch_search_tca();
+  console.log('watch_search_tca_value', watch_search_tca_value);
 
   return {
     // ? useForm - create and update tca
@@ -50,6 +52,6 @@ export const use_tca = () => {
     handleSubmit_search_tca,
     formState_search_tca,
     reset_search_tca,
-    watch_search_tca
+    watch_search_tca_value,
   };
 };

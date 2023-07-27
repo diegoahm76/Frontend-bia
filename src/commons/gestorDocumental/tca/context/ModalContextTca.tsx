@@ -24,7 +24,14 @@ const ModalContextTCA = createContext<ModalContextState>({
   //* -------------------------------------------> MODAL TCA TERMINADOS
   modalTcaTerminados: false,
   openModalTcaTerminados: () => {},
-  closeModalTcaTerminados: () => {}
+  closeModalTcaTerminados: () => {},
+
+
+
+
+  // ? ----- | LOAD BUTTONS | -----
+  loadingButton: false,
+  setLoadingButton: () => {},
 });
 
 const ModalProviderTCA: FC<any> = ({ children }: any) => {
@@ -61,6 +68,14 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
   }, []);
 
 
+
+  // ? ----- | LOAD BUTTONS | -----
+  const setLoadingButton = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_LOADING_BUTTON', payload: value });
+  }
+  , []);
+
+
   return (
     <ModalContextTCA.Provider
       value={{
@@ -78,6 +93,13 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
         modalTcaTerminados: state.modalTcaTerminados,
         openModalTcaTerminados,
         closeModalTcaTerminados,
+
+
+
+
+        // ? ----- | LOAD BUTTONS | -----
+        loadingButton: state.loadingButton,
+        setLoadingButton,
 
       }}
     >

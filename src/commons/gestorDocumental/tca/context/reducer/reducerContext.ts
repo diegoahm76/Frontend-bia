@@ -37,6 +37,15 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalTcaTerminados: payload || false
       };
+
+    // ? ----------------- |LOAD BUTTONS| -----------------
+    //* LOAD BUTTONS
+    case Modal.SET_LOADING_BUTTON:
+      return {
+        ...state,
+        loadingButton: payload || false
+      };
+
     default:
       return state;
   }

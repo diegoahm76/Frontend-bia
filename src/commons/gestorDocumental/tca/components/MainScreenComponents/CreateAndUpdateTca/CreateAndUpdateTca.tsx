@@ -208,7 +208,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 startIcon={<SearchIcon />}
                 onClick={openModalBusquedaTca}
               >
-                BUSCAR TCA
+                BUSCAR
               </Button>
               {/* <LoadingButton
           disabled={trd_current != null}
@@ -228,7 +228,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 startIcon={<SaveIcon />}
                 // onClick={openModalModalSearchTRD}
               >
-                CREAR TCA
+                CREAR
               </Button>
 
               <Button
