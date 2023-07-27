@@ -11,17 +11,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
-import { put_asignacion_funcionario } from '../requests/requests';
+import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
 
 interface RootStateFacilidades {
   facilidades: {
     facilidades: FacilidadPago[];
-  }
-}
-
-interface RootStateFuncionarios {
-  funcionarios: {
-    funcionarios: Funcionario[];
   }
 }
 
@@ -35,10 +29,10 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [modal_option, set_modal_option] = useState('no');
   const [modal_asignacion, set_modal_asignacion] = useState(false);
   const [asignacion, set_asignacion] = useState(true);
+  const [funcionarios_options, set_funcionarios_options] = useState<Funcionario[]>([]);
   const [funcionario_selected, set_funcionario_selected] = useState(0);
   const [facilidad_selected, set_facilidad_selected] = useState(0);
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
-  const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
@@ -47,6 +41,19 @@ export const TablaObligacionesAdmin: React.FC = () => {
 
   const handle_open_sub = () => { set_sub_modal(true) };
   const handle_close_sub = () => { set_sub_modal(false) };
+
+  const get_lista_funcionarios = async (): Promise<void> => {
+    try {
+      const { data: { data: res_funcionarios } } = await get_funcionarios();
+      set_funcionarios_options(res_funcionarios ?? []);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  useEffect(() => {
+    void get_lista_funcionarios();
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -137,9 +144,9 @@ export const TablaObligacionesAdmin: React.FC = () => {
                 defaultValue={params.value}
                 onChange={(event: event) => {
                   const { value } = event.target
-                  for(let i=0; i<funcionarios.length; i++){
-                    if(funcionarios[i].nombre_funcionario === value){
-                      set_funcionario_selected(funcionarios[i].id_persona);
+                  for(let i=0; i<funcionarios_options.length; i++){
+                    if(funcionarios_options[i].nombre_funcionario === value){
+                      set_funcionario_selected(funcionarios_options[i].id_persona);
                       set_facilidad_selected(params.row.id_facilidad);
                       handle_open();
                     }
@@ -147,7 +154,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
                 }}
               >
                 {
-                  funcionarios.map((funcionario) => (
+                  funcionarios_options.map((funcionario) => (
                     <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>
                       {funcionario.nombre_funcionario}
                     </MenuItem>

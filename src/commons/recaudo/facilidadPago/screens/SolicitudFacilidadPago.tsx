@@ -13,7 +13,7 @@ import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
-import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
+import { post_registro_fac_pago, post_registro_bienes, get_tipo_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -21,6 +21,12 @@ interface RootState {
   deudores: {
     deudores: Deudor;
   }
+}
+
+interface BienInput {
+  id: number,
+  descripcion: string,
+  vigencia_avaluo: number
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -32,6 +38,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
   const [plazo, set_plazo] = useState(0);
   const [notificacion, set_notificacion] = useState(false);
+  const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<Bien>);
   const { form_state, on_input_change } = use_form({});
   const { form_text, handle_change_text } = useFormText({});
@@ -44,6 +51,19 @@ export const SolicitudFacilidadPago: React.FC = () => {
   console.log('texto', form_state);
   console.log('archivos', form_files);
   console.log('bienes', form_text);
+
+  const get_lista_bienes = async (): Promise<void> => {
+    try {
+      const { data: { data: res_bienes } } = await get_tipo_bienes();
+      set_bienes_options(res_bienes ?? []);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  useEffect(() => {
+    void get_lista_bienes();
+  }, [])
 
   useEffect(() => {
     let count:number = 0;
@@ -780,11 +800,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      {
-        periodicidad === 'años' && plazo > 1 ||
-        periodicidad === 'semestres' && plazo > 2 ||
-        periodicidad === 'trimestres' && plazo > 4 ||
-        periodicidad === 'meses' && plazo > 12 ? (
           <Grid
           container
           sx={{
@@ -805,7 +820,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2} marginBottom={3}>
-              <Grid item xs={12} sm={3.1} >
+              <Grid item xs={12} sm={5} >
               <FormControl size="small" fullWidth>
                   <InputLabel>Tipo Bien</InputLabel>
                   <Select
@@ -814,12 +829,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     defaultValue={""}
                     onChange={handle_change_text}
                   >
-                    <MenuItem value="Casa">Casa</MenuItem>
-                    <MenuItem value="Auto">Auto</MenuItem>
+                    {
+                      bienes_options.map((bien) => (
+                        <MenuItem key={bien.id} value={bien.id}>{bien.descripcion}</MenuItem>
+                      ))
+                    }
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={3.1} >
+              <Grid item xs={12} sm={5} >
                 <TextField
                   required
                   size="small"
@@ -831,7 +849,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   name='id_tipo_bien'
                 />
               </Grid>
-              <Grid item xs={12} sm={3.1}>
+              <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   label="Avalúo"
@@ -843,7 +861,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   name='valor'
                 />
               </Grid>
-              <Grid item xs={12} sm={3.1}>
+              <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   label="Dirección"
@@ -854,7 +872,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   name='direccion'
                 />
               </Grid>
-              <Grid item xs={11} sm={3.1}>
+              <Grid item xs={12} sm={5}>
                 <Button
                   variant="outlined"
                   fullWidth
@@ -922,8 +940,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-        ) : null
-      }
       <Grid
         container
         sx={{
@@ -996,7 +1012,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       direccion: 'calle',
                       id_tipo_bien: 1,
                       id_ubicacion: 1,
-                      valor: '3000000',
+                      valor: 3000000,
                       documento_soporte_bien: form_files.documento_soporte,
                     })
                     handle_open()

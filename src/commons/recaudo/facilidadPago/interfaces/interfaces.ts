@@ -142,7 +142,7 @@ export interface RegistroFacilidadPago {
   direccion: string;
   id_tipo_bien: number;
   id_ubicacion: number;
-  valor: string;
+  valor: number;
   documento_soporte_bien: File;
 }
 

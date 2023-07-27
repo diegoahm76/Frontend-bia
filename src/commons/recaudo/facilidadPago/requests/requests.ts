@@ -7,7 +7,8 @@ interface Funcionario {
 
 // Listar Obligaciones desde Pag. Usuario Externo
 export const get_obligaciones_usuario = async (): Promise<any> => {
-  return await api.get('recaudo/pagos/listado-obligaciones/');
+  const data = await api.get('recaudo/pagos/listado-obligaciones/')
+  return data
 };
 
 // Listar Deudores desde Pag. Usuario Interno
@@ -24,7 +25,8 @@ export const get_filtro_deudores = async (parametro: string, valor: string): Pro
 
 // Listar Obligaciones de Usuario Externo desde Pag. Usuario Interno
 export const get_obligaciones_deudores = async (identificacion: string): Promise<any> => {
-  return await api.get(`recaudo/pagos/consulta-obligaciones-deudores/${identificacion}/`)
+  const data = await api.get(`recaudo/pagos/consulta-obligaciones-deudores/${identificacion}/`)
+  return data
 }
 
 // Listar facilidades de pago ingresadas desde Pag. Usuario Admin
@@ -41,12 +43,14 @@ export const get_filtro_fac_pago_ingresadas = async (parametro: string, valor: s
 
 // Listar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_fac_pago_asignadas = async (): Promise<any> => {
-  return await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/`)
+  const data = await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/`)
+  return data
 }
 
 // Filtrar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_filtro_fac_pago_asignadas = async (parametro: string, valor: string): Promise<any> => {
-  return await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/?${parametro}=${valor}`)
+  const data = await api.get(`recaudo/facilidades-pagos/listado-funcionario/list/?${parametro}=${valor}`)
+  return data
 }
 
 // Ver la información de la facilidad de pago desde Pag. Usuario Interno
@@ -58,7 +62,7 @@ export const get_fac_pago_solicitud = async (id: number): Promise<any> => {
 // Listar funcionarios desde Pag. Usuario Interno
 export const get_funcionarios = async (): Promise<any> => {
   const data = await api.get('recaudo/facilidades-pagos/funcionarios/')
-  return data.data
+  return data
 }
 
 // Asignar la facilidad de pago a un funcionario desde Pag. Usuario Interno
@@ -79,7 +83,8 @@ export const post_respuesta_fac_pago = async (respuesta: RespuestaFacilidadPago)
 
 // Ver la información personal del Deudor desde Pag. Usuario Interno
 export const get_datos_deudor = async (id: number): Promise<any> => {
-  return await api.get(`recaudo/facilidades-pagos/datos-deudor/${id}/`)
+  const data = await api.get(`recaudo/facilidades-pagos/datos-deudor/${id}/`)
+  return data
 }
 
 // Ver la información de contacto del Deudor desde Pag. Usuario Interno
@@ -121,5 +126,6 @@ export const post_registro_bienes = async (bien: Bien): Promise<any> => {
 
 // Ver los tipos de bienes desde Pag. Usuario Externo
 export const get_tipo_bienes = async (): Promise<any> => {
-  return await api.get(`recaudo/facilidades-pagos/tipos-bienes/`)
+  const data = await api.get(`recaudo/facilidades-pagos/tipos-bienes/`)
+  return data
 }
