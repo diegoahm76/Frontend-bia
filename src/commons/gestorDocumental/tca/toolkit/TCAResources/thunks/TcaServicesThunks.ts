@@ -65,7 +65,7 @@ export const create_tca_services = (
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail || error.message);
 
-      throw error;
+      return error;
     } finally {
       setLoadingButton(false);
     }
@@ -78,8 +78,7 @@ export const update_tca_services = (
   setLoadingButton: any
 ): any => {
   return async (dispatch: Dispatch<any>): Promise<any> => {
-
-    console.log(bodyPost)
+    console.log(bodyPost);
     const { id_trd, nombre, version, id_tca } = bodyPost;
     setLoadingButton(true);
 
@@ -115,7 +114,7 @@ export const update_tca_services = (
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail || error.message);
 
-      throw error;
+      return error;
     } finally {
       setLoadingButton(false);
     }
@@ -124,25 +123,44 @@ export const update_tca_services = (
 
 // ! --------- | FINISH AND RESUME TCA SERVICES | --------- ! //
 // ? finish TCA and resume TCA
-export const finish_resume_tca_service: any = async (
-  id_tca: number,
-  flag: boolean,
-  setFlag: React.Dispatch<React.SetStateAction<boolean>>
+export const finish_tca_service = async (
+  id_tca: number = 21,
+  setFlag: any
 ): Promise<any> => {
   try {
-    /*   if (!id_tca) throw new Error('No se ha podido realizar la acción'); */
-    /*
-    const url = flag
-      ? `gestor/tca/finish/${id_tca}/`
-      : `gestor/tca/resume/${id_tca}/`;
-*/
-    // const { data } = await api.put(url);
-    // control_success(data.detail);
-    setFlag(!flag);
-    console.log('flag', flag);
+    if (!id_tca) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/tca/finish/${id_tca}/`;
+    const { data } = await api.put(url);
+    control_success(data.detail);
+    console.log('TCA finalizado');
+    setFlag(true);
     // return data;
   } catch (error: AxiosError | any) {
-    control_error(error.response?.data?.detail || error.message);
-    throw error;
+    control_error(error.response?.data?.detail);
+    return error;
+  }
+};
+
+export const resume_tca_service = async (
+  id_tca: number = 21,
+  setFlag: any
+): Promise<any> => {
+  try {
+    if (!id_tca) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/tca/resume/${id_tca}/`;
+    const { data } = await api.put(url);
+    control_success(data.detail);
+    console.log('TCA reanudado');
+    setFlag(false);
+    // return data;
+  } catch (error: AxiosError | any) {
+    control_error(error.response?.data?.detail);
+    return error;
   }
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -123,14 +124,14 @@ export const use_tca = () => {
       console.log('result_name', result_name);
       const obj: any = {
         id_trd: {
-          label: result_name[0].label,
-          value: result_name[0].value,
-          id_tca: tca_current.id_tca,
+          label: result_name[0]?.item?.nombre || tca_current?.nombre,
+          value: result_name[0]?.item?.id_trd || tca_current?.id_trd,
+          // id_tca: tca_current.id_tca,
         },
         nombre: tca_current?.nombre,
         version: tca_current?.version,
         id_tca: tca_current?.id_tca,
-        id_organigrama: tca_current.id_organigrama,
+        // id_organigrama: tca_current?.id_organigrama,
       };
       // console.log(obj, 'obj');
       console.log(obj, 'obj');

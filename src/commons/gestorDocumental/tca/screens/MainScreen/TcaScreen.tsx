@@ -1,3 +1,4 @@
+/* eslint-disable no-void */
 // Components Material UI
 import { useState, type FC, useEffect } from 'react';
 import {
@@ -23,7 +24,7 @@ import { CatalogoTRDSeleccionado } from '../../components/MainScreenComponents/C
 import { CatalogoTCASeleccionado } from '../../components/MainScreenComponents/CatalogoTCASeleccionado/CatalogoTCASeleccionado';
 import { CreateAndUpdateTca } from '../../components/MainScreenComponents/CreateAndUpdateTca/CreateAndUpdateTca';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { finish_resume_tca_service } from '../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import { finish_tca_service, resume_tca_service } from '../../toolkit/TCAResources/thunks/TcaServicesThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TcaScreen: FC<any> = (props): JSX.Element => {
@@ -88,11 +89,9 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
             flag_finish_or_or_edit_trd ? <RestartAltIcon /> : <SaveIcon />
           }
           onClick={() => {
-            void finish_resume_tca_service(
-              tca_current?.id_tca,
-              flag_finish_or_or_edit_trd,
-              set_flag_finish_or_edit_trd
-            );
+            flag_finish_or_or_edit_trd
+              ? void resume_tca_service(tca_current?.id_tca, set_flag_finish_or_edit_trd)
+              : void finish_tca_service(tca_current?.id_tca, set_flag_finish_or_edit_trd);
           }}
         >
           {
