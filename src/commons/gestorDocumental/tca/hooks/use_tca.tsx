@@ -42,6 +42,13 @@ export const use_tca = () => {
   const watch_search_tca_value = watch_search_tca();
   // console.log('watch_search_tca_value', watch_search_tca_value);
 
+  // ! -------- cleaning funcion for all tca screen ----------------->
+
+  const cleaning_function = () => {
+    reset_create_update_tca(default_values_create_update_tca);
+  }
+
+
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
 
@@ -99,6 +106,10 @@ export const use_tca = () => {
 
     // ? button that manage the name (state (save or update))
     set_title_button_create_edit_tca,
-    title_button_create_edit_tca
+    title_button_create_edit_tca,
+
+
+    // ? cleaning function all
+    cleaning_function,
   };
 };

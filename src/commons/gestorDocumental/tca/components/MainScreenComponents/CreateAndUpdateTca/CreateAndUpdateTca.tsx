@@ -22,6 +22,7 @@ import { useAppSelector } from '../../../../../../hooks';
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
 import SyncIcon from '@mui/icons-material/Sync';
+import { LoadingButton } from '@mui/lab';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   // ? dispatch declaration
@@ -42,12 +43,34 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
     list_non_used_trds,
 
     // ? buytton that manage the name (state (save or update))
-    title_button_create_edit_tca
+    // title_button_create_edit_tca,
+
+    // ? clean button function all tca
+    cleaning_function
   } = use_tca();
 
   //* CONTEXT MODALS
-  const { openModalTcaTerminados, openModalTrdsUsados, openModalBusquedaTca } =
-    useContext(ModalContextTCA);
+
+  const {
+    openModalTcaTerminados,
+    openModalTrdsUsados,
+    openModalBusquedaTca,
+    loadingButton,
+    setLoadingButton
+  } = useContext(ModalContextTCA);
+
+  const createPrueba = async (): Promise<any> => {
+    try {
+      setLoadingButton(true);
+      console.log('createPrueba....');
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingButton(false);
+      console.log('finally');
+    }
+  };
 
   const onSubmit = (): void => {
     const dataToSend = {
@@ -58,8 +81,10 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
 
     const action =
       tca_current !== null
-        ? (console.log(dataToSend), console.log('update'))
-        : (console.log(dataToSend), console.log('create'));
+        ? // eslint-disable-next-line no-void
+          (console.log(dataToSend), void createPrueba())
+        // eslint-disable-next-line no-void
+        : (console.log(dataToSend), void createPrueba());
     console.log(action);
 
     /* trd_current !== null
@@ -254,23 +279,16 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
            {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'} 
           CREAR TCA
         </LoadingButton> */}
-              <Button
+              <LoadingButton
+                loading={loadingButton}
                 color="primary"
                 variant="contained"
                 type="submit"
-                startIcon={
-                  title_button_create_edit_tca === 'Guardar' ? (
-                    <SaveIcon />
-                  ) : (
-                    <SyncIcon />
-                  )
-                }
+                startIcon={tca_current !== null ? <SyncIcon /> : <SaveIcon />}
                 // onClick={openModalModalSearchTRD}
               >
-                {title_button_create_edit_tca === 'Guardar'
-                  ? 'CREAR'
-                  : 'ACTUALIZAR'}
-              </Button>
+                {tca_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
+              </LoadingButton>
 
               <Button
                 color="success"
@@ -278,6 +296,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   console.log('cleaning');
+                  cleaning_function();
                   // reset_all_trd();
                   // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
