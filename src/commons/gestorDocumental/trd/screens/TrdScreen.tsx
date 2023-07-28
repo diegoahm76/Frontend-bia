@@ -38,6 +38,7 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
+// import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
 // import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 export const TrdScreen: FC = (): JSX.Element => {
@@ -87,7 +88,9 @@ export const TrdScreen: FC = (): JSX.Element => {
   const {
     openModalModalSearchTRD,
     openModalCCDUsados,
-    openModalCreacionFormatoTipo
+    openModalCreacionFormatoTipo,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -97,9 +100,13 @@ export const TrdScreen: FC = (): JSX.Element => {
       control_error('datos requeridos');
       return;
     }
-    trd_current != null
-      ? dispatch(update_trd_service(data_create_trd_modal))
-      : dispatch(create_trd_service(data_create_trd_modal));
+    trd_current !== null
+      ? dispatch(
+          update_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        )
+      : dispatch(
+          create_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        );
   };
 
   return (
@@ -209,8 +216,10 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
+                        e.target.value.length === 50 && control_error('max 50 digitos');
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 50 }}
                       // error={!!error}
                       /* helperText={
                         error
@@ -247,8 +256,10 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
+                        e.target.value.length === 10 && control_error('max 10 digitos');
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 10 }}
                     />
                   )}
                 />
@@ -278,7 +289,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 BUSCAR TRD
               </Button>
               <LoadingButton
-                // loading={loadingButton}
+                loading={createTRDLoadingButton}
                 type="submit"
                 color="primary"
                 variant="contained"
@@ -293,6 +304,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
+                  // dispatch(set_selected_item_from_catalogo_trd_action(null));
                   // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
                 }}

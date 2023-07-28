@@ -45,28 +45,6 @@ const SearchCcdModal = ({
   // Hooks
   const { clean_ccd } = use_ccd() as any;
 
-  /* 
-
-  const [world_search, set_world_search] = useState<string>('');
-  const [filter_ccds, set_filter_ccds] = useState<any>([]);
-
- useEffect(() => {
-    const filter = ccds.filter((item) => {
-      return (
-        item.nombre
-          .toLocaleLowerCase()
-          .includes(world_search.toLocaleLowerCase()) ||
-        item.version
-          .toLocaleLowerCase()
-          .includes(world_search.toLocaleLowerCase())
-      );
-    });
-    if (world_search !== '') {
-      set_filter_ccds(filter);
-    } else {
-      set_filter_ccds(ccds);
-    }
-  }, [world_search, ccds]); */
 
   const {
     control: control_search_ccd,

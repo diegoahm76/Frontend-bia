@@ -4,7 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type Icv, type IMarca, type IVehicles, type IcvVehicles } from "../../interfaces/CvVehiculo";
 
 const initial_state_current_vehicle = {
-    id_bien: 0,
+    id_bien: null,
     codigo_bien: null,
     nro_elemento_bien: null,
     nombre: "",
@@ -33,36 +33,36 @@ const initial_state_current_vehicle = {
 
 const initial_state_current_cv_vehicle = {
 
-    id_hoja_de_vida: 0,
+    id_hoja_de_vida: null,
     codigo_bien: "",
     nombre: "",
     doc_identificador_nro: "",
-    id_marca: 0,
+    id_marca: null,
     marca: "",
     cod_tipo_vehiculo: "",
     tiene_platon: false,
-    capacidad_pasajeros: 0,
+    capacidad_pasajeros: null,
     color: "",
     linea: "",
     tipo_combustible: "",
     es_arrendado: false,
-    ultimo_kilometraje: 0,
-    fecha_ultimo_kilometraje: 0,
-    fecha_adquisicion: 0,
-    fecha_vigencia_garantia: 0,
+    ultimo_kilometraje: null,
+    fecha_ultimo_kilometraje: new Date().toString(),
+    fecha_adquisicion: new Date().toString(),
+    fecha_vigencia_garantia: new Date().toString(),
     numero_motor: "",
     numero_chasis: "",
-    cilindraje: 0,
+    cilindraje: null,
     transmision: "",
-    dimension_llantas: 0,
-    capacidad_extintor: 0,
+    dimension_llantas: null,
+    capacidad_extintor: null,
     tarjeta_operacion: "",
     observaciones_adicionales: "",
     es_agendable: false,
     en_circulacion: false,
-    fecha_circulacion: 0,
+    fecha_circulacion: new Date().toString(),
     ruta_imagen_foto: "",
-    id_articulo: 0,
+    id_articulo: null,
     id_vehiculo_arrendado: null,
     id_proveedor: null,
     estado: "",
@@ -97,20 +97,19 @@ export const cve_vehicle_slice = createSlice({
         ) => {
             state.current_vehicle = action.payload;
         },
-        get_cv_vehicle: (
+        set_cv_vehicle: (
             state: Icv,
             action: PayloadAction<IcvVehicles[]>
         ) => {
             state.cv_vehicle = action.payload;
         },
 
-        current_cv_vehicle: (
+        set_current_cv_vehicle: (
             state: Icv,
             action: PayloadAction<IcvVehicles>
         ) => {
             state.current_cv_vehicle = action.payload;
         },
-
 
         get_marks: (
             state: Icv,
@@ -124,4 +123,4 @@ export const cve_vehicle_slice = createSlice({
 })
 
 
-export const { current_cv_vehicle, set_current_vehicles, get_cv_vehicle, get_marks, set_vehicles } = cve_vehicle_slice.actions;
+export const { set_current_cv_vehicle, set_current_vehicles, set_cv_vehicle, get_marks, set_vehicles } = cve_vehicle_slice.actions;

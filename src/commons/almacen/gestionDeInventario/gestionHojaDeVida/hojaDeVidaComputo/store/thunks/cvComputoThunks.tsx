@@ -71,14 +71,10 @@ export const get_computers_all_service: any = () => {
 // Obtener Hoja de Vida PC
 
 export const get_cv_computer_id = (id: number): any => {
-
     return async (dispatch: Dispatch<any>) => {
         try {
-
-
             const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${id}/`);
             console.log(data)
-
             if (data.success === true) {
                 dispatch(set_current_cv_computer(data.data));
 
@@ -93,12 +89,10 @@ export const get_cv_computer_id = (id: number): any => {
 };
 
 export const get_cv_computer_service: (id: any) => any = (id: any) => {
-
     return async (dispatch: Dispatch<any>) => {
         try {
-
-
-            const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${264}/`);
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${id}/`);
             console.log(data)
 
             if (data.success === true) {
@@ -125,7 +119,6 @@ export const create_cv_computers_service: any = (
             const { data } = await api.post(
                 'almacen/hoja-de-vida/computadores/create/', cv
             );
-            //   dispatch(get_cv_computer_service());
             control_success('La hoja de vida se creo correctamente');
             return data;
         } catch (error: any) {
@@ -136,12 +129,11 @@ export const create_cv_computers_service: any = (
     };
 };
 // Actualizar Hoja de Vida PC
-export const update_cv_computers_service: any = (id: string| number, hoja_vida: any) => {
+export const update_cv_computers_service: any = (id: string | number, hoja_vida: any) => {
     return async (dispatch: Dispatch<any>) => {
-     
+
         try {
             const { data } = await api.put(`almacen/hoja-de-vida/computadores/update/${id}/`, hoja_vida);
-            // dispatch(get_cv_computer_id(id));
             control_success('La hoja de vida se actualizó correctamente');
             return data;
         } catch (error: any) {
@@ -155,7 +147,6 @@ export const delete_cv_computers_service: any = (id: string) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.delete(`almacen/hoja-de-vida/computadores/delete/${id}/`);
-            //  dispatch(get_cv_computer_service(id));
             control_success('La hoja de vida se eliminó correctamente');
             return data;
         } catch (error: any) {

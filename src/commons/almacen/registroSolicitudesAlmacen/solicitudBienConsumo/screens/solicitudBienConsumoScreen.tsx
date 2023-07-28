@@ -16,6 +16,7 @@ import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsa
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 import SearchIcon from '@mui/icons-material/Search';
 import PrintIcon from '@mui/icons-material/Print';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoScreen = () => {
@@ -192,7 +193,7 @@ const SolicitudConsumoScreen = () => {
                         type_button="button" />
 
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={2}>
 
                     <Button
                         variant="outlined"
@@ -201,8 +202,13 @@ const SolicitudConsumoScreen = () => {
                             set_anular_solicitud(true);
                         }}
                     >
-                        ANULACIÓN DE SOLICITUDES DE CONSUMO
+                        ANULAR
                     </Button>
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <ButtonSalir
+                    />
+
                 </Grid>
 
 

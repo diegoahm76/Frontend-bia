@@ -129,7 +129,7 @@ const SeleccionarBodega = () => {
                             },
                             label: 'Nombre',
                             type: 'text',
-                            disabled: false,
+                            disabled: true,
                             helper_text: '',
                         },
 
@@ -142,7 +142,7 @@ const SeleccionarBodega = () => {
                             default_value: '',
                             rules: { required_rule: { rule: true, message: 'requerido' } },
                             label: 'Municipio',
-                            disabled: false,
+                            disabled: true,
                             select_options: municipalities,
                             option_label: 'label',
                             option_key: 'value',

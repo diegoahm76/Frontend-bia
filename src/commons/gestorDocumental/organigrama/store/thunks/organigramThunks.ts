@@ -259,7 +259,8 @@ export const get_unitys_service: any = (id: string | number) => {
 // Actualizar Unidades
 export const update_unitys_service: any = (
   id: string | number,
-  new_unitys: any
+  new_unitys: any,
+  clean_unitys: any
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -269,6 +270,7 @@ export const update_unitys_service: any = (
       );
       dispatch(get_unitys_service(id));
       control_success('Proceso Exitoso');
+      clean_unitys()
       return data;
     } catch (error: any) {
       // console.log('update_unitys_service fail');
