@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {
@@ -22,6 +23,10 @@ import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 import { use_register_bombeo_hook } from './hook/useRegisterBombeoHook';
 import { tipo_sesion } from './utils/choices/choices';
 import { colums_bombeo } from './utils/colums/colums';
+import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
+import { useAppSelector } from '../../../../../hooks';
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarBombeo: React.FC = () => {
@@ -83,6 +88,22 @@ export const AgregarBombeo: React.FC = () => {
     handle_date_change,
   } = use_register_bombeo_hook();
 
+  const {
+    // watch_instrumento,
+    reset_instrumento,
+    control,
+  } = useRegisterInstrumentoHook();
+
+  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+
+  useEffect(() => {
+    reset_instrumento({
+      nombre: instrumentos.nombre,
+      nombre_seccion: instrumentos.nombre_seccion,
+      nombre_subseccion: instrumentos.nombre_subseccion,
+    });
+  }, [instrumentos]);
+
   return (
     <>
       <Grid
@@ -117,6 +138,7 @@ export const AgregarBombeo: React.FC = () => {
             fullWidth
             size="small"
             margin="dense"
+            value={instrumentos.nombre_seccion}
             disabled={true}
           />
         </Grid>
@@ -124,18 +146,40 @@ export const AgregarBombeo: React.FC = () => {
           <TextField
             label="Subsección"
             fullWidth
+            value={instrumentos.nombre_subseccion}
             size="small"
             margin="dense"
             disabled={true}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Instrumento Asociado"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={true}
+          <Controller
+            name="nombre"
+            control={control}
+            defaultValue=""
+            // rules={{ required: false }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                label="Instrumento Asociado"
+                size="small"
+                variant="outlined"
+                disabled={true}
+                value={value}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => {
+                  onChange(e.target.value);
+                  console.log(e.target.value);
+                }}
+                error={!!error}
+                /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>

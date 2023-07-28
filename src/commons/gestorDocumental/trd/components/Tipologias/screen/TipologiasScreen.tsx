@@ -43,8 +43,7 @@ export const TipologiasScreen = (): JSX.Element => {
               // disabled={true}
               startIcon={<GradingIcon />}
               onClick={() => {
-                openModalAdministracionTipologiasDocumentales();
-                console.log('ESTABLECER TIPOLOGÍAS'); // ? this is the function to open the modal
+                openModalAdministracionTipologiasDocumentales();// ? this is the function to open the modal
               }}
             >
               {/* this button must be part of the TRD administration */}
@@ -56,8 +55,7 @@ export const TipologiasScreen = (): JSX.Element => {
               variant="outlined"
               startIcon={<SearchIcon />}
               onClick={() => {
-                openModalBusquedaTipologiasDocumentales();
-                console.log('BUSCANDO TIPOLOGÍAS'); // ? this is the function to open the modal
+                openModalBusquedaTipologiasDocumentales(); // ? this is the function to open the modal
               }}
             >
               BUSCAR TIPOLOGÍAS DOCUMENTALES

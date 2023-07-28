@@ -220,34 +220,19 @@ const SeleccionarModeloDialogForm = ({
     set_selected_row(selection);
   };
 
-  const select_model = (): void => {
-    const model = models.find((p) => p[row_id] === selected_row[0]);
-    if (model !== undefined) {
-      dispatch(set_current_model(model));
-      set_models([]);
-      handle_close_select_model();
-    }
-  };
-  const search_models = (): void => {
-    search_model_function();
-  };
-  const button_style = {
-    color: 'white',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: '10px',
-  };
+    const select_model = (): void => {
+        const model = models.find((p) => p[row_id] === selected_row[0])
+        if (model !== undefined) {
+            dispatch(set_current_model(model));
+            set_models([])
+            handle_close_select_model();
+        }
+    };
+    const search_models = (): void => {
+        search_model_function()
+    };
+    
 
-  const handle_clickxls = (): void => {
-    download_xls({ nurseries: models, columns: columns_model });
-  };
-  const handle_clickpdf = (): void => {
-    download_pdf({ nurseries: models, columns: columns_model });
-  };
 
   return (
     <Dialog
@@ -268,80 +253,59 @@ const SeleccionarModeloDialogForm = ({
         
             <Divider /> */}
 
-        <DialogContent sx={{ mb: '0px' }}>
-          {form_filters.length > 0 && (
-            <Grid
-              container
-              sx={{
-                position: 'relative',
-                background: '#FAFAFA',
-                borderRadius: '15px',
-                p: '20px',
-                mb: '20px',
-                boxShadow: '0px 3px 6px #042F4A26',
-                marginTop: '10px',
-                marginLeft: '-6px',
-              }}
-              spacing={2}
-              direction="row"
-            >
-              <Title title={modal_title ?? 'Resultados de la búsqueda'}></Title>
-              {form_filters.map((option, index) => (
-                <TypeDatum key={index} form_input={option} />
-              ))}
-              <Grid item xs={12} md={2}>
-                <FormButton
-                  variant_button="contained"
-                  on_click_function={get_filters_models}
-                  icon_class={<SearchIcon />}
-                  label="BUSCAR"
-                  type_button="button"
-                />
-              </Grid>
-            </Grid>
-          )}
-          {models.length > 0 && (
-            <Grid
-              container
-              sx={{
-                position: 'relative',
-                background: '#FAFAFA',
-                borderRadius: '15px',
-                p: '20px',
-                mb: '20px',
-                boxShadow: '0px 3px 6px #042F4A26',
-                marginLeft: '-6px',
-              }}
-              spacing={2}
-              justifyContent="center"
-              direction="row"
-              marginTop={2}
-            >
-              <Box sx={{ width: '100%' }}>
-                <Title
-                  title={title_table_modal ?? 'Resultados de la búsqueda'}
-                ></Title>
-                <Grid
-                  container
-                  justifyContent="flex-end"
-                  sx={{ marginTop: '6px' }}
-                >
-                  <ButtonGroup style={{ margin: 7 }}>
-                    <Button
-                      style={{ ...button_style, backgroundColor: '#335B1E' }}
-                      onClick={handle_clickxls}
-                    >
-                      <i className="pi pi-file-excel"></i>
-                    </Button>
+                <DialogContent sx={{ mb: '0px' }}>
+                    {form_filters.length > 0 &&
+                        <Grid container sx={{
+                            position: 'relative',
+                            background: '#FAFAFA',
+                            borderRadius: '15px',
+                            p: '20px',
+                            mb: '20px',
+                            boxShadow: '0px 3px 6px #042F4A26',
+                            marginTop: '10px',
+                            marginLeft: '-6px',
+                        }} spacing={2} direction="row">
+                            <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
+                            {form_filters.map((option, index) => (
+                                <TypeDatum key={index} form_input={option} />
+                            ))}
+                            <Grid
+                                item
+                                xs={12}
+                                md={2}
+                            >
+                                <FormButton
+                                    variant_button="contained"
+                                    on_click_function={get_filters_models}
+                                    icon_class={<SearchIcon />}
+                                    label="BUSCAR"
+                                    type_button="button"
+                                />
+                            </Grid>
+                        </Grid>
+                    }
+                    {models.length > 0 &&
+                        <Grid container sx={{
+                            position: 'relative',
+                            background: '#FAFAFA',
+                            borderRadius: '15px',
+                            p: '20px',
+                            mb: '20px',
+                            boxShadow: '0px 3px 6px #042F4A26',
+                            marginLeft: '-6px',
+                        }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
+                            <Box sx={{ width: '100%' }}>
+                                <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
+                                <Grid container justifyContent="flex-end" sx={{ marginTop: "6px" }}>
+                                    <ButtonGroup style={{ margin: 7 }}  >
+                                     
+                                        {download_xls({ nurseries: models, columns: columns_model })}
+                                        {download_pdf({ nurseries: models, columns: columns_model })}
 
-                    <Button
-                      style={{ ...button_style, backgroundColor: 'red' }}
-                      onClick={handle_clickpdf}
-                    >
-                      <i className="pi pi-file-pdf"></i>
-                    </Button>
-                  </ButtonGroup>
-                </Grid>
+
+
+                                    </ButtonGroup>
+                                </Grid>
 
                 <DataGrid
                   onSelectionModelChange={handle_selection_change}
@@ -361,7 +325,8 @@ const SeleccionarModeloDialogForm = ({
                 />
               </Box>
             </Grid>
-          )}
+      }
+      
         </DialogContent>
         <Divider />
         <DialogActions>
@@ -383,7 +348,7 @@ const SeleccionarModeloDialogForm = ({
                 onClick={select_model}
                 startIcon={<PlaylistAddCheckIcon />}
               >
-                Agregar selección
+                Agregar seleccion
               </Button>
             )}
             {(button_origin_show ?? false) && (

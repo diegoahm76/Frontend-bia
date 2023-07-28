@@ -10,7 +10,10 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import EditIcon from '@mui/icons-material/Edit';
-import { get_nurseries_mortalidad_service } from '../store/thunks/produccionThunks';
+import {
+  get_incidencias_service,
+  get_nurseries_mortalidad_service,
+} from '../store/thunks/produccionThunks';
 
 interface IProps {
   control_incidencia: any;
@@ -18,6 +21,9 @@ interface IProps {
   open_modal: boolean;
   set_open_modal: any;
 }
+const max_date = new Date();
+const min_date = new Date();
+min_date.setDate(min_date.getDate() - 1);
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarIncidencia = ({
   control_incidencia,
@@ -33,13 +39,13 @@ const SeleccionarIncidencia = ({
     current_incidencia,
     changing_person,
     current_siembra_material_vegetal,
+    current_nursery,
   } = useAppSelector((state) => state.produccion);
   const dispatch = useAppDispatch();
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>('');
 
   const columns_incidencia: GridColDef[] = [
-    { field: 'id_incidencia', headerName: 'ID', width: 20 },
     {
       field: 'consec_incidencia',
       headerName: 'Consecutivo',
@@ -88,7 +94,7 @@ const SeleccionarIncidencia = ({
             altura_lote_en_cms: get_values('altura_lote_en_cms'),
             nombre_incidencia: get_values('nombre_incidencia'),
             descripcion: get_values('descripcion'),
-            id_persona_crea: changing_person.id_persona,
+            id_persona_registra: changing_person.id_persona,
             persona_crea: changing_person.nombre_completo,
             ruta_archivo_soporte: file,
             id_bien: current_siembra_material_vegetal.id_bien,
@@ -101,19 +107,19 @@ const SeleccionarIncidencia = ({
     }
   }, [file]);
   useEffect(() => {
-    if (current_incidencia.id_incidencia !== null) {
-      if (
-        current_incidencia.ruta_archivo_soporte !== null &&
-        current_incidencia.ruta_archivo_soporte !== undefined
-      ) {
-        set_file_name(String(current_incidencia.ruta_archivo_soporte));
+    if (current_incidencia.ruta_archivo_soporte !== null) {
+      if (typeof current_incidencia.ruta_archivo_soporte === 'string') {
+        const name =
+          current_incidencia.ruta_archivo_soporte?.split('/').pop() ?? '';
+        set_file_name(name);
       }
+    } else {
+      set_file_name('');
     }
   }, [current_incidencia]);
 
   const get_incidencias: any = async () => {
-    //   const nro = get_values("nro_baja_por_tipo");
-    //   void dispatch(get_incidencias_service(nro));
+    void dispatch(get_incidencias_service(current_nursery.id_vivero ?? 0));
   };
 
   return (
@@ -121,7 +127,7 @@ const SeleccionarIncidencia = ({
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_current_incidencia}
-          row_id={'id_incidencia'}
+          row_id={'id_incidencias_mat_vegetal'}
           columns_model={columns_incidencia}
           models={incidencias}
           get_filters_models={get_incidencias}
@@ -132,26 +138,34 @@ const SeleccionarIncidencia = ({
           set_open_search_modal={set_open_modal}
           form_inputs={[
             {
+              datum_type: 'title',
+              title_label: 'Información de incidencia',
+            },
+            {
               datum_type: 'select_controller',
               xs: 12,
-              md: 5,
+              md: 3,
               control_form: control_incidencia,
               control_name: 'id_vivero',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar vivero',
+                },
               },
               label: 'Vivero',
-              disabled: false,
+              disabled: current_nursery.id_vivero !== null,
               helper_text: 'Seleccione Vivero',
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_incidencia,
               control_name: 'consec_incidencia',
               default_value: '',
@@ -167,25 +181,51 @@ const SeleccionarIncidencia = ({
               helper_text: '',
             },
             {
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 2,
+              control_form: control_incidencia,
+              control_name: 'altura_lote_en_cms',
+              default_value: '',
+              rules: {
+                required_rule: {
+                  rule: false,
+                  message: 'Altura de lote requerido',
+                },
+                min_rule: {
+                  rule: 0.01,
+                  message: 'Debe ser mayor a 0',
+                },
+              },
+              label: 'Altura lote (cm)',
+              type: 'number',
+              disabled: false,
+              helper_text: '',
+            },
+            {
               datum_type: 'input_file_controller',
               xs: 12,
-              md: 4,
+              md: 5,
               control_form: control_incidencia,
               control_name: 'ruta_archivo_soporte',
               default_value: '',
               rules: {
-                required_rule: { rule: false, message: 'Archivo requerido' },
+                required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Archivo soporte',
               disabled: false,
               helper_text: '',
               set_value: set_file,
               file_name,
+              value_file:
+                current_incidencia.id_incidencias_mat_vegetal !== null
+                  ? current_incidencia.ruta_archivo_soporte ?? null
+                  : null,
             },
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 4,
+              md: 2,
               control_form: control_incidencia,
               control_name: 'cod_tipo_incidencia',
               default_value: '',
@@ -197,7 +237,7 @@ const SeleccionarIncidencia = ({
               },
               label: 'Tipo incidencia',
               helper_text: '',
-              disabled: false,
+              disabled: current_incidencia.id_incidencias_mat_vegetal !== null,
               select_options: [
                 { label: 'Actividad', value: 'A' },
                 { label: 'Seguimiento', value: 'S' },
@@ -208,7 +248,7 @@ const SeleccionarIncidencia = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 8,
+              md: 3,
               control_form: control_incidencia,
               control_name: 'nombre_incidencia',
               default_value: '',
@@ -223,7 +263,52 @@ const SeleccionarIncidencia = ({
               disabled: false,
               helper_text: '',
             },
-
+            {
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 5,
+              control_form: control_incidencia,
+              control_name: 'persona_crea',
+              default_value: '',
+              rules: {
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar la personas que la creó',
+                },
+              },
+              label: 'Incidencia realizada por',
+              type: 'text',
+              disabled: true,
+              helper_text: '',
+            },
+            {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 2,
+              control_form: control_incidencia,
+              control_name: 'fecha_incidencia',
+              default_value: '',
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+                min_rule: {
+                  rule: new Date().setDate(new Date().getDate() - 1),
+                  message: `La fecha minima posible es 
+                  ${min_date.toString().slice(0, 16)}`,
+                },
+                max_rule: {
+                  rule: new Date(),
+                  message: `La fecha maxima posible es ${max_date
+                    .toString()
+                    .slice(0, 16)}`,
+                },
+              },
+              label: 'Fecha de incidencia',
+              disabled: current_incidencia.id_incidencias_mat_vegetal !== null,
+              helper_text: '',
+              min_date,
+              max_date,
+              format: 'YYYY-MM-DD',
+            },
             {
               datum_type: 'input_controller',
               xs: 12,
@@ -241,64 +326,9 @@ const SeleccionarIncidencia = ({
               disabled: false,
               helper_text: '',
             },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 4,
-              control_form: control_incidencia,
-              control_name: 'persona_crea',
-              default_value: '',
-              rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Debe seleccionar la personas que la creó',
-                },
-              },
-              label: 'Incidencia realizada por',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 5,
-              control_form: control_incidencia,
-              control_name: 'fecha_incidencia',
-              default_value: '',
-              rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Debe seleccionar fecha',
-                },
-              },
-              label: 'Fecha de incidencia',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
           ]}
           modal_select_model_title="Buscar incidencias"
-          modal_form_filters={[
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_incidencia,
-              control_name: 'nro_baja_por_tipo',
-              default_value: '',
-              rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Consecutivo mezcla requerido',
-                },
-              },
-              label: 'Consecutivo baja',
-              type: 'number',
-              disabled: false,
-              helper_text: '',
-            },
-          ]}
+          modal_form_filters={[]}
         />
       </Grid>
     </>

@@ -85,10 +85,10 @@ export const get_persmisions_user: (
       return;
     }
 
-    console.log(
+  /*  console.log(
       '🚀 ~ file: thunks.ts ~ line 86 ~ return ~ resp.data',
       resp.data
-    );
+    ); */
     //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
   return {

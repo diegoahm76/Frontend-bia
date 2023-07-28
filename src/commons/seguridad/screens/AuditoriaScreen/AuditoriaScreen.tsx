@@ -8,19 +8,12 @@ import {
   Typography,
   Stack,
   Button,
-  IconButton,
-  TextField,
-  FormLabel,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
-  Menu,
-  MenuItem
+  TextField
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
-import FilterListIcon from '@mui/icons-material/FilterList';
+
 
 import { type Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -30,7 +23,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // Components
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components/Title';
-import { TablaGeneral } from '../../../../components/TablaGeneral/TablaGeneral';
+
 import { control_error } from '../../../../helpers/controlError';
 import type { IList } from '../../../../interfaces/globalModels';
 import { columns } from './utils/colums';
@@ -38,18 +31,14 @@ import { columns } from './utils/colums';
 import { form_values } from './types/types';
 import type { IFormValues } from './types/types';
 import { get_info } from './services/api.services';
+import { TablaGeneral } from '../../../../components/TablaGeneral/TablaGeneral';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AuditoriaScreen = (): JSX.Element => {
   const [loading_button, set_loading_button] = React.useState(false);
-  const [anchor_el, set_anchor_el] = React.useState<null | HTMLElement>(null);
-  const open_menu_filter = Boolean(anchor_el);
-  const handle_click_menu_filter = (event: React.MouseEvent<HTMLElement>) :any => {
-    set_anchor_el(event.currentTarget);
-  };
-  const handle_close_menu_filter = (): void => {
-    set_anchor_el(null);
-  };
+  
+
   const [checkbox_selection, set_checkbox_selection] = React.useState({
     tipo_documento_filter: false,
     subsistema_modulo_filter: false
@@ -132,22 +121,6 @@ export const AuditoriaScreen = (): JSX.Element => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_change_checkbox = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    set_checkbox_selection((prevSelection) => ({
-      ...prevSelection,
-      [event.target.name]: event.target.checked
-    }));
-
-    if (!tipo_documento_filter || !subsistema_modulo_filter) {
-      set_value('numero_documento', '');
-      set_value('tipo_documento', { label: '', value: '' });
-      set_nombre_usuario_auditoria(null);
-    }
-
-    await query_auditorias(form_values, rango_inicial_fecha, rango_final_fecha);
-  };
 
   useEffect(() => {
     void get_info(
@@ -256,91 +229,9 @@ export const AuditoriaScreen = (): JSX.Element => {
             
                 </LocalizationProvider>
               </Grid>
-              {
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                rango_inicial_fecha && rango_final_fecha && (
-                  <Grid item sm={1}>
-                    <IconButton
-                      onClick={handle_click_menu_filter}
-                      size="small"
-                      sx={{ ml: 2 }}
-                      aria-controls={
-                        open_menu_filter ? 'account-menu' : undefined
-                      }
-                      aria-haspopup="true"
-                      aria-expanded={open_menu_filter ? 'true' : undefined}
-                    >
-                      <FilterListIcon />
-                    </IconButton>
-                    <Menu
-                      anchorEl={anchor_el}
-                      id="account-menu"
-                      open={open_menu_filter}
-                      onClose={handle_close_menu_filter}
-                      onClick={handle_close_menu_filter}
-                      PaperProps={{
-                        elevation: 0,
-                        sx: {
-                          overflow: 'visible',
-                          filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                          mt: 1.5,
-                          '& .MuiAvatar-root': {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1
-                          },
-                          '&:before': {
-                            content: '""',
-                            display: 'block',
-                            position: 'absolute',
-                            top: 0,
-                            right: 14,
-                            width: 10,
-                            height: 10,
-                            bgcolor: 'background.paper',
-                            transform: 'translateY(-50%) rotate(45deg)',
-                            zIndex: 0
-                          }
-                        }
-                      }}
-                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                    >
-                      <MenuItem onClick={handle_close_menu_filter}>
-                        <FormControl
-                          sx={{ m: 3 }}
-                          component="fieldset"
-                          variant="standard"
-                        >
-                          <FormLabel component="legend">Buscar por:</FormLabel>
 
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={tipo_documento_filter}
-                                onChange={handle_change_checkbox}
-                                name="tipo_documento_filter"
-                              />
-                            }
-                            label="Tipo de documento"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={subsistema_modulo_filter}
-                                onChange={handle_change_checkbox}
-                                name="subsistema_modulo_filter"
-                              />
-                            }
-                            label="Subsistema/Módulo"
-                          />
-                        </FormControl>
-                      </MenuItem>
-                    </Menu>
-                  </Grid>
-                )
-              }
+         
+              
             </Grid>
             {tipo_documento_filter && (
               <Grid container spacing={2} sx={{ mt: '0' }}>
