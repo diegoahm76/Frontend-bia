@@ -39,8 +39,14 @@ import { Avatar, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContext } from '../context/ModalContext';
-import { get_serie_ccd_current, get_series_ccd } from '../store/slices/seriesSlice';
-import { get_subseries_ccd, get_subseries_ccd_current } from '../store/slices/subseriesSlice';
+import {
+  get_serie_ccd_current,
+  get_series_ccd
+} from '../store/slices/seriesSlice';
+import {
+  get_subseries_ccd,
+  get_subseries_ccd_current
+} from '../store/slices/subseriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
@@ -267,8 +273,12 @@ const use_ccd = () => {
   }, [data_create_ccd.organigrama.value]);
 
   useEffect(() => {
+    console.log('uniry_organigram', unity_organigram);
+    const filteredUnityOrganigram = unity_organigram.filter(
+      (item) => item.cod_agrupacion_documental !== null
+    );
     set_list_unitys(
-      unity_organigram.map((item) => ({
+      filteredUnityOrganigram.map((item) => ({
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))
@@ -538,8 +548,7 @@ const use_ccd = () => {
       minWidth: 110,
       maxWidth: 120,
       renderCell: (params: any) => {
-        return (
-          ccd_current?.actual ? null :
+        return ccd_current?.actual ? null : (
           <>
             <IconButton
               onClick={() => {
