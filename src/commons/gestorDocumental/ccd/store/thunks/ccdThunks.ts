@@ -122,14 +122,12 @@ export const to_finished_ccds_service: any = (
   assignments_ccd: any,
 ) => {
   return async (
-    dispatch: Dispatch<any>,
-    getState: any
   ): Promise</* AxiosResponse | AxiosError */ any> => {
     try {
-
+      console.log(assignments_ccd, 'assignments_ccd');
       if(assignments_ccd.length === 0){
         control_error('No se puede finalizar el CCD porque no tiene asignaciones');
-        return
+        return;
       }
 
 
@@ -147,9 +145,6 @@ export const to_finished_ccds_service: any = (
       const { data } = await api.put(`gestor/ccd/finish/${id_ccd}/`);
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
-      /* dispatch(
-        get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
-      ); */
       control_success(data.detail);
       set_flag_btn_finish(true);
       return data;
