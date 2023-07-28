@@ -26,9 +26,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import { use_tca } from '../../../../hooks/use_tca';
 import { v4 as uuidv4 } from 'uuid';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
-import { get_searched_tcas_service } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import {
+  get_catalogo_TCA_service,
+  get_catalogo_TRD_service,
+  get_searched_tcas_service
+} from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { set_current_tca_action, set_get_tcas_action } from '../../../../toolkit/TCAResources/slice/TcaSlice';
+import {
+  set_catalog_TCA_action,
+  set_catalog_trd_action,
+  set_current_tca_action,
+  set_get_tcas_action
+} from '../../../../toolkit/TCAResources/slice/TcaSlice';
 
 //* icons
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -46,7 +55,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
   const {
     control_search_tca,
     watch_search_tca_value,
-    reset_search_tca,
+    reset_search_tca
 
     // ? establishe the formState
   } = use_tca();
@@ -88,26 +97,22 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              console.log(
-                'params.row',
-                params.row,
-
-              );
+              console.log('params.row', params.row);
               dispatch(set_current_tca_action(params.row));
               closeModal();
-              /* 
-            closeModalModalSearchTRD();
-            dispatch(get_trds([]));
-            const ccd_current = {
-              id_ccd: params?.row?.id_ccd,
-              id_organigrama: params?.row?.id_organigrama
-            };
-            dispatch(
-              getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
-            ).then((res: any) => {
-              // console.log(res);
-              dispatch(get_catalogo_trd(params.row.id_trd));
-            }); */
+              void get_catalogo_TRD_service(params.row.id_trd)
+                .then((res) => {
+                  console.log(res);
+                  dispatch(set_catalog_trd_action(res));
+                })
+                .then(() => {
+                  void get_catalogo_TCA_service(params.row.id_tca).then(
+                    (res) => {
+                      console.log(res);
+                      dispatch(set_catalog_TCA_action(res));
+                    }
+                  );
+                });
               // reset_searched_trd_modal();
               // console.log(params.row);
             }}

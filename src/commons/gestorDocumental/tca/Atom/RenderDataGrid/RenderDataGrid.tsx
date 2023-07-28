@@ -5,12 +5,13 @@ import { Grid, Box } from '@mui/material';
 import { containerStyles } from '../../screens/utils/constants/constants';
 import { Title } from '../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
+import { v4 as uuidv4 } from 'uuid';
 
 export const RenderDataGrid: FC<any> = ({
   rows,
   columns,
   title,
-  aditionalElement,
+  aditionalElement
 }: any): JSX.Element => {
   return (
     <Grid container sx={containerStyles}>
@@ -28,6 +29,7 @@ export const RenderDataGrid: FC<any> = ({
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                   experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => uuidv4()}
                 />
               </Box>
             </Grid>

@@ -10,7 +10,12 @@ import {
 import { useEffect, useState } from 'react';
 import { getTRDsUsados } from '../components/MainScreenComponents/view/TRDSUsados/services/TRDUsados.service';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
-import { set_current_tca_action } from '../toolkit/TCAResources/slice/TcaSlice';
+import {
+  set_catalog_trd_action,
+  set_current_catalog_trd_action,
+  set_current_tca_action,
+  set_get_tcas_action
+} from '../toolkit/TCAResources/slice/TcaSlice';
 
 export const use_tca = () => {
   // ? dispatch declararion
@@ -53,7 +58,10 @@ export const use_tca = () => {
   // ! -------- cleaning funcion for all tca screen ----------------->
 
   const cleaning_function = () => {
+    dispatch(set_get_tcas_action([]));
     dispatch(set_current_tca_action(null));
+    dispatch(set_catalog_trd_action([]));
+    dispatch(set_current_catalog_trd_action(null));
     reset_create_update_tca(default_values_create_update_tca);
   };
 
@@ -119,18 +127,18 @@ export const use_tca = () => {
         return item.id_trd === tca_current.id_trd;
       }); */
       const result_name = list_trds.filter((item: any) => {
-        return item.value === tca_current.id_trd;
+        return item.value === tca_current?.id_trd;
       });
       console.log('result_name', result_name);
       const obj: any = {
         id_trd: {
           label: result_name[0]?.item?.nombre || tca_current?.nombre,
-          value: result_name[0]?.item?.id_trd || tca_current?.id_trd,
+          value: result_name[0]?.item?.id_trd || tca_current?.id_trd
           // id_tca: tca_current.id_tca,
         },
         nombre: tca_current?.nombre,
         version: tca_current?.version,
-        id_tca: tca_current?.id_tca,
+        id_tca: tca_current?.id_tca
         // id_organigrama: tca_current?.id_organigrama,
       };
       // console.log(obj, 'obj');

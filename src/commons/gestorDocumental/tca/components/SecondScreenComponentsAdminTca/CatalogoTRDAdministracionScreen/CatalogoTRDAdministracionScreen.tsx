@@ -8,12 +8,14 @@ import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/u
 
 //* icons
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { useAppSelector } from '../../../../../../hooks';
 
 export const CatalogoTRDAdministracionScreen: FC<any> = ({
   rows,
   columns,
   title
 }: any): JSX.Element => {
+  const { catalog_trd } = useAppSelector((state) => state.tca_slice);
 
   const newColums = [
     {
@@ -84,11 +86,15 @@ export const CatalogoTRDAdministracionScreen: FC<any> = ({
 
   return (
     <>
-      <RenderDataGrid rows={rows} columns={newColums} title={title} />
+      <RenderDataGrid
+        rows={catalog_trd || []}
+        columns={newColums}
+        title={title}
+      />
       {/*
         mirar si se debe añadir componente adicional
 
-        button - añadir nueva relacion del TRD o cancelar relacion del TRD
+        button - añadir nueva relacion del TRD o cancelar relacion del TRD en la propiedad aditionalElement
       */}
     </>
   );

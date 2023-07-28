@@ -85,7 +85,7 @@ export const update_tca_services = (
     const url = `gestor/tca/update/${id_tca}/`;
     const searchUrl = `gestor/tca/get-busqueda-tca/?nombre=${nombre}&version=${version}`;
 
-    const errorMessage = 'No se ha podido actualizar el TCA';
+    const errorMessage = 'Error en asignación';
     const successMessage = 'El TCA se ha actualizado correctamente';
 
     try {
@@ -98,10 +98,16 @@ export const update_tca_services = (
       const { data: searchData } = await api.get(searchUrl);
 
       const updatedTCA = searchData.data.find(
-        (tca: any) => tca.id_tca === updatedData.data.id_tca
+        (tca: any) => tca.nombre === updatedData.data.nombre
       );
 
       if (!updatedTCA) {
+        console.log(
+          '🚀 ~ file: TcaServicesThunks.ts ~ line 103 ~ return ~ searchData.data',
+          searchData.data
+        );
+        console.log('Updated TCA', updatedData);
+
         control_error(errorMessage);
         return;
       }
@@ -120,6 +126,62 @@ export const update_tca_services = (
     }
   };
 };
+
+
+
+
+// ! --------------------- | CATALOGO SERVICES | --------------------- //
+
+// ? ---- get catalogo trd service ---- //
+export const get_catalogo_TRD_service = async (
+  id_trd: number = 1
+): Promise<any> => {
+  try {
+    if (!id_trd) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/trd/catalogo-trd/get-list/${id_trd}/`;
+    const { data } = await api.get(url);
+    control_success(data.detail);
+    return data.data;
+  } catch (error: AxiosError | any) {
+    control_error(error.response?.data?.detail);
+    return error;
+  }
+};
+
+
+// ? ---- get catalogo tca service ---- //
+export const get_catalogo_TCA_service = async (
+  id_tca: number = 1
+): Promise<any> => {
+  try {
+    if (!id_tca) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/tca/catalogo-tca/get-clasif/${id_tca}/`;
+    const { data } = await api.get(url);
+    console.log('data', data);
+    return data;
+  } catch (error: AxiosError | any) {
+    control_error(error.response?.data?.detail);
+    return error;
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ! --------- | FINISH AND RESUME TCA SERVICES | --------- ! //
 // ? finish TCA and resume TCA

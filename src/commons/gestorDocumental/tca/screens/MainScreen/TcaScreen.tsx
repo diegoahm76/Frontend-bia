@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable no-void */
 // Components Material UI
 import { useState, type FC, useEffect } from 'react';
@@ -13,7 +14,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 // ? colums and rows for the table
 import {
   columsCatalogoTRD,
-  rowsCatalogoTRD
+  // rowsCatalogoTRD
 } from '../utils/columnasCatalogos/CatalogoTRD/CatalogoTRD';
 import {
   columsCatalogoTCA,
@@ -33,7 +34,7 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
   const dispatch = useAppDispatch();
 
   // ? useSelector declaration --------------------->
-  const { tca_current } = useAppSelector((state) => state.tca_slice);
+  const { tca_current, catalog_trd } = useAppSelector((state) => state.tca_slice);
 
   // ? useState declaration --------------------->
   const [flag_finish_or_or_edit_trd, set_flag_finish_or_edit_trd] =
@@ -61,7 +62,7 @@ export const TcaScreen: FC<any> = (props): JSX.Element => {
 
       {/* parte 2. catalogo TRD seleccionado */}
       <CatalogoTRDSeleccionado
-        rows={rowsCatalogoTRD}
+        rows={catalog_trd || []}
         columns={columsCatalogoTRD}
         title="Catálogo TRD seleccionado"
       />

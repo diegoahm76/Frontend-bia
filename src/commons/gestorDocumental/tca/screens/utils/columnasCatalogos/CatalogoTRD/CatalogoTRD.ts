@@ -118,17 +118,5 @@ export const rowsCatalogoTRD = [
     descripcion_procedimiento: 'descripcion_procedimiento',
     digitalizacion: false,
     fecha_registro: 'fecha_registro'
-  },
-  {
-    id: 7,
-    nombre_unidad: 'nombre_unidad',
-    nombre_serie: 'nombre_serie',
-    nombre_subserie: 'nombre_subserie',
-    disposicion_final: 'disposicion_final',
-    tiempo_retencion_ag: 'tiempo_retencion_ag',
-    tiempo_retencion_ac: 'tiempo_retencion_ac',
-    descripcion_procedimiento: 'descripcion_procedimiento',
-    digitalizacion: false,
-    fecha_registro: 'fecha_registro'
   }
 ];

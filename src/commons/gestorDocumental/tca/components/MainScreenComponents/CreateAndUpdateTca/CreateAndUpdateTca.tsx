@@ -25,8 +25,10 @@ import SyncIcon from '@mui/icons-material/Sync';
 import { LoadingButton } from '@mui/lab';
 import {
   create_tca_services,
+  get_catalogo_TRD_service,
   update_tca_services
 } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import { set_catalog_trd_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   // ? dispatch declaration
@@ -124,14 +126,14 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        // name="id_trd"
                         onChange={(selectedOption) => {
-                          /* dispatch(
-                      getServiceSeriesSubseriesXUnidadOrganizacional(
-                        selectedOption.item
-                      )
-                    ); */
-                          console.log(selectedOption);
+                          void get_catalogo_TRD_service(
+                            selectedOption.value
+                          ).then((res) => {
+                            console.log(res);
+                            dispatch(set_catalog_trd_action(res));
+                          });
+
                           onChange(selectedOption);
                         }}
                         isDisabled={tca_current != null}
