@@ -469,10 +469,6 @@ export const FormTRDAdmin = (): JSX.Element => {
                         fullWidth
                         size="small"
                         label="Justificación del cambio"
-                        /* sx={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
-                      }} */
-
                         disabled={false}
                         variant="outlined"
                         value={value}
@@ -483,6 +479,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                             ? 'Es obligatorio ingresar una justificación del cambio'
                             : 'Cambio'
                         }
+                        inputProps={{ maxLength: 250 }}
                       />
                     )}
                   />

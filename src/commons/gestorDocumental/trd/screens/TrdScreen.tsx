@@ -216,8 +216,10 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
+                        e.target.value.length === 50 && control_error('max 50 digitos');
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 50 }}
                       // error={!!error}
                       /* helperText={
                         error
@@ -254,8 +256,10 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
+                        e.target.value.length === 10 && control_error('max 10 digitos');
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 10 }}
                     />
                   )}
                 />

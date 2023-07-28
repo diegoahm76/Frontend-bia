@@ -41,7 +41,9 @@ export const AdminTRDScreen = (): JSX.Element | null => {
     openModalAdministracionTRD,
     closeModalAdministracionTRD,
     buttonAddNewTRDRelationActual,
-    setButtonAddNewTRDRelationActual
+    setButtonAddNewTRDRelationActual,
+    buttonSpecialEditionActualTRD,
+    setButtonSpecialEditionActualTRD
   } = useContext(ModalContextTRD);
 
   const {
@@ -175,6 +177,8 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
+                setButtonSpecialEditionActualTRD(false);
+                console.log(buttonSpecialEditionActualTRD);
                 // ? this is the function to get data asociated to trd
                 // dispatch(get_tipologia_doc_asociadas_trd(params.row.id_cat_serie_und));
                 openModalAdministracionTRD();
