@@ -127,9 +127,6 @@ export const update_tca_services = (
   };
 };
 
-
-
-
 // ! --------------------- | CATALOGO SERVICES | --------------------- //
 
 // ? ---- get catalogo trd service ---- //
@@ -151,7 +148,6 @@ export const get_catalogo_TRD_service = async (
   }
 };
 
-
 // ? ---- get catalogo tca service ---- //
 export const get_catalogo_TCA_service = async (
   id_tca: number = 1
@@ -164,24 +160,15 @@ export const get_catalogo_TCA_service = async (
     const url = `gestor/tca/catalogo-tca/get-clasif/${id_tca}/`;
     const { data } = await api.get(url);
     console.log('data', data);
+    control_success('Se encontró el siguiente catálogo TCA' || data.detail);
     return data;
   } catch (error: AxiosError | any) {
-    control_error(error.response?.data?.detail);
+    control_error(
+      'No se encontró catálog para la TCA' || error.response?.data?.detail
+    );
     return error;
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ! --------- | FINISH AND RESUME TCA SERVICES | --------- ! //
 // ? finish TCA and resume TCA
