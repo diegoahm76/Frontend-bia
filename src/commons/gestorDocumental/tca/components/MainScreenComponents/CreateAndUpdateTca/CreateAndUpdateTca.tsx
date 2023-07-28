@@ -17,16 +17,20 @@ import { TCASTerminados } from '../view/TCASTerminados/TCASTerminados';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
 import { TRDSUsados } from '../view/TRDSUsados/TRDSUsados';
 import { BusquedaTCAModal } from '../view/BusquedaTCA/BusquedaTCAModal';
-import { useAppSelector } from '../../../../../../hooks';
+import { useAppSelector, useAppDispatch } from '../../../../../../hooks';
 
 // import  LoadingButton  from '@mui/lab';
 // import  SyncIcon  from '@mui/icons-material/Sync';
 import SyncIcon from '@mui/icons-material/Sync';
 import { LoadingButton } from '@mui/lab';
+import {
+  create_tca_services,
+  update_tca_services
+} from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   // ? dispatch declaration
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   // ? useSelector declaration
   const { tca_current } = useAppSelector((state) => state.tca_slice);
@@ -59,19 +63,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
     setLoadingButton
   } = useContext(ModalContextTCA);
 
-  const createPrueba = async (): Promise<any> => {
-    try {
-      setLoadingButton(true);
-      console.log('createPrueba....');
-
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoadingButton(false);
-      console.log('finally');
-    }
-  };
-
   const onSubmit = (): void => {
     const dataToSend = {
       id_trd: watch_create_update_tca_value?.id_trd?.value,
@@ -79,13 +70,15 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
       version: watch_create_update_tca_value?.version
     };
 
-    const action =
-      tca_current !== null
-        ? // eslint-disable-next-line no-void
-          (console.log(dataToSend), void createPrueba())
-        // eslint-disable-next-line no-void
-        : (console.log(dataToSend), void createPrueba());
-    console.log(action);
+    const toSendUpdate = {
+      ...dataToSend,
+      id_tca: tca_current?.id_tca
+    };
+
+    tca_current !== null
+      ? // eslint-disable-next-line no-void
+        dispatch(update_tca_services(toSendUpdate, setLoadingButton))
+      : dispatch(create_tca_services(dataToSend, setLoadingButton));
 
     /* trd_current !== null
     ? dispatch(
@@ -284,7 +277,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 color="primary"
                 variant="contained"
                 type="submit"
-                startIcon={tca_current !== null ? <SyncIcon /> : <SaveIcon />}
+                startIcon={tca_current != null ? <SyncIcon /> : <SaveIcon />}
                 // onClick={openModalModalSearchTRD}
               >
                 {tca_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}

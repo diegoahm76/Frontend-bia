@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type AxiosResponse, type AxiosError } from 'axios';
 import { type Dispatch } from 'react';
 import { api } from './../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../helpers';
-import { set_get_tcas_action } from '../slice/TcaSlice';
+import { set_current_tca_action, set_get_tcas_action } from '../slice/TcaSlice';
 
 // ? --------------------- | GET TCAS SERVICES | --------------------- //
 export const get_searched_tcas_service: any = (
@@ -40,32 +42,85 @@ export const get_searched_tcas_service: any = (
 
 // ! --------------------- | CREATE AND UPDATE TCA SERVICES | --------------------- //
 
-export const create_tca_services = (bodyPost: any, setLoadingButton: any): any => {
+// ? ---------------- create TCA ----------------- //
+export const create_tca_services = (
+  bodyPost: any,
+  setLoadingButton: any
+): any => {
   return async (dispatch: Dispatch<any>): Promise<any> => {
     const { id_trd, nombre, version } = bodyPost;
-    // setLoadingButton(true);
+    setLoadingButton(true);
     try {
-      if (!nombre || !id_trd || !version)
-        throw new Error('Todos los campos son obligatorios');
+      if (!nombre || !id_trd || !version) {
+        control_error('Todos los campos son obligatorios');
+        return;
+      }
 
       const url = 'gestor/tca/create/';
       const { data } = await api.post(url, bodyPost);
       control_success(data.detail);
+      dispatch(set_current_tca_action(data.data));
       console.log('data', data);
       return data;
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail || error.message);
 
       throw error;
-    }
-    finally {
+    } finally {
       setLoadingButton(false);
     }
   };
 };
 
+// ? ---------------- update TCA ----------------- //
+export const update_tca_services = (
+  bodyPost: any,
+  setLoadingButton: any
+): any => {
+  return async (dispatch: Dispatch<any>): Promise<any> => {
 
+    console.log(bodyPost)
+    const { id_trd, nombre, version, id_tca } = bodyPost;
+    setLoadingButton(true);
 
+    const url = `gestor/tca/update/${id_tca}/`;
+    const searchUrl = `gestor/tca/get-busqueda-tca/?nombre=${nombre}&version=${version}`;
+
+    const errorMessage = 'No se ha podido actualizar el TCA';
+    const successMessage = 'El TCA se ha actualizado correctamente';
+
+    try {
+      if (!nombre || !id_trd || !version) {
+        control_error('Todos los campos son obligatorios');
+        return;
+      }
+
+      const { data: updatedData } = await api.patch(url, { nombre, version });
+      const { data: searchData } = await api.get(searchUrl);
+
+      const updatedTCA = searchData.data.find(
+        (tca: any) => tca.id_tca === updatedData.data.id_tca
+      );
+
+      if (!updatedTCA) {
+        control_error(errorMessage);
+        return;
+      }
+
+      dispatch(set_current_tca_action(updatedTCA));
+
+      control_success(updatedData.detail || successMessage);
+      console.log('data', updatedData);
+      return updatedData;
+    } catch (error: AxiosError | any) {
+      control_error(error.response?.data?.detail || error.message);
+
+      throw error;
+    } finally {
+      setLoadingButton(false);
+    }
+  };
+};
 
 // ! --------- | FINISH AND RESUME TCA SERVICES | --------- ! //
 // ? finish TCA and resume TCA

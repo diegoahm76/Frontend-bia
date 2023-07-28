@@ -28,7 +28,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
 import { get_searched_tcas_service } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { set_get_tcas_action } from '../../../../toolkit/TCAResources/slice/TcaSlice';
+import { set_current_tca_action, set_get_tcas_action } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 
 //* icons
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -43,8 +43,13 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
   const { tcas } = useAppSelector((state) => state.tca_slice);
 
   // ? use_tca
-  const { control_search_tca, watch_search_tca_value, reset_search_tca } =
-    use_tca();
+  const {
+    control_search_tca,
+    watch_search_tca_value,
+    reset_search_tca,
+
+    // ? establishe the formState
+  } = use_tca();
 
   // ? manage modal
 
@@ -72,8 +77,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
   const closeModal = (): void => {
     closeModalBusquedaTca();
     cleanSearchTCAS();
-  }
-
+  };
 
   const columns = [
     {
@@ -84,8 +88,14 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              console.log(params.row);
-              /* dispatch(get_trd_current(params.row));
+              console.log(
+                'params.row',
+                params.row,
+
+              );
+              dispatch(set_current_tca_action(params.row));
+              closeModal();
+              /* 
             closeModalModalSearchTRD();
             dispatch(get_trds([]));
             const ccd_current = {
@@ -287,7 +297,6 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                 >
                   BUSCAR
                 </LoadingButton>
-
               </Grid>
             </Grid>
             <DataGrid

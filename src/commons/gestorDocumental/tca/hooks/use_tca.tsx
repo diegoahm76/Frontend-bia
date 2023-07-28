@@ -2,12 +2,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useForm } from 'react-hook-form';
-import { default_values_busqueda_tca, default_values_create_update_tca } from './utils/defaultValuesUseForm/defaultValuesUseForm';
+import {
+  default_values_busqueda_tca,
+  default_values_create_update_tca
+} from './utils/defaultValuesUseForm/defaultValuesUseForm';
 import { useEffect, useState } from 'react';
 import { getTRDsUsados } from '../components/MainScreenComponents/view/TRDSUsados/services/TRDUsados.service';
-import { useAppSelector } from '../../../../hooks';
+import { useAppSelector, useAppDispatch } from '../../../../hooks';
+import { set_current_tca_action } from '../toolkit/TCAResources/slice/TcaSlice';
 
 export const use_tca = () => {
+  // ? dispatch declararion
+  const dispatch = useAppDispatch();
+
   // ? useSelector declaration
   const { tca_current } = useAppSelector((state) => state.tca_slice);
 
@@ -45,9 +52,9 @@ export const use_tca = () => {
   // ! -------- cleaning funcion for all tca screen ----------------->
 
   const cleaning_function = () => {
+    dispatch(set_current_tca_action(null));
     reset_create_update_tca(default_values_create_update_tca);
-  }
-
+  };
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -58,6 +65,13 @@ export const use_tca = () => {
 
   // ? list of finished ccd --------------------->
   const [list_non_used_trds, set_list_non_used_trds] = useState<any[]>([
+    {
+      label: '',
+      value: 0
+    }
+  ]);
+
+  const [list_trds, set_list_trds] = useState<any[]>([
     {
       label: '',
       value: 0
@@ -82,7 +96,47 @@ export const use_tca = () => {
             };
           })
       );
+
+      set_list_trds(
+        res.map((item: any) => {
+          return {
+            item,
+            label: `V. ${item.version} - ${item.nombre} `,
+            value: item.id_trd
+          };
+        })
+      );
     });
+  }, [tca_current]);
+
+  // ? try to edit tca --------------------->
+  useEffect(() => {
+    // console.log(data_create_trd_modal, 'data_create_trd');
+    // console.log(trd_current, 'trd_current');
+    if (tca_current !== null) {
+      /* const result_name = list_trds.filter((item: any) => {
+        return item.id_trd === tca_current.id_trd;
+      }); */
+      const result_name = list_trds.filter((item: any) => {
+        return item.value === tca_current.id_trd;
+      });
+      console.log('result_name', result_name);
+      const obj: any = {
+        id_trd: {
+          label: result_name[0].label,
+          value: result_name[0].value,
+          id_tca: tca_current.id_tca,
+        },
+        nombre: tca_current?.nombre,
+        version: tca_current?.version,
+        id_tca: tca_current?.id_tca,
+        id_organigrama: tca_current.id_organigrama,
+      };
+      // console.log(obj, 'obj');
+      console.log(obj, 'obj');
+      console.log('tca_current', tca_current);
+      reset_create_update_tca(obj);
+    }
   }, [tca_current]);
 
   return {
@@ -108,8 +162,7 @@ export const use_tca = () => {
     set_title_button_create_edit_tca,
     title_button_create_edit_tca,
 
-
     // ? cleaning function all
-    cleaning_function,
+    cleaning_function
   };
 };
