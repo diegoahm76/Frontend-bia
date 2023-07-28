@@ -10,7 +10,6 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -30,41 +29,43 @@ import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useNavigate } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarLaboratorio: React.FC = () => {
+export const SeleccionarLaboratorio: React.FC = () => {
   const colums_resultado: GridColDef[] = [
     ...columns_result_lab,
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 200,
+      width: 120,
       renderCell: (params) => (
         <>
-          <Tooltip title="Eliminar registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<DeleteIcon />}
-              onClick={() => {
-                handleDelete(params.row.id);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar Registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                handleEdit(params.row);
-              }}
-            />
-          </Tooltip>
+          {/* <IconButton
+                    onClick={() => {
+                      set_id_seccion(params.row.id_seccion);
+                      set_info_seccion(params.row);
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        background: '#fff',
+                        border: '2px solid',
+                      }}
+                      variant="rounded"
+                    >
+                      <ChecklistIcon
+                        titleAccess="Seleccionar Sección"
+                        sx={{
+                          color: 'primary.main',
+                          width: '18px',
+                          height: '18px',
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton> */}
         </>
       ),
     },
@@ -76,7 +77,45 @@ export const AgregarLaboratorio: React.FC = () => {
     control,
   } = useRegisterInstrumentoHook();
 
-  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+  const {
+    tipo_parametro_value,
+    rows_laboratorio,
+    fecha_toma_muestra,
+    fecha_analisis,
+    fecha_envio,
+    fecha_resultado,
+    set_fecha_toma_muestra,
+    // set_fecha_analisis,
+    set_fecha_envio,
+    set_fecha_resultado,
+    handle_date_change,
+    handle_change_inputs,
+    handle_agregar,
+
+    // *Autocomplete
+    cuenca_select,
+    pozos_selected,
+    parametros_select,
+    undidad_medida_select,
+    id_instrumento_slice,
+    fetch_data_parametros_laboratorios_select,
+    fetch_data_cuencas_instrumentos_select,
+    fetch_data_pozo_instrumentos_select,
+
+    // * Use Form
+    register_laboratorio,
+    control_registro_laboratorio,
+    formErrors_laboratorio,
+
+    // * Onsubmit
+    onSubmit,
+    is_saving,
+    reset_laboratorio,
+  } = use_register_laboratorio_hook();
+
+  const { instrumentos, info_laboratorio } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
 
   const navigate = useNavigate();
 
@@ -97,39 +136,21 @@ export const AgregarLaboratorio: React.FC = () => {
     });
   }, [instrumentos]);
 
-  const {
-    tipo_parametro_value,
-    rows_laboratorio,
-    fecha_toma_muestra,
-    fecha_analisis,
-    fecha_envio,
-    fecha_resultado,
-    handleEdit,
-    handle_date_change,
-    handle_change_inputs,
-    handle_agregar,
-    handleDelete,
-
-    // *Autocomplete
-    cuenca_select,
-    pozos_selected,
-    parametros_select,
-    undidad_medida_select,
-    id_instrumento_slice,
-    fetch_data_parametros_laboratorios_select,
-    fetch_data_cuencas_instrumentos_select,
-    fetch_data_pozo_instrumentos_select,
-
-    // * Use Form
-    register_laboratorio,
-    control_registro_laboratorio,
-    formErrors_laboratorio,
-    data_watch,
-
-    // * Onsubmit
-    onSubmit,
-    is_saving,
-  } = use_register_laboratorio_hook();
+  useEffect(() => {
+    reset_laboratorio({
+      descripcion: info_laboratorio.descripcion,
+      lugar_muestra: info_laboratorio.lugar_muestra,
+      cod_clase_muestra: info_laboratorio.cod_clase_muestra,
+      fecha_toma_muestra: info_laboratorio.fecha_toma_muestra,
+      fecha_resultados_lab: info_laboratorio.fecha_resultados_lab,
+      fecha_envio_lab: info_laboratorio.fecha_envio_lab,
+      latitud: info_laboratorio.latitud,
+      longitud: info_laboratorio.longitud,
+    });
+    set_fecha_toma_muestra(dayjs(info_laboratorio.fecha_toma_muestra));
+    set_fecha_envio(dayjs(info_laboratorio.fecha_envio_lab));
+    set_fecha_resultado(dayjs(info_laboratorio.fecha_resultados_lab));
+  }, [info_laboratorio]);
 
   useEffect(() => {
     if (id_instrumento_slice) {
@@ -178,7 +199,7 @@ export const AgregarLaboratorio: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE LABORATORIO " />
+            <Title title=" INFORMACIÓN DE LABORATORIO " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -241,6 +262,7 @@ export const AgregarLaboratorio: React.FC = () => {
               <DatePicker
                 label="Fecha de toma de muestra"
                 value={fecha_toma_muestra}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_toma_muestra', value);
                 }}
@@ -250,6 +272,7 @@ export const AgregarLaboratorio: React.FC = () => {
                     fullWidth
                     size="small"
                     required
+                    disabled={true}
                     {...register_laboratorio('fecha_toma_muestra', {
                       required: true,
                     })}
@@ -270,7 +293,7 @@ export const AgregarLaboratorio: React.FC = () => {
               required
               size="small"
               margin="dense"
-              disabled={false}
+              disabled={true}
               {...register_laboratorio('lugar_muestra', { required: true })}
               error={!!formErrors_laboratorio.lugar_muestra}
               helperText={
@@ -310,6 +333,7 @@ export const AgregarLaboratorio: React.FC = () => {
               <DatePicker
                 label="Enviado a laboratorio el día"
                 value={fecha_envio}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_envio', value);
                 }}
@@ -319,6 +343,7 @@ export const AgregarLaboratorio: React.FC = () => {
                     fullWidth
                     required
                     size="small"
+                    disabled={true}
                     {...register_laboratorio('fecha_envio_lab', {
                       required: true,
                     })}
@@ -337,6 +362,7 @@ export const AgregarLaboratorio: React.FC = () => {
               <DatePicker
                 label="resultados de laboratorio"
                 value={fecha_resultado}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_resultado', value);
                 }}
@@ -349,6 +375,7 @@ export const AgregarLaboratorio: React.FC = () => {
                     {...register_laboratorio('fecha_resultados_lab', {
                       required: true,
                     })}
+                    disabled={true}
                     error={!!formErrors_laboratorio.fecha_resultados_lab}
                     helperText={
                       formErrors_laboratorio?.fecha_resultados_lab?.type ===
@@ -373,7 +400,7 @@ export const AgregarLaboratorio: React.FC = () => {
               size="small"
               fullWidth
               margin="dense"
-              disabled={false}
+              disabled={true}
               required
               {...register_laboratorio('latitud', { required: true })}
               error={!!formErrors_laboratorio.latitud}
@@ -385,11 +412,10 @@ export const AgregarLaboratorio: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Longitud"
+              disabled={true}
               size="small"
               fullWidth
               margin="dense"
-              disabled={false}
               required
               {...register_laboratorio('longitud', { required: true })}
               error={!!formErrors_laboratorio.longitud}
@@ -406,7 +432,7 @@ export const AgregarLaboratorio: React.FC = () => {
               multiline
               size="small"
               margin="dense"
-              disabled={false}
+              disabled={true}
               rows={2}
               {...register_laboratorio('descripcion', { required: true })}
               error={!!formErrors_laboratorio.descripcion}
@@ -557,10 +583,10 @@ export const AgregarLaboratorio: React.FC = () => {
               onChange={handle_change_inputs}
             >
               {/* {unidad_medida_choices.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))} */}
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))} */}
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -616,7 +642,7 @@ export const AgregarLaboratorio: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required={rows_laboratorio.length === 0}
-                />
+                ></TextField>
               )}
             />
           </Grid>
@@ -631,14 +657,6 @@ export const AgregarLaboratorio: React.FC = () => {
                 variant="outlined"
                 color="primary"
                 onClick={handle_agregar}
-                disabled={
-                  !data_watch.id_parametro ||
-                  !tipo_parametro_value ||
-                  !undidad_medida_select ||
-                  !data_watch.metodo ||
-                  !fecha_analisis ||
-                  !data_watch.resultado
-                }
               >
                 Agregar
               </Button>
@@ -655,7 +673,7 @@ export const AgregarLaboratorio: React.FC = () => {
                   autoHeight
                   rows={rows_laboratorio}
                   columns={colums_resultado}
-                  getRowId={(row) => row.id || uuidv4()}
+                  getRowId={(row) => uuidv4()}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                 />
