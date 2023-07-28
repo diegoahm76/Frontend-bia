@@ -54,8 +54,8 @@ const SeleccionarBienEntrega = () => {
     const columns_bienes: GridColDef[] = [
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
-            width: 200,
+            headerName: 'Código',
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -65,7 +65,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -75,7 +75,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'bodega',
             headerName: 'Bodega',
-            width: 200,
+            width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -86,7 +86,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'cantidad_disponible',
             headerName: 'Cantidad disponible',
-            width: 150,
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -515,7 +515,7 @@ const SeleccionarBienEntrega = () => {
                             helper_text: '',
                         },
                     ]}
-                    title_list="Insumos despachados"
+                    title_list="Bienes entregados"
                     list={aux_insumos}
                     add_item_list={handle_submit_entrega(on_submit_entrega)}
                     add_list_button_label={action}

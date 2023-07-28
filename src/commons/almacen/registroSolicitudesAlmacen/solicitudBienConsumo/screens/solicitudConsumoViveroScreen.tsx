@@ -14,9 +14,9 @@ import {
   crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service, get_bienes_solicitud, editar_solicitud,
 } from '../store/solicitudBienConsumoThunks';
 import PrintIcon from '@mui/icons-material/Print';
-// import CloseIcon from '@mui/icons-material/Close';
 
 import {
+  reset_state,
   set_current_solicitud_vivero,
   set_persona_solicita,
 } from '../store/slices/indexSolicitudBienesConsumo';
@@ -25,11 +25,12 @@ import SeleccionarSolicitudVivero from '../components/componenteBusqueda/Selecci
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import Limpiar from '../../../../conservacion/componentes/Limpiar';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoViveroScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_solicitud_vivero, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values, } = useForm<IObjSolicitudVivero>();
-  const { nro_solicitud_vivero, current_solicitud_vivero, persona_solicita, bienes_solicitud, current_funcionario, } = useAppSelector((state) => state.solic_consumo);
+  const { nro_solicitud_vivero, current_solicitud_vivero, persona_solicita, bienes_solicitud, current_funcionario, } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
   const [action, set_action] = useState<string>('Guardar');
   const [anular, set_anular] = useState<string>('Anular');
   const [anular_solicitud, set_anular_solicitud] = useState<boolean>(false);
@@ -38,18 +39,30 @@ const SolicitudConsumoViveroScreen = () => {
   const dispatch = useAppDispatch();
 
 
+  const initial_values = (): void => {
+    void dispatch(get_uni_organizacional());
+    void dispatch(get_num_solicitud_vivero());
+    void dispatch(get_medida_service());
+    dispatch(set_persona_solicita({
+      nombre: userinfo.nombre,
+      id_persona: userinfo.id_persona,
+      unidad_organizacional: userinfo.nombre_unidad_organizacional,
+    }))
+    set_action('crear');
+  }
+
+
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_num_solicitud_vivero());
     void dispatch(get_medida_service());
-    dispatch(
-      set_persona_solicita({
-        nombre: userinfo.nombre,
-        id_persona: userinfo.id_persona,
-        unidad_organizacional: userinfo.nombre_unidad_organizacional,
-      })
-    );
+    dispatch(set_persona_solicita({
+      nombre: userinfo.nombre,
+      id_persona: userinfo.id_persona,
+      unidad_organizacional: userinfo.nombre_unidad_organizacional,
+    }))
   }, []);
+
 
   useEffect(() => {
     dispatch(
@@ -177,7 +190,7 @@ const SolicitudConsumoViveroScreen = () => {
   return (
     <Grid
       container
-      spacing={2}
+      spacing={1}
       sx={{
         position: 'relative',
         background: '#FAFAFA',
@@ -206,6 +219,7 @@ const SolicitudConsumoViveroScreen = () => {
           <SeleccionarBienConsumoVivero />
         </>
       </Grid>
+
       <Grid container direction="row" padding={2} spacing={2}>
         <Grid item xs={12} md={2}>
           <FormButton
@@ -239,7 +253,7 @@ const SolicitudConsumoViveroScreen = () => {
 
 
 
-        <Grid item xs={6} md={5}>
+        <Grid item xs={6} md={2}>
           <Button
             variant="outlined"
             onClick={() => {
@@ -247,9 +261,17 @@ const SolicitudConsumoViveroScreen = () => {
               set_anular_solicitud(true);
             }}
           >
-            ANULACIÓN DE SOLICITUDES DE CONSUMO
+            ANULAR
           </Button>
 
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <Limpiar
+            dispatch={dispatch}
+            reset_state={reset_state}
+            set_initial_values={initial_values}
+            variant_button={'contained'}
+          />
         </Grid>
 
         <Grid item xs={12} md={2}>
@@ -258,15 +280,16 @@ const SolicitudConsumoViveroScreen = () => {
 
         </Grid>
 
-        <AnularSolicitudModal
-          is_modal_active={anular_solicitud}
-          set_is_modal_active={set_anular_solicitud}
-          action={anular}
-          control_solicitud_vivero={control_solicitud_vivero}
-          get_values={get_values}
-          on_submit={handle_submit(on_submit_anular)}
-        />
+
       </Grid>
+      <AnularSolicitudModal
+        is_modal_active={anular_solicitud}
+        set_is_modal_active={set_anular_solicitud}
+        action={anular}
+        control_solicitud_vivero={control_solicitud_vivero}
+        get_values={get_values}
+        on_submit={handle_submit(on_submit_anular)}
+      />
     </Grid>
   );
 };

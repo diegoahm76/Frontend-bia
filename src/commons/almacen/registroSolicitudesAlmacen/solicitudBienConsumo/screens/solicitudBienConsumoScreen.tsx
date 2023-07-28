@@ -193,7 +193,7 @@ const SolicitudConsumoScreen = () => {
                         type_button="button" />
 
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={2}>
 
                     <Button
                         variant="outlined"
@@ -202,10 +202,10 @@ const SolicitudConsumoScreen = () => {
                             set_anular_solicitud(true);
                         }}
                     >
-                        ANULACIÓN DE SOLICITUDES DE CONSUMO
+                        ANULAR
                     </Button>
                 </Grid>
-                <Grid item xs={6} md={5}>
+                <Grid item xs={12} md={2}>
                     <ButtonSalir
                     />
 

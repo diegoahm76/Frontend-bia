@@ -47,11 +47,11 @@ const SeleccionarBienDespacho = () => {
 
   // tabla de bienes solicitud de consumo
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
-      width: 200,
+      width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -61,7 +61,7 @@ const SeleccionarBienDespacho = () => {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 400,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -71,7 +71,7 @@ const SeleccionarBienDespacho = () => {
     {
       field: 'bodega',
       headerName: 'Bodega',
-      width: 200,
+      width: 400,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -79,16 +79,7 @@ const SeleccionarBienDespacho = () => {
       ),
     },
 
-    {
-      field: 'cantidad_disponible',
-      headerName: 'Cantidad disponible',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+
   ];
   const columns_bienes_origen: GridColDef[] = [
     { field: 'codigo_bien', headerName: 'Código', width: 200 },

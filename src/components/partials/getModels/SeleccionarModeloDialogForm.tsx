@@ -285,7 +285,7 @@ const SeleccionarModeloDialogForm = ({
               spacing={2}
               direction="row"
             >
-              <Title title={modal_title ?? 'Resultados de la busqueda'}></Title>
+              <Title title={modal_title ?? 'Resultados de la búsqueda'}></Title>
               {form_filters.map((option, index) => (
                 <TypeDatum key={index} form_input={option} />
               ))}
@@ -319,7 +319,7 @@ const SeleccionarModeloDialogForm = ({
             >
               <Box sx={{ width: '100%' }}>
                 <Title
-                  title={title_table_modal ?? 'Resultados de la busqueda'}
+                  title={title_table_modal ?? 'Resultados de la búsqueda'}
                 ></Title>
                 <Grid
                   container
@@ -383,7 +383,7 @@ const SeleccionarModeloDialogForm = ({
                 onClick={select_model}
                 startIcon={<PlaylistAddCheckIcon />}
               >
-                Agregar seleccion
+                Agregar selección
               </Button>
             )}
             {(button_origin_show ?? false) && (

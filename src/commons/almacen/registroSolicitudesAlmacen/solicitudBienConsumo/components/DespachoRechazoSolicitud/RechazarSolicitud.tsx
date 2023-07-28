@@ -3,7 +3,6 @@
 import { Grid } from '@mui/material';
 import { useAppSelector } from '../../../../../../hooks';
 import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
-import { type GridColDef } from '@mui/x-data-grid';
 import BuscarModelo from '../../../../../../components/partials/getModels/BuscarModelo';
 import { type IList } from '../../../../../../interfaces/globalModels';
 
@@ -11,9 +10,6 @@ interface IProps {
     title: string;
     control_solicitud_despacho: any;
     get_values: any;
-
-
-
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -36,38 +32,6 @@ const RechazoSolicitud = ({
         },
     ];
 
-    //  const handle_close_despacho = (): void => { set_active(false); };
-
-    const columns_solicitudes: GridColDef[] = [
-        { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
-        {
-            field: 'fecha_solicitud',
-            headerName: 'Fecha de solicitud',
-            width: 400,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-
-        },
-        {
-            field: 'observacion',
-            headerName: 'Observación',
-            width: 350,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-
-        },
-
-    ];
-
-
-
-
     return (
         <>
             <Grid
@@ -80,7 +44,6 @@ const RechazoSolicitud = ({
                 <BuscarModelo
                     set_current_model={set_current_solicitud}
                     row_id={"id_solicitud_consumibles"}
-                    columns_model={columns_solicitudes}
                     models={solicitudes}
                     set_models={set_solicitudes}
                     show_search_button={false}
@@ -98,9 +61,7 @@ const RechazoSolicitud = ({
                             control_form: control_solicitud_despacho,
                             control_name: 'fecha_rechazo_almacen',
                             default_value: '',
-                            rules: {
-
-                            },
+                            rules: {},
                             label: 'Fecha de entrega',
                             disabled: true,
                             helper_text: '',
@@ -121,9 +82,6 @@ const RechazoSolicitud = ({
                             disabled: false,
                             helper_text: ""
                         },
-
-
-
                     ]}
                     modal_select_model_title='Buscar solicitud'
                     modal_form_filters={[
@@ -140,7 +98,7 @@ const RechazoSolicitud = ({
                             disabled: false,
                             helper_text: "",
                         }
-                    ]} get_filters_models={undefined} />
+                    ]} get_filters_models={undefined} columns_model={[]} />
             </Grid>
 
 

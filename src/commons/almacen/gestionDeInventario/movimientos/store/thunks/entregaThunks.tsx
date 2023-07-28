@@ -6,6 +6,7 @@ import { type AxiosError } from 'axios';
 import {
     set_bienes,
     set_bienes_entrada,
+    set_bienes_entrega,
     set_current_bien,
     set_entradas,
     set_entregas,
@@ -139,9 +140,9 @@ export const get_tipo_entrada = (): any => {
             if (data.success === true) {
                 // dispatch(set_entregas(data.data));
                 console.log(data);
-                control_success(data.detail);
+                //  control_success(data.detail);
             } else {
-                control_error(data.detail);
+                // control_error(data.detail);
             }
             return data;
         } catch (error: any) {
@@ -210,11 +211,11 @@ export const get_bien_code_service = (code: string, fecha: string): any => {
 };
 
 // Crear entrega
-export const crear_entrega: any = () => {
+export const crear_entrega: any = (entrega: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             //  console.log(despacho);
-            const { data } = await api.post('almacen/entregas/create-entrega/');
+            const { data } = await api.post('almacen/entregas/create-entrega/', entrega);
             console.log(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
@@ -250,6 +251,79 @@ export const editar_entrega: any = (
             console.log(error);
             //  control_error(error.response.data.detail);
 
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// anular despacho
+export const annul_despacho_service = (
+    id: number,
+    entrega: any,
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.patch(`almacen/entregas/anular-entrega/${id}/`,
+                entrega
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+            console.log('annul_despacho_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener entregas
+export const get_entregas_services = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('almacen/entregas/get-entregas/');
+
+            if (data.success === true) {
+                dispatch(set_entregas(data.data));
+                console.log(data);
+                // control_success(data.detail);
+            } else {
+                // control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// obtener bienes entregas
+export const get_bien_entrega_services = (id: number | null | undefined): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/entregas/get-items-entregas/${id ?? ""}/`);
+
+            if (data.success === true) {
+                dispatch(set_bienes_entrega(data.data));
+                console.log(data);
+                // control_success(data.detail);
+            } else {
+                // control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };

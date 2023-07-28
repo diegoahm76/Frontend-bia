@@ -32,7 +32,7 @@ export interface IObjBien {
 }
 
 export interface IObjEntrega {
-    id_despacho_consumo?: number | null;
+    id_despacho_consumo?: number | null | undefined;
     numero_despacho_consumo?: number | null;
     numero_solicitud_por_tipo?: null;
     fecha_solicitud?: string | null;
@@ -40,7 +40,7 @@ export interface IObjEntrega {
     fecha_registro?: string | null;
     motivo?: string | null;
     es_despacho_conservacion?: boolean;
-    despacho_anulado?: null;
+    despacho_anulado?: boolean;
     justificacion_anulacion?: null;
     fecha_anulacion?: string | null;
     ruta_archivo_doc_con_recibido?: null;
@@ -66,7 +66,7 @@ export interface IObjEntrega {
 
 export interface IObjBienEntrega {
     id_item_despacho_consumo?: number | null;
-    id_despacho_consumo?: number | null;
+    id_despacho_consumo?: number | null | undefined;
     id_bien_despachado?: number | null;
     id_entrada_almacen_bien?: number | null;
     id_bodega?: number | null;

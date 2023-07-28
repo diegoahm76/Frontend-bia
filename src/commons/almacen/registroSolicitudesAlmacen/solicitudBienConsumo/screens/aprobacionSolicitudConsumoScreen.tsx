@@ -31,12 +31,10 @@ const AprobacionSolicitudConsumoScreen = () => {
     useEffect(() => {
         void dispatch(get_uni_organizacional());
         void dispatch(get_solicitud_documento_service())
-        // dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
+
     }, [])
 
-    // useEffect(() => {
-    //     dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_funcionario_responsable_unidad: persona_solicita.id_persona }))
-    // }, [nro_solicitud]);
+
 
     useEffect(() => {
         // console.log(current_solicitud)

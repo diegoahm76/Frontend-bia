@@ -307,8 +307,7 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarSolicitudDespacho
           title={'INFORMACIÓN DE LA SOLICITUD'}
           control_solicitud_despacho={control_solicitud_despacho}
-          get_values={get_values}
-        />
+          get_values={get_values} open_modal={false} set_open_modal={undefined} />
 
         <FuncionarioRechazo
           title={'Persona responsable'}
