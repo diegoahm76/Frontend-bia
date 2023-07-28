@@ -107,6 +107,7 @@ export const solicitud_consumo_slice = createSlice({
     name: "solic_consumo",
     initialState: initial_state,
     reducers: {
+        reset_state: () => initial_state,
         set_solicitudes: (
             state: ISolicitudConsumo,
             action: PayloadAction<IObjSolicitud[]>
@@ -230,4 +231,4 @@ export const solicitud_consumo_slice = createSlice({
     }
 })
 
-export const { set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;
+export const { reset_state, set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;

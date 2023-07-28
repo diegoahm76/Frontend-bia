@@ -8,17 +8,19 @@ export interface Icv {
 
 export interface IcvOthers {
   id_hoja_de_vida: number | null;
-  especificaciones_tecnicas?: string |null;
-  caracteristicas_fisicas?: string|null;
-  observaciones_adicionales?: string|null;
-  id_bien?: number|null;
-  cod_tipo_bien?: string | number|null;
+  especificaciones_tecnicas?: string | null;
+  caracteristicas_fisicas?: string | null;
+  observaciones_adicionales?: string | null;
+  id_bien?: number | null;
+  cod_tipo_bien?: string | number | null;
   id_marca?: number | null;
-  doc_identificador_nro?: string|null;
+  marca?: string;
+  doc_identificador_nro?: string | null;
   estado?: string;
   nombre?: string;
   codigo_bien?: string | null;
   id_articulo?: number | null;
+  ruta_imagen_foto?: string | any;
 }
 
 export interface IOthers {
