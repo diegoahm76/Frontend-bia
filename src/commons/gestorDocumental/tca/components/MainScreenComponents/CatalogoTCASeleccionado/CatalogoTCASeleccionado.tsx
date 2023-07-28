@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC } from 'react';
 
@@ -6,12 +7,16 @@ import { Button, Chip, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { useAppSelector } from '../../../../../../hooks';
 
 export const CatalogoTCASeleccionado: FC<any> = ({
   rows,
   columns,
   title
 }: any): JSX.Element => {
+
+  const { tca_current } = useAppSelector((state: any) => state.tca_slice);
+
   const newColums = [
     ...columns,
     {
@@ -50,6 +55,7 @@ export const CatalogoTCASeleccionado: FC<any> = ({
                 color="warning"
                 variant="contained"
                 startIcon={<AdminPanelSettingsIcon />}
+                disabled={!tca_current}
               >
                 ADMINISTRAR CATÁLOGO TCA
               </Button>
