@@ -30,7 +30,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
-  const [existe] = useState(false); // Mientras nos conectamos con el Backend
+  const [existe] = useState(true); // Mientras nos conectamos con el Backend
   const [modal_anular, set_modal_anular] = useState(false);
   const [modal_plan_pagos, set_modal_plan_pagos] = useState(false);
   const [file, set_file] = useState({});
@@ -219,7 +219,9 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                                         identificacion: solicitud_facilidad.deudor.identificacion,
                                         nombre: solicitud_facilidad.deudor.nombres,
                                         apellido: solicitud_facilidad.deudor.apellidos,
-                                        numero_facilidad: solicitud_facilidad.facilidad_pago.numero_radicacion
+                                        numero_facilidad: solicitud_facilidad.facilidad_pago.numero_radicacion,
+                                        numero_cuotas: solicitud_facilidad.facilidad_pago.cuotas,
+                                        numero_periodicidad: solicitud_facilidad.facilidad_pago.periodicidad
                                       }))
                                       navigate('../amortizacion')
                                     } catch (error: any) {

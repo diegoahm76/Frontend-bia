@@ -13,7 +13,7 @@ import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
-import { post_registro_fac_pago, post_registro_bienes, get_tipo_bienes } from '../requests/requests';
+import { post_registro_fac_pago, get_tipo_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -29,6 +29,23 @@ interface BienInput {
   vigencia_avaluo: number
 }
 
+
+interface RespuestaRegistroFacilidad {
+  consignacion_soporte: string;
+  cuotas: number;
+  documento_no_enajenacion: string;
+  documento_soporte: string;
+  fecha_generacion: string;
+  id: number;
+  id_deudor: number;
+  id_funcionario: number;
+  id_tipo_actuacion: number;
+  notificaciones: boolean;
+  numero_radicacion: string;
+  observaciones: string;
+  periodicidad: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SolicitudFacilidadPago: React.FC = () => {
   const [persona, set_persona] = useState(0);
@@ -40,17 +57,25 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const [notificacion, set_notificacion] = useState(false);
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<Bien>);
+  const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
   const { form_state, on_input_change } = use_form({});
   const { form_text, handle_change_text } = useFormText({});
   const { form_files, name_files, handle_change_file } = useFormFiles({});
   const [modal, set_modal] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+
+  useEffect(() => {
+    if(respuesta_registro !== undefined){
+      set_modal(true)
+    }
+  }, [respuesta_registro])
+
+  const handle_close = () => { set_modal(false) }
 
   console.log('texto', form_state);
   console.log('archivos', form_files);
   console.log('bienes', form_text);
+  console.log('respuesta', respuesta_registro);
 
   const get_lista_bienes = async (): Promise<void> => {
     try {
@@ -761,14 +786,14 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {name_files.garantias !== undefined ? name_files.garantias : 'Carga Garantía Ofrecida'}
+                        {name_files.documento_garantia !== undefined ? name_files.documento_garantia : 'Carga Garantía Ofrecida'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            name='garantias'
+                            name='documento_garantia'
                             onChange={handle_change_file}
                           />
                       </Button>
@@ -825,7 +850,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <InputLabel>Tipo Bien</InputLabel>
                   <Select
                     label="Tipo Bien"
-                    name='descripcion'
+                    name='id_tipo_bien'
                     defaultValue={""}
                     onChange={handle_change_text}
                   >
@@ -846,7 +871,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText='Escribe el Documento de Identificación'
                   variant="outlined"
                   onChange={handle_change_text}
-                  name='id_tipo_bien'
+                  name='descripcion'
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -880,14 +905,14 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {name_files.documento_soporte !== undefined ? name_files.documento_soporte : 'Carga el Documento Impuesto'}
+                  {name_files.documento_soporte_bien !== undefined ? name_files.documento_soporte_bien : 'Carga el Documento Impuesto'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='documento_soporte'
+                      name='documento_soporte_bien'
                       onChange={handle_change_file}
                     />
                 </Button>
@@ -897,7 +922,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   onClick={() => {
-                    void post_registro_bienes({...form_text, cod_deudor: deudores.id})
                     set_rows_bienes(rows_bienes.concat({...form_text, id: faker.database.mongodbObjectId()}))
                   }}
                 >
@@ -993,29 +1017,37 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   variant='contained'
                   startIcon={<SaveIcon />}
                   onClick={() => {
-                    void post_registro_fac_pago({
-                      ...form_state,
-                      id_deudor: deudores.id,
-                      id_tipo_actuacion: persona,
-                      fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
-                      periodicidad: num_periodicidad,
-                      cuotas: plazo,
-                      documento_no_enajenacion: form_files.documento_no_enajenacion,
-                      consignacion_soporte: form_files.consignacion_soporte,
-                      documento_soporte: form_files.documento_soporte,
-                      id_funcionario: 1,
-                      notificaciones: notificacion,
-                      documento_garantia: form_files.documento_soporte,
-                      id_rol: 1,
-                      documento_deudor: form_files.documento_soporte,
-                      descripcion: 'CASA',
-                      direccion: 'calle',
-                      id_tipo_bien: 1,
-                      id_ubicacion: 1,
-                      valor: 3000000,
-                      documento_soporte_bien: form_files.documento_soporte,
-                    })
-                    handle_open()
+                      const post_registro = async (): Promise<void> => {
+                        try {
+                          const { data: { data: res_registro } } = await post_registro_fac_pago({
+                            ...form_state,
+                            id_deudor: deudores.id,
+                            id_tipo_actuacion: persona,
+                            fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
+                            periodicidad: num_periodicidad,
+                            cuotas: plazo,
+                            documento_no_enajenacion: form_files.documento_no_enajenacion,
+                            consignacion_soporte: form_files.consignacion_soporte,
+                            documento_soporte: form_files.documento_soporte,
+                            id_funcionario: 1,
+                            notificaciones: notificacion,
+                            documento_garantia: form_files.documento_garantia,
+                            // id_rol: 1,
+                            documento_deudor: form_files.documento_identidad,
+                            ...form_text,
+                            // descripcion: 'CASA',
+                            // direccion: 'calle',
+                            // id_tipo_bien: 1,
+                            id_ubicacion: 1,
+                            // valor: 3000000,
+                            documento_soporte_bien: form_files.documento_soporte_bien,
+                          })
+                          set_respuesta_registro(res_registro ?? {});
+                        } catch (error: any) {
+                          throw new Error(error);
+                        }
+                      }
+                      void post_registro();
                   }}
                 >
                   Enviar Solicitud
@@ -1035,8 +1067,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Número de radicación:</strong> {'WQEQ123154'}</p>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('YYYY-MM-DD LT')}</p>
+              <p><strong>Número de radicación:</strong> {respuesta_registro !== undefined ? respuesta_registro.numero_radicacion : null}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
           <DialogActions>

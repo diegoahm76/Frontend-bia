@@ -25,8 +25,9 @@ export const ResolucionRespuesta: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [file_name, set_file_name] = useState('');
   const { deudores } = useSelector((state: RootState) => state.deudores);
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+
+  const handle_open = () => { set_modal(true) }
+  const handle_close = () => { set_modal(false) }
 
   const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected_file =
@@ -164,7 +165,7 @@ export const ResolucionRespuesta: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('YYYY-MM-DD LT')}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
           <DialogActions>
