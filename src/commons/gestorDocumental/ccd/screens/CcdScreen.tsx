@@ -66,7 +66,7 @@ export const CcdScreen: React.FC = () => {
   const { series_ccd, serie_ccd_current } = useAppSelector(
     (state: any) => state.series
   );
-  const { subseries_ccd, subserie_ccd_current } = useAppSelector(
+  const { subseries_ccd } = useAppSelector(
     (state: any) => state.subseries
   );
   const { seriesAndSubseries } = useAppSelector(
@@ -82,10 +82,6 @@ export const CcdScreen: React.FC = () => {
         ccd_current?.fecha_terminado !== '' &&
         ccd_current?.fecha_terminado !== undefined
     );
-   /* console.log(
-      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ ccd_current?.fecha_terminado',
-      ccd_current?.fecha_terminado
-    ); */
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
@@ -307,9 +303,6 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
-                      /* sx={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
-                      }} */
                       style={{
                         color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
                       }}
@@ -815,8 +808,6 @@ export const CcdScreen: React.FC = () => {
                       onClick={() => {
                         void dispatch(create_or_delete_relation_unidad);
                         // void dispatch(get_assignments_service(ccd_current));
-
-                        
                       }}
                       color="primary"
                       variant="contained"

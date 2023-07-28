@@ -3,7 +3,6 @@
 import { type Dispatch } from 'react';
 import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
-import Swal from 'sweetalert2';
 import { toast, type ToastContent } from 'react-toastify';
 // Reducers
 // Interfaces
@@ -11,20 +10,6 @@ import { get_ccd_current, get_ccds } from '../slices/ccdSlice';
 import { get_series_service } from './seriesThunks';
 // import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const notification_error = async (
-  message = 'Algo pasó, intente de nuevo',
-  text = ''
-) =>
-  await Swal.mixin({
-    position: 'center',
-    icon: 'error',
-    title: message,
-    text,
-    showConfirmButton: true,
-    confirmButtonText: 'Aceptar'
-  }).fire();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (message: ToastContent) =>
@@ -83,12 +68,8 @@ export const get_classification_ccds_service = (
       // console.log(name, version, 'name, version');
 
       // console.log('helllooo');
-      /* if (name === '' || version === '') {
-        await notification_error(
-          'Debe ingresar el nombre y la versión del CCD'
-        );
-      } */ if (data.data.length === 0) {
-        await notification_error(`No se encontró el CCD ${name} - ${version}`);
+      if (data.data.length === 0) {
+        control_error(`No se encontró el CCD ${name} - ${version}`);
       } else {
         dispatch(get_ccds(data.data));
         dispatch(
