@@ -861,7 +861,8 @@ export const CcdScreen: React.FC = () => {
                       void dispatch(
                         to_finished_ccds_service(
                           set_flag_btn_finish,
-                          ccd_current
+                          ccd_current,
+                          assignments_ccd,
                         )
                       );
                     }}

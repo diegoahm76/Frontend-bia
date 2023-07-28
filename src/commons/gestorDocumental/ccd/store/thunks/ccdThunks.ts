@@ -118,13 +118,21 @@ export const to_resume_ccds_service: any = (
 //! Finalizar Cuadro de Clasificación Documental
 export const to_finished_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void,
-  ccd_current: any
+  ccd_current: any,
+  assignments_ccd: any,
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise</* AxiosResponse | AxiosError */ any> => {
     try {
+
+      if(assignments_ccd.length === 0){
+        control_error('No se puede finalizar el CCD porque no tiene asignaciones');
+        return
+      }
+
+
       if (
         ccd_current.id_ccd === undefined ||
         ccd_current.id_ccd === 0 ||
