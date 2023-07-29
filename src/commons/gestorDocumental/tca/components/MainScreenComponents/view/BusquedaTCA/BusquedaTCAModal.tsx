@@ -112,6 +112,9 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                       dispatch(set_catalog_TCA_action(res));
                     }
                   );
+                }).catch((err) => {
+                  console.log(err);
+                  dispatch(set_catalog_TCA_action([]));
                 });
               // reset_searched_trd_modal();
               // console.log(params.row);

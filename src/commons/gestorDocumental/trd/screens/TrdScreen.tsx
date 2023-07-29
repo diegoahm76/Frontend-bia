@@ -45,7 +45,11 @@ export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { trd_current } = useAppSelector((state: any) => state.trd_slice);
+  const {
+    trd_current,
+    catalado_series_subseries_unidad_organizacional,
+    catalogo_trd
+  } = useAppSelector((state: any) => state.trd_slice);
 
   //! use_trd hook
   const {
@@ -216,7 +220,8 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        e.target.value.length === 50 && control_error('max 50 digitos');
+                        e.target.value.length === 50 &&
+                          control_error('max 50 digitos');
                         // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
@@ -256,7 +261,8 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        e.target.value.length === 10 && control_error('max 10 digitos');
+                        e.target.value.length === 10 &&
+                          control_error('max 10 digitos');
                         // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 10 }}
@@ -327,17 +333,25 @@ export const TrdScreen: FC = (): JSX.Element => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
+          boxShadow: '0px 3px 6px #042F4A26',
+          display: catalado_series_subseries_unidad_organizacional.length > 0
+            ? ''
+            : 'none'
         }}
       >
-        <Grid item xs={12}>
-          <CCDSeleccionadoCatalogo />
-        </Grid>
+        {catalado_series_subseries_unidad_organizacional.length > 0 ? (
+          <Grid item xs={12}>
+            <CCDSeleccionadoCatalogo />
+          </Grid>
+        ) : null}
 
         {/* CATALOGO TRD */}
-        <Grid item xs={12}>
-          <CatalogoTRD />
-        </Grid>
+        {catalogo_trd.length > 0 ? (
+          <Grid item xs={12}>
+            <CatalogoTRD />
+          </Grid>
+        ) : null}
+
         {/* CATALOGO TRD */}
 
         {/* ------------------ */}

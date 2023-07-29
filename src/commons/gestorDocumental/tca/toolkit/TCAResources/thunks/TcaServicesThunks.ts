@@ -140,7 +140,8 @@ export const get_catalogo_TRD_service = async (
     }
     const url = `gestor/trd/catalogo-trd/get-list/${id_trd}/`;
     const { data } = await api.get(url);
-    control_success(data.detail);
+    control_success('Se encontró el siguiente registro de catálogo TRD' || data.detail);
+    console.log('data TRD catalogo', data);
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(error.response?.data?.detail);
@@ -159,9 +160,9 @@ export const get_catalogo_TCA_service = async (
     }
     const url = `gestor/tca/catalogo-tca/get-clasif/${id_tca}/`;
     const { data } = await api.get(url);
-    console.log('data', data);
-    control_success('Se encontró el siguiente catálogo TCA' || data.detail);
-    return data;
+    control_success('Se encontró el siguiente registro de catálogo TCA' || data.detail);
+    console.log('data TCA catalogo', data);
+    return data.data;
   } catch (error: AxiosError | any) {
     control_error(
       'No se encontró catálog para la TCA' || error.response?.data?.detail

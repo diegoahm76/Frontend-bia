@@ -8,14 +8,14 @@ import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/u
 
 //* icons
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { useAppSelector } from '../../../../../../hooks';
+import type { dataGridTypes } from '../../../types/tca.types';
 
-export const CatalogoTRDAdministracionScreen: FC<any> = ({
+export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
   columns,
   title
-}: any): JSX.Element => {
-  const { catalog_trd } = useAppSelector((state) => state.tca_slice);
+}: dataGridTypes): JSX.Element => {
+
 
   const newColums = [
     {
@@ -87,7 +87,7 @@ export const CatalogoTRDAdministracionScreen: FC<any> = ({
   return (
     <>
       <RenderDataGrid
-        rows={catalog_trd || []}
+        rows={rows || []}
         columns={newColums}
         title={title}
       />

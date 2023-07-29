@@ -29,6 +29,7 @@ const initialState: TCASliceInterface = {
   catalog_TCA_current: null
 };
 
+
 export const TCASlice = createSlice({
   name: 'tca_slice',
   initialState,

@@ -11,7 +11,9 @@ import { useEffect, useState } from 'react';
 import { getTRDsUsados } from '../components/MainScreenComponents/view/TRDSUsados/services/TRDUsados.service';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
 import {
+  set_catalog_TCA_action,
   set_catalog_trd_action,
+  set_current_catalog_TCA_action,
   set_current_catalog_trd_action,
   set_current_tca_action,
   set_get_tcas_action
@@ -62,6 +64,8 @@ export const use_tca = () => {
     dispatch(set_current_tca_action(null));
     dispatch(set_catalog_trd_action([]));
     dispatch(set_current_catalog_trd_action(null));
+    dispatch(set_catalog_TCA_action([]));
+    dispatch(set_current_catalog_TCA_action(null));
     reset_create_update_tca(default_values_create_update_tca);
   };
 
@@ -142,8 +146,7 @@ export const use_tca = () => {
         // id_organigrama: tca_current?.id_organigrama,
       };
       // console.log(obj, 'obj');
-      console.log(obj, 'obj');
-      console.log('tca_current', tca_current);
+      // console.log('tca_current', tca_current);
       reset_create_update_tca(obj);
     }
   }, [tca_current]);

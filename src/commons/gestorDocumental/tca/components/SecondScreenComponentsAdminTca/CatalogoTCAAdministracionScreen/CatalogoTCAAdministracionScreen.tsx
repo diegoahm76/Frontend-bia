@@ -10,12 +10,13 @@ import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/u
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
+import type { dataGridTypes } from '../../../types/tca.types';
 
-export const CatalogoTCAAdministracionScreen: FC<any> = ({
+export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
   rows,
   columns,
   title
-}: any): JSX.Element => {
+}: dataGridTypes): JSX.Element => {
 
   const newColums = [
     {
@@ -160,7 +161,7 @@ export const CatalogoTCAAdministracionScreen: FC<any> = ({
 
   return (
     <>
-      <RenderDataGrid rows={rows} columns={newColums} title={title} />
+      <RenderDataGrid rows={rows || []} columns={newColums} title={title} />
     </>
   );
 };

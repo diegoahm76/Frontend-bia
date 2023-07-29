@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, Stack } from '@mui/material';
 import { type FC } from 'react';
@@ -6,19 +7,24 @@ import { Link } from 'react-router-dom';
 //* icons
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-  columsCatalogoTCA,
-  rowsCatalogoTCA
+  columsCatalogoTCA
+  // rowsCatalogoTCA
 } from '../utils/columnasCatalogos/CatalogoTCA/CatalogoTCA';
 import {
-  columsCatalogoTRD,
-  rowsCatalogoTRD
+  columsCatalogoTRD
+  // rowsCatalogoTRD
 } from '../utils/columnasCatalogos/CatalogoTRD/CatalogoTRD';
 
 //* components
 import { CatalogoTRDAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTRDAdministracionScreen/CatalogoTRDAdministracionScreen';
 import { CatalogoTCAAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTCAAdministracionScreen/CatalogoTCAAdministracionScreen';
+import { useAppSelector } from '../../../../../hooks';
 
 export const AdminTcaScreen: FC<any> = (): JSX.Element => {
+  const { catalog_trd, catalog_TCA } = useAppSelector(
+    (state) => state.tca_slice
+  );
+
   return (
     <>
       <Grid
@@ -49,23 +55,40 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
             </Button>
           </Link>
         </Stack>
-
         {/* parte 2. catalogo TRD Administracion screen */}
+
+        {/* poner la condicional de la longitud del array para que tenga un mejor manejo visual */}
+
         <CatalogoTRDAdministracionScreen
-          rows={rowsCatalogoTRD}
+          rows={
+            (catalog_TCA.length > 0 &&
+              catalog_trd?.filter((item: any) => {
+                if (catalog_TCA.length === 0) {
+                  console.log('catalog_TCA.length === 0');
+                  return true;
+                }
+                return !catalog_TCA.some(
+                  (otherItem: any) =>
+                    otherItem.id_cat_serie_und_ccd_trd ===
+                    item.id_catserie_unidadorg
+                );
+              })) ||
+            catalog_trd
+          }
           columns={columsCatalogoTRD}
           title="Catálogo TRD - ( Administración TCA )"
         />
         {/* fin parte 2 */}
-
         {/* parte 3. catalogo TCA Administracion Screen */}
+
+        {/* poner la condicional de la longitud del array para que tenga un mejor manejo visual */}
+
         <CatalogoTCAAdministracionScreen
-          rows={rowsCatalogoTCA}
+          rows={catalog_TCA}
           columns={columsCatalogoTCA}
           title="Catálogo TCA - ( Administración TCA )"
         />
         {/* fin parte 3 */}
-
         {/*    <Grid
           item
           container
@@ -181,7 +204,6 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
             </Box>
           </Grid>
         </Grid> */}
-
         {/*  <Grid
           container
           sx={{
@@ -212,9 +234,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
             </Box>
           </Grid>
         </Grid> */}
-
         {/* parte formulario */}
-
         {/* {modalAdministracionTRD ? (
           <Grid
             container
