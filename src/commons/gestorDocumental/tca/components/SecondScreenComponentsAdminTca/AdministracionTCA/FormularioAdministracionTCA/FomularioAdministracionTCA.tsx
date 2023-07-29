@@ -19,8 +19,8 @@ import Select from 'react-select';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-// import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
@@ -42,16 +42,15 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     closeModalAdministracionTca
   } = useContext(ModalContextTCA);
   // * state from tca_slice
-  const {
-    // tca_current,
-    selected_item_from_catalogo_trd
-  } = useAppSelector((state: any) => state.tca_slice);
+  const { tca_current, selected_item_from_catalogo } = useAppSelector(
+    (state: any) => state.tca_slice
+  );
 
   const {
-    control_administrar_tca
+    control_administrar_tca,
+    reset_administrar_tca
     // handleSubmit_administrar_tca,
     // formState_administrar_tca,
-    // reset_administrar_tca,
     // watch_administrar_tca_value,
   } = use_tca();
 
@@ -268,152 +267,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={3}>
-              {/*  <Controller
-                name="digitalizacion_dis_final"
-                control={control_administrar_trd}
-                defaultValue=""
-                // rules={{ required: false }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <FormControl fullWidth>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={value}
-                          onChange={(e) => {
-                            onChange(e.target.checked);
-                          }}
-                          // name="checkedB"
-                          color="primary"
-                        />
-                      }
-                      label={
-                        value ? (
-                          <Typography variant="body2">
-                            <strong>digitalización - SI</strong>
-                            <Tooltip
-                              title="digitalización - SI"
-                              placement="right"
-                            >
-                              <InfoIcon
-                                sx={{
-                                  width: '1.2rem',
-                                  height: '1.2rem',
-                                  ml: '0.5rem',
-                                  color: 'green'
-                                }}
-                              />
-                            </Tooltip>
-                          </Typography>
-                        ) : (
-                          <Typography variant="body2">
-                            <strong>digitalización - NO</strong>
-                            <Tooltip
-                              title="digitalización - NO"
-                              placement="right"
-                            >
-                              <InfoIcon
-                                sx={{
-                                  width: '1.2rem',
-                                  height: '1.2rem',
-                                  ml: '0.5rem',
-                                  color: 'orange'
-                                }}
-                              />
-                            </Tooltip>
-                          </Typography>
-                        )
-                      }
-                    />
-                  </FormControl>
-                )}
-              /> */}
-            </Grid>
-
-            <Grid item xs={12} sm={3}>
-              {/*  <Controller
-                name="tiempo_retencion_ag"
-                control={control_administrar_trd}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <TextField
-                    // margin="dense"
-                    fullWidth
-                    // disabled={ccd_current?.actual}
-                    size="small"
-                    label="Tiempo de retención AG"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'años'}
-                  />
-                )}
-              /> */}
-            </Grid>
-
-            <Grid item xs={12} sm={3}>
-              {/*   <Controller
-                name="tiempo_retencion_ac"
-                control={control_administrar_trd}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <TextField
-                    // margin="dense"
-                    fullWidth
-                    // disabled={ccd_current?.actual}
-                    size="small"
-                    label="Tiempo de retención AC"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'años'}
-                  />
-                )}
-              /> */}
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              {/*  <Controller
-                name="descripcion_procedimiento"
-                control={control_administrar_trd}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <TextField
-                    // margin="dense"
-                    fullWidth
-                    //  disabled={ccd_current?.actual}
-                    size="small"
-                    label="Descripción del procedimiento"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar una descripción del procedimiento'
-                        : 'Procedimiento'
-                    }
-                  />
-                )}
-              /> */}
-            </Grid>
             {/* new spaces */}
 
             {/* justificación del cambio, solo aparece para trd actual */}
@@ -529,7 +382,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               color="primary"
               type="submit"
               startIcon={
-                selected_item_from_catalogo_trd?.cod_clas_expediente ? (
+                selected_item_from_catalogo?.cod_clas_expediente ? (
                   <SyncIcon />
                 ) : (
                   <SaveIcon />
@@ -537,7 +390,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               }
               // disabled={ccd_current?.actual}
             >
-              {selected_item_from_catalogo_trd?.cod_clas_expediente
+              {selected_item_from_catalogo?.cod_clas_expediente
                 ? 'Actualizar'
                 : 'Guardar'}
             </Button>
@@ -548,16 +401,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               // disabled={ccd_current?.actual}
               onClick={() => {
                 console.log('cancelando...');
-                /* reset_administrar_trd({
-                  cod_disposicion_final: '',
-                  digitalizacion_dis_final: true,
-                  tiempo_retencion_ag: '',
-                  tiempo_retencion_ac: '',
-                  descripcion_procedimiento: '',
-                  justificacion_cambio: '',
-                  tipologias: [],
-                  ruta_archivo_cambio: ''
-                }); */
+                reset_administrar_tca({
+                  id_cat_serie_und_ccd_trd: '',
+                  cod_clas_expediente: ''
+                });
                 closeModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(null));
               }}
@@ -565,8 +412,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               SALIR Y CANCELAR
             </Button>
 
-            {/* {trd_current.actual &&
-            selected_item_from_catalogo_trd?.nombre_unidad ? (
+            {!tca_current.actual &&
+            selected_item_from_catalogo?.cod_clas_expediente ? (
               <>
                 <Button
                   variant="contained"
@@ -575,8 +422,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   // disabled={ccd_current?.actual}
                   onClick={() => {
                     console.log('viendo historial de cambios');
-                    dispatch(get_historical_trd(trd_current.id_trd));
-                    openModalHistorialCambios();
+                    // dispatch(get_historical_trd(trd_current.id_trd));
+                    // openModalHistorialCambios();
                   }}
                 >
                   VER HISTORIAL DE CAMBIOS
@@ -587,18 +434,19 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   color="secondary"
                   startIcon={<AutoFixHighIcon />}
                   onClick={() => {
-                    buttonSpecialEditionActualTRD
+                    /* buttonSpecialEditionActualTRD
                       ? setButtonSpecialEditionActualTRD(false)
-                      : setButtonSpecialEditionActualTRD(true);
-                    console.log('viendo historial de cambios');
+                      : setButtonSpecialEditionActualTRD(true); */
+                    console.log('Edicion especial');
                   }}
                 >
-                  {buttonSpecialEditionActualTRD
+                  {/* {buttonSpecialEditionActualTRD
                     ? 'CANCELAR EDICIÓN ESPECIAL'
-                    : 'EDICIÓN ESPECIAL'}
+                    : 'EDICIÓN ESPECIAL'} */}
+                  EDICIÓN ESPECIAL
                 </Button>
               </>
-            ) : null} */}
+            ) : null}
           </Stack>
         </Box>
       </Grid>

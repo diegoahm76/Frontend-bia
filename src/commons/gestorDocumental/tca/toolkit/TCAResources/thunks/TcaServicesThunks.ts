@@ -140,7 +140,9 @@ export const get_catalogo_TRD_service = async (
     }
     const url = `gestor/trd/catalogo-trd/get-list/${id_trd}/`;
     const { data } = await api.get(url);
-    control_success('Se encontró el siguiente registro de catálogo TRD' || data.detail);
+    control_success(
+      'Se encontró el siguiente registro de catálogo TRD' || data.detail
+    );
     console.log('data TRD catalogo', data);
     return data.data;
   } catch (error: AxiosError | any) {
@@ -160,12 +162,37 @@ export const get_catalogo_TCA_service = async (
     }
     const url = `gestor/tca/catalogo-tca/get-clasif/${id_tca}/`;
     const { data } = await api.get(url);
-    control_success('Se encontró el siguiente registro de catálogo TCA' || data.detail);
+    control_success(
+      'Se encontró el siguiente registro de catálogo TCA' || data.detail
+    );
     console.log('data TCA catalogo', data);
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(
       'No se encontró catálogo para la TCA' || error.response?.data?.detail
+    );
+    return error;
+  }
+};
+
+// ? --------- DELETE ITEM FROM CATALOGO TCA SERVICE --------- //
+
+export const delete_item_catalogo_tca_service = async (
+  id_clasif_ser_sub_unidad_tca: number = 1
+): Promise<AxiosResponse | AxiosError | any> => {
+  try {
+    if (!id_clasif_ser_sub_unidad_tca) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/tca/catalogo-tca/delete-clasif/${id_clasif_ser_sub_unidad_tca}/`;
+    const { data } = await api.delete(url);
+    control_success(data.detail);
+    console.log('data TCA catalogo', data);
+    return data.data;
+  } catch (error: AxiosError | any) {
+    control_error(
+      error.response?.data?.detail || 'No se encontró catálogo para la TCA'
     );
     return error;
   }

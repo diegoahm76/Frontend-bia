@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import type { dataGridTypes } from '../../../types/tca.types';
-import { useAppDispatch } from '../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
 import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
 
@@ -30,6 +30,9 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
     openModalAdministracionTca
     // closeModalAdministracionTca,
   } = useContext(ModalContextTCA);
+
+  //* redux states declararion
+  const { tca_current } = useAppSelector((state) => state.tca_slice);
 
   const newColums = [
     {
@@ -59,31 +62,13 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                 />
               </Avatar>
             </IconButton>
-            <IconButton
-              aria-label="delete"
-              size="large"
-              title="Eliminar relación catalogo TRD"
-              onClick={() => {
-                console.log(params.row);
-              }}
-            >
-              <Avatar sx={AvatarStyles} variant="rounded">
-                <DeleteIcon
-                  sx={{
-                    color: 'primary.main',
-                    width: '18px',
-                    height: '18px'
-                  }}
-                />
-              </Avatar>
-            </IconButton>
-            {/* {trd_current.actual ? null : (
+            {tca_current.actual ? null : (
               <IconButton
                 aria-label="delete"
                 size="large"
                 title="Eliminar relación catalogo TRD"
                 onClick={() => {
-                  
+                  /* 
                   dispatch(
                     delete_item_catalogo_trd(params.row.id_catserie_unidadorg)
                   )
@@ -109,8 +94,8 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                         tipologias: [],
                         ruta_archivo_cambio: ''
                       });
-                    });
-
+                    }); */
+                  console.log('hello from delete icon catalogo tca');
                   console.log(params.row);
                 }}
               >
@@ -124,7 +109,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                   />
                 </Avatar>
               </IconButton>
-            )} */}
+            )}
           </>
         );
       }
