@@ -1,64 +1,75 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Avatar, Box, Button, Grid, IconButton, Stack, TextField, Tooltip } from "@mui/material"
 import { Title } from '../../../components/Title';
 import EditIcon from '@mui/icons-material/Edit';
 import { PersonSearch, Visibility } from '@mui/icons-material';
 import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import type { Proceso } from "../interfaces/proceso";
+import { api } from "../../../api/axios";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VisorProcesosScreen: React.FC = () => {
-  const rows_etapas = [
-    {
-      id: 1,
-      identificacion: '90239230',
-      deudor: 'CC Primavera',
-      proceso: 'EXP-5663',
-      estado_proceso: 'Cobro Persuasivo',
-      ultima_actualizacion: '21-03-2023'
-    },
-    {
-      id: 2,
-      identificacion: '89643939',
-      deudor: 'Tulio Alvarado',
-      proceso: 'EXP-9732',
-      estado_proceso: 'Embargo',
-      ultima_actualizacion: '21-11-2022'
-    }
-  ]
+  const [procesos, set_procesos] = useState<Proceso[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    api.get('recaudo/procesos/procesos')
+      .then((response) => {
+        set_procesos(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const columns_etapas: GridColDef[] = [
     {
-      field: 'identificacion',
-      headerName: 'Identificación',
+      field: 'id',
+      headerName: 'ID Proceso',
       minWidth: 200,
       flex: 1,
     },
     {
-      field: 'deudor',
-      headerName: 'Deudor',
+      field: 'id_funcionario',
+      headerName: 'ID Deudor',
       minWidth: 200,
       flex: 1,
     },
     {
-      field: 'proceso',
-      headerName: 'Proceso',
+      field: 'id_etapa',
+      headerName: 'Estado actual',
       minWidth: 200,
       flex: 1,
+      valueGetter: (params) => {
+        if (!params.value) {
+          return params.value;
+        }
+        return params.value.etapa;
+      },
     },
     {
-      field: 'estado_proceso',
-      headerName: 'Estado de Proceso',
+      field: 'id_categoria',
+      headerName: 'Categoría',
       minWidth: 200,
       flex: 1,
+      valueGetter: (params) => {
+        if (!params.value) {
+          return params.value;
+        }
+        return params.value.categoria;
+      },
     },
     {
-      field: 'ultima_actualizacion',
+      field: 'inicio',
       headerName: 'Última Actualización',
       minWidth: 200,
       flex: 1,
     },
     {
       field: 'acciones',
-      headerName: 'Opciones',
+      headerName: 'Acciones',
       minWidth: 100,
       flex: 1,
       renderCell: (params) => {
@@ -67,6 +78,7 @@ export const VisorProcesosScreen: React.FC = () => {
             <Tooltip title='Ver'>
               <IconButton
                 onClick={() => {
+                  navigate('../historial_proceso', { state: { editar: 0, proceso: procesos.find(proceso => proceso.id === params.row.id) } });
                 }}
               >
                 <Avatar
@@ -91,6 +103,7 @@ export const VisorProcesosScreen: React.FC = () => {
             <Tooltip title='Editar'>
               <IconButton
                 onClick={() => {
+                  navigate('../historial_proceso', { state: { editar: 1, proceso: procesos.find(proceso => proceso.id === params.row.id) } });
                 }}
               >
                 <Avatar
@@ -132,7 +145,7 @@ export const VisorProcesosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-        <Title title='Visor de Procesos de Gestión de Cartera' />
+          <Title title='Visor de Procesos de Gestión de Cartera' />
           <Box
             component='form'
             sx={{ mt: '20px' }}
@@ -164,7 +177,7 @@ export const VisorProcesosScreen: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows_etapas}
+                rows={procesos}
                 columns={columns_etapas}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

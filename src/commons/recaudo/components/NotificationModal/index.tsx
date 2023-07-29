@@ -54,6 +54,7 @@ export const NotificationModal = ({ open_notification_modal, set_open_notificati
   //   return '#000';
   // };
 
+
   const get_title = (type: string): JSX.Element => {
     return (
       <DialogTitle
@@ -65,6 +66,7 @@ export const NotificationModal = ({ open_notification_modal, set_open_notificati
         }}
       >
         {get_icon(type)} {type.toUpperCase()}
+
       </DialogTitle>
     );
   };

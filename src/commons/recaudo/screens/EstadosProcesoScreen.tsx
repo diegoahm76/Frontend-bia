@@ -357,7 +357,9 @@ export const EstadosProcesoScreen: React.FC = () => {
                     components={{ Toolbar: GridToolbar }}
                   /> */}
                   {rows_atributos_etapa.map((arreglo_objetos, index) => (
+
                     <CollapsibleButton key={index} categoria={arreglo_objetos[0].id_categoria.categoria}>
+
                       <DataGrid
                         density="compact"
                         autoHeight

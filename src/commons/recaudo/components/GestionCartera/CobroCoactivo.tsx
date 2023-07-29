@@ -207,6 +207,7 @@ export const CobroCoactivo: React.FC<IProps> = ({
             /> */}
             {rows_atributos.map((arreglo_objetos, index) => (
               <CollapsibleButton key={index} categoria={arreglo_objetos[0].id_categoria.categoria}>
+
                 <DataGrid
                   density="standard"
                   autoHeight

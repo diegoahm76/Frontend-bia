@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { AgregarEditarOpciones } from "../components/constructorLiquidador/AgregarEditarOpciones";
 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen = (): JSX.Element => {
   const [position_tab, set_position_tab] = useState('1');
@@ -19,6 +20,8 @@ export const LiquidacionScreen = (): JSX.Element => {
   const [form_data, set_form_data] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
   const [refresh_page, set_refresh_page] = useState<boolean>(false);
+
+
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/opciones-liquidacion-base')
@@ -41,6 +44,7 @@ export const LiquidacionScreen = (): JSX.Element => {
       })
       .catch((error) => {
         console.log(error);
+
       });
   };
 
@@ -111,6 +115,7 @@ export const LiquidacionScreen = (): JSX.Element => {
                 onClick={() => {
                   set_id_opcion_liquidacion(params.row.id);
                   set_form_data((previousState) => ({...previousState, nombre_opcion_liquidacion: params.row.nombre, estado: params.row.estado}));
+
                   set_tab_name('Editar opciones');
                   set_position_tab('2');
                 }}
@@ -234,6 +239,7 @@ export const LiquidacionScreen = (): JSX.Element => {
           </Box>
         </Grid>
       </Grid>
+
     </>
   );
 };

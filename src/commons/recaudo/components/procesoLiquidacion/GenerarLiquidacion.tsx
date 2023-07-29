@@ -70,7 +70,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               onChange={handle_select_form_liquidacion_change}
             >
               {deudores.map((deudor) => (
-                <MenuItem key={deudor.codigo} value={deudor.codigo}>
+                <MenuItem key={deudor.id} value={deudor.id}>
                   {`${deudor.nombres} ${deudor.apellidos}`}
                 </MenuItem>
               ))}
@@ -88,7 +88,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             >
               {expedientes.map((expediente) => (
                 <MenuItem key={expediente.id} value={expediente.id}>
-                  {expediente.codigo_expediente}
+                  {expediente.cod_expediente}
                 </MenuItem>
               ))}
             </Select>
