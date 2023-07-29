@@ -2,7 +2,6 @@ import { Box, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { TablaObligacionesAdmin } from '../componentes/TablaObligacionesAdmin';
 import { get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
-import { get_funcionarios } from '../slices/FuncionariosSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
@@ -14,7 +13,6 @@ export const ObligacionesAdmin: React.FC = () => {
   useEffect(() => {
     try {
       void dispatch(get_facilidades_ingresadas());
-      void dispatch(get_funcionarios());
     } catch (error: any) {
       throw new Error(error);
     }

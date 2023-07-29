@@ -18,7 +18,7 @@ interface RootState {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuario: React.FC = () => {
+export const TablaObligacionesUsuarioConsulta: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
@@ -227,6 +227,9 @@ export const TablaObligacionesUsuario: React.FC = () => {
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
+              <p>
+                {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
+              </p>
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
