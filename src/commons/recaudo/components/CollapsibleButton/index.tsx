@@ -11,7 +11,7 @@ interface IProps {
   children: ReactNode;
 }
 
-export const CollapsibleButton = ({ texto_boton, children }: IProps): JSX.Element => {
+export const CollapsibleButton = ({ categoria, children }: IProps): JSX.Element => {
 
   const [open, set_open] = useState(false);
   return (
