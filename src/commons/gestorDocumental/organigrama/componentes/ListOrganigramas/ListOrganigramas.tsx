@@ -67,7 +67,7 @@ export function ListOrganigramas({
     useState<boolean>(false);
 
   const columns: GridColDef[] = [
-    { field: 'id_organigrama', headerName: 'ID', width: 20 },
+    // { field: 'id_organigrama', headerName: 'ID', width: 20, }
     {
       field: 'nombre',
       headerName: 'Nombre',
@@ -307,8 +307,8 @@ export function ListOrganigramas({
             autoHeight
             rows={organigram}
             columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
+            pageSize={15}
+            rowsPerPageOptions={[15]}
             getRowId={(row) => row.id_organigrama}
           />
         </Box>

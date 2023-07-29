@@ -38,6 +38,7 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 // import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
 // import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
@@ -220,7 +221,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                       onChange={(e) => {
                         onChange(e.target.value);
                         e.target.value.length === 50 &&
-                          control_error('max 50 digitos');
+                          control_warning('máximo 50 caracteres');
                         // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
@@ -261,7 +262,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                       onChange={(e) => {
                         onChange(e.target.value);
                         e.target.value.length === 10 &&
-                          control_error('max 10 digitos');
+                          control_warning('máximo 10 carácteres');
                         // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 10 }}

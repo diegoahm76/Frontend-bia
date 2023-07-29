@@ -51,6 +51,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
   get_assignments_service
 } from '../store/thunks/assignmentsThunks';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -247,8 +248,17 @@ export const CcdScreen: React.FC = () => {
                       label="Nombre CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        if (e.target.value.length === 50)
+                          control_warning('máximo 50 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       error={!(error == null)}
+                      inputProps={{
+                        maxLength: 50
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un nombre'
@@ -276,8 +286,17 @@ export const CcdScreen: React.FC = () => {
                       label="Versión CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       error={!(error == null)}
+                      onChange={(e) => {
+                        if (e.target.value.length === 10)
+                          control_warning('máximo 10 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar una versión'

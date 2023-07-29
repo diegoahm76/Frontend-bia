@@ -32,6 +32,7 @@ import {
   to_finalize_organigram_service,
   to_resume_organigram_service
 } from '../../store/thunks/organigramThunks';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -150,7 +151,16 @@ export const EditarOrganigrama = ({
                     variant="outlined"
                     disabled={organigram_current.fecha_terminado !== null}
                     value={value}
-                    onChange={onChange}
+                    inputProps={{
+                      maxLength: 50
+                    }}
+                    onChange={(e) => {
+                      if (e.target.value.length === 50)
+                        control_warning('máximo 50 caracteres');
+
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
                     error={!(error == null)}
                     helperText={
                       error != null
@@ -179,7 +189,16 @@ export const EditarOrganigrama = ({
                     variant="outlined"
                     disabled={organigram_current.fecha_terminado !== null}
                     value={value}
-                    onChange={onChange}
+                    inputProps={{
+                      maxLength: 10
+                    }}
+                    onChange={(e) => {
+                      if (e.target.value.length === 10)
+                        control_warning('máximo 10 caracteres');
+
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
                     error={!(error == null)}
                     helperText={
                       error != null
