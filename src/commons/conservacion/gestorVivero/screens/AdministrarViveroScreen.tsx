@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // Componentes de download_xlsterial UI
 
-
 import {
   Grid,
   Box,
@@ -28,6 +27,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BusinessIcon from '@mui/icons-material/Business';
 import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
 import ArticleIcon from '@mui/icons-material/Article';
+import PersonIcon from '@mui/icons-material/Person';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -47,7 +47,6 @@ import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 import { current_nursery, get_nurseries } from '../store/slice/viveroSlice';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-
 
 const initial_state_current_nursery = {
   id_vivero: null,
@@ -278,6 +277,34 @@ export function AdministrarViveroScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
+          { params.row.id_viverista_actual === null ? (
+            <>              
+              <Tooltip title="Viverista">
+                  <IconButton 
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    href={`/#/app/conservacion/gestor_vivero/viverista/${params.row.id_vivero}/`}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        background: '#fff',
+                        border: '2px solid',
+                      }}
+                      variant="rounded"
+                    >
+                      <PersonIcon
+                        sx={{
+                          color: 'primary.main',
+                          width: '18px',
+                          height: '18px',
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton>
+              </Tooltip>              
+            </>
+          ) : null}
 
           {params.row.activo === true && params.row.id_viverista_actual ? (
             <>
@@ -403,10 +430,6 @@ export function AdministrarViveroScreen(): JSX.Element {
     void dispatch(get_nurseries_service());
   }, []);
 
-
-
-
- 
   return (
     <>
       <Grid
@@ -422,33 +445,45 @@ export function AdministrarViveroScreen(): JSX.Element {
         }}
         spacing={2}
       >
-        <Grid item xs={12}  >
-          <Grid container spacing={2} sx={{marginTop:"-30px"}}>
+        <Grid item xs={12}>
+          <Grid container spacing={2} sx={{ marginTop: '-30px' }}>
             <Grid item xs={12} spacing={2}>
               <Title title="Viveros"></Title>
             </Grid>
-            <Grid item xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Grid
+              item
+              xs={12}
+              spacing={2}
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
                 onClick={() => {
                   dispatch(current_nursery(initial_state_current_nursery));
-                  set_action("create");
+                  set_action('create');
                   set_add_nursery_is_active(true);
                 }}
-              // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
+                // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
               >
                 Crear vivero
               </Button>
             </Grid>
-            <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px', marginLeft: 'auto' }} />
+            <Divider
+              style={{
+                width: '98%',
+                marginTop: '8px',
+                marginBottom: '8px',
+                marginLeft: 'auto',
+              }}
+            />
             <Grid container>
               <Grid item xs={6}>
                 <TextField
                   label="Buscar"
                   value={searchtext}
                   onChange={(e) => {
-                    setsearchtext(e.target.value)
+                    setsearchtext(e.target.value);
                   }}
                   variant="outlined"
                   size="small"
@@ -458,8 +493,11 @@ export function AdministrarViveroScreen(): JSX.Element {
                   variant="contained"
                   style={{ marginLeft: '4px', top: '2px' }}
                   onClick={() => {
-                    const filterednurseries = nurseries.filter((nursery: { nombre: string; }) =>
-                      nursery.nombre.toLowerCase().includes(searchtext.toLowerCase())
+                    const filterednurseries = nurseries.filter(
+                      (nursery: { nombre: string }) =>
+                        nursery.nombre
+                          .toLowerCase()
+                          .includes(searchtext.toLowerCase())
                     );
                     dispatch(get_nurseries(filterednurseries));
                     // setfilterednurseries(filterednurseries);
@@ -469,17 +507,15 @@ export function AdministrarViveroScreen(): JSX.Element {
                 </Button>
               </Grid>
               {/* <Divider /> */}
-
             </Grid>
-
           </Grid>
 
           <Divider />
-          <ButtonGroup style={{ margin: 7, display: "flex", justifyContent: "flex-end" }}  >
-
+          <ButtonGroup
+            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+          >
             {download_xls({ nurseries, columns })}
             {download_pdf({ nurseries, columns })}
-
           </ButtonGroup>
 
           <Grid item sx={{ marginTop: '20px' }}>
@@ -503,7 +539,6 @@ export function AdministrarViveroScreen(): JSX.Element {
           </Grid>
         </Grid>
       </Grid>
-
     </>
   );
 }
