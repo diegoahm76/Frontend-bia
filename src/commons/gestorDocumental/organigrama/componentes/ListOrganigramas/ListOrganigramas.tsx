@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
 // Componentes de Material UI
 import {
@@ -8,7 +9,7 @@ import {
   IconButton,
   Avatar,
   Chip,
-  Tooltip,
+  Tooltip
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -26,10 +27,11 @@ import DialogCrearOrganigrama from '../DialogCrearOrganigrama/DialogCrearOrganig
 import DialogElegirOrganigramaActual from '../DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
 import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarOrganigrama';
 // Slices
-import { current_organigram } from '../../store/slices/organigramSlice';
+import { current_organigram, set_special_edit } from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
 import DialogElegirCcdActual from '../DialogElegirCcdActual/DialogElegirCcdActual';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -41,7 +43,7 @@ const control_error = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light',
+    theme: 'light'
   });
 
 interface IProps {
@@ -50,7 +52,7 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ListOrganigramas({
-  set_position_tab_organigrama,
+  set_position_tab_organigrama
 }: IProps): JSX.Element {
   const dispatch = useAppDispatch();
   const { organigram } = useAppSelector((state) => state.organigram);
@@ -59,7 +61,7 @@ export function ListOrganigramas({
     useState<boolean>(false);
   const [
     elegir_organigrama_actual_is_active,
-    set_elegir_organigrama_actual_is_active,
+    set_elegir_organigrama_actual_is_active
   ] = useState<boolean>(false);
   const [elegir_ccd_actual_is_active, set_elegir_ccd_actual_is_active] =
     useState<boolean>(false);
@@ -76,35 +78,41 @@ export function ListOrganigramas({
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
         </div>
-      ),
+      )
     },
     {
       field: 'descripcion',
       headerName: 'Descripción',
       type: 'number',
-      width: 200,
+      width: 200
     },
     {
       field: 'version',
       headerName: 'Versión',
-      width: 100,
+      width: 100
     },
     {
       field: 'usado',
       headerName: 'Usado',
       width: 100,
       renderCell: (params: { row: IObjOrganigram }) => {
-
-        if(params.row.actual){
-          return <Chip size="small" label="Actual" color="primary" variant="filled" />
-        }else if(!params.row.actual){
-        return params.row.usado ? (
-          <Chip size="small" label="Sí" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="No" color="error" variant="outlined" />
-        );
+        if (params.row.actual) {
+          return (
+            <Chip
+              size="small"
+              label="Actual"
+              color="primary"
+              variant="filled"
+            />
+          );
+        } else if (!params.row.actual) {
+          return params.row.usado ? (
+            <Chip size="small" label="Sí" color="success" variant="outlined" />
+          ) : (
+            <Chip size="small" label="No" color="error" variant="outlined" />
+          );
+        }
       }
-    },
     },
     {
       field: 'fecha_terminado',
@@ -117,7 +125,7 @@ export function ListOrganigramas({
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      },
+      }
     },
     {
       field: 'fecha_puesta_produccion',
@@ -130,7 +138,7 @@ export function ListOrganigramas({
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      },
+      }
     },
     {
       field: 'fecha_retiro_produccion',
@@ -142,12 +150,12 @@ export function ListOrganigramas({
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      },
+      }
     },
     {
       field: 'justificacion_nueva_version',
       headerName: 'Justificacion nueva versión',
-      width: 150,
+      width: 150
     },
 
     {
@@ -169,7 +177,7 @@ export function ListOrganigramas({
                     width: 24,
                     height: 24,
                     background: '#fff',
-                    border: '2px solid',
+                    border: '2px solid'
                   }}
                   variant="rounded"
                 >
@@ -177,7 +185,7 @@ export function ListOrganigramas({
                     sx={{
                       color: 'primary.main',
                       width: '18px',
-                      height: '18px',
+                      height: '18px'
                     }}
                   />
                 </Avatar>
@@ -186,10 +194,8 @@ export function ListOrganigramas({
           ) : (
             <Tooltip title="Editar">
               <IconButton
-              //! revisar esto detalladamente con el ing de backend
-                disabled={
-                  params.row.id_persona_cargo !== userinfo.id_persona
-                }
+                //! revisar esto detalladamente con el ing de backend
+                disabled={params.row.id_persona_cargo !== userinfo.id_persona}
                 onClick={() => {
                   dispatch(current_organigram(params.row));
                   set_position_tab_organigrama('2');
@@ -203,7 +209,7 @@ export function ListOrganigramas({
                       params.row.id_persona_cargo !== userinfo.id_persona
                         ? ''
                         : '#fff',
-                    border: '2px solid',
+                    border: '2px solid'
                   }}
                   variant="rounded"
                 >
@@ -214,13 +220,14 @@ export function ListOrganigramas({
                           ? ''
                           : 'primary.main',
                       width: '18px',
-                      height: '18px',
+                      height: '18px'
                     }}
                   />
                 </Avatar>
               </IconButton>
             </Tooltip>
           )}
+
           {params.row.fecha_terminado === null && (
             <Tooltip title="Delegación">
               <IconButton
@@ -245,7 +252,7 @@ export function ListOrganigramas({
                     width: 24,
                     height: 24,
                     background: '#fff',
-                    border: '2px solid',
+                    border: '2px solid'
                   }}
                   variant="rounded"
                 >
@@ -253,16 +260,60 @@ export function ListOrganigramas({
                     sx={{
                       color: 'primary.main',
                       width: '18px',
-                      height: '18px',
+                      height: '18px'
                     }}
                   />
                 </Avatar>
               </IconButton>
             </Tooltip>
           )}
+
+
+         { /*  edición especial  */ }
+
+          {params.row.actual && (
+            <Tooltip title="Edición especial">
+            <IconButton
+            //! revisar esto detalladamente con el ing de backend
+           //  disabled={params.row.id_persona_cargo !== userinfo.id_persona}
+            onClick={() => {
+
+              console.log('params.row.id_persona_cargo', params.row);
+              console.log('userinfo.id_persona', userinfo);
+              dispatch(set_special_edit(true));
+              dispatch(current_organigram(params.row));
+              set_position_tab_organigrama('2');
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background:
+                  params.row.id_persona_cargo !== userinfo.id_persona
+                    ? ''
+                    : '#fff',
+                border: '2px solid'
+              }}
+              variant="rounded"
+            >
+              <AutoFixHighIcon
+                sx={{
+                  color:
+                    params.row.id_persona_cargo !== userinfo.id_persona
+                      ? ''
+                      : 'primary.main',
+                  width: '18px',
+                  height: '18px'
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+          )}
         </>
-      ),
-    },
+      )
+    }
   ];
 
   useEffect(() => {
