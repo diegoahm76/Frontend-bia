@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useForm } from 'react-hook-form';
 import {
+  default_values_administracion_tca,
   default_values_busqueda_tca,
   default_values_create_update_tca
 } from './utils/defaultValuesUseForm/defaultValuesUseForm';
@@ -56,6 +57,20 @@ export const use_tca = () => {
   });
   const watch_search_tca_value = watch_search_tca();
   // console.log('watch_search_tca_value', watch_search_tca_value);
+
+  const {
+    control: control_administrar_tca,
+    handleSubmit: handleSubmit_administrar_tca,
+    formState: formState_administrar_tca,
+    reset: reset_administrar_tca,
+    watch: watch_administrar_tca
+  } = useForm({
+    defaultValues: default_values_administracion_tca,
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
+  });
+  const watch_administrar_tca_value = watch_administrar_tca();
+
 
   // ! -------- cleaning funcion for all tca screen ----------------->
 
@@ -165,6 +180,13 @@ export const use_tca = () => {
     formState_search_tca,
     reset_search_tca,
     watch_search_tca_value,
+
+    // ? useForm - administrar tca
+    control_administrar_tca,
+    handleSubmit_administrar_tca,
+    formState_administrar_tca,
+    reset_administrar_tca,
+    watch_administrar_tca_value,
 
     // ? non used trds
     set_list_non_used_trds,

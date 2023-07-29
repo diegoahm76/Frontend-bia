@@ -18,11 +18,16 @@ import {
 //* components
 import { CatalogoTRDAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTRDAdministracionScreen/CatalogoTRDAdministracionScreen';
 import { CatalogoTCAAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTCAAdministracionScreen/CatalogoTCAAdministracionScreen';
-import { useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { ModalContextTCA } from '../../context/ModalContextTca';
 import { ItemSeleccionadoCatalogo } from '../../components/SecondScreenComponentsAdminTca/AdministracionTCA/ItemSeleccionadoCatalago/ItemSeleccionadoCatalogo';
+import { set_selected_item_from_catalogo_action } from '../../toolkit/TCAResources/slice/TcaSlice';
+import { FormularioAdministracionTCA } from '../../components/SecondScreenComponentsAdminTca/AdministracionTCA/FormularioAdministracionTCA/FomularioAdministracionTCA';
 
 export const AdminTcaScreen: FC<any> = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
   //* REDUX ELEMENTS
   const { catalog_trd, catalog_TCA } = useAppSelector(
     (state) => state.tca_slice
@@ -31,9 +36,9 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   //* MODAL CONTEXT ELEMENTS
 
   const {
-    modalAdministracionTca
+    modalAdministracionTca,
     // openModalAdministracionTca,
-    // closeModalAdministracionTca,
+    closeModalAdministracionTca
   } = useContext(ModalContextTCA);
 
   return (
@@ -57,10 +62,10 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
               color="success"
               variant="contained"
               startIcon={<ArrowBackIcon />}
-              /* onClick={() => {
-                dispatch(set_selected_item_from_catalogo_trd_action(null));
-                closeModalAdministracionTRD();
-              }} */
+              onClick={() => {
+                dispatch(set_selected_item_from_catalogo_action(null));
+                closeModalAdministracionTca();
+              }}
             >
               REGRESAR A TCA
             </Button>
@@ -249,7 +254,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
 
         {/* poner la condicional de administración de TCA */}
 
-        {!modalAdministracionTca ? (
+        {modalAdministracionTca ? (
           <Grid
             container
             sx={{
@@ -261,11 +266,11 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
               boxShadow: '0px 3px 6px #042F4A26'
             }}
           >
-            <ItemSeleccionadoCatalogo/>
-            <h1>formaulario de administracion de TCA</h1>
+            {/* item seleccionado del catalogo TRD o TCA */}
+            <ItemSeleccionadoCatalogo />
+            <FormularioAdministracionTCA />
           </Grid>
         ) : null}
-
       </Grid>
     </>
   );

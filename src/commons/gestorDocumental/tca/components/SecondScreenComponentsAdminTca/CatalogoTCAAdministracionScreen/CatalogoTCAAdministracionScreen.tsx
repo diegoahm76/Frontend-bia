@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { type FC } from 'react';
+import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Chip, IconButton } from '@mui/material';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
@@ -11,12 +11,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import type { dataGridTypes } from '../../../types/tca.types';
+import { useAppDispatch } from '../../../../../../hooks';
+import { ModalContextTCA } from '../../../context/ModalContextTca';
+import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
 
 export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
   rows,
   columns,
   title
 }: dataGridTypes): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
+  //* context declaration
+  // eslint-disable-next-line no-empty-pattern
+  const {
+    // modalAdministracionTca,
+    openModalAdministracionTca
+    // closeModalAdministracionTca,
+  } = useContext(ModalContextTCA);
 
   const newColums = [
     {
@@ -29,19 +42,11 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
             <IconButton
               aria-label="edit"
               size="large"
-              title="Editar relación catalogo TRD"
+              title="Editar relación catalogo TCA"
               onClick={() => {
-                // ? this is the function to get data asociated to trd
-                /*  dispatch(
-                  set_selected_item_from_catalogo_trd_action(params.row)
-                );
-                dispatch(
-                  get_tipologia_doc_asociadas_trd(
-                    params.row.id_catserie_unidadorg
-                  )
-                );
-                openModalAdministracionTRD(); */
                 console.log(params.row);
+                openModalAdministracionTca();
+                dispatch(set_selected_item_from_catalogo_action(params.row));
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

@@ -18,7 +18,6 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   columns,
   title
 }: dataGridTypes): JSX.Element => {
-
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
@@ -26,10 +25,9 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   // eslint-disable-next-line no-empty-pattern
   const {
     // modalAdministracionTca,
-    // openModalAdministracionTca,
+    openModalAdministracionTca,
     // closeModalAdministracionTca,
-  } = useContext(ModalContextTCA)
-
+  } = useContext(ModalContextTCA);
 
   const newColums = [
     {
@@ -44,11 +42,9 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
-               // openModalAdministracionTca();
                 console.log(params.row);
-                dispatch(
-                  set_selected_item_from_catalogo_action(params.row)
-                );
+                openModalAdministracionTca();
+                dispatch(set_selected_item_from_catalogo_action(params.row));
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -97,11 +93,7 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
   return (
     <>
-      <RenderDataGrid
-        rows={rows || []}
-        columns={newColums}
-        title={title}
-      />
+      <RenderDataGrid rows={rows || []} columns={newColums} title={title} />
       {/*
         mirar si se debe añadir componente adicional
 
