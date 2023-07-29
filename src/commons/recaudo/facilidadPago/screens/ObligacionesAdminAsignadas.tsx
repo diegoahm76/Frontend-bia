@@ -34,55 +34,53 @@ export const ObligacionesAdminAsignadas: React.FC = () => {
   return (
     <>
       <Title title='Listado de Facilidades de Pago Asignadas - Usuario Cormacarena'/>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          mb: '20px',
-          mt: '20px',
-          p: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
+      {
+        facilidades.length !== 0 ? (
+          <Grid
+            container
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              mb: '20px',
+              mt: '20px',
+              p: '20px',
+              boxShadow: '0px 3px 6px #042F4A26',
+            }}
           >
-            {
-              facilidades.length !== 0 ? (
-                <>
-                  <p>Buzón de facilidades de pago asignadas:</p>
-                  <TablaObligacionesAdminAsignadas />
-                </>
-              ) : (
-                <Dialog
-                  open={modal}
-                  onClose={handle_close}
-                  maxWidth="xs"
+            <Grid item xs={12}>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+              >
+                <p>Buzón de facilidades de pago asignadas:</p>
+                <TablaObligacionesAdminAsignadas />
+              </Box>
+            </Grid>
+          </Grid>
+        ) : (
+          <Dialog
+            open={modal}
+            onClose={handle_close}
+            maxWidth="xs"
+          >
+            <Box component="form">
+              <DialogTitle>Usted no tiene facilidades de pago asignadas.</DialogTitle>
+              <DialogActions>
+                <Button
+                  variant='outlined'
+                  color="primary"
+                  startIcon={<Close />}
+                  onClick={handle_close}
                 >
-                  <Box component="form">
-                    <DialogTitle>Usted no tiene facilidades de pago asignadas.</DialogTitle>
-                    <DialogActions>
-                      <Button
-                        variant='outlined'
-                        color="primary"
-                        startIcon={<Close />}
-                        onClick={handle_close}
-                      >
-                        Cerrar
-                      </Button>
-                    </DialogActions>
-                  </Box>
-                </Dialog>
-              )
-            }
-          </Box>
-        </Grid>
-      </Grid>
+                  Cerrar
+                </Button>
+              </DialogActions>
+            </Box>
+          </Dialog>
+        )
+      }
     </>
   )
 }

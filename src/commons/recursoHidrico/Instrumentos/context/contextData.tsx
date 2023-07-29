@@ -13,12 +13,14 @@ import type {
 } from '../interfaces/interface';
 import { type AxiosError } from 'axios';
 import {
+  type DataGeneralLaboratorio,
   type Archivos,
   type CuencasInstrumentos,
 } from '../../ConsultaBiblioteca/interfaces/interfaces';
 import {
   get_archivos,
   get_data_cuenca_instrumentos,
+  get_data_laboratorio_id,
   get_instrumento_id,
 } from '../../ConsultaBiblioteca/request/request';
 import { get_pozo_id } from '../request/request';
@@ -90,6 +92,19 @@ interface UserContext {
 
   fetch_data_cuencas: () => void;
   fetch_data_pozo: () => void;
+
+  // * Parametros de laboratorio
+
+  id_resultado_laboratorio: number | null;
+  set_id_resultado_laboratorio: (
+    id_resultado_laboratorio: number | null
+  ) => void;
+
+  // * informacion de laboratorio
+  rows_laboratorio: DataGeneralLaboratorio[];
+  set_rows_laboratorio: (rows_laboratorio: DataGeneralLaboratorio[]) => void;
+  fetch_data_laboratorio: () => Promise<any>;
+
 }
 
 // <--------------------- Data context --------------------->
@@ -178,6 +193,16 @@ export const DataContext = createContext<UserContext>({
 
   fetch_data_cuencas: () => {},
   fetch_data_pozo: () => {},
+
+  // * parametros de laboratorio
+  id_resultado_laboratorio: null,
+  set_id_resultado_laboratorio: () => {},
+
+  // * informacion de laboratorio
+  rows_laboratorio: [],
+  set_rows_laboratorio: () => {},
+  fetch_data_laboratorio: async () => {},
+
 });
 
 export const UserProvider = ({
@@ -240,9 +265,7 @@ export const UserProvider = ({
   const [rows_register_pozos, set_rows_register_pozos] = React.useState<any>(
     {}
   );
-  const [rows_edit_pozo, set_rows_edit_pozo] = React.useState<any>(
-    {}
-  );
+  const [rows_edit_pozo, set_rows_edit_pozo] = React.useState<any>({});
 
   // select instruemnto
   const [id_instrumento, set_id_instrumento] = React.useState<number | null>(
@@ -370,6 +393,29 @@ export const UserProvider = ({
     }
   };
 
+  // * parametros de laboratorio
+
+  const [id_resultado_laboratorio, set_id_resultado_laboratorio] =
+    React.useState<number | null>(null);
+
+  // * Traer data de labororAtorio
+  const [rows_laboratorio, set_rows_laboratorio] = React.useState<
+    DataGeneralLaboratorio[]
+  >([]);
+
+  const fetch_data_laboratorio = async (): Promise<any> => {
+    try {
+      set_rows_laboratorio([]);
+      if (id_instrumento) {
+        const response = await get_data_laboratorio_id(id_instrumento);
+        set_rows_laboratorio(response);
+        return response;
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+
   const value = {
     // *modos instrumentos
     register_instrumento,
@@ -432,6 +478,15 @@ export const UserProvider = ({
     set_is_loading_submit,
     fetch_data_cuencas,
     fetch_data_pozo,
+
+    // * parametros de laboratorio
+    id_resultado_laboratorio,
+    set_id_resultado_laboratorio,
+
+    // * informacion de laboratorio
+    rows_laboratorio,
+    set_rows_laboratorio,
+    fetch_data_laboratorio,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

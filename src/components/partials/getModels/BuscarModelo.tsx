@@ -353,7 +353,7 @@ const BuscarModelo = ({
         models={models}
         columns_model={columns_model}
         row_id={row_id}
-        title_table_modal={title_table_modal ?? 'Resultados de la busqueda'}
+        title_table_modal={title_table_modal ?? 'Resultados de la búsqueda'}
         button_add_selection_hidden={button_add_selection_hidden ?? false}
       />
     </Grid>

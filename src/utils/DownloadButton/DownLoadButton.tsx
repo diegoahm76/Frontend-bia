@@ -30,7 +30,7 @@ export const DownloadButton = ({
           fileUrl &&
           fileUrl.includes('https://back-end-bia-beta.up.railway.app')
             ? fileUrl
-            : `https://back-end-bia-beta.up.railway.app/${fileUrl}`
+            : `https://back-end-bia-beta.up.railway.app${fileUrl}`
         }
         ref={linkRef}
         style={{ display: 'none' }}
