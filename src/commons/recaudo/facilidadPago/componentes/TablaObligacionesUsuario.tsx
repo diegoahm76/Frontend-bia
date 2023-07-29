@@ -24,13 +24,17 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const [modal, set_modal] = useState(false);
+  const [modal_opcion, set_modal_opcion] = useState(0);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const handle_open = (opcion: number) => {
+    set_modal(true)
+    set_modal_opcion(opcion)
+  }
+  const handle_close = () => { set_modal(false) }
 
   const handle_submit = async () => {
     const arr_registro = []
@@ -279,7 +283,9 @@ export const TablaObligacionesUsuario: React.FC = () => {
             sx={{ marginTop: '30px' }}
             onClick={() => {
               if(obligaciones.tiene_facilidad){
-                handle_open();
+                handle_open(1);
+              } else if(selected.length === 0){
+                handle_open(2);
               } else {
                 navigate('../registro');
                 void handle_submit();
@@ -297,7 +303,12 @@ export const TablaObligacionesUsuario: React.FC = () => {
         maxWidth="xs"
       >
         <Box component="form">
-          <DialogTitle>{`El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`}</DialogTitle>
+          {
+            modal_opcion === 1 ?
+              <DialogTitle>{`El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`}</DialogTitle> :
+            modal_opcion === 2 ?
+              <DialogTitle>Para continuar a la página de registro seleccione al menos una de las obligaciones</DialogTitle> : null
+          }
           <DialogActions>
             <Button
               variant='outlined'

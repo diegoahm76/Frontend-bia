@@ -44,6 +44,7 @@ import AnularEliminar from '../../../../conservacion/componentes/AnularEliminar'
 import Block from '@mui/icons-material/Block';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
@@ -306,8 +307,7 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarSolicitudDespacho
           title={'INFORMACIÓN DE LA SOLICITUD'}
           control_solicitud_despacho={control_solicitud_despacho}
-          get_values={get_values}
-        />
+          get_values={get_values} open_modal={false} set_open_modal={undefined} />
 
         <FuncionarioRechazo
           title={'Persona responsable'}
@@ -340,7 +340,7 @@ const DespachoBienesConsumoScreen = () => {
             disabled={false}
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <AnularEliminar
             action={
               current_solicitud.solicitud_abierta === true
@@ -522,9 +522,17 @@ const DespachoBienesConsumoScreen = () => {
               },
             ]}
           />
+
+
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <ButtonSalir
+          />
         </Grid>
 
+
       </Grid>
+
     </Grid>
   );
 };

@@ -44,6 +44,7 @@ import { use_trd } from '../../../../hooks/use_trd';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import { LoadingButton } from '@mui/lab';
 // import { v4 as uuidv4 } from 'uuid';
 
 export const BusquedaTipologias = (): JSX.Element => {
@@ -54,7 +55,9 @@ export const BusquedaTipologias = (): JSX.Element => {
   const {
     modalBusquedaTipologiasDocumentales,
     closeModalBusquedaTipologiasDocumentales,
-    openModalAdministracionTipologiasDocumentales
+    openModalAdministracionTipologiasDocumentales,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton,
   } = useContext(ModalContextTRD);
 
   const {
@@ -187,7 +190,8 @@ export const BusquedaTipologias = (): JSX.Element => {
             // console.log('buscando tipologias documentales');
             dispatch(
               get_tipologias_documentales_by_name(
-                form_data_searched_tipologia_documental.nombre
+                setCreateTRDLoadingButton,
+                form_data_searched_tipologia_documental.nombre,
               )
             );
           }}
@@ -248,14 +252,17 @@ export const BusquedaTipologias = (): JSX.Element => {
                 />
               </Grid>
               <Grid item xs={12} sm={5.5}>
-                <Button
+
+              <LoadingButton
+                  loading={createTRDLoadingButton}
                   variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
+                  // sx={{ mt: '15px' }}
                   color="primary"
                 >
                   BUSCAR
-                </Button>
+                </LoadingButton>
                 <Button
                   variant="contained"
                   startIcon={<CleanIcon />}

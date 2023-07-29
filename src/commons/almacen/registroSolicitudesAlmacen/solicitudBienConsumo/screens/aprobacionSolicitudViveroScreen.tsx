@@ -15,6 +15,7 @@ import SeleccionarBienAprobacionVivero from '../components/componentesAprobacion
 import PersonaResponsableVivero from '../components/componentesAprobacion/SeleccionarPersonaAprobadoVivero';
 import Aprobacion from '../components/componentesAprobacion/Aprobacion';
 import SearchIcon from '@mui/icons-material/Search';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AprobacionSolicitudViveroScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -128,6 +129,11 @@ const AprobacionSolicitudViveroScreen = () => {
                         type_button="button"
                         disabled={false}
                     />
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <ButtonSalir
+                    />
+
                 </Grid>
 
 

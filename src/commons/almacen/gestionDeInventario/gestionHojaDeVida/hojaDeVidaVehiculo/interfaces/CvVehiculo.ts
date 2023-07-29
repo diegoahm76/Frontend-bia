@@ -7,7 +7,7 @@ export interface Icv {
 }
 
 export interface IVehicles {
-  id_bien: number;
+  id_bien: number | null;
   codigo_bien: string | null;
   nro_elemento_bien: number | null;
   nombre: string;
@@ -35,49 +35,40 @@ export interface IVehicles {
 }
 
 export interface IcvVehicles {
-  id_hoja_de_vida: number;
-  cod_tipo_vehiculo: string;
-  tiene_platon: boolean;
-  capacidad_pasajeros: number;
-  color: string;
-  linea: string;
-  tipo_combustible: string;
-  es_arrendado: boolean;
-  ultimo_kilometraje: number;
-  fecha_ultimo_kilometraje: number;
-  fecha_adquisicion: number;
-  fecha_vigencia_garantia: number;
-  numero_motor: string;
-  numero_chasis: string;
-  cilindraje: number;
-  transmision: string;
-  dimension_llantas: number;
-  capacidad_extintor: number;
-  tarjeta_operacion: string;
-  observaciones_adicionales: string;
-  es_agendable: boolean;
-  en_circulacion: boolean;
-  fecha_circulacion: number;
-  ruta_imagen_foto: string;
-  id_vehiculo_arrendado: null;
-  id_proveedor: null;
-  codigo_bien: string;
-  nombre: string;
-  doc_identificador_nro: string;
-  id_marca: number;
-  marca: string;
-  estado: string;
-  tipo_vehiculo: string;
-  id_articulo: number;
-}
-
-export interface IcvMaintenance {
-  estado: string;
-  fecha: Date | string;
-  id_programacion_mantenimiento: number;
-  responsable: string;
-  tipo_descripcion: string;
-  tipo: string;
+  id_hoja_de_vida?: number | null;
+  cod_tipo_vehiculo?: string | null;
+  tiene_platon?: boolean | null;
+  capacidad_pasajeros?: number | null;
+  color?: string | null;
+  linea?: string | null;
+  tipo_combustible?: string | null;
+  es_arrendado?: boolean | null;
+  ultimo_kilometraje?: number | null;
+  fecha_ultimo_kilometraje?: string | null;
+  fecha_adquisicion?: string | null;
+  fecha_vigencia_garantia?: string | null;
+  numero_motor?: string | null;
+  numero_chasis?: string | null;
+  cilindraje?: number | null;
+  transmision?: string | null;
+  dimension_llantas?: number | null;
+  capacidad_extintor?: number | null;
+  tarjeta_operacion?: string | null;
+  observaciones_adicionales?: string | null;
+  es_agendable?: boolean | null;
+  en_circulacion?: boolean | null;
+  fecha_circulacion?: string | null;
+  ruta_imagen_foto?: string | any;
+  id_vehiculo_arrendado?: null | null;
+  id_proveedor?: null | null;
+  codigo_bien?: string | null;
+  nombre?: string | null;
+  doc_identificador_nro?: string | null;
+  id_marca?: number | null;
+  marca?: string | null;
+  estado?: string | null;
+  tipo_vehiculo?: string | null;
+  id_articulo?: number | null;
 }
 
 export interface IMarca {

@@ -1,29 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-
-interface TRD {
-  //! TRD necesarios para el funcionamiento de la aplicación
-  trds: any[];
-  trd_current: any;
-
-  //! catalogo de series y subseries por Unidad organizacional
-  catalado_series_subseries_unidad_organizacional: any[];
-  ccd_current_catalogo_ser_sub_unid: any;
-
-  //! data formatos tipos medios creados
-  data_format_documental_type_current: any;
-  data_format_documental_type: any[];
-
-  //! data tipologias documentales
-  tipologias: any[];
-  tipologias_asociadas_a_trd: any[];
-  tipologias_documental_current: any;
-
-  //! catalogo TRD
-  catalogo_trd: any[];
-
-  //! selected_item_from_catalogo_trd
-  selected_item_from_catalogo_trd: any;
-}
+import { type TRD } from './types/TRDResourcesSlices.types';
 
 const initial_state: TRD = {
   //! TRD necesarios para el funcionamiento de la aplicación
@@ -43,7 +19,12 @@ const initial_state: TRD = {
   catalogo_trd: [],
 
   //! selected_item_from_catalogo_trd
-  selected_item_from_catalogo_trd: null
+  selected_item_from_catalogo_trd: null,
+
+  //! add tipologia documental to trd
+  nuevasTipologias: [],
+  // ! historial de cambios
+  historialCambios: [],
 };
 
 export const trd_slice = createSlice({
@@ -120,7 +101,19 @@ export const trd_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.selected_item_from_catalogo_trd = action.payload;
+    },
+
+    //! add tipologia documental to trd
+    add_tipologia_documental_to_trd: (state: any, action: PayloadAction<any>) => {
+      state.nuevasTipologias = action.payload;
+    },
+
+    //! historial de cambios
+    get_historial_cambios_action: (state: any, action: PayloadAction<any>) => {
+      state.historialCambios = action.payload;
     }
+
+
   }
 });
 
@@ -142,4 +135,7 @@ export const {
   get_catalogo_trd_action,
   //* -------------------------------->
   set_selected_item_from_catalogo_trd_action,
+  //* -------------------------------->
+  add_tipologia_documental_to_trd,
+  get_historial_cambios_action,
 } = trd_slice.actions;

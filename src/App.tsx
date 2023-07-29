@@ -17,6 +17,8 @@ export const App = () => {
       <AppTheme>
         <AppRouter />
       </AppTheme>
+
+
       {/* <Online>
         <OfflineScreen />
       </Online>

@@ -89,6 +89,11 @@ const use_editar_organigrama = () => {
     },
     codigo: '',
     nombre: '',
+    tipo_unidad: {
+      label: '',
+      value: null,
+      isDisabled: false,
+    },
     nivel_unidad: {
       label: '',
       value: null,
@@ -542,7 +547,9 @@ const use_editar_organigrama = () => {
 
   // Vuelve a los valores iniciales
   const clean_unitys = (): void => {
+   // console.log('datos unidades' , datos_unidades);
     reset_unidades(initial_state_unitys);
+   // console.log('clean_unitys');
     set_title_unidades('Agregar');
   };
 

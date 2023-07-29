@@ -5,6 +5,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
 import { useSelector } from 'react-redux';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
 
 interface RootState {
   solicitud_facilidad: {
@@ -16,26 +17,9 @@ interface RootState {
 export const VistaSolicitud: React.FC = () => {
   const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
 
-  const rows_bienes = [
-    {
-      id: 'jsjsjq939',
-      bien: 'Casa',
-      identificacion: 'reg-9233319',
-      avaluo: 120000000,
-      direccion: 'Cl 45 # 120 - 123',
-    },
-    {
-      id: 'jfsmd30230',
-      bien: 'Auto',
-      identificacion: 'GMW-604',
-      avaluo: 100000000,
-      direccion: 'Cra 4 # 120 - 678',
-    },
-  ];
-
   const columns_bienes: GridColDef[] = [
     {
-      field: 'bien',
+      field: 'nombre_tipo_bien',
       headerName: 'Tipo Bien',
       width: 150,
       renderCell: (params) => (
@@ -55,7 +39,7 @@ export const VistaSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'avaluo',
+      field: 'valor',
       headerName: 'Avalúo',
       width: 150,
       renderCell: (params) => {
@@ -71,30 +55,31 @@ export const VistaSolicitud: React.FC = () => {
       },
     },
     {
-      field: 'direccion',
+      field: 'Direccion',
       headerName: 'Dirección',
-      width: 150,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {`${params.row.direccion as string}, ${params.row.ubicacion as string}`}
         </div>
       ),
     },
     {
-      field: 'docImpuesto',
+      field: 'documento_soporte',
       headerName: 'Doc. Impuestos',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          <Button
-            color='primary'
-            variant='outlined'
-            size='small'
-            startIcon={<CloudDownloadIcon />}
-            onClick={() => {}}
-          >
-            Ver Documento
-          </Button>
+          <a href={params.value} target="_blank" rel="noreferrer">
+            <Button
+              color='primary'
+              variant='outlined'
+              size='small'
+              startIcon={<CloudDownloadIcon />}
+            >
+              Ver Documento
+            </Button>
+          </a>
         </div>
       ),
     },
@@ -105,36 +90,37 @@ export const VistaSolicitud: React.FC = () => {
       <h3>Detalle</h3>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={5}>
-          <Button
-            fullWidth
-            color='primary'
-            variant='outlined'
-            size='medium'
-            startIcon={<CloudDownloadIcon />}
-            onClick={() => {}}
-          >
-            Ver Documento Solicitud
-          </Button>
+          <a href={solicitud_facilidad.facilidad_pago.documento_soporte} target="_blank" rel="noreferrer">
+            <Button
+              fullWidth
+              color='primary'
+              variant='outlined'
+              size='medium'
+              startIcon={<CloudDownloadIcon />}
+            >
+              Ver Documento Solicitud
+            </Button>
+          </a>
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Button
-            fullWidth
-            color='primary'
-            variant='outlined'
-            size='medium'
-            startIcon={<CloudDownloadIcon />}
-            onClick={() => {}}
-          >
-            Ver Soporte Consignación
-          </Button>
+          <a href={solicitud_facilidad.facilidad_pago.consignacion_soporte} target="_blank" rel="noreferrer">
+            <Button
+              fullWidth
+              color='primary'
+              variant='outlined'
+              size='medium'
+              startIcon={<CloudDownloadIcon />}
+            >
+              Ver Soporte Consignación
+            </Button>
+          </a>
         </Grid>
         <Grid item xs={12} sm={5}>
           <TextField
             label="Calidad en que actúa la persona"
             size="small"
             fullWidth
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            value={`${solicitud_facilidad.tipo_actuacion === 'tipo 1' ? 'Persona Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? 'Persona Juridica' : solicitud_facilidad.tipo_actuacion === 'tipo 3' ? 'Deudor Solidario Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 4' ? 'Deudor Solidario Juridico' : null}`}
+            value={`${solicitud_facilidad.facilidad_pago.tipo_actuacion}`}
             disabled
           />
         </Grid>
@@ -149,13 +135,13 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={15}>
           {
-            solicitud_facilidad.tipo_actuacion === 'tipo 1' ? (
+            solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 1 ? (
               <PersonaNatural />
-            ) : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? (
+            ) : solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 2 ? (
               <PersonaJuridica />
-            ) : solicitud_facilidad.tipo_actuacion === 'tipo 3' ? (
+            ) : solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 3 ? (
               <DeudorSolidarioNatural />
-            ) : solicitud_facilidad.tipo_actuacion === 'tipo 4' ?  (
+            ) : solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 4 ?  (
               <DeudorSolidarioJuridico />
             ) : null
           }
@@ -165,7 +151,13 @@ export const VistaSolicitud: React.FC = () => {
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
-            value={`${solicitud_facilidad.periodicidad}`}
+            value={
+              solicitud_facilidad.facilidad_pago.periodicidad === 1 ?
+              'Mensual' : solicitud_facilidad.facilidad_pago.periodicidad === 3 ?
+              'Trimestral' : solicitud_facilidad.facilidad_pago.periodicidad === 6 ?
+              'Semestral' : solicitud_facilidad.facilidad_pago.periodicidad === 12 ?
+              'Anual' : solicitud_facilidad.facilidad_pago.periodicidad
+            }
             disabled
           />
         </Grid>
@@ -174,33 +166,35 @@ export const VistaSolicitud: React.FC = () => {
             label="Plazo"
             size="small"
             fullWidth
-            value={`${solicitud_facilidad.cuotas}`}
+            value={`${solicitud_facilidad.facilidad_pago.cuotas}`}
             disabled
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Button
-            fullWidth
-            color='primary'
-            variant='outlined'
-            size='medium'
-            startIcon={<CloudDownloadIcon />}
-            onClick={() => {}}
-          >
-            Ver Documento No Enajenación
-          </Button>
+          <a href={solicitud_facilidad.facilidad_pago.documento_no_enajenacion} target="_blank" rel="noreferrer">
+            <Button
+              fullWidth
+              color='primary'
+              variant='outlined'
+              size='medium'
+              startIcon={<CloudDownloadIcon />}
+            >
+              Ver Documento No Enajenación
+            </Button>
+          </a>
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Button
-            fullWidth
-            color='primary'
-            variant='outlined'
-            size='medium'
-            startIcon={<CloudDownloadIcon />}
-            onClick={() => {}}
-          >
-            Ver Garantías Ofrecidas
-          </Button>
+          <a href={solicitud_facilidad.documento_garantia} target="_blank" rel="noreferrer">
+            <Button
+              fullWidth
+              color='primary'
+              variant='outlined'
+              size='medium'
+              startIcon={<CloudDownloadIcon />}
+            >
+              Ver Garantías Ofrecidas
+            </Button>
+          </a>
         </Grid>
       </Grid>
       <p><strong>Relación de bienes</strong></p>
@@ -210,12 +204,12 @@ export const VistaSolicitud: React.FC = () => {
             <DataGrid
               autoHeight
               disableSelectionOnClick
-              rows={rows_bienes}
+              rows={solicitud_facilidad.bienes}
               columns={columns_bienes}
               pageSize={10}
               rowsPerPageOptions={[10]}
               experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id}
+              getRowId={(row) => faker.database.mongodbObjectId()}
             />
           </Box>
         </Grid>
@@ -224,7 +218,7 @@ export const VistaSolicitud: React.FC = () => {
         <TextField
           multiline
           rows={4}
-          value={`${solicitud_facilidad.observaciones}`}
+          value={`${solicitud_facilidad.facilidad_pago.observaciones}`}
           label="Observación Usuario"
           size="small"
           fullWidth
@@ -234,7 +228,10 @@ export const VistaSolicitud: React.FC = () => {
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
         {
-          solicitud_facilidad.notificaciones !== undefined ? solicitud_facilidad.notificaciones ?  (<FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)  : (<FormControlLabel disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) : null
+          solicitud_facilidad.facilidad_pago.notificaciones !== undefined ?
+          solicitud_facilidad.facilidad_pago.notificaciones ?
+          (<FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) :
+          (<FormControlLabel disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) : null
         }
       </FormGroup>
     </>
