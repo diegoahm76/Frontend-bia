@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { type FC } from 'react';
+import { type FC, useContext } from 'react';
 import { RenderDataGrid } from '../../../Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Chip, IconButton } from '@mui/material';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
@@ -9,12 +9,26 @@ import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/u
 //* icons
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import type { dataGridTypes } from '../../../types/tca.types';
+import { useAppDispatch } from '../../../../../../hooks';
+import { ModalContextTCA } from '../../../context/ModalContextTca';
+import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
 
 export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
   columns,
   title
 }: dataGridTypes): JSX.Element => {
+
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
+  //* context declaration
+  // eslint-disable-next-line no-empty-pattern
+  const {
+    // modalAdministracionTca,
+    // openModalAdministracionTca,
+    // closeModalAdministracionTca,
+  } = useContext(ModalContextTCA)
 
 
   const newColums = [
@@ -30,14 +44,11 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
-                // ? this is the function to get data asociated to trd
-                // dispatch(get_tipologia_doc_asociadas_trd(params.row.id_cat_serie_und));
+               // openModalAdministracionTca();
                 console.log(params.row);
-                /*   openModalAdministracionTRD();
                 dispatch(
-                  set_selected_item_from_catalogo_trd_action(params.row)
+                  set_selected_item_from_catalogo_action(params.row)
                 );
-                dispatch(get_tipologias_asociadas_a_trd([])); */
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

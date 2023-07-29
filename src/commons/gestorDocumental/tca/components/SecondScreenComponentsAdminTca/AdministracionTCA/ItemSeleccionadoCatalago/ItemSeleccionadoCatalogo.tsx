@@ -3,12 +3,22 @@
 import { Grid, Box, TextField } from '@mui/material';
 import { useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
+import { styles } from './utils/style';
 
 export const ItemSeleccionadoCatalogo = (): JSX.Element => {
   // * state from trd_slice
-  const { selected_item_from_catalogo_trd } = useAppSelector(
-    (state) => state.trd_slice
+  const { selected_item_from_catalogo } = useAppSelector(
+    (state) => state.tca_slice
   );
+
+  const {
+    cod_unidad_org,
+    nombre_unidad,
+    cod_serie,
+    nombre_serie,
+    cod_subserie,
+    nombre_subserie
+  } = selected_item_from_catalogo;
 
   return (
     <Grid xs={12}>
@@ -22,166 +32,91 @@ export const ItemSeleccionadoCatalogo = (): JSX.Element => {
             justifyContent: 'center'
           }}
         >
-          {/* codigo unidad organizacional || id unidad organizacional */}
+          {/* codigo unidad organizacional */}
           <Grid item xs={12} sm={3}>
             <TextField
-              // margin="dense"
               fullWidth
               size="small"
               label="Cód. Unidad Organizacional"
               variant="outlined"
-              value={
-                selected_item_from_catalogo_trd?.id_unidad_organizacional ||
-                selected_item_from_catalogo_trd?.cod_unidad_org
-              }
+              value={cod_unidad_org}
               disabled
             />
             <label htmlFor="">
-              <small
-                style={{
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  fontWeight: 'thin',
-                  fontSize: '0.75rem'
-                }}
-              >
-                UNIDAD ORGANIZACIONAL
-              </small>
+              <small style={styles}>UNIDAD ORGANIZACIONAL</small>
             </label>
           </Grid>
 
           {/* nombre unidad organizacional */}
           <Grid item xs={12} sm={3}>
             <TextField
-              // margin="dense"
               fullWidth
-              // disabled={ccd_current?.actual}
               size="small"
               label="Nombre Unidad Organizacional"
               variant="outlined"
-              value={
-                selected_item_from_catalogo_trd?.nombre_unidad ||
-                selected_item_from_catalogo_trd?.nombreUnidad
-              }
+              value={nombre_unidad}
               disabled
             />
             <label htmlFor="">
-              <small
-                style={{
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  fontWeight: 'thin',
-                  fontSize: '0.75rem'
-                }}
-              >
-                UNIDAD ORGANIZACIONAL
-              </small>
+              <small style={styles}>UNIDAD ORGANIZACIONAL</small>
             </label>
           </Grid>
 
           {/* codigo serie */}
           <Grid item xs={12} sm={3}>
             <TextField
-              // margin="dense"
               fullWidth
-              // disabled={ccd_current?.actual}
               size="small"
               label="Cod. Serie"
               variant="outlined"
-              value={
-                selected_item_from_catalogo_trd?.cod_serie ||
-                selected_item_from_catalogo_trd?.codigo_serie
-              }
+              value={cod_serie}
               disabled
             />
             <label htmlFor="">
-              <small
-                style={{
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  fontWeight: 'thin',
-                  fontSize: '0.75rem'
-                }}
-              >
-                SERIE
-              </small>
+              <small style={styles}>SERIE</small>
             </label>
           </Grid>
 
           {/* nombre serie */}
           <Grid item xs={12} sm={3}>
             <TextField
-              // margin="dense"
               fullWidth
-              // disabled={ccd_current?.actual}
               size="small"
               label="Nombre Serie"
               variant="outlined"
-              value={
-                selected_item_from_catalogo_trd?.nombre_serie ||
-                selected_item_from_catalogo_trd?.nombre_serie
-              }
+              value={nombre_serie}
               disabled
             />
             <label htmlFor="">
-              <small
-                style={{
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  fontWeight: 'thin',
-                  fontSize: '0.75rem'
-                }}
-              >
-                SERIE
-              </small>
+              <small style={styles}>SERIE</small>
             </label>
           </Grid>
 
           <Grid item xs={12} sm={3}>
             <TextField
-              // margin="dense"
               fullWidth
-              // disabled={ccd_current?.actual}
               size="small"
               label="Cod. Subserie"
               variant="outlined"
-              value={
-                (selected_item_from_catalogo_trd?.codigo_subserie ||
-                  selected_item_from_catalogo_trd?.cod_subserie) ??
-                '----'
-              }
+              value={cod_subserie ?? '----'}
               disabled
             />
             <label htmlFor="">
-              <small
-                style={{
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  fontWeight: 'thin',
-                  fontSize: '0.75rem'
-                }}
-              >
-                SUBSERIE
-              </small>
+              <small style={styles}>SUBSERIE</small>
             </label>
           </Grid>
 
           <Grid item xs={12} sm={3}>
             <TextField
-              // margin="dense"
               fullWidth
-              // disabled={ccd_current?.actual}
               size="small"
               label="Nombre Subserie"
               variant="outlined"
-              value={selected_item_from_catalogo_trd?.nombre_subserie ?? '----'}
+              value={nombre_subserie ?? '----'}
               disabled
             />
             <label htmlFor="">
-              <small
-                style={{
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  fontWeight: 'thin',
-                  fontSize: '0.75rem'
-                }}
-              >
-                SUBSERIE
-              </small>
+              <small style={styles}>SUBSERIE</small>
             </label>
           </Grid>
         </Grid>

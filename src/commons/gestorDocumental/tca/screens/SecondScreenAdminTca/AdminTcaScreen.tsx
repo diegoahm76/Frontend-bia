@@ -20,6 +20,7 @@ import { CatalogoTRDAdministracionScreen } from '../../components/SecondScreenCo
 import { CatalogoTCAAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTCAAdministracionScreen/CatalogoTCAAdministracionScreen';
 import { useAppSelector } from '../../../../../hooks';
 import { ModalContextTCA } from '../../context/ModalContextTca';
+import { ItemSeleccionadoCatalogo } from '../../components/SecondScreenComponentsAdminTca/AdministracionTCA/ItemSeleccionadoCatalago/ItemSeleccionadoCatalogo';
 
 export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   //* REDUX ELEMENTS
@@ -260,25 +261,11 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
               boxShadow: '0px 3px 6px #042F4A26'
             }}
           >
+            <ItemSeleccionadoCatalogo/>
             <h1>formaulario de administracion de TCA</h1>
           </Grid>
         ) : null}
 
-        {/* {modalAdministracionTRD ? (
-          <Grid
-            container
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px',
-              mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26'
-            }}
-          >
-            <FormTRDAdmin />
-          </Grid>
-        ) : null} */}
       </Grid>
     </>
   );

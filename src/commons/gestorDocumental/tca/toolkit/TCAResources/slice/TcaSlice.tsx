@@ -13,6 +13,9 @@ export interface TCASliceInterface {
   // ! ------- CATALOG TCA ----------------->
   catalog_TCA: any[];
   catalog_TCA_current: any;
+
+  //! selected icon from catalogo create or edit admini TCA
+  selected_item_from_catalogo: any;
 }
 
 const initialState: TCASliceInterface = {
@@ -26,7 +29,12 @@ const initialState: TCASliceInterface = {
 
   // ! ------- CATALOG TCA ----------------->
   catalog_TCA: [],
-  catalog_TCA_current: null
+  catalog_TCA_current: null,
+
+  //! selected icon from catalogo create or edit admini TCA
+  selected_item_from_catalogo: null,
+
+
 };
 
 
@@ -59,7 +67,16 @@ export const TCASlice = createSlice({
 
     set_current_catalog_TCA_action(state, action: PayloadAction<any>) {
       state.catalog_TCA_current = action.payload;
+    },
+
+    // ! ------- SELECTED ITEM FROM CATALOG ----------------->
+    set_selected_item_from_catalogo_action(
+      state,
+      action: PayloadAction<any>
+    ) {
+      state.selected_item_from_catalogo = action.payload;
     }
+
   }
 });
 
@@ -74,5 +91,8 @@ export const {
 
   // ! ------- CATALOG TCA ----------------->
   set_catalog_TCA_action,
-  set_current_catalog_TCA_action
+  set_current_catalog_TCA_action,
+
+  // ! ------- SELECTED ITEM FROM CATALOG ----------------->
+  set_selected_item_from_catalogo_action,
 } = TCASlice.actions;
