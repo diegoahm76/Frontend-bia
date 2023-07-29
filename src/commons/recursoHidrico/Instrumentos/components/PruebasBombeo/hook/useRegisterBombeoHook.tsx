@@ -5,9 +5,48 @@
 import { useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import { useForm } from 'react-hook-form';
 // import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 export const use_register_bombeo_hook = () => {
+  // * USE FORM
+
+  const {
+    register: register_bombeo,
+    handleSubmit: handleSubmit_bombeo,
+    formState: { errors: errors_bombeo },
+    control: control_bombeo,
+    reset: reset_bombeo,
+    setValue: setValue_bombeo,
+    getValues: getValues_bombeo,
+    watch: watch_bombeo,
+  } = useForm({
+    defaultValues: {
+      // Datos generales
+      id_prueba_bombeo: '',
+      id_instrumento: '',
+      id_pozo: '',
+      descripcion: '',
+      fecha_prueba_bombeo: '',
+      latitud: '',
+      longitud: '',
+      ubicacion_prueba: '',
+
+      // * secciones
+      id_sesion_prueba_bombeo: '',
+      hora_inicio: '',
+      prueba_bombeo: '',
+      caudal_sesion: '',
+      cod_tipo_sesion: '',
+
+      // *datos prueba de bombeo
+      tiempo_transcurrido: '',
+      nivel: '',
+      resultado: '',
+      caudal: '',
+    },
+  });
+
   // Datos generales
 
   const [fecha_prubea_bombeo, set_fecha_prubea_bombeo] = useState<Dayjs | null>(
@@ -39,16 +78,8 @@ export const use_register_bombeo_hook = () => {
   const [abatimientoRecuperacion, setAbatimientoRecuperacion] = useState('');
   const [caudalAgua, setCaudalAgua] = useState('');
 
-  const handlePruebaBombeoChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setPruebaBombeo(event.target.value);
-  };
-
-  const handleCaudalChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setCaudal(event.target.value);
+  const handleComboChange = (value1: string, value2: string) => {
+    setValue_bombeo('cod_tipo_sesion', `${value1}${value2}`);
   };
 
   const handle_agregar = () => {
@@ -96,8 +127,17 @@ export const use_register_bombeo_hook = () => {
     setAbatimientoRecuperacion,
     setCaudalAgua,
     handle_agregar,
-    handlePruebaBombeoChange,
-    handleCaudalChange,
+    handleComboChange,
     handle_date_change,
+
+    // * USE FORM
+    register_bombeo,
+    handleSubmit_bombeo,
+    errors_bombeo,
+    control_bombeo,
+    reset_bombeo,
+    setValue_bombeo,
+    getValues_bombeo,
+    watch_bombeo,
   };
 };

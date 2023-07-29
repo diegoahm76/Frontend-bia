@@ -25,9 +25,6 @@ const ModalContextTRD = createContext<ModalContextState>({
   openModalBusquedaTipologiasDocumentales: () => {},
   closeModalBusquedaTipologiasDocumentales: () => {},
   //*
-  createTRDLoadingButton: false,
-  setCreateTRDLoadingButton: () => {},
-  //*
   modalAdministracionTipologiasDocumentales: false,
   openModalAdministracionTipologiasDocumentales: () => {},
   closeModalAdministracionTipologiasDocumentales: () => {},
@@ -39,6 +36,21 @@ const ModalContextTRD = createContext<ModalContextState>({
   modalEstablecerTipologiaDocumentalATRD: false,
   openModalEstablecerTipologiaDocumentalATRD: () => {},
   closeModalEstablecerTipologiaDocumentalATRD: () => {},
+  //* -----------------------------------> MODAL HISTORIAL DE CAMBIOS
+  modalHistorialCambios: false,
+  openModalHistorialCambios: () => {},
+  closeModalHistorialCambios: () => {},
+
+  // ! -------------------------------------> loading buttons
+  // ? loading button create - update TRD
+  createTRDLoadingButton: false,
+  setCreateTRDLoadingButton: () => {},
+
+  buttonAddNewTRDRelationActual: false,
+  setButtonAddNewTRDRelationActual: () => {},
+
+  buttonSpecialEditionActualTRD : false,
+  setButtonSpecialEditionActualTRD : () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -100,18 +112,34 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
   //* -------------------------------------> MODAL ESTABLECER TIPOLOGIAS DOCUMENTALES A TRD
   const openModalEstablecerTipologiaDocumentalATRD = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD' });
-  }
-  , []);
+  }, []);
 
   const closeModalEstablecerTipologiaDocumentalATRD = useCallback(() => {
     dispatch({ type: 'CLOSE_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD' });
-  }
-  , []);
+  }, []);
+
+  // * -----------------------------------> MODAL HISTORIAL DE CAMBIOS
+  const openModalHistorialCambios = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_HISTORIAL_CAMBIOS' });
+  }, []);
+
+  const closeModalHistorialCambios = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_HISTORIAL_CAMBIOS' });
+  }, []);
 
   //* -------------------------------------> loading button create TRD
   const setCreateTRDLoadingButton = useCallback((value: boolean) => {
-    dispatch({ type: 'SET_CREATE_TRD_LOADING_BUTTON', payload: value });
+    dispatch({ type: 'CREATE_TRD_LOADING_BUTTON', payload: value });
   }, []);
+
+  const setButtonAddNewTRDRelationActual = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL', payload: value });
+  }, []);
+
+  const setButtonSpecialEditionActualTRD = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD', payload: value });
+  }
+  , []);
 
   return (
     <ModalContextTRD.Provider
@@ -147,10 +175,18 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
           state.modalEstablecerTipologiaDocumentalATRD,
         openModalEstablecerTipologiaDocumentalATRD,
         closeModalEstablecerTipologiaDocumentalATRD,
+        //* -----------------------------------> MODAL HISTORIAL DE CAMBIOS
+        modalHistorialCambios: state.modalHistorialCambios,
+        openModalHistorialCambios,
+        closeModalHistorialCambios,
 
         //* -------------------------------------> loading button create TRD
         createTRDLoadingButton: state.createTRDLoadingButton,
-        setCreateTRDLoadingButton
+        setCreateTRDLoadingButton,
+        buttonAddNewTRDRelationActual: state.buttonAddNewTRDRelationActual,
+        setButtonAddNewTRDRelationActual,
+        buttonSpecialEditionActualTRD: state.buttonSpecialEditionActualTRD,
+        setButtonSpecialEditionActualTRD,
       }}
     >
       {children}

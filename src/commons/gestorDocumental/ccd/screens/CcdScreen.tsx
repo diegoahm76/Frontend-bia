@@ -66,7 +66,7 @@ export const CcdScreen: React.FC = () => {
   const { series_ccd, serie_ccd_current } = useAppSelector(
     (state: any) => state.series
   );
-  const { subseries_ccd, subserie_ccd_current } = useAppSelector(
+  const { subseries_ccd } = useAppSelector(
     (state: any) => state.subseries
   );
   const { seriesAndSubseries } = useAppSelector(
@@ -82,10 +82,6 @@ export const CcdScreen: React.FC = () => {
         ccd_current?.fecha_terminado !== '' &&
         ccd_current?.fecha_terminado !== undefined
     );
-   /* console.log(
-      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ ccd_current?.fecha_terminado',
-      ccd_current?.fecha_terminado
-    ); */
   }, [ccd_current?.fecha_terminado]);
 const [isFileSelected, setIsFileSelected] = useState(false);
   useEffect(() => {
@@ -120,7 +116,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
     set_consulta_ccd_is_active,
     // // Functions
     on_submit_create_ccd,
-    on_submit_create_or_delete_relation_unidad,
+    // on_submit_create_or_delete_relation_unidad,
     create_or_delete_relation_unidad,
     clean_ccd
   } = use_ccd() as any;
@@ -307,9 +303,6 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
-                      /* sx={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
-                      }} */
                       style={{
                         color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
                       }}
@@ -814,7 +807,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       fullWidth
                       onClick={() => {
                         void dispatch(create_or_delete_relation_unidad);
-                        void dispatch(get_assignments_service(ccd_current));
+                        // void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
                       variant="contained"
@@ -868,7 +861,8 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       void dispatch(
                         to_finished_ccds_service(
                           set_flag_btn_finish,
-                          ccd_current
+                          ccd_current,
+                          assignments_ccd,
                         )
                       );
                     }}

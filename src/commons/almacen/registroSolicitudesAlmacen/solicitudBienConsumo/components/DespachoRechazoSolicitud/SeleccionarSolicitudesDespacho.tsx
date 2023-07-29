@@ -14,12 +14,15 @@ interface IProps {
   title: string;
   control_solicitud_despacho: any;
   get_values: any;
+  open_modal: boolean;
+  set_open_modal: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudDespacho = ({
   title,
   control_solicitud_despacho,
-  get_values,
+  get_values, open_modal,
+  set_open_modal,
 }: IProps) => {
   // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
@@ -92,7 +95,9 @@ const SeleccionarSolicitudDespacho = ({
           models={solicitudes}
           get_filters_models={get_solicitudes_filtro}
           set_models={set_solicitudes}
-          button_submit_label="Buscar solicitud"
+          show_search_button={false}
+          open_search_modal={open_modal}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'title',
