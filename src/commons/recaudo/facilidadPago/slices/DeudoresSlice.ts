@@ -20,7 +20,7 @@ export const get_filtro_deudores = createAsyncThunk('facilidades_pago/get_filtro
 
 // Ver la información personal del Deudor desde Pag. Usuario Interno
 export const get_datos_deudor = createAsyncThunk('facilidades_pago/get_datos_deudor', async (id: number) => {
-  const { data } = await api.get(`recaudo/pagos/facilidades-pagos-deudor/${id}/`)
+  const { data } = await api.get(`recaudo/facilidades-pagos/datos-deudor/${id}/`)
   return data.data
 })
 

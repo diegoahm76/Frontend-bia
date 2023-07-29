@@ -36,14 +36,17 @@ import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
 import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import { Avatar, IconButton } from '@mui/material';
-// import { get_serie_ccd_current } from '../store/slices/seriesSlice';
-// import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
-// import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContext } from '../context/ModalContext';
-import { get_serie_ccd_current } from '../store/slices/seriesSlice';
-import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
+import {
+  get_serie_ccd_current,
+  get_series_ccd
+} from '../store/slices/seriesSlice';
+import {
+  get_subseries_ccd,
+  get_subseries_ccd_current
+} from '../store/slices/subseriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
@@ -270,8 +273,12 @@ const use_ccd = () => {
   }, [data_create_ccd.organigrama.value]);
 
   useEffect(() => {
+    console.log('uniry_organigram', unity_organigram);
+    const filteredUnityOrganigram = unity_organigram.filter(
+      (item) => item.cod_agrupacion_documental !== null
+    );
     set_list_unitys(
-      unity_organigram.map((item) => ({
+      filteredUnityOrganigram.map((item) => ({
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))
@@ -419,6 +426,8 @@ const use_ccd = () => {
     set_list_sries_asignacion([]);
     set_list_subsries([]);
     set_list_sries([]);
+    dispatch(get_subseries_ccd([]));
+    dispatch(get_series_ccd([]));
   };
 
   const clean_after_update = (): void => {
@@ -445,9 +454,8 @@ const use_ccd = () => {
   }, [dispatch, reset, set_title_button_asing]);
 
   const create_or_delete_relation_unidad = (): void => {
-    // console.log(data_asing, 'data_asing');
-    // console.log('epa la patria', ccd_current);
-
+    console.log(data_asing, 'data_asing');
+    console.log('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
       (item: {
         item: {
@@ -476,8 +484,6 @@ const use_ccd = () => {
       }
     );
 
-    // console.log(itemSend, 'itemSend');
-
     const itemSendDef = [...assignments_ccd, ...itemSend];
 
     // console.log(itemSendDef, 'itemSendDef');
@@ -492,14 +498,6 @@ const use_ccd = () => {
   // Funcion para eliminar Asignaciones
   const delete_asing = (id: any): void => {
     const new_items = assignments_ccd.filter((item) => item.id !== id);
-    // console.log(new_items, 'new_items');
-    /* const item_final = new_items.map((item: any) => {
-      return {
-        id_unidad_organizacional: item?.id_unidad_organizacional,
-        id_serie_doc: item?.codigo_serie,
-        subseries: item?.subseries?.map((item: { value: any }) => item.value),
-      };
-    }); */
     void dispatch(
       create_or_delete_assignments_service(new_items, ccd_current)
     ).then(() => {
@@ -512,7 +510,8 @@ const use_ccd = () => {
       headerName: 'ID Un. Org',
       field: 'id_unidad_organizacional',
       minWidth: 90,
-      maxWidth: 100
+      maxWidth: 100,
+      hide: true
     },
     {
       headerName: 'Unidad Organizacional',
@@ -549,7 +548,7 @@ const use_ccd = () => {
       minWidth: 110,
       maxWidth: 120,
       renderCell: (params: any) => {
-        return (
+        return ccd_current?.actual ? null : (
           <>
             <IconButton
               onClick={() => {

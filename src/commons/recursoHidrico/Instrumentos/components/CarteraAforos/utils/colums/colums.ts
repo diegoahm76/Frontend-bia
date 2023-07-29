@@ -1,7 +1,7 @@
 
 export const colums_aforos = [
     {
-        field: 'distancia_orilla',
+        field: 'distancia_a_la_orilla',
         headerName: 'DISTANCIA ORILLA (m)',
         width: 200,
     },
@@ -16,17 +16,17 @@ export const colums_aforos = [
         width: 200,
     },
     {
-        field: 'Profundidad_promedio',
+        field: 'profundidad_promedio',
         headerName: 'PROFUNDIDAD PROMEDIO (m)',
         width: 220,
     },
     {
-        field: 'valocidad_superficial',
+        field: 'velocidad_superficial',
         headerName: 'VELOCIDAD SUPERFICIAL (m/s)',
         width: 220,
     },
     {
-        field: 'valocidad_profunda',
+        field: 'velocidad_profunda',
         headerName: 'VELOCIDAD PROFUDA (m/s)',
         width: 200,
     },
@@ -36,7 +36,7 @@ export const colums_aforos = [
         width: 200,
     },
     {
-        field: 'valocidad_transecto',
+        field: 'velocidad_transecto',
         headerName: 'VELOCIDAD TRANSECTO (m/s)',
         width: 200,
     },

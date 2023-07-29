@@ -97,7 +97,6 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
                 <Preview
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
-
               </Avatar>
             </IconButton>
           </Tooltip>
