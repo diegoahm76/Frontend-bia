@@ -5,11 +5,11 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 interface IProps {
-  texto_boton: string;
+  texto_bot: string;
   children: ReactNode;
 }
 
-export const CollapsibleButton = ({ texto_boton, children }: IProps): JSX.Element => {
+export const CollapsibleButton = ({ texto_bot, children }: IProps): JSX.Element => {
   const [open, set_open] = useState(false);
   return (
     <Grid
@@ -35,7 +35,7 @@ export const CollapsibleButton = ({ texto_boton, children }: IProps): JSX.Elemen
           set_open(previousState => !previousState);
         }}
       >
-        {texto_boton}
+        {texto_bot}
       </Button>
       <Grid
         item
