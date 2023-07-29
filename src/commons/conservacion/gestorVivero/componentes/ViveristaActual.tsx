@@ -103,7 +103,7 @@ const SeleccionarNuevoViverista = () => {
 
   return (
     <>
-      <Grid container direction="row" padding={2} borderRadius={2}>
+      <Grid container direction="row" padding={2} borderRadius={2} marginTop={1}>
         <BuscarModelo
           set_current_model={set_current_nuevo_viverista}
           row_id={''}
@@ -116,7 +116,7 @@ const SeleccionarNuevoViverista = () => {
           form_inputs={[
             {
               datum_type: 'title',
-              title_label: 'Viverista actual',
+              title_label: 'Viverista actual',              
             },
             {
               datum_type: 'select_controller',
