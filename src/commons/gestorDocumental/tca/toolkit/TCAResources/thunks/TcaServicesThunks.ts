@@ -165,7 +165,7 @@ export const get_catalogo_TCA_service = async (
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(
-      'No se encontró catálog para la TCA' || error.response?.data?.detail
+      'No se encontró catálogo para la TCA' || error.response?.data?.detail
     );
     return error;
   }
