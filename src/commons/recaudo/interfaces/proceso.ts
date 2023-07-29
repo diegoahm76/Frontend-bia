@@ -15,6 +15,11 @@ export interface CategoriaAtributo {
   categoria: string;
 }
 
+export interface CategoriaAtributo {
+  id: number;
+  categoria: string;
+}
+
 export interface AtributoEtapa {
   id: number;
   descripcion: string;
