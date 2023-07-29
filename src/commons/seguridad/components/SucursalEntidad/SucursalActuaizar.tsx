@@ -1,24 +1,13 @@
-import { useState, useEffect } from "react";
-import { TextField, Button, Grid } from "@mui/material";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { api } from "../../../../api/axios";
+import { control_error, control_success } from "./utils/control_error_or_success";
+import { SucursalDirecciones } from "./SucursalDirecciones";
+import { Title } from "../../../../components";
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { ISucursalForm } from "./utils/interfac";
 
-interface ISucursalForm {
-  descripcion_sucursal: string;
-  direccion: string;
-  direccion_sucursal_georeferenciada: string | null;
-  municipio: string | null;
-  pais_sucursal_exterior: string | null;
-  direccion_notificacion: string;
-  direccion_notificacion_referencia: string | null;
-  municipio_notificacion: string | null;
-  email_sucursal: string;
-  confirmar_email: string;
-  telefono_sucursal: number | null;
-  es_principal: boolean;
-  activo: boolean;
-  item_ya_usado: boolean;
-  id_persona_empresa: number;
-}
 
 interface Props {
   selected_id: number | null;
@@ -29,7 +18,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
   const initial_state: ISucursalForm = {
     descripcion_sucursal: "",
     direccion: "",
-    direccion_sucursal_georeferenciada: null,
+    direccion_sucursal_georeferenciada: "",
     municipio: null,
     pais_sucursal_exterior: null,
     direccion_notificacion: "",
@@ -37,11 +26,12 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
     municipio_notificacion: null,
     email_sucursal: "",
     confirmar_email: "",
-    telefono_sucursal: null,
+    telefono_sucursal: "",
     es_principal: false,
     activo: true,
     item_ya_usado: false,
     id_persona_empresa: 3,
+    numero_sucursal: null,
   };
 
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
@@ -60,13 +50,16 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
       setform_values(res.data);
     } catch (error) {
       console.error(error);
+      control_error(" Error ")
+
     }
   };
 
   const handleinput_change = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string | null>,
+    child?: React.ReactNode
   ): void => {
-    const { name, value } = e.target;
+    const { name, value } = event.target as HTMLInputElement | HTMLTextAreaElement;
     setform_values((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -95,10 +88,12 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
       })
       .then((response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
+        control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         setform_values(initial_state);
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
+        control_error(isediting ? "Error al actualizada  " : "Error al  guardar ")
       });
   };
 
@@ -111,7 +106,23 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
     <Grid container
       spacing={2}
     >
-      <Grid item xs={12} sm={6}>
+
+      <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
+        <Title title="Sucursal" />
+      </Grid>
+      <Grid item xs={12} sm={1.5}>
+        <TextField
+          variant="outlined"
+          size="small"
+          label="N sucursal"
+          fullWidth
+          disabled
+          name="N sucursal"
+          value={form_values.numero_sucursal}
+          onChange={handleinput_change}
+        />
+      </Grid>
+      <Grid item xs={12} sm={10}>
         <TextField
           variant="outlined"
           size="small"
@@ -122,28 +133,9 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
           onChange={handleinput_change}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="direccion  "
-          fullWidth
-          name="direccion"
-          value={form_values.direccion}
-          onChange={handleinput_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="direccion_notificacion  "
-          fullWidth
-          name="direccion_notificacion"
-          value={form_values.direccion_notificacion}
-          onChange={handleinput_change}
-        />
-      </Grid>
+
+      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} />
+
       <Grid item xs={12} sm={6}>
         <TextField
           variant="outlined"
@@ -185,68 +177,48 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id }: Props) => {
           onChange={handleinput_change}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="direccion_sucursal_georeferenciada"
-          fullWidth
-          name="direccion_sucursal_georeferenciada"
-          value={form_values.direccion_sucursal_georeferenciada}
-          onChange={handleinput_change}
-        />
+      <Grid item xs={12} sm={3}>
+        <FormControl fullWidth size="small">
+          <InputLabel id="demo-simple-select-label">es-principal-select-label</InputLabel>
+          <Select
+            labelId="es-principal-select-label"
+            id="es-principal-select"
+            required
+            value={form_values.es_principal}
+            label="es-principal-select-label"
+            onChange={(e) => {
+              setform_values((prevValues) => ({
+                ...prevValues,
+                es_principal: e.target.value === "true",
+              }));
+            }}
+          >
+            <MenuItem value="true">Sí</MenuItem>
+            <MenuItem value="false">No</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="municipio"
-          fullWidth
-          name="municipio"
-          value={form_values.municipio}
-          onChange={handleinput_change}
-        />
+      <Grid item xs={12} sm={3  }>
+        <FormControl fullWidth   size="small" >
+          <InputLabel id="activo">activo</InputLabel>
+          <Select
+            labelId="activo"
+            id="activo"
+            required
+            value={form_values.activo}
+            label="activo"
+            onChange={(e) => {
+              setform_values((prevValues) => ({
+                ...prevValues,
+                activo: e.target.value === "true",
+              }));
+            }}
+          >
+            <MenuItem value="true">Sí</MenuItem>
+            <MenuItem value="false">No</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="pais_sucursal_exterior"
-          fullWidth
-          name="pais_sucursal_exterior"
-          value={form_values.pais_sucursal_exterior}
-          onChange={handleinput_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="direccion_notificacion_referencia"
-          fullWidth
-          name="direccion_notificacion_referencia"
-          value={form_values.direccion_notificacion_referencia}
-          onChange={handleinput_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          size="small"
-          label="municipio_notificacion"
-          fullWidth
-          name="municipio_notificacion"
-          value={form_values.municipio_notificacion}
-          onChange={handleinput_change}
-        />
-      </Grid>
-
-
-
-
-
-
-      
       <Grid item xs={12} sm={2}>
         <Button variant="contained" color="primary" onClick={handleform_submit}>
           {isediting ? "Actualizar" : "Guardar"}

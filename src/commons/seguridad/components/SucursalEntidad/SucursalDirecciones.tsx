@@ -1,4 +1,5 @@
-import { Grid, Select } from '@mui/material';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { Grid, Select, SelectChangeEvent } from '@mui/material';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -9,50 +10,66 @@ import TextField from '@mui/material/TextField';
 import { useEffect, useState, type FC } from 'react';
 import { Title } from '../../../../components';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { ISucursalForm } from './utils/interfac';
 
 
-interface Municipios {
+export interface Municipios {
     label: string;
     value: string;
 };
 
-interface MunicipiosResponse {
+export interface MunicipiosResponse {
     success: boolean;
     detail: string;
     data: Municipios[];
 };
 
-interface Paises {
+export interface Paises {
     label: string;
     value: string;
 };
 
-interface PaisesResponse {
+export interface PaisesResponse {
     success: boolean;
     detail: string;
     data: Paises[];
 };
 
-interface Departamento {
+export interface Departamento {
     label: string;
     value: string;
 };
 
-interface DepartamentoResponse {
+export interface DepartamentoResponse {
     success: boolean;
     detail: string;
     data: Departamento[];
 };
 
+interface SucursalDireccionesProps {
+    form_values: ISucursalForm;
+    handleinput_change: (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string | null>,
+        child?: React.ReactNode
+    ) => void;
+
+}
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalDirecciones: FC = () => {
+export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
     const [selected_pais, setselected_pais] = useState('');
     const [paises, setpaises] = useState<Paises[]>([]);
     const [departamentos, set_departamentos] = useState<Departamento[]>([]);
-    const [link, set_link] = useState('');
     const [selected_departamento, setselected_departamento] = useState('');
+    const [link, set_link] = useState('');
+    const [selected_departamento_noti, setselected_departamento_noti] = useState('');
+    const [departamentos_noti, set_departamentos_noti] = useState<Departamento[]>([]);
+    const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
+
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
     useEffect(() => {
@@ -113,6 +130,41 @@ export const SucursalDirecciones: FC = () => {
         void fetch_data();
     }, [selected_departamento]);
 
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=`);
+                const data: DepartamentoResponse = await response.json();
+                if (data.success) {
+                    set_departamentos_noti(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching departamentos de notificación:', error);
+            }
+        };
+        void fetch_data();
+    }, [selected_pais]);
+
+    // Nuevo useEffect para obtener municipios de notificación del departamento seleccionado
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=${selected_departamento_noti}`);
+                const data: MunicipiosResponse = await response.json();
+                if (data.success) {
+                    set_municipios_noti(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching municipios de notificación:', error);
+            }
+        };
+        void fetch_data();
+    }, [selected_departamento_noti]);
+
 
     const set_value_direction = (_value: string, type: string): void => {
 
@@ -157,6 +209,7 @@ export const SucursalDirecciones: FC = () => {
                     <Title title="Dirección física" />
                 </Grid>
 
+
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel>pais</InputLabel>
@@ -196,7 +249,12 @@ export const SucursalDirecciones: FC = () => {
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel>Municipio</InputLabel>
-                        <Select label="Municipio">
+                        <Select
+                            label="Municipio"
+                            name="municipio"
+                            value={form_values.municipio}
+                            onChange={handleinput_change}
+                        >
                             {municipios.map((municipio) => (
                                 <MenuItem key={municipio.value} value={municipio.value}>
                                     {municipio.label}
@@ -206,21 +264,27 @@ export const SucursalDirecciones: FC = () => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <TextField variant="outlined"
+                    <TextField
+                        variant="outlined"
                         size="small"
-                        style={{ marginBottom: '10px' }}
-                        label="Dirección  "
+                        label="direccion  "
                         fullWidth
                         required
+                        name="direccion"
+                        value={form_values.direccion}
+                        onChange={handleinput_change}
                     />
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
-                    <TextField variant="outlined"
+                    <TextField
+                        variant="outlined"
                         size="small"
-                        style={{ marginBottom: '10px' }}
-                        label="Dirección geografica  "
+                        label="direccion geografica  "
                         fullWidth
+                        required
+                        name="direccion_sucursal_georeferenciada"
+                        value={form_values.direccion_sucursal_georeferenciada}
+                        onChange={handleinput_change}
                     />
                 </Grid>
                 <Grid item xs={4}>
@@ -247,24 +311,38 @@ export const SucursalDirecciones: FC = () => {
                     <Title title="Dirección de notificación nacional" />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl size='small' fullWidth>
-                        <InputLabel>Dpto</InputLabel>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel>Departamento</InputLabel>
                         <Select
-                            label="Dpto"
+                            label="Departamento"
+                            value={selected_departamento_noti}
+                            onChange={(event) => {
+                                setselected_departamento_noti(event.target.value);
+                            }}
                         >
-                            <MenuItem>
-                            </MenuItem>
+                            {departamentos_noti.map((departamento) => (
+                                <MenuItem key={departamento.value} value={departamento.value}>
+                                    {departamento.label}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl size='small' fullWidth>
+                    <FormControl required size="small" fullWidth>
                         <InputLabel>Municipio</InputLabel>
                         <Select
                             label="Municipio"
+                            name="municipio_notificacion"
+
+                            value={form_values.municipio_notificacion}
+                            onChange={handleinput_change}
                         >
-                            <MenuItem>
-                            </MenuItem>
+                            {municipios_noti.map((municipio) => (
+                                <MenuItem key={municipio.value} value={municipio.value}>
+                                    {municipio.label}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -272,19 +350,25 @@ export const SucursalDirecciones: FC = () => {
                     <FormControlLabel control={<Checkbox />} label="Misma dirección física" />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <TextField variant="outlined"
+                    <TextField
+                        variant="outlined"
                         size="small"
-                        style={{ marginBottom: '10px' }}
-                        label="Dirección    "
+                        label="direccion_notificacion  "
                         fullWidth
+                        name="direccion_notificacion"
+                        value={form_values.direccion_notificacion}
+                        onChange={handleinput_change}
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <TextField variant="outlined"
+                    <TextField
+                        variant="outlined"
                         size="small"
-                        style={{ marginBottom: '10px' }}
-                        label="Dirección geografica  "
+                        label="direccion_notificacion_geografica"
                         fullWidth
+                        name="direccion_notificacion_referencia"
+                        value={form_values.direccion_notificacion_referencia}
+                        onChange={handleinput_change}
                     />
                 </Grid>
                 <Grid item xs={4}>
@@ -297,7 +381,10 @@ export const SucursalDirecciones: FC = () => {
                         Generar dirección
                     </Button>
                 </Grid>
+
+
             </Grid>
         </>
     );
 }
+
