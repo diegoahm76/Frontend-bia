@@ -13,6 +13,10 @@ export enum Modal {
   OPEN_MODAL_TCA_TERMINADOS = 'OPEN_MODAL_TCA_TERMINADOS',
   CLOSE_MODAL_TCA_TERMINADOS = 'CLOSE_MODAL_TCA_TERMINADOS',
 
+  // ? MODAL ADMINISTRACION TCA
+  OPEN_MODAL_ADMINISTRACION_TCA = 'OPEN_MODAL_ADMINISTRACION_TCA',
+  CLOSE_MODAL_ADMINISTRACION_TCA = 'CLOSE_MODAL_ADMINISTRACION_TCA',
+
 
 
   //* LOAD BUTTONS
@@ -29,6 +33,9 @@ export const initialState = {
 
   // ? modal tca terminados
   modalTcaTerminados: false,
+
+  // ? MODAL ADMINISTRACION TCA
+  modalAdministracionTca: false,
 
 
 

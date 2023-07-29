@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
+import { type FC, useContext } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
-import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 //* icons
@@ -19,11 +19,21 @@ import {
 import { CatalogoTRDAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTRDAdministracionScreen/CatalogoTRDAdministracionScreen';
 import { CatalogoTCAAdministracionScreen } from '../../components/SecondScreenComponentsAdminTca/CatalogoTCAAdministracionScreen/CatalogoTCAAdministracionScreen';
 import { useAppSelector } from '../../../../../hooks';
+import { ModalContextTCA } from '../../context/ModalContextTca';
 
 export const AdminTcaScreen: FC<any> = (): JSX.Element => {
+  //* REDUX ELEMENTS
   const { catalog_trd, catalog_TCA } = useAppSelector(
     (state) => state.tca_slice
   );
+
+  //* MODAL CONTEXT ELEMENTS
+
+  const {
+    modalAdministracionTca
+    // openModalAdministracionTca,
+    // closeModalAdministracionTca,
+  } = useContext(ModalContextTCA);
 
   return (
     <>
@@ -235,6 +245,25 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
           </Grid>
         </Grid> */}
         {/* parte formulario */}
+
+        {/* poner la condicional de administración de TCA */}
+
+        {!modalAdministracionTca ? (
+          <Grid
+            container
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px',
+              mb: '20px',
+              boxShadow: '0px 3px 6px #042F4A26'
+            }}
+          >
+            <h1>formaulario de administracion de TCA</h1>
+          </Grid>
+        ) : null}
+
         {/* {modalAdministracionTRD ? (
           <Grid
             container

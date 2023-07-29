@@ -16,6 +16,11 @@ export interface ModalContextState {
   openModalTcaTerminados: () => void;
   closeModalTcaTerminados: () => void;
 
+  //* MODAL ADMINISTRACION TCA
+  modalAdministracionTca: boolean;
+  openModalAdministracionTca: () => void;
+  closeModalAdministracionTca: () => void;
+
   //* LOAD BUTTONS
   loadingButton: boolean;
   setLoadingButton: (value: boolean) => void;
