@@ -277,9 +277,9 @@ export function AdministrarViveroScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
-          { params.row.id_viverista_actual === null ? (
+          { params.row.activo === true && params.row.id_viverista_actual === null ? (
             <>              
-              <Tooltip title="Viverista">
+              <Tooltip title="Asignar Viverista">
                   <IconButton 
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     href={`/#/app/conservacion/gestor_vivero/viverista/${params.row.id_vivero}/`}
