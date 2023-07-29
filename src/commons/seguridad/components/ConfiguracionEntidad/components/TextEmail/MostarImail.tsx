@@ -7,7 +7,6 @@ import type { IconfiguracionEntidad } from "../../interfaces/interfacesConEntida
 
 
 
-
     // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MostrarEmail: React.FC = () => {
     // Estado inicial de los datos de la sucursal de la empresa
@@ -42,6 +41,8 @@ export const MostrarEmail: React.FC = () => {
     // Estado para controlar si los correos coinciden o están vacíos
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
+       // eslint-disable-next-line @typescript-eslint/naming-convention
+ const [isEditMode, setIsEditMode] = useState<boolean>(false); // Estado para habilitar/deshabilitar edición
 
     // Función para obtener los datos de la sucursal de la empresa mediante una solicitud a la API
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -86,7 +87,7 @@ export const MostrarEmail: React.FC = () => {
                         email_corporativo_sistema: updatedEmail,
                     };
                     setDataEntidad(updatedDataEntidadWithUpdatedEmail);
-                    control_success("Email Corporativo actualizados correctamente");
+                    control_success("Email Corporativo actualizado correctamente"); 
                 })
                 .catch((error: any) => {
                     // console.error("Error al actualizar los datos:", error);
@@ -114,7 +115,7 @@ export const MostrarEmail: React.FC = () => {
         });
     }, [handleChangeEmail]);
 
-  
+   
 
     return (
         <Grid
@@ -132,61 +133,75 @@ export const MostrarEmail: React.FC = () => {
                 <Title title="Editar Correo" />
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
                     <Grid item container spacing={3}>
-                        <Grid item xs={12} sm={6}  lg={4}>
-                        <TextField
-                            variant="outlined"
-                            size="small"
-                            label="Email Actual"
-                            fullWidth
+                        <Grid item xs={12} sm={6} lg={4}>
+                            <TextField
+                                variant="outlined"
+                                size="small"
+                                label="Email Actual"
+                                fullWidth
                                 value={emailactaul}
-                           disabled  
-                        />
-                    </Grid>
-                        <Grid item xs={12} sm={6} lg={3}>
-                            <TextField
-                                variant="outlined"
-                                size="small"
-                                label="Email"
-                                fullWidth
-                                value={emailValue}
-                                onChange={(e) => {
-                                    setEmailValue(e.target.value);
-                                    setEmailMismatch(false);
-                                }}
-                                error={emailMismatch} // Agregar el error prop
-                                helperText={emailMismatch ? "Los correos no coinciden o son inválidos" : ""} // Agregar el mensaje de error
+                                disabled
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} lg={3}>
-                            <TextField
-                                variant="outlined"
-                                size="small"
-                                label="Confirmar Email"
-                                fullWidth
-                                value={confirmEmailValue}
-                                onChange={(e) => {
-                                    setConfirmEmailValue(e.target.value);
-                                    setEmailMismatch(false);
-                                }}
-                                error={emailMismatch}
-                                helperText={emailMismatch ? "Los correos no coinciden o son inválidos" : ""}
-                            />
-                            
-                        </Grid>
-
-                        <Grid item xs={12} sm={6} lg={2}>
-
-                        <Button
-                            style={{ margin: 3 }}
-                            type="submit"
-                            variant="contained"
-                            color="success"
-                            onClick={handleChangeEmail}
-                        >
-                            Guardar
-                        </Button>
+                        {isEditMode && (
+                            <>
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        label="Email"
+                                        fullWidth
+                                        value={emailValue}
+                                        onChange={(e) => {
+                                            setEmailValue(e.target.value);
+                                            setEmailMismatch(false);
+                                        }}
+                                        error={emailMismatch}
+                                        helperText={emailMismatch ? "Los correos no coinciden o son inválidos" : ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        label="Confirmar Email"
+                                        fullWidth
+                                        value={confirmEmailValue}
+                                        onChange={(e) => {
+                                            setConfirmEmailValue(e.target.value);
+                                            setEmailMismatch(false);
+                                        }}
+                                        error={emailMismatch}
+                                        helperText={emailMismatch ? "Los correos no coinciden o son inválidos" : ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} lg={2}>
+                                    <Button
+                                        style={{ margin: 3 }}
+                                        type="submit"
+                                        variant="contained"
+                                        color="success"
+                                        onClick={handleChangeEmail}
+                                    >
+                                        Guardar
+                                    </Button>
+                                </Grid>
+                            </>
+                        )}
+                        {!isEditMode && (
+                            <Grid item xs={12} sm={6} lg={2}>
+                                <Button
+                                    style={{ margin: 3 }}
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {setIsEditMode(true)}} // Habilitar el modo edición al presionar el botón
+                                >
+                                    Editar
+                                </Button>
+                            </Grid>
+                        )}
                     </Grid>
-                    </Grid>
+                  
                 </Box>
             </Grid>
         </Grid>

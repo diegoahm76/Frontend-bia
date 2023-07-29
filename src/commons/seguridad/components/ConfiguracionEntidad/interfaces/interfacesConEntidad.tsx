@@ -75,3 +75,15 @@ export interface IDataentidad {
     digito_verificacion: string;
     razon_social: string;
 }
+
+export  interface DatosHistoricoPerfilEntidad {
+    cod_tipo_perfil_histo: string;
+    consec_asignacion_perfil_histo: number;
+    fecha_fin_periodo: string;
+    fecha_inicio_periodo: string;
+    id_historico_perfil_entidad: number;
+    id_persona_cambia: number;
+    id_persona_entidad: number;
+    id_persona_perfil_histo: number;
+    observaciones_cambio: string;
+}

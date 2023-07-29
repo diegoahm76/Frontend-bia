@@ -9,6 +9,7 @@ import { BuscadorPersona } from "../../../../../../../components/BuscadorPersona
 import { control_error, control_success } from "../../../../SucursalEntidad/utils/control_error_or_success";
 import { api } from "../../../../../../../api/axios";
 import type { ISucursalEmpresa } from "../../../interfaces/interfacesConEntidad";
+import { ModificadorFormatoFecha } from "../../../utils/modificadorForematoFecha";
 
 interface ModalEditarCargoProps {
     name: string;
@@ -208,14 +209,6 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         });
     }, []);
 
-    const format_date = (dateString: string): string => {
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-
-        return `${day}/${month}/${year}`;
-    };
 
 
     return (
@@ -262,7 +255,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                             size="small"
                             disabled
                             fullWidth
-                            value={format_date(fecha)}
+                            value={ModificadorFormatoFecha(fecha)}
                         />
                     </Grid>
                 </Grid>

@@ -1,4 +1,4 @@
-import { Box, Button, Grid } from "@mui/material";
+import {  Box, Button, Grid, Chip } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "../../../../../../api/axios";
@@ -35,10 +35,47 @@ export const TablaSucursales: React.FC = () => {
     }, []);
 
     const columns = [
-        { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
-        { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
-        { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
-
+        {
+            field: "numero_sucursal",
+            headerName: "Número de Sucursal",
+            width: 100,
+            flex: 1,
+        },
+        {
+            field: "descripcion_sucursal",
+            headerName: "Descripción",
+            width: 200,
+            flex: 1,
+        },
+        {
+            field: "es_principal",
+            headerName: "Es Principal",
+            width: 150,
+            flex: 1,
+            renderCell: (params: any ) => {
+                const value = params.value as boolean; // Asegurarse de que el tipo sea booleano
+                if (typeof value === 'boolean') {
+                    return value ? (
+                        <Chip
+                            size="small"
+                            label="Activo"
+                            color="success"
+                            variant="outlined"
+                        />
+                    ) : (
+                        <Chip
+                            size="small"
+                            label="Inactivo"
+                            color="error"
+                            variant="outlined"
+                        />
+                    );
+                } else {
+                    // Manejar el caso en el que el tipo no sea booleano (opcional)
+                    return null; // O muestra algún otro valor predeterminado
+                }
+            },
+        },
     ];
 
     return (

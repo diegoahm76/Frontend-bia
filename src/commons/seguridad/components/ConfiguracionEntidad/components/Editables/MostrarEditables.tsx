@@ -6,6 +6,7 @@ import { Title } from "../../../../../../components/Title";
 import { api } from "../../../../../../api/axios";
 import type { IconfiguracionEntidad } from "../../interfaces/interfacesConEntidad"; // <-- Use import type here
 import {MostrrModalHistorico} from "./ModalHistorico/ModalHistroico";
+import { ModificadorFormatoFecha } from "../../utils/modificadorForematoFecha";
 
 const initial_state: IconfiguracionEntidad = {
     email_corporativo_sistema: "",
@@ -26,15 +27,7 @@ export const MostrarEditables: React.FC = () => {
     const [data_entidad, setdata_entidad] = useState<IconfiguracionEntidad>(initial_state);
     const [data_nombre, setdata_nombre] = useState<string[]>([]);
 
-    // Function to format date strings
-    const format_date = (dateString: string): string => {
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-
-        return `${day}/${month}/${year}`;
-    };
+   
 
     // Fetch data for the entity configuration
     const fetch_data_get = async (): Promise<void> => {
@@ -175,7 +168,7 @@ const [variable,setvariable] = useState<boolean>(false);
                         
                         <Box style={{ display: 'flex'}}>
                         <ModalEditarCargo name={data_nombre[0]} fecha={fecha_inicio_dir_actual} titlee={"Director"} cod={1} onClick={handleButtonClick} />
-                        <MostrrModalHistorico codi={1}/>
+                            <MostrrModalHistorico cargo={"Director"} codig={1} />
                         </Box>
 
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -184,7 +177,7 @@ const [variable,setvariable] = useState<boolean>(false);
                                 type="text"
                                 disabled
                                 className="p-inputtext-sm"
-                                placeholder={format_date(fecha_inicio_dir_actual)}
+                                placeholder={ModificadorFormatoFecha(fecha_inicio_dir_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
                         </Box>
@@ -204,7 +197,7 @@ const [variable,setvariable] = useState<boolean>(false);
                      
                         <Box style={{ display: 'flex' }}>
                             <ModalEditarCargo name={data_nombre[1]} fecha={fecha_inicio_coord_alm_actual} titlee={"Coordinador de Almacen"} cod={2} onClick={handleButtonClick} />
-                            <MostrrModalHistorico codi={2} />
+                            <MostrrModalHistorico cargo={"Coordinador de Almacen"} codig={2} />
                         </Box>
                      
                      
@@ -215,7 +208,7 @@ const [variable,setvariable] = useState<boolean>(false);
                                 type="text"
                                 disabled
                                 className="p-inputtext-sm"
-                                placeholder={format_date(fecha_inicio_coord_alm_actual)}
+                                placeholder={ModificadorFormatoFecha(fecha_inicio_coord_alm_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
                         </Box>
@@ -236,7 +229,7 @@ const [variable,setvariable] = useState<boolean>(false);
 
                             <Box style={{ display: 'flex' }}>
                             <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} cod={3} onClick={handleButtonClick} />
-                            <MostrrModalHistorico codi={3} />
+                            <MostrrModalHistorico cargo={"Coordinador de Viveros"} codig={3} />
                         </Box>
                       
                       
@@ -247,7 +240,7 @@ const [variable,setvariable] = useState<boolean>(false);
                                 type="text"
                                 disabled
                                 className="p-inputtext-sm"
-                                placeholder={format_date(fecha_inicio_coord_viv_actual)}
+                                placeholder={ModificadorFormatoFecha(fecha_inicio_coord_viv_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
                         </Box>
@@ -267,7 +260,7 @@ const [variable,setvariable] = useState<boolean>(false);
 
                         <Box style={{ display: 'flex' }}>
                             <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} cod={4} onClick={handleButtonClick} />
-                            <MostrrModalHistorico codi={4} />
+                            <MostrrModalHistorico cargo={"Coordinador de Transporte"} codig={4} />
                         </Box>
 
                       
@@ -279,7 +272,7 @@ const [variable,setvariable] = useState<boolean>(false);
                                 type="text"
                                 className="p-inputtext-sm"
                                   disabled
-                                placeholder={format_date(fecha_inicio_respon_trans_actual)}
+                                placeholder={ModificadorFormatoFecha(fecha_inicio_respon_trans_actual)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
                         </Box>
@@ -298,7 +291,7 @@ const [variable,setvariable] = useState<boolean>(false);
                         
                         <Box style={{ display: 'flex' }}>
                             <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} cod={5} onClick={handleButtonClick} />
-                            <MostrrModalHistorico codi={5} />
+                            <MostrrModalHistorico cargo={"Almacenista"} codig={5}/>
                         </Box>
 
                         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -307,7 +300,7 @@ const [variable,setvariable] = useState<boolean>(false);
                                 type="text"
                                 className="p-inputtext-sm"
                                   disabled
-                                placeholder={format_date(fecha_inicio_almacenista)}
+                                placeholder={ModificadorFormatoFecha(fecha_inicio_almacenista)}
                                 style={{ margin: 0, height: 15, width: 80 }}
                             />
                         </Box>
