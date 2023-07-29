@@ -14,6 +14,7 @@ import {
   MenuItem,
   Grid,
   Chip,
+  Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
@@ -244,373 +245,392 @@ const CrearViveroDialogForm = ({
         </DialogTitle> */}
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container>
-            <Title title="INFORMACION PRINCIPAL"></Title>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="nombre"
-                control={control_vivero}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Nombre"
-                    variant="outlined"
-                    disabled={action !== 'create'}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar un nombre'
-                        : 'Ingrese el nombre'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="cod_municipio"
-                control={control_vivero}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Municipio"
-                    variant="outlined"
-                    disabled={action !== 'create'}
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar municipio'
-                        : 'Seleccione municipio'
-                    }
-                  >
-                    {municipalities.map((option: IList) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="direccion"
-                control={control_vivero}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Dirección"
-                    variant="outlined"
-                    disabled={action !== 'create'}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar una dirección'
-                        : 'Ingrese dirección'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="area_mt2"
-                control={control_vivero}
-                defaultValue={0}
-                rules={{
-                  required: true,
-                  min: get_values('area_propagacion_mt2') ?? '',
-                }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Área m2"
-                    variant="outlined"
-                    type="number"
-                    disabled={action === 'detail'}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? error.type === 'required'
-                          ? 'El área es requerida'
-                          : `El valor del área debe ser mayor al área de propagación (${
-                              get_values('area_propagacion_mt2') ?? ''
-                            })`
-                        : 'Ingrese área'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="cod_tipo_vivero"
-                control={control_vivero}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Tipo de vivero"
-                    variant="outlined"
-                    disabled={action === 'detail'}
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar el tipo de vivero'
-                        : 'Seleccione tipo vivero'
-                    }
-                  >
-                    {nursery_types.map((option: IList) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Title title="Detalles vivero"></Title>
-
-            <Grid item xs={11} md={5} margin={0}>
-              <Controller
-                name="area_propagacion_mt2"
-                control={control_vivero}
-                defaultValue={0}
-                rules={{ required: true, max: get_values('area_mt2') ?? '' }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Area propagación m2"
-                    variant="outlined"
-                    type="number"
-                    disabled={action === 'detail'}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? error.type === 'required'
-                          ? 'El área de propagación es requerida'
-                          : `El valor del área de propagación debe ser menor al área total (${
-                              get_values('area_mt2') ?? ''
-                            })`
-                        : 'Ingrese área'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="tiene_area_produccion"
-                control={control_vivero}
-                defaultValue={true}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Tiene area de producción?"
-                    variant="outlined"
-                    disabled={action === 'detail'}
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="tiene_areas_pep_sustrato"
-                control={control_vivero}
-                defaultValue={true}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Tiene área preparación de sustrato?"
-                    variant="outlined"
-                    disabled={action === 'detail'}
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="tiene_area_embolsado"
-                control={control_vivero}
-                defaultValue={true}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Tiene área de embolsado?"
-                    variant="outlined"
-                    disabled={action === 'detail'}
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <Controller
-                name="cod_origen_recursos_vivero"
-                control={control_vivero}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Vivero creado por medio de ?"
-                    variant="outlined"
-                    disabled={action === 'detail'}
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar origen de recursos'
-                        : 'Elija origen recurso'
-                    }
-                  >
-                    {source_resources.map((option: IList) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
-
-            <FormInputFileController
-              xs={11}
-              md={5}
-              margin={1}
-              control_form={control_vivero}
-              control_name="ruta_archivo_creacion"
-              default_value=""
-              rules={{
-                required_rule: { rule: true, message: 'Archivo requerido' },
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Administracion de viveros
+            </Typography>
+            <Title title="Información principal"></Title>
+            <form
+              style={{
+                marginTop: '20px',
               }}
-              label="Archivo de soporte"
-              disabled={action !== 'create'}
-              helper_text=""
-              set_value={set_file}
-              hidden_text={action === 'edit'}
-              file_name={file_name}
-              value_file={current_nursery.ruta_archivo_creacion}
-            />
+            >
+              <Grid container marginTop={3} spacing={1}>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="nombre"
+                    control={control_vivero}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        autoFocus
+                        fullWidth
+                        size="small"
+                        label="Nombre"
+                        variant="outlined"
+                        disabled={action !== 'create'}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar un nombre'
+                            : 'Ingrese el nombre'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="cod_municipio"
+                    control={control_vivero}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="Municipio"
+                        variant="outlined"
+                        disabled={action !== 'create'}
+                        defaultValue={value}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio seleccionar municipio'
+                            : 'Seleccione municipio'
+                        }
+                      >
+                        {municipalities.map((option: IList) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="direccion"
+                    control={control_vivero}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Dirección"
+                        variant="outlined"
+                        disabled={action !== 'create'}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar una dirección'
+                            : 'Ingrese dirección'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="area_mt2"
+                    control={control_vivero}
+                    defaultValue={0}
+                    rules={{
+                      required: true,
+                      min: get_values('area_propagacion_mt2') ?? '',
+                    }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Área m2"
+                        variant="outlined"
+                        type="number"
+                        disabled={action === 'detail'}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? error.type === 'required'
+                              ? 'El área es requerida'
+                              : `El valor del área debe ser mayor al área de propagación (${
+                                  get_values('area_propagacion_mt2') ?? ''
+                                })`
+                            : 'Ingrese área'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="cod_tipo_vivero"
+                    control={control_vivero}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="Tipo de vivero"
+                        variant="outlined"
+                        disabled={action === 'detail'}
+                        defaultValue={value}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio seleccionar el tipo de vivero'
+                            : 'Seleccione tipo vivero'
+                        }
+                      >
+                        {nursery_types.map((option: IList) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
+              </Grid>
+            </form>
+
+            <Title title="Detalles vivero"></Title>
+            <Grid container spacing={1} marginTop={3}>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="area_propagacion_mt2"
+                  control={control_vivero}
+                  defaultValue={0}
+                  rules={{
+                    required: true,
+                    max: get_values('area_mt2') ?? '',
+                  }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Area propagación m2"
+                      variant="outlined"
+                      type="number"
+                      disabled={action === 'detail'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? error.type === 'required'
+                            ? 'El área de propagación es requerida'
+                            : `El valor del área de propagación debe ser menor al área total (${
+                                get_values('area_mt2') ?? ''
+                              })`
+                          : 'Ingrese área'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="tiene_area_produccion"
+                  control={control_vivero}
+                  defaultValue={true}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      select
+                      size="small"
+                      label="¿Tiene area de producción?"
+                      variant="outlined"
+                      disabled={action === 'detail'}
+                      defaultValue={value}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio seleccionar una opción'
+                          : 'Seleccionar opción'
+                      }
+                    >
+                      <MenuItem value="true">SI</MenuItem>
+                      <MenuItem value="false">NO</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="tiene_areas_pep_sustrato"
+                  control={control_vivero}
+                  defaultValue={true}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      select
+                      size="small"
+                      label="¿Tiene área preparación de sustrato?"
+                      variant="outlined"
+                      disabled={action === 'detail'}
+                      defaultValue={value}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio seleccionar una opción'
+                          : 'Seleccionar opción'
+                      }
+                    >
+                      <MenuItem value="true">SI</MenuItem>
+                      <MenuItem value="false">NO</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="tiene_area_embolsado"
+                  control={control_vivero}
+                  defaultValue={true}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      select
+                      size="small"
+                      label="¿Tiene área de embolsado?"
+                      variant="outlined"
+                      disabled={action === 'detail'}
+                      defaultValue={value}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio seleccionar una opción'
+                          : 'Seleccionar opción'
+                      }
+                    >
+                      <MenuItem value="true">SI</MenuItem>
+                      <MenuItem value="false">NO</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="cod_origen_recursos_vivero"
+                  control={control_vivero}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      select
+                      size="small"
+                      label="¿Vivero creado por medio de ?"
+                      variant="outlined"
+                      disabled={action === 'detail'}
+                      defaultValue={value}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio seleccionar origen de recursos'
+                          : 'Elija origen recurso'
+                      }
+                    >
+                      {source_resources.map((option: IList) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              
+              <FormInputFileController
+                xs={11}
+                md={5}
+                control_form={control_vivero}
+                control_name="ruta_archivo_creacion"
+                default_value=""
+                rules={{
+                  required_rule: { rule: true, message: 'Archivo requerido' },
+                }}
+                label="Archivo de soporte"
+                disabled={action !== 'create'}
+                helper_text=""
+                set_value={set_file}
+                hidden_text={action === 'edit'}
+                file_name={file_name}
+                value_file={current_nursery.ruta_archivo_creacion}
+              />
+
+            </Grid>
             {current_nursery.id_viverista_actual !== null &&
               current_nursery.activo === true && <ViveristaActual />}
+
+
             <Grid item xs={12} marginY={2}>
               {current_nursery.vivero_en_cuarentena === true ? (
                 <Chip
