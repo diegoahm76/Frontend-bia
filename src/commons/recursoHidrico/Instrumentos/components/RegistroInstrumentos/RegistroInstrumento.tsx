@@ -179,7 +179,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     formErrors,
     limpiar_formulario,
   } = useRegisterInstrumentoHook();
-  
+
   const { nombre_subseccion, nombre_seccion } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -258,6 +258,11 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   });
 
   useEffect(() => {
+    console.log(tipo_agua_selected, 'tipo_agua_selected');
+  }, [tipo_agua_selected]);
+
+
+  useEffect(() => {
     void fetch_data_cuencas();
     fetch_data_pozo();
   }, []);
@@ -290,6 +295,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
           }}
         >
           <Grid item xs={12}>
+            
             <Typography variant="subtitle1" fontWeight="bold">
               Información del Instrumento:
             </Typography>

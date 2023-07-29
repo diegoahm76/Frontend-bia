@@ -75,7 +75,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
   }, []);
 
   const columns_despacho: GridColDef[] = [
-    { field: 'id_despacho_consumo', headerName: 'ID', width: 20 },
+
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
@@ -99,7 +99,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
     {
       field: 'motivo',
       headerName: 'Motivo',
-      width: 150,
+      width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}

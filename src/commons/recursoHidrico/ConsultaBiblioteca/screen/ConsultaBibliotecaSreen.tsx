@@ -2,6 +2,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Divider,
   Grid,
   IconButton,
@@ -11,7 +12,7 @@ import {
 import { Title } from '../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistIcon from '@mui/icons-material/Checklist';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/contextData';
 import { v4 as uuidv4 } from 'uuid';
 import '../css/styles.css';
@@ -19,6 +20,7 @@ import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton'
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { BusquedaInstrumentos } from '../components/BusquedaInstrumentos';
 import { BusquedaInstrumentosBasica } from '../components/BusquedaInstrumentosBasica';
+import { DialogLaboratorio } from '../components/DialogLaboratorio';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
@@ -46,7 +48,19 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               set_id_seccion(params.row.id_seccion);
               set_nombre_seccion(params.row.nombre);
               set_nombre_subseccion('');
-              set_info_instrumento(undefined);
+              set_info_instrumento({
+                id_instrumento: 0,
+                nombre: '',
+                id_resolucion: 0,
+                fecha_registro: '',
+                fecha_creacion_instrumento: '',
+                fecha_fin_vigencia: '',
+                cod_tipo_agua: '',
+                id_seccion: 0,
+                id_subseccion: 0,
+                id_persona_registra: 0,
+                id_pozo: null,
+              });
             }}
           >
             <Avatar
@@ -171,6 +185,13 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
     fetch_data_anexos,
   } = useContext(DataContext);
 
+  const [is_open_modal_laboratorio, set_is_open_modal_laboratorio] =
+    useState(false);
+
+  const handle_open_laboratorio = (): void => {
+    set_is_open_modal_laboratorio(true);
+  };
+
   useEffect(() => {
     void fetch_data_seccion();
   }, []);
@@ -188,6 +209,12 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
       void fetch_data_anexos();
     }
   }, [id_instrumento]);
+
+  useEffect(() => {
+    if (info_instrumentos) {
+      console.log(info_instrumentos);
+    }
+  }, [info_instrumentos]);
 
   return (
     <>
@@ -370,6 +397,60 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 rowsPerPageOptions={[5]}
               />
             </Grid>
+            {info_instrumentos?.cod_tipo_agua === 'SUP' ? (
+              <>
+                <Grid item xs={12} sm={6} md={3}></Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    onClick={() => {}}
+                  >
+                    Ver Cartera de aforo
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    onClick={() => {
+                      handle_open_laboratorio();
+                    }}
+                  >
+                    Ver resultado de laboratorio
+                  </Button>
+                </Grid>
+              </>
+            ) : null}
+            {info_instrumentos?.cod_tipo_agua === 'SUB' ? (
+              <>
+                <Grid item xs={12} sm={6} md={3}></Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    onClick={() => {}}
+                  >
+                    Prueba de bombeo
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    onClick={() => {
+                      handle_open_laboratorio();
+                    }}
+                  >
+                    Ver resultado de laboratorio
+                  </Button>
+                </Grid>
+              </>
+            ) : null}
           </>
         ) : null}
       </Grid>
@@ -379,6 +460,10 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
           <ButtonSalir />
         </Grid>
       </Grid>
+      <DialogLaboratorio
+        is_modal_active={is_open_modal_laboratorio}
+        set_is_modal_active={set_is_open_modal_laboratorio}
+      />
     </>
   );
 };

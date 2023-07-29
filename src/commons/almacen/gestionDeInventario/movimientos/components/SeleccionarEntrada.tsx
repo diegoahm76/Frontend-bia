@@ -87,7 +87,7 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                             control_name: 'tipo_entrada',
                             default_value: '',
                             rules: {},
-                            label: 'tipo de entrada',
+                            label: 'Tipo de entrada',
                             type: 'text',
                             disabled: true,
                             helper_text: '',
@@ -113,6 +113,21 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                             option_label: "label",
                             option_key: "value"
                         },
+
+                        {
+                            datum_type: 'input_controller',
+                            xs: 12,
+                            md: 3,
+                            control_form: control_entrada_entrega,
+                            control_name: 'numero_entrada_almacen',
+                            default_value: '',
+                            rules: {},
+                            label: 'Número de entrada de almacén',
+                            type: 'number',
+                            disabled: false,
+                            helper_text: '',
+                        },
+
 
 
 

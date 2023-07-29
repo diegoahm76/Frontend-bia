@@ -161,6 +161,7 @@ const ListadoBienesSolicitud = () => {
   };
 
   const select_model = (): void => {
+
     const model: IObjBienesSolicitud | undefined = bienes_solicitud_aux.find(
       (p) => p.id_bien === selected_row[0]
     );

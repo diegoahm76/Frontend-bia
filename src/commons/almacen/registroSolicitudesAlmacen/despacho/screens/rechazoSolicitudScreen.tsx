@@ -1,12 +1,11 @@
-import { useEffect, } from 'react';
+import { useEffect, useState, } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
-import CloseIcon from '@mui/icons-material/Close';
 import { type IObjSolicitud } from "../../solicitudBienConsumo/interfaces/solicitudBienConsumo";
+import SearchIcon from '@mui/icons-material/Search';
 import { type AuthSlice } from '../../../../auth/interfaces';
 import { useForm } from 'react-hook-form';
-
 import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
@@ -16,6 +15,7 @@ import RechazoSolicitud from '../../solicitudBienConsumo/components/DespachoRech
 import { set_current_solicitud, set_persona_solicita } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
 import FuncionarioRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
 import BienRechazado from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/BienesRechazo';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -23,6 +23,8 @@ const RechazoSolicitudScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_despacho, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
     const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
+    const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+    const handle_open_select_model = (): void => { set_open_search_modal(true); };
 
 
 
@@ -95,7 +97,9 @@ const RechazoSolicitudScreen = () => {
                 <SeleccionarSolicitudDespacho
                     title={"INFORMACIÓN DE LA SOLICITUD"}
                     control_solicitud_despacho={control_solicitud_despacho}
-                    get_values={get_values} />
+                    get_values={get_values}
+                    open_modal={open_search_modal}
+                    set_open_modal={set_open_search_modal} />
 
                 <FuncionarioRechazo title={"Persona responsable"}
                     get_values_solicitud={get_values} />
@@ -122,16 +126,19 @@ const RechazoSolicitudScreen = () => {
                         type_button="button" />
                 </Grid>
 
-                <Grid item xs={6} md={2}>
+                <Grid item xs={12} md={2}>
                     <FormButton
                         variant_button="contained"
-                        on_click_function={reset_solicitud_aprobacion}
-                        icon_class={<CloseIcon />}
-                        label="Cerrar"
-                        type_button="button" />
-
-
-
+                        on_click_function={handle_open_select_model}
+                        icon_class={<SearchIcon />}
+                        label={'Buscar solicitud'}
+                        type_button="button"
+                        disabled={false}
+                    />
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <ButtonSalir
+                    />
                 </Grid>
 
             </>

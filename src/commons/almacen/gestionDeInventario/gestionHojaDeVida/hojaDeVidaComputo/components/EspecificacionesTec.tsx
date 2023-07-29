@@ -139,7 +139,7 @@ const EspecificacionesTec = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Memoria RAM",
                             type: "text",
-                            disabled: true,
+                            disabled: false,
                             helper_text: ""
                         },
 
@@ -153,7 +153,7 @@ const EspecificacionesTec = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Tipo de almacenamiento",
                             type: "text",
-                            disabled: true,
+                            disabled: false,
                             helper_text: "Disco Duro, SSD, NVME"
                         },
 
