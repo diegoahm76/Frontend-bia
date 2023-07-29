@@ -48,7 +48,6 @@ export const TrdScreen: FC = (): JSX.Element => {
   const {
     trd_current,
     catalado_series_subseries_unidad_organizacional,
-    catalogo_trd
   } = useAppSelector((state: any) => state.trd_slice);
 
   //! use_trd hook
@@ -346,7 +345,7 @@ export const TrdScreen: FC = (): JSX.Element => {
         ) : null}
 
         {/* CATALOGO TRD */}
-        {catalogo_trd.length > 0 ? (
+        {catalado_series_subseries_unidad_organizacional.length > 0 ? (
           <Grid item xs={12}>
             <CatalogoTRD />
           </Grid>
