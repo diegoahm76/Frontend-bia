@@ -99,3 +99,32 @@ export interface Laboratorio {
     resultado:                    string;
     fecha_analisis:               string;
 }
+
+export interface DataGeneralAforo {
+    id_cartera_aforos: number;
+    fecha_registro:    string;
+    ubicacion_aforo:   string;
+    descripcion:       string;
+    latitud:           string;
+    longitud:          string;
+    fecha_aforo:       string;
+    cod_tipo_aforo:    string;
+    numero_serie:      string;
+    numero_helice:     string;
+    id_instrumento:    number;
+    id_cuenca:         number;
+}
+
+export interface DataCarteraAforo {
+    id_dato_cartera_aforos: number;
+    distancia_a_la_orilla:  string;
+    profundidad:            string;
+    velocidad_superficial:  string;
+    velocidad_profunda:     string;
+    transecto:              string;
+    profundidad_promedio:   string;
+    velocidad_promedio:     string;
+    velocidad_transecto:    string;
+    caudal:                 string;
+    id_cartera_aforos:      number;
+}

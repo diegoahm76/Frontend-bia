@@ -6,6 +6,7 @@ import type {
   BusquedaArchivo,
   BusquedaBasica,
   CuencasInstrumentos,
+  DataGeneralAforo,
   DataGeneralLaboratorio,
   IntrumentosId,
   Laboratorio,
@@ -13,6 +14,7 @@ import type {
   // Resultadolaboratorio,
 } from '../interfaces/interfaces';
 import type { Pozo } from '../../configuraciones/interfaces/interfaces';
+import type { ArchivosCalidadAgua } from '../../Instrumentos/interfaces/interface';
 
 export const search_instrumento = async ({
   nombre_seccion,
@@ -53,6 +55,36 @@ export const get_archivos = async (
     ResponseServer<Archivos[]>
   >(
     `hidrico/bibliotecas/ArchivosInstrumento/get-ArchivosInstrumento-instrumento/${id_instrumento}/`
+  );
+  return response.data.data;
+};
+export const get_archivos_laboratorio = async (
+  id_laboratorio: number
+): Promise<ArchivosCalidadAgua[]> => {
+  const response: AxiosResponse<ResponseServer<ArchivosCalidadAgua[]>> = await api.get<
+    ResponseServer<ArchivosCalidadAgua[]>
+  >(
+    `hidrico/bibliotecas/archivos_instrumento/get-by-resultado_laboratorio/${id_laboratorio}/`
+  );
+  return response.data.data;
+};
+export const get_archivos_cartera = async (
+  id_cartera: number
+): Promise<ArchivosCalidadAgua[]> => {
+  const response: AxiosResponse<ResponseServer<ArchivosCalidadAgua[]>> = await api.get<
+    ResponseServer<ArchivosCalidadAgua[]>
+  >(
+    `hidrico/bibliotecas/archivos_instrumento/get-by-cartera-aforo/${id_cartera}/`
+  );
+  return response.data.data;
+};
+export const get_archivos_prueba_bombeo = async (
+  id_prueba: number
+): Promise<ArchivosCalidadAgua[]> => {
+  const response: AxiosResponse<ResponseServer<ArchivosCalidadAgua[]>> = await api.get<
+    ResponseServer<ArchivosCalidadAgua[]>
+  >(
+    `hidrico/bibliotecas/archivos_instrumento/get-by-prueba_bombeo/${id_prueba}/`
   );
   return response.data.data;
 };
@@ -100,6 +132,15 @@ export const get_data_parametro_id = async (
   const response: AxiosResponse<ResponseServer<ParametrosId[]>> =
     await api.get<ResponseServer<ParametrosId[]>>(
       `hidrico/bibliotecas/parametros_laboratorio/get-id/${id_parametro}/}`
+    );
+  return response.data.data;
+};
+export const get_data_cartera_id = async (
+  id_instrumento: number,
+): Promise<DataGeneralAforo[]> => {
+  const response: AxiosResponse<ResponseServer<DataGeneralAforo[]>> =
+    await api.get<ResponseServer<DataGeneralAforo[]>>(
+      `hidrico/bibliotecas/carteras_aforo/get-by-instrumento/${id_instrumento}/`
     );
   return response.data.data;
 };

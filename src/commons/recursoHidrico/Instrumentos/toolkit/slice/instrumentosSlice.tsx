@@ -37,10 +37,30 @@ const initialState = {
 
   id_resultado_laboratorio: 0,
 
+  info_cartera: {
+    id_cartera_aforos: 0,
+    fecha_registro: '',
+    ubicacion_aforo: '',
+    descripcion: '',
+    latitud: '',
+    longitud: '',
+    fecha_aforo: '',
+    cod_tipo_aforo: '',
+    numero_serie: '',
+    numero_helice: '',
+    id_instrumento: 0,
+    id_cuenca: 0,
+  },
+
   mode: {
     ver: false,
     crear: false,
-    editar : false,
+    editar: false,
+  },
+  mode_carteras: {
+    ver: false,
+    crear: false,
+    editar: false,
   },
 };
 
@@ -87,17 +107,38 @@ export const instrumentos_slice = createSlice({
       state.info_laboratorio.id_cuenca = action.payload.id_cuenca;
       state.info_laboratorio.id_pozo = action.payload.id_pozo;
     },
-    set_currente_id_resultado_laboratorio: (state, action: PayloadAction<number>) => {
+    set_currente_id_resultado_laboratorio: (
+      state,
+      action: PayloadAction<number>
+    ) => {
       state.id_resultado_laboratorio = action.payload;
     },
     set_current_mode: (state, action: PayloadAction<any>) => {
       state.mode.ver = action.payload.ver;
       state.mode.crear = action.payload.crear;
       state.mode.editar = action.payload.editar;
-    }
+    },
+    set_current_mode_cartera: (state, action: PayloadAction<any>) => {
+      state.mode_carteras.ver = action.payload.ver;
+      state.mode_carteras.crear = action.payload.crear;
+      state.mode_carteras.editar = action.payload.editar;
+    },
+    set_current_info_cartera: (state, action: PayloadAction<any>) => {
+      state.info_cartera.id_cartera_aforos = action.payload.id_cartera_aforos;
+      state.info_cartera.fecha_registro = action.payload.fecha_registro;
+      state.info_cartera.ubicacion_aforo = action.payload.ubicacion_aforo;
+      state.info_cartera.descripcion = action.payload.descripcion;
+      state.info_cartera.latitud = action.payload.latitud;
+      state.info_cartera.longitud = action.payload.longitud;
+      state.info_cartera.fecha_aforo = action.payload.fecha_aforo;
+      state.info_cartera.cod_tipo_aforo = action.payload.cod_tipo_aforo;
+      state.info_cartera.numero_serie = action.payload.numero_serie;
+      state.info_cartera.numero_helice = action.payload.numero_helice;
+      state.info_cartera.id_instrumento = action.payload.id_instrumento;
+      state.info_cartera.id_cuenca = action.payload.id_cuenca;
+    },
   },
 });
-
 // {...state, mode: {...state.mode, ver: true}}
 
 export const {
@@ -106,4 +147,6 @@ export const {
   set_current_info_laboratorio,
   set_current_mode,
   set_currente_id_resultado_laboratorio,
+  set_current_mode_cartera,
+  set_current_info_cartera,
 } = instrumentos_slice.actions;

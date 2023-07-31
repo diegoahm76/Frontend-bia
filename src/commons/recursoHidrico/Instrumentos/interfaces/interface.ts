@@ -45,7 +45,7 @@ export interface DataAgregarLaboratorio {
   parametro: string;
   unidad: string;
   metodo: string;
-  fecha_analisis: Date | null;
+  fecha_analisis: string | null;
   resultado: string;
 }
 export interface Aforo {
@@ -59,4 +59,23 @@ export interface Aforo {
   velocidad_promedio: number,
   velocidad_transecto: number,
   caudal: number
+}
+
+export interface CuencasId {
+  id_cuenca:           number;
+  nombre:              string;
+  activo:              boolean;
+  item_ya_usado:       boolean;
+  registro_precargado: boolean;
+} 
+export interface ArchivosCalidadAgua {
+  id_archivo_instrumento:   null | number;
+  cod_tipo_de_archivo:      string;
+  nombre_archivo:           string;
+  ruta_archivo:             string;
+  fecha_cargado:            string;
+  id_instrumento:           number;
+  id_cartera_aforo:         null | number;
+  id_prueba_bombeo:         null | number;
+  id_resultado_laboratorio: number;
 }

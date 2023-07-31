@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import {
@@ -21,6 +21,7 @@ import { type AxiosError } from 'axios';
 import { control_error } from '../../../../../../helpers';
 import { useForm } from 'react-hook-form';
 import {
+  get_cuenca_id,
   get_parametros_laboratorio,
   post_resultado_laboratorio,
 } from '../../../request/request';
@@ -36,6 +37,8 @@ export const use_register_laboratorio_hook = () => {
     id_resultado_laboratorio,
     archivos,
     nombres_archivos,
+    rows_anexos_laboratorio,
+    fetch_data_anexos_laboratorio,
     set_id_resultado_laboratorio,
     set_archivos,
     set_nombres_archivos,
@@ -83,6 +86,7 @@ export const use_register_laboratorio_hook = () => {
   const [tipo_parametro_value, set_tipo_parametro_value] = useState('');
   const [unidad_medida_value, set_unidad_medida_value] = useState('');
   const [parametro_value, set_parametro_value] = useState('');
+  const [parametro_select, set_parametro_select] = useState('');
 
   const handle_date_change = (fieldName: string, value: Dayjs | null): void => {
     switch (fieldName) {
@@ -140,12 +144,37 @@ export const use_register_laboratorio_hook = () => {
   const { id_instrumento: id_instrumento_slice } = useAppSelector(
     (state) => state.instrumentos_slice
   );
-
+  const { info_laboratorio } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
   const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
   const [pozos_selected, set_pozos_selected] = useState<ValueProps[]>([]);
   const [parametros_select, set_parametros_select] = useState<ValueProps[]>([]);
   const [undidad_medida_select, set_undidad_medida_select] = useState('');
+  const [cuenca_laboratorio, set_cuenca_id_laboratorio] = useState<
+    ValueProps[]
+  >([]);
 
+  const fetch_data_cuencas_id = async (): Promise<void> => {
+    try {
+      if (info_laboratorio) {
+        const response = await get_cuenca_id(info_laboratorio?.id_cuenca);
+        if (response?.length > 0) {
+          const data_cuenca = response.map((item: IpropsCuenca) => ({
+            value: item.id_cuenca,
+            label: item.nombre ?? '',
+          }));
+          set_cuenca_id_laboratorio(data_cuenca);
+          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+        }
+      }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
   const fetch_data_cuencas_instrumentos_select = async (): Promise<void> => {
     try {
       if (id_instrumento_slice) {
@@ -362,19 +391,13 @@ export const use_register_laboratorio_hook = () => {
     Laboratorio[]
   >([]);
 
-  const { info_laboratorio } = useAppSelector(
-    (state) => state.instrumentos_slice
-  );
-
-  const [tipo_parametro, set_tipo_parametro] = useState('');
-
   const fetch_data_resultado_laboratorio = async (): Promise<any> => {
     try {
       set_rows_resultado_laboratorio([]);
-      if (info_laboratorio.id_resultado_laboratorio && tipo_parametro) {
+      if (info_laboratorio.id_resultado_laboratorio && parametro_select) {
         const response = await get_data_resulatado_laboratorio_id(
           info_laboratorio.id_resultado_laboratorio,
-          tipo_parametro
+          parametro_select
         );
         set_rows_resultado_laboratorio(response);
         return response;
@@ -383,6 +406,14 @@ export const use_register_laboratorio_hook = () => {
       control_error(err.response.data.detail);
     }
   };
+
+  useEffect(() => {
+    if (info_laboratorio?.id_resultado_laboratorio) {
+      void fetch_data_anexos_laboratorio(
+        info_laboratorio?.id_resultado_laboratorio
+      );
+    }
+  }, [info_laboratorio?.id_resultado_laboratorio]);
 
   return {
     clase_muestra_value,
@@ -433,9 +464,14 @@ export const use_register_laboratorio_hook = () => {
     is_saving,
 
     // * ver resultados de laboratorio
+    parametro_select,
     rows_resultado_laboratorio,
-    tipo_parametro,
-    set_tipo_parametro,
+    cuenca_laboratorio,
+    set_parametro_select,
+    set_cuenca_id_laboratorio,
     fetch_data_resultado_laboratorio,
+    fetch_data_cuencas_id,
+    rows_anexos_laboratorio,
+    fetch_data_anexos_laboratorio,
   };
 };

@@ -4,6 +4,7 @@ import { api } from '../../../../api/axios';
 import { type ResponseServer } from '../../../../interfaces/globalModels';
 import type {
   BusquedaInstrumentos,
+  CuencasId,
   IpropsInstrumentos,
 } from '../interfaces/interface';
 import type {
@@ -11,8 +12,6 @@ import type {
   Pozo,
 } from '../../configuraciones/interfaces/interfaces';
 import dayjs from 'dayjs';
-// import { useAppDispatch } from '../../../../hooks';
-// import { set_currente_id_resultado_laboratorio } from '../toolkit/slice/instrumentosSlice';
 
 export const search_seccion_subseccion = async ({
   nombre_seccion,
@@ -234,3 +233,13 @@ export const post_resultado_aforo = async (
     throw new Error('id_cartera_aforos is missing in the response');
   }
 };
+
+  export const get_cuenca_id = async (
+    id_cuenca: number,
+  ): Promise<CuencasId[]> => {
+    const response: AxiosResponse<ResponseServer<CuencasId[]>> =
+      await api.get<ResponseServer<CuencasId[]>>(
+        `hidrico/bibliotecas/cuencas/get-id/${id_cuenca}/`
+      );
+    return response.data.data;
+  };

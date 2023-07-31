@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import {
   Box,
   Button,
@@ -25,11 +26,13 @@ import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 import { useAppSelector } from '../../../../../hooks';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import { Laboratorio } from '../../../ConsultaBiblioteca/interfaces/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
@@ -70,6 +73,57 @@ export const SeleccionarLaboratorio: React.FC = () => {
       ),
     },
   ];
+  const colums_resultado_laboratorio: GridColDef[] = [
+    {
+      field: 'parametro',
+      headerName: 'PARAMETRO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'unidad',
+      headerName: 'UNIDAD DE MEDIDA',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'metodo',
+      headerName: 'METODO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'fecha_analisis',
+      headerName: 'FECHA DE ANALISIS',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'resultado',
+      headerName: 'RESULTADO',
+      sortable: true,
+      width: 150,
+    },
+  ];
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ANEXO',
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'ARCHIVO',
+      width: 200,
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.value}
+          fileName={params.row.nombre}
+          condition={false}
+        />
+      ),
+    },
+  ];
 
   const {
     // watch_instrumento,
@@ -91,8 +145,11 @@ export const SeleccionarLaboratorio: React.FC = () => {
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
+    parametro_select,
+    set_parametro_select,
 
     // *Autocomplete
+    cuenca_laboratorio,
     cuenca_select,
     pozos_selected,
     parametros_select,
@@ -111,15 +168,39 @@ export const SeleccionarLaboratorio: React.FC = () => {
     onSubmit,
     is_saving,
     reset_laboratorio,
+
+    rows_resultado_laboratorio,
+    fetch_data_resultado_laboratorio,
+    fetch_data_cuencas_id,
+
+    rows_anexos_laboratorio,
+    // fetch_data_anexos_laboratorio,
   } = use_register_laboratorio_hook();
 
   const { instrumentos, info_laboratorio } = useAppSelector(
     (state) => state.instrumentos_slice
   );
+  useEffect(() => {
+    if (info_laboratorio?.id_resultado_laboratorio && parametro_select) {
+      void fetch_data_resultado_laboratorio();
+    }
+    // void fetch_data_laboratorio();
+  }, [info_laboratorio, parametro_select]);
+
+  useEffect(() => {
+    if (info_laboratorio?.id_cuenca) {
+      void fetch_data_cuencas_id();
+    }
+  }, [info_laboratorio?.id_cuenca]);
+
+  useEffect(() => {
+    console.log(cuenca_laboratorio, 'cuenca_laboratorio');
+  }, [cuenca_laboratorio]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('instrumentos', instrumentos);
     if (!instrumentos) {
       console.log('instrumentos', instrumentos);
       navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
@@ -127,6 +208,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
       });
     }
   }, []);
+
   useEffect(() => {
     reset_instrumento({
       nombre: instrumentos.nombre,
@@ -442,23 +524,74 @@ export const SeleccionarLaboratorio: React.FC = () => {
               }
             />
           </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Seleccione un tipo de parametro para consultar los regristros
+              existentes
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Tipo parámetro "
+              select
+              fullWidth
+              size="small"
+              value={parametro_select}
+              margin="dense"
+              disabled={false}
+              name="tipo_parametro"
+              onChange={(e) => {
+                set_parametro_select(e.target.value);
+              }}
+            >
+              {tipo_parametro_choices.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}></Grid>
+
+          {rows_resultado_laboratorio.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Analisis de laboratorio" />
+              </Grid>
+              <Grid item xs={12}>
+                <>
+                  <DataGrid
+                    autoHeight
+                    rows={rows_resultado_laboratorio}
+                    columns={colums_resultado_laboratorio}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </>
+              </Grid>
+            </>
+          )}
+
           {instrumentos.cod_tipo_agua === 'SUP' ? (
             <>
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="id_cuenca"
                   control={control_registro_laboratorio}
-                  defaultValue=""
+                  defaultValue={cuenca_laboratorio[0]?.value?.toString() || ''}
                   rules={{ required: true }}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      label="Seleccione una cuenca"
+                      label="Cuenca"
                       select
                       size="small"
                       margin="dense"
-                      disabled={false}
+                      disabled={cuenca_laboratorio.length <= 1} // disable if there is only one option or none
                       fullWidth
+                      value={cuenca_laboratorio[0]?.value || ''}
                       required
                       error={!!formErrors_laboratorio.id_cuenca}
                       helperText={
@@ -466,7 +599,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                           'required' && 'Este campo es obligatorio'
                       }
                     >
-                      {cuenca_select.map((option) => (
+                      {cuenca_laboratorio.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
@@ -680,6 +813,21 @@ export const SeleccionarLaboratorio: React.FC = () => {
               </Grid>
             </>
           )}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Anexos asociados al resultado de laboratorio:
+            </Typography>
+            <Divider />
+            <DataGrid
+              autoHeight
+              rows={rows_anexos_laboratorio}
+              columns={columns_anexos}
+              getRowId={(row) => uuidv4()}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}></Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
