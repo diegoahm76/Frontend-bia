@@ -18,7 +18,7 @@ const routes = [
   { path: '/administracion_usuarios', element: <AdministracionPersonasScreen /> },
   { path: '/delegacion_superusuario', element: <DelegacionSuperuserScreen /> },
   { path: '/sucursal_entidad', element: <Sucursal /> },
-  { path: '/configuracionentidad', element: <ConfiguracionEntidad /> },
+  { path: '/configuracion_entidad', element: <ConfiguracionEntidad /> },
 
 ];
 export const SeguridadRoutes: React.FC = () => {

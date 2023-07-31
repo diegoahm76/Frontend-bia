@@ -23,14 +23,16 @@ interface ModalEditarCargoProps {
 export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod, onClick }) => {
 
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const handleGuardarYPoner = ():void => {
-         setVisible(false)
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const handleGuardarYPoner = (): void => {
+        setVisible(false)
         onClick();
+        setValue("");
+        set_persona(undefined);
     };
 
- 
- 
+
+
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [visible, setVisible] = React.useState<boolean>(false);
 
@@ -38,7 +40,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         <div>
             <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { handleGuardarYPoner() }} >Salir</Button>
             <Button style={{ margin: 3 }} type="submit" variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
-  
+
         </div>
     );
 
@@ -60,7 +62,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         segundo_apellido: string;
 
     }
-  
+
     const [persona, set_persona] = useState<Persona | undefined>();
 
     const on_result = async (info_persona: Persona): Promise<void> => {
@@ -121,7 +123,8 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [value, setValue] = useState<string>("");
-   
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
 
 
     const codigo = cod;
@@ -129,7 +132,12 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     const handleChangeEmail = (): void => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         let updatedDataEntidad: ISucursalEmpresa = { ...dataEntidad };
-
+        if (value === "") {
+            // alert("Ingrese un valor");
+            setEmailMismatch(true);
+            return;
+        }
+        setEmailMismatch(false);
         switch (codigo) {
             case 1:
                 updatedDataEntidad = {
@@ -137,7 +145,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                     id_persona_director_actual: id_personaa,
                     observaciones_de_cambio_director: value,
                 };
-                
+
                 break;
 
             case 2:
@@ -146,7 +154,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                     id_persona_coord_almacen_actual: id_personaa,
                     observaciones_de_cambio_coord_almacen: value,
                 };
-              
+
                 break;
 
             case 4:
@@ -155,7 +163,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                     id_persona_coord_viveros_actual: id_personaa,
                     observaciones_de_cambio_coord_viveros: value,
                 };
-               
+
                 break;
 
             case 3:
@@ -164,7 +172,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                     id_persona_respon_transporte_actual: id_personaa,
                     observaciones_de_cambio_respon_transporte: value,
                 };
-               
+
                 break;
 
             case 5:
@@ -173,11 +181,11 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                     id_persona_almacenista: id_personaa,
                     observaciones_de_cambio_almacenista: value,
                 };
-             
+
                 break;
 
             default:
-                
+
                 break;
         }
 
@@ -199,7 +207,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                 control_success("Cargo actualizado correctamente");
             })
             .catch((error: any) => {
-              
+
                 control_error(error.response.data.detail);
             });
     };
@@ -295,6 +303,8 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                             id="description"
                             value={value}
                             onChange={(e: any): void => { setValue(e.target.value) }}
+                            error={emailMismatch}
+                            helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
                         />
 
                     </Grid>

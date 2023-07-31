@@ -1,9 +1,10 @@
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid, Button, ButtonGroup } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from "react";
 import { api } from "../../../../../../api/axios";
 import type { ItablaUnidades } from "../../interfaces/interfacesConEntidad";
+import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
 
 
 
@@ -51,6 +52,9 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
         >
             <Grid item xs={12}>
                 <Title title="Lideres de Unidades Organizacionales" />
+                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }} >
+                    {download_xls({ nurseries: data_lideres, columns })}
+                </ButtonGroup>
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <DataGrid
                         density="compact"
