@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid } from "@mui/material";
 import { useState, type ReactNode } from "react";
 import AddIcon from '@mui/icons-material/Add';
@@ -9,8 +10,6 @@ interface IProps {
 
   children: ReactNode;
 }
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
 
 export const CollapsibleButton = ({ categoria, children }: IProps): JSX.Element => {
 

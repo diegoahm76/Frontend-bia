@@ -1,110 +1,203 @@
-import { useState, type FC, } from 'react';
-import { Grid } from '@mui/material';
-import { control_error } from './utils/control_error_or_success';
-import { SucursalDirecciones } from './SucursalDirecciones';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { Grid, IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState, type FC } from 'react';
+import { api } from '../../../../api/axios';
+import { SucursalActuaizar } from './SucursalActuaizar';
+import Swal from 'sweetalert2';
 import { SucursalEntidad } from './SucursalEntidad';
-import { SucursalTabla } from './SucursalTabla';
 
-const columns = [
-    { field: 'id', headerName: 'Nro Sucursal', width: 150, flex: 1 },
-    { field: 'nombre', headerName: 'descripcin', width: 120, flex: 1 },
-    { field: 'principal', headerName: 'Principal', width: 120, flex: 1 },
-];
-
-
-const rows = [
-    { id: 1, principal: 'Sí', nombre: 'miguel' },
-    // Agrega más filas según sea necesario
-];
-
+export interface ISucursalEmpresa {
+  id_sucursal_empresa: number;
+  numero_sucursal: number;
+  descripcion_sucursal: string;
+  direccion: string;
+  direccion_sucursal_georeferenciada: string | null;
+  municipio: string | null;
+  pais_sucursal_exterior: string | null;
+  direccion_notificacion: string;
+  direccion_notificacion_referencia: string | null;
+  municipio_notificacion: string | null;
+  email_sucursal: string;
+  telefono_sucursal: string;
+  es_principal: boolean;
+  activo: boolean;
+  item_ya_usado: boolean;
+  id_persona_empresa: number;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Sucursal: FC = () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+  const initial_data: ISucursalEmpresa[] = [];
+  const [selected_id, setselected_id] = useState<number | null>(null);
+  const [data_entidad, setdata_entidad] = useState<ISucursalEmpresa[]>(initial_data);
 
+  const fetchand_update_data = async (): Promise<void> => {
+    try {
+      const url = "/transversal/sucursales/sucursales-empresa-lista/3";
+      const res = await api.get(url);
+      const sucursales_data = res.data.data;
+      setdata_entidad(sucursales_data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const [nueva_sucursal, setnueva_sucursal] = useState('');
-    const [nombrenuebo, setnombrenuebo] = useState('');
+  useEffect(() => {
+    fetchand_update_data().catch((error) => {
+      console.error(error);
+    });
 
-    const [data_rows, set_data_rows] = useState(rows);
+    const interval = setInterval(() => {
+      fetchand_update_data().catch((error) => {
+        console.error(error);
+      });
+    }, 30);
 
+    return () => { clearInterval(interval) };
+  }, []);
 
-    const agregar_sucursal = (): void => {
-        const nueva_sucursal_obj = {
-            id: data_rows.length + 1,
-            principal: nueva_sucursal,
-            nombre: nombrenuebo,
-        };
+  const fetch_dataget = async (): Promise<void> => {
+    try {
+      const url = "/transversal/sucursales/sucursales-empresa-lista/3";
+      const res = await api.get(url);
+      const sucursales_data = res.data.data;
+      setdata_entidad(sucursales_data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-        const nuevas_filas = [...data_rows, nueva_sucursal_obj];
-        set_data_rows(nuevas_filas);
-        setnueva_sucursal('');
-        setnombrenuebo('');
-    };
+  useEffect(() => {
+    fetch_dataget().catch((error) => {
+      console.error(error);
+    });
+  }, []);
 
-    const [email, set_email] = useState('');
-    const [confirm_email, set_confirm_email] = useState('');
-    const [, set_error] = useState<any>('');
+  const handle_delete_sucursal = (id: number): void => {
+    const sucursaltodelete = data_entidad.find((sucursal) => sucursal.id_sucursal_empresa === id);
+    const item_ya_usado = sucursaltodelete?.item_ya_usado ?? false;
+    if (item_ya_usado) {
+      void Swal.fire({
+        title: 'No se puede eliminar',
+        text: 'Este item ya ha sido utilizado y no puede ser eliminado.',
+        icon: 'info',
+        confirmButtonText: 'Ok',
+        confirmButtonColor: '#042F4A',
+        customClass: {
+          container: 'my-swal',
+        },
+      }); 
+      return;
+    }
 
-    const handle_email_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        set_email(event.target.value);
-    };
+    void Swal.fire({
+      title: '¿Está seguro de eliminar esta sucursal?',
+      showDenyButton: true,
+      confirmButtonText: `Sí`,
+      denyButtonText: `No`,
+      confirmButtonColor: '#042F4A',
+      cancelButtonColor: '#DE1616',
+      icon: 'question',
+      customClass: {
+        container: 'my-swal',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
+          .then((res) => {
+            void fetch_dataget();
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else if (result.isDenied) {
+        void Swal.fire({
+          title: 'La sucursal no se ha eliminado',
+          icon: 'info',
+          confirmButtonText: 'Ok',
+          confirmButtonColor: '#042F4A',
+          customClass: {
+            container: 'my-swal',
+          },
+        });
+      }
+    });
+  };
 
-    const handle_confirm_email_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        set_confirm_email(event.target.value);
-    };
+  const columns = [
+    { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
+    { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
+    { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
+    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
+    { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
 
-    const handle_submit = (): void => {
-        if (email === confirm_email) {
-            set_error('');
-        } else {
-            set_error(control_error('Los Emails  no coinciden'));
-        }
-    };
-
-
-    // Establece la dirección generada en el generador de direcciones
-
-    return (
+    {
+      field: "accion",
+      headerName: "Acción",
+      width: 150,
+      flex: 1,
+      renderCell: (params: any) => (
         <>
-            < >
-
-            </>
-            <Grid
-                container
-                spacing={2}
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px', mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                    marginTop: '20px',
-                    marginLeft: '-5px',
-                }}
-            >
-
-                {/* sucursal entidad ///////////////////// */}
-                <SucursalEntidad />
-
-                {/*  direcciones      //////////////////// */}
-                <SucursalDirecciones />
-
-                {/* tabla SUCURSAL         ///////////////////// */}
-                <SucursalTabla
-                    email={email}
-                    handle_email_change={handle_email_change}
-                    nombrenuebo={nombrenuebo}
-                    setnombrenuebo={setnombrenuebo}
-                    confirm_email={confirm_email}
-                    handle_confirm_email_change={handle_confirm_email_change}
-                    nueva_sucursal={nueva_sucursal}
-                    handle_submit={handle_submit}
-                    data_rows={data_rows}
-                    columns={columns}
-                    agregar_sucursal={agregar_sucursal}
-                    setnueva_sucursal={setnueva_sucursal}
-                />
-            </Grid>
+          <IconButton
+            color="primary"
+            aria-label="Editar"
+            onClick={() => {
+              setselected_id(params.row.id_sucursal_empresa);
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            color="primary"
+            aria-label="Eliminar"
+            onClick={() => {
+              handle_delete_sucursal(params.row.id_sucursal_empresa);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
         </>
-    );
-}
+      ),
+    },
+  ];
+
+  const max_numero_sucursal = Math.max(...data_entidad.map((sucursal) => sucursal.numero_sucursal));
+  const siguiente_numeros_sucursal = max_numero_sucursal + 1;
+
+  return (
+    <>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          marginTop: '20px',
+          marginLeft: '-5px',
+        }}
+      >
+        {/* sucursal entidad */}
+        <SucursalEntidad />
+
+        <SucursalActuaizar selected_id={selected_id} siguiente_numeros_sucursal={siguiente_numeros_sucursal} />
+
+        <Grid item xs={12}>
+          <DataGrid
+            density="compact"
+            autoHeight
+            columns={columns}
+            rows={data_entidad}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowId={(row) => row.id_sucursal_empresa}
+          />
+        </Grid>
+      </Grid>
+    </>
+  );
+};

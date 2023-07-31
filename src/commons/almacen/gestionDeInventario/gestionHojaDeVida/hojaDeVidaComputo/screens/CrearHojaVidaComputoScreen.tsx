@@ -14,6 +14,7 @@ import Especificaciones from '../components/EspecificacionesFisc';
 import EspecificacionesTec from '../components/EspecificacionesTec';
 import Caracteristicas from '../components/Caracteristicas';
 import FormButton from '../../../../../../components/partials/form/FormButton';
+import { Title } from '../../../../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
@@ -88,20 +89,26 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+
+        <h1>Hoja de vida computadores </h1>
+        <Grid item xs={12} md={12} marginTop={-2}>
+          <Title title={''}></Title>
+        </Grid>
+
         <SeleccionarComputer />
 
         <Especificaciones
           control_computo={control_cv_computo}
           get_values={get_values}
-          title="ESPECIFICACIONES FÍSICAS" />
+          title="Especificaciones físicas" />
         <EspecificacionesTec
           control_computo={control_cv_computo}
           get_values={get_values}
-          title="ESPECIFICACIONES TECNICAS" />
+          title="Especificaciones técnicas" />
         <Caracteristicas
           control_computo={control_cv_computo}
           get_values={get_values}
-          title="CARACTERISTÍCAS" />
+          title="Características" />
 
 
         <Grid
