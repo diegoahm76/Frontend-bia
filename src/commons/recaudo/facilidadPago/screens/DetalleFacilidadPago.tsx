@@ -36,7 +36,10 @@ export const DetalleFacilidadPago: React.FC = () => {
           >
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Title title={estado !== 'Cancelada/Anulada' ? `Detalle de la Facilidad de Pago ${'#2121231'}` : `Facilidad de Pago Cancelada o Bloqueada ${'#2121231'}`} />
+                  <Title title={estado !== 'Cancelada/Anulada' ?
+                    `Detalle de la Facilidad de Pago ${'#2121231'}` :
+                    `Facilidad de Pago Cancelada o Bloqueada ${'#2121231'}`}
+                  />
                 </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField

@@ -1,0 +1,43 @@
+colums to catalogo TRD
+
+ {
+   "id_catserie_unidadorg": 4,
+   "nombre_unidad": "Unidad 2",
+   "cod_unidad_org": 843,
+   "nombre_serie": "Serie 1",
+   "cod_serie": "1",
+   "nombre_subserie": "Subserie 1 - Serie 1 - CCD Prueba 4",
+   "cod_subserie": "1",
+   "disposicion_final": "C",
+   "digitalizacion_dis_final": true,
+   "tiempo_retencion_ag": 1,
+   "tiempo_retencion_ac": 2,
+   "descripcion_procedimiento": "PRUEBA ACTIVACION 2",
+   "fecha_registro": "2023-05-29T16:06:01.189093",
+   "justificacion_cambio": null,
+   "ruta_archivo_cambio": null,
+   "id_trd": 12,
+   "id_cat_serie_und": 12,
+   "cod_disposicion_final": "C"
+  },
+
+colums to catalogo TCA
+
+{
+     "id_cat_serie_unidad_org_ccd_trd_tca": 3,
+    "id_unidad_organizacional": 831,
+    "nombre_unidad": "unidad 3.0",
+    "cod_unidad_org": "3.0",
+    "id_serie_doc": 59,
+    "nombre_serie": "Serie 2",
+    "cod_serie": "2",
+    "id_subserie": 5,
+    "nombre_subserie": "Subserie 1 - Serie 2 - CCD Prueba",
+    "cod_subserie": "1",
+    "cod_clas_expediente": "P",
+    "fecha_registro": "2023-05-24T21:04:26.828799",
+    "justificacion_cambio": null,
+    "ruta_archivo_cambio": null,
+    "id_tca": 10,
+    "id_cat_serie_und_ccd_trd": 2
+},

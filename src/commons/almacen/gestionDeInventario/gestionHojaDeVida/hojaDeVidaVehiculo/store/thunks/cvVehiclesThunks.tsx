@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import { get_cv_vehicle, set_vehicles, get_marks } from '../../store/slices/indexCvVehiculo';
+import { set_cv_vehicle, set_vehicles, get_marks, set_current_cv_vehicle } from '../../store/slices/indexCvVehiculo';
 import { type Dispatch } from 'react';
 
 
@@ -64,13 +64,13 @@ export const get_vehicles_all_service: any = () => {
   };
 };
 
-// Obtener Hoja de Vida PC
+// Obtener Hoja de Vida 
 export const get_cv_vehicle_service: (id: any) => any = (id: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const { data } = await api.get(`almacen/hoja-de-vida/vehiculos/get-by-id-bien/${id}/`);
-      dispatch(get_cv_vehicle(data.Elementos));
+      dispatch(set_cv_vehicle(data.Elementos));
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -80,13 +80,63 @@ export const get_cv_vehicle_service: (id: any) => any = (id: any) => {
 };
 
 
-// Crear Hoja de Vida PC
+// Crear Hoja de Vida 
 export const create_cv_vehicles_service: any = (formdata: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post('almacen/hoja-de-vida/vehiculos/create/', formdata);
       control_success('La hoja de vida se creo correctamente');
       dispatch(get_vehicles_all_service());
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener Hoja de Vida PC
+
+export const get_cv_vehicle_id = (id: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`almacen/hoja-de-vida/vehiculos/get-by-id-bien/${id}/`);
+      console.log(data)
+      if (data.success === true) {
+        dispatch(set_current_cv_vehicle(data.data));
+
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// Eliminar Hoja de Vida
+export const delete_cv_vehicle_service: any = (id: string) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(`/almacen/hoja-de-vida/vehiculos/delete//${id}/`);
+      control_success('La hoja de vida se eliminó correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Actualizar Hoja de Vida 
+export const update_cv_vehicle_service: any = (id: string | number, hoja_vida: any) => {
+  return async (dispatch: Dispatch<any>) => {
+
+    try {
+      const { data } = await api.put(`almacen/hoja-de-vida/vehiculos/update/${id}/`, hoja_vida);
+      control_success('La hoja de vida se actualizó correctamente');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

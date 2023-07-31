@@ -7,6 +7,7 @@ import {
   Grid,
   MenuItem,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -24,6 +25,13 @@ import { DataContext } from '../../context/contextData';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { useAppDispatch } from '../../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
+import {
+  set_current_info_laboratorio,
+  set_current_mode,
+} from '../../toolkit/slice/instrumentosSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
@@ -103,39 +111,73 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       ),
     },
   ];
-  const columns_laboratorio: GridColDef[] = [
-    // ...columns_result_lab,
+  const colums_laboratorio: GridColDef[] = [
+    {
+      field: 'lugar_muestra',
+      headerName: 'LUGAR DE MUESTRA',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'fecha_registro',
+      headerName: 'FECHA DE REGISTRO',
+      sortable: true,
+      width: 300,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                        onClick={() => {
-                          set_id_seccion(params.row.id_seccion);
-                          set_info_seccion(params.row);
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                          }}
-                          variant="rounded"
-                        >
-                          <ChecklistIcon
-                            titleAccess="Seleccionar Sección"
-                            sx={{
-                              color: 'primary.main',
-                              width: '18px',
-                              height: '18px',
-                            }}
-                          />
-                        </Avatar>
-                      </IconButton> */}
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_current_mode({
+                    ver: true,
+                    crear: false,
+                    editar: false,
+                  })
+                );
+                navigate(
+                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                  {
+                    replace: true,
+                  }
+                );
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar Registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_current_mode({
+                    ver: false,
+                    crear: false,
+                    editar: true,
+                  })
+                );
+                navigate(
+                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                  {
+                    replace: true,
+                  }
+                );
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
@@ -187,7 +229,6 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     tipo_agua_selected,
     row_cartera_aforo,
     row_prueba_bombeo,
-    row_result_laboratorio,
     set_fecha_creacion,
     set_fecha_vigencia,
     handle_date_change,
@@ -206,6 +247,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     // info_instrumentos,
     info_busqueda_instrumentos,
     rows_cuencas_instrumentos,
+    rows_laboratorio,
     rows_anexos,
     id_instrumento,
     rows_edit_pozo,
@@ -213,16 +255,18 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     fetch_data_instrumento,
     fetch_data_anexos,
     fetch_data_pozo_id,
+    fetch_data_laboratorio,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (id_instrumento) {
       void fetch_data_cuencas_instrumentos();
       void fetch_data_instrumento();
       void fetch_data_anexos();
+      void fetch_data_laboratorio();
     }
   }, [id_instrumento]);
 
@@ -543,6 +587,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                     variant="outlined"
                     color="primary"
                     onClick={() => {
+                      dispatch(
+                        set_current_mode({
+                          ver: false,
+                          crear: true,
+                          editar: false,
+                        })
+                      );
                       navigate(
                         '/app/recurso_hidrico/instrumentos/cartera_aforo',
                         {
@@ -606,13 +657,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
             </Typography>
             <Divider />
           </Grid>
-          {row_result_laboratorio.length > 0 && (
+          {rows_laboratorio.length > 0 && (
             <>
               <Grid item xs={12}>
                 <DataGrid
                   autoHeight
-                  rows={row_result_laboratorio}
-                  columns={columns_laboratorio}
+                  rows={rows_laboratorio}
+                  columns={colums_laboratorio}
                   getRowId={(row) => uuidv4()}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
@@ -627,6 +678,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 color="primary"
                 type="submit"
                 onClick={() => {
+                  dispatch(
+                    set_current_mode({
+                      ver: false,
+                      crear: true,
+                      editar: false,
+                    })
+                  );
                   navigate(
                     '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
                     {

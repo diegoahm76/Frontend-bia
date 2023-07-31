@@ -397,6 +397,8 @@ export const EditarOrganigrama = ({
                         {...field}
                         value={field.value}
                         onChange={(option: SingleValue<any>) => {
+                          console.log(option);
+                          console.log('value', field.value);
                           set_value_unidades('tipo_unidad', option);
                         }}
                         options={options_tipo_unidad.map((item) =>

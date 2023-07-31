@@ -20,11 +20,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   const [action, set_action] = useState<string>("guardar");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const { current_cv_computer } = useAppSelector(
-    (state) => state.cv
-  );
-
+  const { current_cv_computer } = useAppSelector((state) => state.cv);
   const { control: control_cv_computo, handleSubmit: handle_submit, reset: reset_cv_computer, getValues: get_values } = useForm<FormValues>();
 
   useEffect(() => {
@@ -64,13 +60,9 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
       void dispatch(create_cv_computers_service(form_data, navigate));
     } else {
       void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
-
     }
-
-
   };
   const delete_hoja_vida = (): void => {
-
     if (current_cv_computer.id_hoja_de_vida !== null && current_cv_computer.id_hoja_de_vida !== undefined) {
       void dispatch(delete_cv_computers_service(current_cv_computer.id_hoja_de_vida));
     }

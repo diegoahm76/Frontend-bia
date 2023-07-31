@@ -7,25 +7,31 @@ import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
-import type { IObjBienEntrega, IObjBienesEntrada } from '../interfaces/entregas';
-import { initial_state_bien_entrega, set_bienes_entrada, set_bienes_entrega, set_current_bien_entrega, } from '../store/slice/indexEntrega';
-import { get_bien_code_service } from '../store/thunks/entregaThunks';
-
-;
+import type { IObjBien, IObjBienEntrega } from '../interfaces/entregas';
+import {
+    initial_state_current_bien,
+    set_bienes,
+    set_bienes_entrada,
+    set_bienes_entrega,
+    set_current_bien,
+} from '../store/slice/indexEntrega';
+import {
+    control_error,
+    get_bien_code_service,
+} from '../store/thunks/entregaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBienEntrega = () => {
     const {
         control: control_bien,
         reset: reset_bien,
-
-    } = useForm<IObjBienesEntrada>();
+        getValues: get_values_bien,
+    } = useForm<IObjBien>();
     const {
         control: control_entrega,
-        // handleSubmit: handle_submit_despacho,
-
+        handleSubmit: handle_submit_entrega,
+        reset: reset_entrega,
     } = useForm<IObjBienEntrega>();
-
 
     const [bienes_aux, set_bienes_aux] = useState<any>([]);
     const [select_model_is_active, set_select_model_is_active] =
@@ -33,22 +39,23 @@ const SeleccionarBienEntrega = () => {
     const [action, set_action] = useState<string>('agregar');
     const [aux_insumos, set_aux_insumos] = useState<IObjBienEntrega[]>([]);
 
+    const dispatch = useAppDispatch();
+
     const {
         current_bien,
         bienes,
-
-    } = useAppSelector((state) => state.despacho);
-    const dispatch = useAppDispatch();
-
-    const { current_bien_entrega, bien_selected, bienes_entrega, current_entrega, } = useAppSelector((state) => state.entrega_otros);
+        bien_selected,
+        bienes_entrega,
+        current_entrega,
+        current_entrada,
+    } = useAppSelector((state) => state.entrega_otros);
 
     // tabla de bienes solicitud de consumo
     const columns_bienes: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
-            width: 200,
+            headerName: 'Código',
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -58,7 +65,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -68,7 +75,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'bodega',
             headerName: 'Bodega',
-            width: 200,
+            width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -79,7 +86,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'cantidad_disponible',
             headerName: 'Cantidad disponible',
-            width: 150,
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -90,7 +97,6 @@ const SeleccionarBienEntrega = () => {
 
     // tabla de bienes solicitud de consumo vivero
     const columns_bienes_despacho: GridColDef[] = [
-
         {
             field: 'codigo_bien',
             headerName: 'Codigo',
@@ -102,7 +108,7 @@ const SeleccionarBienEntrega = () => {
             ),
         },
         {
-            field: 'nombre_bien_despacho',
+            field: 'nombre_bien',
             headerName: 'Nombre',
             width: 150,
             renderCell: (params) => (
@@ -151,9 +157,9 @@ const SeleccionarBienEntrega = () => {
                 <>
                     <Tooltip title="Borrar">
                         <IconButton
-                        //   onClick={() => {
-                        //     delete_bien_despacho(params.row);
-                        //   }}
+                            onClick={() => {
+                                delete_bien_entrega(params.row);
+                            }}
                         >
                             <Avatar
                                 sx={{
@@ -177,27 +183,23 @@ const SeleccionarBienEntrega = () => {
 
     const search_bien: any = async () => {
         try {
-
             const fecha = new Date(
                 current_entrega.fecha_despacho ?? ''
             ).toISOString();
             const data = await dispatch(
                 get_bien_code_service(
                     bien_selected.codigo_bien ?? '',
-                    fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
+                    fecha.slice(0, 10) + ' ' + fecha.slice(11, 19)
                 )
             );
-            console.log("cjdjb");
             set_bienes_aux(data);
         } catch (error) {
             console.error(error);
         }
     };
 
-
-
-
     useEffect(() => {
+        console.log(bienes_aux);
         if ('success' in bienes_aux) {
             if (bienes_aux.success === true) {
                 if ('data' in bienes_aux) {
@@ -210,24 +212,23 @@ const SeleccionarBienEntrega = () => {
     }, [bienes_aux]);
 
     useEffect(() => {
-        reset_bien(current_bien_entrega);
+        reset_bien(current_bien);
         set_action('agregar');
-    }, [current_bien_entrega]);
+    }, [current_bien]);
 
     useEffect(() => {
-        if (current_bien_entrega.id_bien === null) {
-            reset_bien(current_bien_entrega);
+        if (current_bien.id_bien === null) {
+            reset_bien(current_bien);
         }
     }, [current_entrega]);
 
     useEffect(() => {
-        console.log("hshs")
+        console.log('hshs');
         if (bien_selected.id_bien !== null) {
             console.log(bien_selected);
-            dispatch(set_current_bien_entrega(initial_state_bien_entrega));
+            dispatch(set_current_bien(initial_state_current_bien));
             search_bien();
         }
-        console.log(bien_selected)
     }, [bien_selected]);
 
     useEffect(() => {
@@ -238,123 +239,155 @@ const SeleccionarBienEntrega = () => {
         dispatch(set_bienes_entrega(aux_insumos));
     }, [aux_insumos]);
 
-    // const on_submit_despacho = (data: IObjBienDespacho): void => {
-    //     if (current_bien.id_bien !== null) {
-    //         if (get_values_bien('codigo_bien') === current_bien.codigo_bien) {
-    //             const bien: IObjBienDespacho | undefined = aux_insumos.find(
-    //                 (p) =>
-    //                     p.id_bien_solicitado === current_bien.id_bien &&
-    //                     p.id_bodega === current_bien.id_bodega
-    //             );
-    //             let asignada = 0;
+    const on_submit_entrega = (data: IObjBienEntrega): void => {
+        if (current_bien.id_bien !== null) {
+            if (get_values_bien('codigo_bien') === current_bien.codigo_bien) {
+                const bien: IObjBienEntrega | undefined = aux_insumos.find(
+                    (p) =>
+                        p.id_bien_despachado === current_bien.id_bien &&
+                        p.id_bodega === current_bien.id_bodega
+                );
+                let asignada = 0;
 
-    //             aux_insumos.forEach((option) => {
-    //                 if (option.id_bien_solicitado === bien?.id_bien_solicitado) {
-    //                     asignada = asignada + (option.cantidad_despachada ?? 0);
-    //                 }
-    //             });
-    //             asignada = asignada + Number(data.cantidad_despachada ?? 0);
+                aux_insumos.forEach((option) => {
+                    if (option.id_bien_despachado === bien?.id_bien_despachado) {
+                        asignada = asignada + (option.cantidad_despachada ?? 0);
+                    }
+                });
+                asignada = asignada + Number(data.cantidad_despachada ?? 0);
 
-    //             if (
-    //                 (data.cantidad_despachada ?? 0) <=
-    //                 (current_bien.cantidad_disponible ?? 0)
-    //             ) {
-    //                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    //                 console.log(asignada, bien_selected.cantidad);
-    //                 if (asignada <= (bien_selected.cantidad ?? 0)) {
-    //                     const new_bien: IObjBienDespacho = {
-    //                         id_inventario: current_bien.id_inventario ?? null,
-    //                         id_item_despacho_consumo: data.id_item_despacho_consumo ?? null,
-    //                         id_bien_despachado: current_bien.id_bien ?? null,
-    //                         id_bien_solicitado: current_bien.id_bien ?? null,
-    //                         id_bodega: current_bien.id_bodega ?? null,
-    //                         cantidad_despachada: Number(data.cantidad_despachada),
-    //                         cantidad_solicitada: Number(bien_selected.cantidad),
-    //                         nombre_bien_despacho: current_bien.nombre,
-    //                         codigo_bien: current_bien.codigo_bien,
-    //                         observacion: data.observacion,
-    //                         unidad_medida: current_bien.unidad_medida ?? null,
-    //                         id_unidad_medida_solicitada:
-    //                             bien_selected.id_unidad_medida ?? null,
-    //                         bodega: current_bien.bodega ?? null,
-    //                         id_entrada_bien: current_bien.id_entrada_bien ?? null,
-    //                     };
-    //                     console.log(new_bien);
-    //                     if (bien === undefined) {
-    //                         set_aux_insumos([...aux_insumos, new_bien]);
-    //                         const restante =
-    //                             (current_bien.cantidad_disponible ?? 0) -
-    //                             (new_bien.cantidad_despachada ?? 0);
-    //                         dispatch(
-    //                             set_current_bien({
-    //                                 ...current_bien,
-    //                                 cantidad_disponible: restante,
-    //                             })
-    //                         );
-    //                         reset_despacho({
-    //                             id_bien_solicitado: current_bien?.id_bien,
-    //                             cantidad_despachada: null,
-    //                             observacion: null,
-    //                         });
-    //                     } else {
-    //                         if (action === 'editar') {
-    //                             const aux_items: IObjBienDespacho[] = [];
-    //                             aux_insumos.forEach((option) => {
-    //                                 if (option.id_bien_solicitado === current_bien.id_bien) {
-    //                                     aux_items.push(new_bien);
-    //                                 } else {
-    //                                     aux_items.push(option);
-    //                                 }
-    //                             });
-    //                             set_aux_insumos(aux_items);
-    //                             const restante =
-    //                                 (current_bien.cantidad_disponible ?? 0) -
-    //                                 (new_bien.cantidad_despachada ?? 0);
-    //                             dispatch(
-    //                                 set_current_bien({
-    //                                     ...current_bien,
-    //                                     cantidad_disponible: restante,
-    //                                 })
-    //                             );
-    //                             reset_despacho({
-    //                                 id_bien_solicitado: current_bien?.id_bien,
-    //                                 cantidad_despachada: null,
-    //                                 observacion: null,
-    //                             });
-    //                             set_action('agregar');
-    //                         } else {
-    //                             control_error('El bien ya fue agregado');
-    //                         }
-    //                     }
-    //                 } else {
-    //                     control_error(
-    //                         'La cantidad asignada debe ser maximo ' +
-    //                         String(bien_selected.cantidad)
-    //                     );
-    //                 }
-    //             } else {
-    //                 control_error(
-    //                     'La cantidad asignada debe ser maximo ' +
-    //                     String(current_bien.cantidad_disponible)
-    //                 );
-    //             }
-    //         } else {
-    //             control_error('Codigo de bien no coincide con el seleccionado');
-    //         }
-    //     } else {
-    //         control_error('Debe seleccionar el bien');
-    //     }
-    // };
+                if (
+                    (data.cantidad_despachada ?? 0) <=
+                    (current_bien.cantidad_disponible ?? 0)
+                ) {
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                    console.log(asignada, bien_selected.cantidad_disponible);
+                    if (asignada <= (bien_selected.cantidad_disponible ?? 0)) {
+                        const new_bien: IObjBienEntrega = {
+                            id_item_despacho_consumo: data.id_item_despacho_consumo ?? null,
+                            id_entrada_almacen_bien:
+                                current_entrada.id_entrada_almacen ?? null,
+                            id_bien_despachado: current_bien.id_bien ?? null,
+                            id_bien: current_bien.id_bien ?? null,
+                            id_despacho_consumo: current_entrega.id_despacho_consumo ?? null,
+                            id_bodega: current_bien.id_bodega ?? null,
+                            cantidad_despachada: Number(data.cantidad_despachada),
+                            observacion: data.observacion,
+                            nombre_bien: current_bien.nombre,
+                            codigo_bien: current_bien.codigo_bien,
+                            unidad_medida: current_bien.unidad_medida ?? null,
+                            bodega: current_bien.bodega ?? null,
+                        };
+                        console.log(new_bien);
+                        if (bien === undefined) {
+                            set_aux_insumos([...aux_insumos, new_bien]);
+                            const restante =
+                                (current_bien.cantidad_disponible ?? 0) -
+                                (new_bien.cantidad_despachada ?? 0);
+                            dispatch(
+                                set_current_bien({
+                                    ...current_bien,
+                                    cantidad_disponible: restante,
+                                })
+                            );
+                            reset_entrega({
+                                id_bien_despachado: current_bien?.id_bien,
+                                cantidad_despachada: null,
+                                observacion: null,
+                            });
+                        } else {
+                            if (action === 'editar') {
+                                const aux_items: IObjBienEntrega[] = [];
+                                aux_insumos.forEach((option) => {
+                                    if (option.id_bien_despachado === current_bien.id_bien) {
+                                        aux_items.push(new_bien);
+                                    } else {
+                                        aux_items.push(option);
+                                    }
+                                });
+                                set_aux_insumos(aux_items);
+                                const restante =
+                                    (current_bien.cantidad_disponible ?? 0) -
+                                    (new_bien.cantidad_despachada ?? 0);
+                                dispatch(
+                                    set_current_bien({
+                                        ...current_bien,
+                                        cantidad_disponible: restante,
+                                    })
+                                );
+                                reset_entrega({
+                                    id_bien_despachado: current_bien?.id_bien,
+                                    cantidad_despachada: null,
+                                    observacion: null,
+                                });
+                                set_action('agregar');
+                            } else {
+                                control_error('El bien ya fue agregado');
+                            }
+                        }
+                    } else {
+                        control_error(
+                            'La cantidad asignada debe ser maximo ' +
+                            String(bien_selected.cantidad_disponible)
+                        );
+                    }
+                } else {
+                    control_error(
+                        'La cantidad asignada debe ser maximo ' +
+                        String(current_bien.cantidad_disponible)
+                    );
+                }
+            } else {
+                control_error('Codigo de bien no coincide con el seleccionado');
+            }
+        } else {
+            control_error('Debe seleccionar el bien');
+        }
+    };
+
+    const delete_bien_entrega = (item: IObjBienEntrega): void => {
+        const bien: IObjBien | undefined = bienes.find(
+            (p: IObjBien) => p.id_bien === item.id_bien
+        );
+
+        if (bien !== undefined) {
+            const restante =
+                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+                (bien.cantidad_disponible ?? 0) + (item?.cantidad_despachada ?? 0);
+            if (item.id_item_despacho_consumo !== null) {
+                dispatch(set_current_bien({ ...bien, cantidad_disponible: restante }));
+            } else {
+                dispatch(set_current_bien(bien));
+            }
+        }
+        reset_entrega({
+            ...item,
+            id_bien: bien?.id_bien,
+            cantidad_despachada: null,
+            observacion: null,
+        });
+        const aux_items: IObjBienEntrega[] = [];
+        aux_insumos.forEach((option) => {
+            if (
+                !(
+                    option.id_bien === item.id_bien && option.id_bodega === item.id_bodega
+                )
+            ) {
+                aux_items.push(option);
+            }
+        });
+        set_aux_insumos(aux_items);
+    };
     return (
         <>
             <Grid container direction="row" padding={2} borderRadius={2}>
                 <BuscarModelo
-                    set_current_model={set_current_bien_entrega}
+                    set_current_model={set_current_bien}
                     row_id={'id_bien'}
                     columns_model={columns_bienes}
-                    models={bienes_entrega}
+                    models={bienes}
                     get_filters_models={null}
-                    set_models={set_bienes_entrada}
+                    set_models={set_bienes}
                     show_search_button={false}
                     button_submit_label="Buscar bien"
                     form_inputs={[
@@ -400,7 +433,6 @@ const SeleccionarBienEntrega = () => {
                             disabled: true,
                             helper_text: '',
                         },
-
                     ]}
                     form_inputs_list={[
                         {
@@ -483,9 +515,9 @@ const SeleccionarBienEntrega = () => {
                             helper_text: '',
                         },
                     ]}
-                    title_list="Insumos despachados"
+                    title_list="Bienes entregados"
                     list={aux_insumos}
-                    // add_item_list={handle_submit_despacho(on_submit_despacho)}
+                    add_item_list={handle_submit_entrega(on_submit_entrega)}
                     add_list_button_label={action}
                     columns_list={columns_bienes_despacho}
                     row_list_id={'id_item_despacho_consumo'}
@@ -542,9 +574,8 @@ const SeleccionarBienEntrega = () => {
                     ]}
                 />
 
-
                 <SeleccionarModeloDialogForm
-                    set_current_model={set_current_bien_entrega}
+                    set_current_model={set_current_bien}
                     is_modal_active={select_model_is_active}
                     set_is_modal_active={set_select_model_is_active}
                     modal_title={'Seleccionar bodega para despachar'}
@@ -555,9 +586,7 @@ const SeleccionarBienEntrega = () => {
                     columns_model={columns_bienes}
                     row_id={'id_inventario'}
                     title_table_modal={'Resultados de la busqueda'}
-
                 />
-
             </Grid>
         </>
     );
