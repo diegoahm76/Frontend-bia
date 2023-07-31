@@ -9,7 +9,6 @@ import {
   DashboardScreen,
   AnaliticaScreen,
 } from '../screens';
-import { HistorialDatos } from '../screens/HistorialScreen';
 import { HistorialEquipos } from '../components/HistorialEquipos';
 import { HistorialAlertas } from '../components/HistorialAlertas';
 import { ParametrosReferencia } from '../components/ParametrosReferencia';
@@ -30,9 +29,6 @@ export const EstacionesRoutes: React.FC = () => {
 
       {/* Usuarios Estaciones */}
       <Route path="usuarios/*" element={<UsuariosScreen />} />
-
-      {/* Historial Estaciones */}
-      <Route path="historial/*" element={<HistorialDatos />} />
 
       {/* Geolocalizacion Estaciones */}
       <Route path="reportes/*" element={<ReportesScreen />} />
