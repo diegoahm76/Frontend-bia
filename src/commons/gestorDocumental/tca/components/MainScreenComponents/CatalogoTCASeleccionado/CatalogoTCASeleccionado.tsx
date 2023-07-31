@@ -8,12 +8,13 @@ import { Link } from 'react-router-dom';
 
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { useAppSelector } from '../../../../../../hooks';
+import type { dataGridTypes } from '../../../types/tca.types';
 
-export const CatalogoTCASeleccionado: FC<any> = ({
+export const CatalogoTCASeleccionado: FC<dataGridTypes> = ({
   rows,
   columns,
   title
-}: any): JSX.Element => {
+}: dataGridTypes): JSX.Element => {
 
   const { tca_current } = useAppSelector((state: any) => state.tca_slice);
 
