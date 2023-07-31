@@ -13,6 +13,9 @@ export interface formulario_create_update_tca extends baseForm {
 export interface formulario_busqueda_tca extends baseForm {}
 
 export interface formulario_administracion_tca_base {
-  id_cat_serie_und_ccd_trd: number | string;
-  cod_clas_expediente: string;
+  id_cat_serie_und_ccd_trd: string;
+  cod_clas_expediente: {
+    value: string | number;
+    label: string | number;
+  };
 }

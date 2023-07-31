@@ -136,7 +136,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
         }}
       >
         <Grid item xs={12}>
-          <Title title="Cuadro de clasificación documental - Busca CCD por nombre y versión" />
+          <Title title="Cuadro de clasificación documental" />
           <form
             style={{
               marginTop: '20px'

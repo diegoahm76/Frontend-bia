@@ -159,7 +159,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
       headerName: 'Actual',
       width: 80,
       renderCell: (params: any) =>
-        params.value.actual ? (
+        params.row.actual ? (
           <Chip label="SI" color="primary" variant="outlined" />
         ) : (
           <Chip label="NO" color="error" variant="outlined" />

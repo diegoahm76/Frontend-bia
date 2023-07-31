@@ -6,6 +6,7 @@ import { type Dispatch } from 'react';
 import { api } from './../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../helpers';
 import { set_current_tca_action, set_get_tcas_action } from '../slice/TcaSlice';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // ? --------------------- | GET TCAS SERVICES | --------------------- //
 export const get_searched_tcas_service: any = (
@@ -140,9 +141,9 @@ export const get_catalogo_TRD_service = async (
     }
     const url = `gestor/trd/catalogo-trd/get-list/${id_trd}/`;
     const { data } = await api.get(url);
-    control_success(
+    /* control_success(
       'Se encontró el siguiente registro de catálogo TRD' || data.detail
-    );
+    ); */
     console.log('data TRD catalogo', data);
     return data.data;
   } catch (error: AxiosError | any) {
@@ -162,17 +163,49 @@ export const get_catalogo_TCA_service = async (
     }
     const url = `gestor/tca/catalogo-tca/get-clasif/${id_tca}/`;
     const { data } = await api.get(url);
-    control_success(
+    /* control_success(
       'Se encontró el siguiente registro de catálogo TCA' || data.detail
-    );
+    ); */
     console.log('data TCA catalogo', data);
     return data.data;
   } catch (error: AxiosError | any) {
-    control_error(
+    control_warning(
       'No se encontró catálogo para la TCA' || error.response?.data?.detail
     );
     return error;
   }
+};
+
+// ? --------- CREATE ITEM FROM CATALOGO TRD SERVICE TO CATALOGO TCA --------- //
+
+export const create_item_catalogo_tca_service: any = async (
+  bodyPost: any,
+  setLoadingButton: any
+): Promise<any> => {
+    const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
+    setLoadingButton(true);
+    try {
+      if (!id_tca) {
+        control_error('Todos los campos son obligatorios');
+        return;
+      }
+      console.log('bodyPost', bodyPost);
+      const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
+      const { data } = await api.post(url, {
+        id_cat_serie_und_ccd_trd,
+        cod_clas_expediente
+      });
+      control_success(data.detail);
+      console.log('data TCA catalogo', data);
+      return data;
+    } catch (error: AxiosError | any) {
+      control_error(
+        error.response?.data?.detail || 'Error al clasificar el expediente'
+      );
+      return error;
+    } finally {
+      setLoadingButton(false);
+    }
 };
 
 // ? --------- DELETE ITEM FROM CATALOGO TCA SERVICE --------- //

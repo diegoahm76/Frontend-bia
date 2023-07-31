@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/promise-function-async */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -13,7 +15,18 @@ import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadB
 import type { dataGridTypes } from '../../../types/tca.types';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
-import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
+import {
+  set_catalog_TCA_action,
+  set_catalog_trd_action,
+  set_selected_item_from_catalogo_action
+} from '../../../toolkit/TCAResources/slice/TcaSlice';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {
+  delete_item_catalogo_tca_service,
+  get_catalogo_TCA_service,
+  get_catalogo_TRD_service
+} from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import { use_tca } from '../../../hooks/use_tca';
 
 export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
   rows,
@@ -27,12 +40,49 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
   // eslint-disable-next-line no-empty-pattern
   const {
     // modalAdministracionTca,
-    openModalAdministracionTca
-    // closeModalAdministracionTca,
+    openModalAdministracionTca,
+    closeModalAdministracionTca
   } = useContext(ModalContextTCA);
+
+  //* use_tca
+  const { reset_administrar_tca } = use_tca();
 
   //* redux states declararion
   const { tca_current } = useAppSelector((state) => state.tca_slice);
+
+  const deleteCatalogoTCA = (id: number) => {
+    return delete_item_catalogo_tca_service(id);
+  };
+
+  const updateCatalogoTRD = async (id: number) => {
+    const res = await get_catalogo_TRD_service(id);
+    return dispatch(set_catalog_trd_action(res));
+  };
+
+  const updateCatalogoTCA = async (id: number) => {
+    const res = await get_catalogo_TCA_service(id);
+    return dispatch(set_catalog_TCA_action(res));
+  };
+
+  const resetAdministrarTCA = (): void => {
+    reset_administrar_tca({
+      id_cat_serie_und_ccd_trd: '',
+      cod_clas_expediente: {
+        label: '',
+        value: '',
+      }
+    });
+  };
+
+  const handleClickDeleteIcon = (params: any): void => {
+    void deleteCatalogoTCA(params?.row?.id_cat_serie_unidad_org_ccd_trd_tca)
+      .then(() => updateCatalogoTRD(tca_current?.id_trd))
+      .then(() => updateCatalogoTCA(params?.row.id_tca))
+      .then(() => {
+        closeModalAdministracionTca();
+        resetAdministrarTCA();
+      });
+  };
 
   const newColums = [
     {
@@ -68,35 +118,8 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                 size="large"
                 title="Eliminar relación catalogo TRD"
                 onClick={() => {
-                  /* 
-                  dispatch(
-                    delete_item_catalogo_trd(params.row.id_catserie_unidadorg)
-                  )
-                    .then(() => {
-                      dispatch(get_catalogo_trd(trd_current.id_trd));
-                    })
-                    .then(() => {
-                      dispatch(
-                        getServiceSeriesSubseriesXUnidadOrganizacional({
-                          id_ccd: trd_current.id_ccd,
-                          id_organigrama: trd_current.id_organigrama
-                        })
-                      );
-                      closeModalAdministracionTRD();
-                      dispatch(get_tipologias_asociadas_a_trd([]));
-                      reset_administrar_trd({
-                        cod_disposicion_final: '',
-                        digitalizacion_dis_final: true,
-                        tiempo_retencion_ag: '',
-                        tiempo_retencion_ac: '',
-                        descripcion_procedimiento: '',
-                        justificacion_cambio: '',
-                        tipologias: [],
-                        ruta_archivo_cambio: ''
-                      });
-                    }); */
-                  console.log('hello from delete icon catalogo tca');
-                  console.log(params.row);
+                  // console.log(params.row);
+                  handleClickDeleteIcon(params);
                 }}
               >
                 <Avatar sx={AvatarStyles} variant="rounded">
