@@ -156,10 +156,15 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
           nombreUnidad: unidad?.nombre
         };
       });
-      /* console.log(
+
+      if(new_data.length === 0) {
+        control_error('No se encontró data relacionada');
+      }
+
+    console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         new_data
-      ); */
+      );
       dispatch(get_catalogo_series_subseries_unidad_organizacional(new_data));
       return data;
     } catch (error: any) {

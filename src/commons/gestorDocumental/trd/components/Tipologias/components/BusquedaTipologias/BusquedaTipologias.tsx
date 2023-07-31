@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { useContext } from 'react';
 import {
   Avatar,
@@ -39,13 +38,11 @@ import {
   get_data_tipologias_documentales
 } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../hooks/use_trd';
-//* icons
-// import VisibilityIcon from '@mui/icons-material/Visibility';
+//* icons;
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { LoadingButton } from '@mui/lab';
-// import { v4 as uuidv4 } from 'uuid';
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -65,8 +62,6 @@ export const BusquedaTipologias = (): JSX.Element => {
     form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales
 
-    //* state to update data in the administre data
-    // set_list_format_documental_type,
   } = use_trd();
 
   const resetOnCloseModal = (): any => {
@@ -109,7 +104,7 @@ export const BusquedaTipologias = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              closeModalBusquedaTipologiasDocumentales();
+              resetOnCloseModal();
               openModalAdministracionTipologiasDocumentales();
 
               dispatch(
@@ -124,7 +119,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                   })
                 );
               });
-
               // console.log('params edit formato', params.row);
             }}
           >
@@ -151,11 +145,11 @@ export const BusquedaTipologias = (): JSX.Element => {
                 ).then((res: any) => {
                   dispatch(
                     get_tipologias_documentales_by_name(
+                      setCreateTRDLoadingButton,
                       form_data_searched_tipologia_documental.nombre
                     )
                   );
                 });
-                // void deleteFormat(params);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -230,7 +224,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
@@ -239,7 +232,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
                       }}
                       error={!!error}
                       /* helperText={
@@ -272,7 +264,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                     resetBusquedaTipologiasDocumentales({
                       nombre: ''
                     });
-                    // dispatch(get_tipologias_documentales_by_name(''));
                   }}
                 >
                   LIMPIAR
@@ -291,8 +282,6 @@ export const BusquedaTipologias = (): JSX.Element => {
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={
                 (row) => row.id_tipologia_documental
-                /* ? row.id_tipologia_documental
-                  : uuidv4() */
               }
             />
           </DialogContent>

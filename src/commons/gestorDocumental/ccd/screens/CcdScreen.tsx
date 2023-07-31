@@ -51,6 +51,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
   get_assignments_service
 } from '../store/thunks/assignmentsThunks';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -83,7 +84,7 @@ export const CcdScreen: React.FC = () => {
         ccd_current?.fecha_terminado !== undefined
     );
   }, [ccd_current?.fecha_terminado]);
-const [isFileSelected, setIsFileSelected] = useState(false);
+
   useEffect(() => {
     dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
     get_assignments_service(ccd_current?.id_ccd)(dispatch);
@@ -135,7 +136,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
         }}
       >
         <Grid item xs={12}>
-          <Title title="Cuadro de clasificación documental - Busca CCD por nombre y versión" />
+          <Title title="Cuadro de clasificación documental" />
           <form
             style={{
               marginTop: '20px'
@@ -247,8 +248,17 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       label="Nombre CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        if (e.target.value.length === 50)
+                          control_warning('máximo 50 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       error={!(error == null)}
+                      inputProps={{
+                        maxLength: 50
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un nombre'
@@ -276,8 +286,17 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       label="Versión CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       error={!(error == null)}
+                      onChange={(e) => {
+                        if (e.target.value.length === 10)
+                          control_warning('máximo 10 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar una versión'
@@ -384,13 +403,18 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                         <input
                           style={{ display: 'none' }}
                           type="file"
+                          accept='application/pdf'
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
-                            // console.log('valueeee', value);
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
-                              onChange(files[0]);
-                              // console.log(files[0]);
+                              const file = files[0];
+                              if (file.type !== 'application/pdf') {
+                                control_warning('Solo formato pdf')
+                                // dejar vacio el input file
+                              } else {
+                                onChange(file);
+                              }
                             }
                           }}
                         />

@@ -6,6 +6,7 @@ import { type Dispatch } from 'react';
 import { api } from './../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../helpers';
 import { set_current_tca_action, set_get_tcas_action } from '../slice/TcaSlice';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // ? --------------------- | GET TCAS SERVICES | --------------------- //
 export const get_searched_tcas_service: any = (
@@ -140,7 +141,10 @@ export const get_catalogo_TRD_service = async (
     }
     const url = `gestor/trd/catalogo-trd/get-list/${id_trd}/`;
     const { data } = await api.get(url);
-    control_success(data.detail);
+    /* control_success(
+      'Se encontró el siguiente registro de catálogo TRD' || data.detail
+    ); */
+    console.log('data TRD catalogo', data);
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(error.response?.data?.detail);
@@ -159,12 +163,98 @@ export const get_catalogo_TCA_service = async (
     }
     const url = `gestor/tca/catalogo-tca/get-clasif/${id_tca}/`;
     const { data } = await api.get(url);
-    console.log('data', data);
-    control_success('Se encontró el siguiente catálogo TCA' || data.detail);
+    /* control_success(
+      'Se encontró el siguiente registro de catálogo TCA' || data.detail
+    ); */
+    console.log('data TCA catalogo', data);
+    return data.data;
+  } catch (error: AxiosError | any) {
+    control_warning(
+      'No se encontró catálogo para la TCA' || error.response?.data?.detail
+    );
+    return error;
+  }
+};
+
+// ? --------- CREATE ITEM FROM CATALOGO TRD SERVICE TO CATALOGO TCA --------- //
+
+export const create_item_catalogo_tca_service: any = async (
+  bodyPost: any,
+  setLoadingButton: any
+): Promise<any> => {
+  const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
+  setLoadingButton(true);
+  try {
+    if (!id_tca) {
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
+    console.log('bodyPost', bodyPost);
+    const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
+    const { data } = await api.post(url, {
+      id_cat_serie_und_ccd_trd,
+      cod_clas_expediente
+    });
+    control_success(data.detail);
+    console.log('data TCA catalogo', data);
     return data;
   } catch (error: AxiosError | any) {
     control_error(
-      'No se encontró catálog para la TCA' || error.response?.data?.detail
+      error.response?.data?.detail || 'Error al clasificar el expediente'
+    );
+    return error;
+  } finally {
+    setLoadingButton(false);
+  }
+};
+
+// ? --------- UPDATE ITEM FROM CATALOGO TCA SERVICE --------- //
+
+export const update_item_catalogo_tca_service = async (
+  formData: any,
+  id_cat_serie_unidad_org_ccd_trd_tca: any,
+  setLoadingButton: any
+): Promise<any> => {
+  setLoadingButton(true);
+  try {
+    if (!id_cat_serie_unidad_org_ccd_trd_tca) {
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
+    console.log('bodyPost', formData);
+    const url = `gestor/tca/catalogo-tca/update-clasif/${id_cat_serie_unidad_org_ccd_trd_tca}/`;
+    const { data } = await api.put(url, formData);
+    control_success(data.detail);
+    console.log('data TCA catalogo', data);
+    return data;
+  } catch (error: AxiosError | any) {
+    control_error(
+      error.response?.data?.detail || 'Error al actualizar el expediente'
+    );
+    return error;
+  } finally {
+    setLoadingButton(false);
+  }
+};
+
+// ? --------- DELETE ITEM FROM CATALOGO TCA SERVICE --------- //
+
+export const delete_item_catalogo_tca_service = async (
+  id_clasif_ser_sub_unidad_tca: number = 1
+): Promise<AxiosResponse | AxiosError | any> => {
+  try {
+    if (!id_clasif_ser_sub_unidad_tca) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/tca/catalogo-tca/delete-clasif/${id_clasif_ser_sub_unidad_tca}/`;
+    const { data } = await api.delete(url);
+    control_success(data.detail);
+    console.log('data TCA catalogo', data);
+    return data.data;
+  } catch (error: AxiosError | any) {
+    control_error(
+      error.response?.data?.detail || 'No se encontró catálogo para la TCA'
     );
     return error;
   }
@@ -213,3 +303,4 @@ export const resume_tca_service = async (
     return error;
   }
 };
+
