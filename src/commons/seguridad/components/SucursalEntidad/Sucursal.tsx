@@ -1,23 +1,20 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid, IconButton } from '@mui/material';
- import { DataGrid } from '@mui/x-data-grid';
-import { useEffect, useState, type FC, } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState, type FC } from 'react';
 import { api } from '../../../../api/axios';
- import { SucursalActuaizar } from './SucursalActuaizar';
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { SucursalActuaizar } from './SucursalActuaizar';
 import Swal from 'sweetalert2';
 import { SucursalEntidad } from './SucursalEntidad';
- 
-
 
 export interface ISucursalEmpresa {
-    id_sucursal_empresa: number;
-    numero_sucursal: number;
-    descripcion_sucursal: string;
-    direccion: string;
-   direccion_sucursal_georeferenciada: string | null;
-    municipio: string | null;
+  id_sucursal_empresa: number;
+  numero_sucursal: number;
+  descripcion_sucursal: string;
+  direccion: string;
+  direccion_sucursal_georeferenciada: string | null;
+  municipio: string | null;
   pais_sucursal_exterior: string | null;
   direccion_notificacion: string;
   direccion_notificacion_referencia: string | null;
@@ -29,16 +26,13 @@ export interface ISucursalEmpresa {
   item_ya_usado: boolean;
   id_persona_empresa: number;
 }
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Sucursal: FC = () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention 
-    const initialData: ISucursalEmpresa[] = [];
+  const initial_data: ISucursalEmpresa[] = [];
   const [selected_id, setselected_id] = useState<number | null>(null);
-  const [data_entidad, setdata_entidad] = useState<ISucursalEmpresa[]>(initialData);
-  
-    // eslint-disable-next-line @typescript-eslint/naming-convention 
-  const fetchAndUpdateData = async (): Promise<void> => {
+  const [data_entidad, setdata_entidad] = useState<ISucursalEmpresa[]>(initial_data);
+
+  const fetchand_update_data = async (): Promise<void> => {
     try {
       const url = "/transversal/sucursales/sucursales-empresa-lista/3";
       const res = await api.get(url);
@@ -48,21 +42,19 @@ export const Sucursal: FC = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
-    // Fetch data on initial component mount
-    fetchAndUpdateData().catch((error) => {
+    fetchand_update_data().catch((error) => {
       console.error(error);
     });
 
-    // Set up interval to fetch data every 5 seconds
     const interval = setInterval(() => {
-      fetchAndUpdateData().catch((error) => {
+      fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 50);
+    }, 30);
 
-    // Clear the interval when the component unmounts
-    return () => {clearInterval(interval)};
+    return () => { clearInterval(interval) };
   }, []);
 
   const fetch_dataget = async (): Promise<void> => {
@@ -83,6 +75,22 @@ export const Sucursal: FC = () => {
   }, []);
 
   const handle_delete_sucursal = (id: number): void => {
+    const sucursaltodelete = data_entidad.find((sucursal) => sucursal.id_sucursal_empresa === id);
+    const item_ya_usado = sucursaltodelete?.item_ya_usado ?? false;
+    if (item_ya_usado) {
+      void Swal.fire({
+        title: 'No se puede eliminar',
+        text: 'Este item ya ha sido utilizado y no puede ser eliminado.',
+        icon: 'info',
+        confirmButtonText: 'Ok',
+        confirmButtonColor: '#042F4A',
+        customClass: {
+          container: 'my-swal',
+        },
+      }); 
+      return;
+    }
+
     void Swal.fire({
       title: '¿Está seguro de eliminar esta sucursal?',
       showDenyButton: true,
@@ -98,7 +106,7 @@ export const Sucursal: FC = () => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
           .then((res) => {
-           void fetch_dataget();
+            void fetch_dataget();
           })
           .catch((error) => {
             console.error(error);
@@ -118,23 +126,17 @@ export const Sucursal: FC = () => {
   };
 
   const columns = [
-    // { field: "id_sucursal_empresa", headerName: "ID Sucursal", width: 150 },
-    { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1, },
-    { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1, },
-    { field: "direccion", headerName: "Dirección", width: 200, flex: 1, },
-    // { field: "direccion_sucursal_georeferenciada", headerName: "Dirección Georreferenciada", width: 250 },
-    // { field: "municipio", headerName: "Municipio", width: 150 },
-    // { field: "pais_sucursal_exterior", headerName: "País", width: 150 },
-    // { field: "direccion_notificacion", headerName: "Dirección de Notificación", width: 250 },
-    // { field: "municipio_notificacion", headerName: "Municipio de Notificación", width: 200 },
-    // { field: "email_sucursal", headerName: "Email", width: 200 },
-    // { field: "telefono_sucursal", headerName: "Teléfono", width: 150 },
-    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1, },
-    // { field: "activo", headerName: "Activo", width: 120 },
+    { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
+    { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
+    { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
+    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
+    { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
+
     {
       field: "accion",
       headerName: "Acción",
-      width: 150, flex: 1,
+      width: 150,
+      flex: 1,
       renderCell: (params: any) => (
         <>
           <IconButton
@@ -160,6 +162,9 @@ export const Sucursal: FC = () => {
     },
   ];
 
+  const max_numero_sucursal = Math.max(...data_entidad.map((sucursal) => sucursal.numero_sucursal));
+  const siguiente_numeros_sucursal = max_numero_sucursal + 1;
+
   return (
     <>
       <Grid
@@ -169,23 +174,18 @@ export const Sucursal: FC = () => {
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
-          p: '20px', mb: '20px',
+          p: '20px',
+          mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
           marginTop: '20px',
           marginLeft: '-5px',
         }}
       >
-        {/* <Crear /> */}
-        {/* sucursal entidad ///////////////////// */}
+        {/* sucursal entidad */}
         <SucursalEntidad />
 
+        <SucursalActuaizar selected_id={selected_id} siguiente_numeros_sucursal={siguiente_numeros_sucursal} />
 
-        {/*  direcciones      //////////////////// */}
-        {/* <SucursalDirecciones /> */}
-
-        <SucursalActuaizar selected_id={selected_id} />
-
-        {/* tabla SUCURSAL         ///////////////////// */}
         <Grid item xs={12}>
           <DataGrid
             density="compact"
@@ -197,9 +197,7 @@ export const Sucursal: FC = () => {
             getRowId={(row) => row.id_sucursal_empresa}
           />
         </Grid>
-
       </Grid>
     </>
   );
 };
-

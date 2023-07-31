@@ -1,3 +1,5 @@
+import { SelectChangeEvent } from "@mui/material";
+
 export interface ISucursalEditar {
   email_sucursal: string;
   confirm_email_sucursal: string;
@@ -102,3 +104,11 @@ export interface DepartamentoResponse {
   detail: string;
   data: Departamento[];
 };
+export interface SucursalDireccionesProps {
+  form_values: ISucursalForm;
+  handleinput_change: (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string | null>,
+      child?: React.ReactNode
+  ) => void;
+
+}
