@@ -3,7 +3,6 @@ import { Page404 } from '../../../../screens/404';
 import {
   IndexEstacionesScreen,
   GeolocalizacionScreen,
-  AlertasScreen,
   AdministradorDeEstaciones,
   UsuariosScreen,
   ReportesScreen,
@@ -26,9 +25,6 @@ export const EstacionesRoutes: React.FC = () => {
       {/* Partes Interesadas Estaciones */}
       <Route path="geolocalizacion/*" element={<GeolocalizacionScreen />} />
 
-      {/* Configuracion Alerta persona */}
-      <Route path="alertas/*" element={<AlertasScreen />} />
-
       {/* Estaciones */}
       <Route path="estacion/*" element={<AdministradorDeEstaciones />} />
 
@@ -48,7 +44,7 @@ export const EstacionesRoutes: React.FC = () => {
       <Route path="analitica/*" element={<AnaliticaScreen />} />
 
       {/* Historial_Datos   */}
-      <Route path="Historial_Datos/*" element={<HistorialDeDatos />} />
+      <Route path="historial_datos/*" element={<HistorialDeDatos />} />
 
       {/* historial_equipos   */}
       <Route path="historial_equipos/*" element={<HistorialEquipos />} />
@@ -57,10 +53,10 @@ export const EstacionesRoutes: React.FC = () => {
       <Route path="historial_alertas/*" element={<HistorialAlertas />} />
 
       {/* ParametrosReferencia   */}
-      <Route path="Parametros_Referencia/*" element={<ParametrosReferencia />} />
+      <Route path="parametros_referencia/*" element={<ParametrosReferencia />} />
 
       {/* Configuracion_alarma   */}
-      <Route path="Configuracion_alarma/*" element={<ConfiguracionAlarma />} />
+      <Route path="configuracion_alarma/*" element={<ConfiguracionAlarma />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>
