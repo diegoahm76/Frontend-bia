@@ -42,6 +42,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import  CloudUploadIcon  from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -53,6 +54,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   const {
     // modalAdministracionTca,
     // openModalAdministracionTca,
+    openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
     setLoadingButton
@@ -400,8 +402,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   // disabled={ccd_current?.actual}
                   onClick={() => {
                     console.log('viendo historial de cambios');
-                    // dispatch(get_historical_trd(trd_current.id_trd));
-                    // openModalHistorialCambios();
+                    // void get_historial_cambios_tca_service()
+                    openModalHistorialCambios();
                   }}
                 >
                   VER HISTORIAL DE CAMBIOS
@@ -413,7 +415,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       </Grid>
 
       {/* Modal historial de cambios TRD ACTUAL */}
-      {/* <HistorialDeCambios /> */}
+       <HistorialCambiosTCA /> 
       {/* Modal historial de cambios TRD ACTUAL */}
     </>
   );

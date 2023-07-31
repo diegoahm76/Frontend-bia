@@ -28,6 +28,11 @@ const ModalContextTCA = createContext<ModalContextState>({
   openModalAdministracionTca: () => {},
   closeModalAdministracionTca: () => {},
 
+  // -------------------------------------------> MODAL HISTORIAL DE CAMBIOS
+  modalHistorialCambios: false,
+  openModalHistorialCambios: () => {},
+  closeModalHistorialCambios: () => {},
+
   // ? ----- | LOAD BUTTONS | -----
   loadingButton: false,
   setLoadingButton: () => {}
@@ -71,6 +76,15 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_ADMINISTRACION_TCA' });
   }, []);
 
+  // * -------------------------------------------------------> MODAL HISTORIAL DE CAMBIOS
+  const openModalHistorialCambios = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_HISTORIAL_CAMBIOS' });
+  }, []);
+
+  const closeModalHistorialCambios = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_HISTORIAL_CAMBIOS' });
+  }, []);
+
   // ? ----- | LOAD BUTTONS | -----
   const setLoadingButton = useCallback((value: boolean) => {
     dispatch({ type: 'SET_LOADING_BUTTON', payload: value });
@@ -93,10 +107,15 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
         openModalTcaTerminados,
         closeModalTcaTerminados,
 
-        // -------------------------------------------> MODAL ADMINISTRACION TCA
+        //* -------------------------------------------> MODAL ADMINISTRACION TCA
         modalAdministracionTca: state.modalAdministracionTca,
         openModalAdministracionTca,
         closeModalAdministracionTca,
+
+        //* -------------------------------------------> MODAL HISTORIAL DE CAMBIOS
+        modalHistorialCambios: state.modalHistorialCambios,
+        openModalHistorialCambios,
+        closeModalHistorialCambios,
 
         // ? ----- | LOAD BUTTONS | -----
         loadingButton: state.loadingButton,

@@ -182,32 +182,31 @@ export const create_item_catalogo_tca_service: any = async (
   bodyPost: any,
   setLoadingButton: any
 ): Promise<any> => {
-    const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
-    setLoadingButton(true);
-    try {
-      if (!id_tca) {
-        control_error('Todos los campos son obligatorios');
-        return;
-      }
-      console.log('bodyPost', bodyPost);
-      const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
-      const { data } = await api.post(url, {
-        id_cat_serie_und_ccd_trd,
-        cod_clas_expediente
-      });
-      control_success(data.detail);
-      console.log('data TCA catalogo', data);
-      return data;
-    } catch (error: AxiosError | any) {
-      control_error(
-        error.response?.data?.detail || 'Error al clasificar el expediente'
-      );
-      return error;
-    } finally {
-      setLoadingButton(false);
+  const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
+  setLoadingButton(true);
+  try {
+    if (!id_tca) {
+      control_error('Todos los campos son obligatorios');
+      return;
     }
+    console.log('bodyPost', bodyPost);
+    const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
+    const { data } = await api.post(url, {
+      id_cat_serie_und_ccd_trd,
+      cod_clas_expediente
+    });
+    control_success(data.detail);
+    console.log('data TCA catalogo', data);
+    return data;
+  } catch (error: AxiosError | any) {
+    control_error(
+      error.response?.data?.detail || 'Error al clasificar el expediente'
+    );
+    return error;
+  } finally {
+    setLoadingButton(false);
+  }
 };
-
 
 // ? --------- UPDATE ITEM FROM CATALOGO TCA SERVICE --------- //
 
@@ -237,11 +236,6 @@ export const update_item_catalogo_tca_service = async (
     setLoadingButton(false);
   }
 };
-
-
-
-
-
 
 // ? --------- DELETE ITEM FROM CATALOGO TCA SERVICE --------- //
 
@@ -309,3 +303,4 @@ export const resume_tca_service = async (
     return error;
   }
 };
+

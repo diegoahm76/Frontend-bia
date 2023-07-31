@@ -38,7 +38,6 @@ export const reducer = (state: any, { payload, type }: any): any => {
         modalTcaTerminados: payload || false
       };
 
-
     //* MODAL ADMINISTRACION TCA
     case Modal.OPEN_MODAL_ADMINISTRACION_TCA:
       return {
@@ -51,6 +50,17 @@ export const reducer = (state: any, { payload, type }: any): any => {
         modalAdministracionTca: payload || false
       };
 
+    //* MODAL HISTORIAL DE CAMBIOS
+    case Modal.OPEN_MODAL_HISTORIAL_CAMBIOS:
+      return {
+        ...state,
+        modalHistorialCambios: payload || true
+      };
+    case Modal.CLOSE_MODAL_HISTORIAL_CAMBIOS:
+      return {
+        ...state,
+        modalHistorialCambios: payload || false
+      };
 
     // ? ----------------- |LOAD BUTTONS| -----------------
     //* LOAD BUTTONS
