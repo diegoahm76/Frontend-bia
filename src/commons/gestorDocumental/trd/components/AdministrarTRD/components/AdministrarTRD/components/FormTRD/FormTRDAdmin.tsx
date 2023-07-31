@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -16,7 +17,7 @@ import {
   Typography
 } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
-import { useContext, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { ModalContextTRD } from '../../../../../../context/ModalsContextTrd';
 import { Controller } from 'react-hook-form';
 import { use_trd } from '../../../../../../hooks/use_trd';
@@ -25,32 +26,47 @@ import InfoIcon from '@mui/icons-material/Info';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
+import SyncIcon from '@mui/icons-material/Sync';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
-import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
-import { useAppSelector } from '../../../../../../../../../hooks';
+// import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../hooks';
 import { ItemSeleccionado } from './components/ItemSeleccionado/ItemSeleccionado';
 import { TipologiasAsociadasATRD } from './components/TipologiasAsociadasATRD/TipologiasAsociadasATRD';
 import { EstablecerTipologias } from './components/EstablecerTipologias/EstablecerTipologias';
-import SyncIcon from '@mui/icons-material/Sync';
-
-const options_dispocision_final = [
-  { value: 'C', label: 'Conservación Total' },
-  { value: 'E', label: 'Eliminación' },
-  { value: 'S', label: 'Selección' }
-];
+import {
+  create_item_catalogo_trd,
+  get_historical_trd,
+  update_item_catalogo_trd
+} from '../../../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import { options_dispocision_final } from './choices/choices';
+import { HistorialDeCambios } from '../HistorialDeCambios/HistorialDeCambios';
+import {
+  add_tipologia_documental_to_trd,
+  set_selected_item_from_catalogo_trd_action
+} from '../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 export const FormTRDAdmin = (): JSX.Element => {
-  //* necccesary states
-  const [nuevasTipologias, setNuevasTipologias] = useState<any>([]);
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { closeModalAdministracionTRD } = useContext(ModalContextTRD);
-
+  const {
+    closeModalAdministracionTRD,
+    openModalHistorialCambios,
+    buttonSpecialEditionActualTRD,
+    setButtonSpecialEditionActualTRD
+  } = useContext(ModalContextTRD);
   // * state from trd_slice
   const {
     trd_current,
     selected_item_from_catalogo_trd,
+    nuevasTipologias,
     tipologias_asociadas_a_trd
   } = useAppSelector((state) => state.trd_slice);
 
@@ -63,6 +79,160 @@ export const FormTRDAdmin = (): JSX.Element => {
     // watch_administrar_trd
   } = use_trd();
 
+  // ? use effect acceso datos desde button edit para editar administrar trd
+  useEffect(() => {
+    console.log(
+      'selected_item_from_catalogo_trd',
+      selected_item_from_catalogo_trd
+    );
+    reset_administrar_trd({
+      cod_disposicion_final: {
+        value: selected_item_from_catalogo_trd?.cod_disposicion_final,
+        label: selected_item_from_catalogo_trd?.cod_disposicion_final
+      },
+      digitalizacion_dis_final:
+        selected_item_from_catalogo_trd?.digitalizacion_dis_final,
+      tiempo_retencion_ag: selected_item_from_catalogo_trd?.tiempo_retencion_ag,
+      tiempo_retencion_ac: selected_item_from_catalogo_trd?.tiempo_retencion_ac,
+      descripcion_procedimiento:
+        selected_item_from_catalogo_trd?.descripcion_procedimiento,
+      justificacion_cambio:
+        selected_item_from_catalogo_trd?.justificacion_cambio
+      // tipologias: [],
+      // ruta_archivo_cambio: ''
+    });
+  }, [selected_item_from_catalogo_trd]);
+
+  const create_item_onSubmit_trd_catalogo = (): any => {
+    const tipologias =
+      nuevasTipologias.length > 0
+        ? nuevasTipologias.map((el: any) => {
+            return el.id_tipologia_documental;
+          })
+        : tipologias_asociadas_a_trd.map((el: any) => {
+            return el.id_tipologia_documental;
+          }) ?? [];
+
+    const elementsToSendCreate = {
+      id_ccd: trd_current.id_ccd,
+      id_organigrama: trd_current.id_organigrama,
+      id_trd: trd_current.id_trd,
+      id_cat_serie_und: selected_item_from_catalogo_trd?.id_cat_serie_und,
+      cod_disposicion_final:
+        form_data_administrar_trd.cod_disposicion_final.value,
+      digitalizacion_dis_final:
+        form_data_administrar_trd.digitalizacion_dis_final,
+      tiempo_retencion_ag: form_data_administrar_trd.tiempo_retencion_ag,
+      tiempo_retencion_ac: form_data_administrar_trd.tiempo_retencion_ac,
+      descripcion_procedimiento:
+        form_data_administrar_trd.descripcion_procedimiento
+    };
+    dispatch(create_item_catalogo_trd(elementsToSendCreate, tipologias)).then(
+      (res: any) => {
+        closeModalAdministracionTRD();
+        reset_administrar_trd({
+          cod_disposicion_final: '',
+          digitalizacion_dis_final: true,
+          tiempo_retencion_ag: '',
+          tiempo_retencion_ac: '',
+          descripcion_procedimiento: '',
+          justificacion_cambio: '',
+          tipologias: [],
+          ruta_archivo_cambio: ''
+        });
+        dispatch(add_tipologia_documental_to_trd([]));
+        setButtonSpecialEditionActualTRD(false);
+        // dispatch(set_selected_item_from_catalogo_trd_action(null))
+      }
+    );
+  };
+
+  const edit_item_onSubmit_trd_catalogo = (): any => {
+    const formData = new FormData();
+    /*    formData.append('id_ccd', trd_current.id_ccd);
+    formData.append('id_organigrama', trd_current.id_organigrama);
+    formData.append('id_trd', trd_current.id_trd); */
+    /*   formData.append(
+      'id_cat_serie_und',
+      selected_item_from_catalogo_trd?.id_cat_serie_und
+    ); */
+    formData.append(
+      'cod_disposicion_final',
+      form_data_administrar_trd.cod_disposicion_final.value
+    );
+    formData.append(
+      'digitalizacion_dis_final',
+      form_data_administrar_trd.digitalizacion_dis_final
+    );
+    formData.append(
+      'tiempo_retencion_ag',
+      form_data_administrar_trd.tiempo_retencion_ag
+    );
+    formData.append(
+      'tiempo_retencion_ac',
+      form_data_administrar_trd.tiempo_retencion_ac
+    );
+    formData.append(
+      'descripcion_procedimiento',
+      form_data_administrar_trd.descripcion_procedimiento
+    );
+
+    if (nuevasTipologias.length > 0) {
+      const o = nuevasTipologias.map((el: any) => {
+        return {
+          id_tipologia_documental: el.id_tipologia_documental,
+          activo: el.activo
+        };
+      });
+     formData.append('tipologias', JSON.stringify(o));
+    } else {
+      const t = tipologias_asociadas_a_trd.map((el: any) => {
+        return {
+          id_tipologia_documental: el.id_tipologia_documental,
+          activo: el.activo
+        };
+      });
+      formData.append('tipologias', JSON.stringify(t));
+    }
+
+    if (form_data_administrar_trd.justificacion_cambio) {
+      formData.append(
+        'justificacion_cambio',
+        form_data_administrar_trd.justificacion_cambio
+      );
+    }
+
+    if (form_data_administrar_trd.ruta_archivo_cambio) {
+      formData.append(
+        'ruta_archivo_cambio',
+        form_data_administrar_trd.ruta_archivo_cambio
+      );
+    }
+
+    dispatch(
+      update_item_catalogo_trd(
+        formData,
+        selected_item_from_catalogo_trd?.id_catserie_unidadorg,
+        trd_current
+      )
+    ).then((res: any) => {
+      closeModalAdministracionTRD();
+      reset_administrar_trd({
+        cod_disposicion_final: '',
+        digitalizacion_dis_final: true,
+        tiempo_retencion_ag: '',
+        tiempo_retencion_ac: '',
+        descripcion_procedimiento: '',
+        justificacion_cambio: '',
+        tipologias: [],
+        ruta_archivo_cambio: ''
+      });
+      dispatch(add_tipologia_documental_to_trd([]));
+      setButtonSpecialEditionActualTRD(false);
+      // dispatch(set_selected_item_from_catalogo_trd_action(null))
+    });
+  };
+
   return (
     <>
       <ItemSeleccionado />
@@ -72,30 +242,9 @@ export const FormTRDAdmin = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            const elementsToSendCreate = {
-              id_trd: trd_current.id_trd,
-              id_cat_serie_und:
-                selected_item_from_catalogo_trd.id_cat_serie_und,
-              cod_disposicion_final:
-                form_data_administrar_trd.cod_disposicion_final.value,
-              digitalizacion_dis_final:
-                form_data_administrar_trd.digitalizacion_dis_final,
-              tiempo_retencion_ag:
-                form_data_administrar_trd.tiempo_retencion_ag,
-              tiempo_retencion_ac:
-                form_data_administrar_trd.tiempo_retencion_ac,
-              descripcion_procedimiento:
-                form_data_administrar_trd.descripcion_procedimiento,
-              tipologias:
-                nuevasTipologias.length > 0
-                  ? nuevasTipologias.map(
-                      (el: any) => el.id_tipologia_documental
-                    )
-                  : tipologias_asociadas_a_trd.map(
-                      (el: any) => el.id_tipologia_documental
-                    )
-            };
-            console.log('elementsToSendCreate', elementsToSendCreate);
+            selected_item_from_catalogo_trd?.nombre_unidad
+              ? edit_item_onSubmit_trd_catalogo()
+              : create_item_onSubmit_trd_catalogo();
           }}
           sx={{ width: '100%' }}
         >
@@ -303,7 +452,7 @@ export const FormTRDAdmin = (): JSX.Element => {
 
             {/* justificación del cambio, solo aparece para trd actual */}
             {/* SOLO TRD ACTUAL */}
-            {trd_current.actual ? (
+            {trd_current.actual && buttonSpecialEditionActualTRD ? (
               <>
                 <Grid item xs={12} sm={12}>
                   <Controller
@@ -320,10 +469,6 @@ export const FormTRDAdmin = (): JSX.Element => {
                         fullWidth
                         size="small"
                         label="Justificación del cambio"
-                        /* sx={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
-                      }} */
-
                         disabled={false}
                         variant="outlined"
                         value={value}
@@ -334,6 +479,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                             ? 'Es obligatorio ingresar una justificación del cambio'
                             : 'Cambio'
                         }
+                        inputProps={{ maxLength: 250 }}
                       />
                     )}
                   />
@@ -406,19 +552,17 @@ export const FormTRDAdmin = (): JSX.Element => {
                     )}
                   />
                 </Grid>
-                {/* boton descarga justifacion del cambio en trd actual */}
-                <Grid item xs={12} sm={2}>
+
+                {/* <Grid item xs={12} sm={2}>
                   <DownloadButton
                     fileName="ruta_archivo_cambio"
                     condition={
                       true
-                      // control_administrar_trd._formValues.ruta_archivo_cambio
+                      control_administrar_trd._formValues.ruta_archivo_cambio
                     }
                     fileUrl={trd_current?.ruta_archivo_cambio}
                   />
-                </Grid>
-                {/* boton descarga justifacion del cambio en trd actual - fin */}
-                {/* ruta archivo soporte de cambio, solo aparece en trd actual - fin */}
+                </Grid> */}
               </>
             ) : null}
 
@@ -428,13 +572,13 @@ export const FormTRDAdmin = (): JSX.Element => {
 
             {/* tipologias asociadas a trd fin */}
           </Grid>
-          <Stack direction="row" spacing={2} sx={{ marginTop: '.15rem' }}>
+          <Stack direction="row" spacing={2} sx={{ marginTop: '1.5rem' }}>
             <Button
               variant="contained"
               color="primary"
               type="submit"
               startIcon={
-                selected_item_from_catalogo_trd.nombre_unidad ? (
+                selected_item_from_catalogo_trd?.nombre_unidad ? (
                   <SyncIcon />
                 ) : (
                   <SaveIcon />
@@ -442,7 +586,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               }
               // disabled={ccd_current?.actual}
             >
-              {selected_item_from_catalogo_trd.nombre_unidad
+              {selected_item_from_catalogo_trd?.nombre_unidad
                 ? 'Actualizar'
                 : 'Guardar'}
             </Button>
@@ -463,20 +607,62 @@ export const FormTRDAdmin = (): JSX.Element => {
                   ruta_archivo_cambio: ''
                 });
                 closeModalAdministracionTRD();
+                dispatch(set_selected_item_from_catalogo_trd_action(null));
               }}
             >
               SALIR Y CANCELAR
             </Button>
+
+            {/* {trd_current.actual ? (
+
+            ) : null } */}
+
+            {trd_current.actual &&
+            selected_item_from_catalogo_trd?.nombre_unidad ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<VisibilityIcon />}
+                  // disabled={ccd_current?.actual}
+                  onClick={() => {
+                    console.log('viendo historial de cambios');
+                    dispatch(get_historical_trd(trd_current.id_trd));
+                    openModalHistorialCambios();
+                  }}
+                >
+                  VER HISTORIAL DE CAMBIOS
+                </Button>
+
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<AutoFixHighIcon />}
+                  // disabled={ccd_current?.actual}
+                  onClick={() => {
+                    buttonSpecialEditionActualTRD
+                      ? setButtonSpecialEditionActualTRD(false)
+                      : setButtonSpecialEditionActualTRD(true);
+                    console.log('viendo historial de cambios');
+                  }}
+                >
+                  {buttonSpecialEditionActualTRD
+                    ? 'CANCELAR EDICIÓN ESPECIAL'
+                    : 'EDICIÓN ESPECIAL'}
+                </Button>
+              </>
+            ) : null}
           </Stack>
         </Box>
       </Grid>
 
+      {/* Modal historial de cambios TRD ACTUAL */}
+      <HistorialDeCambios />
+      {/* Modal historial de cambios TRD ACTUAL */}
+
       {/* establecer tipologias */}
-      {/* poner modal de manejo para establecer tipologias a un TRD */}
-      <EstablecerTipologias
-        setNuevasTipologias={setNuevasTipologias}
-        nuevasTipologias={nuevasTipologias}
-      />
+
+      <EstablecerTipologias />
       {/* end new spaces */}
     </>
   );

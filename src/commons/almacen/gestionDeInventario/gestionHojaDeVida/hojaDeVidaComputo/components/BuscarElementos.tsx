@@ -8,14 +8,11 @@ import { useEffect } from 'react';
 import type { IComputers } from '../interfaces/CvComputo';
 import { useForm } from 'react-hook-form';
 
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarComputer = () => {
-
     const { control: control_computo, reset: reset_computo, getValues: get_values } = useForm<IComputers>();
-
     const { computers, current_computer, current_cv_computer } = useAppSelector((state) => state.cv);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(set_current_cv_computer({
@@ -32,17 +29,11 @@ const SeleccionarComputer = () => {
 
     }, [current_computer]);
 
-
-    const dispatch = useAppDispatch();
-
-
     const columns_solicitudes: GridColDef[] = [
-        // { field: 'id_bien', headerName: 'ID', width: 200 },
-
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -53,7 +44,7 @@ const SeleccionarComputer = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -64,7 +55,7 @@ const SeleccionarComputer = () => {
         {
             field: 'cod_tipo_activo',
             headerName: 'Tipo de bien',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -75,7 +66,6 @@ const SeleccionarComputer = () => {
 
     ];
     const filter_computer: any = (async () => {
-
         void dispatch(get_computers_all_service())
 
     })
@@ -114,7 +104,7 @@ const SeleccionarComputer = () => {
                             control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "Código bien",
+                            label: "Código",
                             type: "number",
                             disabled: false,
                             helper_text: "",

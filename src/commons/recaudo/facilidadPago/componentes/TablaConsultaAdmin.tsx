@@ -4,7 +4,7 @@ import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
+import { TablaObligacionesUsuarioConsulta } from './TablaObligacionesUsuarioConsulta';
 import { type event, type ObligacionesUsuario, type Contribuyente } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -56,39 +56,38 @@ export const TablaConsultaAdmin: React.FC = () => {
     },
     {
       field: 'acciones',
-      headerName: 'Ver',
+      headerName: 'Acción',
       width: 150,
       renderCell: (params) => {
         return (
           <>
             <Tooltip title="Ver">
-                <IconButton
-                  onClick={() => {
-                    try {
-                      void dispatch(get_obligaciones_id(params.row.identificacion));
-                      set_obligaciones_module(true);
-                    } catch (error: any) {
-                      throw new Error(error);
-                    }
+              <IconButton
+                onClick={() => {
+                  try {
+                    void dispatch(get_obligaciones_id(params.row.identificacion));
+                    set_obligaciones_module(true);
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
+                  variant="rounded"
                 >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ArticleIcon
-                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    />
-
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </>
+                  <ArticleIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
         )
       },
     },
@@ -235,8 +234,8 @@ export const TablaConsultaAdmin: React.FC = () => {
               {
                 obligaciones.length !== 0 ? (
                   <>
-                    <p>Las obligaciones pendientes por pago son las siguientes:</p>
-                    <TablaObligacionesUsuario />
+
+                    <TablaObligacionesUsuarioConsulta />
                   </>
                 ): <p>El usuario no tiene obligaciones pendientes por pago.</p>
               }

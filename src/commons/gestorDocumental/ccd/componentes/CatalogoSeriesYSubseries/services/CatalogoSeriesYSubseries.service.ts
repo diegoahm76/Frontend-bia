@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { type AxiosError, type AxiosResponse } from 'axios';
 import { api } from '../../../../../../api/axios';
-import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { setUserSeriesAndSubseries } from '../slice/CatalogoSeriesYSubseriesSlice';
 import { type Dispatch } from 'react';
 import {
   control_success,
-  notification_error
+  control_error,
 } from '../../../store/thunks/ccdThunks';
 
 export const getCatalogoSeriesYSubseries = (id_ccd: string): any => {
@@ -27,7 +27,7 @@ export const getCatalogoSeriesYSubseries = (id_ccd: string): any => {
       //  ? control_success(data.detail);
       return data;
     } catch (error: any) {
-      // ? await notification_error(error.response.data.detail);
+      // control_error(error.response.data.detail || 'Ha ocurrido un error');
       return error as AxiosError;
     }
   };
@@ -64,7 +64,7 @@ export const delete_independiente_serie_service: any = (
 
       return data;
     } catch (error: any) {
-      await notification_error(error.response.data.detail);
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };

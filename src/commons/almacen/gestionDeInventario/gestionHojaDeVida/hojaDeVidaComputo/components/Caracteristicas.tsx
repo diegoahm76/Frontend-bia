@@ -89,7 +89,6 @@ const Caracteristicas = ({
                             disabled: false,
                             helper_text: ""
                         },
-
                         {
                             datum_type: "input_controller",
                             xs: 12,

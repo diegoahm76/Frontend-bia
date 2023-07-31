@@ -31,8 +31,8 @@ export const ItemSeleccionado = (): JSX.Element => {
               label="Cód. Unidad Organizacional"
               variant="outlined"
               value={
-                selected_item_from_catalogo_trd.id_unidad_organizacional ||
-                selected_item_from_catalogo_trd.cod_unidad_org
+                selected_item_from_catalogo_trd?.id_unidad_organizacional ||
+                selected_item_from_catalogo_trd?.cod_unidad_org
               }
               disabled
             />

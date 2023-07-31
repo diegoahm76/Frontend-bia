@@ -50,24 +50,24 @@ export interface IComputers {
 }
 
 export interface ICvcomputers {
-  id_hoja_de_vida: number | null;
-  antivirus: string;
-  capacidad_almacenamiento: string;
-  color: string;
-  memoria_ram: string;
-  observaciones_adicionales: string;
-  otras_aplicaciones: string;
-  procesador: string;
-  ruta_imagen_foto: string | any;
-  sistema_operativo: string;
-  suite_ofimatica: string;
-  tipo_almacenamiento: string;
-  tipo_de_equipo: string;
-  codigo_bien: string | null;
-  doc_identificador_nro: string;
-  estado: string;
-  id_articulo: number | null;
-  marca: string;
-  nombre: string;
+  id_hoja_de_vida?: number | null;
+  antivirus?: string;
+  capacidad_almacenamiento?: string;
+  color?: string;
+  memoria_ram?: string;
+  observaciones_adicionales?: string;
+  otras_aplicaciones?: string;
+  procesador?: string;
+  ruta_imagen_foto?: string | any;
+  sistema_operativo?: string;
+  suite_ofimatica?: string;
+  tipo_almacenamiento?: string;
+  tipo_de_equipo?: string;
+  codigo_bien?: string | null;
+  doc_identificador_nro?: string;
+  estado?: string;
+  id_articulo?: number | null;
+  marca?: string;
+  nombre?: string;
   id_marca?: number | null;
 }
