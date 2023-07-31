@@ -84,7 +84,7 @@ export const CcdScreen: React.FC = () => {
         ccd_current?.fecha_terminado !== undefined
     );
   }, [ccd_current?.fecha_terminado]);
-const [isFileSelected, setIsFileSelected] = useState(false);
+
   useEffect(() => {
     dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
     get_assignments_service(ccd_current?.id_ccd)(dispatch);
@@ -403,13 +403,18 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                         <input
                           style={{ display: 'none' }}
                           type="file"
+                          accept='application/pdf'
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
-                            // console.log('valueeee', value);
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
-                              onChange(files[0]);
-                              // console.log(files[0]);
+                              const file = files[0];
+                              if (file.type !== 'application/pdf') {
+                                control_warning('Solo formato pdf')
+                                // dejar vacio el input file
+                              } else {
+                                onChange(file);
+                              }
                             }
                           }}
                         />

@@ -18,4 +18,6 @@ export interface formulario_administracion_tca_base {
     value: string | number;
     label: string | number;
   };
+  justificacion_cambio: string;
+  ruta_archivo_cambio: any;
 }

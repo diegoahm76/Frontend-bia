@@ -208,6 +208,41 @@ export const create_item_catalogo_tca_service: any = async (
     }
 };
 
+
+// ? --------- UPDATE ITEM FROM CATALOGO TCA SERVICE --------- //
+
+export const update_item_catalogo_tca_service = async (
+  formData: any,
+  id_cat_serie_unidad_org_ccd_trd_tca: any,
+  setLoadingButton: any
+): Promise<any> => {
+  setLoadingButton(true);
+  try {
+    if (!id_cat_serie_unidad_org_ccd_trd_tca) {
+      control_error('Todos los campos son obligatorios');
+      return;
+    }
+    console.log('bodyPost', formData);
+    const url = `gestor/tca/catalogo-tca/update-clasif/${id_cat_serie_unidad_org_ccd_trd_tca}/`;
+    const { data } = await api.put(url, formData);
+    control_success(data.detail);
+    console.log('data TCA catalogo', data);
+    return data;
+  } catch (error: AxiosError | any) {
+    control_error(
+      error.response?.data?.detail || 'Error al actualizar el expediente'
+    );
+    return error;
+  } finally {
+    setLoadingButton(false);
+  }
+};
+
+
+
+
+
+
 // ? --------- DELETE ITEM FROM CATALOGO TCA SERVICE --------- //
 
 export const delete_item_catalogo_tca_service = async (

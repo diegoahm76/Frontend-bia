@@ -21,5 +21,7 @@ export const default_values_administracion_tca: formulario_administracion_tca_ba
     cod_clas_expediente: {
       value: '',
       label: ''
-    }
+    },
+    justificacion_cambio: '',
+    ruta_archivo_cambio: '',
   };

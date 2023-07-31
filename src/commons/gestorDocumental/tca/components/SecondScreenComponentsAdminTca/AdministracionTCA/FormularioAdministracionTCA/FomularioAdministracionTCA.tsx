@@ -8,7 +8,8 @@ import {
   Box,
   Button,
   Grid,
-  Stack
+  Stack,
+  TextField
   // TextField,
 } from '@mui/material';
 import { useContext /* , useEffect */ } from 'react';
@@ -21,7 +22,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
@@ -36,9 +36,12 @@ import {
 import {
   create_item_catalogo_tca_service,
   get_catalogo_TCA_service,
-  get_catalogo_TRD_service
+  get_catalogo_TRD_service,
+  update_item_catalogo_tca_service
 } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { LoadingButton } from '@mui/lab';
+import  CloudUploadIcon  from '@mui/icons-material/CloudUpload';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -85,9 +88,33 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       cod_clas_expediente: {
         value: '',
         label: ''
-      }
+      },
+      justificacion_cambio: '',
+      ruta_archivo_cambio: ''
     });
   };
+
+  // ? use effect acceso datos desde button edit para editar administrar tca
+  useEffect(() => {
+    const comparacion =
+      selected_item_from_catalogo?.cod_clas_expediente === 'P'
+        ? 'Público - P'
+        : selected_item_from_catalogo?.cod_clas_expediente === 'R'
+        ? 'Reservado - R'
+        : selected_item_from_catalogo?.cod_clas_expediente === 'C'
+        ? 'Controlado - C'
+        : '';
+
+    reset_administrar_tca({
+      cod_clas_expediente: {
+        value: selected_item_from_catalogo?.cod_clas_expediente,
+        label: comparacion
+      },
+      id_cat_serie_und_ccd_trd:
+        selected_item_from_catalogo?.id_cat_serie_und_ccd_trd,
+      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio,
+    });
+  }, [selected_item_from_catalogo]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmitCreate = async (
@@ -108,70 +135,38 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       });
   };
 
-  // ? use effect acceso datos desde button edit para editar administrar tca
-  useEffect(() => {
-    const comparacion =
-      selected_item_from_catalogo?.cod_clas_expediente === 'P'
-        ? 'Público'
-        : selected_item_from_catalogo?.cod_clas_expediente === 'R'
-        ? 'Reservado'
-        : selected_item_from_catalogo?.cod_clas_expediente === 'C'
-        ? 'Controlado'
-        : '';
-
-    reset_administrar_tca({
-      cod_clas_expediente: {
-        value: selected_item_from_catalogo?.cod_clas_expediente,
-        label: comparacion
-      },
-      id_cat_serie_und_ccd_trd: selected_item_from_catalogo?.id_cat_serie_und_ccd_trd
-    });
-  }, [selected_item_from_catalogo]);
-
-  /*  const edit_item_onSubmit_trd_catalogo = (): any => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const edit_item_onSubmit_tca_catalogo = (): any => {
     const formData = new FormData();
-    formData.append(
-      'cod_disposicion_final',
-      form_data_administrar_trd.cod_disposicion_final.value
-    );
-    formData.append(
-      'digitalizacion_dis_final',
-      form_data_administrar_trd.digitalizacion_dis_final
-    );
+    const dato: any = watch_administrar_tca_value?.cod_clas_expediente?.value;
 
+    formData.append('cod_clas_expediente', dato);
 
-
-    if (form_data_administrar_trd.justificacion_cambio) {
+    if (watch_administrar_tca_value.justificacion_cambio) {
       formData.append(
         'justificacion_cambio',
-        form_data_administrar_trd.justificacion_cambio
+        watch_administrar_tca_value.justificacion_cambio
       );
     }
 
-    if (form_data_administrar_trd.ruta_archivo_cambio) {
+    if (watch_administrar_tca_value.ruta_archivo_cambio) {
       formData.append(
         'ruta_archivo_cambio',
-        form_data_administrar_trd.ruta_archivo_cambio
+        watch_administrar_tca_value.ruta_archivo_cambio
       );
     }
-
-    dispatch(
-      update_item_catalogo_trd(
-        formData,
-        selected_item_from_catalogo?.id_catserie_unidadorg,
-        trd_current
-      )
-    ).then((res: any) => {
-      closeModalAdministracionTRD();
-      reset_administrar_trd({
-        cod_disposicion_final: '',
-        descripcion_procedimiento: '',
-        justificacion_cambio: '',
-        ruta_archivo_cambio: ''
+    void update_item_catalogo_tca_service(
+      formData,
+      selected_item_from_catalogo?.id_cat_serie_unidad_org_ccd_trd_tca,
+      setLoadingButton
+    )
+      .then(async () => await updateCatalogoTRD(tca_current?.id_trd))
+      .then(async () => await updateCatalogoTCA(tca_current?.id_tca))
+      .then(() => {
+        closeModalAdministracionTca();
+        resetAdministrarTCA();
       });
-      setButtonSpecialEditionActualTRD(false);
-    });
-  }; */
+  };
 
   return (
     <>
@@ -181,7 +176,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
           onSubmit={(e: any) => {
             e.preventDefault();
             void (selected_item_from_catalogo?.cod_clas_expediente
-              ? console.log('editando bro')
+              ? edit_item_onSubmit_tca_catalogo()
               : onSubmitCreate(
                   selected_item_from_catalogo?.id_catserie_unidadorg,
                   watch_administrar_tca_value?.cod_clas_expediente?.value
@@ -248,12 +243,13 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
             {/* ruta archivo soporte de cambio, solo aparece en trd actual */}
             {/* SOLO TRD ACTUAL */}
 
-            {/*  {trd_current.actual && buttonSpecialEditionActualTRD ? (
+            {tca_current.actual &&
+            selected_item_from_catalogo?.cod_clas_expediente ? (
               <>
                 <Grid item xs={12} sm={12}>
-                    <Controller
+                  <Controller
                     name="justificacion_cambio"
-                    control={control_administrar_trd}
+                    control={control_administrar_tca}
                     defaultValue=""
                     rules={{ required: true }}
                     render={({
@@ -261,7 +257,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                       fieldState: { error }
                     }) => (
                       <TextField
-                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Justificación del cambio"
@@ -278,13 +273,13 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                         inputProps={{ maxLength: 250 }}
                       />
                     )}
-                  /> 
+                  />
                 </Grid>
 
                 <Grid item xs={12} sm={5}>
-                   <Controller
+                  <Controller
                     name="ruta_archivo_cambio"
-                    control={control_administrar_trd}
+                    control={control_administrar_tca}
                     defaultValue=""
                     rules={{ required: false }}
                     render={({
@@ -310,11 +305,18 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
+                            accept='application/pdf'
                             onChange={(e) => {
                               const files = (e.target as HTMLInputElement)
                                 .files;
                               if (files && files.length > 0) {
-                                onChange(files[0]);
+                                const file = files[0];
+                                if (file.type !== 'application/pdf') {
+                                  control_warning('Solo formato pdf');
+                                  // dejar vacio el input file
+                                } else {
+                                  onChange(file);
+                                }
                               }
                             }}
                           />
@@ -327,11 +329,11 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                               fontSize: '0.75rem'
                             }}
                           >
-                            {control_administrar_trd._formValues
+                            {control_administrar_tca._formValues
                               .ruta_archivo_cambio
-                              ? control_administrar_trd._formValues
+                              ? control_administrar_tca._formValues
                                   .ruta_archivo_cambio.name ??
-                                control_administrar_trd._formValues.ruta_soporte.replace(
+                                control_administrar_tca._formValues.ruta_soporte.replace(
                                   /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
                                   ''
                                 )
@@ -340,10 +342,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                         </label>
                       </>
                     )}
-                  /> 
+                  />
                 </Grid>
               </>
-            ) : null} */}
+            ) : null}
           </Grid>
           <Stack
             justifyContent="flex-end"
@@ -403,23 +405,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   }}
                 >
                   VER HISTORIAL DE CAMBIOS
-                </Button>
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<AutoFixHighIcon />}
-                  onClick={() => {
-                    /* buttonSpecialEditionActualTRD
-                      ? setButtonSpecialEditionActualTRD(false)
-                      : setButtonSpecialEditionActualTRD(true); */
-                    console.log('Edicion especial');
-                  }}
-                >
-                  {/* {buttonSpecialEditionActualTRD
-                    ? 'CANCELAR EDICIÓN ESPECIAL'
-                    : 'EDICIÓN ESPECIAL'} */}
-                  EDICIÓN ESPECIAL
                 </Button>
               </>
             ) : null}
