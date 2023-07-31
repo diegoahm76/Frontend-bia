@@ -145,7 +145,7 @@ const FormInputFileController = ({
           {value_file !== '' &&
             value_file !== null &&
             typeof value_file === 'string' && (
-              <Grid item xs={1} md={1} marginLeft={1}>
+              <Grid item xs={1} md={1} spacing={1}>
                 <DownloadButton                  
                   fileUrl={value_file}
                   fileName={control_name}
