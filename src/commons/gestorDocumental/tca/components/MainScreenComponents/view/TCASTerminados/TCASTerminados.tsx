@@ -40,9 +40,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
   useEffect(() => {
     if (modalTcaTerminados)
       void getTcaTerminados().then((res) => {
-        // console.log('res', res);
-        const data = res.filter((item: TcaTerminados) => item.fecha_terminado);
-        setrowsTcasTerminados(data);
+        setrowsTcasTerminados(res);
       });
     return () => {
       setrowsTcasTerminados([]);
@@ -68,7 +66,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
       headerName: 'Actual',
       width: 100,
       renderCell: (params: any) =>
-        params.value.actual ? (
+        params.row.actual ? (
           <Chip label="SI" color="primary" variant="outlined" />
         ) : (
           <Chip label="NO" color="error" variant="outlined" />
@@ -123,7 +121,9 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
         onClose={closeModalTcaTerminados}
       >
         <DialogTitle>
-          {`TCA'S TERMINADOS`}
+          {rowsTcasTerminados?.length > 0
+            ? 'TCA TERMINADOS'
+            : 'TCA TERMINADOS : NO HAY TCA TERMINADOS'}
           <IconButton
             aria-label="close"
             onClick={closeModalTcaTerminados}
