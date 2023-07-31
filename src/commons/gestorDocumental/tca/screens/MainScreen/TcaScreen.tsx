@@ -113,7 +113,7 @@ export const TcaScreen: FC = (): JSX.Element => {
           >
             {
               // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-              flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
+              flag_finish_or_or_edit_trd ? 'REANUDAR TCA' : 'FINALIZAR TCA'
             }
           </Button>
         </Stack>
