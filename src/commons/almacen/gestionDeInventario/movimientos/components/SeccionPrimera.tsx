@@ -97,7 +97,7 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                     form_inputs={[
                         {
                             datum_type: 'title',
-                            title_label: 'ENTREGA DE BIENES DE CONSUMO A VIVERO',
+                            title_label: 'Entrega de bienes de consumo a vivero',
                         },
                         {
                             datum_type: 'input_controller',

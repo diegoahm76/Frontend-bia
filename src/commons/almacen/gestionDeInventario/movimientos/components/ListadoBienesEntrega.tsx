@@ -172,7 +172,11 @@ const ListadoBienesEntrega = () => {
           marginTop={2}
         >
           <Box sx={{ width: '100%' }}>
+          <Grid item xs={12} md={12} marginTop={-2}>
+
             <Title title="Bienes solicitados" />
+          </Grid>
+          <Grid item xs={12} md={12} marginTop={2}>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"
@@ -184,8 +188,9 @@ const ListadoBienesEntrega = () => {
               getRowId={(row) => row.id_bien}
               selectionModel={selected_row}
               rows={bienes_entrada_aux}
-            />
-            <Grid item xs={12} md={12}>
+            /> 
+            </Grid>
+            <Grid item xs={12} md={12} marginTop={2}>
               <FormButton
                 variant_button="contained"
                 on_click_function={select_model}
