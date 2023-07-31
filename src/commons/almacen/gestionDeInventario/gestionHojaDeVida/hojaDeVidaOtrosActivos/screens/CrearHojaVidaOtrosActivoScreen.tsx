@@ -15,6 +15,7 @@ import EspecificacionesOtros from '../components/Especificaciones';
 import EspecificacionesTec from '../components/EspecificacionesTec';
 import FormButton from '../../../../../../components/partials/form/FormButton';
 import { get_marca_service } from '../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
+import { Title } from '../../../../../../components';
 
 
 
@@ -77,7 +78,11 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
+                <h1>Hoja de vida otros activos</h1>
+                <Grid item xs={12} md={12} marginTop={-2}>
 
+                    <Title title={''}  ></Title>
+                </Grid>
 
                 <SeleccionarOtros />
 
@@ -85,12 +90,12 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                 <EspecificacionesOtros
                     control_other={control_other}
                     get_values={get_values}
-                    title="CARACTERISTICAS FÍSICAS" />
+                    title="Características físicas" />
 
                 <EspecificacionesTec
                     control_other={control_other}
                     get_values={get_values}
-                    title="ADICIONAL" />
+                    title="Adicional" />
 
                 <Grid
                     container
