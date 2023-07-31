@@ -15,7 +15,6 @@ import {
   MenuItem,
   Grid,
   Chip,
-  Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
