@@ -154,6 +154,9 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
         if (data?.length > 0) {
           set_rows(data);
         }
+        if (data?.length === 0) {
+          control_error('No se encontraron resultados');
+        }
       } catch (error) {
         const temp_error = error as AxiosError;
         const resp = temp_error.response?.data as ResponseServer<any>;

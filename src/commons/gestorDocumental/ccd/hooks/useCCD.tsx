@@ -36,14 +36,17 @@ import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
 import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import { Avatar, IconButton } from '@mui/material';
-// import { get_serie_ccd_current } from '../store/slices/seriesSlice';
-// import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
-// import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContext } from '../context/ModalContext';
-import { get_serie_ccd_current } from '../store/slices/seriesSlice';
-import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
+import {
+  get_serie_ccd_current,
+  get_series_ccd
+} from '../store/slices/seriesSlice';
+import {
+  get_subseries_ccd,
+  get_subseries_ccd_current
+} from '../store/slices/subseriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
@@ -170,23 +173,23 @@ const use_ccd = () => {
     formState: { errors: errors_create_ccd }
   } = useForm<ICCDForm>({ defaultValues: initial_state });
   const data_create_ccd = watch_create_ccd();
-  console.log(data_create_ccd, 'data_create_ccd');
+  // console.log(data_create_ccd, 'data_create_ccd');
 
   //  UseEffect para obtener organigramas
   useEffect(() => {
-    console.log(data_create_ccd, 'data_create_ccd');
-    console.log(ccd_current, 'ccd_current');
+    // console.log(data_create_ccd, 'data_create_ccd');
+    // console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item) => {
         return item.id_organigrama === ccd_current.id_organigrama;
       });
 
-      const result_unity = unity_organigram.filter(
+      /* const result_unity = unity_organigram.filter(
         (item) => item.id_organigrama === ccd_current.id_organigrama
-      );
+      ); */
 
-      console.log('result_name', result_name);
-      console.log('result_unity', result_unity);
+      // console.log('result_name', result_name);
+      // console.log('result_unity', result_unity);
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd ? ccd_current.id_ccd : 0,
         nombre_ccd: ccd_current.nombre ? ccd_current.nombre : '',
@@ -234,7 +237,7 @@ const use_ccd = () => {
           value: assignments_ccd_current.id_unidad_organizacional
         }
       };
-      console.log(obj, 'obj');
+      // console.log(obj, 'obj');
       reset(obj);
       set_title_button_asing('Editar relación');
     }
@@ -270,8 +273,12 @@ const use_ccd = () => {
   }, [data_create_ccd.organigrama.value]);
 
   useEffect(() => {
+    console.log('uniry_organigram', unity_organigram);
+    const filteredUnityOrganigram = unity_organigram.filter(
+      (item) => item.cod_agrupacion_documental !== null
+    );
     set_list_unitys(
-      unity_organigram.map((item) => ({
+      filteredUnityOrganigram.map((item) => ({
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))
@@ -322,7 +329,7 @@ const use_ccd = () => {
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
     e.preventDefault();
-    console.log(data_create_ccd, 'data_create_ccd');
+    // console.log(data_create_ccd, 'data_create_ccd');
     // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
       update_ccd(data_create_ccd);
@@ -350,7 +357,7 @@ const use_ccd = () => {
       }
     }
 
-    console.log('new_ccd', new_ccd);
+    // console.log('new_ccd', new_ccd);
     void dispatch(
       create_ccds_service(
         formData,
@@ -398,18 +405,6 @@ const use_ccd = () => {
     ) {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
-
-    /*  for (const key in updatedCCD) {
-      if (updatedCCD[key] !== null) {
-        formData.append(key, updatedCCD[key]);
-      }
-    } */
-
-    console.log(formData, 'formData');
-
-    console.log('udpated ccd', updatedCCD);
-    // void dispatch(create_ccds_service(formData, set_save_ccd));
-    // clean_after_update();
     void dispatch(
       update_ccds_service(
         formData,
@@ -431,6 +426,8 @@ const use_ccd = () => {
     set_list_sries_asignacion([]);
     set_list_subsries([]);
     set_list_sries([]);
+    dispatch(get_subseries_ccd([]));
+    dispatch(get_series_ccd([]));
   };
 
   const clean_after_update = (): void => {
@@ -457,9 +454,8 @@ const use_ccd = () => {
   }, [dispatch, reset, set_title_button_asing]);
 
   const create_or_delete_relation_unidad = (): void => {
-    // console.log(data_asing, 'data_asing');
-    // console.log('epa la patria', ccd_current);
-
+    console.log(data_asing, 'data_asing');
+    console.log('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
       (item: {
         item: {
@@ -488,11 +484,9 @@ const use_ccd = () => {
       }
     );
 
-    console.log(itemSend, 'itemSend');
-
     const itemSendDef = [...assignments_ccd, ...itemSend];
 
-    console.log(itemSendDef, 'itemSendDef');
+    // console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
       create_or_delete_assignments_service(itemSendDef, ccd_current)
@@ -504,14 +498,6 @@ const use_ccd = () => {
   // Funcion para eliminar Asignaciones
   const delete_asing = (id: any): void => {
     const new_items = assignments_ccd.filter((item) => item.id !== id);
-    console.log(new_items, 'new_items');
-    /* const item_final = new_items.map((item: any) => {
-      return {
-        id_unidad_organizacional: item?.id_unidad_organizacional,
-        id_serie_doc: item?.codigo_serie,
-        subseries: item?.subseries?.map((item: { value: any }) => item.value),
-      };
-    }); */
     void dispatch(
       create_or_delete_assignments_service(new_items, ccd_current)
     ).then(() => {
@@ -524,7 +510,8 @@ const use_ccd = () => {
       headerName: 'ID Un. Org',
       field: 'id_unidad_organizacional',
       minWidth: 90,
-      maxWidth: 100
+      maxWidth: 100,
+      hide: true
     },
     {
       headerName: 'Unidad Organizacional',
@@ -561,13 +548,13 @@ const use_ccd = () => {
       minWidth: 110,
       maxWidth: 120,
       renderCell: (params: any) => {
-        return (
+        return ccd_current?.actual ? null : (
           <>
             <IconButton
               onClick={() => {
-                console.log('elimaniando relación');
+                // console.log('elimaniando relación');
                 delete_asing(params.row.id);
-                console.log(params.row);
+                // console.log(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

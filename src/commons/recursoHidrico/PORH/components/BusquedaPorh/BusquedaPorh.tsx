@@ -25,7 +25,6 @@ import type { BusquedaPorhI } from '../../Interfaces/interfaces';
 export const BusquedaPorh: React.FC = () => {
   const {
     info_instrumento,
-    id_instrumento,
     set_is_general,
     set_is_consulta,
     set_id_instrumento,
@@ -34,10 +33,10 @@ export const BusquedaPorh: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_PORH',
+      field: 'nombre',
       headerName: 'NOMBRE PORH',
       sortable: true,
-      width: 300,
+      width: 400,
     },
     {
       field: 'ACCIONES',
@@ -116,16 +115,12 @@ export const BusquedaPorh: React.FC = () => {
     set_is_search(false);
   }, []);
 
-  useEffect(() => {
-    console.log('id_instrumento', id_instrumento);
-  }, [id_instrumento]);
-
   return (
     <>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
           label="Nombre PORH "
-          value={info_instrumento?.nombre_PORH ?? ''}
+          value={info_instrumento?.nombre ?? ''}
           disabled={true}
           fullWidth
           size="small"

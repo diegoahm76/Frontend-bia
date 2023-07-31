@@ -1,8 +1,6 @@
-import { type Persona } from "../../../../../interfaces/globalModels";
-
+import { type Persona } from '../../../../../interfaces/globalModels';
 
 export interface IEntrega {
-
     persona_entrega: Persona;
     entregas: IObjEntrega[];
     current_entrega: IObjEntrega;
@@ -13,21 +11,37 @@ export interface IEntrega {
     bienes_entrada: IObjBienesEntrada[];
     current_entrada: IObjEntrada;
     entradas: IObjEntrada[];
+    bien_selected: IObjBienesEntrada;
+    bienes_entrada_aux: IObjBienesEntrada[];
+    bienes: IObjBien[];
+    current_bien: IObjBien;
+}
 
-
+export interface IObjBien {
+    bodega: string | null;
+    cantidad_disponible: number | null;
+    codigo_bien: string | null;
+    disponible: boolean | null;
+    id_bien: number | null;
+    id_bodega: number | null;
+    id_inventario: number | null;
+    nombre: string | null;
+    origen: string | null;
+    tipo_documento: string | null;
+    unidad_medida: string | null;
 }
 
 export interface IObjEntrega {
-    id_despacho_consumo?: number | null;
+    id_despacho_consumo?: number | null | undefined;
     numero_despacho_consumo?: number | null;
-    numero_solicitud_por_tipo?: null,
+    numero_solicitud_por_tipo?: null;
     fecha_solicitud?: string | null;
     fecha_despacho?: string | null;
     fecha_registro?: string | null;
     motivo?: string | null;
-    es_despacho_conservacion?: boolean,
-    despacho_anulado?: null,
-    justificacion_anulacion?: null,
+    es_despacho_conservacion?: boolean;
+    despacho_anulado?: boolean;
+    justificacion_anulacion?: null;
     fecha_anulacion?: string | null;
     ruta_archivo_doc_con_recibido?: null;
     id_solicitud_consumo?: number | null;
@@ -51,13 +65,19 @@ export interface IObjEntrega {
 }
 
 export interface IObjBienEntrega {
-    id_despacho_consumo?: number | null;
+    id_item_despacho_consumo?: number | null;
+    id_despacho_consumo?: number | null | undefined;
     id_bien_despachado?: number | null;
     id_entrada_almacen_bien?: number | null;
     id_bodega?: number | null;
     cantidad_despachada?: number | null;
     numero_posicion_despacho?: number | null;
     observacion?: string | null;
+    id_bien?: number | null;
+    bodega?: string | null;
+    nombre_bien?: string | null;
+    codigo_bien?: string | null;
+    unidad_medida?: string | null;
 }
 
 export interface TipoEntrada {
@@ -65,20 +85,21 @@ export interface TipoEntrada {
     nombre?: string | null;
     descripcion?: string | null;
     titulo_persona_origen?: string | null;
-    constituye_propiedad?: boolean
+    constituye_propiedad?: boolean;
 }
 
 export interface IObjBienesEntrada {
     id_entrada_almacen?: number | null;
     id_bien?: number | null;
     cantidad_entrante?: number | null;
-    tiene_cantidad_disponible: boolean | null;
+    tiene_cantidad_disponible?: boolean | null;
     cantidad_disponible?: number | null;
-    codigo_bien?: number | null;
+    codigo_bien?: string | null;
     nombre_bien?: string | null;
     observaciones?: string | null;
+    cantidad_faltante?: number | null;
+    cantidad_despachada?: number | null;
 }
-
 
 export interface IObjEntrada {
     id_entrada_almacen?: number | null;

@@ -213,7 +213,7 @@ export const ParametrosLabScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CONFIGURACIONES BÁSICAS PARAMETROS" />
+          <Title title="CONFIGURACIONES BÁSICAS PARÁMETROS" />
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -222,7 +222,7 @@ export const ParametrosLabScreen: React.FC = () => {
             onClick={handle_open_crear}
             startIcon={<AddIcon />}
           >
-            CREAR PARAMETRO
+            CREAR PARÁMETRO
           </Button>
         </Grid>
         <Grid item xs={12}>

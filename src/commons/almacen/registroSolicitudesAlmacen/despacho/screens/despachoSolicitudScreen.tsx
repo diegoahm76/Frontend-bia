@@ -43,16 +43,20 @@ import SeleccionarBienDespacho from '../components/SeleccionarBienDespacho';
 import AnularEliminar from '../../../../conservacion/componentes/AnularEliminar';
 import Block from '@mui/icons-material/Block';
 import SaveIcon from '@mui/icons-material/Save';
+import SearchIcon from '@mui/icons-material/Search';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, } = useForm<IObjSolicitud>();
   const { control: control_despacho, handleSubmit: handle_submit, reset: reset_despacho, getValues: get_values, } = useForm<IObjDespacho>();
-  const [action, set_action] = useState<string>('Crear');
+  const [action, set_action] = useState<string>('Guardar');
   const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any }) => state.solic_consumo);
   const { persona_despacha, current_despacho, nro_despacho, bienes_despacho } = useAppSelector((state) => state.despacho);
   const { bodega_seleccionada } = useAppSelector((state: { bodegas: any }) => state.bodegas);
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => { set_open_search_modal(true); };
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -297,12 +301,13 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarDespacho
           control_despacho={control_despacho}
           get_values={get_values}
+          open_modal={open_search_modal}
+          set_open_modal={set_open_search_modal}
         />
         <SeleccionarSolicitudDespacho
           title={'INFORMACIÓN DE LA SOLICITUD'}
           control_solicitud_despacho={control_solicitud_despacho}
-          get_values={get_values}
-        />
+          get_values={get_values} open_modal={false} set_open_modal={undefined} />
 
         <FuncionarioRechazo
           title={'Persona responsable'}
@@ -315,7 +320,7 @@ const DespachoBienesConsumoScreen = () => {
 
       <Grid container direction="row" padding={2} spacing={2}>
         {!(current_despacho.despacho_anulado === true) && (
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             <FormButton
               variant_button="contained"
               on_click_function={handle_submit(on_submit)}
@@ -325,7 +330,17 @@ const DespachoBienesConsumoScreen = () => {
             />
           </Grid>
         )}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={6} md={2}>
+          <FormButton
+            variant_button="contained"
+            on_click_function={handle_open_select_model}
+            icon_class={<SearchIcon />}
+            label={'Buscar despacho'}
+            type_button="button"
+            disabled={false}
+          />
+        </Grid>
+        <Grid item xs={12} md={2}>
           <AnularEliminar
             action={
               current_solicitud.solicitud_abierta === true
@@ -417,7 +432,8 @@ const DespachoBienesConsumoScreen = () => {
             ]}
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+
+        <Grid item xs={12} md={2}>
           <AnularEliminar
             action={
               current_despacho.despacho_anulado === true
@@ -506,8 +522,17 @@ const DespachoBienesConsumoScreen = () => {
               },
             ]}
           />
+
+
         </Grid>
+        <Grid item xs={12} md={2}>
+          <ButtonSalir
+          />
+        </Grid>
+
+
       </Grid>
+
     </Grid>
   );
 };

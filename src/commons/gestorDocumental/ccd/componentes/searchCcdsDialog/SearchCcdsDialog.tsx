@@ -45,28 +45,6 @@ const SearchCcdModal = ({
   // Hooks
   const { clean_ccd } = use_ccd() as any;
 
-  /* 
-
-  const [world_search, set_world_search] = useState<string>('');
-  const [filter_ccds, set_filter_ccds] = useState<any>([]);
-
- useEffect(() => {
-    const filter = ccds.filter((item) => {
-      return (
-        item.nombre
-          .toLocaleLowerCase()
-          .includes(world_search.toLocaleLowerCase()) ||
-        item.version
-          .toLocaleLowerCase()
-          .includes(world_search.toLocaleLowerCase())
-      );
-    });
-    if (world_search !== '') {
-      set_filter_ccds(filter);
-    } else {
-      set_filter_ccds(ccds);
-    }
-  }, [world_search, ccds]); */
 
   const {
     control: control_search_ccd,
@@ -128,7 +106,7 @@ const SearchCcdModal = ({
         <>
           <IconButton
             onClick={() => {
-              console.log('params para ver ccd en el icono del ojito', params);
+              // console.log('params para ver ccd en el icono del ojito', params);
               void dispatch(
                 get_classification_ccds_service(
                   params.row.nombre,
@@ -138,7 +116,7 @@ const SearchCcdModal = ({
               );
               openModalBusquedaCreacionCCD();
               // dispatch(get_assignments_service(params.row.id_ccd));
-              console.log('params para ver ccd en el icono del ojito', params);
+              // console.log('params para ver ccd en el icono del ojito', params);
               // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
             }}
@@ -199,7 +177,7 @@ const SearchCcdModal = ({
               marginTop: '20px'
             }}
             onSubmit={(e: any) => {
-              console.log('onSubmit');
+              // console.log('onSubmit');
               e.preventDefault();
               void dispatch(
                 get_classification_ccds_service(
@@ -208,7 +186,7 @@ const SearchCcdModal = ({
                 )
               ).then((data: any) => {
                 openModalBusquedaCreacionCCD();
-                console.log(data);
+                // console.log(data);
                 if (
                   data.data.length > 0 &&
                   control_search_ccd._formValues.nombre_ccd !== '' &&
@@ -234,7 +212,7 @@ const SearchCcdModal = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                     // margin="dense"
                       fullWidth
                       size="small"
                       label="Nombre CCD"

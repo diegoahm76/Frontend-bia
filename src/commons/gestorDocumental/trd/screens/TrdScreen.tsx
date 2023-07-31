@@ -26,7 +26,9 @@ import { use_trd } from '../hooks/use_trd';
 //* thunks
 import {
   create_trd_service,
+  finish_trd_service,
   getServiceSeriesSubseriesXUnidadOrganizacional,
+  resume_trd_service,
   update_trd_service
 } from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -36,6 +38,8 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
+// import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
+// import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -84,7 +88,9 @@ export const TrdScreen: FC = (): JSX.Element => {
   const {
     openModalModalSearchTRD,
     openModalCCDUsados,
-    openModalCreacionFormatoTipo
+    openModalCreacionFormatoTipo,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -94,9 +100,13 @@ export const TrdScreen: FC = (): JSX.Element => {
       control_error('datos requeridos');
       return;
     }
-    trd_current != null
-      ? dispatch(update_trd_service(data_create_trd_modal))
-      : dispatch(create_trd_service(data_create_trd_modal));
+    trd_current !== null
+      ? dispatch(
+          update_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        )
+      : dispatch(
+          create_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        );
   };
 
   return (
@@ -191,7 +201,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       // name="nombre"
                       label="Nombre del TRD"
@@ -206,8 +216,10 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        console.log(e.target.value);
+                        e.target.value.length === 50 && control_error('max 50 digitos');
+                        // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 50 }}
                       // error={!!error}
                       /* helperText={
                         error
@@ -229,7 +241,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       // name="version"
                       label="Versión del TRD"
@@ -244,8 +256,10 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        console.log(e.target.value);
+                        e.target.value.length === 10 && control_error('max 10 digitos');
+                        // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 10 }}
                     />
                   )}
                 />
@@ -275,7 +289,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 BUSCAR TRD
               </Button>
               <LoadingButton
-                // loading={loadingButton}
+                loading={createTRDLoadingButton}
                 type="submit"
                 color="primary"
                 variant="contained"
@@ -290,7 +304,8 @@ export const TrdScreen: FC = (): JSX.Element => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
-                  console.log('reset_create_trd_modal');
+                  // dispatch(set_selected_item_from_catalogo_trd_action(null));
+                  // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
                 }}
               >
@@ -324,6 +339,15 @@ export const TrdScreen: FC = (): JSX.Element => {
           <CatalogoTRD />
         </Grid>
         {/* CATALOGO TRD */}
+
+        {/* ------------------ */}
+        {/* Administración de TRD, va a estar en otra ruta  */}
+
+        {/* <Grid item xs={12}>
+          <AdminTRDScreen/>
+        </Grid> */}
+
+        {/* ------------------ */}
       </Grid>
       {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
 
@@ -353,31 +377,10 @@ export const TrdScreen: FC = (): JSX.Element => {
         spacing={2}
         sx={{ m: '20px 0' }}
       >
-        <Button
-          color="success"
-          variant="contained"
-          startIcon={<SaveIcon />}
-          onClick={() => {
-            if (flag_finish_or_or_edit_trd) {
-              set_flag_finish_or_edit_trd(false);
-              console.log('TRD reanudado');
-            } else {
-              set_flag_finish_or_edit_trd(true);
-              console.log('TRD finalizado');
-            }
-          }}
-        >
-          {
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
-          }
-        </Button>
-
         {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
 
         <Button
-          // color="info"
-          color="primary"
+          color="warning"
           variant="contained"
           startIcon={<AddCircleIcon />}
           onClick={openModalCreacionFormatoTipo}
@@ -386,6 +389,33 @@ export const TrdScreen: FC = (): JSX.Element => {
         </Button>
 
         {/* buttons end */}
+        <Button
+          color="success"
+          variant="contained"
+          startIcon={<SaveIcon />}
+          onClick={() => {
+            if (flag_finish_or_or_edit_trd) {
+              dispatch(
+                resume_trd_service(
+                  trd_current?.id_trd,
+                  set_flag_finish_or_edit_trd
+                )
+              );
+            } else {
+              dispatch(
+                finish_trd_service(
+                  trd_current?.id_trd,
+                  set_flag_finish_or_edit_trd
+                )
+              );
+            }
+          }}
+        >
+          {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
+          }
+        </Button>
       </Stack>
 
       {/* -- this modal allow us to do the TRD search  -- */}

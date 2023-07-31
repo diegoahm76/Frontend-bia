@@ -330,13 +330,14 @@ export const AgregarProyectos: React.FC = () => {
     if (edit_row_proyectos) {
       const proyectos_actualizados = rows_proyectos_register.map((proyecto) => {
         if (proyecto.id === edit_row_proyectos.id) {
-          return {
+          const updatedProject = {
             ...proyecto,
             nombre,
             vigencia_inicial,
             vigencia_final,
             inversion,
           };
+          return updatedProject;
         }
         return proyecto;
       });
@@ -447,7 +448,7 @@ export const AgregarProyectos: React.FC = () => {
   useEffect(() => {
     if (edit_row_proyectos) {
       set_value('nombre', edit_row_proyectos.nombre);
-      set_value(' vigencia_inicial', edit_row_proyectos.vigencia_inicial);
+      set_value('vigencia_inicial', edit_row_proyectos.vigencia_inicial);
       set_value('vigencia_final', edit_row_proyectos.vigencia_final);
       set_value('inversion', edit_row_proyectos.inversion);
       set_start_date(dayjs(edit_row_proyectos.vigencia_inicial));

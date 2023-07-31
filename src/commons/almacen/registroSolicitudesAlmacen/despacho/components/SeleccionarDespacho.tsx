@@ -17,6 +17,8 @@ import { get_despachos_service } from '../store/thunks/despachoThunks';
 interface IProps {
   control_despacho: any;
   get_values: any;
+  open_modal: boolean;
+  set_open_modal: any;
 }
 interface IList {
   value: string | number;
@@ -29,7 +31,7 @@ const initial_options: IList[] = [
   },
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
+const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_open_modal, }: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
   const { despachos, current_despacho, persona_despacha } = useAppSelector(
     (state) => state.despacho
@@ -73,7 +75,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
   }, []);
 
   const columns_despacho: GridColDef[] = [
-    { field: 'id_despacho_consumo', headerName: 'ID', width: 20 },
+
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
@@ -97,7 +99,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
     {
       field: 'motivo',
       headerName: 'Motivo',
-      width: 150,
+      width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -167,7 +169,9 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
           models={despachos}
           get_filters_models={get_despachos}
           set_models={set_despachos}
-          button_submit_label="Buscar despachos"
+          show_search_button={false}
+          open_search_modal={open_modal}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'title',
@@ -176,7 +180,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 4,
               control_form: control_despacho,
               control_name: 'numero_despacho_consumo',
               default_value: '',
@@ -203,6 +207,21 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               file_name,
             },
             {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 4,
+              control_form: control_despacho,
+              control_name: 'fecha_despacho',
+              default_value: '',
+              rules: {
+
+              },
+              label: 'Fecha de despacho',
+              disabled: true,
+              helper_text: '',
+              format: 'YYYY-MM-DD',
+            },
+            {
               datum_type: 'input_controller',
               xs: 12,
               md: 12,
@@ -222,7 +241,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 4,
+              md: 12,
               control_form: control_despacho,
               control_name: 'persona_crea',
               default_value: '',
@@ -237,24 +256,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               disabled: true,
               helper_text: '',
             },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 5,
-              control_form: control_despacho,
-              control_name: 'fecha_despacho',
-              default_value: '',
-              rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Debe seleccionar fecha',
-                },
-              },
-              label: 'Fecha de despacho',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
+
           ]}
           modal_select_model_title="Buscar despacho"
           modal_form_filters={[

@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { useEffect, useState } from 'react';
-import { Grid, Box, DialogTitle, DialogActions, Button, Stack, } from '@mui/material';
+import { Grid, } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { type IcvOthers as FormValues } from '../interfaces/CvOtrosActivos';
-import { create_cv_others_service } from '../store/thunks/cvOtrosActivosThunks';
+import { create_cv_others_service, delete_cv_others_service, update_cv_other_service } from '../store/thunks/cvOtrosActivosThunks';
 import SaveIcon from '@mui/icons-material/Save';
 import SeleccionarOtros from '../components/BuscarElemento';
 import EspecificacionesOtros from '../components/Especificaciones';
 import EspecificacionesTec from '../components/EspecificacionesTec';
+import FormButton from '../../../../../../components/partials/form/FormButton';
+import { get_marca_service } from '../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 
 
 
@@ -20,13 +22,18 @@ import EspecificacionesTec from '../components/EspecificacionesTec';
 export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [action] = useState<string>("create");
-    const { current_cv_other, current_other } = useAppSelector((state) => state.cvo);
+    const [action, set_action] = useState<string>("guardar");
+    const { current_cv_other, } = useAppSelector((state) => state.cvo);
     const { control: control_other, handleSubmit: handle_submit, reset: reset_other, getValues: get_values } = useForm<FormValues>();
     useEffect(() => {
-        reset_other(current_cv_other);
-        console.log(current_cv_other)
-    }, [current_other]);
+        void dispatch(get_marca_service());
+    }, []);
+    useEffect(() => {
+        if (current_cv_other.id_hoja_de_vida !== null) {
+            set_action("editar")
+        }
+    }, [current_cv_other]);
+
 
     const on_submit = (data: FormValues): void => {
         const form_data: any = new FormData();
@@ -34,14 +41,27 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
         form_data.append('doc_identificador_nro', data.doc_identificador_nro);
         form_data.append('especificaciones_tecnicas', data.especificaciones_tecnicas);
         form_data.append('observaciones_acionales', data.observaciones_adicionales);
-        form_data.append('id_marca', data.id_marca);
-        form_data.append('id_bien', (data.id_bien ?? "").toString());
-        // form_data.append('ruta_imagen_foto', file === null ? '' : file);
+        form_data.append('id_marca', data.id_marca ?? null);
+        form_data.append('id_articulo', (data.id_articulo ?? "").toString());
+        form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+        if (data.id_hoja_de_vida === null) {
+            void dispatch(create_cv_others_service(form_data, navigate));
+        } else {
+            void dispatch(update_cv_other_service(data.id_hoja_de_vida, form_data));
 
-        void dispatch(create_cv_others_service(form_data, navigate));
-
-
+        }
     };
+    const delete_hoja_vida = (): void => {
+
+        if (current_cv_other.id_hoja_de_vida !== null && current_cv_other.id_hoja_de_vida !== undefined) {
+            void dispatch(delete_cv_others_service(current_cv_other.id_hoja_de_vida));
+        }
+    };
+
+    useEffect(() => {
+        reset_other(current_cv_other);
+        console.log(current_cv_other)
+    }, [current_cv_other]);
 
     return (
         <>
@@ -58,72 +78,51 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                 }}
             >
 
-                <Box
-                    component="form"
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    onSubmit={
-                        action === 'create'
-                            ? handle_submit(on_submit)
-                            : handle_submit(on_submit)
-                    }
+
+                <SeleccionarOtros />
+
+
+                <EspecificacionesOtros
+                    control_other={control_other}
+                    get_values={get_values}
+                    title="CARACTERISTICAS FÍSICAS" />
+
+                <EspecificacionesTec
+                    control_other={control_other}
+                    get_values={get_values}
+                    title="ADICIONAL" />
+
+                <Grid
+                    container
+                    direction="row"
+                    padding={2}
+                    spacing={2}
                 >
-                    <DialogTitle>
-                        {action === 'create'
-                            ? ''
-                            : action === 'detail'
-                                ? 'Detalle  Hoja de vida'
-                                : 'Editar hoja de '}
-                    </DialogTitle>
+                    <Grid item xs={12} md={2}>
+                        <FormButton
+                            variant_button="contained"
+                            on_click_function={handle_submit(on_submit)}
+                            icon_class={action === "create" ? <EditIcon /> : <SaveIcon />}
+                            label={action}
+                            type_button="button"
+                        />
+                    </Grid>
 
-                    <SeleccionarOtros control_other={control_other}
-                        get_values={get_values} />
-
-
-                    <EspecificacionesOtros
-                        control_other={control_other}
-                        get_values={get_values}
-                        title="CARACTERISTICAS FÍSICAS" />
-
-                    <EspecificacionesTec
-                        control_other={control_other}
-                        get_values={get_values}
-                        title="ADICIONAL" />
-
+                    <Grid item xs={12} md={2}>
+                        <FormButton
+                            variant_button="outlined"
+                            on_click_function={delete_hoja_vida}
+                            icon_class={<CloseIcon />}
+                            label={"Eliminar"}
+                            type_button="button"
+                        />
+                    </Grid>
+                </Grid>
 
 
-                    <DialogActions>
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-                        >
-                            <Button
-                                variant="outlined"
-                                //   onClick={handle_close_cv_com_is_active}
-                                startIcon={<CloseIcon />}
-                            >
-                                CERRAR
-                            </Button>
-                            {action === 'create' ? (
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    startIcon={<SaveIcon />}
-                                >
-                                    GUARDAR
-                                </Button>
-                            ) : action === 'edit' ? (
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    startIcon={<EditIcon />}
-                                >
-                                    EDITAR
-                                </Button>
-                            ) : null}
-                        </Stack>
-                    </DialogActions>
-                </Box>
+
+
+
 
 
 

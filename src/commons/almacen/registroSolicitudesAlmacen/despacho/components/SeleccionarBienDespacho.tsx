@@ -3,24 +3,14 @@ import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import SeleccionarModeloDialogForm from '../../../../../components/partials/getModels/SeleccionarModeloDialogForm';
 import { type GridColDef } from '@mui/x-data-grid';
+import type { IObjBienDespacho, IObjBienConsumo, } from '../interfaces/despacho';
 import {
-  type IObjBienDespacho,
-  type IObjBienConsumo,
-} from '../interfaces/despacho';
-import {
-  set_current_bien,
-  set_bienes_despacho,
-  set_bienes,
+  set_current_bien, set_bienes_despacho, set_bienes,
   initial_state_current_bien,
 } from '../store/slices/indexDespacho';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
-import {
-  control_error,
-  get_bien_code_service,
-  get_bien_code_service_origin,
-
-} from '../store/thunks/despachoThunks';
+import { control_error, get_bien_code_service, get_bien_code_service_origin, } from '../store/thunks/despachoThunks';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -57,11 +47,11 @@ const SeleccionarBienDespacho = () => {
 
   // tabla de bienes solicitud de consumo
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
-      width: 200,
+      width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -71,7 +61,7 @@ const SeleccionarBienDespacho = () => {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 400,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -81,7 +71,7 @@ const SeleccionarBienDespacho = () => {
     {
       field: 'bodega',
       headerName: 'Bodega',
-      width: 200,
+      width: 400,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -89,16 +79,7 @@ const SeleccionarBienDespacho = () => {
       ),
     },
 
-    {
-      field: 'cantidad_disponible',
-      headerName: 'Cantidad disponible',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+
   ];
   const columns_bienes_origen: GridColDef[] = [
     { field: 'codigo_bien', headerName: 'Código', width: 200 },
@@ -440,43 +421,6 @@ const SeleccionarBienDespacho = () => {
       control_error('Debe seleccionar el bien');
     }
   };
-
-  // const delete_bien_despacho = (item: IObjBienDespacho): void => {
-  //   let bien: IObjBienConsumo | undefined;
-
-  //     bien = bienes.find(
-  //       (p: IObjBienConsumo) =>
-  //         p.id_bien === item.id_bien_solicitado && p.id_bodega === item.id_bodega
-  //     );
-
-  //   console.log(bien);
-
-  //   if (bien !== undefined) {
-  //     dispatch(set_current_bien(bien));
-  //   }
-  //   reset_despacho({
-  //     id_bien: bien?.id_bien,
-  //     cantidad_despachada: null,
-  //     observacion_del_despacho: null,
-  //   });
-  //   const aux_items: IObjBienDespacho[] = [];
-  //   aux_insumos.forEach((option) => {
-  //     if (item.cod_tipo_elemento_vivero === 'IN') {
-  //       if (option.id_bien !== item.id_bien) {
-  //         aux_items.push(option);
-  //       }
-  //     } else {
-  //       if (
-  //         !(
-  //           option.id_bien === item.id_bien && option.nro_lote === item.nro_lote
-  //         )
-  //       ) {
-  //         aux_items.push(option);
-  //       }
-  //     }
-  //   });
-  //   set_aux_insumos(aux_items);
-  // };
 
   return (
     <>

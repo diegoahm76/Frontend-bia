@@ -12,6 +12,7 @@ import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFini
 import {
   get_catalogo_series_subseries_unidad_organizacional,
   get_catalogo_trd_action,
+  get_data_format_documental_type,
   // get_data_format_documental_type,
   get_data_format_documental_type_current,
   get_trd_current,
@@ -86,10 +87,35 @@ export const use_trd = (): any => {
   });
   const form_data_searched_tipologia_documental =
     watchBusquedaTipologiasDocumentales();
-  console.log(
+  /* console.log(
     form_data_searched_tipologia_documental,
     'form_data_searched_tipologia_documental'
-  );
+  ); */
+
+  // ? administracion de TRD
+
+  const {
+    control: control_administrar_trd,
+    // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
+    // formState: { errors },
+    reset: reset_administrar_trd,
+    watch: watch_administrar_trd
+  } = useForm({
+    defaultValues: {
+      cod_disposicion_final: '',
+      digitalizacion_dis_final: true,
+      tiempo_retencion_ag: '',
+      tiempo_retencion_ac: '',
+      descripcion_procedimiento: '',
+      justificacion_cambio: '',
+      tipologias: [],
+      ruta_archivo_cambio: ''
+    },
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
+  });
+  const form_data_administrar_trd = watch_administrar_trd();
+  // console.log(form_data_administrar_trd, 'form_data_administrar_trd');
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -119,6 +145,10 @@ export const use_trd = (): any => {
     title_button_administrar_tipologias,
     set_title_button_administrar_tipologias
   ] = useState('Guardar');
+
+  // ? manage tipolgies asociated to trd --------------------->
+  //* necccesary states
+
   //* -------------------------------------------------------------------------->
   //! useEffects that I will use in different components --------------------->
 
@@ -141,13 +171,13 @@ export const use_trd = (): any => {
 
   // ? try to edit trd --------------------->
   useEffect(() => {
-    console.log(data_create_trd_modal, 'data_create_trd');
-    console.log(trd_current, 'trd_current');
+    // console.log(data_create_trd_modal, 'data_create_trd');
+    // console.log(trd_current, 'trd_current');
     if (trd_current !== null) {
       const result_name = ccd_finished.filter((item: any) => {
         return item.id_ccd === trd_current.id_ccd;
       });
-      console.log('result_name', result_name);
+      // console.log('result_name', result_name);
       const obj: any = {
         id_ccd: {
           label: result_name[0].nombre,
@@ -157,27 +187,10 @@ export const use_trd = (): any => {
         version: trd_current.version,
         id_trd: trd_current.id_trd
       };
-      console.log(obj, 'obj');
+      // console.log(obj, 'obj');
       reset_create_trd_modal(obj);
     }
   }, [trd_current]);
-
-  // ? try to edit format type x --------------------->
-  /*   useEffect(() => {
-    console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
-    console.log(data_format_documental_type_current, 'data_format_documental_type_current');
-    if (data_format_documental_type_current !== null) {
-      const result_name = ccd_finished.filter((item: any) => {
-        return item.id_ccd === trd_current.id_ccd;
-      });
-      console.log('result_name', result_name);
-      const obj: any = {
-        nombre: data_format_documental_type_current.nombre,
-      };
-      console.log(obj, 'obj');
-      reset_format_documental_type(obj);
-    }
-  }, [data_format_documental_type_current]); */
 
   //! reset functions that I will use in different components --------------------->
 
@@ -204,7 +217,7 @@ export const use_trd = (): any => {
   const reset_all_format_documental_type_modal = (): void => {
     //* reset form
     dispatch(get_data_format_documental_type_current(null));
-    // dispatch(get_data_format_documental_type([]));
+    dispatch(get_data_format_documental_type([]));
     reset_format_documental_type({
       'cod-tipo-medio': {
         label: '',
@@ -252,6 +265,11 @@ export const use_trd = (): any => {
     form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales,
 
+    // ? administrar trd --------------------------------------------->
+    control_administrar_trd,
+    form_data_administrar_trd,
+    reset_administrar_trd,
+
     // ? reset functions data trd --------------------------------------------->
     reset_all_trd,
     reset_create_trd_modal,
@@ -260,6 +278,9 @@ export const use_trd = (): any => {
     list_finished_ccd,
     // ? list of formats by documental type --------------------------------------------->
     set_list_format_documental_type,
-    list_format_documental_type
+    list_format_documental_type,
+
+    // ? tipologias documentales --------------------------------------------->
+    // ? tipologias documentales --------------------------------------------->
   };
 };

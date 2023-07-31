@@ -89,6 +89,11 @@ const use_editar_organigrama = () => {
     },
     codigo: '',
     nombre: '',
+    tipo_unidad: {
+      label: '',
+      value: null,
+      isDisabled: false,
+    },
     nivel_unidad: {
       label: '',
       value: null,
@@ -198,8 +203,6 @@ const use_editar_organigrama = () => {
             type="button"
             title="Eliminar"
             onClick={() => {
-              console.log(params.row)
-              console.log(params.row.orden_nivel)
               delete_level(params.row.orden_nivel);
             }}
           >
@@ -281,7 +284,6 @@ const use_editar_organigrama = () => {
         <>
           <IconButton
             onClick={() => {
-              console.log(params.row)
               reset_unidades({
                 codigo: params.row.codigo,
                 nombre: params.row.nombre,
@@ -545,101 +547,15 @@ const use_editar_organigrama = () => {
 
   // Vuelve a los valores iniciales
   const clean_unitys = (): void => {
+   // console.log('datos unidades' , datos_unidades);
     reset_unidades(initial_state_unitys);
+   // console.log('clean_unitys');
     set_title_unidades('Agregar');
   };
 
   // Funcion para actualizar un unidades
-/*  const submit_unidades: SubmitHandler<FormValuesUnitys> = ({
-    codigo,
-    nombre,
-    nivel_padre,
-    tipo_unidad,
-    agrupacion_documental,
-    unidad_raiz,
-    nivel_unidad,
-  }: FormValuesUnitys) => {
-    let new_unidades: any[] = [];
-    if (title_unidades === 'Agregar') {
-      new_unidades = [
-        ...unity_organigram,
-        {
-          id_nivel_organigrama: nivel_unidad!.value!,
-          nombre,
-          codigo,
-          cod_tipo_unidad: tipo_unidad!.value,
-          cod_agrupacion_documental: agrupacion_documental!.value,
-
-          unidad_raiz: unidad_raiz!.value,
-          id_organigrama: organigram_current.id_organigrama,
-          // eslint-disable-next-line no-extra-boolean-cast
-          cod_unidad_org_padre: Boolean(nivel_padre)
-            ? nivel_padre?.value
-            : null,
-        },
-      ];
-    } else {
-      new_unidades = unity_organigram.map((unidad) => {
-        if (unidad.codigo === codigo) {
-          return {
-            nombre,
-            codigo,
-            id_organigrama: organigram_current.id_organigrama,
-            id_nivel_organigrama: nivel_unidad?.value,
-            cod_tipo_unidad: tipo_unidad?.value,
-            cod_agrupacion_documental: agrupacion_documental?.value,
-            unidad_raiz: unidad_raiz?.value,
-            // eslint-disable-next-line no-extra-boolean-cast
-            cod_unidad_org_padre: Boolean(nivel_padre)
-              ? nivel_padre?.value
-              : null,
-          };
-        }
-        return unidad;
-      });
-      set_title_unidades('Agregar');
-    }
-
-    void dispatch(
-      update_unitys_service(
-        organigram_current.id_organigrama,
-        new_unidades,
-        clean_unitys
-      )
-    );
-  }; */
-
 //! ----------------
-/*  const submit_unidades: SubmitHandler<FormValuesUnitys> = ({
-  codigo,
-  nombre,
-  nivel_padre,
-  tipo_unidad,
-  agrupacion_documental,
-  unidad_raiz,
-  nivel_unidad,
-}: FormValuesUnitys) => {
 
-  const newUnidad = {
-    id_nivel_organigrama: nivel_unidad!.value!,
-    nombre,
-    codigo,
-    cod_tipo_unidad: tipo_unidad!.value,
-    cod_agrupacion_documental: agrupacion_documental!.value,
-    unidad_raiz: unidad_raiz!.value,
-    id_organigrama: organigram_current.id_organigrama,
-    cod_unidad_org_padre: nivel_padre?.value ?? null,
-  };
-  console.log(newUnidad, 'newUnidad');
-
-  const newUnidades = title_unidades === 'Agregar'
-    ? [...unity_organigram, newUnidad]
-    : unity_organigram.map((unidad) => unidad.codigo === codigo ? newUnidad : unidad);
-
-  set_title_unidades('Agregar');
-  dispatch(update_unitys_service(organigram_current.id_organigrama, newUnidades, clean_unitys));
-};
- */
 
 const edit_unidad = ({
   codigo,
@@ -660,7 +576,7 @@ const edit_unidad = ({
     id_organigrama: organigram_current.id_organigrama,
     cod_unidad_org_padre: nivel_padre?.value ?? null,
   };
-  console.log(newUnidad, 'newUnidad');
+  // console.log(newUnidad, 'newUnidad');
 
   const newUnidades = unity_organigram.map((unidad) => unidad.codigo === codigo ? newUnidad : unidad);
 
@@ -687,7 +603,7 @@ const create_unidad = ({
     id_organigrama: organigram_current.id_organigrama,
     cod_unidad_org_padre: nivel_padre?.value ?? null,
   };
-  console.log(newUnidad, 'newUnidad');
+  // console.log(newUnidad, 'newUnidad');
 
   const newUnidades = [...unity_organigram, newUnidad];
 
@@ -698,7 +614,7 @@ const create_unidad = ({
 
 
   const on_grid_ready = (params: any): void => {
-    console.log(params, 'params');
+    // console.log(params, 'params');
   };
 
   // Funcion para eliminar un nivel

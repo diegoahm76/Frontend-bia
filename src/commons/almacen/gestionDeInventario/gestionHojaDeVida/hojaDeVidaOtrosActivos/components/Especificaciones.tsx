@@ -1,10 +1,10 @@
 import { Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
-import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 
-import { set_current_others, set_others } from '../store/slices/indexCvOtrosActivos';
+import { set_current_cv_others, set_current_others, set_others } from '../store/slices/indexCvOtrosActivos';
 import { get_others_all_service } from '../store/thunks/cvOtrosActivosThunks';
+import { useEffect, useState } from 'react';
 
 
 
@@ -21,50 +21,12 @@ const EspecificacionesOtros = ({
 }: IProps) => {
 
 
-    const { others, marcas } = useAppSelector((state) => state.cvo);
-
-
-
+    const { others, current_cv_other } = useAppSelector((state) => state.cvo);
+    const { marcas } = useAppSelector((state) => state.cv);
     const dispatch = useAppDispatch();
-
-    const columns_solicitudes: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 200 },
-
-        {
-            field: 'codigo_bien',
-            headerName: 'Código',
-            width: 200,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-
-        },
-        {
-            field: 'nombre',
-            headerName: 'Nombre',
-            width: 200,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-
-        },
-        {
-            field: 'cod_tipo_activo',
-            headerName: 'Tipo de bien',
-            width: 200,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-
-        },
-
-    ];
+    const [file_name, set_file_name] = useState<string>("");
+    const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
+    const [file, set_file] = useState<any>(null);
     const filter_other: any = (async () => {
         const cv_computer = get_values("id_bien")
         if (cv_computer !== null) {
@@ -73,12 +35,49 @@ const EspecificacionesOtros = ({
     })
 
 
-    const search_other: any = (async () => {
-        const cv_computer = get_values("id_bien")
-        if (cv_computer !== null) {
-            void dispatch(get_others_all_service())
+    useEffect(() => {
+        if (file !== null) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                set_selected_image_aux(reader.result);
+            };
+            reader.readAsDataURL(file);
+            if ('name' in file) {
+                console.log(file.name)
+                set_file_name(file.name)
+                dispatch(set_current_cv_others({
+                    ...current_cv_other,
+                    id_marca: get_values("id_marca"),
+                    especificaciones_tecnicas: get_values("especificaciones_tecnicas"),
+                    caracteristicas_fisicas: get_values("caracteristicas_fisicas"),
+                    observaciones_adicionales: get_values("observaciones_adicionales"),
+                    ruta_imagen_foto: file
+                }))
+
+            }
         }
-    })
+    }, [file]);
+
+    useEffect(() => {
+        if (current_cv_other.id_hoja_de_vida
+            !== null) {
+            if (current_cv_other.ruta_imagen_foto !== null) {
+                const file = current_cv_other.ruta_imagen_foto
+                console.log(file)
+                if (!(typeof file === "string")) {
+                    if ('name' in file) {
+                        set_file_name(String(file.name))
+
+                    }
+                } else {
+                    set_file_name(String(current_cv_other.ruta_imagen_foto))
+                    set_selected_image_aux(current_cv_other.ruta_imagen_foto);
+                }
+
+            }
+        }
+    }, [current_cv_other]);
+
 
 
     return (
@@ -93,7 +92,6 @@ const EspecificacionesOtros = ({
                 <BuscarModelo
                     set_current_model={set_current_others}
                     row_id={"id_bien"}
-                    columns_model={columns_solicitudes}
                     models={others}
                     set_models={set_others}
                     show_search_button={false}
@@ -103,18 +101,25 @@ const EspecificacionesOtros = ({
                             title_label: title ?? "hh"
                         },
                         {
+                            datum_type: "image_uploader",
+                            xs: 12,
+                            md: 12,
+                            selected_image: selected_image_aux,
+                            width_image: '150px',
+                            height_image: 'auto',
+                        },
+                        {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
                             control_form: control_other,
-                            control_name: "id_bien",
+                            control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "ID",
+                            label: "Codigo bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
-                            on_blur_function: search_other
                         },
                         {
                             datum_type: "select_controller",
@@ -131,62 +136,47 @@ const EspecificacionesOtros = ({
                             option_label: "nombre",
                             option_key: "id_marca"
                         },
-
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
                             control_form: control_other,
-                            control_name: "serie",
+                            control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serie",
                             type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "estado",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Estado del equipo",
                             disabled: false,
-                            helper_text: "debe seleccionar campo",
-                            select_options: [{ label: "Óptimo", value: "O" }, { label: "Defectuoso", value: "D" }, { label: "Averiado", value: "A" }],
-                            option_label: "label",
-                            option_key: "value",
-
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "color",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Color",
-                            type: "text",
-                            disabled: true,
                             helper_text: ""
                         },
                         {
-                            datum_type: "input_controller",
+                            datum_type: "input_file_controller",
                             xs: 12,
                             md: 3,
                             control_form: control_other,
-                            control_name: "tipo_de_equipo",
+                            control_name: "ruta_imagen_foto",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "Archivo requerido" } },
+                            label: "Imagen equipo",
+                            disabled: false,
+                            helper_text: "",
+                            set_value: set_file,
+                            file_name,
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 12,
+                            control_form: control_other,
+                            control_name: "caracteristicas_fisicas",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Tipo de equipo",
+                            label: "Especificaciones técnicas",
+                            multiline_text: true,
+                            rows_text: 4,
                             type: "text",
-                            disabled: true,
-                            helper_text: "Portatil, Tablet, All-in-on"
+                            disabled: false,
+                            helper_text: ""
                         },
                     ]}
                     modal_select_model_title='Buscar Computadores'
@@ -204,7 +194,7 @@ const EspecificacionesOtros = ({
                             disabled: false,
                             helper_text: "",
                         }
-                    ]} get_filters_models={filter_other} />
+                    ]} get_filters_models={filter_other} columns_model={[]} />
             </Grid>
         </>
     );

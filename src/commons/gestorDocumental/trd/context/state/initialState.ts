@@ -15,8 +15,19 @@ export enum Modal {
   //*
   OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'OPEN_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
   CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES = 'CLOSE_MODAL_ADMINISTRACION_TIPOLOGIAS_DOCUMENTALES',
+  //* modal administracion de TRD
+  OPEN_MODAL_ADMINISTRACION_TRD = 'OPEN_MODAL_ADMINISTRACION_TRD',
+  CLOSE_MODAL_ADMINISTRACION_TRD = 'CLOSE_MODAL_ADMINISTRACION_TRD',
+  //* modal establecer tipologia documental a TRD
+  OPEN_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD = 'OPEN_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD',
+  CLOSE_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD = 'CLOSE_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD',
+  //* historial de cambios
+  OPEN_MODAL_HISTORIAL_CAMBIOS = 'OPEN_MODAL_HISTORIAL_CAMBIOS',
+  CLOSE_MODAL_HISTORIAL_CAMBIOS = 'CLOSE_MODAL_HISTORIAL_CAMBIOS',
   // ? buttons, loading, etc
-  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON'
+  CREATE_TRD_LOADING_BUTTON = 'CREATE_TRD_LOADING_BUTTON',
+  SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL = 'SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL',
+  SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD = 'SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD'
 }
 
 export const initialState = {
@@ -25,6 +36,11 @@ export const initialState = {
   modalCreacionFormatoTipo: false,
   modalBusquedaTipologiasDocumentales: false,
   modalAdministracionTipologiasDocumentales: false,
+  modalAdministracionTRD: false,
+  modalEstablecerTipologiaDocumentalATRD: false,
+  modalHistorialCambios: false,
   // ? buttons, loading, etc
-  createTRDLoadingButton: false
+  createTRDLoadingButton: false,
+  buttonAddNewTRDRelationActual: false,
+  buttonSpecialEditionActualTRD: false
 };

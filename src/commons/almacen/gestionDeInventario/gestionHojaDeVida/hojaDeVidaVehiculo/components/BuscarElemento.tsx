@@ -2,31 +2,39 @@ import { Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_vehicles_all_service } from '../store/thunks/cvVehiclesThunks';
-import { set_current_vehicles, set_vehicles } from '../store/slices/indexCvVehiculo';
+import { get_cv_vehicle_id, get_vehicles_all_service } from '../store/thunks/cvVehiclesThunks';
+import { set_current_cv_vehicle, set_current_vehicles, set_vehicles } from '../store/slices/indexCvVehiculo';
+import type { IVehicles } from '../interfaces/CvVehiculo';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
-
-interface IProps {
-    control_vehicle: any;
-    get_values: any
-}
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarVehiculo = ({
-    control_vehicle,
-    get_values
-}: IProps) => {
+const SeleccionarVehiculo = () => {
 
-
-    const { vehicles } = useAppSelector((state) => state.cve);
+    const { control: control_vehicle, reset: reset_vehicle, getValues: get_values } = useForm<IVehicles>();
+    const { vehicles, current_cv_vehicle, current_vehicle } = useAppSelector((state) => state.cve);
     const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(set_current_cv_vehicle({
+            ...current_cv_vehicle,
+            id_articulo: current_vehicle.id_bien,
+            nombre: current_vehicle.nombre,
+            codigo_bien: current_vehicle.codigo_bien,
+            id_marca: current_vehicle.id_marca
+        }))
+        reset_vehicle(current_vehicle);
+        if (current_vehicle.id_bien !== null) {
+            void dispatch(get_cv_vehicle_id(current_vehicle.id_bien))
+        }
+
+    }, [current_vehicle]);
 
     const columns_solicitudes: GridColDef[] = [
-        // { field: 'id_bien', headerName: 'ID', width: 200 },
 
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -37,7 +45,7 @@ const SeleccionarVehiculo = ({
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -48,7 +56,7 @@ const SeleccionarVehiculo = ({
         {
             field: 'cod_tipo_activo',
             headerName: 'Tipo de bien',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -59,10 +67,7 @@ const SeleccionarVehiculo = ({
 
     ];
     const filter_vehicle: any = (async () => {
-        const cv_vehicle = get_values("id_bien")
-        if (cv_vehicle !== null) {
-            void dispatch(get_vehicles_all_service())
-        }
+        void dispatch(get_vehicles_all_service())
     })
 
 
@@ -96,10 +101,10 @@ const SeleccionarVehiculo = ({
                             xs: 12,
                             md: 3,
                             control_form: control_vehicle,
-                            control_name: "id_bien",
+                            control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "ID",
+                            label: "Código",
                             type: "number",
                             disabled: false,
                             helper_text: "",

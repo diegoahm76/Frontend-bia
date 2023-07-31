@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { type GridColDef } from '@mui/x-data-grid';
 
-export const columns_catalogo: GridColDef[] = [
-  {
+export const columnsCCD: GridColDef[] = [
+ /* {
     headerName: 'ID Un. Org',
     field: 'id_unidad_organizacional',
     minWidth: 90,
     maxWidth: 100
-  },
+  }, */
   {
     headerName: 'Unidad Organizacional',
     field: 'nombreUnidad',
