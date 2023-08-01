@@ -180,7 +180,7 @@ const use_ccd = () => {
     // console.log(data_create_ccd, 'data_create_ccd');
     // console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
-      const result_name = organigram.filter((item) => {
+      const result_name = organigram.filter((item: any) => {
         return item.id_organigrama === ccd_current.id_organigrama;
       });
 
@@ -275,10 +275,10 @@ const use_ccd = () => {
   useEffect(() => {
     console.log('uniry_organigram', unity_organigram);
     const filteredUnityOrganigram = unity_organigram.filter(
-      (item) => item.cod_agrupacion_documental !== null
+      (item: any) => item.cod_agrupacion_documental !== null
     );
     set_list_unitys(
-      filteredUnityOrganigram.map((item) => ({
+      filteredUnityOrganigram.map((item:any) => ({
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))
@@ -287,7 +287,7 @@ const use_ccd = () => {
 
   useEffect(() => {
     set_list_organigrams(
-      organigram.map((item) => ({
+      organigram.map((item: any) => ({
         label: item?.nombre,
         value: item.id_organigrama!
       }))
