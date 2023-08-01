@@ -193,7 +193,7 @@ export const CcdScreen: React.FC = () => {
                   </div>
                 )}
               </Grid>
-              <Grid
+            {/*  <Grid
                 item
                 xs={12}
                 sm={3}
@@ -229,7 +229,7 @@ export const CcdScreen: React.FC = () => {
                     </div>
                   )}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="nombre_ccd"
