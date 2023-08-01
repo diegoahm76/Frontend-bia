@@ -53,6 +53,7 @@ import { columsTRD } from './utils/colums';
 import { options_search_trd } from './utils/options';
 import InfoIcon from '@mui/icons-material/Info';
 import { LoadingButton } from '@mui/lab';
+import { Title } from '../../../../../../components';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -262,19 +263,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       onClose={closeModalCreacionFormatoTipo}
     >
       <DialogTitle>
-        Módulo creación de Formatos para cada tipo de medio documental
-        <IconButton
-          aria-label="close"
-          onClick={closeModalCreacionFormatoTipo}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500]
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+        <Title title=" Módulo creación de Formatos para cada tipo de medio documental" />
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
