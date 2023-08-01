@@ -6,8 +6,12 @@ import type {
   BusquedaArchivo,
   BusquedaBasica,
   CuencasInstrumentos,
+  DataCarteraAforo,
   DataGeneralAforo,
+  DataGeneralBombeo,
   DataGeneralLaboratorio,
+  DatoSesionBombeo,
+  GeneralSesionBombeo,
   IntrumentosId,
   Laboratorio,
   ParametrosId,
@@ -141,6 +145,42 @@ export const get_data_cartera_id = async (
   const response: AxiosResponse<ResponseServer<DataGeneralAforo[]>> =
     await api.get<ResponseServer<DataGeneralAforo[]>>(
       `hidrico/bibliotecas/carteras_aforo/get-by-instrumento/${id_instrumento}/`
+    );
+  return response.data.data;
+};
+export const get_data_cartera = async (
+  id_cartera: number,
+): Promise<DataCarteraAforo[]> => {
+  const response: AxiosResponse<ResponseServer<DataCarteraAforo[]>> =
+    await api.get<ResponseServer<DataCarteraAforo[]>>(
+      `hidrico/bibliotecas/datos_cartera_aforos/get-by-cartera-aforos/${id_cartera}/`
+    );
+  return response.data.data;
+};
+export const get_data_bombeo_general = async (
+  id_instrumento: number,
+): Promise<DataGeneralBombeo[]> => {
+  const response: AxiosResponse<ResponseServer<DataGeneralBombeo[]>> =
+    await api.get<ResponseServer<DataGeneralBombeo[]>>(
+      `hidrico/bibliotecas/pruebas_bombeo/get-by-instrumento/${id_instrumento}/`
+    );
+  return response.data.data;
+};
+export const get_data_sesion_bombeo_general = async (
+  id_prueba_bombeo: number,
+): Promise<GeneralSesionBombeo[]> => {
+  const response: AxiosResponse<ResponseServer<GeneralSesionBombeo[]>> =
+    await api.get<ResponseServer<GeneralSesionBombeo[]>>(
+      `hidrico/bibliotecas/sesiones_prueba_bombeo/get-by-prueba-bombeo/${id_prueba_bombeo}/`
+    );
+  return response.data.data;
+};
+export const get_data_sesion_bombeo = async (
+  id_dato_sesion_prueba_bombeo: number,
+): Promise<DatoSesionBombeo[]> => {
+  const response: AxiosResponse<ResponseServer<DatoSesionBombeo[]>> =
+    await api.get<ResponseServer<DatoSesionBombeo[]>>(
+      `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/get-by-id/${id_dato_sesion_prueba_bombeo}/`
     );
   return response.data.data;
 };
