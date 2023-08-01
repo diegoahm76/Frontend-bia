@@ -31,7 +31,7 @@ import { Controller, useForm } from 'react-hook-form';
 import SearchIcon from '@mui/icons-material/Search';
 import use_ccd from '../../hooks/useCCD';
 import { LoadingButton } from '@mui/lab';
-import  CleanIcon  from '@mui/icons-material/CleaningServices';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -279,14 +279,9 @@ const SearchCcdModal = ({
                     variant="outlined"
                     type="submit"
                     startIcon={<SearchIcon />}
-                    /* onClick={() => {
-                          console.log('buscando');
-                          
-                        }} */
                   >
                     BUSCAR CCD
                   </LoadingButton>
-                  
                 </Stack>
               </Grid>
             </Grid>
@@ -312,7 +307,8 @@ const SearchCcdModal = ({
           sx={{ mr: '15px', mb: '10px', mt: '10px' }}
         >
           <Button
-            variant="outlined"
+            variant="contained"
+            color="success"
             onClick={() => {
               reset_search_ccd({ nombre_ccd: '', version: '' });
             }}
@@ -323,11 +319,7 @@ const SearchCcdModal = ({
           <Button
             variant="outlined"
             onClick={() => {
-              // clean_ccd()
               set_is_modal_active(false);
-              // closeModalBusquedaCreacionCCD();
-              // dispatch(get_ccd_current(null));
-              // dispatch(get_ccds([]))
               dispatch(get_ccds([]));
               reset_search_ccd({ nombre_ccd: '', version: '' });
             }}
@@ -335,7 +327,6 @@ const SearchCcdModal = ({
           >
             CERRAR
           </Button>
-
         </Stack>
       </DialogActions>
     </Dialog>

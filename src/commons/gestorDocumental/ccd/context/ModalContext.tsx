@@ -47,7 +47,7 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
     []
   );
 
-  // states loading button
+  // - states loading button
   const [loadingButtonBusquedaCCD, setLoadingButtonBusquedaCCD] =
     useState(false);
 
@@ -57,6 +57,19 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
   );
   const desactivateLoadingButtonBusquedaCCD = useCallback(
     () => setLoadingButtonBusquedaCCD(false),
+    []
+  );
+
+  //* states loading button guardarRelacion
+  const [loadingButtonGuardarRelacion, setLoadingButtonGuardarRelacion] =
+    useState(false);
+
+  const activateLoadingButtonGuardarRelacion = useCallback(
+    () => setLoadingButtonGuardarRelacion(true),
+    []
+  );
+  const desactivateLoadingButtonGuardarRelacion = useCallback(
+    () => setLoadingButtonGuardarRelacion(false),
     []
   );
 
@@ -76,7 +89,12 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
         //* loading busqueda
         loadingButtonBusquedaCCD,
         activateLoadingButtonBusquedaCCD,
-        desactivateLoadingButtonBusquedaCCD
+        desactivateLoadingButtonBusquedaCCD,
+
+        //* loading guardarRelacion
+        loadingButtonGuardarRelacion,
+        activateLoadingButtonGuardarRelacion,
+        desactivateLoadingButtonGuardarRelacion
       }}
     >
       {children}

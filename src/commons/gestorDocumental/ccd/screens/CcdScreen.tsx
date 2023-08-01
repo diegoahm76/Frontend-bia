@@ -530,7 +530,6 @@ export const CcdScreen: React.FC = () => {
                             styles={{
                               control: (provided) => ({
                                 ...provided,
-                                // maxHeight: '200px',
                                 overflowY: 'auto'
                               })
                             }}
@@ -540,10 +539,6 @@ export const CcdScreen: React.FC = () => {
                               dispatch(
                                 get_serie_ccd_current(selectedOption.value)
                               );
-                            /*  console.log(
-                                'Valor seleccionado:',
-                                selectedOption
-                              ); */
                             }}
                             options={list_sries}
                             // isSearchable
@@ -557,26 +552,12 @@ export const CcdScreen: React.FC = () => {
                                 fontSize: '0.75rem'
                               }}
                             >
-                              {/* {error ? (
-                                <span className="text-danger text-small d-block mb-2">
-                                  {error.message}
-                                </span>
-                              ) : (
-                                ''
-                              )} */}
                               series
                             </small>
                           </label>
                         </>
                       )}
                     />
-                    {/* {errors.sries !== null && (
-                      <div className="col-12">
-                        <small className="text-center text-danger">
-                          Campo obligatorio
-                        </small>
-                      </div>
-                    )} */}
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <ButtonGroup
