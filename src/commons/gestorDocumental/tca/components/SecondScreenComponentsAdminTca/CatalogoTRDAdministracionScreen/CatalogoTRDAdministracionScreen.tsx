@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -16,7 +17,8 @@ import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAReso
 export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
   columns,
-  title
+  title,
+  aditionalElement
 }: dataGridTypes): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -25,11 +27,11 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   // eslint-disable-next-line no-empty-pattern
   const {
     // modalAdministracionTca,
-    openModalAdministracionTca,
+    openModalAdministracionTca
     // closeModalAdministracionTca,
   } = useContext(ModalContextTCA);
 
-  const newColums = [
+  const newColums: any = [
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -93,7 +95,12 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
   return (
     <>
-      <RenderDataGrid rows={rows || []} columns={newColums} title={title} />
+      <RenderDataGrid
+        rows={rows || []}
+        columns={newColums || []}
+        title={title}
+        aditionalElement={aditionalElement}
+      />
       {/*
         mirar si se debe añadir componente adicional
 
