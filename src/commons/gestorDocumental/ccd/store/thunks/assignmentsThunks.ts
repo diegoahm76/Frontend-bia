@@ -84,12 +84,15 @@ export const get_assignments_service = (ccd_current: any): any => {
 export const create_or_delete_assignments_service: any = (
   new_items: any[],
   ccd_current: any,
-  reset: any,
+  reset?: any,
+  activateLoadingButtonGuardarRelacion?: any,
+  desactivateLoadingButtonGuardarRelacion?: any
 ) => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse[] | AxiosError> => {
     try {
+      activateLoadingButtonGuardarRelacion();
       const id_ccd: number = ccd_current.id_ccd;
 
       console.log(new_items);
@@ -124,9 +127,11 @@ export const create_or_delete_assignments_service: any = (
     } catch (error: any) {
       // console.log(error);
       dispatch(get_assignments_service(ccd_current));
-     // control_error(error.response?.data?.detail);
+      // control_error(error.response?.data?.detail);
 
       return error as AxiosError;
+    } finally {
+      desactivateLoadingButtonGuardarRelacion();
     }
   };
 };

@@ -54,7 +54,9 @@ const use_ccd = () => {
     openModalBusquedaCreacionCCD,
     closeModalBusquedaCreacionCCD,
     activateLoadingButton,
-    desactivateLoadingButton
+    desactivateLoadingButton,
+    activateLoadingButtonGuardarRelacion,
+    desactivateLoadingButtonGuardarRelacion
   } = useContext(ModalContext);
 
   const dispatch = useAppDispatch();
@@ -453,7 +455,11 @@ const use_ccd = () => {
     dispatch(get_subseries_ccd_current(null));
   }, [dispatch, reset, set_title_button_asing]);
 
-  const create_or_delete_relation_unidad = (reset: any): any => {
+  const create_or_delete_relation_unidad = (
+    reset: any,
+    activateLoadingButtonGuardarRelacion: any,
+    desactivateLoadingButtonGuardarRelacion: any
+  ): any => {
     console.log(data_asing, 'data_asing');
     console.log('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
@@ -489,7 +495,13 @@ const use_ccd = () => {
     // console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
-      create_or_delete_assignments_service(itemSendDef, ccd_current, reset)
+      create_or_delete_assignments_service(
+        itemSendDef,
+        ccd_current,
+        reset,
+        activateLoadingButtonGuardarRelacion,
+        desactivateLoadingButtonGuardarRelacion
+      )
     ).then(() => {
       void dispatch(get_assignments_service(ccd_current));
     });
@@ -499,7 +511,13 @@ const use_ccd = () => {
   const delete_asing = (id: any): void => {
     const new_items = assignments_ccd.filter((item) => item.id !== id);
     void dispatch(
-      create_or_delete_assignments_service(new_items, ccd_current)
+      create_or_delete_assignments_service(
+        new_items,
+        ccd_current,
+        reset,
+        activateLoadingButtonGuardarRelacion,
+        desactivateLoadingButtonGuardarRelacion
+      )
     ).then(() => {
       void dispatch(get_assignments_service(ccd_current));
     });

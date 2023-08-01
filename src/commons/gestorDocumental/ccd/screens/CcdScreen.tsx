@@ -56,7 +56,10 @@ export const CcdScreen: React.FC = () => {
   const {
     openModalModalSeriesAndSubseries,
     busquedaCreacionCCDModal,
-    loadingButton
+    loadingButton,
+    loadingButtonGuardarRelacion,
+    activateLoadingButtonGuardarRelacion,
+    desactivateLoadingButtonGuardarRelacion
   } = useContext(ModalContext);
 
   const dispatch: any = useAppDispatch();
@@ -808,10 +811,15 @@ export const CcdScreen: React.FC = () => {
                       marginTop: '25px'
                     }}
                   >
-                    <Button
+                    <LoadingButton
+                      loading={loadingButtonGuardarRelacion}
                       fullWidth
                       onClick={() => {
-                        void create_or_delete_relation_unidad(reset)
+                        void create_or_delete_relation_unidad(
+                          reset,
+                          activateLoadingButtonGuardarRelacion,
+                          desactivateLoadingButtonGuardarRelacion
+                        );
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
@@ -819,7 +827,7 @@ export const CcdScreen: React.FC = () => {
                       startIcon={<SaveIcon />}
                     >
                       {title_button_asing}
-                    </Button>
+                    </LoadingButton>
                     <br />
                     <Button
                       fullWidth
