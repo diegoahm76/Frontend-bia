@@ -40,7 +40,6 @@ export const LiquidacionScreen = (): JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     api.get(`recaudo/liquidaciones/clonar-opcion-liquidacion-base/${id}`)
       .then((response) => {
-        console.log(response.data.data);
         const cloned_opcion: OpcionLiquidacion = response.data.data;
         add_cloned_opcion(cloned_opcion);
         set_notification_info({ type: 'success', message: `Se ha clonado correctamente la opción de liquidación "${cloned_opcion.nombre}" al final de la tabla.` });

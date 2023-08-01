@@ -297,7 +297,6 @@ export const GestionCarteraScreen: React.FC = () => {
       id_categoria,
     })
       .then((response) => {
-        console.log(response);
         set_carteras([]);
         set_position_tab_organigrama('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
@@ -339,7 +338,6 @@ export const GestionCarteraScreen: React.FC = () => {
       valor: value,
     })
       .then((response) => {
-        console.log(response);
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente el valor "${value}".` });
         set_open_notification_modal(true);
       })
@@ -357,7 +355,6 @@ export const GestionCarteraScreen: React.FC = () => {
       documento: value,
     })
       .then((response) => {
-        console.log(response);
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente el archivo "${value.name}".` });
         set_open_notification_modal(true);
       })

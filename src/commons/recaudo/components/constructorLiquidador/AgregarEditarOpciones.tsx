@@ -231,7 +231,6 @@ export const AgregarEditarOpciones = ({
       bloques: JSON.stringify(json),
     })
       .then((response) => {
-        console.log(response);
         set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
         set_open_notification_modal(true);
         set_refresh_page(true);
