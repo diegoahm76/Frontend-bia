@@ -725,7 +725,7 @@ export const CcdScreen: React.FC = () => {
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={4.5}
                     sx={{
                       zIndex: 5
                     }}
@@ -762,7 +762,7 @@ export const CcdScreen: React.FC = () => {
                   <Grid
                     item
                     xs={12}
-                    sm={5}
+                    sm={4.5}
                     sx={{
                       zIndex: 5
                     }}
@@ -831,6 +831,9 @@ export const CcdScreen: React.FC = () => {
                     <br />
                     <Button
                       fullWidth
+                      sx={{
+                        marginTop: '7px'
+                      }}
                       onClick={() => {
                         reset({
                           catalogo_asignacion: [],
