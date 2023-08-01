@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import { TextField, Grid, Box, Button } from "@mui/material";
 import { api } from "../../../../../../api/axios";
+import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit'; 
 import { Title } from "../../../../../../components/Title";
 import { control_error, control_success } from "../../../SucursalEntidad/utils/control_error_or_success";
 import type { IconfiguracionEntidad } from "../../interfaces/interfacesConEntidad";
 
 
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const MostrarEmail: React.FC = () => {
     // Estado inicial de los datos de la sucursal de la empresa
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const initialState: IconfiguracionEntidad = {
-     email_corporativo_sistema: "",
+        email_corporativo_sistema: "",
         fecha_inicio_dir_actual: "",
         fecha_inicio_coord_alm_actual: "",
         fecha_inicio_respon_trans_actual: "",
@@ -25,7 +27,7 @@ export const MostrarEmail: React.FC = () => {
         id_persona_almacenista: 0,
     };
 
-  
+
     // Estado para almacenar los datos de la sucursal de la empresa
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [dataEntidad, setDataEntidad] = useState<IconfiguracionEntidad>(initialState);
@@ -41,8 +43,8 @@ export const MostrarEmail: React.FC = () => {
     // Estado para controlar si los correos coinciden o están vacíos
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
-       // eslint-disable-next-line @typescript-eslint/naming-convention
- const [isEditMode, setIsEditMode] = useState<boolean>(false); // Estado para habilitar/deshabilitar edición
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [isEditMode, setIsEditMode] = useState<boolean>(false); // Estado para habilitar/deshabilitar edición
 
     // Función para obtener los datos de la sucursal de la empresa mediante una solicitud a la API
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -61,8 +63,8 @@ export const MostrarEmail: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleChangeEmail = (): void => {
         // Expresión regular para validar el formato del correo electrónico
-           // eslint-disable-next-line @typescript-eslint/naming-convention
- const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if (emailValue === confirmEmailValue && emailValue !== "" && emailRegex.test(emailValue)) {
             // Los correos coinciden, no están vacíos y el formato es válido, se realiza el PUT
@@ -87,7 +89,7 @@ export const MostrarEmail: React.FC = () => {
                         email_corporativo_sistema: updatedEmail,
                     };
                     setDataEntidad(updatedDataEntidadWithUpdatedEmail);
-                    control_success("Email Corporativo actualizado correctamente"); 
+                    control_success("Email Corporativo actualizado correctamente");
                 })
                 .catch((error: any) => {
                     // console.error("Error al actualizar los datos:", error);
@@ -99,9 +101,9 @@ export const MostrarEmail: React.FC = () => {
         }
     };
 
-    const { email_corporativo_sistema }=dataEntidad;
+    const { email_corporativo_sistema } = dataEntidad;
     const emailactaul = email_corporativo_sistema;
-  
+
 
     // Efecto para obtener los datos de la sucursal de la empresa al cargar el componente
     useEffect(() => {
@@ -115,7 +117,7 @@ export const MostrarEmail: React.FC = () => {
         });
     }, [handleChangeEmail]);
 
-   
+
 
     return (
         <Grid
@@ -181,6 +183,7 @@ export const MostrarEmail: React.FC = () => {
                                         type="submit"
                                         variant="contained"
                                         color="success"
+                                        startIcon={<SaveIcon />}
                                         onClick={handleChangeEmail}
                                     >
                                         Guardar
@@ -192,16 +195,17 @@ export const MostrarEmail: React.FC = () => {
                             <Grid item xs={12} sm={6} lg={2}>
                                 <Button
                                     style={{ margin: 3 }}
+                                    startIcon={<EditIcon />}
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => {setIsEditMode(true)}} // Habilitar el modo edición al presionar el botón
+                                    onClick={() => { setIsEditMode(true) }} // Habilitar el modo edición al presionar el botón
                                 >
                                     Editar
                                 </Button>
                             </Grid>
                         )}
                     </Grid>
-                  
+
                 </Box>
             </Grid>
         </Grid>

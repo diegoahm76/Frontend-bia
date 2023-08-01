@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import type { Itablaucursales } from "../../interfaces/interfacesConEntidad";
 import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
 import { useNavigate } from "react-router-dom";
-
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaSucursales: React.FC = () => {
@@ -119,6 +119,7 @@ export const TablaSucursales: React.FC = () => {
                 style={{ margin: 8 }}
                 color="primary"
                 variant="contained"
+                startIcon={<ArrowOutwardIcon />}
                 onClick={() => {navigate("/app/Seguridad/sucursal_entidad")}}
             >
                 Ir a sucursales

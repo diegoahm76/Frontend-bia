@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../../../../../api/axios";
 import type { ItablaUnidades } from "../../interfaces/interfacesConEntidad";
 import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
-
-
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
@@ -67,7 +66,7 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
                     />
                 </Box>
             </Grid>
-            <Button style={{ margin: 8 }} color="primary" variant="contained">Ir a lideres de grupo</Button>
+            <Button style={{ margin: 8 }} color="primary" startIcon={<ArrowOutwardIcon/>} variant="contained">Ir a lideres de grupo</Button>
         </Grid>
     );
 };
