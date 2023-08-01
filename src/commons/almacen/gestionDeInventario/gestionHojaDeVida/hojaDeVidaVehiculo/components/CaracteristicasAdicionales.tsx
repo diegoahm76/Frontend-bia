@@ -40,7 +40,7 @@ const EspecificacionAdicional = ({
                     form_inputs={[
                         {
                             datum_type: "title",
-                            title_label: "ESPECIFICACIONES ADICIONALES"
+                            title_label: "Especificaciones adicionales"
                         },
 
                         {
