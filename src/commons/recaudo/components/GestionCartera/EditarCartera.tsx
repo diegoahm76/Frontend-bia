@@ -11,9 +11,10 @@ import {
   Stack,
   InputLabel
 } from "@mui/material"
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import type { FlujoProceso } from "../../interfaces/flujoProceso";
 import { type Dispatch, type SetStateAction } from "react";
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
   id_flujo: string;
@@ -29,7 +30,10 @@ interface IProps {
     etapa: string;
   },
   flujos_destino: FlujoProceso[];
+  id_proceso: string;
+  id_cartera: string;
   set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
+  set_open_create_proceso_modal: Dispatch<SetStateAction<boolean>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -38,7 +42,10 @@ export const EditarCartera: React.FC<IProps> = ({
   handle_select_change,
   selected_proceso,
   flujos_destino,
-  set_open_requisitos_modal
+  id_proceso,
+  id_cartera,
+  set_open_requisitos_modal,
+  set_open_create_proceso_modal
 }: IProps) => {
   return (
     <>
@@ -255,41 +262,58 @@ export const EditarCartera: React.FC<IProps> = ({
           alignItems='center'
           spacing={2}
         >
-          <Grid item xs={12} sm={3}>
-            <FormControl size='small' fullWidth>
-              <InputLabel>Mover a</InputLabel>
-              <Select
-                label='Mover a'
-                value={id_flujo}
-                onChange={handle_select_change}
-              >
-                {/* {etapas_destino.map(({ id, etapa }) => (
+          {id_proceso !== '' ?
+            (<>
+              <Grid item xs={12} sm={3}>
+                <FormControl size='small' fullWidth>
+                  <InputLabel>Mover a</InputLabel>
+                  <Select
+                    label='Mover a'
+                    value={id_flujo}
+                    onChange={handle_select_change}
+                  >
+                    {/* {etapas_destino.map(({ id, etapa }) => (
                   <MenuItem key={id} value={id}>
                     {etapa}
                   </MenuItem>
                 ))} */}
-                {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
-                  <MenuItem key={id} value={id}>
-                    {etapa}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Button
-              color='primary'
-              variant='contained'
-              startIcon={<ChangeCircleIcon />}
-              fullWidth
-              onClick={() => {
-                set_open_requisitos_modal(true);
-              }}
-              disabled={!id_flujo}
-            >
-              Mover estado actual
-            </Button>
-          </Grid>
+                    {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
+                      <MenuItem key={id} value={id}>
+                        {etapa}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color='primary'
+                  variant='contained'
+                  startIcon={<ChangeCircleIcon />}
+                  fullWidth
+                  onClick={() => {
+                    set_open_requisitos_modal(true);
+                  }}
+                  disabled={!id_flujo}
+                >
+                  Mover estado actual
+                </Button>
+              </Grid>
+            </>) :
+            (<Grid item xs={12} sm={3}>
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                fullWidth
+                onClick={() => {
+                  set_open_create_proceso_modal(true);
+                }}
+                disabled={!id_cartera}
+              >
+                Crear nuevo proceso
+              </Button>
+            </Grid>)}
         </Stack>
       </Grid>
       <Grid item xs={12} sx={{ my: '30px' }}>
