@@ -32,7 +32,7 @@ import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
-  to_finished_ccds_service,
+  to_finished_ccds_service
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -48,9 +48,7 @@ import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubse
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {
-  get_assignments_service
-} from '../store/thunks/assignmentsThunks';
+import { get_assignments_service } from '../store/thunks/assignmentsThunks';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -67,9 +65,7 @@ export const CcdScreen: React.FC = () => {
   const { series_ccd, serie_ccd_current } = useAppSelector(
     (state: any) => state.series
   );
-  const { subseries_ccd } = useAppSelector(
-    (state: any) => state.subseries
-  );
+  const { subseries_ccd } = useAppSelector((state: any) => state.subseries);
   const { seriesAndSubseries } = useAppSelector(
     (state: any) => state.slice_series_and_subseries
   );
@@ -119,7 +115,8 @@ export const CcdScreen: React.FC = () => {
     on_submit_create_ccd,
     // on_submit_create_or_delete_relation_unidad,
     create_or_delete_relation_unidad,
-    clean_ccd
+    clean_ccd,
+    reset
   } = use_ccd() as any;
 
   return (
@@ -193,7 +190,7 @@ export const CcdScreen: React.FC = () => {
                   </div>
                 )}
               </Grid>
-            {/*  <Grid
+              {/*  <Grid
                 item
                 xs={12}
                 sm={3}
@@ -318,15 +315,19 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
                       style={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
+                        color:
+                          series_ccd.length > 0 || ccd_current?.fecha_terminado
+                            ? 'red'
+                            : 'blue'
                       }}
                       disabled={
-                        series_ccd.length > 0 || ccd_current?.fecha_terminado || ccd_current?.actual
+                        series_ccd.length > 0 ||
+                        ccd_current?.fecha_terminado ||
+                        ccd_current?.actual
                       }
                       variant="outlined"
                       value={value}
@@ -358,7 +359,11 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subseries CCD"
                       variant="outlined"
-                      disabled={subseries_ccd.length > 0 || ccd_current?.fecha_terminado || ccd_current?.actual}
+                      disabled={
+                        subseries_ccd.length > 0 ||
+                        ccd_current?.fecha_terminado ||
+                        ccd_current?.actual
+                      }
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -403,14 +408,14 @@ export const CcdScreen: React.FC = () => {
                         <input
                           style={{ display: 'none' }}
                           type="file"
-                          accept='application/pdf'
+                          accept="application/pdf"
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
                               const file = files[0];
                               if (file.type !== 'application/pdf') {
-                                control_warning('Solo formato pdf')
+                                control_warning('Solo formato pdf');
                                 // dejar vacio el input file
                               } else {
                                 onChange(file);
@@ -467,7 +472,7 @@ export const CcdScreen: React.FC = () => {
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  set_consulta_ccd_is_active(true)
+                  set_consulta_ccd_is_active(true);
                 }}
               >
                 BUSCAR CCD
@@ -628,13 +633,6 @@ export const CcdScreen: React.FC = () => {
                         </>
                       )}
                     />
-                    {/* {errors.subserie !== null && (
-                      <div className="col-12">
-                        <small className="text-center text-danger">
-                          Campo obligatorio
-                        </small>
-                      </div>
-                    )} */}
                   </Grid>
 
                   <Grid item xs={12} sm={4}>
@@ -647,7 +645,9 @@ export const CcdScreen: React.FC = () => {
                           set_create_sub_serie_active(true);
                           set_title('Administrar subseries');
                         }}
-                        disabled={serie_ccd_current === null || ccd_current?.actual}
+                        disabled={
+                          serie_ccd_current === null || ccd_current?.actual
+                        }
                       >
                         ADMINISTRAR SUBSERIES
                       </Button>
@@ -811,7 +811,7 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       fullWidth
                       onClick={() => {
-                        void dispatch(create_or_delete_relation_unidad);
+                        dispatch(create_or_delete_relation_unidad)(reset);
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
@@ -819,6 +819,26 @@ export const CcdScreen: React.FC = () => {
                       startIcon={<SaveIcon />}
                     >
                       {title_button_asing}
+                    </Button>
+                    <br />
+                    <Button
+                      fullWidth
+                      onClick={() => {
+                        reset({
+                          catalogo_asignacion: [],
+                          sries_asignacion: { label: '', value: 0 },
+                          sries: '',
+                          subserie_asignacion: [],
+                          subserie: '',
+                          unidades_asignacion: { label: '', value: 0 }
+                        });
+                        // void dispatch(get_assignments_service(ccd_current));
+                      }}
+                      color="success"
+                      variant="contained"
+                      startIcon={<CleanIcon />}
+                    >
+                      LIMPIAR CAMPOS
                     </Button>
                   </Grid>
                 </Grid>
@@ -867,7 +887,7 @@ export const CcdScreen: React.FC = () => {
                         to_finished_ccds_service(
                           set_flag_btn_finish,
                           ccd_current,
-                          assignments_ccd,
+                          assignments_ccd
                         )
                       );
                     }}

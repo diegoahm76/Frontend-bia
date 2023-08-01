@@ -278,7 +278,7 @@ const use_ccd = () => {
       (item: any) => item.cod_agrupacion_documental !== null
     );
     set_list_unitys(
-      filteredUnityOrganigram.map((item:any) => ({
+      filteredUnityOrganigram.map((item: any) => ({
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))
@@ -453,7 +453,7 @@ const use_ccd = () => {
     dispatch(get_subseries_ccd_current(null));
   }, [dispatch, reset, set_title_button_asing]);
 
-  const create_or_delete_relation_unidad = (): void => {
+  const create_or_delete_relation_unidad = (reset: any): any => {
     console.log(data_asing, 'data_asing');
     console.log('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
@@ -489,7 +489,7 @@ const use_ccd = () => {
     // console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
-      create_or_delete_assignments_service(itemSendDef, ccd_current)
+      create_or_delete_assignments_service(itemSendDef, ccd_current, reset)
     ).then(() => {
       void dispatch(get_assignments_service(ccd_current));
     });
@@ -612,7 +612,8 @@ const use_ccd = () => {
 
     create_sub_serie_active,
     set_create_sub_serie_active,
-    create_or_delete_relation_unidad
+    create_or_delete_relation_unidad,
+    reset
     // file,
     // set_file,
   };
