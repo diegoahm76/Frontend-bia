@@ -1,5 +1,5 @@
 .recibo {
-  width: 1000px;
+  width: 600px;
   border: solid 1px black;
 }
 
@@ -146,4 +146,10 @@
 
 .codigo__imagen {
   width: 30%;
+}
+
+@media (min-width:1440px){
+  .recibo {
+    width: 1000px;
+  }
 }

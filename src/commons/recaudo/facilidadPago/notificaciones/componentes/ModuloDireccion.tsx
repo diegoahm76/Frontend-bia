@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState } from 'react';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
@@ -17,8 +18,6 @@ export const ModuloDireccion: React.FC = () => {
   const [direccion, set_direccion] = useState('');
   const [complemento, set_complemento] = useState('');
   const [modal, set_modal] = useState(false);
-
-  console.log(ciudad_selected, complemento)
 
   const handle_close = () => { set_modal(false) }
   const handle_open = () => { set_modal(true) }

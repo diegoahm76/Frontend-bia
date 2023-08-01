@@ -129,3 +129,9 @@ export const get_tipo_bienes = async (): Promise<any> => {
   const data = await api.get(`recaudo/facilidades-pagos/tipos-bienes/`)
   return data
 }
+
+// Ver los tipos de garantias desde Pag. Usuario Externo
+export const get_roles_garantia = async (): Promise<any> => {
+  const data = await api.get(`recaudo/garantias/roles-garantias/`)
+  return data
+}
