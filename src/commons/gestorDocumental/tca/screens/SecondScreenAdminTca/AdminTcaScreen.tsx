@@ -29,7 +29,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* REDUX ELEMENTS
-  const { catalog_trd, catalog_TCA } = useAppSelector(
+  const { catalog_trd, catalog_TCA, tca_current } = useAppSelector(
     (state) => state.tca_slice
   );
 
@@ -38,7 +38,10 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   const {
     modalAdministracionTca,
     // openModalAdministracionTca,
-    closeModalAdministracionTca
+    closeModalAdministracionTca,
+    modalTrdRelacionTcaActual,
+    openModalTrdRelacionTcaActual,
+    closeModalTrdRelacionTcaActual,
   } = useContext(ModalContextTCA);
 
   return (
@@ -75,7 +78,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
 
         {/* poner la condicional de la longitud del array para que tenga un mejor manejo visual */}
 
-        <CatalogoTRDAdministracionScreen
+        {/*  <CatalogoTRDAdministracionScreen
           rows={
             (catalog_TCA.length > 0 &&
               catalog_trd?.filter((item: any) => {
@@ -94,6 +97,112 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
           columns={columsCatalogoTRD}
           title="Catálogo TRD - ( Administración TCA )"
         />
+*/}
+
+        {/* fin parte 3 */}
+
+        {tca_current?.actual ? null : (
+          <CatalogoTRDAdministracionScreen
+            rows={
+              (catalog_TCA.length > 0 &&
+                catalog_trd?.filter((item: any) => {
+                  if (catalog_TCA.length === 0) {
+                    console.log('catalog_TCA.length === 0');
+                    return true;
+                  }
+                  return !catalog_TCA.some(
+                    (otherItem: any) =>
+                      otherItem.id_cat_serie_und_ccd_trd ===
+                      item.id_catserie_unidadorg
+                  );
+                })) ||
+              catalog_trd
+            }
+            columns={columsCatalogoTRD}
+            title="Catálogo TRD - ( Administración TCA )"
+          />
+        )}
+
+        {tca_current?.actual &&
+        catalog_trd.filter(
+          (item: any) =>
+            !catalog_TCA.some(
+              (otherItem: any) =>
+                otherItem.id_cat_serie_und_ccd_trd ===
+                item.id_catserie_unidadorg
+            )
+        ).length > 0 &&
+        !modalTrdRelacionTcaActual ? (
+          <CatalogoTRDAdministracionScreen
+            rows={[]}
+            columns={[]}
+            title="Catálogo TRD - ( Administración TCA )"
+            aditionalElement={
+              <Button
+                sx={{
+                  marginTop: '1rem'
+                }}
+                variant="contained"
+                color="warning"
+                onClick={() => {
+                  // setButton(true);
+                  openModalTrdRelacionTcaActual();
+                  console.log('agregar nueva relacion trd');
+                }}
+              >
+                AGREGAR NUEVA RELACION TRD
+              </Button>
+            }
+          />
+        ) : null}
+        
+              {modalTrdRelacionTcaActual &&
+              tca_current?.actual &&
+              catalog_trd.filter(
+                (item: any) =>
+                  !catalog_TCA.some(
+                    (otherItem: any) =>
+                      otherItem.id_cat_serie_und_ccd_trd ===
+                      item.id_catserie_unidadorg
+                  )
+              ).length > 0 ? (
+
+                <CatalogoTRDAdministracionScreen
+                rows={
+                  (catalog_TCA.length > 0 &&
+                    catalog_trd?.filter((item: any) => {
+                      if (catalog_TCA.length === 0) {
+                        console.log('catalog_TCA.length === 0');
+                        return true;
+                      }
+                      return !catalog_TCA.some(
+                        (otherItem: any) =>
+                          otherItem.id_cat_serie_und_ccd_trd ===
+                          item.id_catserie_unidadorg
+                      );
+                    })) ||
+                  catalog_trd
+                }
+                columns={columsCatalogoTRD}
+                title="Catálogo TRD - ( Administración TCA )"
+                aditionalElement={
+                  <Button
+                  sx={{
+                    marginTop: '1rem'
+                  }}
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    closeModalTrdRelacionTcaActual();
+                    console.log('agregar nueva relacion trd');
+                  }}
+                >
+                  CANCELAR AGREGAR NUEVA RELACION TRD
+                </Button>
+                }
+              />
+              ) : null}
+
         {/* fin parte 2 */}
         {/* parte 3. catalogo TCA Administracion Screen */}
 
@@ -104,153 +213,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
           columns={columsCatalogoTCA}
           title="Catálogo TCA - ( Administración TCA )"
         />
-        {/* fin parte 3 */}
-        {/*    <Grid
-          item
-          container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26'
-          }}
-        >
-          <Grid item xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <Title title="Cuadro de clasificación documental Seleccionado - (Administración TRD)" />
 
-              {trd_current?.actual ? null : (
-                <DataGrid
-                  sx={{
-                    marginTop: '.5rem'
-                  }}
-                  density="compact"
-                  autoHeight
-                  rows={
-                    catalado_series_subseries_unidad_organizacional.filter(
-                      (item: any) =>
-                        !catalogo_trd.some(
-                          (otherItem: any) =>
-                            otherItem.id_cat_serie_und === item.id_cat_serie_und
-                        )
-                    ) || []
-                  }
-                  columns={columns_catalogo_ccd}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id_cat_serie_und ?? 0}
-                />
-              )}
-
-              {trd_current?.actual &&
-              catalado_series_subseries_unidad_organizacional.filter(
-                (item: any) =>
-                  !catalogo_trd.some(
-                    (otherItem: any) =>
-                      otherItem.id_cat_serie_und === item.id_cat_serie_und
-                  )
-              ).length > 0 &&
-              !buttonAddNewTRDRelationActual ? (
-                <Button
-                  sx={{
-                    marginTop: '1rem'
-                  }}
-                  variant="contained"
-                  color="warning"
-                  onClick={() => {
-                    // setButton(true);
-                    setButtonAddNewTRDRelationActual(true);
-                    console.log('agregar nueva relacion ccd');
-                  }}
-                >
-                  AGREGAR NUEVA RELACION CCD
-                </Button>
-              ) : null}
-
-              {buttonAddNewTRDRelationActual &&
-              trd_current?.actual &&
-              catalado_series_subseries_unidad_organizacional.filter(
-                (item: any) =>
-                  !catalogo_trd.some(
-                    (otherItem: any) =>
-                      otherItem.id_cat_serie_und === item.id_cat_serie_und
-                  )
-              ).length > 0 ? (
-                <>
-                  <DataGrid
-                    sx={{
-                      marginTop: '.5rem'
-                    }}
-                    density="compact"
-                    autoHeight
-                    rows={
-                      catalado_series_subseries_unidad_organizacional.filter(
-                        (item: any) =>
-                          !catalogo_trd.some(
-                            (otherItem: any) =>
-                              otherItem.id_cat_serie_und ===
-                              item.id_cat_serie_und
-                          )
-                      ) || []
-                    }
-                    columns={columns_catalogo_ccd}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id_cat_serie_und ?? 0}
-                  />
-                  <Button
-                    sx={{
-                      marginTop: '1rem'
-                    }}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setButtonAddNewTRDRelationActual(false);
-                      console.log('agregar nueva relacion ccd');
-                    }}
-                  >
-                    CANCELAR AGREGAR NUEVA RELACION CCD
-                  </Button>
-                </>
-              ) : null}
-            </Box>
-          </Grid>
-        </Grid> */}
-        {/*  <Grid
-          container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26'
-          }}
-        >
-          <Grid xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <Title title="Catalogo TRD - Tabla de retención documental - (Administración TRD)" />
-              <DataGrid
-                sx={{
-                  marginTop: '.5rem'
-                }}
-                density="compact"
-                autoHeight
-                rows={catalogo_trd || []}
-                columns={columns_catalogo_trd}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_catserie_unidadorg ?? 0}
-              />
-            </Box>
-          </Grid>
-        </Grid> */}
-        {/* parte formulario */}
 
         {/* poner la condicional de administración de TCA */}
 
