@@ -811,7 +811,7 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       fullWidth
                       onClick={() => {
-                        dispatch(create_or_delete_relation_unidad)(reset);
+                        void create_or_delete_relation_unidad(reset)
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
