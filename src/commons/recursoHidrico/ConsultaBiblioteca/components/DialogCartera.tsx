@@ -26,6 +26,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 interface IProps {
   is_modal_active: boolean;
@@ -128,16 +129,39 @@ export const DialogCartera: React.FC<IProps> = ({
       width: 200,
     },
   ];
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ARCHIVO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'ARCHIVO',
+      width: 200,
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.value}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+  ];
+
   const {
     id_instrumento,
     id_cartera,
     info_cartera,
     rows_cartera,
     rows_data_cartera,
+    rows_anexos_cartera,
     fetch_data_cartera,
     set_id_cartera,
     set_info_cartera,
     fetch_data_general_cartera,
+    fetch_data_anexos_carteras,
   } = useContext(DataContext);
 
   const handle_close = (): void => {
@@ -153,6 +177,7 @@ export const DialogCartera: React.FC<IProps> = ({
   useEffect(() => {
     if (id_cartera) {
       void fetch_data_general_cartera();
+      void fetch_data_anexos_carteras(id_cartera);
     }
   }, [id_cartera]);
 
@@ -279,6 +304,16 @@ export const DialogCartera: React.FC<IProps> = ({
                         size="small"
                       />
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Cuenca Asociada"
+                        value={info_cartera.nombre_cuenca}
+                        fullWidth
+                        disabled
+                        multiline
+                        size="small"
+                      />
+                    </Grid>
                   </>
                 )}
                 {rows_data_cartera.length > 0 && (
@@ -300,6 +335,21 @@ export const DialogCartera: React.FC<IProps> = ({
                     </Grid>
                   </>
                 )}
+                <Grid item xs={12}>
+                  <Title title="Anexos asociados a la cartera" />
+                </Grid>
+                <Grid item xs={12}>
+                  <>
+                    <DataGrid
+                      autoHeight
+                      rows={rows_anexos_cartera}
+                      columns={columns_anexos}
+                      getRowId={(row) => uuidv4()}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </>
+                </Grid>
               </>
             )}
           </Grid>

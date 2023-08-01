@@ -18,12 +18,14 @@ import type {
   Archivos,
   CuencasInstrumentos,
   DataGeneralAforo,
+  DataGeneralBombeo,
 } from '../../ConsultaBiblioteca/interfaces/interfaces';
 import {
   get_archivos,
   get_archivos_cartera,
   get_archivos_laboratorio,
   get_archivos_prueba_bombeo,
+  get_data_bombeo_general,
   get_data_cartera_id,
   get_data_cuenca_instrumentos,
   get_data_laboratorio_id,
@@ -116,6 +118,11 @@ interface UserContext {
   set_rows_cartera: (rows_cartera: DataGeneralAforo[]) => void;
   fetch_data_cartera: () => Promise<any>;
 
+    // * Traer data de prueba de bombeo
+    rows_prueba_bombeo: DataGeneralBombeo[];
+    set_rows_prueba_bombeo: (rows_prueba_bombeo: DataGeneralBombeo[]) => void;
+    fetch_data_prueba_bombeo: () => Promise<any>;
+    
   // * Informacion de anexos
   rows_anexos_laboratorio: ArchivosCalidadAgua[];
   rows_anexos_cartera: ArchivosCalidadAgua[];
@@ -230,6 +237,11 @@ export const DataContext = createContext<UserContext>({
   rows_cartera: [],
   set_rows_cartera: () => {},
   fetch_data_cartera: async () => {},
+
+      // * Traer data de prueba de bombeo
+  rows_prueba_bombeo: [],
+  set_rows_prueba_bombeo: () => {},
+  fetch_data_prueba_bombeo: async () => {},
 
   // * Informacion de anexos
 
@@ -523,6 +535,22 @@ export const UserProvider = ({
     }
   };
 
+  // * Traer data de prueba de bombeo
+  const [rows_prueba_bombeo, set_rows_prueba_bombeo] = React.useState<DataGeneralBombeo[]>([]);
+
+  const fetch_data_prueba_bombeo = async (): Promise<any> => {
+    try {
+      set_rows_prueba_bombeo([]);
+      if (id_instrumento) {
+        const response = await get_data_bombeo_general(id_instrumento);
+        set_rows_prueba_bombeo(response);
+        return response;
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+
   const value = {
     // *modos instrumentos
     register_instrumento,
@@ -600,6 +628,12 @@ export const UserProvider = ({
     rows_cartera,
     set_rows_cartera,
     fetch_data_cartera,
+
+    // * Traer data de prueba de bombeo
+    rows_prueba_bombeo,
+    set_rows_prueba_bombeo,
+    fetch_data_prueba_bombeo,
+
     // * Informacion de anexos
     rows_anexos_laboratorio,
     rows_anexos_cartera,

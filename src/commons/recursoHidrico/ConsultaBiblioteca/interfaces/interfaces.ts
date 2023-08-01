@@ -68,6 +68,8 @@ export interface DataGeneralLaboratorio {
     id_instrumento: number;
     id_cuenca: number;
     id_pozo: number;
+    nombre_cuenca: string;
+    nombre_pozo: string;
 }
 export interface Resultadolaboratorio {
     id_dato_registro_laboratorio: number;
@@ -113,6 +115,7 @@ export interface DataGeneralAforo {
     numero_helice: string;
     id_instrumento: number;
     id_cuenca: number;
+    nombre_cuenca: string;
 }
 
 export interface DataCarteraAforo {
@@ -139,6 +142,7 @@ export interface DataGeneralBombeo {
     ubicacion_prueba: string;
     id_instrumento: number;
     id_pozo: number;
+    nombre_pozo: string;
 }
 export interface GeneralSesionBombeo {
     id_sesion_prueba_bombeo: number;

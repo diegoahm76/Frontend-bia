@@ -52,12 +52,30 @@ const initialState = {
     id_cuenca: 0,
   },
 
+  info_prueba_bombeo: {
+    id_prueba_bombeo: 0,
+    descripcion: '',
+    fecha_registro: '',
+    fecha_prueba_bombeo: '',
+    latitud: '',
+    longitud: '',
+    ubicacion_prueba: '',
+    id_instrumento: 0,
+    id_pozo: 0,
+    nombre_pozo: '',
+  },
+
   mode: {
     ver: false,
     crear: false,
     editar: false,
   },
   mode_carteras: {
+    ver: false,
+    crear: false,
+    editar: false,
+  },
+  mode_bombeo: {
     ver: false,
     crear: false,
     editar: false,
@@ -123,6 +141,12 @@ export const instrumentos_slice = createSlice({
       state.mode_carteras.crear = action.payload.crear;
       state.mode_carteras.editar = action.payload.editar;
     },
+    set_current_mode_bombeo: (state, action: PayloadAction<any>) => {
+      state.mode_bombeo.ver = action.payload.ver;
+      state.mode_bombeo.crear = action.payload.crear;
+      state.mode_bombeo.editar = action.payload.editar;
+    },
+
     set_current_info_cartera: (state, action: PayloadAction<any>) => {
       state.info_cartera.id_cartera_aforos = action.payload.id_cartera_aforos;
       state.info_cartera.fecha_registro = action.payload.fecha_registro;
@@ -137,6 +161,21 @@ export const instrumentos_slice = createSlice({
       state.info_cartera.id_instrumento = action.payload.id_instrumento;
       state.info_cartera.id_cuenca = action.payload.id_cuenca;
     },
+    set_current_info_prueba_bombeo: (state, action: PayloadAction<any>) => {
+      state.info_prueba_bombeo.id_prueba_bombeo =
+        action.payload.id_prueba_bombeo;
+      state.info_prueba_bombeo.descripcion = action.payload.descripcion;
+      state.info_prueba_bombeo.fecha_registro = action.payload.fecha_registro;
+      state.info_prueba_bombeo.fecha_prueba_bombeo =
+        action.payload.fecha_prueba_bombeo;
+      state.info_prueba_bombeo.latitud = action.payload.latitud;
+      state.info_prueba_bombeo.longitud = action.payload.longitud;
+      state.info_prueba_bombeo.ubicacion_prueba =
+        action.payload.ubicacion_prueba;
+      state.info_prueba_bombeo.id_instrumento = action.payload.id_instrumento;
+      state.info_prueba_bombeo.id_pozo = action.payload.id_pozo;
+      state.info_prueba_bombeo.nombre_pozo = action.payload.nombre_pozo;
+    },
   },
 });
 // {...state, mode: {...state.mode, ver: true}}
@@ -149,4 +188,6 @@ export const {
   set_currente_id_resultado_laboratorio,
   set_current_mode_cartera,
   set_current_info_cartera,
+  set_current_info_prueba_bombeo,
+  set_current_mode_bombeo,
 } = instrumentos_slice.actions;

@@ -252,7 +252,6 @@ export const DialogBombeo: React.FC<IProps> = ({
                     <Grid item xs={12}>
                       <Title title="Datos Generales" />
                     </Grid>
-
                     <Grid item xs={12} sm={6} md={4}>
                       <TextField
                         label="Fecha de prueba"
@@ -305,6 +304,16 @@ export const DialogBombeo: React.FC<IProps> = ({
                         size="small"
                       />
                     </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        label="Pozo asociado"
+                        value={info_bombeo_general.nombre_pozo}
+                        fullWidth
+                        disabled
+                        size="small"
+                      />
+                    </Grid>
+
                     {rows_sesion_bombeo.length > 0 && (
                       <>
                         <Grid item xs={12}>

@@ -208,6 +208,8 @@ export const DataContext = createContext<UserContext>({
     id_instrumento: 0,
     id_cuenca: 0,
     id_pozo: 0,
+    nombre_cuenca: '',
+    nombre_pozo: '',
   },
   info_parametro: {
     id_parametro: 0,
@@ -248,6 +250,7 @@ export const DataContext = createContext<UserContext>({
     numero_helice: '',
     id_instrumento: 0,
     id_cuenca: 0,
+    nombre_cuenca: '',
   },
   set_id_cartera: () => {},
   set_rows_cartera: () => {},
@@ -273,6 +276,7 @@ export const DataContext = createContext<UserContext>({
     ubicacion_prueba: '',
     id_instrumento: 0,
     id_pozo: 0,
+    nombre_pozo: '',
   },
   info_sesion_bombeo: {
     id_sesion_prueba_bombeo: 0,
