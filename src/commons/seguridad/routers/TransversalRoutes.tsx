@@ -8,11 +8,13 @@ import { Page404 } from '../../../screens/404';
 import { NotificacionPage } from '../screens/NotificacionPage';
 import { VinculacionColaboradoresRoutes } from '../screens/vinculacionColaboradores/routes/VinculacionColaboradores';
 
+import { ConfiguracionEntidad } from '../components/ConfiguracionEntidad/screens/configuracionEntidad'
 
 const routes = [
   { path: '/datos_restringidos', element: <ActualizacionDatosRestringidosScreen /> },
   { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
+  { path: '/configuracion_entidad', element: <ConfiguracionEntidad /> },
 ];
 export const TransversalRoutes: React.FC = () => {
   return (
