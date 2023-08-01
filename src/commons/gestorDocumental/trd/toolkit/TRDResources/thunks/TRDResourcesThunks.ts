@@ -652,7 +652,7 @@ export const get_historical_trd = (id_trd: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       if (!id_trd) return control_error('No se ha podido realizar la acción');
-      const url = `gestor/trd/historico/?id_trd=${id_trd}/`;
+      const url = `gestor/trd/historico/?id_trd=${id_trd}`;
       const { data } = await api.get(url);
 
       if (data.data.length > 0) {
