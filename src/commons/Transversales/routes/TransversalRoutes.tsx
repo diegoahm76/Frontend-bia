@@ -5,12 +5,14 @@ import { VinculacionColaboradoresRoutes } from '../../seguridad/screens/vinculac
 import { NotificacionPage } from '../../seguridad/screens/NotificacionPage';
 import { ActualizacionDatosRestringidosScreen, AdminUsuariosScreen } from '../../seguridad/screens';
 import { ProcesosRoutes } from '../modules/procesos/routes/ProcesosRoutes';
+import { ConfiguracionEntidad } from '../../seguridad/components/ConfiguracionEntidad/screens/configuracionEntidad';
 
 
 const routes = [
   { path: '/datos_restringidos', element: <ActualizacionDatosRestringidosScreen /> },
   { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
+  { path: '/configuracion_entidad', element: <ConfiguracionEntidad /> },
 ];
 export const TransversalRoutes: React.FC = () => {
   return (
