@@ -7,6 +7,7 @@ import { Avatar, IconButton } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
+import { baseURL } from '../../api/axios';
 
 export const IconButtonDownLoad = ({
   fileUrl,
@@ -28,7 +29,7 @@ export const IconButtonDownLoad = ({
         rel="noopener noreferrer"
         href={
           fileUrl &&
-          fileUrl.includes('https://back-end-bia-beta.up.railway.app')
+          fileUrl.includes(baseURL)
             ? fileUrl
             : `https://back-end-bia-beta.up.railway.app${fileUrl}`
         }

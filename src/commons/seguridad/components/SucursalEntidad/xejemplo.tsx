@@ -78,7 +78,7 @@
 //     useEffect(() => {
 //         const fetch_data = async (): Promise<any> => {
 //             try {
-//                 const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO');
+//                 const response = await fetch(`${baseURL}listas/departamentos/?pais=CO`);
 //                 const data: DepartamentoResponse = await response.json();
 //                 if (data.success) {
 //                     setDepartamentos(data.data);
@@ -130,7 +130,7 @@
 //     useEffect(() => {
 //         const fetch_data = async (): Promise<any> => {
 //             try {
-//                 const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/paises/');
+//                 const response = await fetch(`${baseURL}listas/paises/`);
 //                 const data: PaisesResponse = await response.json();
 //                 if (data.success) {
 //                     setPaisess(data.data);
@@ -161,6 +161,7 @@
 
 
 import { useEffect, useState, type FC } from 'react';
+import { baseURL } from '../../../../api/axios';
 
  interface Municipios {
     label: string;
@@ -180,7 +181,7 @@ export const SucursalEntidad: FC = () => {
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=');
+                const response = await fetch(`${baseURL}listas/municipios/?cod_departamento=`);
                 const data: MunicipiosResponse = await response.json();
                 if (data.success) {
                     setMunicipioss(data.data);

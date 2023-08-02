@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import { useEffect, useState, type FC } from 'react';
 import { Title } from '../../../../components';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
+import { baseURL } from '../../../../api/axios';
 
 
 interface Municipios {
@@ -57,7 +58,7 @@ export const SucursalDirecciones: FC = () => {
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/paises/');
+                const response = await fetch(`${baseURL}api/listas/paises/`);
                 const data: PaisesResponse = await response.json();
                 if (data.success) {
                     setpaises(data.data);
@@ -74,7 +75,7 @@ export const SucursalDirecciones: FC = () => {
 
 
     useEffect(() => {
-        set_link(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=${selected_pais}`);
+        set_link(`${baseURL}listas/departamentos/?pais=${selected_pais}`);
     }, [selected_pais]);
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
@@ -100,7 +101,7 @@ export const SucursalDirecciones: FC = () => {
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=');
+                const response = await fetch(`${baseURL}listas/municipios/?cod_departamento=`);
                 const data: MunicipiosResponse = await response.json();
                 if (data.success) {
                     setmunicipios(data.data);
