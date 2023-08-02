@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Route, Routes } from 'react-router-dom';
+/* import { Route, Routes } from 'react-router-dom';
 import {
   ActualizacionDatosRestringidosScreen,
   AdminUsuariosScreen,
@@ -15,7 +15,7 @@ const routes = [
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
  
 ];
-export const TransversalRoutes: React.FC = () => {
+export const TransversalRoutess: React.FC = () => {
   return (
     <Routes>
       {routes.map((route, index) => (
@@ -25,4 +25,4 @@ export const TransversalRoutes: React.FC = () => {
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
-};
+}; */

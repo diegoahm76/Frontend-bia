@@ -78,7 +78,7 @@
 //     useEffect(() => {
 //         const fetch_data = async (): Promise<any> => {
 //             try {
-//                 const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO');
+//                 const response = await fetch(`${baseURL}listas/departamentos/?pais=CO`);
 //                 const data: DepartamentoResponse = await response.json();
 //                 if (data.success) {
 //                     setDepartamentos(data.data);
@@ -130,7 +130,7 @@
 //     useEffect(() => {
 //         const fetch_data = async (): Promise<any> => {
 //             try {
-//                 const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/paises/');
+//                 const response = await fetch(`${baseURL}listas/paises/`);
 //                 const data: PaisesResponse = await response.json();
 //                 if (data.success) {
 //                     setPaisess(data.data);
@@ -160,6 +160,42 @@
 
 
 
+
+import { useEffect, useState, type FC } from 'react';
+import { baseURL } from '../../../../api/axios';
+
+ interface Municipios {
+    label: string;
+    value: string;
+};
+
+interface MunicipiosResponse {
+    success: boolean;
+    detail: string;
+    data: Municipios[];
+};
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const SucursalEntidad: FC = () => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [Municipioss, setMunicipioss] = useState<Municipios[]>([]);
+
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch(`${baseURL}listas/municipios/?cod_departamento=`);
+                const data: MunicipiosResponse = await response.json();
+                if (data.success) {
+                    setMunicipioss(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching Municipioss:', error);
+            }
+        };
+
+        void fetch_data();
+    }, []);
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { Grid,   } from '@mui/material';
  import Checkbox from '@mui/material/Checkbox';
@@ -188,7 +224,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         }
     };
     
-
     const handle_direccion_notificacion = (event: ChangeEvent<HTMLInputElement>) => {
         if (!same_address) {
             // Update the value of "direccion_notificacion" if the checkbox is not checked
