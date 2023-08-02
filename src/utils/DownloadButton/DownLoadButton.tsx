@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
+import { baseURL } from '../../api/axios';
 
 export const DownloadButton = ({
   fileUrl,
@@ -23,6 +24,28 @@ export const DownloadButton = ({
 
   return (
     <>
+
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={
+          fileUrl &&
+          fileUrl.includes(baseURL)
+            ? fileUrl
+            : `https://back-end-bia-beta.up.railway.app${fileUrl}`
+        }
+        ref={linkRef}
+        style={{ display: 'none' }}
+        download={fileName}
+      />
+      <Button
+        // fullWidth
+        variant="contained"
+        disabled={condition}
+        onClick={handleDownload}
+      >
+        <FileDownloadIcon />
+      </Button>
       <Grid container>
 
         <Grid item sm={6}>
@@ -52,6 +75,7 @@ export const DownloadButton = ({
           </Button>
         </Grid>
       </Grid>
+
     </>
   );
 };

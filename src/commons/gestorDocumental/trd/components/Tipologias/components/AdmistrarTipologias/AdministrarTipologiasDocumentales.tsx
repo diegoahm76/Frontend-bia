@@ -53,6 +53,7 @@ import {
   get_data_format_documental_type
 } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { LoadingButton } from '@mui/lab';
+import { Title } from '../../../../../../../components';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones
@@ -266,7 +267,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               : edit_tipologia();
           }}
         >
-          <DialogTitle>Administración de Tipologias Documentales</DialogTitle>
+          <DialogTitle>
+            <Title title="Administración de Tipologias Documentales" />
+          </DialogTitle>
           <Divider />
           <DialogContent
             sx={{
