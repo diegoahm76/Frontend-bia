@@ -5,7 +5,7 @@ import { OrganigramaScreen } from '../../../../gestorDocumental/organigrama/scre
 import { TrasladoMasivoUnidadOrganizacional } from '../screens/TrasladoMasivoUnidadOrganizacional/screens/TrasladoMasivoUnidadOrganizacional';
 
 const routes = [
-  { path: '/traslado_masivo_unidad_por_entidad', element: <TrasladoMasivoUnidadOrganizacional/> },
+  { path: '/traslado_masivo_unidad_organizacional', element: <TrasladoMasivoUnidadOrganizacional/> },
   { path: '/traslado_masivo_unidad_a_unidad', element: <>Traslado masivo de unidad a unidad</> },
   { path: '/cambio_organigrama_actual', element: <OrganigramaScreen /> },
 ];
