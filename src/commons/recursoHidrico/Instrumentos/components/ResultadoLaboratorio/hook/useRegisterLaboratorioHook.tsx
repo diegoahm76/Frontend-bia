@@ -230,11 +230,6 @@ export const use_register_laboratorio_hook = () => {
             label: item.nombre ?? '',
           }));
           set_parametros_select(data_parametros);
-          const data_unidad_medida = response.map(
-            (item: IpropsParametros) => item.unidad_de_medida ?? ''
-          );
-          set_undidad_medida_select(data_unidad_medida.join(', '));
-          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
       }
     } catch (err: any) {
@@ -244,6 +239,35 @@ export const use_register_laboratorio_hook = () => {
       }
     }
   };
+  const fetch_data_parametros_laboratorios_select_id =
+    async (): Promise<void> => {
+      try {
+        if (tipo_parametro_value) {
+          const response = await get_parametros_laboratorio(
+            tipo_parametro_value
+          );
+          if (response?.length > 0) {
+            // Find the parameter object that has the matching ID
+            const matchingParam = response.find(
+              (item: IpropsParametros) =>
+                item.id_parametro === (data_watch.id_parametro as any)
+            );
+
+            // Extract the unit of measure from the matching parameter object
+            const unidad_medida = matchingParam?.unidad_de_medida ?? '';
+            set_undidad_medida_select(unidad_medida);
+
+            console.log('unidad_medida', unidad_medida);
+          }
+          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
+        }
+      } catch (err: any) {
+        const temp = err as AxiosError;
+        if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+          control_error(err.response.data.detail);
+        }
+      }
+    };
 
   const [rows_laboratorio, set_rows_laboratorio] = useState<any[]>([]);
   const [metodo, set_metodo] = useState('');
@@ -446,6 +470,7 @@ export const use_register_laboratorio_hook = () => {
     undidad_medida_select,
     id_instrumento_slice,
     fetch_data_parametros_laboratorios_select,
+    fetch_data_parametros_laboratorios_select_id,
     fetch_data_cuencas_instrumentos_select,
     fetch_data_pozo_instrumentos_select,
 

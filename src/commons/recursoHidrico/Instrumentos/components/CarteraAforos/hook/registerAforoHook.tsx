@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { DataContext } from '../../../context/contextData';
@@ -18,8 +18,17 @@ import type { Aforo } from '../../../interfaces/interface';
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const use_register_aforo_hook = () => {
   // * context
-  const { archivos, nombres_archivos, set_archivos, set_nombres_archivos } =
-    useContext(DataContext);
+  const {
+    archivos,
+    nombres_archivos,
+    rows_anexos_cartera,
+    rows_data_cartera,
+    set_archivos,
+    set_rows_data_cartera,
+    set_nombres_archivos,
+    fetch_data_anexos_carteras,
+    fetch_data_cartera_especifica,
+  } = useContext(DataContext);
 
   // use form
 
@@ -29,6 +38,7 @@ export const use_register_aforo_hook = () => {
     register: register_cartera_aforo,
     handleSubmit: handleSubmit_cartera_aforo,
     setValue: set_value_cartera_aforo,
+    reset: reset_cartera_aforo,
     formState: { errors: errors_cartera_aforo },
   } = useForm({
     defaultValues: {
@@ -69,7 +79,13 @@ export const use_register_aforo_hook = () => {
   const handle_date_change = (fieldName: string, value: Dayjs | null): void => {
     switch (fieldName) {
       case 'fecha_aforo':
-        set_fecha_aforo(value);
+        if (value) {
+          set_fecha_aforo(value);
+          set_value_cartera_aforo(
+            'fecha_aforo',
+            value.format('YYYY-MM-DDTHH:mm:ss')
+          );
+        }
         break;
     }
   };
@@ -112,7 +128,6 @@ export const use_register_aforo_hook = () => {
       caudal,
     };
   };
-
   const handle_update = (id: string, updatedValues: Partial<Aforo>): void => {
     // Encontrar el índice del registro a actualizar
     const index = row_aforo.findIndex((row: Aforo) => row.id === id);
@@ -213,8 +228,6 @@ export const use_register_aforo_hook = () => {
       };
 
       // Agregar el nuevo registro a la lista de registros
-      console.log(new_data, 'new_data');
-      console.log(row_aforo, 'row_aforo');
       set_row_aforo([...row_aforo, new_data]);
     }
 
@@ -224,10 +237,26 @@ export const use_register_aforo_hook = () => {
     set_value_cartera_aforo('velocidad_superficial', '');
     set_value_cartera_aforo('velocidad_profunda', '');
   };
-
   const handle_delete = (id: string): void => {
-    const new_rows = row_aforo.filter((row) => row.id !== id);
-    set_row_aforo(new_rows);
+    // Encuentra el índice del registro a eliminar
+    const index = row_aforo.findIndex((row: Aforo) => row.id === id);
+
+    // Si el registro no se encontró, termina la ejecución
+    if (index === -1) return;
+
+    // Crea una copia de row_aforo y elimina el registro
+    let updatedRowAforo = [...row_aforo];
+    updatedRowAforo.splice(index, 1);
+
+    // Recalcular y actualizar todos los registros desde el eliminado (o el siguiente si se eliminó el primer registro) hasta el final
+    let startIndex = index > 0 ? index - 1 : 0;
+    for (let i = startIndex; i < updatedRowAforo.length; i++) {
+      const previousRow = i > 0 ? updatedRowAforo[i - 1] : undefined;
+      updatedRowAforo[i] = calcularValores(updatedRowAforo[i], previousRow);
+    }
+
+    // Actualizar el estado con la copia modificada de la lista
+    set_row_aforo(updatedRowAforo);
   };
 
   const limpiar_formulario = (): void => {
@@ -250,7 +279,7 @@ export const use_register_aforo_hook = () => {
     set_archivos([]);
   };
 
-  const { id_instrumento: id_instrumento_slice } = useAppSelector(
+  const { id_instrumento: id_instrumento_slice, } = useAppSelector(
     (state) => state.instrumentos_slice
   );
 
@@ -298,11 +327,17 @@ export const use_register_aforo_hook = () => {
     register_cartera_aforo,
     handleSubmit_cartera_aforo,
     set_value_cartera_aforo,
+    reset_cartera_aforo,
 
     // general
     fecha_aforo,
     tipo_aforo_value,
     row_aforo,
+    rows_data_cartera,
+    rows_anexos_cartera,
+    fetch_data_cartera_especifica,
+    fetch_data_anexos_carteras,
+    set_fecha_aforo,
     setEditingId,
     handle_date_change,
     handle_tipo_aforo_change,

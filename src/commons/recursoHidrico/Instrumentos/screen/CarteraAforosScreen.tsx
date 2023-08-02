@@ -4,9 +4,12 @@ import { AgregarCartera } from '../components/CarteraAforos/AgregarCartera';
 import { useAppSelector } from '../../../../hooks';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { SeleccionarAforo } from '../components/CarteraAforos/SeleccionarAforo';
+import { EditarCartera } from '../components/CarteraAforos/EditarCartera';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CarteraAforosScreen: React.FC = () => {
+  const { mode_carteras } = useAppSelector((state) => state.instrumentos_slice);
   const { id_instrumento } = useAppSelector(
     (state) => state.instrumentos_slice
   );
@@ -40,7 +43,9 @@ export const CarteraAforosScreen: React.FC = () => {
           <Title title="CARTERA DE AFOROS " />
         </Grid>
       </Grid>
-      <AgregarCartera />
+      {mode_carteras.crear && <AgregarCartera />}
+      {mode_carteras.ver && <SeleccionarAforo />}
+      {mode_carteras.editar && <EditarCartera />}
     </>
   );
 };

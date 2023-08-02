@@ -68,8 +68,8 @@ export interface DataGeneralLaboratorio {
     id_instrumento: number;
     id_cuenca: number;
     id_pozo: number;
-    nombre_cuenca: string;
-    nombre_pozo: string;
+    nombre_cuenca?: string;
+    nombre_pozo?: string;
 }
 export interface Resultadolaboratorio {
     id_dato_registro_laboratorio: number;
@@ -119,6 +119,7 @@ export interface DataGeneralAforo {
 }
 
 export interface DataCarteraAforo {
+    id?: string;
     id_dato_cartera_aforos: number;
     distancia_a_la_orilla: string;
     profundidad: string;

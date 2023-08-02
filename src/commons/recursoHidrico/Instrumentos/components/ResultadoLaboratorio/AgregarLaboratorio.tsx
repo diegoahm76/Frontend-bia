@@ -43,17 +43,6 @@ export const AgregarLaboratorio: React.FC = () => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Eliminar registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<DeleteIcon />}
-              onClick={() => {
-                handleDelete(params.row.id);
-              }}
-            />
-          </Tooltip>
           <Tooltip title="Editar Registro de laboratorio">
             <Button
               variant="outlined"
@@ -62,6 +51,17 @@ export const AgregarLaboratorio: React.FC = () => {
               startIcon={<EditIcon />}
               onClick={() => {
                 handleEdit(params.row);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Eliminar registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => {
+                handleDelete(params.row.id);
               }}
             />
           </Tooltip>
@@ -117,6 +117,7 @@ export const AgregarLaboratorio: React.FC = () => {
     undidad_medida_select,
     id_instrumento_slice,
     fetch_data_parametros_laboratorios_select,
+    fetch_data_parametros_laboratorios_select_id,
     fetch_data_cuencas_instrumentos_select,
     fetch_data_pozo_instrumentos_select,
 
@@ -146,9 +147,14 @@ export const AgregarLaboratorio: React.FC = () => {
   useEffect(() => {
     if (tipo_parametro_value) {
       void fetch_data_parametros_laboratorios_select();
-      console.log(undidad_medida_select, 'undidad_medida_select');
     }
   }, [tipo_parametro_value]);
+
+  useEffect(() => {
+    if (data_watch?.id_parametro) {
+      void fetch_data_parametros_laboratorios_select_id();
+    }
+  }, [data_watch?.id_parametro]);
 
   return (
     <>
@@ -672,7 +678,7 @@ export const AgregarLaboratorio: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving}
+                disabled={is_saving || rows_laboratorio.length === 0}
                 loading={is_saving}
               >
                 Guardar

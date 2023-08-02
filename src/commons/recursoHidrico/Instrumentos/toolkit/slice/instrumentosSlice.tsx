@@ -52,6 +52,8 @@ const initialState = {
     id_cuenca: 0,
   },
 
+  id_cartera_aforos: 0,
+
   info_prueba_bombeo: {
     id_prueba_bombeo: 0,
     descripcion: '',
@@ -64,6 +66,8 @@ const initialState = {
     id_pozo: 0,
     nombre_pozo: '',
   },
+
+  id_prueba_bombeo: 0,
 
   mode: {
     ver: false,
@@ -161,6 +165,9 @@ export const instrumentos_slice = createSlice({
       state.info_cartera.id_instrumento = action.payload.id_instrumento;
       state.info_cartera.id_cuenca = action.payload.id_cuenca;
     },
+    set_current_id_cartera_aforos: (state, action: PayloadAction<number>) => {
+      state.id_cartera_aforos = action.payload;
+    },
     set_current_info_prueba_bombeo: (state, action: PayloadAction<any>) => {
       state.info_prueba_bombeo.id_prueba_bombeo =
         action.payload.id_prueba_bombeo;
@@ -176,6 +183,9 @@ export const instrumentos_slice = createSlice({
       state.info_prueba_bombeo.id_pozo = action.payload.id_pozo;
       state.info_prueba_bombeo.nombre_pozo = action.payload.nombre_pozo;
     },
+    set_current_id_prueba_bombeo: (state, action: PayloadAction<number>) => {
+      state.id_prueba_bombeo = action.payload;
+    },
   },
 });
 // {...state, mode: {...state.mode, ver: true}}
@@ -190,4 +200,6 @@ export const {
   set_current_info_cartera,
   set_current_info_prueba_bombeo,
   set_current_mode_bombeo,
+  set_current_id_prueba_bombeo,
+  set_current_id_cartera_aforos,
 } = instrumentos_slice.actions;
