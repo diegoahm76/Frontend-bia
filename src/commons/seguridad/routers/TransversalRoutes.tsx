@@ -8,7 +8,7 @@ import { Page404 } from '../../../screens/404';
 import { NotificacionPage } from '../screens/NotificacionPage';
 import { VinculacionColaboradoresRoutes } from '../screens/vinculacionColaboradores/routes/VinculacionColaboradores';
 
-y
+
 const routes = [
   { path: '/datos_restringidos', element: <ActualizacionDatosRestringidosScreen /> },
   { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
