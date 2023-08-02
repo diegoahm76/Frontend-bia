@@ -186,6 +186,7 @@ const EntregaScreen = () => {
         <Grid
             container
             spacing={2}
+            marginTop={3}
             sx={{
                 position: 'relative',
                 background: '#FAFAFA',

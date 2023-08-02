@@ -76,7 +76,13 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                         <TableCell component="th" scope="row">{pago.cuota}</TableCell>
                         <TableCell>{pago.numero_factura}</TableCell>
                         <TableCell>{pago.fecha_pago}</TableCell>
-                        <TableCell sx={ pago.estado === "Pagada" ? { WebkitTextFillColor: "green"} : pago.estado === "Vencida" ? { WebkitTextFillColor: "red"} : { WebkitTextFillColor: "#BE8400"} }>
+                        <TableCell sx={
+                          pago.estado === "Pagada" ?
+                          { WebkitTextFillColor: "green"} :
+                          pago.estado === "Vencida" ?
+                          { WebkitTextFillColor: "red"} :
+                          { WebkitTextFillColor: "#BE8400"}
+                        }>
                           {pago.estado}
                         </TableCell>
                         <TableCell>{pago.dias_vencimiento}</TableCell>

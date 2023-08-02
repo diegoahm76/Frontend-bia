@@ -113,7 +113,7 @@ const EspecificacionesVehicle = ({
                     form_inputs={[
                         {
                             datum_type: "title",
-                            title_label: "ESPECIFICACIONES"
+                            title_label: "Especificaciones"
                         },
                         {
                             datum_type: "image_uploader",

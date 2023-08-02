@@ -30,8 +30,6 @@ import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesA
 import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
 import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
 import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
-import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
-import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
 import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
 import { seriesAndSubseriesSlice } from "../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice";
@@ -75,8 +73,6 @@ const app_reducers = combineReducers({
   obligaciones: obligaciones_slice.reducer,
   deudores: deudores_slice.reducer,
   facilidades: facilidades_slice.reducer,
-  funcionarios: funcionarios_slice.reducer,
-  calidad_personas: calidad_personas_slice.reducer,
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
   solicitud_vivero: solicitud_vivero_slice.reducer,
   reportes_recaudo: reportes_recaudo_slice.reducer,

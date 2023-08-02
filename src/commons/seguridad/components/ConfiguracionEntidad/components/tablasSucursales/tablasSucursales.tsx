@@ -1,10 +1,11 @@
-import { Box, Button, Grid } from "@mui/material";
+import {  Box, Button, Grid, Chip, ButtonGroup,  } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "../../../../../../api/axios";
 import { useEffect, useState } from "react";
 import type { Itablaucursales } from "../../interfaces/interfacesConEntidad";
-
+import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
+import { useNavigate } from "react-router-dom";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -35,12 +36,51 @@ export const TablaSucursales: React.FC = () => {
     }, []);
 
     const columns = [
-        { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
-        { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
-        { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
-
+        {
+            field: "numero_sucursal",
+            headerName: "Número de Sucursal",
+            width: 100,
+            flex: 1,
+        },
+        {
+            field: "descripcion_sucursal",
+            headerName: "Descripción",
+            width: 200,
+            flex: 1,
+        },
+        {
+            field: "es_principal",
+            headerName: "Es Principal",
+            width: 150,
+            flex: 1,
+            renderCell: (params: any ) => {
+                const value = params.value as boolean; // Asegurarse de que el tipo sea booleano
+                if (typeof value === 'boolean') {
+                    return value ? (
+                        <Chip
+                            size="small"
+                            label="Activo"
+                            color="success"
+                            variant="outlined"
+                        />
+                    ) : (
+                        <Chip
+                            size="small"
+                            label="Inactivo"
+                            color="error"
+                            variant="outlined"
+                        />
+                    );
+                } else {
+                    // Manejar el caso en el que el tipo no sea booleano (opcional)
+                    return null; // O muestra algún otro valor predeterminado
+                }
+            },
+        },
     ];
+    const filtered_data = dataEntidad.filter((row) => row.es_principal);
 
+    const navigate = useNavigate();
     return (
         <Grid
             container
@@ -55,21 +95,35 @@ export const TablaSucursales: React.FC = () => {
         >
             <Grid item xs={12}>
                 <Title title="Tabla sucursales" />
+                <ButtonGroup
+                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                    {download_xls({ nurseries: dataEntidad, columns })}
+            
+                </ButtonGroup>
+
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
                     <DataGrid
                         density="compact"
                         autoHeight
                         columns={columns}
-                        rows={dataEntidad}
+                        rows={filtered_data}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => row.id_sucursal_empresa}
                     />
                 </Box>
             </Grid>
-            <Button style={{ margin: 8 }} color="primary" variant="contained">
+
+            <Button
+                style={{ margin: 8 }}
+                color="primary"
+                variant="contained"
+                onClick={() => {navigate("/app/Seguridad/sucursal_entidad")}}
+            >
                 Ir a sucursales
             </Button>
+        
         </Grid>
     );
 };
