@@ -26,6 +26,11 @@ export interface ModalContextState {
   openModalHistorialCambios: () => void;
   closeModalHistorialCambios: () => void;
 
+  //* MODAL TRD RELACION TCA ACTUAL
+  modalTrdRelacionTcaActual: boolean;
+  openModalTrdRelacionTcaActual: () => void;
+  closeModalTrdRelacionTcaActual: () => void;
+
   //* LOAD BUTTONS
   loadingButton: boolean;
   setLoadingButton: (value: boolean) => void;

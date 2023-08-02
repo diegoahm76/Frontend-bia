@@ -62,6 +62,18 @@ export const reducer = (state: any, { payload, type }: any): any => {
         modalHistorialCambios: payload || false
       };
 
+    //* MODAL TRD RELACION TCA ACTUAL
+    case Modal.OPEN_MODAL_TRD_RELACION_TCA_ACTUAL:
+      return {
+        ...state,
+        modalTrdRelacionTcaActual: payload || true
+      };
+    case Modal.CLOSE_MODAL_TRD_RELACION_TCA_ACTUAL:
+      return {
+        ...state,
+        modalTrdRelacionTcaActual: payload || false
+      };
+
     // ? ----------------- |LOAD BUTTONS| -----------------
     //* LOAD BUTTONS
     case Modal.SET_LOADING_BUTTON:
