@@ -3,9 +3,11 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../../screens/404';
 import { LideresXUnidadOrganizacionalMainScreen } from '../screens/LideresXUnidadOrganizacional/screens/LideresXUnidadOrganizacionalMainScreen';
 
-
 const routes = [
-  { path: '/lideres_unidad_organizacional', element: <LideresXUnidadOrganizacionalMainScreen/> },
+  {
+    path: '/lideres_unidad_organizacional',
+    element: <LideresXUnidadOrganizacionalMainScreen />
+  }
 ];
 
 export const CorporativoRoutes: React.FC = () => {
