@@ -1,4 +1,5 @@
 import axios from "axios";
+import { control_warning } from "../commons/almacen/configuracion/store/thunks/BodegaThunks";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const baseURL = "https://back-end-bia-beta.up.railway.app/api/"
@@ -15,7 +16,8 @@ api.interceptors.request.use(
         request.headers.Authorization = `Bearer ${token}`;
       }
     } catch (e) {
-      // console.log(e);
+      window.location.href = "/#/auth/login"
+      control_warning("Su sesión ha expirado, por favor vuelva a iniciar sesión")
     }
     return request;
   },
