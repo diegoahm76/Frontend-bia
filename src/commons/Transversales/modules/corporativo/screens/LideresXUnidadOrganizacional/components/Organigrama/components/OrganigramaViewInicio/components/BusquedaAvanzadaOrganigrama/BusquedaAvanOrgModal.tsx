@@ -21,70 +21,123 @@ import {
   Stack,
   TextField
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 import Select from 'react-select';
-//! helpers
-
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Controller } from 'react-hook-form';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-
-import { LoadingButton } from '@mui/lab';
+import { v4 as uuidv4 } from 'uuid';
 
 import { AvatarStyles } from '../../../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../../../../../components';
 
-
-import { v4 as uuidv4 } from 'uuid';
 import { useLideresXUnidadOrganizacional } from './../../../../../../hook/useLideresXUnidadOrganizacional';
-//! toolkit-redux values
+import { columsBusquedaAvanzada } from './columns/columnsBusqueda';
 
 export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
   const {
-    control_organigrama_lideres_por_unidad,
+    control_organigrama_lideres_por_unidad
     // reset_organigrama_lideres_por_unidad,
     // watch_organigrama_lideres_por_unidad_value
   } = useLideresXUnidadOrganizacional();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const columns_busqueda_avazada_organigrama_lideres: GridColDef[] = [
-    // ...columnsModalBusquedaTRD,
+    ...columsBusquedaAvanzada,
     {
-      headerName: 'Estado',
-      field: 'estado',
+      headerName: 'Fecha Terminado',
+      field: 'fecha_terminado',
       minWidth: 180,
       maxWidth: 220,
-      renderCell: (params: { row: { fecha_terminado: null } }) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.fecha_terminado !== null ? (
+      renderCell: (params: any) => {
+        return (
           <Chip
             size="small"
-            label={`Terminado ${params.row.fecha_terminado}`}
+            label={`Terminado ${new Date(
+              params.row.fecha_terminado
+            ).toLocaleString()}`}
             color="success"
             variant="outlined"
           />
-        ) : (
-          <Chip
-            size="small"
-            label="En Proceso"
-            color="error"
-            variant="outlined"
-          />
-        );
+        ) as JSX.Element;
+      }
+    },
+
+    {
+      headerName: 'Fecha Puesta en Producción',
+      field: 'fecha_puesta_produccion',
+      minWidth: 180,
+      maxWidth: 230,
+      renderCell: (params: any) => {
+        return params.row.fecha_puesta_produccion
+          ? ((
+              <Chip
+                size="small"
+                label={`Terminado ${new Date(
+                  params.row.fecha_puesta_produccion
+                ).toLocaleString()}`}
+                color="success"
+                variant="outlined"
+              />
+            ) as JSX.Element)
+          : ((
+              <Chip
+                size="small"
+                label={`No está en Producción`}
+                color="error"
+                variant="outlined"
+              />
+            ) as JSX.Element);
+      }
+    },
+
+    {
+      headerName: 'Fecha Retiro de producción',
+      field: 'fecha_retiro_produccion',
+      minWidth: 180,
+      maxWidth: 220,
+      renderCell: (params: any) => {
+        return params.row.fecha_retiro_produccion
+          ? ((
+              <Chip
+                size="small"
+                label={`Terminado ${new Date(
+                  params.row.fecha_retiro_produccion
+                ).toLocaleString()}`}
+                color="success"
+                variant="outlined"
+              />
+            ) as JSX.Element)
+          : ((
+              <Chip
+                size="small"
+                label={`No retirado de Producción`}
+                color="error"
+                variant="outlined"
+              />
+            ) as JSX.Element);
       }
     },
     {
       headerName: 'Actual',
-      field: 'is_actual',
+      field: 'actual',
       minWidth: 50,
-      maxWidth: 60,
-      renderCell: (params: { row: { actual: null } }) => {
+      maxWidth: 70,
+      renderCell: (params: { row: { actual: any } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.actual !== false ? (
-          <Chip size="small" label="Si" color="info" variant="outlined" />
-        ) : (
-          <Chip size="small" label="No" color="warning" variant="outlined" />
-        );
+        return params.row.actual !== false
+          ? ((
+              <Chip size="small" label="Si" color="info" variant="outlined" />
+            ) as JSX.Element)
+          : ((
+              <Chip
+                size="small"
+                label="No"
+                color="warning"
+                variant="outlined"
+              />
+            ) as JSX.Element);
       }
     },
     {
@@ -168,9 +221,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
+                      onChange={onChange}
                       error={!!error}
                     />
                   )}
@@ -194,10 +245,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                        // console.log(e.target.value);
-                      }}
+                      onChange={onChange}
                       error={!!error}
                     />
                   )}
@@ -224,7 +272,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                       <Select
                         value={value}
                         onChange={(selectedOption) => {
-                         /* void get_catalogo_TRD_service(
+                          /* void get_catalogo_TRD_service(
                             selectedOption.value
                           ).then((res) => {
                             console.log(res);
@@ -232,7 +280,6 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                           }); */
                           onChange(selectedOption);
                         }}
-                        // isDisabled={tca_current != null}
                         options={[
                           {
                             label: 'SI',
@@ -279,7 +326,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               density="compact"
               autoHeight
               rows={[]}
-              columns={[]}
+              columns={columns_busqueda_avazada_organigrama_lideres}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}

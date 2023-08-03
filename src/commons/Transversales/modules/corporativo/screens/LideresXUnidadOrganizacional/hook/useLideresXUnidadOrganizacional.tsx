@@ -14,10 +14,8 @@ interface LideresXUnidadOrganizacional {
 export const useLideresXUnidadOrganizacional = ():
   | LideresXUnidadOrganizacional
   | any => {
-
-    //* dispatch
-   //  const dispatch = useAppDispatch();
-
+  //* dispatch
+  //  const dispatch = useAppDispatch();
 
   // ! -------- USE FORM DECLARATIONS -------- ! //
 
@@ -31,17 +29,19 @@ export const useLideresXUnidadOrganizacional = ():
     mode: 'onChange',
     defaultValues: {
       nombre: '',
+      version: '',
+      actual: false,
       descripcion: '',
-      fecha_puesta_produccion: '',
-      actual: false
-    }
+      fecha_puesta_produccion: ''
+    } as any
   });
   const watch_organigrama_lideres_por_unidad_value =
     watch_organigrama_lideres_por_unidad();
-  // console.log(watch_organigrama_lideres_por_unidad_value); */
+  console.log(watch_organigrama_lideres_por_unidad_value);
 
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 
+  // ? ----- use effect after select searched organigramas to put the data into the main inputs ----- ! //
 
   return {
     // ? -------- USE FORM DECLARATIONS -------- ? //
