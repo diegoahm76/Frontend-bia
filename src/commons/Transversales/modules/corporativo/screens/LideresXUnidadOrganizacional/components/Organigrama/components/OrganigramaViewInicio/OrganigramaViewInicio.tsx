@@ -14,6 +14,8 @@ import { Title } from '../../../../../../../../../../components';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
 import { OrganigramaChip } from './utils/ChipComponent';
 import { BusquedaAvanOrgModal } from './components/BusquedaAvanzadaOrganigrama/BusquedaAvanOrgModal';
+import { useContext } from 'react';
+import { ModalContextLideres } from '../../../../context/ModalContextLideres';
 
 export const OrganigramaViewInicio = (): JSX.Element => {
   //* redux states
@@ -25,7 +27,12 @@ export const OrganigramaViewInicio = (): JSX.Element => {
   const { control_organigrama_lideres_por_unidad } =
     useLideresXUnidadOrganizacional();
 
-  // ? functions
+  // ? useContext declaration
+  const {
+    // modalBusquedaAvanzadaOrganigrama,
+    openModalBusquedaAvanzadaOrganigrama
+    // closeModalBusquedaAvanzadaOrganigrama
+  } = useContext(ModalContextLideres);
 
   //* ----- Onsubmit function -----
   const onSubmit = (data?: any): void => {
@@ -157,9 +164,7 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                 color="primary"
                 variant="outlined"
                 startIcon={<SearchIcon />}
-                // onClick={(openModalModalAdvancedOrganigrama) => {
-                //   console.log('openModalModalAdvancedOrganigrama');
-                // }}
+                onClick={openModalBusquedaAvanzadaOrganigrama}
               >
                 BÚSQUEDA AVANZADA ORGANIGRAMA
               </Button>

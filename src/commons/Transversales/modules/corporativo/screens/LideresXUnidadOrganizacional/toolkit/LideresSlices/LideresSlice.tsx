@@ -29,4 +29,7 @@ export const lideres_slice = createSlice({
   }
 });
 
-export const { set_organigrama_lideres_current } = lideres_slice.actions;
+export const {
+  set_organigrama_lideres_current,
+  get_list_busqueda_organigramas
+} = lideres_slice.actions;

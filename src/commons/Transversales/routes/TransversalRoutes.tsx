@@ -10,6 +10,7 @@ import {
 import { ProcesosRoutes } from '../modules/procesos/routes/ProcesosRoutes';
 import { ConfiguracionEntidad } from '../../seguridad/components/ConfiguracionEntidad/screens/configuracionEntidad';
 import { CorporativoRoutes } from '../modules/corporativo/routes/CorporativoRoutes';
+import { ModalProviderLideres } from '../modules/corporativo/screens/LideresXUnidadOrganizacional/context/ModalContextLideres';
 
 const routes = [
   {
@@ -22,17 +23,19 @@ const routes = [
 ];
 export const TransversalRoutes: React.FC = () => {
   return (
-    <Routes>
-      {routes.map((route, index) => (
-        <Route key={index} path={route.path} element={route.element} />
-      ))}
-      <Route
-        path="vinculacion_colaboradores/*"
-        element={<VinculacionColaboradoresRoutes />}
-      />
-      <Route path="procesos/*" element={<ProcesosRoutes />} />
-      <Route path="corporativo/*" element={<CorporativoRoutes />} />
-      <Route path="/*" element={<Page404 />} />
-    </Routes>
+    <ModalProviderLideres>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
+        <Route
+          path="vinculacion_colaboradores/*"
+          element={<VinculacionColaboradoresRoutes />}
+        />
+        <Route path="procesos/*" element={<ProcesosRoutes />} />
+        <Route path="corporativo/*" element={<CorporativoRoutes />} />
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
+    </ModalProviderLideres>
   );
 };

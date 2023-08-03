@@ -37,7 +37,7 @@ export const useLideresXUnidadOrganizacional = ():
   });
   const watch_organigrama_lideres_por_unidad_value =
     watch_organigrama_lideres_por_unidad();
-  console.log(watch_organigrama_lideres_por_unidad_value);
+  //  console.log(watch_organigrama_lideres_por_unidad_value);
 
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 

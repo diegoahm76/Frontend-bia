@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 //! libraries or frameworks
-import { type FC } from 'react';
+import { useContext, type FC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -34,16 +34,71 @@ import { Title } from '../../../../../../../../../../../../components';
 
 import { useLideresXUnidadOrganizacional } from './../../../../../../hook/useLideresXUnidadOrganizacional';
 import { columsBusquedaAvanzada } from './columns/columnsBusqueda';
+import { get_organigramas_list_lideres_screen_service } from '../../../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
+import { get_list_busqueda_organigramas } from '../../../../../../toolkit/LideresSlices/LideresSlice';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../../../../hooks';
+import { ModalContextLideres } from '../../../../../../context/ModalContextLideres';
 
 export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
+  // * dispatch to use in the component * //
+  const dispatch = useAppDispatch();
+
+  //* -------- hook declaration -------- *//
   const {
-    control_organigrama_lideres_por_unidad
-    // reset_organigrama_lideres_por_unidad,
-    // watch_organigrama_lideres_por_unidad_value
+    control_organigrama_lideres_por_unidad,
+    reset_organigrama_lideres_por_unidad,
+    watch_organigrama_lideres_por_unidad_value
   } = useLideresXUnidadOrganizacional();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { organigramas_list } = useAppSelector((state) => state.lideres_slice);
+
+  // ? useContext declaration
+  const {
+    modalBusquedaAvanzadaOrganigrama,
+    // openModalBusquedaAvanzadaOrganigrama,
+    closeModalBusquedaAvanzadaOrganigrama,
+    loadingButton,
+    setLoadingButton
+  } = useContext(ModalContextLideres);
+
+  //* -------- columns declaration -------- *//
   const columns_busqueda_avazada_organigrama_lideres: GridColDef[] = [
+    {
+      headerName: 'Acciones',
+      field: 'accion',
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            onClick={() => {
+              console.log(params.row);
+              //  dispatch(set_organigrama_lideres_current(params.row));
+
+              /* dispatch(get_trd_current(params.row));
+              closeModalModalSearchTRD();
+              dispatch(get_trds([]));
+              const ccd_current = {
+                id_ccd: params?.row?.id_ccd,
+                id_organigrama: params?.row?.id_organigrama
+              };
+              dispatch(
+                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
+              ).then((res: any) => {
+                dispatch(get_catalogo_trd(params.row.id_trd));
+              }); */
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
+    },
     ...columsBusquedaAvanzada,
     {
       headerName: 'Fecha Terminado',
@@ -139,59 +194,61 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               />
             ) as JSX.Element);
       }
-    },
-    {
-      headerName: 'Acciones',
-      field: 'accion',
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            onClick={() => {
-              /*  dispatch(get_trd_current(params.row));
-              closeModalModalSearchTRD();
-              dispatch(get_trds([]));
-              const ccd_current = {
-                id_ccd: params?.row?.id_ccd,
-                id_organigrama: params?.row?.id_organigrama
-              };
-              dispatch(
-                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
-              ).then((res: any) => {
-                dispatch(get_catalogo_trd(params.row.id_trd));
-              }); */
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      )
     }
   ];
 
+  const resetFunction = (): void => {
+    console.log('resetFunction');
+    reset_organigrama_lideres_por_unidad({
+      nombre: '',
+      version: '',
+      actual: false
+    });
+  };
+
   const closeModal = (): any => {
-    console.log('closeModal');
+    closeModalBusquedaAvanzadaOrganigrama();
+    dispatch(get_list_busqueda_organigramas([]));
+    resetFunction();
+  };
+
+  const onSubmitSearchOrganigramas = async ({
+    nombre,
+    version,
+    actual
+  }: any): Promise<any> => {
+    try {
+      const dataToSearch = {
+        nombre,
+        version,
+        actual: actual.value,
+        setLoadingButton,
+      };
+      const dataSearch = await get_organigramas_list_lideres_screen_service(
+        dataToSearch
+      );
+      dispatch(get_list_busqueda_organigramas(dataSearch));
+      // * console.log(dataSearch);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
-      <Dialog fullWidth maxWidth="md" open={true} onClose={closeModal}>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={modalBusquedaAvanzadaOrganigrama}
+        onClose={closeModal}
+      >
         <Box
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log('onsubmit');
-            // console.log(form_data_searched_trd_modal);
-            /*  dispatch(
-              get_searched_trd(
-                form_data_searched_trd_modal.nombre,
-                form_data_searched_trd_modal.version,
-                setCreateTRDLoadingButton
-              )
-            ); */
+            void onSubmitSearchOrganigramas(
+              watch_organigrama_lideres_por_unidad_value
+            );
           }}
         >
           <DialogTitle>
@@ -311,7 +368,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <LoadingButton
-                  loading={false}
+                  loading={loadingButton}
                   variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
@@ -325,7 +382,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={[]}
+              rows={organigramas_list}
               columns={columns_busqueda_avazada_organigrama_lideres}
               pageSize={5}
               rowsPerPageOptions={[7]}
@@ -344,6 +401,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 onClick={() => {
+                  resetFunction();
                   console.log('cerrando');
                   // reset_searched_trd_modal();
                 }}
