@@ -16,7 +16,7 @@ import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Pai
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
-    const [selected_pais, setselected_pais] = useState('');
+    const [selected_pais, setselected_pais] = useState('');  
     const [paises, setpaises] = useState<Paises[]>([]);
     const [departamentos, set_departamentos] = useState<Departamento[]>([]);
     const [selected_departamento, setselected_departamento] = useState('');
@@ -119,17 +119,17 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     }, [selected_departamento_noti]);
 
 
-    const set_value_direction = (_value: string, type: string): void => {
+    // const set_value_direction = (_value: string, type: string): void => {
 
-        switch (type) {
-            case 'residencia':
-                break;
-            case 'notificacion':
-                break;
-            case 'laboral':
-                break;
-        }
-    };
+    //     switch (type) {
+    //         case 'residencia':
+    //             break;
+    //         case 'notificacion':
+    //             break;
+    //         case 'laboral':
+    //             break;
+    //     }
+    // };
     const [error] = useState<any>('');
 
     const is_error = error !== '';
@@ -140,15 +140,76 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     ] = useState('');
     console.log(is_error);
 
+    const [same_address, setsame_address] = useState(false);
+
+    const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setsame_address(event.target.checked);
+        // setsame_address(event.target.checked);
+        // When the checkbox is checked, update the direccion_notificacion_referencia field
+        // with the value of direccion_sucursal_georeferenciada
+        if (event.target.checked) {
+            handleinput_change({
+                target: {
+                    name: 'direccion_notificacion_referencia',
+                    value: form_values.direccion_sucursal_georeferenciada,
+                },
+
+            }); handleinput_change({
+                target: {
+                    name: 'direccion_notificacion',
+                    value: form_values.direccion,
+                },
+
+            });handleinput_change({
+                target: {
+                    name: 'municipio_notificacion',
+                    value: form_values.municipio,
+                },
+
+            });
+            handleinput_change({
+                target: {
+                    name: 'municipio_notificacion',
+                    value: form_values.municipio,
+                },
+
+            });
+        }
+    };
+    
+    const [direccion_generada, setdireccion_generada] = useState('');
+
+    const mostrardireccion_generada = (direccion: any): void => {
+        setdireccion_generada(direccion);
+      };
+      
+
     return (
         <>
-            <DialogGeneradorDeDirecciones
+            {/* <DialogGeneradorDeDirecciones
                 open={opengeneradordirecciones}
                 openDialog={setopengeneradordirecciones}
                 onChange={set_value_direction}
                 type={type_direction}
+                
+                
+            /> */}
+           <DialogGeneradorDeDirecciones
+        open={opengeneradordirecciones}
+        openDialog={setopengeneradordirecciones}
+        onChange={mostrardireccion_generada} // Pasa la función para mostrar la dirección generada
+        type={type_direction}
+      />
+      <div>
+      {/* Aquí muestras la dirección generada */}
+       <>
+       {direccion_generada}
+       </>
+    
 
-            />
+    
+    </div>
+
             <Grid
                 container
                 spacing={2}
@@ -165,7 +226,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>pais</InputLabel>
+                        <InputLabel shrink={true}>pais</InputLabel>
                         <Select
                             label="pais"
                             value={selected_pais}
@@ -183,7 +244,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>Departamento</InputLabel>
+                        <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
                             value={selected_departamento}
@@ -199,25 +260,25 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
-                
-<Grid item xs={12} sm={4}>
-    <FormControl required size="small" fullWidth>
-        <InputLabel shrink={true}>Municipio</InputLabel>
-        <Select
-            label="Municipio"
-            name="municipio"
-            value={form_values.municipio}
-            onChange={handleinput_change}
-            inputProps={{ shrink: true }}
-        >
-            {municipios.map((municipio) => (
-                <MenuItem key={municipio.value} value={municipio.value}>
-                    {municipio.label}
-                </MenuItem>
-            ))}
-        </Select>
-    </FormControl>
-</Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel shrink={true}>Municipio</InputLabel>
+                        <Select
+                            label="Municipio"
+                            name="municipio"
+                            value={form_values.municipio}
+                            onChange={handleinput_change}
+                            inputProps={{ shrink: true }}
+                        >
+                            {municipios.map((municipio) => (
+                                <MenuItem key={municipio.value} value={municipio.value}>
+                                    {municipio.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
@@ -228,7 +289,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        name="direccion"
+                        name="direccion"    
                         value={form_values.direccion}
                         onChange={handleinput_change}
                     />
@@ -259,6 +320,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     </Button>
                 </Grid>
             </Grid>
+            
             <Grid
                 container
                 spacing={2}
@@ -273,7 +335,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>Departamento</InputLabel>
+                        <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
                             value={selected_departamento_noti}
@@ -291,12 +353,13 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>Municipio</InputLabel>
+                        <InputLabel shrink={true}>Municipio</InputLabel>
                         <Select
                             label="Municipio"
                             name="municipio_notificacion"
+                            value={same_address ? form_values.municipio : form_values.municipio_notificacion}
 
-                            value={form_values.municipio_notificacion}
+                            // value={form_values.municipio_notificacion}
                             onChange={handleinput_change}
                         >
                             {municipios_noti.map((municipio) => (
@@ -308,7 +371,15 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}   >
-                    <FormControlLabel control={<Checkbox />} label="Misma dirección física" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={same_address}
+                                onChange={handle_checkbox}
+                            />
+                        }
+                        label="Misma dirección física"
+                    />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
@@ -320,7 +391,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             shrink: true,
                         }}
                         name="direccion_notificacion"
-                        value={form_values.direccion_notificacion}
+                        // value={form_values.direccion_notificacion}
+                        value={same_address ? form_values.direccion : form_values.direccion_notificacion}
+
                         onChange={handleinput_change}
                     />
                 </Grid>
@@ -334,7 +407,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             shrink: true,
                         }}
                         name="direccion_notificacion_referencia"
-                        value={form_values.direccion_notificacion_referencia}
+                        value={same_address ? form_values.direccion_sucursal_georeferenciada : form_values.direccion_notificacion_referencia}
+
+                        // value={form_values.direccion_notificacion_referencia}
                         onChange={handleinput_change}
                     />
                 </Grid>
@@ -354,4 +429,3 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         </>
     );
 }
-
