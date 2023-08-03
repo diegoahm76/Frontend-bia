@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useLideresXUnidadOrganizacional } from '../../hook/useLideresXUnidadOrganizacional';
 import {
@@ -18,10 +19,17 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../../../../../components';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
-
 //* icons
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
+import { useAppSelector } from '../../../../../../../../hooks';
 export const OrganigramaLideres = (): JSX.Element => {
+  //* redux states
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { organigrama_lideres_current } = useAppSelector(
+    (state) => state.lideres_slice
+  );
+
+  //* hooks
   const { control_organigrama_lideres_por_unidad } =
     useLideresXUnidadOrganizacional();
 
@@ -72,8 +80,9 @@ export const OrganigramaLideres = (): JSX.Element => {
                     } */
                       size="small"
                       variant="outlined"
-                      value={value}
+                      value={organigrama_lideres_current?.nombre}
                       InputLabelProps={{ shrink: true }}
+                      disabled={true}
                       onChange={(e) => {
                         onChange(e.target.value);
                         e.target.value.length === 50 &&
@@ -105,8 +114,9 @@ export const OrganigramaLideres = (): JSX.Element => {
                     } */
                       size="small"
                       variant="outlined"
-                      value={value}
+                      value={organigrama_lideres_current?.descripcion}
                       InputLabelProps={{ shrink: true }}
+                      disabled={true}
                       onChange={(e) => {
                         onChange(e.target.value);
                         e.target.value.length === 50 &&
@@ -140,7 +150,14 @@ export const OrganigramaLideres = (): JSX.Element => {
                     } */
                       size="small"
                       variant="outlined"
-                      value={value}
+                      value={
+                        organigrama_lideres_current?.fecha_puesta_produccion
+                          ? new Date(
+                              organigrama_lideres_current?.fecha_puesta_produccion
+                            ).toLocaleString()
+                          : ''
+                      }
+                      disabled={true}
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
@@ -174,8 +191,9 @@ export const OrganigramaLideres = (): JSX.Element => {
                     } */
                       size="small"
                       variant="outlined"
-                      value={value}
+                      value={organigrama_lideres_current?.version}
                       InputLabelProps={{ shrink: true }}
+                      disabled={true}
                       onChange={(e) => {
                         onChange(e.target.value);
                         e.target.value.length === 10 &&
