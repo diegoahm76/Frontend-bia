@@ -156,7 +156,8 @@ export const post_resultado_laboratorio = async (
 export const post_resultado_aforo = async (
   form: any,
   rows_registro_aforo: any,
-  datos: FormData
+  datos: FormData,
+  archivo: any
 ): Promise<any> => {
   const new_array = [
     ...rows_registro_aforo,
@@ -213,12 +214,12 @@ export const post_resultado_aforo = async (
     'data.data.cartera_aforo'
   );
   // Verify that all properties exist
-  if (response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos) {
+  if (archivo === null && response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos) {
     const id_cartera_aforos =
       response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos;
 
     // Append id_cartera_aforos to datos
-    datos.append('id_cartera_aforos', id_cartera_aforos);
+    datos.append('id_cartera_aforo', id_cartera_aforos);
 
     const response_archivos = await api.post(
       `hidrico/bibliotecas/archivos_instrumento/create/`,
@@ -230,16 +231,112 @@ export const post_resultado_aforo = async (
       response_archivos: response_archivos.data,
     };
   } else {
-    throw new Error('id_cartera_aforos is missing in the response');
+    return {
+      reponse_general: response.data,
+    };
+  }
+};
+export const put_resultado_aforo_select = async (
+  form: any,
+  rows_registro_aforo: any,
+  datos: FormData,
+  archivos: any
+): Promise<any> => {
+  const id_cartera_aforos = form.id_cartera_aforos;
+  const new_array = [
+    ...rows_registro_aforo,
+
+    form.id_cartera_aforos === null ||
+    form.distancia_a_la_orilla === null ||
+    form.profundidad === '' ||
+    form.velocidad_superficial === '' ||
+    form.velocidad_profunda === '' ||
+    form.transecto === '' ||
+    form.profundidad_promedio === '' ||
+    form.velocidad_promedio === '' ||
+    form.velocidad_transecto === '' ||
+    form.caudal === ''
+      ? null
+      : {
+          id_cartera_aforos: form.id_cartera_aforos,
+          id_dato_cartera_aforos: form.id_dato_cartera_aforos,
+          distancia_a_la_orilla: form.distancia_a_la_orilla,
+          profundidad: form.profundidad,
+          velocidad_superficial: form.velocidad_superficial,
+          velocidad_profunda: form.velocidad_profunda,
+          transecto: form.transecto,
+          profundidad_promedio: form.profundidad_promedio,
+          velocidad_promedio: form.velocidad_promedio,
+          velocidad_transecto: form.velocidad_transecto,
+          caudal: form.caudal,
+        },
+  ];
+
+  const filtered_array = new_array.filter((item: any) => item !== null);
+
+  const response = await api.put(
+    `hidrico/bibliotecas/carteras_aforo/update/${id_cartera_aforos as number}/`,
+    {
+      ...form,
+      id_cartera_aforos: form.id_cartera_aforos,
+      id_instrumento: form.id_instrumento,
+      id_dato_cartera_aforos: form.id_dato_cartera_aforos,
+      id_cuenca: form.id_cuenca,
+      ubicacion_aforo: form.ubicacion_aforo,
+      descripcion: form.descripcion,
+      latitud: form.latitud,
+      longitud: form.longitud,
+      fecha_aforo: dayjs(form.fecha_aforo).format('YYYY-MM-DDTHH:mm:ss'),
+      cod_tipo_aforo: form.cod_tipo_aforo,
+      numero_serie: form.numero_serie,
+      numero_helice: form.numero_helice,
+      datos_cartera_aforo:
+        rows_registro_aforo.length === 0 ? [] : filtered_array,
+    }
+  );
+
+  if (archivos === null && id_cartera_aforos) {
+    // const id_cartera_aforos = form.id_cartera_aforos;
+    console.log(archivos, 'archivos');
+    console.log(id_cartera_aforos, 'id_cartera_aforos');
+
+    // Append id_cartera_aforos to datos
+    datos.append('id_cartera_aforo', id_cartera_aforos);
+
+    const response_archivos = await api.post(
+      `hidrico/bibliotecas/archivos_instrumento/create/`,
+      datos
+    );
+
+    return {
+      reponse_general: response.data,
+      response_archivos: response_archivos.data,
+    };
+  } else {
+    return {
+      reponse_general: response.data,
+    };
   }
 };
 
-  export const get_cuenca_id = async (
-    id_cuenca: number,
-  ): Promise<CuencasId[]> => {
-    const response: AxiosResponse<ResponseServer<CuencasId[]>> =
-      await api.get<ResponseServer<CuencasId[]>>(
-        `hidrico/bibliotecas/cuencas/get-id/${id_cuenca}/`
-      );
-    return response.data.data;
-  };
+export const get_cuenca_id = async (
+  id_cuenca: number
+): Promise<CuencasId[]> => {
+  const response: AxiosResponse<ResponseServer<CuencasId[]>> = await api.get<
+    ResponseServer<CuencasId[]>
+  >(`hidrico/bibliotecas/cuencas/get-id/${id_cuenca}/`);
+  return response.data.data;
+};
+
+export const put_archivos = async (
+  id_archivo: number,
+  nombre_archivo: string
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/archivos_instrumento/update/${id_archivo}/`,
+    {
+      nombre_archivo
+    }
+  );
+  return response.data;
+}

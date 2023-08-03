@@ -103,6 +103,7 @@ export interface Laboratorio {
 }
 
 export interface DataGeneralAforo {
+    id?: string;
     id_cartera_aforos: number;
     fecha_registro: string;
     ubicacion_aforo: string;
@@ -119,18 +120,19 @@ export interface DataGeneralAforo {
 }
 
 export interface DataCarteraAforo {
-    id?: string;
-    id_dato_cartera_aforos: number;
-    distancia_a_la_orilla: string;
-    profundidad: string;
-    velocidad_superficial: string;
-    velocidad_profunda: string;
-    transecto: string;
-    profundidad_promedio: string;
-    velocidad_promedio: string;
-    velocidad_transecto: string;
-    caudal: string;
-    id_cartera_aforos: number;
+    id?: any;
+    id_dato_cartera_aforos?: number;
+    distancia_a_la_orilla?: string;
+    profundidad?: string;
+    velocidad_superficial?: string;
+    velocidad_profunda?: string;
+    transecto?: string;
+    profundidad_promedio?: string;
+    velocidad_promedio?: string;
+    velocidad_transecto?: string;
+    caudal?: string;
+    id_cartera_aforos?: number;
+    molinete?: string;
 }
 
 export interface DataGeneralBombeo {

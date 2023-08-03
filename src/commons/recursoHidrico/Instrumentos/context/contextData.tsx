@@ -34,6 +34,7 @@ import {
   get_instrumento_id,
 } from '../../ConsultaBiblioteca/request/request';
 import { get_pozo_id } from '../request/request';
+import { v4 as uuidv4 } from 'uuid';
 
 interface UserContext {
   // *modos instrumentos
@@ -551,7 +552,13 @@ export const UserProvider = ({
     try {
       set_rows_data_cartera([]);
       const response = await get_data_cartera(id_cartera);
-      set_rows_data_cartera(response);
+
+      const elementToAssingDataCartera = response.map((item: any) => ({
+        ...item,
+        id: uuidv4(),
+      }));
+
+      set_rows_data_cartera(elementToAssingDataCartera);
     } catch (err: any) {
       control_error(err.response.data.detail);
     }

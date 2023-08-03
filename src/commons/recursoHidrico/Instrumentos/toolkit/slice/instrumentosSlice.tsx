@@ -50,6 +50,7 @@ const initialState = {
     numero_helice: '',
     id_instrumento: 0,
     id_cuenca: 0,
+    molinete: '',
   },
 
   id_cartera_aforos: 0,
@@ -164,6 +165,7 @@ export const instrumentos_slice = createSlice({
       state.info_cartera.numero_helice = action.payload.numero_helice;
       state.info_cartera.id_instrumento = action.payload.id_instrumento;
       state.info_cartera.id_cuenca = action.payload.id_cuenca;
+      state.info_cartera.molinete = action.payload.molinete;
     },
     set_current_id_cartera_aforos: (state, action: PayloadAction<number>) => {
       state.id_cartera_aforos = action.payload;

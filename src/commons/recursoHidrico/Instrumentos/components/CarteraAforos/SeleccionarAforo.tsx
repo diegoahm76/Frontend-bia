@@ -31,7 +31,7 @@ import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchi
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import dayjs from 'dayjs';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -99,7 +99,7 @@ export const SeleccionarAforo: React.FC = () => {
               size="small"
               startIcon={<DeleteIcon />}
               onClick={() => {
-                handle_delete(params.row.id);
+                handle_delete_select(params.row.id);
               }}
             />
           </Tooltip>
@@ -124,11 +124,11 @@ export const SeleccionarAforo: React.FC = () => {
     fetch_data_anexos_carteras,
     fetch_data_cartera_especifica,
     handle_date_change,
-    handle_agregar,
-    handle_delete,
+    handle_agregar_select,
+    handle_delete_select,
     watch_aforo,
-    // *onSubmit
-    onSubmit,
+    // *onSubmit_select
+    onSubmit_select,
     is_saving,
   } = use_register_aforo_hook();
 
@@ -148,7 +148,7 @@ export const SeleccionarAforo: React.FC = () => {
     instrumentos,
     id_instrumento: id_instrumento_slice,
     info_cartera,
-    // id_cartera_aforos,
+    id_cartera_aforos,
   } = useAppSelector((state) => state.instrumentos_slice);
 
   useEffect(() => {
@@ -160,6 +160,7 @@ export const SeleccionarAforo: React.FC = () => {
   }, [instrumentos]);
 
   useEffect(() => {
+    console.log(id_cartera_aforos, 'id_cartera_aforos');
     reset_cartera_aforo({
       id_cuenca: info_cartera.id_cuenca as any,
       ubicacion_aforo: info_cartera.ubicacion_aforo,
@@ -170,7 +171,7 @@ export const SeleccionarAforo: React.FC = () => {
       cod_tipo_aforo: info_cartera.cod_tipo_aforo,
       numero_serie: info_cartera.numero_serie,
       numero_helice: info_cartera.numero_helice,
-      // molinete: info_cartera.molinete,
+      molinete: info_cartera.molinete,
       id_cartera_aforos: info_cartera.id_cartera_aforos,
       id_instrumento: info_cartera.id_instrumento,
     });
@@ -188,20 +189,16 @@ export const SeleccionarAforo: React.FC = () => {
   }, [id_instrumento_slice]);
 
   useEffect(() => {
-    if(info_cartera.id_cartera_aforos){
-        console.log('info_cartera.id_cartera_aforos', info_cartera.id_cartera_aforos);
-        console.log(rows_anexos_cartera, 'rows_anexos_cartera')
+    if (info_cartera.id_cartera_aforos) {
       void fetch_data_anexos_carteras(info_cartera.id_cartera_aforos);
-      void fetch_data_cartera_especifica(info_cartera.id_cartera_aforos)
+      void fetch_data_cartera_especifica(info_cartera.id_cartera_aforos);
     }
-  }, [info_cartera.id_cartera_aforos]);  
-
+  }, [info_cartera.id_cartera_aforos]);
 
   return (
     <>
-      |
       <form
-        onSubmit={onSubmit}
+        onSubmit={onSubmit_select}
         style={{
           width: '100%',
           height: 'auto',
@@ -656,7 +653,7 @@ export const SeleccionarAforo: React.FC = () => {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={handle_agregar}
+                onClick={handle_agregar_select}
                 disabled={
                   !watch_aforo.distancia_a_la_orilla ||
                   !watch_aforo.profundidad ||
@@ -696,7 +693,7 @@ export const SeleccionarAforo: React.FC = () => {
                 autoHeight
                 rows={rows_anexos_cartera}
                 columns={columns_anexos}
-                getRowId={(row) => row.id}
+                getRowId={(row) => uuidv4()}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
               />

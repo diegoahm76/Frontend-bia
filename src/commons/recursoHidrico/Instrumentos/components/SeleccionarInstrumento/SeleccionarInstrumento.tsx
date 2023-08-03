@@ -27,6 +27,8 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
+  set_current_id_cartera_aforos,
+  set_current_id_prueba_bombeo,
   set_current_info_cartera,
   set_current_info_laboratorio,
   set_current_info_prueba_bombeo,
@@ -67,6 +69,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               onClick={() => {
                 dispatch(set_current_info_prueba_bombeo(params.row));
                 dispatch(
+                  set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
+                );
+                dispatch(
                   set_current_mode_bombeo({
                     ver: true,
                     crear: false,
@@ -87,6 +92,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               startIcon={<EditIcon />}
               onClick={() => {
                 dispatch(set_current_info_cartera(params.row));
+                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
                 dispatch(
                   set_current_mode_cartera({
                     ver: false,
@@ -132,6 +138,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               onClick={() => {
                 dispatch(set_current_info_cartera(params.row));
                 dispatch(
+                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+                );
+                dispatch(
                   set_current_mode_cartera({
                     ver: true,
                     crear: false,
@@ -152,6 +161,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               startIcon={<EditIcon />}
               onClick={() => {
                 dispatch(set_current_info_cartera(params.row));
+                dispatch(
+                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+                );
                 dispatch(
                   set_current_mode_cartera({
                     ver: false,
