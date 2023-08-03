@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type LideresInterface } from './types/LideresSlice.types';
+import type { lideresInterface } from './types/LideresSlice.types';
 
-const initial_state: LideresInterface = {
+const initial_state: lideresInterface = {
   organigrama_lideres_current: null
 };
 

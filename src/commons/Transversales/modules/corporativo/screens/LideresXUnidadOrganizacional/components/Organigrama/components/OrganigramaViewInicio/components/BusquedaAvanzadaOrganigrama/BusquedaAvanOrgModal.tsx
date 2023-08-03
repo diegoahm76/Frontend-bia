@@ -22,6 +22,7 @@ import {
   TextField
 } from '@mui/material';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
+import Select from 'react-select';
 //! helpers
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -32,9 +33,10 @@ import { LoadingButton } from '@mui/lab';
 
 import { AvatarStyles } from '../../../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../../../../../components';
-import { useLideresXUnidadOrganizacional } from '../../../../../../hook/useLideresXUnidadOrganizacional';
+
 
 import { v4 as uuidv4 } from 'uuid';
+import { useLideresXUnidadOrganizacional } from './../../../../../../hook/useLideresXUnidadOrganizacional';
 //! toolkit-redux values
 
 export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
@@ -123,7 +125,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
 
   return (
     <>
-      <Dialog fullWidth maxWidth="sm" open={true} onClose={closeModal}>
+      <Dialog fullWidth maxWidth="md" open={true} onClose={closeModal}>
         <Box
           component="form"
           onSubmit={(e) => {
@@ -140,7 +142,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
           }}
         >
           <DialogTitle>
-            <Title title="Consultar los TRD que coincidan con el criterio de búsqueda" />
+            <Title title="Búsqueda avanzada de Organigramas" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -150,7 +152,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4.5}>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name="nombre"
                   control={control_organigrama_lideres_por_unidad}
@@ -161,7 +163,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
-                      label="Nombre del TRD"
+                      label="Nombre del Organigrama"
                       size="small"
                       variant="outlined"
                       value={value}
@@ -174,7 +176,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4.5}>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name="version"
                   control={control_organigrama_lideres_por_unidad}
@@ -187,7 +189,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                     <TextField
                       // margin="dense"
                       fullWidth
-                      label="Versión del TRD"
+                      label="Versión del Organigrama"
                       size="small"
                       variant="outlined"
                       value={value}
@@ -198,6 +200,65 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                       }}
                       error={!!error}
                     />
+                  )}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 2
+                }}
+              >
+                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+                <Controller
+                  name="actual"
+                  control={control_organigrama_lideres_por_unidad}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                         /* void get_catalogo_TRD_service(
+                            selectedOption.value
+                          ).then((res) => {
+                            console.log(res);
+                            dispatch(set_catalog_trd_action(res));
+                          }); */
+                          onChange(selectedOption);
+                        }}
+                        // isDisabled={tca_current != null}
+                        options={[
+                          {
+                            label: 'SI',
+                            value: true
+                          },
+                          {
+                            label: 'NO',
+                            value: false
+                          }
+                        ]}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem'
+                          }}
+                        >
+                          ACTUAL
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
               </Grid>
