@@ -11,6 +11,7 @@ import {
   MenuItem,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -33,6 +34,8 @@ import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Laboratorio } from '../../../ConsultaBiblioteca/interfaces/interfaces';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
@@ -41,34 +44,31 @@ export const SeleccionarLaboratorio: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                    onClick={() => {
-                      set_id_seccion(params.row.id_seccion);
-                      set_info_seccion(params.row);
-                    }}
-                  >
-                    <Avatar
-                      sx={{
-                        width: 24,
-                        height: 24,
-                        background: '#fff',
-                        border: '2px solid',
-                      }}
-                      variant="rounded"
-                    >
-                      <ChecklistIcon
-                        titleAccess="Seleccionar Sección"
-                        sx={{
-                          color: 'primary.main',
-                          width: '18px',
-                          height: '18px',
-                        }}
-                      />
-                    </Avatar>
-                  </IconButton> */}
+          <Tooltip title="Editar Registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                handleEdit(params.row);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Eliminar registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => {
+                handleDelete(params.row.id);
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
@@ -103,6 +103,37 @@ export const SeleccionarLaboratorio: React.FC = () => {
       headerName: 'RESULTADO',
       sortable: true,
       width: 150,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 200,
+      // renderCell: (params) => (
+      //   <>
+      //     <Tooltip title="Editar Registro de laboratorio">
+      //       <Button
+      //         variant="outlined"
+      //         color="primary"
+      //         size="small"
+      //         startIcon={<EditIcon />}
+      //         onClick={() => {
+      //           handleEdit(params.row);
+      //         }}
+      //       />
+      //     </Tooltip>
+      //     <Tooltip title="Eliminar registro de laboratorio">
+      //       <Button
+      //         variant="outlined"
+      //         color="primary"
+      //         size="small"
+      //         startIcon={<DeleteIcon />}
+      //         onClick={() => {
+      //           handleDelete(params.row.id);
+      //         }}
+      //       />
+      //     </Tooltip>
+      //   </>
+      // ),
     },
   ];
   const columns_anexos: GridColDef[] = [
@@ -145,6 +176,8 @@ export const SeleccionarLaboratorio: React.FC = () => {
     handle_date_change,
     handle_change_inputs,
     handle_agregar,
+    handleEdit,
+    handleDelete,
     parametro_select,
     set_parametro_select,
 
@@ -163,6 +196,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
     register_laboratorio,
     control_registro_laboratorio,
     formErrors_laboratorio,
+    data_watch,
 
     // * Onsubmit
     onSubmit,
@@ -174,7 +208,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
     fetch_data_cuencas_id,
 
     rows_anexos_laboratorio,
-    // fetch_data_anexos_laboratorio,
+    fetch_data_anexos_laboratorio,
   } = use_register_laboratorio_hook();
 
   const { instrumentos, info_laboratorio } = useAppSelector(
@@ -193,21 +227,19 @@ export const SeleccionarLaboratorio: React.FC = () => {
     }
   }, [info_laboratorio?.id_cuenca]);
 
-  useEffect(() => {
-    console.log(cuenca_laboratorio, 'cuenca_laboratorio');
-  }, [cuenca_laboratorio]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('instrumentos', instrumentos);
-    if (!instrumentos) {
-      console.log('instrumentos', instrumentos);
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
-        replace: true,
-      });
+    if (info_laboratorio?.id_resultado_laboratorio) {
+      console.log(
+        'info_laboratorio?.id_resultado_laboratorio',
+        info_laboratorio?.id_resultado_laboratorio
+      );
+      void fetch_data_anexos_laboratorio(
+        info_laboratorio?.id_resultado_laboratorio
+      );
     }
-  }, []);
+  }, [info_laboratorio?.id_resultado_laboratorio]);
 
   useEffect(() => {
     reset_instrumento({
@@ -228,6 +260,8 @@ export const SeleccionarLaboratorio: React.FC = () => {
       fecha_envio_lab: info_laboratorio.fecha_envio_lab,
       latitud: info_laboratorio.latitud,
       longitud: info_laboratorio.longitud,
+      id_cuenca: info_laboratorio.id_cuenca as any,
+      id_pozo: info_laboratorio.id_pozo as any,
     });
     set_fecha_toma_muestra(dayjs(info_laboratorio.fecha_toma_muestra));
     set_fecha_envio(dayjs(info_laboratorio.fecha_envio_lab));
@@ -281,7 +315,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" INFORMACIÓN DE LABORATORIO " />
+            <Title title=" REGISTRO DE LABORATORIO " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -354,7 +388,6 @@ export const SeleccionarLaboratorio: React.FC = () => {
                     fullWidth
                     size="small"
                     required
-                    disabled={true}
                     {...register_laboratorio('fecha_toma_muestra', {
                       required: true,
                     })}
@@ -363,6 +396,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                       formErrors_laboratorio?.fecha_toma_muestra?.type ===
                         'required' && 'Este campo es obligatorio'
                     }
+                    disabled={true}
                   />
                 )}
               />
@@ -425,10 +459,10 @@ export const SeleccionarLaboratorio: React.FC = () => {
                     fullWidth
                     required
                     size="small"
-                    disabled={true}
                     {...register_laboratorio('fecha_envio_lab', {
                       required: true,
                     })}
+                    disabled={true}
                     error={!!formErrors_laboratorio.fecha_envio_lab}
                     helperText={
                       formErrors_laboratorio?.fecha_envio_lab?.type ===
@@ -453,11 +487,11 @@ export const SeleccionarLaboratorio: React.FC = () => {
                     {...params}
                     fullWidth
                     required
+                    disabled={true}
                     size="small"
                     {...register_laboratorio('fecha_resultados_lab', {
                       required: true,
                     })}
-                    disabled={true}
                     error={!!formErrors_laboratorio.fecha_resultados_lab}
                     helperText={
                       formErrors_laboratorio?.fecha_resultados_lab?.type ===
@@ -494,10 +528,11 @@ export const SeleccionarLaboratorio: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              disabled={true}
+              label="Longitud"
               size="small"
               fullWidth
               margin="dense"
+              disabled={true}
               required
               {...register_laboratorio('longitud', { required: true })}
               error={!!formErrors_laboratorio.longitud}
@@ -524,74 +559,23 @@ export const SeleccionarLaboratorio: React.FC = () => {
               }
             />
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Seleccione un tipo de parametro para consultar los regristros
-              existentes
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Tipo parámetro "
-              select
-              fullWidth
-              size="small"
-              value={parametro_select}
-              margin="dense"
-              disabled={false}
-              name="tipo_parametro"
-              onChange={(e) => {
-                set_parametro_select(e.target.value);
-              }}
-            >
-              {tipo_parametro_choices.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}></Grid>
-
-          {rows_resultado_laboratorio.length > 0 && (
-            <>
-              <Grid item xs={12}>
-                <Title title="Analisis de laboratorio" />
-              </Grid>
-              <Grid item xs={12}>
-                <>
-                  <DataGrid
-                    autoHeight
-                    rows={rows_resultado_laboratorio}
-                    columns={colums_resultado_laboratorio}
-                    getRowId={(row) => uuidv4()}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                  />
-                </>
-              </Grid>
-            </>
-          )}
-
           {instrumentos.cod_tipo_agua === 'SUP' ? (
             <>
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="id_cuenca"
                   control={control_registro_laboratorio}
-                  defaultValue={cuenca_laboratorio[0]?.value?.toString() || ''}
+                  defaultValue=""
                   rules={{ required: true }}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      label="Cuenca"
+                      label="Seleccione una cuenca"
                       select
                       size="small"
                       margin="dense"
-                      disabled={cuenca_laboratorio.length <= 1} // disable if there is only one option or none
+                      disabled={true}
                       fullWidth
-                      value={cuenca_laboratorio[0]?.value || ''}
                       required
                       error={!!formErrors_laboratorio.id_cuenca}
                       helperText={
@@ -599,7 +583,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                           'required' && 'Este campo es obligatorio'
                       }
                     >
-                      {cuenca_laboratorio.map((option) => (
+                      {cuenca_select.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
@@ -625,7 +609,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                       select
                       size="small"
                       margin="dense"
-                      disabled={false}
+                      disabled={true}
                       fullWidth
                       required
                       error={!!formErrors_laboratorio.id_pozo}
@@ -645,10 +629,59 @@ export const SeleccionarLaboratorio: React.FC = () => {
               </Grid>
             </>
           ) : null}
+          {/* <Grid item xs={12} sm={6}></Grid> */}
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
-              Registro de medición
+              Seleccione un tipo de parametro para consultar los regristros
+              existentes
             </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Tipo parámetro "
+              select
+              fullWidth
+              size="small"
+              value={parametro_select}
+              margin="dense"
+              disabled={false}
+              name="tipo_parametro"
+              onChange={(e) => {
+                set_parametro_select(e.target.value);
+              }}
+            >
+              {tipo_parametro_choices.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}></Grid>
+          {rows_resultado_laboratorio.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Analisis de laboratorio" />
+              </Grid>
+              <Grid item xs={12}>
+                <>
+                  <DataGrid
+                    autoHeight
+                    rows={rows_resultado_laboratorio}
+                    columns={colums_resultado_laboratorio}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </>
+              </Grid>
+            </>
+          )}
+          <Grid item xs={12}>
+            {/* <Typography variant="subtitle1" fontWeight="bold">
+              Registro de medición
+            </Typography> */}
+            <Title title="Registro de medición" />
           </Grid>
           <Grid item xs={12}>
             <Divider />
@@ -714,13 +747,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               disabled={true}
               name="unidad_medida"
               onChange={handle_change_inputs}
-            >
-              {/* {unidad_medida_choices.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))} */}
-            </TextField>
+            ></TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
@@ -775,7 +802,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required={rows_laboratorio.length === 0}
-                ></TextField>
+                />
               )}
             />
           </Grid>
@@ -790,6 +817,14 @@ export const SeleccionarLaboratorio: React.FC = () => {
                 variant="outlined"
                 color="primary"
                 onClick={handle_agregar}
+                disabled={
+                  !data_watch.id_parametro ||
+                  !tipo_parametro_value ||
+                  !undidad_medida_select ||
+                  !data_watch.metodo ||
+                  !fecha_analisis ||
+                  !data_watch.resultado
+                }
               >
                 Agregar
               </Button>
@@ -806,7 +841,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                   autoHeight
                   rows={rows_laboratorio}
                   columns={colums_resultado}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={(row) => row.id || uuidv4()}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                 />
@@ -817,6 +852,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
             <Typography variant="subtitle1" fontWeight="bold">
               Anexos asociados al resultado de laboratorio:
             </Typography>
+            {/* <Title title="Anexos asociados al resultado de laboratorio:" /> */}
             <Divider />
             <DataGrid
               autoHeight
