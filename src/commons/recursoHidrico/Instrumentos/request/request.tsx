@@ -99,7 +99,7 @@ export const post_resultado_laboratorio = async (
         },
   ];
 
-  const filtered_array = new_array.filter((item: any) => item !== null);
+  const filtered_array = new_array.filter((item: any) => item);
 
   const response = await api.post(
     'hidrico/bibliotecas/resultados_laboratorio/create/',
@@ -125,7 +125,7 @@ export const post_resultado_laboratorio = async (
     }
   );
   if (
-    archivo === null &&
+    archivo &&
     response.data.data.resultados_laboratorio.id_resultado_laboratorio
   ) {
     const id_resultado_laboratorio =
@@ -152,6 +152,7 @@ export const put_resultado_laboratorio = async (
   datos: FormData,
   archivo: any
 ): Promise<any> => {
+  const id_resultado_laboratorio = form.id_resultado_laboratorio;
   const new_array = [
     ...rows_registro_laboratorio,
 
@@ -171,10 +172,12 @@ export const put_resultado_laboratorio = async (
         },
   ];
 
-  const filtered_array = new_array.filter((item: any) => item !== null);
+  const filtered_array = new_array.filter((item: any) => item);
 
   const response = await api.put(
-    'hidrico/bibliotecas/resultados_laboratorio/create/',
+    `hidrico/bibliotecas/resultados_laboratorio/update/${
+      id_resultado_laboratorio as number
+    }/`,
     {
       ...form,
       id_dato_registro_laboratorio: form.id_dato_registro_laboratorio,
@@ -197,12 +200,7 @@ export const put_resultado_laboratorio = async (
         rows_registro_laboratorio.length === 0 ? [] : filtered_array,
     }
   );
-  if (
-    archivo === null &&
-    response.data.data.resultados_laboratorio.id_resultado_laboratorio
-  ) {
-    const id_resultado_laboratorio =
-      response.data.data.resultados_laboratorio.id_resultado_laboratorio;
+  if (archivo && id_resultado_laboratorio) {
     datos.append('id_resultado_laboratorio', id_resultado_laboratorio);
 
     const response_archivos = await api.post(
@@ -253,7 +251,7 @@ export const post_resultado_aforo = async (
         },
   ];
 
-  const filtered_array = new_array.filter((item: any) => item !== null);
+  const filtered_array = new_array.filter((item: any) => item);
 
   const response = await api.post(
     'hidrico/bibliotecas/carteras_aforo/create/',
@@ -275,13 +273,8 @@ export const post_resultado_aforo = async (
     }
   );
 
-  console.log(
-    response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos,
-    'data.data.cartera_aforo'
-  );
-  // Verify that all properties exist
   if (
-    archivo === null &&
+    archivo &&
     response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos
   ) {
     const id_cartera_aforos =
@@ -312,6 +305,7 @@ export const put_resultado_aforo_select = async (
   archivos: any
 ): Promise<any> => {
   const id_cartera_aforos = form.id_cartera_aforos;
+  console.log(archivos, 'archivos');
   const new_array = [
     ...rows_registro_aforo,
 
@@ -341,7 +335,7 @@ export const put_resultado_aforo_select = async (
         },
   ];
 
-  const filtered_array = new_array.filter((item: any) => item !== null);
+  const filtered_array = new_array.filter((item: any) => item);
 
   const response = await api.put(
     `hidrico/bibliotecas/carteras_aforo/update/${id_cartera_aforos as number}/`,
@@ -364,7 +358,7 @@ export const put_resultado_aforo_select = async (
     }
   );
 
-  if (archivos === null && id_cartera_aforos) {
+  if (archivos && id_cartera_aforos) {
     // const id_cartera_aforos = form.id_cartera_aforos;
     console.log(archivos, 'archivos');
     console.log(id_cartera_aforos, 'id_cartera_aforos');

@@ -35,6 +35,7 @@ import {
   set_current_mode,
   set_current_mode_bombeo,
   set_current_mode_cartera,
+  set_currente_id_resultado_laboratorio,
 } from '../../toolkit/slice/instrumentosSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -209,6 +210,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               onClick={() => {
                 dispatch(set_current_info_laboratorio(params.row));
                 dispatch(
+                  set_currente_id_resultado_laboratorio(params.row.id_resultado_laboratorio)
+                );
+                dispatch(
                   set_current_mode({
                     ver: true,
                     crear: false,
@@ -232,6 +236,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               startIcon={<EditIcon />}
               onClick={() => {
                 dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_currente_id_resultado_laboratorio(params.row.id_resultado_laboratorio)
+                );
                 dispatch(
                   set_current_mode({
                     ver: false,

@@ -41,37 +41,37 @@ import EditIcon from '@mui/icons-material/Edit';
 export const SeleccionarLaboratorio: React.FC = () => {
   const colums_resultado: GridColDef[] = [
     ...columns_result_lab,
-    {
-      field: 'ACCIONES',
-      headerName: 'ACCIONES',
-      width: 200,
-      renderCell: (params) => (
-        <>
-          <Tooltip title="Editar Registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                handleEdit(params.row);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Eliminar registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<DeleteIcon />}
-              onClick={() => {
-                handleDelete(params.row.id);
-              }}
-            />
-          </Tooltip>
-        </>
-      ),
-    },
+    // {
+    //   field: 'ACCIONES',
+    //   headerName: 'ACCIONES',
+    //   width: 200,
+    //   renderCell: (params) => (
+    //     <>
+    //       <Tooltip title="Editar Registro de laboratorio">
+    //         <Button
+    //           variant="outlined"
+    //           color="primary"
+    //           size="small"
+    //           startIcon={<EditIcon />}
+    //           onClick={() => {
+    //             handleEdit(params.row);
+    //           }}
+    //         />
+    //       </Tooltip>
+    //       <Tooltip title="Eliminar registro de laboratorio">
+    //         <Button
+    //           variant="outlined"
+    //           color="primary"
+    //           size="small"
+    //           startIcon={<DeleteIcon />}
+    //           onClick={() => {
+    //             handleDelete(params.row.id);
+    //           }}
+    //         />
+    //       </Tooltip>
+    //     </>
+    //   ),
+    // },
   ];
   const colums_resultado_laboratorio: GridColDef[] = [
     {
@@ -198,8 +198,8 @@ export const SeleccionarLaboratorio: React.FC = () => {
     formErrors_laboratorio,
     data_watch,
 
-    // * Onsubmit
-    onSubmit,
+    // * onSubmit_select
+    onSubmit_select,
     is_saving,
     reset_laboratorio,
 
@@ -209,6 +209,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
 
     rows_anexos_laboratorio,
     fetch_data_anexos_laboratorio,
+    fetch_data_parametros_laboratorios_select_id,
   } = use_register_laboratorio_hook();
 
   const { instrumentos, info_laboratorio } = useAppSelector(
@@ -283,14 +284,19 @@ export const SeleccionarLaboratorio: React.FC = () => {
   useEffect(() => {
     if (tipo_parametro_value) {
       void fetch_data_parametros_laboratorios_select();
-      console.log(undidad_medida_select, 'undidad_medida_select');
     }
   }, [tipo_parametro_value]);
+
+  useEffect(() => {
+    if (data_watch?.id_parametro) {
+      void fetch_data_parametros_laboratorios_select_id();
+    }
+  }, [data_watch?.id_parametro]);
 
   return (
     <>
       <form
-        onSubmit={onSubmit}
+        onSubmit={onSubmit_select}
         style={{
           width: '100%',
           height: 'auto',
@@ -710,7 +716,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               name="id_parametro"
               control={control_registro_laboratorio}
               defaultValue=""
-              rules={{ required: rows_laboratorio.length === 0 }}
+              rules={{ required: false }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -720,7 +726,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                   margin="dense"
                   disabled={tipo_parametro_value === ''}
                   fullWidth
-                  required={rows_laboratorio.length === 0}
+                  required={false}
                   error={!!formErrors_laboratorio.id_parametro}
                   helperText={
                     formErrors_laboratorio?.id_parametro?.type === 'required' &&
@@ -754,7 +760,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               name="metodo"
               control={control_registro_laboratorio}
               defaultValue=""
-              rules={{ required: rows_laboratorio.length === 0 }}
+              rules={{ required: false }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -763,7 +769,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={rows_laboratorio.length === 0}
+                  required={false}
                 ></TextField>
               )}
             />
@@ -792,7 +798,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               name="resultado"
               control={control_registro_laboratorio}
               defaultValue=""
-              rules={{ required: rows_laboratorio.length === 0 }}
+              rules={{ required: false }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -801,7 +807,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={rows_laboratorio.length === 0}
+                  required={false}
                 />
               )}
             />
@@ -848,11 +854,8 @@ export const SeleccionarLaboratorio: React.FC = () => {
               </Grid>
             </>
           )}
-          <Grid item xs={12} sm={6}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Anexos asociados al resultado de laboratorio:
-            </Typography>
-            {/* <Title title="Anexos asociados al resultado de laboratorio:" /> */}
+          <Grid item xs={12}>
+            <Title title="Anexos asociados al resultado de laboratorio:" />
             <Divider />
             <DataGrid
               autoHeight
@@ -863,7 +866,6 @@ export const SeleccionarLaboratorio: React.FC = () => {
               rowsPerPageOptions={[5]}
             />
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>

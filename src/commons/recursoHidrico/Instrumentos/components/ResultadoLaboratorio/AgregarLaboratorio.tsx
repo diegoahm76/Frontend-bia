@@ -81,14 +81,6 @@ export const AgregarLaboratorio: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!instrumentos) {
-      console.log('instrumentos', instrumentos);
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
-        replace: true,
-      });
-    }
-  }, []);
-  useEffect(() => {
     reset_instrumento({
       nombre: instrumentos.nombre,
       nombre_seccion: instrumentos.nombre_seccion,

@@ -24,6 +24,7 @@ import {
   get_cuenca_id,
   get_parametros_laboratorio,
   post_resultado_laboratorio,
+  put_resultado_laboratorio,
 } from '../../../request/request';
 import { control_success } from '../../../../requets/Request';
 import { DataContext } from '../../../context/contextData';
@@ -141,7 +142,7 @@ export const use_register_laboratorio_hook = () => {
     }
   };
   // *Autocomplete
-  const { id_instrumento: id_instrumento_slice } = useAppSelector(
+  const { id_instrumento: id_instrumento_slice, } = useAppSelector(
     (state) => state.instrumentos_slice
   );
   const { info_laboratorio } = useAppSelector(
@@ -291,6 +292,7 @@ export const use_register_laboratorio_hook = () => {
 
   const handle_agregar = (): void => {
     const new_row = {
+      id_dato_registro_laboratorio: null,
       id: uuidv4(),
       id_parametro: data_watch.id_parametro,
       parametro: tipo_parametro_value,
@@ -348,7 +350,6 @@ export const use_register_laboratorio_hook = () => {
     try {
       set_is_saving(true);
       set_id_resultado_laboratorio(null);
-      console.log(data);
       data.id_instrumento = id_instrumento_slice;
       data.id_resultado_laboratorio = id_resultado_laboratorio;
       data.cod_clase_muestra = instrumentos?.cod_tipo_agua;
@@ -460,10 +461,9 @@ export const use_register_laboratorio_hook = () => {
   const onSubmit_select = handleSubmit_laboratorio(async (data: any) => {
     try {
       set_is_saving(true);
-      set_id_resultado_laboratorio(null);
-      console.log(data);
+
       data.id_instrumento = id_instrumento_slice;
-      data.id_resultado_laboratorio = id_resultado_laboratorio;
+      data.id_resultado_laboratorio = id_resultado_laboratorio_slice;
       data.cod_clase_muestra = instrumentos?.cod_tipo_agua;
       data.fecha_toma_muestra = dayjs(fecha_toma_muestra).format('YYYY-MM-DD');
       data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
@@ -478,7 +478,7 @@ export const use_register_laboratorio_hook = () => {
       const archivos_lab = new FormData();
 
       archivos.forEach((archivo: any, index: any) => {
-        if (archivo != null) {
+        if (archivo !== null) {
           archivos_lab.append(`ruta_archivo`, archivo);
           archivos_lab.append(`nombre_archivo`, nombres_archivos[index]);
         }
@@ -486,8 +486,9 @@ export const use_register_laboratorio_hook = () => {
       archivos_lab.append('id_instrumento', String(id_instrumento_slice));
       archivos_lab.append('cod_tipo_de_archivo', codigo_archivo);
 
-      await post_resultado_laboratorio(data, rows_laboratorio, archivos_lab, archivos);
-      reset_formulario();
+      await put_resultado_laboratorio(data, rows_laboratorio, archivos_lab, archivos);
+      set_nombres_archivos([]);
+      set_archivos([]);
       control_success('Registro de laboratorio creado exitosamente');
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -519,6 +520,9 @@ export const use_register_laboratorio_hook = () => {
     handle_agregar,
     handleEdit,
     handleDelete,
+    handle_agregar_select,
+    handleEdit_select,
+    handleDelete_select,
 
     // *Autocomplete
     cuenca_select,
@@ -543,6 +547,7 @@ export const use_register_laboratorio_hook = () => {
 
     // * Onsubmit
     onSubmit,
+    onSubmit_select,
     is_saving,
 
     // * ver resultados de laboratorio
