@@ -37,6 +37,8 @@ export const get_asignaciones_lideres_organigrama_actual_service: any =
     }
   };
 
+// ! ----------- SERVICES ORGANIGRAMAS ----------- //
+
 // ? --------- get organigramas list --------- //
 export const get_organigramas_list_lideres_screen_service = async ({
   nombre,
@@ -62,5 +64,22 @@ export const get_organigramas_list_lideres_screen_service = async ({
     control_error(error.response.data.detail);
   } finally {
     setLoadingButton(false);
+  }
+};
+
+// ! --------- ASIGNACIONES LIDERES BY ORGANIGRAMA --------- //
+
+export const get_asignaciones_lideres_by_id_organigrama_service: any = async (
+  idOrganigrama: string
+) => {
+  try {
+    const url = `transversal/lideres/get-list/${idOrganigrama}/`;
+    const { data } = await api.get(url);
+    console.log(data.data, 'data asignaciones lideres by organigrama');
+    return data.data;
+  } catch (error: any) {
+    console.log(error.response.data, 'error');
+    control_error(error.response.data.detail);
+    return error as AxiosError;
   }
 };

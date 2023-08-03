@@ -34,8 +34,12 @@ import { Title } from '../../../../../../../../../../../../components';
 
 import { useLideresXUnidadOrganizacional } from './../../../../../../hook/useLideresXUnidadOrganizacional';
 import { columsBusquedaAvanzada } from './columns/columnsBusqueda';
-import { get_organigramas_list_lideres_screen_service } from '../../../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
 import {
+  get_asignaciones_lideres_by_id_organigrama_service,
+  get_organigramas_list_lideres_screen_service
+} from '../../../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
+import {
+  get_list_asignaciones_lideres,
   get_list_busqueda_organigramas,
   set_organigrama_lideres_current
 } from '../../../../../../toolkit/LideresSlices/LideresSlice';
@@ -115,6 +119,12 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
             onClick={() => {
               console.log(params.row);
               dispatch(set_organigrama_lideres_current(params.row));
+              void get_asignaciones_lideres_by_id_organigrama_service(
+                params.row.id_organigrama
+              ).then((data: any) => {
+                dispatch(get_list_asignaciones_lideres(data));
+              });
+
               closeModal();
             }}
           >
