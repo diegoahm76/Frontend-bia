@@ -35,7 +35,10 @@ import { Title } from '../../../../../../../../../../../../components';
 import { useLideresXUnidadOrganizacional } from './../../../../../../hook/useLideresXUnidadOrganizacional';
 import { columsBusquedaAvanzada } from './columns/columnsBusqueda';
 import { get_organigramas_list_lideres_screen_service } from '../../../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
-import { get_list_busqueda_organigramas } from '../../../../../../toolkit/LideresSlices/LideresSlice';
+import {
+  get_list_busqueda_organigramas,
+  set_organigrama_lideres_current
+} from '../../../../../../toolkit/LideresSlices/LideresSlice';
 import {
   useAppDispatch,
   useAppSelector
@@ -64,30 +67,55 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     setLoadingButton
   } = useContext(ModalContextLideres);
 
+  const resetFunction = (): void => {
+    console.log('resetFunction');
+    reset_organigrama_lideres_por_unidad({
+      nombre: '',
+      version: '',
+      actual: false
+    });
+  };
+
+  const closeModal = (): any => {
+    closeModalBusquedaAvanzadaOrganigrama();
+    dispatch(get_list_busqueda_organigramas([]));
+    resetFunction();
+  };
+
+  const onSubmitSearchOrganigramas = async ({
+    nombre,
+    version,
+    actual
+  }: any): Promise<any> => {
+    try {
+      const dataToSearch = {
+        nombre,
+        version,
+        actual: actual.value,
+        setLoadingButton
+      };
+      const dataSearch = await get_organigramas_list_lideres_screen_service(
+        dataToSearch
+      );
+      dispatch(get_list_busqueda_organigramas(dataSearch));
+      // * console.log(dataSearch);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //* -------- columns declaration -------- *//
   const columns_busqueda_avazada_organigrama_lideres: GridColDef[] = [
     {
-      headerName: 'Acciones',
+      headerName: 'Acción',
       field: 'accion',
+      width: 65,
       renderCell: (params: any) => (
         <>
           <IconButton
             onClick={() => {
               console.log(params.row);
-              //  dispatch(set_organigrama_lideres_current(params.row));
-
-              /* dispatch(get_trd_current(params.row));
-              closeModalModalSearchTRD();
-              dispatch(get_trds([]));
-              const ccd_current = {
-                id_ccd: params?.row?.id_ccd,
-                id_organigrama: params?.row?.id_organigrama
-              };
-              dispatch(
-                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
-              ).then((res: any) => {
-                dispatch(get_catalogo_trd(params.row.id_trd));
-              }); */
+              dispatch(set_organigrama_lideres_current(params.row));
+              closeModal();
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -196,43 +224,6 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
       }
     }
   ];
-
-  const resetFunction = (): void => {
-    console.log('resetFunction');
-    reset_organigrama_lideres_por_unidad({
-      nombre: '',
-      version: '',
-      actual: false
-    });
-  };
-
-  const closeModal = (): any => {
-    closeModalBusquedaAvanzadaOrganigrama();
-    dispatch(get_list_busqueda_organigramas([]));
-    resetFunction();
-  };
-
-  const onSubmitSearchOrganigramas = async ({
-    nombre,
-    version,
-    actual
-  }: any): Promise<any> => {
-    try {
-      const dataToSearch = {
-        nombre,
-        version,
-        actual: actual.value,
-        setLoadingButton,
-      };
-      const dataSearch = await get_organigramas_list_lideres_screen_service(
-        dataToSearch
-      );
-      dispatch(get_list_busqueda_organigramas(dataSearch));
-      // * console.log(dataSearch);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <>

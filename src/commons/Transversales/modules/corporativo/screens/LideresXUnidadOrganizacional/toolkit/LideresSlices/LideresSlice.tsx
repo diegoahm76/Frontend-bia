@@ -1,10 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { lideresInterface } from './types/LideresSlice.types';
+import type { lideresInterface } from '../types/LideresSlice.types';
 
 const initial_state: lideresInterface = {
   //* -- organigrama lideres interaction -- *//
   organigramas_list: [],
-  organigrama_lideres_current: null
+  organigrama_lideres_current: null,
+
+  //* -- asignacion lideres interaction -- *//
+  asignaciones_lideres_list: [],
+  asignacion_lideres_current: null
 };
 
 export const lideres_slice = createSlice({
@@ -25,11 +29,24 @@ export const lideres_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.organigrama_lideres_current = action.payload;
+    },
+
+    // ! --- get list asignaciones lideres ---
+    get_list_asignaciones_lideres: (
+      state: any,
+
+      action: PayloadAction<any>
+    ) => {
+      state.asignaciones_lideres_list = action.payload;
     }
   }
 });
 
 export const {
+  //* organigrama lideres interaction
   set_organigrama_lideres_current,
-  get_list_busqueda_organigramas
+  get_list_busqueda_organigramas,
+
+  //* asignacion lideres interaction
+  get_list_asignaciones_lideres
 } = lideres_slice.actions;

@@ -11,6 +11,7 @@ interface OrganigramaChipProps {
     fecha_retiro_produccion?: string;
     actual?: boolean;
     fecha_puesta_produccion?: string;
+    fecha_terminado: string;
   };
 }
 
@@ -22,15 +23,19 @@ export const OrganigramaChip: React.FC<OrganigramaChipProps> = ({
   let iconValue = <HelpOutlineIcon />;
 
   if (organigrama_lideres_current?.fecha_retiro_produccion) {
-    labelValue = 'FUERA DE PRODUCCIÓN';
+    labelValue = 'ORGANIGRAMA FUERA DE PRODUCCIÓN';
     colorValue = 'error';
     iconValue = <HelpOutlineIcon />;
   } else if (organigrama_lideres_current?.actual) {
-    labelValue = 'ACTUAL';
+    labelValue = 'ORGANIGRAMA ACTUAL';
     colorValue = 'info';
     iconValue = <TipsAndUpdatesIcon />;
   } else if (organigrama_lideres_current?.fecha_puesta_produccion) {
-    labelValue = 'EN PRODUCCIÓN';
+    labelValue = 'ORGANIGRAMA EN PRODUCCIÓN';
+    colorValue = 'success';
+    iconValue = <BeenhereIcon />;
+  }else if(organigrama_lideres_current?.fecha_terminado){
+    labelValue = 'ORGANIGRMA TERMINADO';
     colorValue = 'success';
     iconValue = <BeenhereIcon />;
   }
