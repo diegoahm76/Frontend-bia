@@ -130,6 +130,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
           >
             <Avatar sx={AvatarStyles} variant="rounded">
               <VisibilityIcon
+                titleAccess="Ver Organigrama"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>

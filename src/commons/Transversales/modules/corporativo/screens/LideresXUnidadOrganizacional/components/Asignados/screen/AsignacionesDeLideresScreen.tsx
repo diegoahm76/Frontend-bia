@@ -4,8 +4,9 @@ import { RenderDataGrid } from '../../../../../../../../gestorDocumental/tca/Ato
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesDeLideres/columnsAsignacionesDeLideres';
 import { Avatar, Chip, IconButton } from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import { AvatarStyles } from '../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import EditIcon from '@mui/icons-material/Edit';
 
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   //* states declarations
@@ -29,7 +30,8 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
-                <VisibilityIcon
+                <EditIcon
+                  titleAccess="Editar asignación de líder"
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
               </Avatar>
@@ -61,7 +63,11 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
       <RenderDataGrid
         rows={asignaciones_lideres_list}
         columns={columnsLideres}
-        title="Líderes asignados por unidad organizacional"
+        title={
+          asignaciones_lideres_list.length > 0
+            ? 'Líderes asignados a las unidades organizacionales'
+            : 'No hay asignaciones de lideres en las unidades organizacionales '
+        }
       />
     </>
   );

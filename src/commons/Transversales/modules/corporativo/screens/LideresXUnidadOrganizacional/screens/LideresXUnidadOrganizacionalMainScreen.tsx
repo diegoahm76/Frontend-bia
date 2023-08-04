@@ -13,6 +13,7 @@ import {
 import { useAppDispatch } from '../../../../../../../hooks';
 import { OrganigramaLideresScreen } from '../components/Organigrama/screen/OrganigramaLideresScreen';
 import { AsignacionesDeLideresScreen } from '../components/Asignados/screen/AsignacionesDeLideresScreen';
+import { UnidadOrganizacionalScreen } from '../components/UnidadOrganizacional/screen/UnidadOrganizacionalScreen';
 
 export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
   //* dispatch declarations
@@ -45,6 +46,8 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
       <OrganigramaLideresScreen />
 
       {/* segunda parte asignacion lideres Unidad organizacional */}
+
+      <UnidadOrganizacionalScreen />
 
       {/* ---------------------------------------------- */}
 
