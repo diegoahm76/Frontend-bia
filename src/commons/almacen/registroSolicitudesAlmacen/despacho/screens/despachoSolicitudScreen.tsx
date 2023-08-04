@@ -25,7 +25,7 @@ import {
 } from '../interfaces/despacho';
 import {
   set_current_despacho,
-  set_persona_despacha,
+  set_persona_despacha, reset_state
 } from '../store/slices/indexDespacho';
 import {
   annul_despacho_service,
@@ -45,11 +45,12 @@ import Block from '@mui/icons-material/Block';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import Limpiar from '../../../../conservacion/componentes/Limpiar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, } = useForm<IObjSolicitud>();
+  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, getValues: get_values_solicitud_despacho, } = useForm<IObjSolicitud>();
   const { control: control_despacho, handleSubmit: handle_submit, reset: reset_despacho, getValues: get_values, } = useForm<IObjDespacho>();
   const [action, set_action] = useState<string>('Guardar');
   const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any }) => state.solic_consumo);
@@ -58,6 +59,18 @@ const DespachoBienesConsumoScreen = () => {
   const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
   const handle_open_select_model = (): void => { set_open_search_modal(true); };
   const dispatch = useAppDispatch();
+
+
+  const initial_values = (): void => {
+    void dispatch(get_uni_organizacional());
+    void dispatch(get_num_despacho());
+    dispatch(
+      set_persona_despacha({
+        nombre_completo: userinfo.nombre,
+        id_persona: userinfo.id_persona,
+      }))
+    set_action('crear');
+  };
 
   useEffect(() => {
     void dispatch(get_uni_organizacional());
@@ -307,12 +320,10 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarSolicitudDespacho
           title={'INFORMACIÓN DE LA SOLICITUD'}
           control_solicitud_despacho={control_solicitud_despacho}
-          get_values={get_values} open_modal={false} set_open_modal={undefined} />
+          get_values={get_values_solicitud_despacho} />
 
         <FuncionarioRechazo
-          title={'Persona responsable'}
-          get_values_solicitud={get_values}
-        />
+          title={'Persona responsable'} get_values_solicitud={undefined} />
         <SeleccionarBodega />
         <ListadoBienesSolicitud />
         <SeleccionarBienDespacho />
@@ -340,190 +351,200 @@ const DespachoBienesConsumoScreen = () => {
             disabled={false}
           />
         </Grid>
-        <Grid item xs={12} md={2}>
-          <AnularEliminar
-            action={
-              current_solicitud.solicitud_abierta === true
-                ? 'Cerrar por no disponibilidad'
-                : 'Detalle del cierre'
-            }
-            button_icon_class={<Block />}
-            button_disabled={false}
-            modal_title={
-              current_solicitud.solicitud_abierta === true
-                ? 'Cerrar solicitud'
-                : 'Detalle del cierre de solicitud por no disponibilidad'
-            }
-            button_submit_label={'Cierre de solicitud'}
-            button_submit_disabled={
-              !(current_solicitud.solicitud_abierta === true)
-            }
-            button_submit_icon_class={<Block />}
-            button_submit_action={handle_submit_solicitud(on_submit_closed)}
-            modal_inputs={[
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud_despacho,
-                control_name: 'nro_solicitud_por_tipo',
-                default_value: '',
-                rules: {},
-                label: 'Numero solicitud',
-                type: 'number',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                person: true,
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud_despacho,
-                control_name: 'persona_cierra',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Debe seleccionar la personas que la creó',
-                  },
+        {current_despacho.id_despacho_consumo !== null &&
+          <Grid item xs={12} md={2}>
+            <AnularEliminar
+              action={
+                current_solicitud.solicitud_abierta === true
+                  ? 'Cerrar por no disponibilidad'
+                  : 'Detalle del cierre'
+              }
+              button_icon_class={<Block />}
+              button_disabled={false}
+              modal_title={
+                current_solicitud.solicitud_abierta === true
+                  ? 'Cerrar solicitud'
+                  : 'Detalle del cierre de solicitud por no disponibilidad'
+              }
+              button_submit_label={'Cierre de solicitud'}
+              button_submit_disabled={
+                !(current_solicitud.solicitud_abierta === true)
+              }
+              button_submit_icon_class={<Block />}
+              button_submit_action={handle_submit_solicitud(on_submit_closed)}
+              modal_inputs={[
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_solicitud_despacho,
+                  control_name: 'nro_solicitud_por_tipo',
+                  default_value: '',
+                  rules: {},
+                  label: 'Numero solicitud',
+                  type: 'number',
+                  disabled: true,
+                  helper_text: '',
                 },
-                label: 'Cierre realizao por',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'date_picker_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud_despacho,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_cierre_no_dispo_alm'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_solicitud_despacho,
-                control_name: 'observacion_cierre_no_dispo_alm',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Observación requerida',
+                {
+                  datum_type: 'input_controller',
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_solicitud_despacho,
+                  control_name: 'persona_cierra',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar la personas que la creó',
+                    },
                   },
+                  label: 'Cierre realizao por',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
                 },
-                label: 'Observación',
-                type: 'text',
-                multiline_text: true,
-                rows_text: 4,
-                disabled: false,
-                helper_text: '',
-              },
-            ]}
+                {
+                  datum_type: 'date_picker_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_solicitud_despacho,
+                  control_name:
+                    current_solicitud.solicitud_anulada_solicitante === true
+                      ? 'fecha_cierre_no_dispo_alm'
+                      : 'fecha',
+                  default_value: new Date().toString(),
+                  rules: { required_rule: { rule: true, message: 'requerido' } },
+                  label: 'Fecha actual',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 12,
+                  control_form: control_solicitud_despacho,
+                  control_name: 'observacion_cierre_no_dispo_alm',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Observación requerida',
+                    },
+                  },
+                  label: 'Observación',
+                  type: 'text',
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: '',
+                },
+              ]}
+            />
+          </Grid>}
+        {current_despacho.id_despacho_consumo !== null &&
+          <Grid item xs={12} md={2}>
+            <AnularEliminar
+              action={
+                current_despacho.despacho_anulado === true
+                  ? 'Detalle anulación'
+                  : 'Anular'
+              }
+              button_icon_class={<Block />}
+              button_disabled={false}
+              modal_title={
+                current_despacho.despacho_anulado === true
+                  ? 'Detalle anulación'
+                  : 'Anular despacho'
+              }
+              button_submit_label={'Anular'}
+              button_submit_disabled={current_despacho.despacho_anulado}
+              button_submit_icon_class={<Block />}
+              button_submit_action={handle_submit(on_submit_annul)}
+              modal_inputs={[
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_despacho,
+                  control_name: 'nro_despachos_viveros',
+                  default_value: '',
+                  rules: {},
+                  label: 'Numero despacho',
+                  type: 'number',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_despacho,
+                  control_name: 'persona_anula',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar la personas que la creó',
+                    },
+                  },
+                  label: 'Anulación realizada por',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'date_picker_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_despacho,
+                  control_name:
+                    current_solicitud.solicitud_anulada_solicitante === true
+                      ? 'fecha_anulacion'
+                      : 'fecha',
+                  default_value: new Date().toString(),
+                  rules: { required_rule: { rule: true, message: 'requerido' } },
+                  label: 'Fecha actual',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 12,
+                  control_form: control_despacho,
+                  control_name: 'justificacion_anulacion',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Observación requerida',
+                    },
+                  },
+                  label: 'Justificacion',
+                  type: 'text',
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: '',
+                },
+              ]}
+            />
+
+
+          </Grid>}
+
+        <Grid item xs={12} md={1}>
+          <Limpiar
+            dispatch={dispatch}
+            reset_state={reset_state}
+            set_initial_values={initial_values}
+            variant_button={'contained'}
           />
-        </Grid>
-
-        <Grid item xs={12} md={2}>
-          <AnularEliminar
-            action={
-              current_despacho.despacho_anulado === true
-                ? 'Detalle anulación'
-                : 'Anular'
-            }
-            button_icon_class={<Block />}
-            button_disabled={false}
-            modal_title={
-              current_despacho.despacho_anulado === true
-                ? 'Detalle anulación'
-                : 'Anular despacho'
-            }
-            button_submit_label={'Anular'}
-            button_submit_disabled={current_despacho.despacho_anulado}
-            button_submit_icon_class={<Block />}
-            button_submit_action={handle_submit(on_submit_annul)}
-            modal_inputs={[
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_despacho,
-                control_name: 'nro_despachos_viveros',
-                default_value: '',
-                rules: {},
-                label: 'Numero despacho',
-                type: 'number',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                person: true,
-                xs: 12,
-                md: 4,
-                control_form: control_despacho,
-                control_name: 'persona_anula',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Debe seleccionar la personas que la creó',
-                  },
-                },
-                label: 'Anulación realizada por',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'date_picker_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_despacho,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_anulacion'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_despacho,
-                control_name: 'justificacion_anulacion',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Observación requerida',
-                  },
-                },
-                label: 'Justificacion',
-                type: 'text',
-                multiline_text: true,
-                rows_text: 4,
-                disabled: false,
-                helper_text: '',
-              },
-            ]}
-          />
-
-
         </Grid>
         <Grid item xs={12} md={2}>
           <ButtonSalir

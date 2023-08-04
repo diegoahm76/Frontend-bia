@@ -94,6 +94,7 @@ export interface IObjBienesEntrada {
     cantidad_entrante?: number | null;
     tiene_cantidad_disponible?: boolean | null;
     cantidad_disponible?: number | null;
+    cantidad?: number | null;
     codigo_bien?: string | null;
     nombre_bien?: string | null;
     observaciones?: string | null;

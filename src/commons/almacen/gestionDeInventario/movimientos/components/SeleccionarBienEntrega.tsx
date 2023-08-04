@@ -95,7 +95,7 @@ const SeleccionarBienEntrega = () => {
         },
     ];
 
-    // tabla de bienes solicitud de consumo vivero
+    // tabla de la entrega realizada
     const columns_bienes_despacho: GridColDef[] = [
         {
             field: 'codigo_bien',
@@ -121,17 +121,14 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'cantidad_despachada',
             headerName: 'Cantidad despachada',
-            width: 140,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {String(params.value) + String(params.row.unidad_medida)}
-                </div>
-            ),
+            width: 150,
+
         },
+
         {
             field: 'bodega',
             headerName: 'Bodega',
-            width: 140,
+            width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -142,7 +139,7 @@ const SeleccionarBienEntrega = () => {
         {
             field: 'observacion',
             headerName: 'Observacion',
-            width: 150,
+            width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -454,7 +451,7 @@ const SeleccionarBienEntrega = () => {
                                 max_rule: {
                                     rule: current_bien.cantidad_disponible,
                                     message:
-                                        'La cantidad no debe ser mayor que ' +
+                                        'La cantidad asignada total, debe ser máximo' +
                                         String(current_bien.cantidad_disponible),
                                 },
                             },
@@ -502,7 +499,20 @@ const SeleccionarBienEntrega = () => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 6,
+                            md: 2,
+                            control_form: control_bien,
+                            control_name: 'bodega',
+                            default_value: '',
+                            rules: {},
+                            label: 'Bodega',
+                            type: 'text',
+                            disabled: true,
+                            helper_text: '',
+                        },
+                        {
+                            datum_type: 'input_controller',
+                            xs: 12,
+                            md: 4,
                             control_form: control_entrega,
                             control_name: 'observacion',
                             default_value: '',
@@ -514,6 +524,7 @@ const SeleccionarBienEntrega = () => {
                             disabled: false,
                             helper_text: '',
                         },
+
                     ]}
                     title_list="Bienes entregados"
                     list={aux_insumos}

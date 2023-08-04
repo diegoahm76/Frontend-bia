@@ -137,9 +137,7 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                             control_form: control_entrega,
                             control_name: 'fecha_despacho',
                             default_value: '',
-                            rules: {
-
-                            },
+                            rules: {},
                             label: 'Fecha de entrega',
                             disabled: false,
                             helper_text: '',
@@ -175,8 +173,8 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                             helper_text: '',
                         },
                     ]}
-                    modal_select_model_title="Buscar despacho"
-                    modal_form_filters={[]} />
+                    title_table_modal="Entregas"
+                    modal_form_filters={[]} modal_select_model_title={''} />
             </Grid>
         </>
     );

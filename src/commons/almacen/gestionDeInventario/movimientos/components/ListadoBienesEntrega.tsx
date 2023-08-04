@@ -15,7 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesEntrega = () => {
   const [selected_row, set_selected_row] = useState([]);
-  const { bienes_entrada, bienes_entrada_aux, bienes_entrega } = useAppSelector(
+  const { bienes_entrada, bienes_entrada_aux, bienes_entrega, } = useAppSelector(
     (state) => state.entrega_otros
   );
   const dispatch = useAppDispatch();
@@ -25,7 +25,6 @@ const ListadoBienesEntrega = () => {
     if (bienes_entrada.length > 0) {
       if (bienes_entrega.length > 0) {
         const aux_items: IObjBienesEntrada[] = [];
-        // let bien: IObjBienDespacho | undefined;
         let despachada: number = 0;
 
         bienes_entrada.forEach((option: IObjBienesEntrada) => {
@@ -35,16 +34,15 @@ const ListadoBienesEntrega = () => {
               despachada =
                 // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                 despachada + (option_entrega.cantidad_despachada ?? 0);
-              aux_items.push({
-                ...option,
-                cantidad_despachada: despachada,
-                cantidad_faltante:
-                  (option.cantidad_disponible ?? 0) - despachada,
-              });
-            } else {
-              aux_items.push({ ...option });
+
             }
-            console.log(option, despachada, aux_items);
+          });
+          aux_items.push({
+            ...option,
+            cantidad_despachada: despachada,
+            cantidad_faltante:
+              //    (option.cantidad_disponible ?? 0) - despachada,
+              (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
           });
         });
         console.log(aux_items);
@@ -55,8 +53,15 @@ const ListadoBienesEntrega = () => {
     }
   }, [bienes_entrada]);
 
+
+  useEffect(() => {
+    console.log(bienes_entrada_aux);
+  }, [bienes_entrada_aux]);
+
+
   useEffect(() => {
     if (bienes_entrada.length > 0) {
+      console.log("Bienes entrega")
       if (bienes_entrega.length > 0) {
         const aux_items: IObjBienesEntrada[] = [];
         // let bien: IObjBienDespacho | undefined;
@@ -74,7 +79,8 @@ const ListadoBienesEntrega = () => {
           aux_items.push({
             ...option,
             cantidad_despachada: despachada,
-            cantidad_faltante: (option.cantidad_disponible ?? 0) - despachada,
+            cantidad_faltante: (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
+
           });
         });
         dispatch(set_bienes_entrada_aux(aux_items));
@@ -108,17 +114,17 @@ const ListadoBienesEntrega = () => {
     {
       field: 'cantidad_disponible',
       headerName: 'Cantidad disponible',
-      width: 140,
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {String(params.value) + String(params.row.unidad_medida ?? '')}
+          {String(params.value ?? params.row.cantidad) + String(params.row.unidad_medida ?? '')}
         </div>
       ),
     },
     {
       field: 'cantidad_despachada',
       headerName: 'Cantidad despachada',
-      width: 140,
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? 0}
@@ -128,7 +134,7 @@ const ListadoBienesEntrega = () => {
     {
       field: 'cantidad_faltante',
       headerName: 'Cantidad faltante',
-      width: 140,
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? params.row.cantidad}
@@ -172,7 +178,7 @@ const ListadoBienesEntrega = () => {
           marginTop={2}
         >
           <Box sx={{ width: '100%' }}>
-            <Title title="Bienes solicitados" />
+            <Title title="Bienes de Entrada Seleccionada" />
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"

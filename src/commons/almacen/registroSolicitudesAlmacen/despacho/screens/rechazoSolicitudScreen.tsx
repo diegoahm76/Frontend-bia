@@ -10,12 +10,13 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../../solicitudBienConsumo/store/solicitudBienConsumoThunks';
-import SeleccionarSolicitudDespacho from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/SeleccionarSolicitudesDespacho';
+
 import RechazoSolicitud from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/RechazarSolicitud';
 import { set_current_solicitud, set_persona_solicita } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
 import FuncionarioRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
 import BienRechazado from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/BienesRechazo';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import SeleccionarSolicitudRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/SeleccionarSolicitudRechazo';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -94,7 +95,7 @@ const RechazoSolicitudScreen = () => {
 
 
             <Grid item xs={12} marginY={2}>
-                <SeleccionarSolicitudDespacho
+                <SeleccionarSolicitudRechazo
                     title={"INFORMACIÓN DE LA SOLICITUD"}
                     control_solicitud_despacho={control_solicitud_despacho}
                     get_values={get_values}

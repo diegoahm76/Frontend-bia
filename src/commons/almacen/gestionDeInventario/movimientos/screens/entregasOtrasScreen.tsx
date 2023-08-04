@@ -8,8 +8,8 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SearchIcon from '@mui/icons-material/Search';
-import { set_current_entrega, set_persona_entrega, } from '../store/slice/indexEntrega';
-import { annul_despacho_service, crear_entrega, editar_entrega, get_bien_entrega_services, get_bienes_entrada, get_entregas_services, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
+import { set_current_entrega, set_persona_entrega, reset_state } from '../store/slice/indexEntrega';
+import { annul_despacho_service, crear_entrega, editar_entrega, get_bien_entrega_services, get_bienes_entrada, get_bodega_id, get_entrada_id, get_entregas_services, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
 import { get_uni_organizacional } from '../../../registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
 import type { IEntrega, IObjBienEntrega, IObjEntrada, IObjEntrega } from '../interfaces/entregas';
 import SeleccionarEntrada from '../components/SeleccionarEntrada';
@@ -20,6 +20,7 @@ import SeleccionarBienEntrega from '../components/SeleccionarBienEntrega';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import AnularEliminar from '../../../../conservacion/componentes/AnularEliminar';
 import { Block } from '@mui/icons-material';
+import Limpiar from '../../../../conservacion/componentes/Limpiar';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -28,7 +29,7 @@ import { Block } from '@mui/icons-material';
 const EntregaScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_entrega, reset: reset_entrega, getValues: get_values, handleSubmit: handle_submit } = useForm<IObjEntrega>();
-    const { control: control_entrada_entrega, reset: reset_entrada_entrega } = useForm<IObjEntrada>();
+    const { control: control_entrada_entrega, reset: reset_entrada_entrega, getValues: get_values_entrada } = useForm<IObjEntrada>();
     const [action, set_action] = useState<string>('Guardar');
     const { nro_entrega, current_entrega, persona_entrega, current_entrada, bienes_entrega, } = useAppSelector((state: { entrega_otros: IEntrega; }) => state.entrega_otros);
     const { bodega_seleccionada } = useAppSelector((state: { bodegas: any }) => state.bodegas);
@@ -36,6 +37,20 @@ const EntregaScreen = () => {
     const handle_open_select_model = (): void => { set_open_search_modal(true); };
     const dispatch = useAppDispatch();
 
+
+    const initial_values = (): void => {
+        void dispatch(get_uni_organizacional());
+        void dispatch(get_num_entrega())
+        void dispatch(get_tipo_entrada())
+        void dispatch(get_entregas_services());
+        dispatch(
+            set_persona_entrega({
+                nombre_completo: userinfo.nombre,
+                id_persona: userinfo.id_persona,
+            }))
+        set_action('crear');
+
+    }
 
     useEffect(() => {
         // console.log(current_solicitud)
@@ -57,6 +72,8 @@ const EntregaScreen = () => {
             current_entrega.id_entrada_almacen_cv !== null && current_entrega.id_entrada_almacen_cv !== undefined
         ) {
             void dispatch(get_bien_entrega_services(current_entrega.id_despacho_consumo))
+            void dispatch(get_entrada_id(current_entrega.id_entrada_almacen_cv))
+            void dispatch(get_bodega_id(current_entrega.id_bodega_general ?? 0))
         }
     }, [current_entrega]);
 
@@ -106,6 +123,8 @@ const EntregaScreen = () => {
     },
         [current_entrada]);
 
+
+
     const on_submit = (data: IObjEntrega): void => {
         const form_data: any = new FormData();
         if (
@@ -119,14 +138,15 @@ const EntregaScreen = () => {
                 aux_items.push({ ...element, numero_posicion_despacho: index });
             });
 
-            form_data.append('data_entrega', JSON.stringify({ ...data }));
-            form_data.append('ruta_archivo_doc_con_recibido', data.ruta_archivo_doc_con_recibido);
-            form_data.append('data_items_entrega', JSON.stringify(aux_items));
+            const entrega = {
+                data_entrega: { ...data },
+                data_items_entrega: aux_items
+            }
 
             void dispatch(
                 editar_entrega(
                     current_entrega.id_despacho_consumo,
-                    form_data)
+                    entrega)
             );
         } else {
             set_action('crear');
@@ -165,7 +185,7 @@ const EntregaScreen = () => {
     };
     const on_submit_annul = (data: IObjEntrega): void => {
         const data_annul = {
-            justificacion_anulacion: data.justificacion_anulacion,
+            descripcion_anulacion: data.justificacion_anulacion,
         };
         console.log(data_annul);
         if (
@@ -208,7 +228,7 @@ const EntregaScreen = () => {
             <Grid item xs={12} marginY={2}>
                 <SeleccionarEntrada
                     control_entrada_entrega={control_entrada_entrega}
-                    get_values={get_values}
+                    get_values={get_values_entrada}
 
                 />
             </Grid>
@@ -216,6 +236,7 @@ const EntregaScreen = () => {
                 <SeleccionarBodega
                 />
             </Grid>
+
             <Grid item xs={12} marginY={2}>
 
                 <ListadoBienesEntrega />
@@ -224,6 +245,7 @@ const EntregaScreen = () => {
 
                 <SeleccionarBienEntrega />
             </Grid>
+
             <Grid
                 container
                 direction="row"
@@ -250,94 +272,103 @@ const EntregaScreen = () => {
                         disabled={false}
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
-                    <AnularEliminar
-                        action={
-                            current_entrega.despacho_anulado === true
-                                ? 'Detalle anulación'
-                                : 'Anular'
-                        }
-                        button_icon_class={<Block />}
-                        button_disabled={false}
-                        modal_title={
-                            current_entrega.despacho_anulado === true
-                                ? 'Detalle anulación'
-                                : 'Anular despacho'
-                        }
-                        button_submit_label={'Anular'}
-                        button_submit_disabled={current_entrega.despacho_anulado}
-                        button_submit_icon_class={<Block />}
-                        button_submit_action={handle_submit(on_submit_annul)}
-                        modal_inputs={[
-                            {
-                                datum_type: 'input_controller',
-                                xs: 12,
-                                md: 4,
-                                control_form: control_entrada_entrega,
-                                control_name: 'numero_despacho_consumo',
-                                default_value: '',
-                                rules: {},
-                                label: 'Numero despacho',
-                                type: 'number',
-                                disabled: true,
-                                helper_text: '',
-                            },
-                            {
-                                datum_type: 'input_controller',
-                                person: true,
-                                xs: 12,
-                                md: 4,
-                                control_form: control_entrada_entrega,
-                                control_name: 'persona_anula',
-                                default_value: '',
-                                rules: {
-                                    required_rule: {
-                                        rule: true,
-                                        message: 'Debe seleccionar la personas que la creó',
-                                    },
+                {current_entrega.id_despacho_consumo !== null &&
+                    <Grid item xs={12} md={2}>
+                        <AnularEliminar
+                            action={
+                                current_entrega.despacho_anulado === true
+                                    ? 'Detalle anulación'
+                                    : 'Anular'
+                            }
+                            button_icon_class={<Block />}
+                            button_disabled={false}
+                            modal_title={
+                                current_entrega.despacho_anulado === true
+                                    ? 'Detalle anulación'
+                                    : 'Anular Entrega'
+                            }
+                            button_submit_label={'Anular'}
+                            button_submit_disabled={current_entrega.despacho_anulado}
+                            button_submit_icon_class={<Block />}
+                            button_submit_action={handle_submit(on_submit_annul)}
+                            modal_inputs={[
+                                {
+                                    datum_type: 'input_controller',
+                                    xs: 12,
+                                    md: 4,
+                                    control_form: control_entrega,
+                                    control_name: 'numero_despacho_consumo',
+                                    default_value: '',
+                                    rules: {},
+                                    label: 'Numero despacho',
+                                    type: 'number',
+                                    disabled: true,
+                                    helper_text: '',
                                 },
-                                label: 'Anulación realizada por',
-                                type: 'text',
-                                disabled: true,
-                                helper_text: '',
-                            },
-                            {
-                                datum_type: 'date_picker_controller',
-                                xs: 12,
-                                md: 4,
-                                control_form: control_entrada_entrega,
-                                control_name: '',
-                                default_value: new Date().toString(),
-                                rules: { required_rule: { rule: true, message: 'requerido' } },
-                                label: 'Fecha actual',
-                                type: 'text',
-                                disabled: true,
-                                helper_text: '',
-                            },
-                            {
-                                datum_type: 'input_controller',
-                                xs: 12,
-                                md: 12,
-                                control_form: control_entrada_entrega,
-                                control_name: 'justificacion_anulacion',
-                                default_value: '',
-                                rules: {
-                                    required_rule: {
-                                        rule: true,
-                                        message: 'Observación requerida',
+                                {
+                                    datum_type: 'input_controller',
+                                    person: true,
+                                    xs: 12,
+                                    md: 4,
+                                    control_form: control_entrega,
+                                    control_name: 'persona_anula',
+                                    default_value: '',
+                                    rules: {
+                                        required_rule: {
+                                            rule: true,
+                                            message: 'Debe seleccionar la personas que la creó',
+                                        },
                                     },
+                                    label: 'Anulación realizada por',
+                                    type: 'text',
+                                    disabled: true,
+                                    helper_text: '',
                                 },
-                                label: 'Justificacion',
-                                type: 'text',
-                                multiline_text: true,
-                                rows_text: 4,
-                                disabled: false,
-                                helper_text: '',
-                            },
-                        ]}
+                                {
+                                    datum_type: 'date_picker_controller',
+                                    xs: 12,
+                                    md: 4,
+                                    control_form: control_entrega,
+                                    control_name: '',
+                                    default_value: new Date().toString(),
+                                    rules: { required_rule: { rule: true, message: 'requerido' } },
+                                    label: 'Fecha actual',
+                                    type: 'text',
+                                    disabled: true,
+                                    helper_text: '',
+                                },
+                                {
+                                    datum_type: 'input_controller',
+                                    xs: 12,
+                                    md: 12,
+                                    control_form: control_entrada_entrega,
+                                    control_name: 'justificacion_anulacion',
+                                    default_value: '',
+                                    rules: {
+                                        required_rule: {
+                                            rule: true,
+                                            message: 'Observación requerida',
+                                        },
+                                    },
+                                    label: 'Justificación',
+                                    type: 'text',
+                                    multiline_text: true,
+                                    rows_text: 4,
+                                    disabled: false,
+                                    helper_text: '',
+                                },
+                            ]}
+                        />
+
+
+                    </Grid>}
+                <Grid item xs={12} md={1}>
+                    <Limpiar
+                        dispatch={dispatch}
+                        reset_state={reset_state}
+                        set_initial_values={initial_values}
+                        variant_button={'contained'}
                     />
-
-
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <ButtonSalir
@@ -345,30 +376,6 @@ const EntregaScreen = () => {
                 </Grid>
 
 
-                <Grid item xs={6} md={3}>
-
-                    {/* <Button
-                        variant="outlined"
-                        onClick={() => {
-                            set_anular("Anular")
-                            set_anular_solicitud(true);
-                        }}
-
-
-                    >
-                        ANULACIÓN DE SOLICITUDES DE CONSUMO
-                    </Button> */}
-
-
-                </Grid>
-                {/* <AnularSolicitudModal
-                    is_modal_active={anular_solicitud}
-                    set_is_modal_active={set_anular_solicitud}
-                    action={anular}
-                    control_solicitud={control_solicitud}
-                    get_values={get_values}
-                    on_submit={handle_submit(on_submit_anular)}
-                /> */}
             </Grid>
         </Grid>
 

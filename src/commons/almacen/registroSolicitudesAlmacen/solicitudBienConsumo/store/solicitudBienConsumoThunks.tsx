@@ -673,6 +673,29 @@ export const get_solicitudes_pendientes_despacho = (): any => {
 };
 
 
+
+export const get_solicitudes_despacho_fecha = (fecha: string | number,): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/despachos/get-solicitudes-aprobados-abiertos/?fecha_despacho=${fecha}`);
+            dispatch(set_solicitudes(data.data))
+            console.log(data);
+            console.log(data, "data")
+            // if ('data' in data) {
+            //     if (data.length > 0) {
+            //         control_success("Se encontrarón solicitudes aprobadas por despachar")
+            //     } else {
+            //         control_error("No se encontrarón solicitudes")
+            //     }
+            // }
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+};
+
+
 // rechazar SOLICITUD por parte de almacen
 
 export const rechazar_solicitud_service: any = (

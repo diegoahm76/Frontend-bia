@@ -59,7 +59,7 @@ const SeleccionarBodega = () => {
     useEffect(() => { }, [bodega_seleccionada]);
 
     const columns_solicitudes: GridColDef[] = [
-        { field: 'id_bodega', headerName: 'ID', width: 20 },
+
         {
             field: 'nombre',
             headerName: 'Nombre',
@@ -88,14 +88,10 @@ const SeleccionarBodega = () => {
                 );
             },
         },
-        {
-            field: 'nombre_completo_responsable',
-            headerName: 'Responsable de Bodega',
-            width: 350,
-        },
+
     ];
 
-    const get_bodegas_filtro: any = async () => {
+    const get_bodegas: any = async () => {
         void dispatch(get_bodega_service());
     };
 
@@ -107,7 +103,7 @@ const SeleccionarBodega = () => {
                     row_id={'id_bodega'}
                     columns_model={columns_solicitudes}
                     models={bodegas}
-                    get_filters_models={get_bodegas_filtro}
+                    get_filters_models={get_bodegas}
                     set_models={get_bodega}
                     reset_values={reset_bodega}
                     button_submit_label="Buscar bodega"
@@ -149,21 +145,20 @@ const SeleccionarBodega = () => {
                         },
                     ]}
                     modal_select_model_title="Buscar bodega"
-                    modal_form_filters={[
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 2,
-                            control_form: control_bodega,
-                            control_name: 'id_bodega',
-                            default_value: '',
-                            rules: {},
-                            label: 'Número de bodega',
-                            type: 'number',
-                            disabled: false,
-                            helper_text: '',
-                        },
-                    ]}
+                    modal_form_filters={[{
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bodega,
+                        control_name: 'id_bodega',
+                        default_value: '',
+                        rules: {},
+                        label: 'Número de bodega',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                    },]}
+                    title_table_modal={'Bodegas'}
                 />
             </Grid>
         </>
