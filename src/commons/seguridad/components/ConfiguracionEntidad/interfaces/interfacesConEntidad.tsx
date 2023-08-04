@@ -78,6 +78,7 @@ export interface IDataentidad {
 
 export  interface DatosHistoricoPerfilEntidad {
     cod_tipo_perfil_histo: string;
+    nombre_completo:string;
     consec_asignacion_perfil_histo: number;
     fecha_fin_periodo: string;
     fecha_inicio_periodo: string;

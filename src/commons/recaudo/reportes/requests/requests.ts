@@ -34,7 +34,7 @@ export const get_filtro_cartera_edades = async (filtro: Filtro): Promise<any> =>
 // Ver Reporte Facilidad de Pago General
 export const get_facilidad_general = async (): Promise<any> => {
   const data = await api.get(`recaudo/reportes/reporte-facilidades-pagos/`)
-  return data.data
+  return data
 }
 
 // Ver Reporte Facilidad de Pago Detallada

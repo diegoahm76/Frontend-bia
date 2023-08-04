@@ -149,7 +149,7 @@ export const EditarOrganigrama = ({
                   fieldState: { error }
                 }) => (
                   <TextField
-                    margin="dense"
+                    // margin="dense"
                     fullWidth
                     size="small"
                     label="Nombre"
@@ -187,7 +187,7 @@ export const EditarOrganigrama = ({
                   fieldState: { error }
                 }) => (
                   <TextField
-                    margin="dense"
+                    // margin="dense"
                     fullWidth
                     size="small"
                     label="Versión"
@@ -225,7 +225,7 @@ export const EditarOrganigrama = ({
                   fieldState: { error }
                 }) => (
                   <TextField
-                    margin="dense"
+                    // margin="dense"
                     fullWidth
                     size="small"
                     label="Descripcion"
@@ -280,7 +280,7 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        margin="dense"
+                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre de nivel"
@@ -363,7 +363,7 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        margin="dense"
+                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Código"
@@ -396,7 +396,7 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        margin="dense"
+                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre"
@@ -573,7 +573,7 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        margin="dense"
+                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Código"
@@ -606,7 +606,7 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        margin="dense"
+                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre"
