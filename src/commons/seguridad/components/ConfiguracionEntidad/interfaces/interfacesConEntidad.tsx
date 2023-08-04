@@ -12,7 +12,24 @@ export  interface IconfiguracionEntidad {
     id_persona_coord_viveros_actual: number;
     id_persona_almacenista: number;
 }
-
+export interface ISucursalEmpresa {
+    email_corporativo_sistema: string | null;
+    fecha_inicio_dir_actual: string | null;
+    fecha_inicio_coord_alm_actual: string | null;
+    fecha_inicio_respon_trans_actual: string | null;
+    fecha_inicio_coord_viv_actual: string | null;
+    fecha_inicio_almacenista: string | null;
+    id_persona_director_actual: number;
+    id_persona_coord_almacen_actual: number;
+    id_persona_respon_transporte_actual: number;
+    id_persona_coord_viveros_actual: number;
+    id_persona_almacenista: number;
+    observaciones_de_cambio_director: string;
+    observaciones_de_cambio_coord_almacen: string;
+    observaciones_de_cambio_respon_transporte: string;
+    observaciones_de_cambio_coord_viveros: string;
+    observaciones_de_cambio_almacenista: string;
+}
 
 
 
@@ -57,4 +74,17 @@ export interface IDataentidad {
     nombre_tipo_documento: string;
     digito_verificacion: string;
     razon_social: string;
+}
+
+export  interface DatosHistoricoPerfilEntidad {
+    cod_tipo_perfil_histo: string;
+    nombre_completo:string;
+    consec_asignacion_perfil_histo: number;
+    fecha_fin_periodo: string;
+    fecha_inicio_periodo: string;
+    id_historico_perfil_entidad: number;
+    id_persona_cambia: number;
+    id_persona_entidad: number;
+    id_persona_perfil_histo: number;
+    observaciones_cambio: string;
 }

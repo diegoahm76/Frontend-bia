@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SaveIcon from '@mui/icons-material/Save';
 import { Dialog } from 'primereact/dialog';
 import {
     Button,
@@ -8,23 +9,39 @@ import { Title } from "../../../../../../../components/Title";
 import { BuscadorPersona } from "../../../../../../../components/BuscadorPersona";
 import { control_error, control_success } from "../../../../SucursalEntidad/utils/control_error_or_success";
 import { api } from "../../../../../../../api/axios";
-
+import type { ISucursalEmpresa } from "../../../interfaces/interfacesConEntidad";
+import { ModificadorFormatoFecha } from "../../../utils/modificadorForematoFecha";
+import EditIcon from '@mui/icons-material/Edit';
 interface ModalEditarCargoProps {
     name: string;
     fecha: string;
     titlee: string;
+    cod: number;
+    onClick: () => void; // Prop para la función onClick del botón en el componente hijo
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee }) => {
+export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod, onClick }) => {
+
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const handleGuardarYPoner = (): void => {
+        setVisible(false)
+        onClick();
+        setValue("");
+        set_persona(undefined);
+    };
+
+
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [visible, setVisible] = React.useState<boolean>(false);
 
     const footer_content = (
         <div>
-            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { setVisible(false) }} >Salir</Button>
-            <Button style={{ margin: 3 }} type="submit" variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar  </Button>
+            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { handleGuardarYPoner() }} >Salir</Button>
+            <Button style={{ margin: 3 }} type="submit" startIcon={<SaveIcon />}  variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
+
         </div>
     );
 
@@ -45,17 +62,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         primer_apellido: string;
         segundo_apellido: string;
 
-        // Otras propiedades...
     }
-    // const initialPersona: Persona = {
-    //     id_persona: 0,
-    //     primer_nombre: "",
-    //     segundo_nombre: "",
-    //     primer_apellido: "",
-    //     segundo_apellido: "",
-    //     // Otras propiedades... (si las hay)
-    // };
-
 
     const [persona, set_persona] = useState<Persona | undefined>();
 
@@ -65,7 +72,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     }
 
     const {
-        //   id_persona ,
+        id_persona,
         primer_nombre,
         segundo_nombre,
         primer_apellido,
@@ -73,36 +80,11 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     const nombre_completo = `${primer_nombre ?? ""} ${segundo_nombre ?? ""} ${primer_apellido ?? ""} ${segundo_apellido ?? ""}`;
     const nombre = nombre_completo ?? "";
-
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [value, setValue] = useState<string>('');
+    const id_personaa: number = id_persona ?? 0;
 
 
 
 
-
-
-    interface ISucursalEmpresa {
-        email_corporativo_sistema: string | null;
-        fecha_inicio_dir_actual: string | null;
-        fecha_inicio_coord_alm_actual: string | null;
-        fecha_inicio_respon_trans_actual: string | null;
-        fecha_inicio_coord_viv_actual: string | null;
-        fecha_inicio_almacenista: string | null;
-        id_persona_director_actual: number;
-        id_persona_coord_almacen_actual: number;
-        id_persona_respon_transporte_actual: number;
-        id_persona_coord_viveros_actual: number;
-        id_persona_almacenista: number;
-        observaciones_de_cambio_director: string;
-        observaciones_de_cambio_coord_almacen: string;
-        observaciones_de_cambio_respon_transporte: string;
-        observaciones_de_cambio_coord_viveros: string;
-        observaciones_de_cambio_almacenista: string;
-    }
-
-    // Inicialización de la variable personaEntidad con valores predeterminados
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const initialState: ISucursalEmpresa = {
 
@@ -126,13 +108,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [dataEntidad, setDataEntidad] = useState<ISucursalEmpresa>(initialState);
-    console.log(dataEntidad);
-    console.log(1);
-    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-    const [personaEntidad, setPersonaEntidad] = useState<Persona | undefined>();
 
-    // Utilizando el hook useState para crear el estado personaEntidad y su función para actualizarlo
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const fetchDataGet = async (): Promise<void> => {
         try {
@@ -140,22 +116,79 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             const res = await api.get(url);
             const facilidad_pago_data = res.data.data;
             setDataEntidad(facilidad_pago_data[0]);
+
         } catch (error) {
             console.error(error);
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [value, setValue] = useState<string>("");
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
 
 
+    const codigo = cod;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleChangeEmail = (): void => {
-
-
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const updatedDataEntidad: ISucursalEmpresa = {
-            ...dataEntidad,
-            email_corporativo_sistema: "jajajaajjaja",
-        };
+        let updatedDataEntidad: ISucursalEmpresa = { ...dataEntidad };
+        if (value === "") {
+            // alert("Ingrese un valor");
+            setEmailMismatch(true);
+            return;
+        }
+        setEmailMismatch(false);
+        switch (codigo) {
+            case 1:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_director_actual: id_personaa,
+                    observaciones_de_cambio_director: value,
+                };
+
+                break;
+
+            case 2:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_coord_almacen_actual: id_personaa,
+                    observaciones_de_cambio_coord_almacen: value,
+                };
+
+                break;
+
+            case 4:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_coord_viveros_actual: id_personaa,
+                    observaciones_de_cambio_coord_viveros: value,
+                };
+
+                break;
+
+            case 3:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_respon_transporte_actual: id_personaa,
+                    observaciones_de_cambio_respon_transporte: value,
+                };
+
+                break;
+
+            case 5:
+                updatedDataEntidad = {
+                    ...updatedDataEntidad,
+                    id_persona_almacenista: id_personaa,
+                    observaciones_de_cambio_almacenista: value,
+                };
+
+                break;
+
+            default:
+
+                break;
+        }
 
         const payload = {
             ...updatedDataEntidad,
@@ -165,32 +198,26 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             .put("transversal/configuracion/configuracionEntidad/update/3/", payload)
             .then((response) => {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                const updatedEmail = response.data.email_corporativo_sistema;
+                const updatedEmail = response.data.id_persona_almacenista;
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 const datosActualizados: ISucursalEmpresa = {
                     ...updatedDataEntidad,
-                    email_corporativo_sistema: updatedEmail,
+                    id_persona_almacenista: updatedEmail,
                 };
                 setDataEntidad(datosActualizados);
-
-
-                control_success("Datos actualizados correctamente");
-                // mensaje();
+                control_success("Cargo actualizado correctamente");
             })
             .catch((error: any) => {
-                // console.error("Error al actualizar los datos:", error);
-                control_error(error.response.data.detail)
 
-
+                control_error(error.response.data.detail);
             });
-
     };
-
     useEffect(() => {
-        fetchDataGet().catch((error) => {
+        fetchDataGet().catch((error: any) => {
             console.error(error);
         });
     }, []);
+
 
 
     return (
@@ -199,12 +226,13 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             <Button
                 style={{ margin: 3, marginTop: 10, marginRight: 10 }}
                 color="primary"
+                startIcon={<EditIcon />}
                 variant="contained"
                 onClick={handleClick}
             >
                 Cambiar
             </Button>
-            <Dialog header={title} visible={visible} style={{ width: '50%' }} onHide={() => { setVisible(false) }} footer={footer_content}>
+            <Dialog header={title} visible={visible} style={{ width: '50%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
                 <Grid container sx={{
                     background: '#FAFAFA',
                     borderRadius: '15px',
@@ -237,7 +265,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                             size="small"
                             disabled
                             fullWidth
-                            value={fecha}
+                            value={ModificadorFormatoFecha(fecha)}
                         />
                     </Grid>
                 </Grid>
@@ -277,6 +305,8 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                             id="description"
                             value={value}
                             onChange={(e: any): void => { setValue(e.target.value) }}
+                            error={emailMismatch}
+                            helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
                         />
 
                     </Grid>

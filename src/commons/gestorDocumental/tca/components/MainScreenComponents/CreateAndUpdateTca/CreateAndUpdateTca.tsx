@@ -29,6 +29,8 @@ import {
   update_tca_services
 } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { set_catalog_trd_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
+// import { control_error } from '../../../../../../helpers';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   // ? dispatch declaration
@@ -184,9 +186,13 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                       value={value}
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
+                        if (e.target.value.length === 50)
+                          control_warning('máximo 50 caracteres');
+
                         onChange(e.target.value);
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 50 }}
                       // error={!!error}
                       /* helperText={
                   error
@@ -222,9 +228,12 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                       value={value}
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
+                        if (e.target.value.length === 10)
+                          control_warning('máximo 10 caracteres');
                         onChange(e.target.value);
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 10 }}
                     />
                   )}
                 />

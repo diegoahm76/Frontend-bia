@@ -4,12 +4,13 @@ import { type FC } from 'react';
 
 import { RenderDataGrid } from '../../../Atom/RenderDataGrid/RenderDataGrid';
 import { Chip } from '@mui/material';
+import type { dataGridTypes } from '../../../types/tca.types';
 
-export const CatalogoTRDSeleccionado: FC<any> = ({
+export const CatalogoTRDSeleccionado: FC<dataGridTypes> = ({
   rows,
   columns,
   title
-}: any): JSX.Element => {
+}: dataGridTypes): JSX.Element => {
 
   const newColums = [
     ...columns,

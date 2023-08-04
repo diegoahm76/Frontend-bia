@@ -68,33 +68,33 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
     },
     {
       field: 'acciones',
-      headerName: 'Ver',
+      headerName: 'Acción',
       width: 150,
       renderCell: (params) => {
         return params.row.id !== 'total' ? (
           <>
             <Tooltip title="Ver">
-                <IconButton
-                  onClick={() => {
-                    navigate('../seguimiento')
+              <IconButton
+                onClick={() => {
+                  navigate('../seguimiento')
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
+                  variant="rounded"
                 >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ArticleIcon
-                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    />
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </>
+                  <ArticleIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
         ) : null
       },
     },

@@ -28,6 +28,6 @@ export const get_permisos_adapter_general = (permisos: any): any => {
       permiso.id_modulo.subsistema === 'TRSV'
   );
 
-  console.log(permisos_adapted);
+  // console.log(permisos_adapted);
   return permisos_adapted;
 };

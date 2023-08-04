@@ -13,6 +13,7 @@ import EspecificacionesVehicle from '../components/Caracteristicas';
 import FormButton from '../../../../../../components/partials/form/FormButton';
 import EspecificacionAdicional from '../components/CaracteristicasAdicionales';
 import { get_marca_service } from '../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
+import { Title } from '../../../../../../components';
 
 
 
@@ -94,8 +95,10 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
         }}
       >
 
-
-
+        <h1>Hoja de vida vehículos </h1>
+        <Grid item xs={12} md={12} marginTop={-2}>
+          <Title title={''}></Title>
+        </Grid>
         <SeleccionarVehiculo />
         <EspecificacionesVehicle
           control_vehicle={control_vehicle} get_values={get_values} title={''} />

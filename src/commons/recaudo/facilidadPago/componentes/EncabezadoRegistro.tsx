@@ -79,7 +79,7 @@ export const EncabezadoRegistro: React.FC = () => {
                     <DatePicker
                       label="Fecha Solicitud"
                       disabled
-                      inputFormat="YYYY/MM/DD"
+                      inputFormat="DD/MM/YYYY"
                       openTo="day"
                       views={[ 'day', 'month', 'year' ]}
                       value={new Date()}

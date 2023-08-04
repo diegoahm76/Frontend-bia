@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Stack, MenuItem, FormControl, Select, InputLabel, Grid, TextField } from '@mui/material'
 import { FileDownloadOutlined, KeyboardArrowDown, KeyboardArrowUp, SearchOutlined}  from '@mui/icons-material';
@@ -76,7 +77,13 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                         <TableCell component="th" scope="row">{pago.cuota}</TableCell>
                         <TableCell>{pago.numero_factura}</TableCell>
                         <TableCell>{pago.fecha_pago}</TableCell>
-                        <TableCell sx={ pago.estado === "Pagada" ? { WebkitTextFillColor: "green"} : pago.estado === "Vencida" ? { WebkitTextFillColor: "red"} : { WebkitTextFillColor: "#BE8400"} }>
+                        <TableCell sx={
+                          pago.estado === "Pagada" ?
+                          { WebkitTextFillColor: "green"} :
+                          pago.estado === "Vencida" ?
+                          { WebkitTextFillColor: "red"} :
+                          { WebkitTextFillColor: "#BE8400"}
+                        }>
                           {pago.estado}
                         </TableCell>
                         <TableCell>{pago.dias_vencimiento}</TableCell>
@@ -161,7 +168,6 @@ export const TablaFacilidadPagoVencimiento: React.FC = () => {
   const [total_coactivo, set_total_coactivo] = useState(0);
   const [total_persuasivo, set_total_persuasivo] = useState(0);
   const [type, set_type] = useState('');
-  console.log('Estado Seleccionado', type);
 
   useEffect(() => {
     if(rows.length !== 0) {

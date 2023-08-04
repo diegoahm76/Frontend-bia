@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_asignadas, get_facilidades_asignadas } from '../slices/FacilidadesSlice';
+import dayjs from 'dayjs';
 
 interface RootState {
   facilidades: {
@@ -63,41 +64,40 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value.slice(0, 10)).format('DD/MM/YYYY')}
         </div>
       ),
     },
     {
       field: 'acciones',
-      headerName: 'Ver',
+      headerName: 'Acción',
       width: 150,
       renderCell: (params) => {
         return (
           <>
             <Tooltip title="Ver">
-                <IconButton
-                  onClick={() => {
-                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                    navigate('../solicitud');
+              <IconButton
+                onClick={() => {
+                  void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                  navigate('../solicitud');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
+                  variant="rounded"
                 >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ArticleIcon
-                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    />
-
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </>
+                  <ArticleIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
         )
       },
     },
@@ -200,5 +200,5 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         ) : null
       }
     </Box>
-  );
+  )
 }

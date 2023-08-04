@@ -393,7 +393,7 @@ const use_editar_organigrama = () => {
   useEffect(() => {
     set_orden_nivel((levels_organigram.length as number) + 1);
     set_option_nivel(
-      levels_organigram.map((item) => ({
+      levels_organigram.map((item: any) => ({
         label: item.nombre,
         value: item.id_nivel_organigrama,
         orden: item.orden_nivel,
@@ -406,7 +406,7 @@ const use_editar_organigrama = () => {
       unidadRaiz: { label: 'Si', value: true },
     });
     set_option_unidad_padre(
-      unity_organigram.map((item) => ({
+      unity_organigram.map((item: any) => ({
         label: item.nombre,
         value: item.codigo,
         id_nivel_organigrama: item.id_nivel_organigrama,
@@ -419,7 +419,7 @@ const use_editar_organigrama = () => {
   useEffect(() => {
     if (datos_unidades.nivel_unidad != null) {
       set_option_unidad_padre(
-        unity_organigram.map((item) =>
+        unity_organigram.map((item: any) =>
           item.id_nivel_organigrama <
           Number(datos_unidades!.nivel_unidad!.value!)
             ? {
@@ -530,7 +530,7 @@ const use_editar_organigrama = () => {
         },
       ];
     } else {
-      new_niveles = levels_organigram.map((item) => {
+      new_niveles = levels_organigram.map((item: any) => {
         return item.id_nivel_organigrama === data.id_nivel_organigrama
           ? { ...item, nombre: data.nombre }
           : item;
@@ -578,7 +578,7 @@ const edit_unidad = ({
   };
   // console.log(newUnidad, 'newUnidad');
 
-  const newUnidades = unity_organigram.map((unidad) => unidad.codigo === codigo ? newUnidad : unidad);
+  const newUnidades = unity_organigram.map((unidad: any) => unidad.codigo === codigo ? newUnidad : unidad);
 
   set_title_unidades('Agregar');
   dispatch(update_unitys_service(organigram_current.id_organigrama, newUnidades, clean_unitys));
@@ -620,7 +620,7 @@ const create_unidad = ({
   // Funcion para eliminar un nivel
   const delete_level = (level_row: number): void => {
     const new_niveles = levels_organigram.filter(
-      (nivel) => nivel.orden_nivel !== level_row
+      (nivel: any) => nivel.orden_nivel !== level_row
     );
     void dispatch(
       update_levels_service(organigram_current?.id_organigrama, new_niveles)
@@ -630,7 +630,7 @@ const create_unidad = ({
   // Funcion para eliminar una unidad
   const delete_unidades = (codigo_unidad: string): void => {
     const new_unidades = unity_organigram.filter(
-      (unidad) => unidad.codigo !== codigo_unidad
+      (unidad: any) => unidad.codigo !== codigo_unidad
     );
     void dispatch(
       update_unitys_service(

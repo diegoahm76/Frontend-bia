@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState } from 'react';
 import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
@@ -24,10 +25,6 @@ export const RegistroRecepcion: React.FC = () => {
     set_date(date);
     set_fecha_string(dayjs(date).format('YYYY-MM-DD'));
   };
-
-  console.log('fecha', fecha_string);
-  console.log('texto', form_state);
-  console.log('archivos', form_files);
 
   return (
     <>

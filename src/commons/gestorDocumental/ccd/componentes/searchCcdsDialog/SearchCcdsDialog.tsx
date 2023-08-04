@@ -21,7 +21,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
-import { get_ccd_current, get_ccds } from '../../store/slices/ccdSlice';
+import { get_ccds } from '../../store/slices/ccdSlice';
 import type { IProps } from './types/types';
 import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
 import { ModalContext } from '../../context/ModalContext';
@@ -30,6 +30,8 @@ import { Title } from '../../../../../components';
 import { Controller, useForm } from 'react-hook-form';
 import SearchIcon from '@mui/icons-material/Search';
 import use_ccd from '../../hooks/useCCD';
+import { LoadingButton } from '@mui/lab';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -38,13 +40,17 @@ const SearchCcdModal = ({
   title
 }: IProps) => {
   const dispatch = useAppDispatch();
-  const { openModalBusquedaCreacionCCD } = useContext(ModalContext);
+  const {
+    openModalBusquedaCreacionCCD,
+    loadingButtonBusquedaCCD,
+    activateLoadingButtonBusquedaCCD,
+    desactivateLoadingButtonBusquedaCCD
+  } = useContext(ModalContext);
 
   const { ccds } = useAppSelector((state) => state.ccd);
 
   // Hooks
   const { clean_ccd } = use_ccd() as any;
-
 
   const {
     control: control_search_ccd,
@@ -109,6 +115,8 @@ const SearchCcdModal = ({
               // console.log('params para ver ccd en el icono del ojito', params);
               void dispatch(
                 get_classification_ccds_service(
+                  activateLoadingButtonBusquedaCCD,
+                  desactivateLoadingButtonBusquedaCCD,
                   params.row.nombre,
                   params.row.version,
                   params.row.id_ccd
@@ -181,6 +189,8 @@ const SearchCcdModal = ({
               e.preventDefault();
               void dispatch(
                 get_classification_ccds_service(
+                  activateLoadingButtonBusquedaCCD,
+                  desactivateLoadingButtonBusquedaCCD,
                   control_search_ccd._formValues.nombre_ccd,
                   control_search_ccd._formValues.version
                 )
@@ -212,7 +222,7 @@ const SearchCcdModal = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                     // margin="dense"
+                      // margin="dense"
                       fullWidth
                       size="small"
                       label="Nombre CCD"
@@ -240,7 +250,7 @@ const SearchCcdModal = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       size="small"
                       label="Versión CCD"
@@ -263,18 +273,15 @@ const SearchCcdModal = ({
                   spacing={2}
                   //  sx={{ mr: '15px', mb: '10px', mt: '10px' }}
                 >
-                  <Button
+                  <LoadingButton
+                    loading={loadingButtonBusquedaCCD}
                     color="primary"
                     variant="outlined"
                     type="submit"
                     startIcon={<SearchIcon />}
-                    /* onClick={() => {
-                          console.log('buscando');
-                          
-                        }} */
                   >
                     BUSCAR CCD
-                  </Button>
+                  </LoadingButton>
                 </Stack>
               </Grid>
             </Grid>
@@ -300,13 +307,19 @@ const SearchCcdModal = ({
           sx={{ mr: '15px', mb: '10px', mt: '10px' }}
         >
           <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              reset_search_ccd({ nombre_ccd: '', version: '' });
+            }}
+            startIcon={<CleanIcon />}
+          >
+            LIMPIAR CAMPOS
+          </Button>
+          <Button
             variant="outlined"
             onClick={() => {
-              // clean_ccd()
               set_is_modal_active(false);
-              // closeModalBusquedaCreacionCCD();
-              // dispatch(get_ccd_current(null));
-              // dispatch(get_ccds([]))
               dispatch(get_ccds([]));
               reset_search_ccd({ nombre_ccd: '', version: '' });
             }}

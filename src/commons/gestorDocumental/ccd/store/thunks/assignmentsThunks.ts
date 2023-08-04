@@ -16,7 +16,7 @@ import { get_assignments_ccd } from '../slices/assignmentsSlice';
 // import { ccd_slice } from './../slices/ccdSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+/* const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
   toast.error(message, {
     position: 'bottom-left',
     autoClose: 2000,
@@ -26,7 +26,7 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
     draggable: true,
     progress: undefined,
     theme: 'light'
-  });
+  }); */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_success = (message: ToastContent) =>
@@ -83,12 +83,16 @@ export const get_assignments_service = (ccd_current: any): any => {
 
 export const create_or_delete_assignments_service: any = (
   new_items: any[],
-  ccd_current: any
+  ccd_current: any,
+  reset?: any,
+  activateLoadingButtonGuardarRelacion?: any,
+  desactivateLoadingButtonGuardarRelacion?: any
 ) => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse[] | AxiosError> => {
     try {
+      activateLoadingButtonGuardarRelacion();
       const id_ccd: number = ccd_current.id_ccd;
 
       console.log(new_items);
@@ -110,13 +114,24 @@ export const create_or_delete_assignments_service: any = (
       dispatch(get_assignments_service(ccd_current));
       control_success(data.detail);
 
+      reset({
+        catalogo_asignacion: [],
+        sries_asignacion: { label: '', value: 0 },
+        sries: '',
+        subserie_asignacion: [],
+        subserie: '',
+        unidades_asignacion: { label: '', value: 0 }
+      });
+
       return data;
     } catch (error: any) {
       // console.log(error);
-      control_error(error.response?.data?.detail);
       dispatch(get_assignments_service(ccd_current));
+      // control_error(error.response?.data?.detail);
 
       return error as AxiosError;
+    } finally {
+      desactivateLoadingButtonGuardarRelacion();
     }
   };
 };

@@ -54,7 +54,9 @@ const use_ccd = () => {
     openModalBusquedaCreacionCCD,
     closeModalBusquedaCreacionCCD,
     activateLoadingButton,
-    desactivateLoadingButton
+    desactivateLoadingButton,
+    activateLoadingButtonGuardarRelacion,
+    desactivateLoadingButtonGuardarRelacion
   } = useContext(ModalContext);
 
   const dispatch = useAppDispatch();
@@ -180,7 +182,7 @@ const use_ccd = () => {
     // console.log(data_create_ccd, 'data_create_ccd');
     // console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
-      const result_name = organigram.filter((item) => {
+      const result_name = organigram.filter((item: any) => {
         return item.id_organigrama === ccd_current.id_organigrama;
       });
 
@@ -275,10 +277,10 @@ const use_ccd = () => {
   useEffect(() => {
     console.log('uniry_organigram', unity_organigram);
     const filteredUnityOrganigram = unity_organigram.filter(
-      (item) => item.cod_agrupacion_documental !== null
+      (item: any) => item.cod_agrupacion_documental !== null
     );
     set_list_unitys(
-      filteredUnityOrganigram.map((item) => ({
+      filteredUnityOrganigram.map((item: any) => ({
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))
@@ -287,7 +289,7 @@ const use_ccd = () => {
 
   useEffect(() => {
     set_list_organigrams(
-      organigram.map((item) => ({
+      organigram.map((item: any) => ({
         label: item?.nombre,
         value: item.id_organigrama!
       }))
@@ -453,7 +455,11 @@ const use_ccd = () => {
     dispatch(get_subseries_ccd_current(null));
   }, [dispatch, reset, set_title_button_asing]);
 
-  const create_or_delete_relation_unidad = (): void => {
+  const create_or_delete_relation_unidad = (
+    reset: any,
+    activateLoadingButtonGuardarRelacion: any,
+    desactivateLoadingButtonGuardarRelacion: any
+  ): any => {
     console.log(data_asing, 'data_asing');
     console.log('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
@@ -489,7 +495,13 @@ const use_ccd = () => {
     // console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
-      create_or_delete_assignments_service(itemSendDef, ccd_current)
+      create_or_delete_assignments_service(
+        itemSendDef,
+        ccd_current,
+        reset,
+        activateLoadingButtonGuardarRelacion,
+        desactivateLoadingButtonGuardarRelacion
+      )
     ).then(() => {
       void dispatch(get_assignments_service(ccd_current));
     });
@@ -499,7 +511,13 @@ const use_ccd = () => {
   const delete_asing = (id: any): void => {
     const new_items = assignments_ccd.filter((item) => item.id !== id);
     void dispatch(
-      create_or_delete_assignments_service(new_items, ccd_current)
+      create_or_delete_assignments_service(
+        new_items,
+        ccd_current,
+        reset,
+        activateLoadingButtonGuardarRelacion,
+        desactivateLoadingButtonGuardarRelacion
+      )
     ).then(() => {
       void dispatch(get_assignments_service(ccd_current));
     });
@@ -612,7 +630,8 @@ const use_ccd = () => {
 
     create_sub_serie_active,
     set_create_sub_serie_active,
-    create_or_delete_relation_unidad
+    create_or_delete_relation_unidad,
+    reset
     // file,
     // set_file,
   };
