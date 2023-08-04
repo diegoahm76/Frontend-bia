@@ -472,17 +472,19 @@ export const use_register_laboratorio_hook = () => {
     set_fecha_analisis(null);
   };
 
+  const [selectedRow_edit, setSelectedRow_edit] = useState<Laboratorio | null>(null);
+
   const handleEdit_select = (row: any): void => {
-    setSelectedRow(row);
+    setSelectedRow_edit(row);
     set_value_laboratorio('metodo', row.metodo);
     set_value_laboratorio('resultado', row.resultado);
     set_value_laboratorio('id_parametro', row.id_parametro);
-    set_tipo_parametro_value(row.parametro);
+    set_tipo_parametro_value(row.cod_clase);
     set_undidad_medida_select(row.unidad);
     set_fecha_analisis(row.fecha_analisis);
   };
 
-  const handleDelete_select = (id: ReturnType<typeof uuidv4>): void => {
+  const handleDelete_select = (id: any): void => {
     set_rows_resultado_laboratorio(
       rows_resultado_laboratorio.filter((row) => row.id !== id)
     );
@@ -501,13 +503,13 @@ export const use_register_laboratorio_hook = () => {
       resultado: data_watch.resultado,
     };
     // Si se está editando una fila, reemplace esa fila en lugar de agregar una nueva
-    if (selectedRow) {
+    if (selectedRow_edit) {
       set_rows_resultado_laboratorio(
         rows_resultado_laboratorio.map((row: any) =>
-          row.id === selectedRow.id ? new_row : row
+          row.id === selectedRow_edit.id ? new_row : row
         )
       );
-      setSelectedRow(null); // Borra la selección
+      setSelectedRow_edit(null); // Borra la selección
     } else {
       set_rows_resultado_laboratorio([
         ...(rows_resultado_laboratorio as any),
@@ -654,6 +656,8 @@ export const use_register_laboratorio_hook = () => {
     handle_agregar_editar,
     handleEdit_select,
     handleDelete_select,
+    setSelectedRow_edit,
+
 
     // *Autocomplete
     cuenca_select,

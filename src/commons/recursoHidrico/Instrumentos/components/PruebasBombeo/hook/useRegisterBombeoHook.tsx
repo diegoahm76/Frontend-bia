@@ -35,8 +35,6 @@ export const use_register_bombeo_hook = () => {
       // * secciones
       id_sesion_prueba_bombeo: '',
       hora_inicio: '',
-      prueba_bombeo: '',
-      caudal_sesion: '',
       cod_tipo_sesion: '',
 
       // *datos prueba de bombeo
@@ -52,18 +50,25 @@ export const use_register_bombeo_hook = () => {
   const [fecha_prubea_bombeo, set_fecha_prubea_bombeo] = useState<Dayjs | null>(
     null
   );
-  const [fechaPruebaBombeo, setFechaPruebaBombeo] = useState<Dayjs | null>(
-    null
-  );
+
+  const [horaPruebaBombeo, setHoraPruebaBombeo] = useState<Dayjs | null>(null);
+
+  const handle_time_change = (value: Dayjs | null): void => {
+    if (value !== null) {
+      const time = value.format('HH:mm:ss'); // Cambia 'HH:mm:ss' a 'hh:mm:ss A' para el formato de 12 horas.
+      setHoraPruebaBombeo(dayjs(time, 'HH:mm:ss'));
+    }
+  };
 
   const handle_date_change = (fieldName: string, value: Dayjs | null): void => {
-    switch (fieldName) {
-      case 'fecha_prueba':
-        set_fecha_prubea_bombeo(value);
-        break;
-      case 'fecha_prueba_bombeo':
-        setFechaPruebaBombeo(value);
-        break;
+    if (value !== null) {
+      switch (fieldName) {
+        case 'fecha_prueba':
+          set_fecha_prubea_bombeo(value);
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -71,64 +76,22 @@ export const use_register_bombeo_hook = () => {
 
   const [row_prueba, set_row_prueba] = useState<any[]>([]);
 
-  const [pruebaBombeo, setPruebaBombeo] = useState('');
-  const [caudal, setCaudal] = useState('');
-  const [tiempoTranscurrido, setTiempoTranscurrido] = useState(0);
-  const [nivelAgua, setNivelAgua] = useState('');
-  const [abatimientoRecuperacion, setAbatimientoRecuperacion] = useState('');
-  const [caudalAgua, setCaudalAgua] = useState('');
-
-  const handleComboChange = (value1: string, value2: string) => {
-    setValue_bombeo('cod_tipo_sesion', `${value1}${value2}`);
-  };
-
   const handle_agregar = () => {
-    const horaInicioSesion = new Date(); // Reemplaza esto con la hora de inicio real de la sesión
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    const horaMedicion = fechaPruebaBombeo
-      ? new Date(horaInicioSesion.getTime() + tiempoTranscurrido * 60000)
-      : null;
-
-    const formattedHoraMedicion =
-      horaMedicion != null
-        ? dayjs(horaMedicion).format('LT') // Aplica el formato de 12 horas
-        : '';
-
-    const newData = {
-      tiempo: tiempoTranscurrido,
-      hora: formattedHoraMedicion,
-      nivel: nivelAgua,
-      abatimiento_recuperacion: abatimientoRecuperacion,
-      caudal: caudalAgua,
-    };
-
-    set_row_prueba([...row_prueba, newData]);
-
     // Reinicia los campos de entrada
-    setFechaPruebaBombeo(null);
-    setTiempoTranscurrido(0);
-    setNivelAgua('');
-    setAbatimientoRecuperacion('');
-    setCaudalAgua('');
+    setValue_bombeo('tiempo_transcurrido', '');
+    setValue_bombeo('nivel', '');
+    setValue_bombeo('resultado', '');
+    setValue_bombeo('caudal', '');
+    setHoraPruebaBombeo(null);
   };
+  
   return {
-    pruebaBombeo,
-    caudal,
     fecha_prubea_bombeo,
-    fechaPruebaBombeo,
+    horaPruebaBombeo,
     row_prueba,
-    tiempoTranscurrido,
-    nivelAgua,
-    abatimientoRecuperacion,
-    caudalAgua,
-    setTiempoTranscurrido,
-    setNivelAgua,
-    setAbatimientoRecuperacion,
-    setCaudalAgua,
     handle_agregar,
-    handleComboChange,
     handle_date_change,
+    handle_time_change,
 
     // * USE FORM
     register_bombeo,

@@ -22,7 +22,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../components/Title';
 import { use_register_laboratorio_hook } from './hook/useRegisterLaboratorioHook';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { columns_result_lab } from './utils/colums/comlums';
 import { tipo_parametro_choices } from './utils/choices/choices';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { LoadingButton } from '@mui/lab';
@@ -85,7 +84,8 @@ export const EditarLaboratorio: React.FC = () => {
               startIcon={<EditIcon />}
               onClick={() => {
                 console.log(params.row);
-                handleEdit(params.row);
+                handleEdit_select(params.row);
+                setSelectedRow_edit(params.row);
               }}
             />
           </Tooltip>
@@ -96,7 +96,8 @@ export const EditarLaboratorio: React.FC = () => {
               size="small"
               startIcon={<DeleteIcon />}
               onClick={() => {
-                handleDelete(params.row.id);
+                console.log(params.row.id, 'id para eliminar');
+                handleDelete_select(params.row.id);
               }}
             />
           </Tooltip>
@@ -174,8 +175,9 @@ export const EditarLaboratorio: React.FC = () => {
     handle_date_change,
     handle_change_inputs,
     handle_agregar_editar,
-    handleEdit,
-    handleDelete,
+    setSelectedRow_edit,
+    handleDelete_select,
+    handleEdit_select,
 
     // *Autocomplete
     cuenca_select,
@@ -288,6 +290,12 @@ export const EditarLaboratorio: React.FC = () => {
       void fetch_data_parametros_laboratorios_select_id();
     }
   }, [data_watch?.id_parametro]);
+
+  useEffect(() => {
+    if (rows_resultado_laboratorio.length > 0) {
+      console.log(rows_resultado_laboratorio);
+    }
+  }, [rows_resultado_laboratorio]);
 
   return (
     <>
@@ -649,7 +657,7 @@ export const EditarLaboratorio: React.FC = () => {
                     autoHeight
                     rows={rows_resultado_laboratorio}
                     columns={colums_resultado_laboratorio}
-                    getRowId={(row) => uuidv4()}
+                    getRowId={(row) => row.id}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                   />

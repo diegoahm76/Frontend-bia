@@ -10,6 +10,7 @@ import {
   MenuItem,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import {
@@ -22,12 +23,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../components/Title';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 import { use_register_bombeo_hook } from './hook/useRegisterBombeoHook';
-import { prueba_de_bombeo, tipo_caudal } from './utils/choices/choices';
 import { colums_bombeo } from './utils/colums/colums';
 import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 import { useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
+import { get_header_name } from './utils/functions/functions';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { LoadingButton } from '@mui/lab';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
+import { tipo_sesion } from './utils/choices/choices';
+import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarBombeo: React.FC = () => {
@@ -68,24 +75,51 @@ export const AgregarBombeo: React.FC = () => {
       ),
     },
   ];
-
+  const columns_sesion: GridColDef[] = [
+    {
+      field: 'cod_tipo_sesion',
+      headerName: 'SECCIÓN/CAUDAL',
+      sortable: true,
+      width: 400,
+      valueGetter: (params) => get_header_name(params.value),
+    },
+    {
+      field: 'fecha_inicio',
+      headerName: 'HORA INICIO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 80,
+      renderCell: (params) => (
+        <>
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
+                // set_info_sesion_bombeo(params.row);
+              }}
+            />
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
+  const { pozos_selected, fetch_data_pozo_instrumentos_select } =
+    use_register_laboratorio_hook();
   const {
-    pruebaBombeo,
-    caudal,
     fecha_prubea_bombeo,
-    fechaPruebaBombeo,
+    horaPruebaBombeo,
     row_prueba,
-    tiempoTranscurrido,
-    nivelAgua,
-    abatimientoRecuperacion,
-    caudalAgua,
-    setTiempoTranscurrido,
-    setNivelAgua,
-    setAbatimientoRecuperacion,
-    setCaudalAgua,
     handle_agregar,
-    handleComboChange,
     handle_date_change,
+    handle_time_change,
 
     // * use form
     register_bombeo,
@@ -113,6 +147,12 @@ export const AgregarBombeo: React.FC = () => {
       nombre_subseccion: instrumentos.nombre_subseccion,
     });
   }, [instrumentos]);
+
+  useEffect(() => {
+    if (instrumentos.id_pozo) {
+      void fetch_data_pozo_instrumentos_select(instrumentos.id_pozo);
+    }
+  }, [instrumentos.id_pozo]);
 
   return (
     <>
@@ -183,11 +223,6 @@ export const AgregarBombeo: React.FC = () => {
                   console.log(e.target.value);
                 }}
                 error={!!error}
-                /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
               />
             )}
           />
@@ -241,53 +276,117 @@ export const AgregarBombeo: React.FC = () => {
           <Divider />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Latitud"
-            size="small"
-            fullWidth
-            margin="dense"
-            disabled={false}
+          <Controller
+            name="latitud"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Latitud"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                required={true}
+                error={!!errors_bombeo.latitud}
+                helperText={
+                  errors_bombeo.latitud
+                    ? 'Es obligatorio ingresar una latitud'
+                    : 'Ingrese una latitud'
+                }
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Longitud"
-            size="small"
-            fullWidth
-            margin="dense"
-            disabled={false}
+          <Controller
+            name="longitud"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Longitud"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                required={true}
+                error={!!errors_bombeo.longitud}
+                helperText={
+                  errors_bombeo.longitud
+                    ? 'Es obligatorio ingresar una longitud'
+                    : 'Ingrese una longitud'
+                }
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            label="Descripción"
-            fullWidth
-            multiline
-            size="small"
-            margin="dense"
-            disabled={false}
-            rows={2}
+          <Controller
+            name="descripcion"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Descripción"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                multiline
+                rows={2}
+                required={true}
+                error={!!errors_bombeo.descripcion}
+                helperText={
+                  errors_bombeo.descripcion
+                    ? 'Es obligatorio ingresar una descripcion'
+                    : 'Ingrese una descripcion'
+                }
+              />
+            )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={1}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Pozo:
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Pozo"
-            size="small"
-            margin="dense"
-            disabled={true}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Button variant="contained" color="primary">
-            Buscar
-          </Button>
-        </Grid>
+        {instrumentos.cod_tipo_agua === 'SUB' ? (
+          <>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="id_pozo"
+                control={control_bombeo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Seleccione un pozo"
+                    select
+                    size="small"
+                    margin="dense"
+                    disabled={false}
+                    fullWidth
+                    required
+                    error={!!errors_bombeo.id_pozo}
+                    helperText={
+                      errors_bombeo?.id_pozo?.type === 'required' &&
+                      'Este campo es obligatorio'
+                    }
+                  >
+                    {pozos_selected.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+          </>
+        ) : null}
       </Grid>
       <Grid
         container
@@ -312,54 +411,16 @@ export const AgregarBombeo: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6}>
           <Controller
-            name="prueba_bombeo"
+            name="cod_tipo_sesion"
             control={control_bombeo}
             defaultValue=""
             rules={{ required: true }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Prueba de bombeo de: "
-                size="small"
-                margin="dense"
-                select
-                fullWidth
-                required={true}
-                error={!!errors_bombeo.prueba_bombeo}
-                helperText={
-                  errors_bombeo.prueba_bombeo
-                    ? 'Es obligatorio seleccionar un tipo prueba de bombeo'
-                    : 'ingrese el tipo prueba de bombeo'
-                }
-                onChange={(e) => {
-                  field.onChange(e); // Mantén esto para que react-hook-form funcione correctamente
-                  handleComboChange(
-                    e.target.value,
-                    getValues_bombeo('caudal_sesion')
-                  );
-                }}
-              >
-                {prueba_de_bombeo.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Controller
-            name="caudal_sesion"
-            control={control_bombeo}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Caudal: "
+                label=" Prueba de bombeo / caudal "
                 size="small"
                 margin="dense"
                 select
@@ -368,18 +429,11 @@ export const AgregarBombeo: React.FC = () => {
                 error={!!errors_bombeo.caudal}
                 helperText={
                   errors_bombeo.caudal
-                    ? 'Es obligatorio seleccionar un tipo caudal'
-                    : 'ingrese el tipo caudal'
+                    ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
+                    : 'ingrese el tipo de prueba de bombeo / caudal'
                 }
-                onChange={(e) => {
-                  field.onChange(e); // Mantén esto para que react-hook-form funcione correctamente
-                  handleComboChange(
-                    getValues_bombeo('prueba_bombeo'),
-                    e.target.value
-                  );
-                }}
               >
-                {tipo_caudal.map((option) => (
+                {tipo_sesion.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -390,30 +444,27 @@ export const AgregarBombeo: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha de prueba de bombeo"
-              value={fechaPruebaBombeo}
-              onChange={(value) => {
-                handle_date_change('fecha_prueba_bombeo', value);
-              }}
-              renderInput={(params) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
               label="Hora de prueba de bombeo"
-              value={fechaPruebaBombeo}
+              value={horaPruebaBombeo}
               onChange={(value) => {
-                handle_date_change('hora_prueba_bombeo', value);
+                handle_time_change(value);
               }}
               renderInput={(params) => (
-                <TextField fullWidth size="small" {...params} />
+                <TextField
+                  {...params}
+                  fullWidth
+                  size="small"
+                  {...register_bombeo('hora_inicio', { required: true })}
+                  error={!!errors_bombeo.hora_inicio}
+                  helperText={
+                    errors_bombeo.hora_inicio
+                      ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
+                      : 'Ingrese la hora de inicio de la prueba de bombeo'
+                  }
+                />
               )}
-              ampm
+              ampm={true}
             />
           </LocalizationProvider>
         </Grid>
@@ -426,58 +477,104 @@ export const AgregarBombeo: React.FC = () => {
           <Divider />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Tiempo transcurrido (min)"
-            fullWidth
-            type="number"
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={tiempoTranscurrido}
-            onChange={(e) => {
-              setTiempoTranscurrido(parseInt(e.target.value));
-            }}
-            inputProps={{ min: 0 }}
+          <Controller
+            name="tiempo_transcurrido"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Tiempo transcurrido (min)"
+                size="small"
+                margin="dense"
+                type="number"
+                disabled={false}
+                fullWidth
+                required={true}
+                error={!!errors_bombeo.tiempo_transcurrido}
+                helperText={
+                  errors_bombeo.tiempo_transcurrido
+                    ? 'Es obligatorio ingresar el tiempo transcurrido'
+                    : 'Ingrese el tiempo transcurrido'
+                }
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Nivel (m)"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={nivelAgua}
-            onChange={(e) => {
-              setNivelAgua(e.target.value);
-            }}
+          <Controller
+            name="nivel"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Nivel (m)"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                required={true}
+                error={!!errors_bombeo.nivel}
+                helperText={
+                  errors_bombeo.nivel
+                    ? 'Es obligatorio ingresar el nivel'
+                    : 'Ingrese el nivel'
+                }
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Abatimiento / Recuperación (m)"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={abatimientoRecuperacion}
-            onChange={(e) => {
-              setAbatimientoRecuperacion(e.target.value);
-            }}
+          <Controller
+            name="resultado"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Abatimiento / Recuperación (m)"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                required={true}
+                error={!!errors_bombeo.resultado}
+                helperText={
+                  errors_bombeo.resultado
+                    ? 'Es obligatorio ingresar el abatimiento / recuperación'
+                    : 'Ingrese el abatimiento / recuperación'
+                }
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Caudal (l/s)"
-            size="small"
-            margin="dense"
-            required
-            disabled={false}
-            fullWidth
-            value={caudalAgua}
-            onChange={(e) => {
-              setCaudalAgua(e.target.value);
-            }}
+          <Controller
+            name="caudal"
+            control={control_bombeo}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Caudal (l/s)"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                required={true}
+                error={!!errors_bombeo.caudal}
+                helperText={
+                  errors_bombeo.caudal
+                    ? 'Es obligatorio ingresar el caudal'
+                    : 'Ingrese el caudal'
+                }
+              />
+            )}
           />
         </Grid>{' '}
         <Box sx={{ flexGrow: 1 }}>
@@ -510,6 +607,24 @@ export const AgregarBombeo: React.FC = () => {
             </Grid>
           </>
         )}
+        <Grid item xs={12}></Grid>
+        <AgregarArchivo multiple={true} />
+        <Grid item spacing={2} justifyContent="end" container>
+          <Grid item>
+            <ButtonSalir />
+          </Grid>
+          <Grid item>
+            <LoadingButton
+              variant="contained"
+              color="success"
+              type="submit"
+              // disabled={is_saving}
+              // loading={is_saving}
+            >
+              Actualizar
+            </LoadingButton>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );
