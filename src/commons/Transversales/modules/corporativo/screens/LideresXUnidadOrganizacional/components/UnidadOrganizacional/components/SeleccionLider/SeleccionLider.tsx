@@ -7,6 +7,7 @@ import { Controller } from 'react-hook-form';
 import SearchIcon from '@mui/icons-material/Search';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
 import Select from 'react-select';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const SeleccionLider = (): JSX.Element => {
   //* ----- form control declarations -------
@@ -114,7 +115,7 @@ export const SeleccionLider = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3.3}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="numero_documento"
                   control={control_seleccionar_lideres}
@@ -126,19 +127,19 @@ export const SeleccionLider = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
-                      label="Nombre del Organigrama"
+                      label="Número de documento"
                       size="small"
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
-                      disabled={true}
+                      // disabled={true}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4.5}>
+              <Grid item xs={12} sm={5}>
                 <Controller
-                  name="descripcion"
+                  name="nombre_persona"
                   control={control_seleccionar_lideres}
                   defaultValue=""
                   rules={{ required: true }}
@@ -169,6 +170,30 @@ export const SeleccionLider = (): JSX.Element => {
               spacing={2}
               sx={{ mb: '20px', mt: '20px', alignItems: 'center' }}
             >
+              <Button
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={() => {
+                  console.log('BUSCANDO LÍDER...');
+                  // onSubmit();
+                }}
+              >
+                BUSCAR
+              </Button>
+
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  console.log('LIMPIANDO CAMPOS');
+                  // onSubmit();
+                }}
+              >
+                LIMPIAR CAMPOS
+              </Button>
+
               <Button
                 color="primary"
                 variant="outlined"
