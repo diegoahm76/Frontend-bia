@@ -1,0 +1,128 @@
+/* eslint-disable array-callback-return */
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from "@mui/material"
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import ClearIcon from '@mui/icons-material/Clear';
+import SaveIcon from '@mui/icons-material/Save';
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { Title } from '../../../../components/Title';
+import { useAppDispatch } from "../../../../hooks";
+import { obtener_bienes_viveros } from "../thunks/DashBoardViveros";
+
+interface IProps {
+  is_modal_active: boolean,
+  set_is_modal_active: Dispatch<SetStateAction<boolean>>,
+  title: string,
+  filtros: any,
+  seleccion_bien: any
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+const BuscarBienViveros = (props: IProps) => {
+  const dispatch = useAppDispatch();
+  const [seleccion_bien, set_seleccion_bien] = useState<any | null>(null);
+  const [data_bienes, set_data_bienes] = useState<any[]>([]);
+
+  useEffect(() => {
+    dispatch(obtener_bienes_viveros(props.filtros)).then((response: any) => {
+      response.data.map((resp: any, index: number) => {
+        resp.id = index;
+        if(resp.codigo_bien === null || resp.codigo_bien === undefined)
+          resp.codigo_bien = 'N/A';
+      });
+      set_data_bienes(response.data);
+      });
+  }, []);
+
+  const seleccionar_bien = (): void => {
+    props.seleccion_bien(seleccion_bien);
+    props.set_is_modal_active(false);
+  }
+
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={props.is_modal_active}
+      onClose={() => { props.set_is_modal_active(false); }}
+    >
+      <DialogTitle>{props.title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          <Box
+            component="form"
+            sx={{ mt: '20px' }}
+            noValidate
+            autoComplete="off"
+          >
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <Grid item xs={12} sm={12}>
+                <Title title="Resultados" />
+                <Box sx={{ width: '100%', mt: '20px' }}>
+                  <div className="card">
+                    <DataTable
+                      value={data_bienes}
+                      sortField="codigo_bien"
+                      stripedRows
+                      paginator
+                      rows={5}
+                      rowsPerPageOptions={[5, 10, 25, 50]}
+                      tableStyle={{ minWidth: '50rem' }}
+                      selectionMode="single"
+                      selection={seleccion_bien}
+                      onSelectionChange={(e) => {
+                        set_seleccion_bien(e.value);
+                      }}
+                      dataKey="id"
+                    >
+                      <Column
+                        field="codigo_bien"
+                        header="Código bien"
+                        style={{ width: '5%' }}
+                      ></Column>
+                      <Column
+                        field="nombre"
+                        header="Nombre"
+                        style={{ width: '8%' }}
+                      ></Column>
+                      <Column
+                        field="tipo_bien"
+                        header="Tipo bien"
+                        style={{ width: '8%' }}
+                      ></Column>
+                    </DataTable>
+                  </div>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color='inherit'
+          variant='contained'
+          startIcon={<ClearIcon />}
+          onClick={() => { props.set_is_modal_active(false); }}>Cancelar</Button>
+        <Button
+          color='primary'
+          variant='contained'
+          startIcon={<SaveIcon />}
+          onClick={seleccionar_bien}>Seleccionar</Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+// eslint-disable-next-line no-restricted-syntax
+export default BuscarBienViveros;

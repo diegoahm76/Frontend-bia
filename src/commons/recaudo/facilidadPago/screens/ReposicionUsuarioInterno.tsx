@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { Add, Close } from '@mui/icons-material';
@@ -15,8 +16,6 @@ export const ReposicionUsuarioInterno: React.FC = () => {
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const navigate = useNavigate();
-  console.log('texto', form_state);
-  console.log('archivo', file);
 
   const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected_file =
