@@ -8,7 +8,7 @@ import { containerStyles } from '../../../../../../../../../gestorDocumental/tca
 import { Title } from '../../../../../../../../../../components';
 import { Controller } from 'react-hook-form';
 import SearchIcon from '@mui/icons-material/Search';
-import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
+import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';
 import Select from 'react-select';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -11,7 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { useAppSelector } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
-import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
+import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';
 import { OrganigramaChip } from './utils/ChipComponent';
 import { BusquedaAvanOrgModal } from './components/BusquedaAvanzadaOrganigrama/BusquedaAvanOrg';
 import { useContext } from 'react';
