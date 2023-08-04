@@ -8,6 +8,7 @@ import { download_xls } from "../../../../../documentos-descargar/XLS_descargar"
 import { ButtonOfDialog } from "../components/dialogo/dialogo";
 import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import { ModalConfirmacionArchivar } from "../components/modalConfirmacio/ModalConfirmacion";
+import { ModalInfoAlerta } from "../components/modalInformacionAlenta/InfoAlerta";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
@@ -101,9 +102,9 @@ export const PantallaPrincipalAlertas: React.FC = () => {
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => row.id_persona}
                     />
-
+ <ModalInfoAlerta/>
                 </Box>
-               
+              
             </Grid>
 
         </Grid>
