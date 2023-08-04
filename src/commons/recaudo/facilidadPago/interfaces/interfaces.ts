@@ -21,6 +21,7 @@ export interface Obligacion {
   inicio: string;
   nro_expediente: number;
   nro_resolucion: string;
+
   monto_inicial: string;
   valor_intereses: string;
   dias_mora: number;

@@ -22,24 +22,26 @@ import {
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import type { TipoAtributo } from '../../interfaces/proceso';
+import type { CategoriaAtributo, TipoAtributo } from '../../interfaces/proceso';
 import { api } from "../../../../api/axios";
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  submit_new_atributo: (descripcion: string, obligatorio: number, id_tipo: number) => void;
+  submit_new_atributo: (descripcion: string, obligatorio: number, id_tipo: number, id_categoria: number) => void;
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, submit_new_atributo, set_position_tab_organigrama }: IProps) => {
+export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, submit_new_atributo, set_position_tab_organigrama }: IProps) => {
   const [form_data, set_form_data] = useState({
     descripcion: '',
     obligatorio: false,
-    id_tipo: ''
+    id_tipo: '',
+    id_categoria: '',
   });
   const [tipos_atributos, set_tipos_atributos] = useState<TipoAtributo[]>([]);
+  const [categorias_atributos, set_categorias_atributos] = useState<CategoriaAtributo[]>([]);
 
   useEffect(() => {
     api.get('recaudo/procesos/tipos-atributos')
@@ -49,6 +51,16 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
       .catch((error) => {
         console.log(error);
       });
+  }, []);
+
+  useEffect(() => {
+    api.get('recaudo/procesos/categoria-atributos')
+    .then((response) => {
+      set_categorias_atributos(response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }, []);
 
   const handle_close = (): void => {
@@ -70,15 +82,17 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
     set_form_data((prevState) => ({ ...prevState, [name]: checked }));
   };
 
-  const handle_submit_atributo = (): void => {
-    const { descripcion, obligatorio, id_tipo } = form_data;
-    submit_new_atributo(descripcion, obligatorio ? 1 : 0, Number(id_tipo));
+  const handle_submit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const { descripcion, obligatorio, id_tipo, id_categoria } = form_data;
+    submit_new_atributo(descripcion, obligatorio ? 1 : 0, Number(id_tipo), Number(id_categoria));
     set_form_data({
       descripcion: '',
       obligatorio: false,
-      id_tipo: ''
+      id_tipo: '',
+      id_categoria: '',
     });
-    set_is_modal_active(false);
+    handle_close();
     set_position_tab_organigrama('1');
   };
 
@@ -90,21 +104,45 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
     >
       <Box
         component="form"
+        onSubmit={handle_submit}
         sx={{
           width: '500px'
         }}
       >
-        <DialogTitle>Nuevo Atributo</DialogTitle>
+        <DialogTitle>Crear Nuevo Atributo</DialogTitle>
         <Divider />
 
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container direction='column'>
             <Grid item xs={11} md={5} margin={1}>
               <FormControl size='small' fullWidth required>
+                <InputLabel>Categoría del atributo</InputLabel>
+                <Select
+                  name="id_categoria"
+                  label='Categoría del atributo'
+                  value={form_data.id_categoria}
+                  MenuProps={{
+                    style: {
+                      maxHeight: 224,
+                    }
+                  }}
+                  onChange={handle_select_change}
+                >
+                  {categorias_atributos.map(({ id, categoria }) => (
+                    <MenuItem key={id} value={id}>
+                      {categoria}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Seleccione la categoría del atributo</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={11} md={5} margin={1}>
+              <FormControl size='small' fullWidth required>
                 <InputLabel>Tipo de atributo</InputLabel>
                 <Select
                   name="id_tipo"
-                  label='Tipo de atributo *'
+                  label='Tipo de atributo'
                   value={form_data.id_tipo}
                   onChange={handle_select_change}
                 >
@@ -114,7 +152,7 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Ingrese el tipo de atributo</FormHelperText>
+                <FormHelperText>Seleccione el tipo de atributo</FormHelperText>
               </FormControl>
             </Grid>
             <Grid item xs={11} md={5} margin={1}>
@@ -157,6 +195,7 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
+              type="button"
               variant="outlined"
               onClick={handle_close}
               startIcon={<CloseIcon />}
@@ -164,11 +203,11 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
               Cerrar
             </Button>
             <Button
+              type="submit"
               color="primary"
               variant="contained"
               startIcon={<SaveIcon />}
-              onClick={handle_submit_atributo}
-              disabled={form_data.descripcion === '' || form_data.id_tipo === ''}
+              // disabled={form_data.descripcion === '' || form_data.id_tipo === ''}
             >
               Crear
             </Button>

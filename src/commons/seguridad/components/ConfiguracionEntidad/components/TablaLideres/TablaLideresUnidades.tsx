@@ -32,13 +32,15 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
     }, []);
 
     const columns = [
-
         { field: "codigo_unidad_org", headerName: "Código Unidad Org", width: 200, flex: 1 },
         { field: "nombre_unidad_org", headerName: "Nombre Unidad Org", width: 200, flex: 1 },
         { field: "nombre_completo", headerName: "Nombre Completo", width: 200, flex: 1 },
-
+        { field: "nombre_organigrama", headerName: "Nombre del Organigrama", width: 200, flex: 1 },
+        { field: "version_organigra", headerName: "Versión del Organigrama", width: 200, flex: 1 },
+        { field: "fecha_asignacion", headerName: "Fecha de Asignación", width: 200, flex: 1 },
+        { field: "observaciones_asignacion", headerName: "Observaciones", width: 200, flex: 1 },
+       
     ];
-
     return (
         <Grid container sx={{
             position: 'relative',
@@ -66,6 +68,7 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
                     />
                 </Box>
             </Grid>
+            
             <Button style={{ margin: 8 }} color="primary" startIcon={<ArrowOutwardIcon/>} variant="contained">Ir a lideres de grupo</Button>
         </Grid>
     );

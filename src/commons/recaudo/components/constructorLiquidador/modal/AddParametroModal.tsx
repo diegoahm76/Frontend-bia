@@ -29,12 +29,11 @@ const tipo_articulo = [{ value: 'opc', label: 'Opciones' }, { value: 'opc2', lab
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AddParametroModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }: IProps) => {
+  const [tipo, set_tipo] = useState("");
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   }
-
-  const [tipo, set_tipo] = useState("");
 
   const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
     set_tipo(event.target.value);
