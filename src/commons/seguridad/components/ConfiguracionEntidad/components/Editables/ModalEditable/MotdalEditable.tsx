@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SaveIcon from '@mui/icons-material/Save';
 import { Dialog } from 'primereact/dialog';
 import {
     Button,
@@ -10,7 +11,7 @@ import { control_error, control_success } from "../../../../SucursalEntidad/util
 import { api } from "../../../../../../../api/axios";
 import type { ISucursalEmpresa } from "../../../interfaces/interfacesConEntidad";
 import { ModificadorFormatoFecha } from "../../../utils/modificadorForematoFecha";
-
+import EditIcon from '@mui/icons-material/Edit';
 interface ModalEditarCargoProps {
     name: string;
     fecha: string;
@@ -39,7 +40,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     const footer_content = (
         <div>
             <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { handleGuardarYPoner() }} >Salir</Button>
-            <Button style={{ margin: 3 }} type="submit" variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
+            <Button style={{ margin: 3 }} type="submit" startIcon={<SaveIcon />}  variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
 
         </div>
     );
@@ -225,6 +226,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             <Button
                 style={{ margin: 3, marginTop: 10, marginRight: 10 }}
                 color="primary"
+                startIcon={<EditIcon />}
                 variant="contained"
                 onClick={handleClick}
             >

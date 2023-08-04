@@ -9,7 +9,7 @@ import { control_error } from "../../../../SucursalEntidad/utils/control_error_o
 import type { DatosHistoricoPerfilEntidad } from "../../../interfaces/interfacesConEntidad";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModificadorFormatoFecha } from "../../../utils/modificadorForematoFecha";
-
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 
 
@@ -161,6 +161,7 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
             <Button
                 style={{ margin: 3, marginTop: 10, marginRight: 10 }}
                 color="primary"
+                startIcon={<AutoStoriesIcon />}
                 variant="outlined"
                 onClick={() => { setVisible(true) }}
 
