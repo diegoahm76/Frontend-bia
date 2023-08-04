@@ -32,7 +32,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AvatarStyles } from '../../../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../../../../../components';
 
-import { useLideresXUnidadOrganizacional } from '../../../../../../hook/useLideresXUnidadOrganizacional';
+import { useLideresXUnidadOrganizacional } from '../../../../../../hook/useLideresXUnidadOrg';
 import { columsBusquedaAvanzada } from './columns/columnsBusqueda';
 import {
   get_asignaciones_lideres_by_id_organigrama_service,

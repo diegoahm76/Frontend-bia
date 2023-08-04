@@ -12,8 +12,8 @@ import {
 } from '../toolkit/LideresSlices/LideresSlice';
 import { useAppDispatch } from '../../../../../../../hooks';
 import { OrganigramaLideresScreen } from '../components/Organigrama/screen/OrganigramaLideresScreen';
-import { AsignacionesDeLideresScreen } from '../components/Asignados/screen/AsignacionesDeLideresScreen';
 import { UnidadOrganizacionalScreen } from '../components/UnidadOrganizacional/screen/UnidadOrganizacionalScreen';
+import { AsignacionesDeLideresScreen } from '../components/Asignados/screen/AsignacionesLideresScreen';
 
 export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
   //* dispatch declarations
