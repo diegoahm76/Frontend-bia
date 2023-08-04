@@ -148,7 +148,7 @@ export const SeleccionLider = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2} sx={{ mb: '20px', zIndex: 9999 }}>
-              <Grid item xs={12} sm={5} zIndex={9999}>
+              <Grid item xs={12} sm={5} zIndex={3}>
                 <Controller
                   name="id_unidad_organizacional"
                   control={control_seleccionar_lideres}

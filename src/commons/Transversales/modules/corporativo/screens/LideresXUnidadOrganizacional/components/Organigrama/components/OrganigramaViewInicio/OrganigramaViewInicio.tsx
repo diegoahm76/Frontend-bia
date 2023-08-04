@@ -13,7 +13,7 @@ import { useAppSelector } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
 import { OrganigramaChip } from './utils/ChipComponent';
-import { BusquedaAvanOrgModal } from './components/BusquedaAvanzadaOrganigrama/BusquedaAvanOrgModal';
+import { BusquedaAvanOrgModal } from './components/BusquedaAvanzadaOrganigrama/BusquedaAvanOrg';
 import { useContext } from 'react';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
 
