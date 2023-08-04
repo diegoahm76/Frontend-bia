@@ -37,9 +37,10 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { tipo_sesion } from './utils/choices/choices';
 import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarBombeo: React.FC = () => {
+export const SeleccionarPruebaBombeo: React.FC = () => {
   const columns_prueba: GridColDef[] = [
     ...colums_bombeo,
     {
@@ -49,30 +50,30 @@ export const AgregarBombeo: React.FC = () => {
       renderCell: (params) => (
         <>
           {/* <IconButton
-              onClick={() => {
-                set_id_seccion(params.row.id_seccion);
-                set_info_seccion(params.row);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
+                onClick={() => {
+                  set_id_seccion(params.row.id_seccion);
+                  set_info_seccion(params.row);
                 }}
-                variant="rounded"
               >
-                <ChecklistIcon
-                  titleAccess="Seleccionar Sección"
+                <Avatar
                   sx={{
-                    color: 'primary.main',
-                    width: '18px',
-                    height: '18px',
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
-                />
-              </Avatar>
-            </IconButton> */}
+                  variant="rounded"
+                >
+                  <ChecklistIcon
+                    titleAccess="Seleccionar Sección"
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton> */}
         </>
       ),
     },
@@ -120,6 +121,7 @@ export const AgregarBombeo: React.FC = () => {
     horaPruebaBombeo,
     row_prueba,
     row_data_prueba,
+    set_fecha_prubea_bombeo,
     handle_agregar,
     handle_date_change,
     handle_time_change,
@@ -139,13 +141,11 @@ export const AgregarBombeo: React.FC = () => {
     is_saving,
   } = use_register_bombeo_hook();
 
-  const {
-    // watch_instrumento,
-    reset_instrumento,
-    control,
-  } = useRegisterInstrumentoHook();
+  const { reset_instrumento, control } = useRegisterInstrumentoHook();
 
-  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+  const { instrumentos, info_prueba_bombeo } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
 
   useEffect(() => {
     reset_instrumento({
@@ -154,6 +154,21 @@ export const AgregarBombeo: React.FC = () => {
       nombre_subseccion: instrumentos.nombre_subseccion,
     });
   }, [instrumentos]);
+
+  useEffect(() => {
+    reset_bombeo({
+      descripcion: info_prueba_bombeo.descripcion,
+      latitud: info_prueba_bombeo.latitud,
+      longitud: info_prueba_bombeo.longitud,
+      ubicacion_prueba: info_prueba_bombeo.ubicacion_prueba,
+      id_instrumento: info_prueba_bombeo.id_instrumento as any,
+      id_pozo: info_prueba_bombeo.id_pozo as any,
+      id_prueba_bombeo: info_prueba_bombeo.id_prueba_bombeo as any,
+      fecha_prueba_bombeo: info_prueba_bombeo.fecha_prueba_bombeo,
+    });
+    // set_fecha_prubea_bombeo(info_prueba_bombeo.fecha_prueba_bombeo.format('YYYY-MM-DD') ?? '');
+    // setValue_bombeo('fecha_prueba_bombeo', info_prueba_bombeo.fecha_prueba_bombeo.format('YYYY-MM-DD') ?? '');
+  }, [info_prueba_bombeo]);
 
   useEffect(() => {
     if (instrumentos.id_pozo) {

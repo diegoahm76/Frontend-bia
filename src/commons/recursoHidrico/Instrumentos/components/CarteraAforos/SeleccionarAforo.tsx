@@ -30,9 +30,33 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarCartera: React.FC = () => {
+export const SeleccionarAforo: React.FC = () => {
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ARCHIVO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'ARCHIVO',
+      width: 200,
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.value}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+  ];
+
   const columns_aforo: GridColDef[] = [
     ...colums_aforos,
     {
@@ -75,7 +99,7 @@ export const AgregarCartera: React.FC = () => {
               size="small"
               startIcon={<DeleteIcon />}
               onClick={() => {
-                handle_delete(params.row.id);
+                handle_delete_select(params.row.id);
               }}
             />
           </Tooltip>
@@ -89,17 +113,22 @@ export const AgregarCartera: React.FC = () => {
     errors_cartera_aforo,
     register_cartera_aforo,
     set_value_cartera_aforo,
+    reset_cartera_aforo,
 
     // *Datos generales
     fecha_aforo,
-    row_aforo,
+    rows_data_cartera,
+    rows_anexos_cartera,
+    set_fecha_aforo,
     setEditingId,
+    fetch_data_anexos_carteras,
+    fetch_data_cartera_especifica,
     handle_date_change,
-    handle_agregar,
-    handle_delete,
+    handle_agregar_select,
+    handle_delete_select,
     watch_aforo,
-    // *onSubmit
-    onSubmit,
+    // *onSubmit_select
+    onSubmit_select,
     is_saving,
   } = use_register_aforo_hook();
 
@@ -115,9 +144,12 @@ export const AgregarCartera: React.FC = () => {
     fetch_data_cuencas_instrumentos_select,
   } = use_register_laboratorio_hook();
 
-  const { instrumentos, id_instrumento: id_instrumento_slice } = useAppSelector(
-    (state) => state.instrumentos_slice
-  );
+  const {
+    instrumentos,
+    id_instrumento: id_instrumento_slice,
+    info_cartera,
+    id_cartera_aforos,
+  } = useAppSelector((state) => state.instrumentos_slice);
 
   useEffect(() => {
     reset_instrumento({
@@ -128,15 +160,45 @@ export const AgregarCartera: React.FC = () => {
   }, [instrumentos]);
 
   useEffect(() => {
+    console.log(id_cartera_aforos, 'id_cartera_aforos');
+    reset_cartera_aforo({
+      id_cuenca: info_cartera.id_cuenca as any,
+      ubicacion_aforo: info_cartera.ubicacion_aforo,
+      descripcion: info_cartera.descripcion,
+      latitud: info_cartera.latitud,
+      longitud: info_cartera.longitud,
+      fecha_aforo: info_cartera.fecha_aforo,
+      cod_tipo_aforo: info_cartera.cod_tipo_aforo,
+      numero_serie: info_cartera.numero_serie,
+      numero_helice: info_cartera.numero_helice,
+      molinete: info_cartera.molinete,
+      id_cartera_aforos: info_cartera.id_cartera_aforos,
+      id_instrumento: info_cartera.id_instrumento,
+    });
+    set_value_cartera_aforo(
+      'fecha_aforo',
+      dayjs(info_cartera.fecha_aforo).format('YYYY-MM-DDTHH:mm:ss')
+    );
+    set_fecha_aforo(dayjs(info_cartera.fecha_aforo));
+  }, [info_cartera]);
+
+  useEffect(() => {
     if (id_instrumento_slice) {
       void fetch_data_cuencas_instrumentos_select();
     }
   }, [id_instrumento_slice]);
 
+  useEffect(() => {
+    if (info_cartera.id_cartera_aforos) {
+      void fetch_data_anexos_carteras(info_cartera.id_cartera_aforos);
+      void fetch_data_cartera_especifica(info_cartera.id_cartera_aforos);
+    }
+  }, [info_cartera.id_cartera_aforos]);
+
   return (
     <>
       <form
-        onSubmit={onSubmit}
+        onSubmit={onSubmit_select}
         style={{
           width: '100%',
           height: 'auto',
@@ -161,7 +223,7 @@ export const AgregarCartera: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE CARTERA DE AFOROS " />
+            <Title title=" INFORMACIÓN DE CARTERA DE AFOROS " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -215,11 +277,6 @@ export const AgregarCartera: React.FC = () => {
                     console.log(e.target.value);
                   }}
                   error={!!error}
-                  /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
                 />
               )}
             />
@@ -228,6 +285,7 @@ export const AgregarCartera: React.FC = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 label="Fecha de Aforo"
+                disabled={true}
                 value={fecha_aforo}
                 onChange={(value) => {
                   handle_date_change('fecha_aforo', value);
@@ -236,6 +294,7 @@ export const AgregarCartera: React.FC = () => {
                   <TextField
                     {...params}
                     fullWidth
+                    disabled={true}
                     size="small"
                     {...register_cartera_aforo('fecha_aforo', {
                       required: true,
@@ -263,7 +322,7 @@ export const AgregarCartera: React.FC = () => {
                   label="Lugar de Aforo"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_cartera_aforo.ubicacion_aforo}
@@ -290,6 +349,7 @@ export const AgregarCartera: React.FC = () => {
                   margin="dense"
                   select
                   fullWidth
+                  disabled={true}
                   required={true}
                   error={!!errors_cartera_aforo.cod_tipo_aforo}
                   helperText={
@@ -319,7 +379,7 @@ export const AgregarCartera: React.FC = () => {
                   label="Molinete"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_cartera_aforo.molinete}
@@ -344,7 +404,7 @@ export const AgregarCartera: React.FC = () => {
                   label="No. de serie"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_cartera_aforo.numero_serie}
@@ -369,7 +429,7 @@ export const AgregarCartera: React.FC = () => {
                   label="No. de hélices"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_cartera_aforo.numero_helice}
@@ -402,7 +462,7 @@ export const AgregarCartera: React.FC = () => {
                   label="Latitud"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_cartera_aforo.latitud}
@@ -427,7 +487,7 @@ export const AgregarCartera: React.FC = () => {
                   label="Longitud"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_cartera_aforo.longitud}
@@ -452,7 +512,7 @@ export const AgregarCartera: React.FC = () => {
                   label="Descripción"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   multiline
                   rows={2}
@@ -476,11 +536,11 @@ export const AgregarCartera: React.FC = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Seleccione una cuenca"
+                  label="Cuanca Asociada"
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required
                   error={!!errors_cartera_aforo.id_cuenca}
@@ -501,7 +561,7 @@ export const AgregarCartera: React.FC = () => {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
-              Registro de medición
+              Agregar Registro de medición
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -512,7 +572,7 @@ export const AgregarCartera: React.FC = () => {
               name="distancia_a_la_orilla"
               control={control_cartera_aforo}
               defaultValue=""
-              rules={{ required: row_aforo.length === 0 }}
+              rules={{ required: rows_data_cartera.length === 0 }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -521,7 +581,7 @@ export const AgregarCartera: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={row_aforo.length === 0}
+                  required={rows_data_cartera.length === 0}
                 />
               )}
             />
@@ -531,7 +591,7 @@ export const AgregarCartera: React.FC = () => {
               name="profundidad"
               control={control_cartera_aforo}
               defaultValue=""
-              rules={{ required: row_aforo.length === 0 }}
+              rules={{ required: rows_data_cartera.length === 0 }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -540,7 +600,7 @@ export const AgregarCartera: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={row_aforo.length === 0}
+                  required={rows_data_cartera.length === 0}
                 />
               )}
             />
@@ -550,7 +610,7 @@ export const AgregarCartera: React.FC = () => {
               name="velocidad_superficial"
               control={control_cartera_aforo}
               defaultValue=""
-              rules={{ required: row_aforo.length === 0 }}
+              rules={{ required: rows_data_cartera.length === 0 }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -559,7 +619,7 @@ export const AgregarCartera: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={row_aforo.length === 0}
+                  required={rows_data_cartera.length === 0}
                 />
               )}
             />
@@ -569,7 +629,7 @@ export const AgregarCartera: React.FC = () => {
               name="velocidad_profunda"
               control={control_cartera_aforo}
               defaultValue=""
-              rules={{ required: row_aforo.length === 0 }}
+              rules={{ required: rows_data_cartera.length === 0 }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -578,7 +638,7 @@ export const AgregarCartera: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={row_aforo.length === 0}
+                  required={rows_data_cartera.length === 0}
                 />
               )}
             />
@@ -593,7 +653,7 @@ export const AgregarCartera: React.FC = () => {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={handle_agregar}
+                onClick={handle_agregar_select}
                 disabled={
                   !watch_aforo.distancia_a_la_orilla ||
                   !watch_aforo.profundidad ||
@@ -605,7 +665,7 @@ export const AgregarCartera: React.FC = () => {
               </Button>
             </Stack>
           </Box>
-          {row_aforo.length > 0 && (
+          {rows_data_cartera.length > 0 && (
             <>
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -614,7 +674,7 @@ export const AgregarCartera: React.FC = () => {
                 <Divider />
                 <DataGrid
                   autoHeight
-                  rows={row_aforo}
+                  rows={rows_data_cartera}
                   columns={columns_aforo}
                   getRowId={(row) => row.id}
                   pageSize={5}
@@ -624,6 +684,21 @@ export const AgregarCartera: React.FC = () => {
             </>
           )}
           <Grid item xs={12}></Grid>
+          <Grid item xs={12}>
+            <Title title="Anexos asociados a la cartera" />
+          </Grid>
+          <Grid item xs={12}>
+            <>
+              <DataGrid
+                autoHeight
+                rows={rows_anexos_cartera}
+                columns={columns_anexos}
+                getRowId={(row) => uuidv4()}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            </>
+          </Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
@@ -634,7 +709,7 @@ export const AgregarCartera: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving || row_aforo.length === 0}
+                disabled={is_saving || rows_data_cartera.length === 0}
                 loading={is_saving}
               >
                 Guardar

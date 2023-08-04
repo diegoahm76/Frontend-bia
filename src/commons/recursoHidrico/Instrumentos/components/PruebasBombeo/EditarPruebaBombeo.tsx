@@ -39,7 +39,7 @@ import { tipo_sesion } from './utils/choices/choices';
 import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarBombeo: React.FC = () => {
+export const EditarPruebaBombeo: React.FC = () => {
   const columns_prueba: GridColDef[] = [
     ...colums_bombeo,
     {
