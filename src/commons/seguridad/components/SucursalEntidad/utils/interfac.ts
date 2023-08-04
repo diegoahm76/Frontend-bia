@@ -113,3 +113,9 @@ export interface SucursalDireccionesProps {
   ) => void;
 
 }
+
+export interface Props {
+  selected_id: number | null;
+  siguiente_numeros_sucursal: any | boolean | string;
+  esPrincipalExists: any;
+}

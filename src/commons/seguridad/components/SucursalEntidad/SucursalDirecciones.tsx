@@ -16,7 +16,7 @@ import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Pai
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
-    const [selected_pais, setselected_pais] = useState('');  
+    const [selected_pais, setselected_pais] = useState('');
     const [paises, setpaises] = useState<Paises[]>([]);
     const [departamentos, set_departamentos] = useState<Departamento[]>([]);
     const [selected_departamento, setselected_departamento] = useState('');
@@ -27,6 +27,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
+    const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
+
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -139,6 +141,11 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
     ] = useState('');
     console.log(is_error);
+    const [type_directionn,
+        // set_type_direction  
+
+    ] = useState('');
+    console.log(is_error);
 
     const [same_address, setsame_address] = useState(false);
 
@@ -160,7 +167,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     value: form_values.direccion,
                 },
 
-            });handleinput_change({
+            }); handleinput_change({
                 target: {
                     name: 'municipio_notificacion',
                     value: form_values.municipio,
@@ -176,39 +183,76 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
             });
         }
     };
-    
-    const [direccion_generada, setdireccion_generada] = useState('');
+
+
+
+
+    const [
+        // direccion_generada
+        , setdireccion_generada] = useState('');
+
+
+    const [
+        // direccionGeneradaActiva
+        , set_direccion_generada_activa] = useState(false);
 
     const mostrardireccion_generada = (direccion: any): void => {
         setdireccion_generada(direccion);
-      };
-      
+        set_direccion_generada_activa(true);
+        handleinput_change({
+            target: {
+                name: 'direccion',
+                value: direccion, // Actualiza form_values.direccion con la dirección generada
+            },
+        });
+    };
+
+
+
+    const [
+        // direccion_generada
+        , setdireccion_generadaa] = useState('');
+
+        const [
+            // direccionGeneradaActiva
+            , set_direccion_generada_activaa] = useState(false);
+
+    const set_value_direction = (direccion_notificacion: any): void => {
+        setdireccion_generadaa(direccion_notificacion);
+        set_direccion_generada_activaa(true);
+        handleinput_change({
+            target: {
+                name: 'direccion_notificacion',
+                value: direccion_notificacion, // Actualiza form_values.direccion con la dirección generada
+            },
+        });
+    };
+
 
     return (
         <>
-            {/* <DialogGeneradorDeDirecciones
+            <DialogGeneradorDeDirecciones
+                open={opengeneradordireccioness}
+                openDialog={setopengeneradordireccioness}
+                onChange={set_value_direction}
+                type={type_directionn}
+            />
+
+            <DialogGeneradorDeDirecciones
                 open={opengeneradordirecciones}
                 openDialog={setopengeneradordirecciones}
-                onChange={set_value_direction}
+                onChange={mostrardireccion_generada} // Pasa la función para mostrar la dirección generada
                 type={type_direction}
-                
-                
-            /> */}
-           <DialogGeneradorDeDirecciones
-        open={opengeneradordirecciones}
-        openDialog={setopengeneradordirecciones}
-        onChange={mostrardireccion_generada} // Pasa la función para mostrar la dirección generada
-        type={type_direction}
-      />
-      <div>
-      {/* Aquí muestras la dirección generada */}
-       <>
+            />
+            <div>
+                {/* Aquí muestras la dirección generada */}
+                {/* <>
        {direccion_generada}
        </>
-    
+     */}
 
-    
-    </div>
+
+            </div>
 
             <Grid
                 container
@@ -289,7 +333,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        name="direccion"    
+                        name="direccion"
                         value={form_values.direccion}
                         onChange={handleinput_change}
                     />
@@ -315,12 +359,11 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         onClick={() => {
                             setopengeneradordirecciones(true);
                         }}
-                    >
-                        Generar dirección
+                    > Generar dirección
                     </Button>
                 </Grid>
             </Grid>
-            
+
             <Grid
                 container
                 spacing={2}
@@ -417,7 +460,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <Button
                         variant="contained"
                         onClick={() => {
-                            setopengeneradordirecciones(true);
+                            setopengeneradordireccioness(true);
                         }}
                     >
                         Generar dirección

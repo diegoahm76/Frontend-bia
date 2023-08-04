@@ -7,34 +7,11 @@ import { control_error, control_success } from "./utils/control_error_or_success
 import { SucursalDirecciones } from "./SucursalDirecciones";
 import { Title } from "../../../../components";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-// import { ISucursalForm } from "./utils/interfac";
+import { ISucursalForm, Props } from "./utils/interfac";
+ 
 
 
-interface Props {
-  selected_id: number | null;
-  siguiente_numeros_sucursal: any | boolean | string;
-  esPrincipalExists: any;
-}
-
-export interface ISucursalForm {
-  descripcion_sucursal: string;
-  direccion: string;
-  direccion_sucursal_georeferenciada: string | null;
-  municipio: string | null;
-  pais_sucursal_exterior: string | null;
-  direccion_notificacion: string;
-  direccion_notificacion_referencia: string | null;
-  municipio_notificacion: string | null;
-  email_sucursal: string;
-  confirmar_email: string;
-  telefono_sucursal: number | null | string;
-  es_principal: boolean;
-  activo: boolean;
-  item_ya_usado: boolean;
-  id_persona_empresa: number;
-  numero_sucursal: number | null;
-
-}
+ 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
@@ -112,12 +89,13 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
         method: isediting ? "put" : "post",
         url: endpoint,
         data: form_values,
-      })
+      })  
       .then((response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         setform_updated(true); // Set the form_updated state to true after successful update
         setform_values(initial_state);
+        
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
@@ -291,9 +269,6 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           Borrar
         </Button>
       </Grid>
-
-
-
       <Grid item xs={12} sm={2}>
         <Button variant="contained" color="error" onClick={handle_exit}>
           Salir
