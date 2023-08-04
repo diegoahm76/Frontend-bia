@@ -3,10 +3,11 @@ import { type FC } from 'react';
 import { RenderDataGrid } from '../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesDeLideres/columnsAsignacionesDeLideres';
-import { Avatar, Chip, IconButton } from '@mui/material';
+import { Avatar, Button, Chip, IconButton } from '@mui/material';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import { AvatarStyles } from '../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
 
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   //* states declarations
@@ -67,6 +68,18 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
           asignaciones_lideres_list.length > 0
             ? 'Líderes asignados a las unidades organizacionales'
             : 'No hay asignaciones de lideres en las unidades organizacionales '
+        }
+        aditionalElement={
+          <Button
+            color="primary"
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              console.log('buscando asignaciones de lideres');
+            }}
+          >
+            BUSCAR ASIGNACIONES DE LÍDERES
+          </Button>
         }
       />
     </>
