@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useEffect, useState } from 'react';
@@ -41,8 +42,13 @@ export const SeleccionLider = (): JSX.Element => {
   // ? ------- use states declarations for unitys -------
 
   const [unidadesOrganizacionales, setUnidadesOrganizacionales] = useState<
-    ISeleccionLideresProps[]
-  >([]);
+    any[]
+  >([
+    {
+      label: '',
+      value: ''
+    }
+  ]);
 
   // ? ------- use effect declarations -------
   useEffect(() => {
@@ -73,14 +79,17 @@ export const SeleccionLider = (): JSX.Element => {
 
   // ? useEffect to get unidades organizacionales organigrama
   useEffect(() => {
+
+    if(!organigrama_lideres_current?.id_organigrama) return;
+
     void get_unidades_organizacionales_by_id_organigrama_service(
       organigrama_lideres_current?.id_organigrama
     ).then((res: any) => {
       setUnidadesOrganizacionales(
-        res.map((el: any) => ({
+        res?.map((el: any) => ({
           el,
-          label: el.nombre_unidad_organizacional,
-          value: el.id_unidad_organizacional
+          label: el?.nombre,
+          value: el?.id_unidad_organizacional
         }))
       );
     });
