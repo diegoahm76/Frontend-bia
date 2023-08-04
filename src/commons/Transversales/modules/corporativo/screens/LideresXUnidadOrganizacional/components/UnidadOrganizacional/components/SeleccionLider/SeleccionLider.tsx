@@ -105,6 +105,59 @@ export const SeleccionLider = (): JSX.Element => {
               marginTop: '20px'
             }}
           >
+            <Grid container spacing={2} sx={{ mb: '20px' }}>
+              <Grid item xs={12} sm={10.2}>
+                <Controller
+                  name="id_unidad_organizacional"
+                  control={control_seleccionar_lideres}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                          /* void get_catalogo_TRD_service(
+                            selectedOption.value
+                          ).then((res) => {
+                            console.log(res);
+                            dispatch(set_catalog_trd_action(res));
+                          }); */
+                          onChange(selectedOption);
+                        }}
+                        options={[
+                          {
+                            label: 'SI',
+                            value: true
+                          },
+                          {
+                            label: 'NO',
+                            value: false
+                          }
+                        ]}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem'
+                          }}
+                        >
+                          Unidad Organizacional
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
+              {/* <Divider /> */}
+            </Grid>
             <Grid container spacing={2}>
               <Grid
                 item
@@ -264,27 +317,29 @@ export const SeleccionLider = (): JSX.Element => {
               />
             </Grid>
             <Grid item xs={12} sm={10.2}>
-            <Controller
-                  name="observaciones_asignacion"
-                  control={control_seleccionar_lideres}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Observaciones de la asignación"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      InputLabelProps={{ shrink: true }}
-                      disabled={organigrama_lideres_current?.fecha_retiro_produccion}
-                    />
-                  )}
-                />
+              <Controller
+                name="observaciones_asignacion"
+                control={control_seleccionar_lideres}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Observaciones de la asignación"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    InputLabelProps={{ shrink: true }}
+                    disabled={
+                      organigrama_lideres_current?.fecha_retiro_produccion
+                    }
+                  />
+                )}
+              />
             </Grid>
           </Grid>
         </Grid>

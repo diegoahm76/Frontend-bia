@@ -55,7 +55,7 @@ export const useLideresXUnidadOrganizacional = ():
       nombre_persona: '',
       id_persona: '',
       observaciones_asignacion: '',
-      unidad_organizacional: ''
+      id_unidad_organizacional: ''
     } as any
   });
 
