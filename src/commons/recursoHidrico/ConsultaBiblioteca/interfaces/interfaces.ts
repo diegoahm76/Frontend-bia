@@ -91,6 +91,7 @@ export interface ParametrosId {
 }
 
 export interface Laboratorio {
+    id?: string;
     cod_clase: string;
     parametro: string;
     unidad: string;

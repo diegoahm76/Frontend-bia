@@ -175,7 +175,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
     set_fecha_resultado,
     handle_date_change,
     handle_change_inputs,
-    handle_agregar,
+    handle_agregar_select,
     handleEdit,
     handleDelete,
     parametro_select,
@@ -219,7 +219,6 @@ export const SeleccionarLaboratorio: React.FC = () => {
     if (info_laboratorio?.id_resultado_laboratorio && parametro_select) {
       void fetch_data_resultado_laboratorio();
     }
-    // void fetch_data_laboratorio();
   }, [info_laboratorio, parametro_select]);
 
   useEffect(() => {
@@ -232,10 +231,6 @@ export const SeleccionarLaboratorio: React.FC = () => {
 
   useEffect(() => {
     if (info_laboratorio?.id_resultado_laboratorio) {
-      console.log(
-        'info_laboratorio?.id_resultado_laboratorio',
-        info_laboratorio?.id_resultado_laboratorio
-      );
       void fetch_data_anexos_laboratorio(
         info_laboratorio?.id_resultado_laboratorio
       );
@@ -822,7 +817,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={handle_agregar}
+                onClick={handle_agregar_select}
                 disabled={
                   !data_watch.id_parametro ||
                   !tipo_parametro_value ||

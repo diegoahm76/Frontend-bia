@@ -769,7 +769,6 @@ export const EditarCartera: React.FC = () => {
               <Grid item xs={12} sm={6}></Grid>
             </>
           )}
-
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>

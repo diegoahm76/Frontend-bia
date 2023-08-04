@@ -24,6 +24,7 @@ import {
   get_cuenca_id,
   get_parametros_laboratorio,
   post_resultado_laboratorio,
+  put_archivos,
   put_resultado_laboratorio,
 } from '../../../request/request';
 import { control_success } from '../../../../requets/Request';
@@ -70,6 +71,9 @@ export const use_register_laboratorio_hook = () => {
       id_parametro: '',
       metodo: '',
       resultado: '',
+
+      // * Anexos
+      nombre_actualizar: '',
     },
   });
 
@@ -142,7 +146,7 @@ export const use_register_laboratorio_hook = () => {
     }
   };
   // *Autocomplete
-  const { id_instrumento: id_instrumento_slice, } = useAppSelector(
+  const { id_instrumento: id_instrumento_slice } = useAppSelector(
     (state) => state.instrumentos_slice
   );
   const { info_laboratorio } = useAppSelector(
@@ -166,7 +170,6 @@ export const use_register_laboratorio_hook = () => {
             label: item.nombre ?? '',
           }));
           set_cuenca_id_laboratorio(data_cuenca);
-          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
       }
     } catch (err: any) {
@@ -377,7 +380,12 @@ export const use_register_laboratorio_hook = () => {
       archivos_lab.append('id_instrumento', String(id_instrumento_slice));
       archivos_lab.append('cod_tipo_de_archivo', codigo_archivo);
 
-      await post_resultado_laboratorio(data, rows_laboratorio, archivos_lab, archivos);
+      await post_resultado_laboratorio(
+        data,
+        rows_laboratorio,
+        archivos_lab,
+        archivos
+      );
       reset_formulario();
       control_success('Registro de laboratorio creado exitosamente');
     } catch (error: any) {
@@ -396,13 +404,23 @@ export const use_register_laboratorio_hook = () => {
   const fetch_data_resultado_laboratorio = async (): Promise<any> => {
     try {
       set_rows_resultado_laboratorio([]);
-      if (info_laboratorio.id_resultado_laboratorio && parametro_select) {
+      if (
+        (info_laboratorio.id_resultado_laboratorio && parametro_select) ||
+        tipo_parametro_value
+      ) {
         const response = await get_data_resulatado_laboratorio_id(
           info_laboratorio.id_resultado_laboratorio,
           parametro_select
         );
-        set_rows_resultado_laboratorio(response);
-        return response;
+        const elementosAssingnedLaboratorio = response.map((row: any) => {
+          return {
+            ...row,
+            id: uuidv4(),
+          };
+        });
+
+        set_rows_resultado_laboratorio(elementosAssingnedLaboratorio);
+        return elementosAssingnedLaboratorio;
       }
     } catch (err: any) {
       control_error(err.response.data.detail);
@@ -418,22 +436,17 @@ export const use_register_laboratorio_hook = () => {
   }, [info_laboratorio?.id_resultado_laboratorio]);
 
   // * <----------------------->Editando laboratorio<----------------------->
-  const handleEdit_select = (row: any): void => {
-    setSelectedRow(row);
-    set_value_laboratorio('metodo', row.metodo);
-    set_value_laboratorio('resultado', row.resultado);
-    set_tipo_parametro_value(row.parametro);
-    set_undidad_medida_select(row.unidad);
-    set_fecha_analisis(row.fecha_analisis);
-  };
 
-  const handleDelete_select = (id: ReturnType<typeof uuidv4>): void => {
-    set_rows_laboratorio(rows_laboratorio.filter((row) => row.id !== id));
-  };
+  // *-------------- editar archivo afoto ------------------*
+  // * Editar Archivos
+  const [id_archivo, set_id_archivo] = useState<number | null>(null);
+  const [is_open_edit_archivos, set_is_open_edit_archivos] =
+    useState<boolean>(false);
 
   const handle_agregar_select = (): void => {
     const new_row = {
       id_dato_registro_laboratorio: null,
+      id_registro_laboratorio: id_resultado_laboratorio_slice,
       id: uuidv4(),
       id_parametro: data_watch.id_parametro,
       parametro: tipo_parametro_value,
@@ -458,6 +471,55 @@ export const use_register_laboratorio_hook = () => {
     set_value_laboratorio('resultado', '');
     set_fecha_analisis(null);
   };
+
+  const handleEdit_select = (row: any): void => {
+    setSelectedRow(row);
+    set_value_laboratorio('metodo', row.metodo);
+    set_value_laboratorio('resultado', row.resultado);
+    set_value_laboratorio('id_parametro', row.id_parametro);
+    set_tipo_parametro_value(row.parametro);
+    set_undidad_medida_select(row.unidad);
+    set_fecha_analisis(row.fecha_analisis);
+  };
+
+  const handleDelete_select = (id: ReturnType<typeof uuidv4>): void => {
+    set_rows_resultado_laboratorio(
+      rows_resultado_laboratorio.filter((row) => row.id !== id)
+    );
+  };
+
+  const handle_agregar_editar = (): void => {
+    const new_row = {
+      id_dato_registro_laboratorio: null,
+      id_registro_laboratorio: id_resultado_laboratorio_slice,
+      id: uuidv4(),
+      id_parametro: data_watch.id_parametro,
+      parametro: tipo_parametro_value,
+      unidad: undidad_medida_select,
+      metodo: data_watch.metodo,
+      fecha_analisis: dayjs(fecha_analisis).format('YYYY-MM-DD') ?? '',
+      resultado: data_watch.resultado,
+    };
+    // Si se está editando una fila, reemplace esa fila en lugar de agregar una nueva
+    if (selectedRow) {
+      set_rows_resultado_laboratorio(
+        rows_resultado_laboratorio.map((row: any) =>
+          row.id === selectedRow.id ? new_row : row
+        )
+      );
+      setSelectedRow(null); // Borra la selección
+    } else {
+      set_rows_resultado_laboratorio([
+        ...(rows_resultado_laboratorio as any),
+        new_row,
+      ]);
+    }
+
+    set_value_laboratorio('metodo', '');
+    set_value_laboratorio('resultado', '');
+    set_fecha_analisis(null);
+  };
+
   const onSubmit_select = handleSubmit_laboratorio(async (data: any) => {
     try {
       set_is_saving(true);
@@ -468,6 +530,7 @@ export const use_register_laboratorio_hook = () => {
       data.fecha_toma_muestra = dayjs(fecha_toma_muestra).format('YYYY-MM-DD');
       data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
       data.fecha_envio_lab = dayjs(fecha_envio).format('YYYY-MM-DD');
+      data.id_registro_laboratorio = id_resultado_laboratorio_slice;
 
       const nombre_archivos_set = new Set(nombres_archivos);
       if (nombre_archivos_set.size !== nombres_archivos.length) {
@@ -486,14 +549,81 @@ export const use_register_laboratorio_hook = () => {
       archivos_lab.append('id_instrumento', String(id_instrumento_slice));
       archivos_lab.append('cod_tipo_de_archivo', codigo_archivo);
 
-      await put_resultado_laboratorio(data, rows_laboratorio, archivos_lab, archivos);
+      await put_resultado_laboratorio(
+        data,
+        rows_laboratorio,
+        archivos_lab,
+        archivos
+      );
+      if (is_open_edit_archivos) {
+        await put_archivos(id_archivo as number, data.nombre_actualizar);
+        set_is_open_edit_archivos(false);
+      }
+      control_success(
+        'Registro o actualización de laboratorio creado exitosamente'
+      );
+      await fetch_data_resultado_laboratorio();
+      await fetch_data_anexos_laboratorio(id_resultado_laboratorio_slice);
       set_nombres_archivos([]);
       set_archivos([]);
-      control_success('Registro de laboratorio creado exitosamente');
     } catch (error: any) {
       control_error(error.response.data.detail);
     } finally {
       set_is_saving(false);
+      set_is_open_edit_archivos(false);
+    }
+  });
+  const onSubmit_editar = handleSubmit_laboratorio(async (data: any) => {
+    try {
+      set_is_saving(true);
+
+      data.id_instrumento = id_instrumento_slice;
+      data.id_resultado_laboratorio = id_resultado_laboratorio_slice;
+      data.cod_clase_muestra = instrumentos?.cod_tipo_agua;
+      data.fecha_toma_muestra = dayjs(fecha_toma_muestra).format('YYYY-MM-DD');
+      data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
+      data.fecha_envio_lab = dayjs(fecha_envio).format('YYYY-MM-DD');
+      data.id_registro_laboratorio = id_resultado_laboratorio_slice;
+
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
+      const codigo_archivo = 'LAB';
+      const archivos_lab = new FormData();
+
+      archivos.forEach((archivo: any, index: any) => {
+        if (archivo !== null) {
+          archivos_lab.append(`ruta_archivo`, archivo);
+          archivos_lab.append(`nombre_archivo`, nombres_archivos[index]);
+        }
+      });
+      archivos_lab.append('id_instrumento', String(id_instrumento_slice));
+      archivos_lab.append('cod_tipo_de_archivo', codigo_archivo);
+
+      await put_resultado_laboratorio(
+        data,
+        rows_resultado_laboratorio,
+        archivos_lab,
+        archivos
+      );
+      if (is_open_edit_archivos) {
+        await put_archivos(id_archivo as number, data.nombre_actualizar);
+        set_is_open_edit_archivos(false);
+      }
+      control_success(
+        'Registro o actualización de laboratorio creado exitosamente'
+      );
+      await fetch_data_resultado_laboratorio();
+      await fetch_data_anexos_laboratorio(id_resultado_laboratorio_slice);
+      set_nombres_archivos([]);
+      set_archivos([]);
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    } finally {
+      set_is_saving(false);
+      set_is_open_edit_archivos(false);
     }
   });
 
@@ -521,6 +651,7 @@ export const use_register_laboratorio_hook = () => {
     handleEdit,
     handleDelete,
     handle_agregar_select,
+    handle_agregar_editar,
     handleEdit_select,
     handleDelete_select,
 
@@ -548,6 +679,7 @@ export const use_register_laboratorio_hook = () => {
     // * Onsubmit
     onSubmit,
     onSubmit_select,
+    onSubmit_editar,
     is_saving,
 
     // * ver resultados de laboratorio
@@ -560,5 +692,11 @@ export const use_register_laboratorio_hook = () => {
     fetch_data_cuencas_id,
     rows_anexos_laboratorio,
     fetch_data_anexos_laboratorio,
+
+    // * Editar Archivos
+    is_open_edit_archivos,
+    id_archivo,
+    set_is_open_edit_archivos,
+    set_id_archivo,
   };
 };

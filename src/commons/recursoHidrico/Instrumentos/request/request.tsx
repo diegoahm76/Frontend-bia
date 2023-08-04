@@ -91,6 +91,7 @@ export const post_resultado_laboratorio = async (
     form.fecha_analisis === ''
       ? null
       : {
+          id_resultado_laboratorio: form.id_resultado_laboratorio,
           id_registro_laboratorio: form.id_registro_laboratorio,
           id_parametro: form.id_parametro,
           metodo: form.metodo,
@@ -106,6 +107,7 @@ export const post_resultado_laboratorio = async (
     {
       ...form,
       id_resultado_laboratorio: form.id_resultado_laboratorio,
+      id_registro_laboratorio: form.id_registro_laboratorio,
       id_instrumento: form.id_instrumento,
       id_cuenca: form.id_cuenca,
       id_pozo: form.id_pozo,
@@ -125,7 +127,8 @@ export const post_resultado_laboratorio = async (
     }
   );
   if (
-    archivo &&
+    archivo.length > 0 &&
+    archivo[0] !== null &&
     response.data.data.resultados_laboratorio.id_resultado_laboratorio
   ) {
     const id_resultado_laboratorio =
@@ -156,11 +159,11 @@ export const put_resultado_laboratorio = async (
   const new_array = [
     ...rows_registro_laboratorio,
 
-    form.id_registro_laboratorio === null ||
     form.id_parametro === null ||
     form.metodo === '' ||
     form.resultado === '' ||
-    form.fecha_analisis === ''
+    form.fecha_analisis === '' ||
+    form.id_registro_laboratorio === null // Agregar una verificación adicional para asegurarse de que el id_registro_laboratorio no sea nulo
       ? null
       : {
           id_dato_registro_laboratorio: form.id_dato_registro_laboratorio,
@@ -200,7 +203,7 @@ export const put_resultado_laboratorio = async (
         rows_registro_laboratorio.length === 0 ? [] : filtered_array,
     }
   );
-  if (archivo && id_resultado_laboratorio) {
+  if (archivo.length > 0 && archivo[0] !== null && id_resultado_laboratorio) {
     datos.append('id_resultado_laboratorio', id_resultado_laboratorio);
 
     const response_archivos = await api.post(
@@ -274,7 +277,8 @@ export const post_resultado_aforo = async (
   );
 
   if (
-    archivo &&
+    archivo.length > 0 &&
+    archivo[0] !== null &&
     response?.data?.data?.cartera_aforo?.data?.id_cartera_aforos
   ) {
     const id_cartera_aforos =
@@ -358,7 +362,7 @@ export const put_resultado_aforo_select = async (
     }
   );
 
-  if (archivos && id_cartera_aforos) {
+  if (archivos.length > 0 && archivos[0] !== null && id_cartera_aforos) {
     // const id_cartera_aforos = form.id_cartera_aforos;
     console.log(archivos, 'archivos');
     console.log(id_cartera_aforos, 'id_cartera_aforos');

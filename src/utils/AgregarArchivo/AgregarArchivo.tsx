@@ -12,15 +12,7 @@ export const AgregarArchivo = ({ multiple }: Iprops) => {
     useContext(DataContext);
 
   const agregar_otro_archivo = (): void => {
-    if (archivos.length === 0) {
-      set_archivos([]);
-      set_nombres_archivos(['']);
-      return;
-    }
-
-
-
-    set_archivos([...archivos]);
+    set_archivos([...archivos, null]);
     set_nombres_archivos([...nombres_archivos, '']);
   };
 
@@ -30,10 +22,6 @@ export const AgregarArchivo = ({ multiple }: Iprops) => {
   ): any => {
     const file = e.target.files?.[0];
     const updated_archivos = [...archivos];
-
-
-
-
     if (file != null) {
       updated_archivos[index] = file;
       set_archivos(updated_archivos);
