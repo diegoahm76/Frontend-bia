@@ -1,11 +1,9 @@
 import JsPDF from 'jspdf';
+import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar la función autoTable
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_pdf = ({ nurseries, columns }: any): JSX.Element => {
-    const doc = new JsPDF();
 
-    const data: any[][] = [];
-    const headers: any[] = [];
 
     const button_style = {
         color: 'white',
@@ -19,6 +17,23 @@ export const download_pdf = ({ nurseries, columns }: any): JSX.Element => {
         justifyContent: 'center',
         marginRight: '10px'
     };
+
+    const doc = new JsPDF();
+
+    const header_img_data = '../image/imagenes/PDF2.jpg'; // Reemplaza con la ruta de la imagen que deseas utilizar
+    const img_width = 50; // Ancho de la imagen en unidades mm
+    const img_height = 50; // Alto de la imagen en unidades mm
+    const page_width = doc.internal.pageSize.getWidth(); // Ancho de la página en unidades mm
+
+    const img_x = (page_width - img_width) / 2; // Posición horizontal centrada
+    const img_y = 10; // Posición vertical en la parte superior
+
+    doc.addImage(header_img_data, 'jpg', img_x, img_y, img_width, img_height);
+
+    const start_y = img_y + img_height + 10; // Posición vertical para iniciar los encabezados y datos
+
+    const data: any[][] = [];
+    const headers: any[] = [];
 
     // Obtener los nombres de las columnas de la cuadrícula
     columns.forEach((column: any) => {
@@ -37,25 +52,111 @@ export const download_pdf = ({ nurseries, columns }: any): JSX.Element => {
         data.push(row_data);
     });
 
+    // Utiliza la variable start_y como posición vertical de inicio en autoTable
     (doc as any).autoTable({
         head: [headers],
         body: data,
+        startY: start_y, // Utiliza la variable start_y para la posición vertical de inicio
     });
 
     const file_id = Math.random();
     const file_name = `Resultados_de_la_busqueda_${file_id}.pdf`;
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-  const handleClick = ():void => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const handleClick = (): void => {
         doc.save(file_name);
     };
 
     return (
         <button style={button_style} onClick={handleClick}>
-         PDF
+            PDF
         </button>
     );
 };
+
+
+
+
+
+
+
+
+
+
+// import JsPDF from 'jspdf';
+
+// // eslint-disable-next-line @typescript-eslint/naming-convention
+// export const download_pdf = ({ nurseries, columns }: any): JSX.Element => {
+
+//     const doc = new JsPDF();
+
+
+//      const header_img_data = '../image/imagenes/PDF.jpg'; // Reemplaza con la ruta de la imagen que deseas utilizar
+//     const img_width = 50; // Ancho de la imagen en unidades mm
+//     const img_height = 50; // Alto de la imagen en unidades mm
+//     const page_width = doc.internal.pageSize.getWidth(); // Ancho de la página en unidades mm
+
+//     const img_x = (page_width - img_width) / 2; // Posición horizontal centrada
+//     const img_y = 10; // Posición vertical en la parte superior
+
+//     doc.addImage(header_img_data, 'jpg', img_x, img_y, img_width, img_height);
+
+
+//  const start_y = img_y + img_height + 10; // Posición vertical para iniciar los encabezados y datos
+
+
+//     const data: any[][] = [];
+//     const headers: any[] = [];
+
+//     const button_style = {
+//         color: 'white',
+//         backgroundColor: 'red',
+//         // border: '3px solid black',
+//         borderRadius: '50%',
+//         width: '40px',
+//         height: '40px',
+//         display: 'flex',
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         marginRight: '10px'
+//     };
+
+//     // Obtener los nombres de las columnas de la cuadrícula
+//     columns.forEach((column: any) => {
+//         headers.push(column.headerName);
+//     });
+
+//     // Obtener los datos de las filas de la cuadrícula
+//     nurseries.forEach((row: any) => {
+//         const row_data: any[] = [];
+
+//         columns.forEach((column: any) => {
+//             const cell_data = row[column.field as keyof typeof row];
+//             row_data.push(cell_data);
+//         });
+
+//         data.push(row_data);
+//     });
+
+//     (doc as any).autoTable({
+//         head: [headers],
+//         body: data,
+//     });
+
+//     const file_id = Math.random();
+//     const file_name = `Resultados_de_la_busqueda_${file_id}.pdf`;
+
+// // eslint-disable-next-line @typescript-eslint/naming-convention
+//   const handleClick = ():void => {
+//         doc.save(file_name);
+//     };
+
+//     return (
+//         <button style={button_style} onClick={handleClick}>
+//          PDF
+//         </button>
+//     );
+// };
 
     // const doc = new JsPDF();
 

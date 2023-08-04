@@ -7,13 +7,14 @@ import { AlmacenRoutes } from '../commons/almacen/routes/AlmacenRoutes';
 import { ConservacionRoutes } from '../commons/conservacion/routes/ConservacionRoutes';
 import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
 import { RecursoHidricoRoutes } from '../commons/recursoHidrico/routers/RecursoHidricoRoutes';
-import { TransversalRoutes } from '../commons/seguridad/routers/TransversalRoutes';
 import { UserRoutes } from '../commons/seguridad/routers/UserRoutes';
 import { useEffect } from 'react';
 
 // * changes
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../commons/auth/interfaces';
+import { TransversalRoutes } from '../commons/Transversales/routes/TransversalRoutes';
+
 //* changes
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
@@ -25,7 +26,7 @@ export const ProtectedRoutes: React.FC = () => {
 
   useEffect(() => {
     console.log('permisos_store', permisos_store);
-  }, [ permisos_store]);
+  }, [permisos_store]);
 
   const allowed_routes = permisos_store.map(
     (permission) => permission.subsistema
@@ -72,6 +73,9 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="transversal/*" element={<TransversalRoutes />} />
         ) : null}
         {/* Usuarios */}
+
+        {/* new transversales */}
+
         <Route path="usuario/*" element={<UserRoutes />} />
 
         <Route path="*" element={<Navigate to="/app/home" />} />

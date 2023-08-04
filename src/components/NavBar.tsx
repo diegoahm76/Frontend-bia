@@ -1,18 +1,20 @@
-// import { createContext, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppBar, IconButton, Stack, Toolbar } from '@mui/material';
+
+import { AppBar, IconButton, Badge, Stack, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HomeIcon from '@mui/icons-material/Home';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import {
   open_drawer_desktop,
   open_drawer_mobile,
   handle_mod_dark,
 } from '../store/layoutSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { AuthSlice } from '../commons/auth/interfaces';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 interface Props {
   drawer_width: number;
@@ -20,6 +22,9 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
+
+
+ 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -48,6 +53,8 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
   const handle_direct_home = (): void => {
     navigate('/');
   };
+
+  const tiene_alerta = true; 
 
   return (
     <>
@@ -114,7 +121,27 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                 sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
               />
             </IconButton>
+            <Link to="/app/transversal/bandeja_alertas">
+              <Badge
+                variant="dot" // El punto que indica la alerta
+                color="error" // El color del círculo (rojo en este caso)
+                invisible={!tiene_alerta} // Si no hay alerta, el círculo no se mostrará
+                overlap="circular" // Superposición circular para acercar el círculo al icono
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                sx={{ position: 'relative', top: '-4px', left: '-4px' }} // Ajusta la posición del círculo según tus necesidades
+              >
+                <IconButton>
+                  <ReportProblemIcon
+                    sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
+                  />
+                </IconButton>
+              </Badge>
+            </Link>
           </Stack>
+
         </Toolbar>
       </AppBar>
     </>

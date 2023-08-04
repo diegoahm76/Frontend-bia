@@ -4,24 +4,27 @@ import { TablaObligacionesSolicitud } from "./TablaObligacionesSolicitud";
 import { TablaObligacionesUsuarioInterno } from "./TablaObligacionesUsuarioInterno";
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { type Deudor } from "../interfaces/interfaces";
+import { type FacilidadPagoSolicitud, type ObligacionesUsuario } from "../interfaces/interfaces";
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
+import dayjs from 'dayjs';
 
-
-interface RootState {
-  deudores: {
-    deudores: Deudor;
+interface RootStateFacilidad {
+  solicitud_facilidad: {
+    solicitud_facilidad: FacilidadPagoSolicitud;
   }
 }
 
-interface Fecha {
-  fecha_solicitud: string;
+interface RootStateObligaciones {
+  obligaciones: {
+    obligaciones: ObligacionesUsuario;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
-  const [obligaciones, set_obligaciones] = useState(false);
-  const { deudores } = useSelector((state: RootState) => state.deudores);
+export const EncabezadoAdmin: React.FC = () => {
+  const [modal_obligaciones, set_modal_obligaciones] = useState(false);
+  const { solicitud_facilidad } = useSelector((state: RootStateFacilidad) => state.solicitud_facilidad);
+  const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   return (
@@ -39,7 +42,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value={''.concat(deudores.nombres, ' ', deudores.apellidos)}
+                  value={''.concat(solicitud_facilidad.deudor.nombres, ' ', solicitud_facilidad.deudor.apellidos)}
                   disabled
                 />
               </Grid>
@@ -48,7 +51,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={`${deudores.identificacion}`}
+                  value={`${solicitud_facilidad.deudor.identificacion}`}
                   disabled
                 />
               </Grid>
@@ -57,7 +60,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={`${deudores.email}`}
+                  value={`${solicitud_facilidad.deudor.email}`}
                   disabled
                 />
               </Grid>
@@ -66,7 +69,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value={`${deudores.ubicacion}`}
+                  value={`${solicitud_facilidad.deudor.ubicacion}`}
                   disabled
                 />
               </Grid>
@@ -75,7 +78,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   label="Fecha Solicitud"
                   size="small"
                   fullWidth
-                  value={`${props.fecha_solicitud}`}
+                  value={`${dayjs(solicitud_facilidad.facilidad_pago.fecha_generacion.slice(0, 10)).format('DD/MM/YYYY')}`}
                   disabled
                 />
               </Grid>
@@ -84,7 +87,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   label="Obligaciones asociadas al radicado nro:"
                   size="small"
                   fullWidth
-                  value={"QWEO9283812"}
+                  value={`${solicitud_facilidad.facilidad_pago.numero_radicacion}`}
                   disabled
                 />
               </Grid>
@@ -93,8 +96,8 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   color='primary'
                   variant='contained'
                   onClick={() => {
-                    void dispatch(get_obligaciones_id(deudores.identificacion))
-                    set_obligaciones(true)
+                    void dispatch(get_obligaciones_id(solicitud_facilidad.deudor.identificacion))
+                    set_modal_obligaciones(true)
                   }}
                 >
                   Consultar listado obligaciones
@@ -108,7 +111,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
           <TablaObligacionesSolicitud />
         </>
         {
-          obligaciones ? (
+          modal_obligaciones && obligaciones.obligaciones !== undefined ? (
             <>
               <p><strong>Obligaciones Pendiente por Pago</strong></p>
               <TablaObligacionesUsuarioInterno />

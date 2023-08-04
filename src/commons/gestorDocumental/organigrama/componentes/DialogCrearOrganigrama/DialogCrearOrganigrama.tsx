@@ -16,6 +16,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { add_organigrams_service } from '../../store/thunks/organigramThunks';
 import { useAppDispatch } from '../../../../../hooks';
 import type { FormValues, IProps } from './types/type';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
   is_modal_active,
@@ -74,13 +75,22 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 size="small"
                 label="Nombre"
                 variant="outlined"
                 value={value}
-                onChange={onChange}
+                inputProps={{
+                  maxLength: 50
+                }}
+                onChange={(e) => {
+                  if (e.target.value.length === 50)
+                    control_warning('máximo 50 caracteres');
+
+                  onChange(e.target.value);
+                  // console.log(e.target.value);
+                }}
                 error={!(error == null)}
                 helperText={
                   error != null
@@ -97,13 +107,22 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 size="small"
                 label="Versión"
                 variant="outlined"
                 value={value}
-                onChange={onChange}
+                inputProps={{
+                  maxLength: 10
+                }}
+                onChange={(e) => {
+                  if (e.target.value.length === 10)
+                    control_warning('máximo 10 caracteres');
+
+                  onChange(e.target.value);
+                  // console.log(e.target.value);
+                }}
                 error={!(error == null)}
                 helperText={
                   error != null
@@ -120,7 +139,7 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 size="small"
                 label="Descripción"

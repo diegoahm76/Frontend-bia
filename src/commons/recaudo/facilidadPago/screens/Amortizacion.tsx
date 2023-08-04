@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
@@ -7,25 +8,43 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { type event } from '../interfaces/interfaces';
 import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
 import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
 import { TablaProyeccionPagos } from '../componentes/TablaProyeccionPagos';
 import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
 
+interface RootState {
+  deudores: {
+    deudores: {
+      identificacion: string;
+      nombre: string;
+      apellido: string;
+      numero_facilidad: string;
+      numero_cuotas: number;
+      numero_periodicidad: number;
+    }
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Amortizacion: React.FC = () => {
-  const [date, set_date] = useState<Date | null>(new Date());
+  const [date_abono, set_date_abono] = useState<Date | null>(new Date());
+  const [date_final, set_date_final] = useState<Date | null>(new Date());
   const [num_periodicidad, set_num_periodicidad] = useState(0);
   const [periodicidad, set_periodicidad] = useState('');
   const [tasa_usura, set_tasa_usura] = useState(0);
   const [tasa_diaria, set_tasa_diaria] = useState(0);
   const [modal, set_modal] = useState(false);
+  const { deudores } = useSelector((state: RootState) => state.deudores);
 
-  console.log('periodicidad: ', num_periodicidad);
+  const handle_change_date_abono = (date: Date | null) => {
+    set_date_abono(date);
+  };
 
-  const handle_change_date = (date: Date | null) => {
-    set_date(date);
+  const handle_change_date_final = (date: Date | null) => {
+    set_date_final(date)
   };
 
   useEffect(() => {
@@ -62,7 +81,7 @@ export const Amortizacion: React.FC = () => {
                   label="Nombre Deudor"
                   size="small"
                   fullWidth
-                  value={``}
+                  value={''.concat(deudores.nombre, ' ', deudores.apellido)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -71,7 +90,7 @@ export const Amortizacion: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={``}
+                  value={`${deudores.identificacion}`}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -80,7 +99,7 @@ export const Amortizacion: React.FC = () => {
                   label="Nro. Solicitud Facilidad de Pago"
                   size="small"
                   fullWidth
-                  value={``}
+                  value={`${deudores.numero_facilidad}`}
                 />
               </Grid>
             </Grid>
@@ -175,13 +194,14 @@ export const Amortizacion: React.FC = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha Pago Abono"
-                      inputFormat="YYYY/MM/DD"
+                      inputFormat="DD/MM/YYYY"
                       openTo="day"
                       views={['day', 'month', 'year']}
-                      value={date}
-                      onChange={handle_change_date}
+                      value={date_abono}
+                      onChange={handle_change_date_abono}
                       renderInput={(params) => (
                         <TextField
+                          name='fecha_pago_abono'
                           size='small'
                           required
                           {...params}
@@ -197,7 +217,13 @@ export const Amortizacion: React.FC = () => {
                   <Select
                     label="Periodicidad"
                     name='periodicidad'
-                    defaultValue={`${'1'}`}
+                    defaultValue={
+                      deudores.numero_periodicidad.toString() === '1' ?
+                      '1' : deudores.numero_periodicidad.toString() === '3' ?
+                      '3' : deudores.numero_periodicidad.toString() === '6' ?
+                      '6' : deudores.numero_periodicidad.toString() === '12' ?
+                      '12' : deudores.numero_periodicidad.toString()
+                    }
                     onChange={(event: event) => {
                       const { value } = event.target
                       set_num_periodicidad(parseInt(value))
@@ -228,7 +254,7 @@ export const Amortizacion: React.FC = () => {
                     size="small"
                     fullWidth
                     type='number'
-                    defaultValue={`${'3'}`}
+                    defaultValue={`${deudores.numero_cuotas}`}
                   />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -236,13 +262,15 @@ export const Amortizacion: React.FC = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha Final de Pago"
-                      inputFormat="YYYY/MM/DD"
+                      inputFormat="DD/MM/YYYY"
                       openTo="day"
                       views={['day', 'month', 'year']}
-                      value={date}
-                      onChange={handle_change_date}
+                      value={date_final}
+                      onChange={handle_change_date_final}
                       renderInput={(params) => (
                         <TextField
+                          name='fecha_final_pago'
+                          required
                           size='small'
                           {...params}
                         />
