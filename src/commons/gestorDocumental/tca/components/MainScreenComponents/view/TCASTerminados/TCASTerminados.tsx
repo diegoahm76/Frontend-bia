@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   Stack
 } from '@mui/material';
 import { useContext, type FC, useEffect, useState } from 'react';
@@ -21,6 +20,7 @@ import { ModalContextTCA } from '../../../../context/ModalContextTca';
 import { getTcaTerminados } from './services/TcaTerminados.service';
 import { type TcaTerminados } from './types/modalTcaTerminados.types';
 import { columnsTcasterminados } from './columns/columns';
+import { Title } from '../../../../../../../components';
 
 export const TCASTerminados: FC<any> = (): JSX.Element => {
   // gestor/trd/get-terminados/ -- usado === true
@@ -40,9 +40,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
   useEffect(() => {
     if (modalTcaTerminados)
       void getTcaTerminados().then((res) => {
-        // console.log('res', res);
-        const data = res.filter((item: TcaTerminados) => item.fecha_terminado);
-        setrowsTcasTerminados(data);
+        setrowsTcasTerminados(res);
       });
     return () => {
       setrowsTcasTerminados([]);
@@ -68,7 +66,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
       headerName: 'Actual',
       width: 100,
       renderCell: (params: any) =>
-        params.value.actual ? (
+        params.row.actual ? (
           <Chip label="SI" color="primary" variant="outlined" />
         ) : (
           <Chip label="NO" color="error" variant="outlined" />
@@ -123,19 +121,13 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
         onClose={closeModalTcaTerminados}
       >
         <DialogTitle>
-          {`TCA'S TERMINADOS`}
-          <IconButton
-            aria-label="close"
-            onClick={closeModalTcaTerminados}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Title
+            title={
+              rowsTcasTerminados?.length > 0
+                ? 'TCA TERMINADOS'
+                : 'TCA TERMINADOS : NO HAY TCA TERMINADOS'
+            }
+          />
         </DialogTitle>
         <Divider />
         <DialogContent

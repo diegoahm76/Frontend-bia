@@ -10,7 +10,6 @@ import { DelegacionSuperuserScreen } from '../screens/DelegacionSuperuserScreen'
 import { ConfiguracionesBasicasRoutes } from '../screens/ConfiguracionesBasicas/Routes/ConfiguracionesBasicas';
  // import  from '../components/SucursalEntidad/SucursalEntidad';
 
-import { ConfiguracionEntidad } from '../components/ConfiguracionEntidad/screens/configuracionEntidad';
 import { Sucursal } from '../components/SucursalEntidad/Sucursal';
 const routes = [
   { path: '/auditoria', element: <AuditoriaScreen /> },
@@ -18,7 +17,7 @@ const routes = [
   { path: '/administracion_usuarios', element: <AdministracionPersonasScreen /> },
   { path: '/delegacion_superusuario', element: <DelegacionSuperuserScreen /> },
   { path: '/sucursal_entidad', element: <Sucursal /> },
-  { path: '/configuracionentidad', element: <ConfiguracionEntidad /> },
+
 
 ];
 export const SeguridadRoutes: React.FC = () => {

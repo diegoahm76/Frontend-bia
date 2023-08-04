@@ -1,8 +1,8 @@
-import { type choicesInterface } from './types/choices.types';
+// import { type choicesInterface } from './types/choices.types';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const choicesTipoClasificacion: choicesInterface[] = [
-  { value: 'P', label: 'Público' },
-  { value: 'C', label: 'Controlado' },
-  { value: 'R', label: 'Rerservado' }
+export const choicesTipoClasificacion: any[] = [
+  { value: 'P', label: 'Público - P' },
+  { value: 'C', label: 'Controlado - C' },
+  { value: 'R', label: 'Rerservado - R' }
 ];

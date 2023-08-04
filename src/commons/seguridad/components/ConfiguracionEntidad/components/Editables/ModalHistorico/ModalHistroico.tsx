@@ -9,7 +9,7 @@ import { control_error } from "../../../../SucursalEntidad/utils/control_error_o
 import type { DatosHistoricoPerfilEntidad } from "../../../interfaces/interfacesConEntidad";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModificadorFormatoFecha } from "../../../utils/modificadorForematoFecha";
-
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 
 
@@ -122,14 +122,15 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
 
     const columns = [
         // { field: "cod_tipo_perfil_histo", headerName: "Código Tipo Perfil", width: 150, flex: 1 },
-        { field: "consec_asignacion_perfil_histo", headerName: "Consec Asignación Perfil", width: 80,  },
-        { field: "fecha_fin_periodo", headerName: "Fecha Fin Periodo", width: 150, flex: 1, valueGetter: (params: any) => ModificadorFormatoFecha(params.value) },
-        { field: "fecha_inicio_periodo", headerName: "Fecha Inicio Periodo", width: 150, flex: 1, valueGetter: (params: any) => ModificadorFormatoFecha(params.value) }, 
+        { field: "consec_asignacion_perfil_histo", headerName: "Consecutivo", width: 90,  },
+        { field: "nombre_completo", headerName: "Nombre Completo",  width: 190 },
+        { field: "fecha_inicio_periodo", headerName: "Inicio Periodo", width: 45, flex: 1, valueGetter: (params: any) => ModificadorFormatoFecha(params.value) }, 
+        { field: "fecha_fin_periodo", headerName: "Fin Periodo", width: 25, flex: 1, valueGetter: (params: any) => ModificadorFormatoFecha(params.value) },
         // { field: "id_historico_perfil_entidad", headerName: "ID Historico Perfil", width: 150, flex: 1 },
         // { field: "id_persona_cambia", headerName: "ID Persona Cambia", width: 150, flex: 1 },
         // { field: "id_persona_entidad", headerName: "ID Persona Entidad", width: 150, flex: 1 },
         // { field: "id_persona_perfil_histo", headerName: "ID Persona Perfil", width: 150, flex: 1 },
-       
+        
         {
             field: "accion",
             headerName: "observaciones",
@@ -160,6 +161,7 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
             <Button
                 style={{ margin: 3, marginTop: 10, marginRight: 10 }}
                 color="primary"
+                startIcon={<AutoStoriesIcon />}
                 variant="outlined"
                 onClick={() => { setVisible(true) }}
 
@@ -182,13 +184,6 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
 
                     <Grid item xs={12}>
 
-                        <TextField fullWidth label={titulo_observacio}  value={mostraobser} id="fullWidth" />
-
-
-
-                    </Grid>
-                    <Grid item xs={12}>
-
 
                         <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
 
@@ -204,7 +199,18 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
 
                         </Box>
                     </Grid>
+                
+                    <Grid item xs={12}>
 
+
+                        <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
+
+
+                            <TextField fullWidth label={titulo_observacio} value={mostraobser} id="fullWidth" />
+
+                        </Box>
+
+                    </Grid>
                 </Grid>
 
 

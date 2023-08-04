@@ -122,7 +122,7 @@ const DespachoScreen = () => {
   };
 
   useEffect(() => {
-    console.log(watch_despacho('id_vivero'));
+    // console.log(watch_despacho('id_vivero'));
 
     if (watch_despacho('id_vivero') !== null) {
       const vivero: IObjNursery | undefined = nurseries.find(
@@ -185,7 +185,7 @@ const DespachoScreen = () => {
 
   useEffect(() => {
     // console.log(current_solicitud)
-    console.log(current_despacho);
+    // console.log(current_despacho);
     reset_despacho(current_despacho);
     if ('persona_crea' in current_despacho) {
       reset_despacho(current_despacho);
@@ -224,7 +224,7 @@ const DespachoScreen = () => {
   }, [persona_solicita]);
 
   useEffect(() => {
-    console.log(transfer_person);
+    // console.log(transfer_person);
     dispatch(
       set_current_despacho({
         ...current_despacho,
@@ -240,7 +240,7 @@ const DespachoScreen = () => {
     const format_date = new Date(fecha_despacho ?? '').toISOString();
 
     if (origin_nursery.id_vivero !== null) {
-      console.log(nro_solicitud, format_date);
+      // console.log(nro_solicitud, format_date);
       void dispatch(
         get_solicitudes_despacho(
           origin_nursery.id_vivero,

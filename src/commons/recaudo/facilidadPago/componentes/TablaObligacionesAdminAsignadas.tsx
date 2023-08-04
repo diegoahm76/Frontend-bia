@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_asignadas, get_facilidades_asignadas } from '../slices/FacilidadesSlice';
+import dayjs from 'dayjs';
 
 interface RootState {
   facilidades: {
@@ -63,7 +64,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value.slice(0, 10)).format('DD/MM/YYYY')}
         </div>
       ),
     },

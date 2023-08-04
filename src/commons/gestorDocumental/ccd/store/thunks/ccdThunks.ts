@@ -51,23 +51,21 @@ export const get_finished_ccd_service = (): any => {
 };
 // Obtener Cuadro de Clasificación Documental
 export const get_classification_ccds_service = (
+  activateLoadingButtonBusquedaCCD: () => void,
+  desactivateLoadingButtonBusquedaCCD: () => void,
   name: string,
   version: string,
   id_ccd?: any
 ): any => {
-  // console.log('get_classification_ccds_service');
-
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+      activateLoadingButtonBusquedaCCD();
       // console.log('hello');
       const { data } = await api.get(
         `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
       );
-      // console.log(name, version, 'name, version');
-
-      // console.log('helllooo');
       if (data.data.length === 0) {
         control_error(`No se encontró el CCD ${name} - ${version}`);
       } else {
@@ -86,6 +84,8 @@ export const get_classification_ccds_service = (
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      desactivateLoadingButtonBusquedaCCD();
     }
   };
 };
@@ -101,10 +101,6 @@ export const to_resume_ccds_service: any = (
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(`gestor/ccd/resume/${id_ccd}/`);
-      // console.log(data, 'data');
-      /* dispatch(
-        get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
-      ); */
       control_success(data.detail);
       set_flag_btn_finish(false);
       // return data;
@@ -119,17 +115,17 @@ export const to_resume_ccds_service: any = (
 export const to_finished_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void,
   ccd_current: any,
-  assignments_ccd: any,
+  assignments_ccd: any
 ) => {
-  return async (
-  ): Promise</* AxiosResponse | AxiosError */ any> => {
+  return async (): Promise</* AxiosResponse | AxiosError */ any> => {
     try {
       console.log(assignments_ccd, 'assignments_ccd');
-      if(assignments_ccd.length === 0){
-        control_error('No se puede finalizar el CCD porque no tiene asignaciones');
+      if (assignments_ccd.length === 0) {
+        control_error(
+          'No se puede finalizar el CCD porque no tiene asignaciones'
+        );
         return;
       }
-
 
       if (
         ccd_current.id_ccd === undefined ||
@@ -149,7 +145,7 @@ export const to_finished_ccds_service: any = (
       set_flag_btn_finish(true);
       return data;
     } catch (error: any) {
-     // console.log(error);
+      // console.log(error);
       control_error(error.response.data.detail);
       // return error as AxiosError;
     }

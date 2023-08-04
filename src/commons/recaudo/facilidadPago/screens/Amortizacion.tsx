@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
@@ -37,8 +38,6 @@ export const Amortizacion: React.FC = () => {
   const [tasa_diaria, set_tasa_diaria] = useState(0);
   const [modal, set_modal] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
-
-  console.log('periodicidad: ', num_periodicidad);
 
   const handle_change_date_abono = (date: Date | null) => {
     set_date_abono(date);

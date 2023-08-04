@@ -133,8 +133,8 @@ export const TablaProyeccionPagos: React.FC = () => {
         type: 'array'
       });
       save_as_excel_file(excel_buffer, 'Proyección de Pagos');
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      throw new Error(error);
     }
   };
 
@@ -150,8 +150,8 @@ export const TablaProyeccionPagos: React.FC = () => {
         });
         save_as_fn(data, fileName + excel_extension);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((error: any) => {
+        throw new Error(error);
       });
   };
 
