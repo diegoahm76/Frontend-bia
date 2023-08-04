@@ -32,8 +32,8 @@ export const GridLiquidacion: React.FC<IProps> = ({ set_position_tab_organigrama
     const new_rows = liquidaciones.map((liquidacion) => ({
       id: liquidacion.id,
       // liquidacion: liquidacion.id_opcion_liq.nombre,
-      deudor: liquidacion.cod_deudor.nombres.concat(' ', liquidacion.cod_deudor.apellidos),
-      identificacion: liquidacion.cod_deudor.identificacion,
+      deudor: liquidacion.id_deudor.nombres.concat(' ', liquidacion.id_deudor.apellidos),
+      identificacion: liquidacion.id_deudor.identificacion,
       monto_inicial: liquidacion.valor,
       fecha_liquidacion: liquidacion.fecha_liquidacion,
       periodo: liquidacion.periodo_liquidacion,

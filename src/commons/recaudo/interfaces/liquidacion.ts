@@ -11,7 +11,7 @@ export interface OpcionLiquidacion {
 }
 
 export interface Deudor {
-  codigo: number;
+  id: number;
   identificacion: string;
   nombres: string;
   apellidos: string;
@@ -19,8 +19,11 @@ export interface Deudor {
 
 export interface Expediente {
   id: number;
-  codigo_expediente: number;
-  cod_deudor: number;
+  cod_expediente: string;
+  numero_resolucion: string;
+  cod_auto: string;
+  cod_recurso: string;
+  id_deudor: number;
 }
 
 export interface Variable {
@@ -41,8 +44,8 @@ export interface Detalle {
 
 export interface Liquidacion {
   id: number;
-  cod_deudor: Deudor;
-  cod_expediente: Expediente;
+  id_deudor: Deudor;
+  id_expediente: Expediente;
   fecha_liquidacion: string;
   vencimiento: string;
   periodo_liquidacion: string;

@@ -17,6 +17,7 @@ export const RegistroReposicionExterno: React.FC = () => {
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
 
+
   return (
     <>
       <Grid
