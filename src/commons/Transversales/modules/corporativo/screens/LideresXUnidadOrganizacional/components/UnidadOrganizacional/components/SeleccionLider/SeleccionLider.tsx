@@ -13,11 +13,15 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppSelector } from '../../../../../../../../../../hooks';
 import { getTipoDocumento } from './services/getTipoDocumento.service';
 import type { ISeleccionLideresProps } from './types/seleccionLideres.types';
+import { getPersonaByTipoDocumentoAndNumeroDocumento } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
 
 export const SeleccionLider = (): JSX.Element => {
   //* ----- form control declarations -------
-  const { control_seleccionar_lideres, reset_seleccionar_lideres } =
-    useLideresXUnidadOrganizacional();
+  const {
+    control_seleccionar_lideres,
+    reset_seleccionar_lideres,
+    watch_seleccionar_lideres_value
+  } = useLideresXUnidadOrganizacional();
 
   //* states redux selectors
   /* const { organigrama_lideres_current } = useAppSelector(
@@ -53,16 +57,23 @@ export const SeleccionLider = (): JSX.Element => {
       nombre_persona: ''
     });
 
+  //* onSubmit busqueda persona
+  const onSubmit = (): void => {
+    void getPersonaByTipoDocumentoAndNumeroDocumento(
+      watch_seleccionar_lideres_value.tipo_documento.value,
+      watch_seleccionar_lideres_value.numero_documento
+    );
+  };
+
   return (
     <>
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title="Líder" />
           <form
-            onSubmit={(w) => {
-              w.preventDefault();
-              console.log('abrir modal');
-              //  onSubmit();
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              onSubmit();
             }}
             style={{
               marginTop: '20px'
@@ -181,12 +192,12 @@ export const SeleccionLider = (): JSX.Element => {
             >
               <Button
                 color="primary"
+                type="submit"
                 variant="contained"
                 startIcon={<SearchIcon />}
-                onClick={() => {
+                /*  onClick={() => {
                   console.log('BUSCANDO LÍDER...');
-                  // onSubmit();
-                }}
+                }} */
               >
                 BUSCAR
               </Button>
