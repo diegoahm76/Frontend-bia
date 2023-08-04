@@ -11,8 +11,7 @@ import { ProcesosRoutes } from '../modules/procesos/routes/ProcesosRoutes';
 import { ConfiguracionEntidad } from '../../seguridad/components/ConfiguracionEntidad/screens/configuracionEntidad';
 import { CorporativoRoutes } from '../modules/corporativo/routes/CorporativoRoutes';
 import { PantallaPrincipalAlertas } from '../modules/Alertas/screens/pantallaPrincipal';
-import { ModalProviderLideres } from '../modules/corporativo/screens/LideresXUnidadOrganizacional/context/ModalContextLideres';
-
+import { ModalProviderLideres } from '../modules/corporativo/screens/LideresXUnidadOrg/context/ModalContextLideres';
 
 const routes = [
   {
@@ -22,8 +21,7 @@ const routes = [
   { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
   { path: '/configuracion_entidad', element: <ConfiguracionEntidad /> },
-  { path: '/bandeja_alertas', element: <PantallaPrincipalAlertas />},
- 
+  { path: '/bandeja_alertas', element: <PantallaPrincipalAlertas /> }
 ];
 export const TransversalRoutes: React.FC = () => {
   return (

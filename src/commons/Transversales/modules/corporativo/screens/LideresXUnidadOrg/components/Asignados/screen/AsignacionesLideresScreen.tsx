@@ -2,12 +2,12 @@
 import { type FC } from 'react';
 import { RenderDataGrid } from '../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppSelector } from '../../../../../../../../../hooks';
-import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesDeLideres/columnsAsignacionesDeLideres';
 import { Avatar, Button, Chip, IconButton } from '@mui/material';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import { AvatarStyles } from '../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
+import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesLideres/columnsAsignacionLideres';
 
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   //* states declarations
