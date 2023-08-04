@@ -24,14 +24,14 @@ interface RootState {
 }
 
 interface BienInput {
-  id: number,
-  descripcion: string,
-  vigencia_avaluo: number
+  id: number;
+  descripcion: string;
+  vigencia_avaluo: number;
 }
 
 interface GarantiaInput {
-  id: number,
-  descripcion: string,
+  id: number;
+  descripcion: string;
 }
 
 interface RespuestaRegistroFacilidad {
@@ -883,7 +883,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={5} >
+              <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   size="small"
@@ -1084,7 +1084,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Número de radicación:</strong> {respuesta_registro !== undefined ? respuesta_registro.numero_radicacion : null}</p>
+              <p><strong>Número de radicación:</strong> {respuesta_registro?.numero_radicacion}</p>
               <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
