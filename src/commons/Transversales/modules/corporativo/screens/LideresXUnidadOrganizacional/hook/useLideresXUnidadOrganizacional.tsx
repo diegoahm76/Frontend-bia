@@ -39,6 +39,20 @@ export const useLideresXUnidadOrganizacional = ():
     watch_organigrama_lideres_por_unidad();
   //  console.log(watch_organigrama_lideres_por_unidad_value);
 
+  // * -------------- USE FORM SELECCIONAR LIDERES PART -------------- * //
+
+  // ? -------- USE FORM DECLARATIONS -------- ? //
+
+  const {
+    control: control_seleccionar_lideres,
+    // handleSubmit: handleSubmit_seleccionar_lideres,
+    //  formState: formState_seleccionar_lideres,
+    reset: reset_seleccionar_lideres,
+    watch: watch_seleccionar_lideres
+  } = useForm();
+
+  const watch_seleccionar_lideres_value = watch_seleccionar_lideres();
+
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 
   // ? ----- use effect after select searched organigramas to put the data into the main inputs ----- ! //
@@ -50,6 +64,11 @@ export const useLideresXUnidadOrganizacional = ():
     control_organigrama_lideres_por_unidad,
     watch_organigrama_lideres_por_unidad,
     reset_organigrama_lideres_por_unidad,
-    watch_organigrama_lideres_por_unidad_value
+    watch_organigrama_lideres_por_unidad_value,
+
+    //* 2 . seleccionar lideres
+    control_seleccionar_lideres,
+    watch_seleccionar_lideres_value,
+    reset_seleccionar_lideres
   };
 };

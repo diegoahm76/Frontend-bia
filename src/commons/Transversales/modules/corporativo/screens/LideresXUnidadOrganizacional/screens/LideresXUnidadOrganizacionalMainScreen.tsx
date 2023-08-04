@@ -49,8 +49,6 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
 
       <UnidadOrganizacionalScreen />
 
-      {/* ---------------------------------------------- */}
-
       {/* listado de asignaciones de lideres a unidades organizacionales por organigrama seleccionado */}
 
       <AsignacionesDeLideresScreen />
