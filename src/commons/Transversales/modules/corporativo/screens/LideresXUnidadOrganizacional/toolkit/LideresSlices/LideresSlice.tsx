@@ -38,6 +38,14 @@ export const lideres_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.asignaciones_lideres_list = action.payload;
+    },
+
+    // ! --- set asignacion lideres current ---
+    set_asignacion_lideres_current: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.asignacion_lideres_current = action.payload;
     }
   }
 });
@@ -48,5 +56,6 @@ export const {
   get_list_busqueda_organigramas,
 
   //* asignacion lideres interaction
-  get_list_asignaciones_lideres
+  get_list_asignaciones_lideres,
+  set_asignacion_lideres_current
 } = lideres_slice.actions;

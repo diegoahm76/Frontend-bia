@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useEffect, useState } from 'react';
-import { Button, Grid, Stack, TextField } from '@mui/material';
+import dayjs from 'dayjs';
+import { Button, Divider, Grid, Stack, TextField } from '@mui/material';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../../../../../components';
 import { Controller } from 'react-hook-form';
@@ -24,20 +25,23 @@ export const SeleccionLider = (): JSX.Element => {
   } = useLideresXUnidadOrganizacional();
 
   //* states redux selectors
-  /* const { organigrama_lideres_current } = useAppSelector(
+  const { organigrama_lideres_current } = useAppSelector(
     (state) => state.lideres_slice
-  ); */
+  );
 
   // ? ------- use states declarations -------
   const [tiposDocumentos, setTiposDocumentos] = useState<
     ISeleccionLideresProps[]
   >([]);
 
+  // ? use state to set the currentDate
+  const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
+
   // ? ------- use effect declarations -------
   useEffect(() => {
     void getTipoDocumento()
       .then((res) => {
-        const filterDocumentos = res.filter(
+        const filterDocumentos = res?.filter(
           (item: ISeleccionLideresProps) => item.value !== 'NT'
         );
         setTiposDocumentos(filterDocumentos);
@@ -46,6 +50,18 @@ export const SeleccionLider = (): JSX.Element => {
         console.error(error);
         // Handle the error here
       });
+  }, []);
+
+  // ? useEffect to update the current date each day
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentDate(dayjs().format('YYYY-MM-DD'));
+    }, dayjs().endOf('day').diff(dayjs(), 'millisecond'));
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   // * functions
@@ -62,14 +78,24 @@ export const SeleccionLider = (): JSX.Element => {
     void getPersonaByTipoDocumentoAndNumeroDocumento(
       watch_seleccionar_lideres_value.tipo_documento.value,
       watch_seleccionar_lideres_value.numero_documento
-    );
+    ).then((res) => {
+      reset_seleccionar_lideres({
+        tipo_documento: {
+          label: res?.tipo_documento,
+          value: res?.tipo_documento
+        },
+        numero_documento: res?.numero_documento,
+        nombre_persona: res?.nombre_completo,
+        id_persona: res?.id_persona
+      });
+    });
   };
 
   return (
     <>
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="Líder" />
+          <Title title="Líder - Unidad Organizacional" />
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
@@ -224,6 +250,43 @@ export const SeleccionLider = (): JSX.Element => {
               </Button>
             </Stack>
           </form>
+          <Divider />
+          <Grid container spacing={2} sx={{ mt: '20px' }}>
+            <Grid item xs={12} sm={1.8}>
+              <TextField
+                fullWidth
+                label="Fecha asignación"
+                size="small"
+                variant="outlined"
+                value={currentDate}
+                InputLabelProps={{ shrink: true }}
+                disabled={true}
+              />
+            </Grid>
+            <Grid item xs={12} sm={10.2}>
+            <Controller
+                  name="observaciones_asignacion"
+                  control={control_seleccionar_lideres}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      fullWidth
+                      label="Observaciones de la asignación"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      InputLabelProps={{ shrink: true }}
+                      disabled={organigrama_lideres_current?.fecha_retiro_produccion}
+                    />
+                  )}
+                />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
 

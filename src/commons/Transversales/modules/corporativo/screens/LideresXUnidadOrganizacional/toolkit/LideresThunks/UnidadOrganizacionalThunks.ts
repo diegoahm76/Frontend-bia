@@ -11,8 +11,7 @@ export const getPersonaByTipoDocumentoAndNumeroDocumento = async (
       numeroDocumento ?? ''
     }&tipo_documento=${tipoDocumento ?? ''}`;
     const response = await api.get(url);
-    console.log('response', response);
-    return response.data;
+    return response.data.data;
   } catch (error: any) {
     console.error(error);
     control_error(error?.response?.data?.detail);

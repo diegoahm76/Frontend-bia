@@ -52,11 +52,15 @@ export const useLideresXUnidadOrganizacional = ():
     defaultValues: {
       tipo_documento: '',
       numero_documento: '',
-      nombre_persona: ''
+      nombre_persona: '',
+      id_persona: '',
+      observaciones_asignacion: '',
+      unidad_organizacional: ''
     } as any
   });
 
   const watch_seleccionar_lideres_value = watch_seleccionar_lideres();
+  console.log(watch_seleccionar_lideres_value);
 
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 
