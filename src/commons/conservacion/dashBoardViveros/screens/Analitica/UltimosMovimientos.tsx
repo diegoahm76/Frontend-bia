@@ -18,13 +18,10 @@ export const UltimosMovimientos: React.FC<IProps> = (props: IProps) => {
                         <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                             <Grid item container spacing={2}>
                                 <Grid item xs={12} sm={12}>
-hola
                                 </Grid>
                                 <Grid item xs={12} sm={12}>
-mundo
                                 </Grid>
                                 <Grid item xs={12} sm={12}>
-en 3
                                 </Grid>
                             </Grid>
                         </Box>
