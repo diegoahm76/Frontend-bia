@@ -15,6 +15,7 @@ import { useAppSelector } from '../../../../../../../../../../hooks';
 import { getTipoDocumento } from './services/getTipoDocumento.service';
 import type { ISeleccionLideresProps } from './types/seleccionLideres.types';
 import { getPersonaByTipoDocumentoAndNumeroDocumento } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
+import { get_unidades_organizacionales_by_id_organigrama_service } from '../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
 
 export const SeleccionLider = (): JSX.Element => {
   //* ----- form control declarations -------
@@ -36,6 +37,12 @@ export const SeleccionLider = (): JSX.Element => {
 
   // ? use state to set the currentDate
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
+
+  // ? ------- use states declarations for unitys -------
+
+  const [unidadesOrganizacionales, setUnidadesOrganizacionales] = useState<
+    ISeleccionLideresProps[]
+  >([]);
 
   // ? ------- use effect declarations -------
   useEffect(() => {
@@ -63,6 +70,21 @@ export const SeleccionLider = (): JSX.Element => {
       clearInterval(intervalId);
     };
   }, []);
+
+  // ? useEffect to get unidades organizacionales organigrama
+  useEffect(() => {
+    void get_unidades_organizacionales_by_id_organigrama_service(
+      organigrama_lideres_current?.id_organigrama
+    ).then((res: any) => {
+      setUnidadesOrganizacionales(
+        res.map((el: any) => ({
+          el,
+          label: el.nombre_unidad_organizacional,
+          value: el.id_unidad_organizacional
+        }))
+      );
+    });
+  }, [organigrama_lideres_current]);
 
   // * functions
 
@@ -105,8 +127,8 @@ export const SeleccionLider = (): JSX.Element => {
               marginTop: '20px'
             }}
           >
-            <Grid container spacing={2} sx={{ mb: '20px' }}>
-              <Grid item xs={12} sm={10.2}>
+            <Grid container spacing={2} sx={{ mb: '20px', zIndex: 9999 }}>
+              <Grid item xs={12} sm={5} zIndex={9999}>
                 <Controller
                   name="id_unidad_organizacional"
                   control={control_seleccionar_lideres}
@@ -127,16 +149,7 @@ export const SeleccionLider = (): JSX.Element => {
                           }); */
                           onChange(selectedOption);
                         }}
-                        options={[
-                          {
-                            label: 'SI',
-                            value: true
-                          },
-                          {
-                            label: 'NO',
-                            value: false
-                          }
-                        ]}
+                        options={unidadesOrganizacionales}
                         placeholder="Seleccionar"
                       />
                       <label>

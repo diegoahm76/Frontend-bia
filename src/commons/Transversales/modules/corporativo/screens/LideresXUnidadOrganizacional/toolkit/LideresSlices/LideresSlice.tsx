@@ -8,7 +8,11 @@ const initial_state: lideresInterface = {
 
   //* -- asignacion lideres interaction -- *//
   asignaciones_lideres_list: [],
-  asignacion_lideres_current: null
+  asignacion_lideres_current: null,
+
+  //* -- unidades interaction -- *//
+  unidades_list: [],
+  unidad_current: null
 };
 
 export const lideres_slice = createSlice({
@@ -46,6 +50,15 @@ export const lideres_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.asignacion_lideres_current = action.payload;
+    },
+
+    // ! --- get list unidades ---
+    get_list_unidades: (
+      state: any,
+
+      action: PayloadAction<any>
+    ) => {
+      state.unidades_list = action.payload;
     }
   }
 });

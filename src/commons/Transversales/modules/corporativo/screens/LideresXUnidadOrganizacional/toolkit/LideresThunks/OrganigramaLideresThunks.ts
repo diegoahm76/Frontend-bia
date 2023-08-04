@@ -83,3 +83,19 @@ export const get_asignaciones_lideres_by_id_organigrama_service: any = async (
     return error as AxiosError;
   }
 };
+
+
+export const get_unidades_organizacionales_by_id_organigrama_service: any = async (
+  idOrganigrama: string
+) => {
+  try {
+    const url = `transversal/organigrama/unidades/get-by-organigrama/${idOrganigrama}/`;
+    const { data } = await api.get(url);
+    console.log(data.data, 'data unidades organizacionales by organigrama');
+    return data.data;
+  } catch (error: any) {
+    console.log(error.response.data, 'error');
+    control_error(error.response.data.detail);
+    return error as AxiosError;
+  }
+}
