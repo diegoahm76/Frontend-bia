@@ -50,11 +50,11 @@ export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
-      console.log(data)
+      // console.log(data)
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      // console.log('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

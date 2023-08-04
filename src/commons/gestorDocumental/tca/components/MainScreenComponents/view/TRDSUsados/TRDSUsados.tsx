@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   Stack
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -19,6 +18,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
 import { v4 as uuidv4 } from 'uuid';
 import { type TrdsUsados } from './types/modalTRDsTerminados.types';
+import { Title } from '../../../../../../../components';
 
 export const TRDSUsados: FC<any> = (): JSX.Element => {
   // ? manage modal
@@ -38,7 +38,7 @@ export const TRDSUsados: FC<any> = (): JSX.Element => {
     }
     return () => {
       setrowsTrdsUsados([]);
-    }
+    };
   }, [modalTrdsUsados]);
 
   const newColums = [
@@ -115,19 +115,7 @@ export const TRDSUsados: FC<any> = (): JSX.Element => {
         onClose={closeModalTrdsUsados}
       >
         <DialogTitle>
-          {`TRD'S USADOS`}
-          <IconButton
-            aria-label="close"
-            onClick={closeModalTrdsUsados}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Title title="TRD'S USADOS" />
         </DialogTitle>
         <Divider />
         <DialogContent

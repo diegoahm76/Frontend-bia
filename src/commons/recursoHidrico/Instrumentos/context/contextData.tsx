@@ -7,23 +7,34 @@ import { control_error } from '../../../../helpers';
 import { get_cuencas, get_pozo } from '../../configuraciones/Request/request';
 import type { Cuenca, Pozo } from '../../configuraciones/interfaces/interfaces';
 import type {
+  ArchivosCalidadAgua,
   BusquedaInstrumentos,
   IpropsPozos,
   ValueProps,
 } from '../interfaces/interface';
 import { type AxiosError } from 'axios';
-import {
-  type DataGeneralLaboratorio,
-  type Archivos,
-  type CuencasInstrumentos,
+import type {
+  DataGeneralLaboratorio,
+  Archivos,
+  CuencasInstrumentos,
+  DataGeneralAforo,
+  DataGeneralBombeo,
+  DataCarteraAforo,
 } from '../../ConsultaBiblioteca/interfaces/interfaces';
 import {
   get_archivos,
+  get_archivos_cartera,
+  get_archivos_laboratorio,
+  get_archivos_prueba_bombeo,
+  get_data_bombeo_general,
+  get_data_cartera,
+  get_data_cartera_id,
   get_data_cuenca_instrumentos,
   get_data_laboratorio_id,
   get_instrumento_id,
 } from '../../ConsultaBiblioteca/request/request';
 import { get_pozo_id } from '../request/request';
+import { v4 as uuidv4 } from 'uuid';
 
 interface UserContext {
   // *modos instrumentos
@@ -105,6 +116,31 @@ interface UserContext {
   set_rows_laboratorio: (rows_laboratorio: DataGeneralLaboratorio[]) => void;
   fetch_data_laboratorio: () => Promise<any>;
 
+  // *informacion de cartera
+  rows_cartera: DataGeneralAforo[];
+  rows_data_cartera: DataCarteraAforo[];
+  set_rows_data_cartera: (rows_data_cartera: DataCarteraAforo[]) => void;
+  set_rows_cartera: (rows_cartera: DataGeneralAforo[]) => void;
+  fetch_data_cartera: () => Promise<any>;
+  fetch_data_cartera_especifica: (id_cartera: number) => Promise<any>;
+
+  // * Traer data de prueba de bombeo
+  rows_prueba_bombeo: DataGeneralBombeo[];
+  set_rows_prueba_bombeo: (rows_prueba_bombeo: DataGeneralBombeo[]) => void;
+  fetch_data_prueba_bombeo: () => Promise<any>;
+
+  // * Informacion de anexos
+  rows_anexos_laboratorio: ArchivosCalidadAgua[];
+  rows_anexos_cartera: ArchivosCalidadAgua[];
+  rows_anexos_bombeo: ArchivosCalidadAgua[];
+  set_rows_anexos_laboratorio: (
+    rows_anexos_laboratorio: ArchivosCalidadAgua[]
+  ) => void;
+  set_rows_anexos_cartera: (rows_anexos_cartera: ArchivosCalidadAgua[]) => void;
+  set_rows_anexos_bombeo: (rows_anexos_bombeo: ArchivosCalidadAgua[]) => void;
+  fetch_data_anexos_laboratorio: (id_laboratorio: number) => Promise<void>;
+  fetch_data_anexos_carteras: (id_cartera_aforo: number) => Promise<any>;
+  fetch_data_anexos_bombeo: (id_prueba_bombeo: number) => Promise<any>;
 }
 
 // <--------------------- Data context --------------------->
@@ -203,6 +239,30 @@ export const DataContext = createContext<UserContext>({
   set_rows_laboratorio: () => {},
   fetch_data_laboratorio: async () => {},
 
+  // *informacion de cartera
+  rows_cartera: [],
+  rows_data_cartera: [],
+  set_rows_data_cartera: () => {},
+  set_rows_cartera: () => {},
+  fetch_data_cartera: async () => {},
+  fetch_data_cartera_especifica: async (id_cartera: number) => {},
+
+  // * Traer data de prueba de bombeo
+  rows_prueba_bombeo: [],
+  set_rows_prueba_bombeo: () => {},
+  fetch_data_prueba_bombeo: async () => {},
+
+  // * Informacion de anexos
+
+  rows_anexos_laboratorio: [],
+  rows_anexos_cartera: [],
+  rows_anexos_bombeo: [],
+  set_rows_anexos_laboratorio: () => {},
+  set_rows_anexos_cartera: () => {},
+  set_rows_anexos_bombeo: () => {},
+  fetch_data_anexos_laboratorio: async (id_laboratorio: number) => {},
+  fetch_data_anexos_carteras: async (id_cartera: number) => {},
+  fetch_data_anexos_bombeo: async (id_prueba_bombeo: number) => {},
 });
 
 export const UserProvider = ({
@@ -277,6 +337,18 @@ export const UserProvider = ({
   const [rows_cuencas_instrumentos, set_rows_cuencas_instrumentos] =
     React.useState<CuencasInstrumentos[]>([]);
   const [rows_anexos, set_rows_anexos] = React.useState<Archivos[]>([]);
+  const [rows_anexos_laboratorio, set_rows_anexos_laboratorio] = React.useState<
+    ArchivosCalidadAgua[]
+  >([]);
+  const [rows_anexos_cartera, set_rows_anexos_cartera] = React.useState<
+    ArchivosCalidadAgua[]
+  >([]);
+  const [rows_anexos_bombeo, set_rows_anexos_bombeo] = React.useState<
+    ArchivosCalidadAgua[]
+  >([]);
+  const [rows_data_cartera, set_rows_data_cartera] = React.useState<
+    DataCarteraAforo[]
+  >([]);
   const [nombre_seccion, set_nombre_seccion] = React.useState('');
   const [nombre_subseccion, set_nombre_subseccion] = React.useState('');
 
@@ -319,6 +391,48 @@ export const UserProvider = ({
         const response = await get_archivos(id_instrumento);
         set_rows_anexos(response);
       }
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+  const fetch_data_anexos_laboratorio = async (
+    id_laboratorio: number
+  ): Promise<void> => {
+    try {
+      set_rows_anexos_laboratorio([]);
+      const response = await get_archivos_laboratorio(id_laboratorio);
+      set_rows_anexos_laboratorio(response);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+  const fetch_data_anexos_carteras = async (
+    id_cartera: number
+  ): Promise<void> => {
+    try {
+      set_rows_anexos_cartera([]);
+      const response = await get_archivos_cartera(id_cartera);
+      set_rows_anexos_cartera(response);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
+    }
+  };
+  const fetch_data_anexos_bombeo = async (
+    id_prueba_bombeo: number
+  ): Promise<void> => {
+    try {
+      set_rows_anexos_bombeo([]);
+      const response = await get_archivos_prueba_bombeo(id_prueba_bombeo);
+      set_rows_anexos_bombeo(response);
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
@@ -415,6 +529,58 @@ export const UserProvider = ({
       control_error(err.response.data.detail);
     }
   };
+  // * Traer data cartera de aforo
+  const [rows_cartera, set_rows_cartera] = React.useState<DataGeneralAforo[]>(
+    []
+  );
+
+  const fetch_data_cartera = async (): Promise<any> => {
+    try {
+      set_rows_cartera([]);
+      if (id_instrumento) {
+        const response = await get_data_cartera_id(id_instrumento);
+        set_rows_cartera(response);
+        return response;
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+  const fetch_data_cartera_especifica = async (
+    id_cartera: number
+  ): Promise<void> => {
+    try {
+      set_rows_data_cartera([]);
+      const response = await get_data_cartera(id_cartera);
+
+      const elementToAssingDataCartera = response.map((item: any) => ({
+        ...item,
+        id: uuidv4(),
+      }));
+
+      set_rows_data_cartera(elementToAssingDataCartera);
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+
+  // * Traer data de prueba de bombeo
+  const [rows_prueba_bombeo, set_rows_prueba_bombeo] = React.useState<
+    DataGeneralBombeo[]
+  >([]);
+
+  const fetch_data_prueba_bombeo = async (): Promise<any> => {
+    try {
+      set_rows_prueba_bombeo([]);
+      if (id_instrumento) {
+        const response = await get_data_bombeo_general(id_instrumento);
+        set_rows_prueba_bombeo(response);
+        return response;
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
 
   const value = {
     // *modos instrumentos
@@ -487,6 +653,31 @@ export const UserProvider = ({
     rows_laboratorio,
     set_rows_laboratorio,
     fetch_data_laboratorio,
+
+    // * informacion de cartera
+
+    rows_cartera,
+    rows_data_cartera,
+    set_rows_data_cartera,
+    set_rows_cartera,
+    fetch_data_cartera,
+    fetch_data_cartera_especifica,
+
+    // * Traer data de prueba de bombeo
+    rows_prueba_bombeo,
+    set_rows_prueba_bombeo,
+    fetch_data_prueba_bombeo,
+
+    // * Informacion de anexos
+    rows_anexos_laboratorio,
+    rows_anexos_cartera,
+    rows_anexos_bombeo,
+    set_rows_anexos_laboratorio,
+    set_rows_anexos_cartera,
+    set_rows_anexos_bombeo,
+    fetch_data_anexos_laboratorio,
+    fetch_data_anexos_carteras,
+    fetch_data_anexos_bombeo,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

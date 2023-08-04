@@ -302,7 +302,7 @@ export const get_items_despacho_service = (id: string | number): any => {
       const { data } = await api.get(
         `conservacion/despachos/items-despacho/get-by-id/${id ?? ''}/`
       );
-      console.log(data);
+      // console.log(data);
       if (data.data.length > 0) {
         dispatch(get_items_despacho(data.data));
       } else {
@@ -310,7 +310,7 @@ export const get_items_despacho_service = (id: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_items_despacho_service');
+      // console.log('get_items_despacho_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -332,7 +332,7 @@ export const get_items_distribuidos_service = (id: string | number): any => {
 
       return data;
     } catch (error: any) {
-      console.log('get_items_despacho_service');
+      // console.log('get_items_despacho_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -392,7 +392,7 @@ export const confirmar_items_distribuidos_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('save_items_despacho_service');
+      // console.log('save_items_despacho_service');
       console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
@@ -830,7 +830,7 @@ export const get_good_code_baja_service = (
         `conservacion/bajas/get-bienes-bajas/${code}/${id_vivero}/`
       );
 
-      console.log(data);
+      // console.log(data);
       if ('data' in data) {
         dispatch(set_current_insumo(data.data));
         control_success('Se selecciono el bien');

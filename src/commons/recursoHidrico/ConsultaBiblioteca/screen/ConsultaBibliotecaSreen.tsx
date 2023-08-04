@@ -21,6 +21,8 @@ import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { BusquedaInstrumentos } from '../components/BusquedaInstrumentos';
 import { BusquedaInstrumentosBasica } from '../components/BusquedaInstrumentosBasica';
 import { DialogLaboratorio } from '../components/DialogLaboratorio';
+import { DialogCartera } from '../components/DialogCartera';
+import { DialogBombeo } from '../components/DialogBombeo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
@@ -187,9 +189,19 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
 
   const [is_open_modal_laboratorio, set_is_open_modal_laboratorio] =
     useState(false);
+  const [is_open_modal_cartera, set_is_open_modal_cartera] = useState(false);
+  const [is_open_modal_bombeo, set_is_open_modal_bombeo] = useState(false);
 
   const handle_open_laboratorio = (): void => {
     set_is_open_modal_laboratorio(true);
+  };
+
+  const handle_open_cartera = (): void => {
+    set_is_open_modal_cartera(true);
+  };
+
+  const handle_open_bombeo = (): void => {
+    set_is_open_modal_bombeo(true);
   };
 
   useEffect(() => {
@@ -405,7 +417,9 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                     variant="outlined"
                     fullWidth
                     color="primary"
-                    onClick={() => {}}
+                    onClick={() => {
+                      handle_open_cartera();
+                    }}
                   >
                     Ver Cartera de aforo
                   </Button>
@@ -432,7 +446,9 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                     variant="outlined"
                     fullWidth
                     color="primary"
-                    onClick={() => {}}
+                    onClick={() => {
+                      handle_open_bombeo();
+                    }}
                   >
                     Prueba de bombeo
                   </Button>
@@ -463,6 +479,14 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
       <DialogLaboratorio
         is_modal_active={is_open_modal_laboratorio}
         set_is_modal_active={set_is_open_modal_laboratorio}
+      />
+      <DialogCartera
+        is_modal_active={is_open_modal_cartera}
+        set_is_modal_active={set_is_open_modal_cartera}
+      />
+      <DialogBombeo
+        is_modal_active={is_open_modal_bombeo}
+        set_is_modal_active={set_is_open_modal_bombeo}
       />
     </>
   );
