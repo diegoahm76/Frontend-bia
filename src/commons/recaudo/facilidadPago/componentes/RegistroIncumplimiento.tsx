@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions } from "@mui/material";
 import { Add, Close } from '@mui/icons-material';
@@ -23,7 +24,6 @@ export const RegistroIncumplimiento: React.FC = () => {
     if (selected_file != null) {
       set_file_name(selected_file.name);
     }
-    console.log('archivo', selected_file);
   };
 
   const handle_open = () => { set_modal(true) };
@@ -31,8 +31,6 @@ export const RegistroIncumplimiento: React.FC = () => {
 
   const handle_open_sub = () => { set_sub_modal(true) };
   const handle_close_sub = () => { set_sub_modal(false) };
-
-  console.log('text', form_state);
 
   return (
     <>
