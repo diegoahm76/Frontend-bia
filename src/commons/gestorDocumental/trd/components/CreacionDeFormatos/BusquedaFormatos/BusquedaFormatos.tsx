@@ -35,6 +35,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import SyncIcon from '@mui/icons-material/Sync';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContextTRD } from '../../../context/ModalsContextTrd';
@@ -51,6 +52,7 @@ import {
 import { columsTRD } from './utils/colums';
 import { options_search_trd } from './utils/options';
 import InfoIcon from '@mui/icons-material/Info';
+import { LoadingButton } from '@mui/lab';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -73,8 +75,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   } = use_trd();
 
   //! context for the modal interacion
-  const { modalCreacionFormatoTipo, closeModalCreacionFormatoTipo } =
-    useContext(ModalContextTRD);
+  const {
+    modalCreacionFormatoTipo,
+    closeModalCreacionFormatoTipo,
+
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
+  } = useContext(ModalContextTRD);
 
   // ? function that allow us to create a format documental type
   const onSubmitCreateFormate = async () => {
@@ -82,6 +89,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
       nombre
     } = data_format_documental_type_watch_form;
+    console.log('cod_tipo_medio_doc', cod_tipo_medio_doc);
 
     try {
       await dispatch(
@@ -92,9 +100,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       );
 
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
-      reset_all_format_documental_type_modal();
+      // reset_all_format_documental_type_modal();
       // set_title_button('Actualizar');
     } catch (err) {
       console.log(err);
@@ -121,9 +133,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       );
 
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
-      reset_all_format_documental_type_modal();
+      // reset_all_format_documental_type_modal();
     } catch (err) {
       console.log(err);
     }
@@ -137,9 +153,12 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         delete_formato_by_tipo_medio_service(id_formato_tipo_medio)
       );
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
-      console.log(`format deleted: ${id_formato_tipo_medio}`);
     } catch (err) {
       console.log(err);
     }
@@ -177,8 +196,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
     {
       headerName: 'Activo',
       field: 'activo',
-      minWidth: 130,
-      maxWidth: 135,
+      minWidth: 80,
+      maxWidth: 95,
       flex: 1,
       renderCell: (params: any) =>
         params.row.activo ? (
@@ -210,7 +229,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   id_formato_tipo_medio: params.row.id_formato_tipo_medio
                 });
                 set_title_button('Actualizar');
-                console.log('params edit formato', params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -321,7 +339,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    margin="dense"
+                    // margin="dense"
                     fullWidth
                     // name="version"
                     label="Nombre tipo de formato"
@@ -361,9 +379,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                       field: { onChange, value },
                       fieldState: { error }
                     }) => (
-                      <FormControl
-                        fullWidth
-                      >
+                      <FormControl fullWidth>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -424,7 +440,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 spacing={2}
                 sx={{ mt: '0' }}
               >
-                <Button
+                <LoadingButton
+                  loading={createTRDLoadingButton}
                   color="primary"
                   variant="outlined"
                   startIcon={<SearchIcon />}
@@ -434,9 +451,9 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }
                   title={'Buscar datos de los formatos relacionados'}
                   onClick={() => {
-                    console.log('buscando datos de los formatos relacionados');
                     void dispatch(
                       get_formatos_by_tipo_medio_by_format_and_name(
+                        setCreateTRDLoadingButton,
                         data_format_documental_type_watch_form.nombre,
                         data_format_documental_type_watch_form[
                           'cod-tipo-medio'
@@ -446,12 +463,16 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }}
                 >
                   BUSCAR
-                </Button>
+                </LoadingButton>
+
                 <Button
+                  // loading={createTRDLoadingButton}
                   type="submit"
                   color="primary"
                   variant="contained"
-                  startIcon={<SaveIcon />}
+                  startIcon={
+                    title_button === 'Actualizar' ? <SyncIcon /> : <SaveIcon />
+                  }
                 >
                   {title_button}
                 </Button>
@@ -461,9 +482,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     reset_all_format_documental_type_modal();
-                    console.log(
-                      'hello from clean button, Im going to clean all fields'
-                    );
                   }}
                 >
                   LIMPIAR

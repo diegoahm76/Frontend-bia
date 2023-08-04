@@ -1,20 +1,23 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { toast, type ToastContent } from 'react-toastify';
-
 import { api } from '../../../../../../api/axios';
-// import { type AxiosError } from 'axios';
-
-
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { set_bienes_entrada, set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
-// import { log } from 'console';
-
-
+import {
+    set_bienes,
+    set_bienes_entrada,
+    set_bienes_entrega,
+    set_current_bien,
+    set_entradas,
+    set_entregas,
+    set_nro_entrega,
+    set_persona_entrega,
+} from '../slice/indexEntrega';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+export const control_error = (
+    message: ToastContent = 'Algo pasó, intente de nuevo'
+) =>
     toast.error(message, {
         position: 'bottom-right',
         autoClose: 3000,
@@ -23,9 +26,8 @@ export const control_error = (message: ToastContent = 'Algo pasó, intente de nu
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light'
+        theme: 'light',
     });
-
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_success = (message: ToastContent) =>
@@ -37,7 +39,7 @@ const control_success = (message: ToastContent) =>
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light'
+        theme: 'light',
     });
 
 // obtener numero de entrega
@@ -48,22 +50,20 @@ export const get_num_entrega = (): any => {
 
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
-                dispatch(set_nro_entrega(data.data))
+                dispatch(set_nro_entrega(data.data));
             }
-            console.log(data)
+            console.log(data);
             return data;
         } catch (error: any) {
             return error as AxiosError;
         }
     };
-}
+};
 // obtener entregas
 export const get_entregas_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/entregas/get-entregas`);
-
-
 
             if (data.success === true) {
                 dispatch(set_entregas(data.data));
@@ -74,7 +74,6 @@ export const get_entregas_service = (): any => {
             }
             return data;
         } catch (error: any) {
-
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -82,15 +81,13 @@ export const get_entregas_service = (): any => {
 };
 
 // obtener entradas disponibles
-export const get_entregas_disponible = (): any => {
+export const get_entradas_disponible = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/entregas/get-entradas-entregas/`);
 
-
-
             if (data.success === true) {
-                dispatch(set_entregas(data.data));
+                dispatch(set_entradas(data.data));
                 console.log(data);
                 control_success(data.detail);
             } else {
@@ -98,13 +95,11 @@ export const get_entregas_disponible = (): any => {
             }
             return data;
         } catch (error: any) {
-
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };
 };
-
 
 // obtener persona por iddocumento
 export const get_person_id_entrega = (id: number): any => {
@@ -145,35 +140,37 @@ export const get_tipo_entrada = (): any => {
             if (data.success === true) {
                 // dispatch(set_entregas(data.data));
                 console.log(data);
-                control_success(data.detail);
+                //  control_success(data.detail);
             } else {
-                control_error(data.detail);
+                // control_error(data.detail);
             }
             return data;
         } catch (error: any) {
-
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };
 };
 
-
 // Obtener bienes por numero de solicitud
 
-export const get_bienes_entrada = (
-    id_entrada_almacen: number | null,
-): any => {
+export const get_bienes_entrada = (id_entrada_almacen: number | null): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(`almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ""}`)
-            const { data } = await api.get(`almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ""}/`);
+            console.log(
+                `almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ''
+                }`
+            );
+            const { data } = await api.get(
+                `almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ''
+                }/`
+            );
             if (data.success === true) {
                 dispatch(set_bienes_entrada(data.data));
-                console.log(data)
-                control_success(data.detail)
+                console.log(data);
+                control_success(data.detail);
             } else {
-                control_error(data.detail)
+                control_error(data.detail);
             }
 
             return data;
@@ -185,3 +182,149 @@ export const get_bienes_entrada = (
     };
 };
 
+// obtener bienes
+export const get_bien_code_service = (code: string, fecha: string): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(
+                `almacen/despachos/agregar-bienes-consumo-conservacion-by-lupa/?codigo_bien_solicitado=${code}&fecha_despacho=${fecha}`
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
+            if (data.data.length > 0) {
+                if (data.data.length === 1) {
+                    dispatch(set_current_bien(data.data[0]));
+                    control_success('Se selecciono el bien');
+                } else {
+                    dispatch(set_bienes(data.data));
+                    control_success('Se encontraron bienes');
+                }
+            }
+
+            return data;
+        } catch (error: any) {
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// Crear entrega
+export const crear_entrega: any = (entrega: any) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            //  console.log(despacho);
+            const { data } = await api.post('almacen/entregas/create-entrega/', entrega);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+            control_success('se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            //  control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// Editar entrega
+export const editar_entrega: any = (
+    id: number,
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            // console.log(despacho);
+            const { data } = await api.put(`almacen/entregas/actualizar-entrega/${id}/`);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            //  control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// anular despacho
+export const annul_despacho_service = (
+    id: number,
+    entrega: any,
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.patch(`almacen/entregas/anular-entrega/${id}/`,
+                entrega
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+            console.log('annul_despacho_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener entregas
+export const get_entregas_services = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('almacen/entregas/get-entregas/');
+
+            if (data.success === true) {
+                dispatch(set_entregas(data.data));
+                console.log(data);
+                // control_success(data.detail);
+            } else {
+                // control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// obtener bienes entregas
+export const get_bien_entrega_services = (id: number | null | undefined): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/entregas/get-items-entregas/${id ?? ""}/`);
+
+            if (data.success === true) {
+                dispatch(set_bienes_entrega(data.data));
+                console.log(data);
+                // control_success(data.detail);
+            } else {
+                // control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};

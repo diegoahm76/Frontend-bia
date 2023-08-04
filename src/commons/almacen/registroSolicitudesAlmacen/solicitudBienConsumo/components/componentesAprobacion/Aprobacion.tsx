@@ -11,13 +11,14 @@ import { useSelector } from 'react-redux';
 interface IProps {
 
     control_solicitud_aprobacion: any;
-    get_values: any
+    get_values: any;
+    title: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const Aprobacion = ({
 
     control_solicitud_aprobacion,
-    get_values
+    get_values, title,
 }: IProps) => {
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -88,6 +89,11 @@ const Aprobacion = ({
                     set_models={set_solicitudes}
                     show_search_button={false}
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? ""
+
+                        },
 
                         {
                             datum_type: "input_controller",
@@ -139,7 +145,19 @@ const Aprobacion = ({
                             helper_text: "",
 
                         },
-
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 12,
+                            control_form: control_solicitud_aprobacion,
+                            control_name: "persona_solicita",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Solicitud aprobada por:",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
 
                         // {
                         //     datum_type: "input_controller",

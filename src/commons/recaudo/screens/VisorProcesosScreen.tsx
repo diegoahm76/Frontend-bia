@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Avatar, Box, Button, Grid, IconButton, Stack, TextField, Tooltip } from "@mui/material"
 import { Title } from '../../../components/Title';
 import EditIcon from '@mui/icons-material/Edit';

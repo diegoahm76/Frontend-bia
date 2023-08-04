@@ -7,6 +7,7 @@ import {
   set_current_stage_change,
   set_current_nursery,
   reset_state,
+  initial_state_current_nursery,
 } from '../store/slice/produccionSlice';
 import { useEffect, useState } from 'react';
 // import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/produccionThunks";
@@ -19,6 +20,7 @@ import PersonaCambia from '../componentes/PersonaCambia';
 import {
   add_stage_change_service,
   annul_stage_change_service,
+  control_error,
   edit_stage_change_service,
   get_nurseries_service,
   get_person_id_service,
@@ -83,7 +85,6 @@ export function CambioEtapaScreen(): JSX.Element {
     reset_cambio(current_stage_change);
     if (current_stage_change.id_cambio_de_etapa !== null) {
       set_action('editar');
-      console.log(current_stage_change);
       // sdispatch(set_current_vegetal_material({ id_bien: current_stage_change.id_bien, codigo_bien: (current_stage_change.codigo??""), nombre: (current_stage_change.nombre??""), agno_lote: current_stage_change.agno_lote, nro_lote: current_stage_change.nro_lote, cod_etapa_lote: current_stage_change.cod_etapa_lote_origen, etapa_lote: (current_stage_change.desc_etapa_lote_origen??""), cantidad_disponible: current_stage_change.cantidad_disponible_al_crear }))
     }
   }, [current_stage_change]);
@@ -120,7 +121,11 @@ export function CambioEtapaScreen(): JSX.Element {
           })
         );
         dispatch(set_current_nursery(vivero));
+      } else {
+        dispatch(set_current_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch_cambio('id_vivero')]);
 
@@ -132,19 +137,29 @@ export function CambioEtapaScreen(): JSX.Element {
       current_stage_change.id_cambio_de_etapa !== null &&
       current_stage_change.id_cambio_de_etapa !== undefined
     ) {
-      set_action('editar');
-      form_data.append('altura_lote_en_cms', Number(data.altura_lote_en_cms));
-      form_data.append('observaciones', data.observaciones);
-      form_data.append('id_persona_cambia', data.id_persona_cambia);
-      form_data.append('cantidad_movida', Number(data.cantidad_movida));
-      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+      const fecha_actual = new Date();
+      const fecha_cambio = new Date(data.fecha_cambio ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_cambio.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
+        form_data.append('altura_lote_en_cms', Number(data.altura_lote_en_cms));
+        form_data.append('observaciones', data.observaciones);
+        form_data.append('id_persona_cambia', data.id_persona_cambia);
+        form_data.append('cantidad_movida', Number(data.cantidad_movida));
+        form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
 
-      void dispatch(
-        edit_stage_change_service(
-          form_data,
-          current_stage_change.id_cambio_de_etapa
-        )
-      );
+        void dispatch(
+          edit_stage_change_service(
+            form_data,
+            current_stage_change.id_cambio_de_etapa
+          )
+        );
+      } else {
+        control_error(
+          'Solo se pueden editar cambios de etapa hasta 30 dias despues de la fecha de cambio'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_cambio ?? '').toISOString();
@@ -166,8 +181,6 @@ export function CambioEtapaScreen(): JSX.Element {
       form_data.append('observaciones', data.observaciones);
       form_data.append('id_persona_cambia', Number(data.id_persona_cambia));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
-      console.log(data);
-
       void dispatch(add_stage_change_service(form_data));
     }
   };
@@ -177,12 +190,22 @@ export function CambioEtapaScreen(): JSX.Element {
       current_stage_change.id_cambio_de_etapa !== null &&
       current_stage_change.id_cambio_de_etapa !== undefined
     ) {
-      void dispatch(
-        annul_stage_change_service(
-          current_stage_change.id_cambio_de_etapa,
-          data
-        )
-      );
+      const fecha_actual = new Date();
+      const fecha_cambio = new Date(current_stage_change.fecha_cambio ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_cambio.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        void dispatch(
+          annul_stage_change_service(
+            current_stage_change.id_cambio_de_etapa,
+            data
+          )
+        );
+      } else {
+        control_error(
+          'Solo se pueden anular cambios de etapa hasta 30 dias despues de la fecha de cambio'
+        );
+      }
     }
   };
 
@@ -200,22 +223,21 @@ export function CambioEtapaScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Cambios de etapa material vegetal"></Title>
+          <Title title="Cambio de etapa"></Title>
         </Grid>
 
+        <SeleccionarMaterialVegetal
+          control_material_vegetal={control_material}
+          get_values={get_values_material}
+        />
         <SeleccionarCambio
           control_cambio={control_cambio}
           get_values={get_values_cambio}
           open_modal={open_search_modal}
           set_open_modal={set_open_search_modal}
         />
-        {current_nursery.id_vivero !== null && (
-          <SeleccionarMaterialVegetal
-            control_material_vegetal={control_material}
-            get_values={get_values_material}
-          />
-        )}
-        <PersonaCambia title={'Persona que realiza el cambio'} />
+
+        <PersonaCambia title={'Persona que realiza el cambio de etapa'} />
         <Grid container direction="row" padding={2} spacing={2}>
           {!(current_stage_change.cambio_anulado === true) && (
             <Grid item xs={12} md={3}>
@@ -223,7 +245,7 @@ export function CambioEtapaScreen(): JSX.Element {
                 variant_button="contained"
                 on_click_function={handle_submit(on_submit)}
                 icon_class={<SaveIcon />}
-                label={action}
+                label={'guardar' ?? action}
                 type_button="button"
               />
             </Grid>
@@ -235,7 +257,7 @@ export function CambioEtapaScreen(): JSX.Element {
               icon_class={<SearchIcon />}
               label={'Buscar cambio de etapa'}
               type_button="button"
-              disabled={false}
+              disabled={current_nursery.id_vivero === null}
             />
           </Grid>
           <Grid item xs={12} md={3}>

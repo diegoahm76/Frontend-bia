@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { Divider, Typography } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../../context/contextData';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridValueFormatterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaPorh: React.FC = () => {
@@ -39,6 +44,17 @@ export const ConsultaPorh: React.FC = () => {
       headerName: 'INVERSIÓN',
       sortable: true,
       width: 250,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
     },
   ];
   const columns_actividades: GridColDef[] = [
@@ -53,14 +69,6 @@ export const ConsultaPorh: React.FC = () => {
       headerName: 'FECHA REGISTRO',
       sortable: true,
       width: 250,
-    },
-    {
-      field: 'ACCIONES',
-      headerName: 'ACCIONES',
-      width: 200,
-      renderCell: (params) => {
-        return <></>;
-      },
     },
   ];
 

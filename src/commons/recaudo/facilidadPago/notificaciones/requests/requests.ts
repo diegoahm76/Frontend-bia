@@ -4,7 +4,7 @@ import { type RecepcionFisica, type NotificacionFisica, type NotificacionEmailEd
 // Obtener Datos Personales del Usuario Externo
 export const get_datos_remitente = async (): Promise<any> => {
   return await api.get(`transversal/notificaciones/datos-remitente/1/`);
-};
+}
 
 // Crear Recepción Notificación Despacho Físico
 export const post_recepcion_fisica = async (recepcion: RecepcionFisica): Promise<any> => {

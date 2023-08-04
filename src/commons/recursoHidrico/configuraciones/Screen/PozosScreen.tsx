@@ -58,52 +58,6 @@ export const PozosScreen: React.FC = () => {
       },
     },
     {
-      field: 'precargado',
-      headerName: 'PRECARGADO',
-      sortable: true,
-      width: 120,
-      renderCell: (params) => {
-        return params.row.precargado === true ? (
-          <Chip
-            size="small"
-            label="Activo"
-            color="success"
-            variant="outlined"
-          />
-        ) : (
-          <Chip
-            size="small"
-            label="Inactivo"
-            color="error"
-            variant="outlined"
-          />
-        );
-      },
-    },
-    {
-      field: 'item_ya_usado',
-      headerName: 'ITEM YA USADO',
-      sortable: true,
-      width: 120,
-      renderCell: (params) => {
-        return params.row.item_ya_usado === true ? (
-          <Chip
-            size="small"
-            label="Activo"
-            color="success"
-            variant="outlined"
-          />
-        ) : (
-          <Chip
-            size="small"
-            label="Inactivo"
-            color="error"
-            variant="outlined"
-          />
-        );
-      },
-    },
-    {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
       width: 200,

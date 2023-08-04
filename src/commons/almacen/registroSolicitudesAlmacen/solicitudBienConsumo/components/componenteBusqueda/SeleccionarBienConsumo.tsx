@@ -48,7 +48,7 @@ const SeleccionarBienConsumo = () => {
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -58,7 +58,7 @@ const SeleccionarBienConsumo = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,flex:1,  
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -360,8 +360,6 @@ const SeleccionarBienConsumo = () => {
                             rules: { required_rule: { rule: true, message: "Observación requerido" } },
                             label: "Observación",
                             type: "text",
-                            multiline_text: true,
-                            rows_text: 4,
                             disabled: false,
                             helper_text: ""
                         },

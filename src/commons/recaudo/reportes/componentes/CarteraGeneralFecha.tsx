@@ -47,7 +47,7 @@ export const CarteraGeneralFecha: React.FC = () => {
   };
 
   const handle_export_excel = async (): Promise<void> => {
-    const fecha_seleccionada = dayjs(date).format('YYYY-MM-DD');
+    const fecha_seleccionada = dayjs(date).format('DD/MM/YYYY');
     try {
       const xlsx = await import('xlsx');
       const worksheet = xlsx.utils.json_to_sheet(visible_rows);
@@ -80,7 +80,7 @@ export const CarteraGeneralFecha: React.FC = () => {
   };
 
   const handle_export_pdf = () => {
-    const fecha_seleccionada = dayjs(date).format('YYYY-MM-DD');
+    const fecha_seleccionada = dayjs(date).format('DD/MM/YYYY');
     const report = new JsPDF('l', 'pt', 'letter');
     report.text(`Reporte General de Cartera Fecha de Corte ${fecha_seleccionada}`, 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
@@ -202,7 +202,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                   <DatePicker
                     label="Fecha Corte"
-                    inputFormat="YYYY/MM/DD"
+                    inputFormat="DD/MM/YYYY"
                     openTo="day"
                     views={['day', 'month', 'year']}
                     value={date}

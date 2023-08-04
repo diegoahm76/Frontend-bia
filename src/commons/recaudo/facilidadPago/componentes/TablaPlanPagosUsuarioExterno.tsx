@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, TextField, Stack } from '@mui/material';
+import { Grid, Box, TextField, Stack, Tooltip, IconButton, Avatar } from '@mui/material';
+import { Preview } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaPlanPagosUsuarioExterno: React.FC = () => {
   const [total, set_total] = useState(0);
+  const navigate = useNavigate();
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -77,7 +79,27 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <Link to='../recibo'>Ver / Generar</Link>
+          <Tooltip title="Ver / Generar">
+            <IconButton
+              onClick={() => {
+                navigate('../recibo');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <Preview
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         )
       }
     },

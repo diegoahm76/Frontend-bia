@@ -7,7 +7,7 @@ const initial_state = {
 
 // Ver la información de la facilidad de pago desde Pag. Usuario Interno
 export const get_facilidad_solicitud = createAsyncThunk('facilidades_pago/solicitud', async (id: number) => {
-  const { data } = await api.get(`recaudo/pagos/consulta-facilidades-pagos/${id}/`)
+  const { data } = await api.get(`recaudo/facilidades-pagos/get-id/${id}/`)
   return data.data
 })
 

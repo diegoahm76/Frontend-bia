@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid } from "@mui/material";
 import { useState, type ReactNode } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 interface IProps {
-  texto_boton: string;
+
+  categoria: string;
+
   children: ReactNode;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const CollapsibleButton = ({ texto_boton, children }: IProps): JSX.Element => {
+export const CollapsibleButton = ({ categoria, children }: IProps): JSX.Element => {
+
   const [open, set_open] = useState(false);
   return (
     <Grid
@@ -35,19 +38,21 @@ export const CollapsibleButton = ({ texto_boton, children }: IProps): JSX.Elemen
           set_open(previousState => !previousState);
         }}
       >
-        {texto_boton}
+
+        {categoria}
+
       </Button>
       <Grid
         item
         xs={12}
         sx={{
           overflow: 'hidden',
+          transition: '0.2s ease-out',
           maxHeight: open ? 'auto' : '0px',
         }}
       >
-        <Grid item sx={{ m: '20px' }}>
-          {children}
-        </Grid>
+        {children}
+
       </Grid>
     </Grid >
   );

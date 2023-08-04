@@ -1,35 +1,53 @@
-import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import Button from '@mui/material/Button';
 
-export const download_xls = ({ nurseries, columns }: any): void => {
-  
-    const rows = document.querySelectorAll('.MuiDataGrid-row');
-    const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');
+interface DownloadXLSProps {
+  nurseries: any[];
+  columns: any[];
+}
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const download_xls: React.FC<DownloadXLSProps> = ({ nurseries, columns }) => {
+
+  const handle_download = (): void => {
     const data: any[][] = [];
 
-    const headers = Array.from(header_cells).map((cell) => cell.textContent);
+    const headers = columns.map((column: any) => column.headerName);
+    data.push(headers);
 
-    rows.forEach((row) => {
+    nurseries.forEach((nursery) => {
       const row_data: any[] = [];
-      const cells = row.querySelectorAll('.MuiDataGrid-cell');
-
-      cells.forEach((cell) => {
-        row_data.push(cell.textContent);
+      columns.forEach((column: any) => {
+        row_data.push(nursery[column.field as keyof typeof nursery]);
       });
 
       data.push(row_data);
     });
 
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]); // Combina headers con los subarreglos de data
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
 
-    const file_i = Math.random(); // Reemplaza con la variable que contenga el ID
-    const file_nnn = `productos_${file_i}.xlsx`; // Nombre del archivo con el ID concatenado
+    const file_id = Math.random();
+    const file_name = `productos_${file_id}.xlsx`;
 
-    XLSX.writeFile(workbook, file_nnn);
-  
-  
+    XLSX.writeFile(workbook, file_name);
   };
 
+  const button_style = {
+    color: 'white',
+    backgroundColor: '#335B1E',
+    borderRadius: '50%',
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: '10px'
+  };
 
+  return (
+    <Button style={button_style} onClick={handle_download}>
+      <img style={{ width: 45 }} src="../image/botones/xlsboton.png" alt="XLS Button" />
+    </Button>
+  );
+};

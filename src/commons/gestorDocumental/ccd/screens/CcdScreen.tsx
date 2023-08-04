@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // Components Material UI
 import {
   Grid,
@@ -33,7 +33,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
-  get_classification_ccds_service
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -50,16 +49,15 @@ import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton'
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
-  create_or_delete_assignments_service,
   get_assignments_service
 } from '../store/thunks/assignmentsThunks';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const {
     openModalModalSeriesAndSubseries,
     busquedaCreacionCCDModal,
-    openModalBusquedaCreacionCCD,
     loadingButton
   } = useContext(ModalContext);
 
@@ -69,7 +67,7 @@ export const CcdScreen: React.FC = () => {
   const { series_ccd, serie_ccd_current } = useAppSelector(
     (state: any) => state.series
   );
-  const { subseries_ccd, subserie_ccd_current } = useAppSelector(
+  const { subseries_ccd } = useAppSelector(
     (state: any) => state.subseries
   );
   const { seriesAndSubseries } = useAppSelector(
@@ -84,10 +82,6 @@ export const CcdScreen: React.FC = () => {
       ccd_current?.fecha_terminado !== null &&
         ccd_current?.fecha_terminado !== '' &&
         ccd_current?.fecha_terminado !== undefined
-    );
-    console.log(
-      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ ccd_current?.fecha_terminado',
-      ccd_current?.fecha_terminado
     );
   }, [ccd_current?.fecha_terminado]);
 
@@ -123,7 +117,7 @@ export const CcdScreen: React.FC = () => {
     set_consulta_ccd_is_active,
     // // Functions
     on_submit_create_ccd,
-    on_submit_create_or_delete_relation_unidad,
+    // on_submit_create_or_delete_relation_unidad,
     create_or_delete_relation_unidad,
     clean_ccd
   } = use_ccd() as any;
@@ -142,7 +136,7 @@ export const CcdScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Cuadro de clasificación documental - Busca CCD por nombre y versión" />
+          <Title title="Cuadro de clasificación documental" />
           <form
             style={{
               marginTop: '20px'
@@ -247,15 +241,24 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       disabled={ccd_current?.actual}
                       size="small"
                       label="Nombre CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        if (e.target.value.length === 50)
+                          control_warning('máximo 50 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       error={!(error == null)}
+                      inputProps={{
+                        maxLength: 50
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un nombre'
@@ -276,15 +279,24 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       disabled={ccd_current?.actual}
                       size="small"
                       label="Versión CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       error={!(error == null)}
+                      onChange={(e) => {
+                        if (e.target.value.length === 10)
+                          control_warning('máximo 10 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar una versión'
@@ -306,13 +318,10 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
-                      /* sx={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
-                      }} */
                       style={{
                         color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
                       }}
@@ -344,7 +353,7 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      margin="dense"
+                      // margin="dense"
                       fullWidth
                       size="small"
                       label="valor aumento subseries CCD"
@@ -394,13 +403,18 @@ export const CcdScreen: React.FC = () => {
                         <input
                           style={{ display: 'none' }}
                           type="file"
+                          accept='application/pdf'
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
-                            console.log('valueeee', value);
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
-                              onChange(files[0]);
-                              console.log(files[0]);
+                              const file = files[0];
+                              if (file.type !== 'application/pdf') {
+                                control_warning('Solo formato pdf')
+                                // dejar vacio el input file
+                              } else {
+                                onChange(file);
+                              }
                             }
                           }}
                         />
@@ -526,10 +540,10 @@ export const CcdScreen: React.FC = () => {
                               dispatch(
                                 get_serie_ccd_current(selectedOption.value)
                               );
-                              console.log(
+                            /*  console.log(
                                 'Valor seleccionado:',
                                 selectedOption
-                              );
+                              ); */
                             }}
                             options={list_sries}
                             // isSearchable
@@ -680,7 +694,7 @@ export const CcdScreen: React.FC = () => {
                       variant="outlined"
                       disabled={ccd_current === null}
                       onClick={() => {
-                        console.log('ver catalogo de series y subseries');
+                        // console.log('ver catalogo de series y subseries');
                         openModalModalSeriesAndSubseries();
                         dispatch(
                           getCatalogoSeriesYSubseries(ccd_current.id_ccd)
@@ -817,7 +831,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       onClick={() => {
                         void dispatch(create_or_delete_relation_unidad);
-                        void dispatch(get_assignments_service(ccd_current));
+                        // void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
                       variant="contained"
@@ -871,7 +885,8 @@ export const CcdScreen: React.FC = () => {
                       void dispatch(
                         to_finished_ccds_service(
                           set_flag_btn_finish,
-                          ccd_current
+                          ccd_current,
+                          assignments_ccd,
                         )
                       );
                     }}

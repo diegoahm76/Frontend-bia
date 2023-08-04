@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Avatar, Button, Grid, TextField, Tooltip } from '@mui/material';
 import { Title } from '../../../components/Title';
 // import { TablaIncumplimiento } from '../components/HistorialProceso/TablaIncumplimiento';
@@ -338,9 +339,9 @@ export const HistorialProceso: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
-        <CollapsibleButton texto_boton={state?.proceso?.id_etapa?.etapa}>
+        <CollapsibleButton categoria={state?.proceso?.id_etapa?.etapa}>
           {rows_valores_proceso.map((arreglo_objetos, index) => (
-            <CollapsibleButton key={index} texto_boton={arreglo_objetos[0].id_atributo.id_categoria.categoria}>
+            <CollapsibleButton key={index} categoria={arreglo_objetos[0].id_atributo.id_categoria.categoria}>
               <DataGrid
                 density={state?.editar ? 'standard' : 'compact'}
                 autoHeight

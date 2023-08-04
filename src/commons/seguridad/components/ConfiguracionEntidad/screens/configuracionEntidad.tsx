@@ -7,17 +7,20 @@ import { TablaSucursales } from "../components/tablasSucursales/tablasSucursales
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionEntidad: React.FC = () => {
+ 
+
+
     return (
         <>
-            <MostrarEntidad/>
-         
-            <MostrarEmail/>
-          
-            <MostrarEditables/>
-            <br /> {/* Salto de línea */}
-            <TablaSucursales/>
-            <br /> {/* Salto de línea */}
-            <TablaLineresUnidadesOrganizacionales/>
+            <MostrarEntidad />
+            <MostrarEmail  /> {/* Pasa el prop emailSent a MostrarEmail */}
+            <MostrarEditables />
+            <br />
+            <TablaSucursales />
+            <br />
+            <TablaLineresUnidadesOrganizacionales />
+
+        
         </>
     );
-}
+};

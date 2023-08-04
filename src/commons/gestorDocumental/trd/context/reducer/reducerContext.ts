@@ -58,12 +58,56 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalAdministracionTipologiasDocumentales: payload || false
       };
+    //* MODAL ESTABLECER TIPOLOGIA DOCUMENTAL A TRD
+    case Modal.OPEN_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD:
+      return {
+        ...state,
+        modalEstablecerTipologiaDocumentalATRD: payload || true
+      };
+    case Modal.CLOSE_MODAL_ESTABLECER_TIPOLOGIA_DOCUMENTAL_A_TRD:
+      return {
+        ...state,
+        modalEstablecerTipologiaDocumentalATRD: payload || false
+      };
+    //* modal administracion de TRD
+    case Modal.OPEN_MODAL_ADMINISTRACION_TRD:
+      return {
+        ...state,
+        modalAdministracionTRD: payload || true
+      };
+    case Modal.CLOSE_MODAL_ADMINISTRACION_TRD:
+      return {
+        ...state,
+        modalAdministracionTRD: payload || false
+      };
+    //* historial de cambios
+    case Modal.OPEN_MODAL_HISTORIAL_CAMBIOS:
+      return {
+        ...state,
+        modalHistorialCambios: payload || true
+      };
+    case Modal.CLOSE_MODAL_HISTORIAL_CAMBIOS:
+      return {
+        ...state,
+        modalHistorialCambios: payload || false
+      };
     // ? buttons, loading, etc
     case Modal.CREATE_TRD_LOADING_BUTTON:
       return {
         ...state,
         createTRDLoadingButton: payload || false
       };
+    case Modal.SET_BUTTON_ADD_NEW_TRD_RELATION_ACTUAL:
+      return {
+        ...state,
+        buttonAddNewTRDRelationActual: payload || false
+      };
+    case Modal.SET_BUTTON_SPECIAL_EDITION_ACTUAL_TRD:
+      return {
+        ...state,
+        buttonSpecialEditionActualTRD: payload || false
+      };
+
     default:
       return state;
   }

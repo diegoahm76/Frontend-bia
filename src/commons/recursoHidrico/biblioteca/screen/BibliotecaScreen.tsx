@@ -9,6 +9,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import { useForm } from 'react-hook-form';
 import { SeccionSubseccionMain } from '../components/SeccionSubseccionMain';
 import '../css/styles.css';
+import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BibliotecaScreen: React.FC = () => {
@@ -153,11 +154,14 @@ export const BibliotecaScreen: React.FC = () => {
                 getRowId={(row) => row.id_seccion}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                rowHeight={100}
+                rowHeight={150}
               />
             </Grid>
           </>
         )}
+      </Grid>
+      <Grid item container justifyContent="flex-end" spacing={2}>
+        <ButtonSalir/>
       </Grid>
     </>
   );
