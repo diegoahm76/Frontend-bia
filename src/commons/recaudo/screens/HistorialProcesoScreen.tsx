@@ -199,7 +199,6 @@ export const HistorialProceso: React.FC = () => {
       valor: value,
     })
       .then((response) => {
-        console.log(response);
         set_notification_info({ type: 'success', message: `Se ha actualizado correctamente el valor "${value}".` });
         set_open_notification_modal(true);
       })
@@ -215,7 +214,6 @@ export const HistorialProceso: React.FC = () => {
       documento: value,
     })
       .then((response) => {
-        console.log(response);
         set_notification_info({ type: 'success', message: `Se ha actualizado correctamente el archivo "${value.name}".` });
         set_open_notification_modal(true);
       })
