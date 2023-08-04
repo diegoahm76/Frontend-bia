@@ -4,9 +4,6 @@ import { control_warning } from '../commons/almacen/configuracion/store/thunks/B
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const baseURL = 'https://back-end-bia-beta.up.railway.app/api/';
 
-const baseURL = "https://back-end-bia-beta.up.railway.app/api/"
-// const baseURL = "http://70.30.6.237/api/"
-
 export const api = axios.create({
   baseURL
 });
