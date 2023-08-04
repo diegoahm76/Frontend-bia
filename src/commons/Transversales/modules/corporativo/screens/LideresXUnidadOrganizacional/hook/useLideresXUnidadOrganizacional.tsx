@@ -46,10 +46,15 @@ export const useLideresXUnidadOrganizacional = ():
   const {
     control: control_seleccionar_lideres,
     // handleSubmit: handleSubmit_seleccionar_lideres,
-    //  formState: formState_seleccionar_lideres,
     reset: reset_seleccionar_lideres,
     watch: watch_seleccionar_lideres
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      tipo_documento: '',
+      numero_documento: '',
+      nombre_persona: ''
+    } as any
+  });
 
   const watch_seleccionar_lideres_value = watch_seleccionar_lideres();
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import { useEffect, useState } from 'react';
 import { Button, Grid, Stack, TextField } from '@mui/material';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../../../../../components';
@@ -8,16 +9,55 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
 import Select from 'react-select';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { useAppSelector } from '../../../../../../../../../../hooks';
+import { getTipoDocumento } from './services/getTipoDocumento.service';
+import type { ISeleccionLideresProps } from './types/seleccionLideres.types';
 
 export const SeleccionLider = (): JSX.Element => {
   //* ----- form control declarations -------
-  const { control_seleccionar_lideres } = useLideresXUnidadOrganizacional();
+  const { control_seleccionar_lideres, reset_seleccionar_lideres } =
+    useLideresXUnidadOrganizacional();
+
+  //* states redux selectors
+  /* const { organigrama_lideres_current } = useAppSelector(
+    (state) => state.lideres_slice
+  ); */
+
+  // ? ------- use states declarations -------
+  const [tiposDocumentos, setTiposDocumentos] = useState<
+    ISeleccionLideresProps[]
+  >([]);
+
+  // ? ------- use effect declarations -------
+  useEffect(() => {
+    void getTipoDocumento()
+      .then((res) => {
+        const filterDocumentos = res.filter(
+          (item: ISeleccionLideresProps) => item.value !== 'NT'
+        );
+        setTiposDocumentos(filterDocumentos);
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle the error here
+      });
+  }, []);
+
+  // * functions
+
+  const cleanElementComponent = (): void =>
+    reset_seleccionar_lideres({
+      tipo_documento: '',
+      numero_documento: '',
+      nombre_persona: ''
+    });
 
   return (
     <>
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="Líderes por Unidad Organizacional - (Organigrama)" />
+          <Title title="Líder" />
           <form
             onSubmit={(w) => {
               w.preventDefault();
@@ -62,40 +102,7 @@ export const SeleccionLider = (): JSX.Element => {
                           false
                           /* solo cuando el organigrama que estoy usando esté fuera de producción */
                         }
-                        options={[
-                          {
-                            value: 'TI',
-                            label: 'Tarjeta de identidad'
-                          },
-                          {
-                            value: 'CC',
-                            label: 'Cédula de ciudadanía'
-                          },
-                          {
-                            value: 'RC',
-                            label: 'Registro civil'
-                          },
-                          {
-                            value: 'NU',
-                            label: 'NUIP'
-                          },
-                          {
-                            value: 'CE',
-                            label: 'Cédula extranjeria'
-                          },
-                          {
-                            value: 'PA',
-                            label: 'Pasaporte'
-                          },
-                          {
-                            value: 'PE',
-                            label: 'Permiso especial de permanencia'
-                          },
-                          {
-                            value: 'NT',
-                            label: 'NIT'
-                          }
-                        ]}
+                        options={tiposDocumentos}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -131,6 +138,7 @@ export const SeleccionLider = (): JSX.Element => {
                       size="small"
                       variant="outlined"
                       value={value}
+                      onChange={onChange}
                       InputLabelProps={{ shrink: true }}
                       // disabled={true}
                     />
@@ -149,13 +157,14 @@ export const SeleccionLider = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
-                      label="Descripción"
+                      label="Nombre de la persona"
                       size="small"
                       multiline
                       rows={1}
                       maxRows={2}
                       variant="outlined"
                       value={value}
+                      onChange={onChange}
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
@@ -186,10 +195,7 @@ export const SeleccionLider = (): JSX.Element => {
                 color="success"
                 variant="contained"
                 startIcon={<CleanIcon />}
-                onClick={() => {
-                  console.log('LIMPIANDO CAMPOS');
-                  // onSubmit();
-                }}
+                onClick={cleanElementComponent}
               >
                 LIMPIAR CAMPOS
               </Button>
