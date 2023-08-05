@@ -1,15 +1,14 @@
 /* eslint-disable object-shorthand */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint no-new-func: 0 */
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react"
-import { Box, Button, FormControl, Grid, MenuItem, Select, type SelectChangeEvent, Stack, InputLabel, TextField, List, ListItemText } from "@mui/material"
-import { DataGrid, type GridColDef } from "@mui/x-data-grid"
-import { Title } from "../../../../components"
-import { DetalleModal } from "./modal/DetalleModal"
-import type { FormDetalleLiquidacion, FormLiquidacion, OpcionLiquidacion } from "../../interfaces/liquidacion"
-
+import { useState, type Dispatch, type SetStateAction } from "react";
+import { Box, Button, Grid, List, ListItemText } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { Title } from "../../../../components";
+import { DetalleModal } from "./modal/DetalleModal";
+import type { FormDetalleLiquidacion, FormLiquidacion, OpcionLiquidacion } from "../../interfaces/liquidacion";
+import AddIcon from '@mui/icons-material/Add';
 interface IProps {
-  opciones_liquidacion: OpcionLiquidacion[];
   set_form_liquidacion: Dispatch<SetStateAction<FormLiquidacion>>;
   set_form_detalle_liquidacion: Dispatch<SetStateAction<FormDetalleLiquidacion[]>>;
 }
@@ -67,24 +66,12 @@ const column_detalle: GridColDef[] = [
 ]
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
-export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set_form_liquidacion, set_form_detalle_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({ set_form_liquidacion, set_form_detalle_liquidacion }: IProps) => {
   const [rows, set_rows] = useState<Row[]>([]);
   const [modal_detalle, set_modal_detalle] = useState<boolean>(false);
-  const [concepto, set_concepto] = useState('');
-  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
   const [id_row, set_id_row] = useState(0);
 
-  const opcion_liquidacion: OpcionLiquidacion = useMemo(() => opciones_liquidacion.filter(opcion_liquidacion => opcion_liquidacion.id === Number(id_opcion_liquidacion))[0], [id_opcion_liquidacion]);
-
-  const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-    set_id_opcion_liquidacion(event.target.value);
-  }
-
-  const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    set_concepto(event.target.value);
-  };
-
-  const add_new_row = (valor: string, nuevas_variables: Record<string, string>): void => {
+  const add_new_row = (valor: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string): void => {
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const funcion = new Function(`return ${valor}`);
     const new_row: Row = {
@@ -110,8 +97,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
     ]);
   };
 
-  const handle_liquidar = (event: React.FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
+  const handle_liquidar = (): void => {
     set_modal_detalle(true);
   }
 
@@ -139,59 +125,24 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
               getRowHeight={() => 'auto'}
             />
           </Box>
-          <Box
-            component='form'
-            onSubmit={handle_liquidar}
-            sx={{ mt: '20px' }}
-            autoComplete="off"
-          >
-            <Stack
-              direction="column"
-              spacing={2}
-              sx={{ m: '20px 0' }}
-              justifyContent="flex-end"
+        </Grid>
+        <Grid container justifyContent='center' sx={{ my: '20px' }}>
+          <Grid item xs={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={<AddIcon />}
+              onClick={handle_liquidar}
             >
-              <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
-                <InputLabel>Selecciona opción liquidación</InputLabel>
-                <Select
-                  label='Selecciona opción liquidación'
-                  value={id_opcion_liquidacion}
-                  MenuProps={{
-                    style: {
-                      maxHeight: 224,
-                    }
-                  }}
-                  onChange={handle_select_change}
-                >
-                  {opciones_liquidacion.map((opc_liquidacion) => (
-                    <MenuItem key={opc_liquidacion.id} value={opc_liquidacion.id}>
-                      {opc_liquidacion.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <TextField
-                label='Concepto'
-                size="small"
-                value={concepto}
-                onChange={handle_input_change}
-                required
-              />
-              <Button
-                type="submit"
-                variant="outlined"
-                color="primary"
-              >
-                Liquidar
-              </Button>
-            </Stack>
-          </Box>
+              Agregar detalle de liquidación
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
       <DetalleModal
         is_modal_active={modal_detalle}
         set_is_modal_active={set_modal_detalle}
-        opcion_liquidacion={opcion_liquidacion}
         add_new_row={add_new_row}
       />
     </>

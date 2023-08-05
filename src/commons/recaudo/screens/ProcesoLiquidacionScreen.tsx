@@ -3,7 +3,7 @@ import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar } f
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
-import type { Deudor, FormDetalleLiquidacion, FormLiquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
+import type { Deudor, FormDetalleLiquidacion, FormLiquidacion } from '../interfaces/liquidacion';
 import { DataGrid, type GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { api } from '../../../api/axios';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
@@ -13,7 +13,6 @@ import { NotificationModal } from '../components/NotificationModal';
 export const ProcesoLiquidacionScreen: React.FC = () => {
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [nombre_deudor, set_nombre_deudor] = useState('');
-  const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
     id_expediente: '',
@@ -31,16 +30,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     api.get('recaudo/liquidaciones/deudores/')
       .then((response) => {
         set_deudores(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    api.get('recaudo/liquidaciones/opciones-liquidacion-base/')
-      .then((response) => {
-        set_opciones_liquidacion(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -243,7 +232,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
-            opciones_liquidacion={opciones_liquidacion}
             set_form_liquidacion={set_form_liquidacion}
             set_form_detalle_liquidacion={set_form_detalle_liquidacion}
           />
