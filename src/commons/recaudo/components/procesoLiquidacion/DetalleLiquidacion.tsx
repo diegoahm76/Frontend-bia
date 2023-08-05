@@ -6,11 +6,11 @@ import { Box, Button, FormControl, Grid, MenuItem, Select, type SelectChangeEven
 import { DataGrid, type GridColDef } from "@mui/x-data-grid"
 import { Title } from "../../../../components"
 import { DetalleModal } from "./modal/DetalleModal"
-import type { FormDetalleLiquidacion, OpcionLiquidacion } from "../../interfaces/liquidacion"
+import type { FormDetalleLiquidacion, FormLiquidacion, OpcionLiquidacion } from "../../interfaces/liquidacion"
 
 interface IProps {
   opciones_liquidacion: OpcionLiquidacion[];
-  set_total_obligacion: Dispatch<SetStateAction<number>>;
+  set_form_liquidacion: Dispatch<SetStateAction<FormLiquidacion>>;
   set_form_detalle_liquidacion: Dispatch<SetStateAction<FormDetalleLiquidacion[]>>;
 }
 
@@ -67,7 +67,7 @@ const column_detalle: GridColDef[] = [
 ]
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
-export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set_total_obligacion, set_form_detalle_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set_form_liquidacion, set_form_detalle_liquidacion }: IProps) => {
   const [rows, set_rows] = useState<Row[]>([]);
   const [modal_detalle, set_modal_detalle] = useState<boolean>(false);
   const [concepto, set_concepto] = useState('');
@@ -95,7 +95,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
       variables: nuevas_variables,
       valor_liquidado: funcion()
     };
-    set_total_obligacion(prevTotal => prevTotal + Number(funcion()));
+    set_form_liquidacion((previousData) => ({ ...previousData, valor: (previousData.valor as number || 0) + Number(funcion()) }));
     set_rows([...rows, new_row]);
     set_id_row(prevID => prevID + 1);
     set_form_detalle_liquidacion((prevData) => [
@@ -109,6 +109,11 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
       }
     ]);
   };
+
+  const handle_liquidar = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    set_modal_detalle(true);
+  }
 
   return (
     <>
@@ -125,10 +130,19 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
       >
         <Grid item xs={12}>
           <Title title="Detalle de liquidación"></Title>
+          <Box sx={{ width: '100%', mt: '20px' }}>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={rows}
+              columns={column_detalle}
+              getRowHeight={() => 'auto'}
+            />
+          </Box>
           <Box
             component='form'
+            onSubmit={handle_liquidar}
             sx={{ mt: '20px' }}
-            noValidate
             autoComplete="off"
           >
             <Stack
@@ -137,14 +151,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
               sx={{ m: '20px 0' }}
               justifyContent="flex-end"
             >
-              <TextField
-                label='Concepto'
-                size="small"
-                value={concepto}
-                onChange={handle_input_change}
-                required
-              />
-              <FormControl sx={{ pb: '10px' }} size='small' fullWidth>
+              <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
                 <InputLabel>Selecciona opción liquidación</InputLabel>
                 <Select
                   label='Selecciona opción liquidación'
@@ -163,36 +170,30 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
                   ))}
                 </Select>
               </FormControl>
+              <TextField
+                label='Concepto'
+                size="small"
+                value={concepto}
+                onChange={handle_input_change}
+                required
+              />
               <Button
+                type="submit"
                 variant="outlined"
                 color="primary"
-                onClick={() => {
-                  set_modal_detalle(true);
-                }}
-                disabled={id_opcion_liquidacion === ''}
               >
                 Liquidar
               </Button>
             </Stack>
-
-            <Box sx={{ width: '100%' }}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={rows}
-                columns={column_detalle}
-                getRowHeight={() => 'auto'}
-              />
-            </Box>
           </Box>
         </Grid>
       </Grid>
-      {opcion_liquidacion && <DetalleModal
+      <DetalleModal
         is_modal_active={modal_detalle}
         set_is_modal_active={set_modal_detalle}
         opcion_liquidacion={opcion_liquidacion}
         add_new_row={add_new_row}
-      />}
+      />
     </>
   )
 }
