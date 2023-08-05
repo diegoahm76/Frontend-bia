@@ -39,7 +39,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
   useEffect(() => {
     if (form_liquidacion.id_deudor) {
-      api.get(`recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor as string}/`)
+      api.get(`recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`)
         .then((response) => {
           set_expedientes_deudor(response.data.data);
         })
