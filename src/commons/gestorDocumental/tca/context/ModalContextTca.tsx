@@ -33,10 +33,12 @@ const ModalContextTCA = createContext<ModalContextState>({
   openModalHistorialCambios: () => {},
   closeModalHistorialCambios: () => {},
 
+
   //* MODAL TRD RELACION TCA ACTUAL
   modalTrdRelacionTcaActual: false,
   openModalTrdRelacionTcaActual: () => {},
   closeModalTrdRelacionTcaActual: () => {},
+
 
   // ? ----- | LOAD BUTTONS | -----
   loadingButton: false,
@@ -101,6 +103,7 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
   }
   , []);
 
+
   // ? ----- | LOAD BUTTONS | -----
   const setLoadingButton = useCallback((value: boolean) => {
     dispatch({ type: 'SET_LOADING_BUTTON', payload: value });
@@ -133,11 +136,13 @@ const ModalProviderTCA: FC<any> = ({ children }: any) => {
         openModalHistorialCambios,
         closeModalHistorialCambios,
 
+
         //* MODAL TRD RELACION TCA ACTUAL
         modalTrdRelacionTcaActual: state.modalTrdRelacionTcaActual,
         openModalTrdRelacionTcaActual,
         closeModalTrdRelacionTcaActual,
         
+
 
         // ? ----- | LOAD BUTTONS | -----
         loadingButton: state.loadingButton,

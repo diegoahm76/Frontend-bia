@@ -6,6 +6,7 @@ export const baseURL = "https://back-end-bia-preproduction.up.railway.app/api/"
 
 // const baseURL = "http://70.30.6.237/api/"
 
+
 export const api = axios.create({
   baseURL
 });

@@ -121,6 +121,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
         onClose={closeModalTcaTerminados}
       >
         <DialogTitle>
+
           <Title
             title={
               rowsTcasTerminados?.length > 0
@@ -128,6 +129,7 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
                 : 'TCA TERMINADOS : NO HAY TCA TERMINADOS'
             }
           />
+
         </DialogTitle>
         <Divider />
         <DialogContent
