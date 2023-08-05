@@ -281,6 +281,7 @@ const use_ccd = () => {
     );
     set_list_unitys(
       filteredUnityOrganigram.map((item: any) => ({
+
         label: item?.nombre,
         value: item.id_unidad_organizacional!
       }))

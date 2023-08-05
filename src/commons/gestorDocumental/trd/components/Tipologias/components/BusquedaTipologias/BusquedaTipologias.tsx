@@ -43,7 +43,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { LoadingButton } from '@mui/lab';
+
 import { Title } from '../../../../../../../components';
+
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -62,6 +64,7 @@ export const BusquedaTipologias = (): JSX.Element => {
     controlBusquedaTipologiasDocumentales,
     form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales
+
   } = use_trd();
 
   const resetOnCloseModal = (): any => {
@@ -267,7 +270,9 @@ export const BusquedaTipologias = (): JSX.Element => {
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
+
               getRowId={(row) => row.id_tipologia_documental}
+
             />
           </DialogContent>
           <Divider />

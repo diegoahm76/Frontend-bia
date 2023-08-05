@@ -1,4 +1,6 @@
+
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -574,6 +576,7 @@ export const EditarOrganigrama = ({
                     }) => (
                       <TextField
                         // margin="dense"
+
                         fullWidth
                         size="small"
                         label="Código"
@@ -606,7 +609,9 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
+
                         // margin="dense"
+
                         fullWidth
                         size="small"
                         label="Nombre"
