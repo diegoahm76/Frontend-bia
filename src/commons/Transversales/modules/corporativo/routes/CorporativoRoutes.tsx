@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../../screens/404';
-import { LideresXUnidadOrganizacionalMainScreen } from '../screens/LideresXUnidadOrganizacional/screens/LideresXUnidadOrganizacionalMainScreen';
+import { LideresXUnidadOrganizacionalMainScreen } from '../screens/LideresXUnidadOrg/screens/LideresXUnidadOrganizacionalMainScreen';
 
 const routes = [
   {

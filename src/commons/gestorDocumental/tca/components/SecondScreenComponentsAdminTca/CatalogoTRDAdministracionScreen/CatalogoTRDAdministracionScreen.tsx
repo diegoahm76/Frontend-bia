@@ -23,6 +23,7 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
+
   //* context declaration
   // eslint-disable-next-line no-empty-pattern
   const {
@@ -95,12 +96,14 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
   return (
     <>
+
       <RenderDataGrid
         rows={rows || []}
         columns={newColums || []}
         title={title}
         aditionalElement={aditionalElement}
       />
+
       {/*
         mirar si se debe añadir componente adicional
 

@@ -22,10 +22,12 @@ export enum Modal {
   CLOSE_MODAL_HISTORIAL_CAMBIOS = 'CLOSE_MODAL_HISTORIAL_CAMBIOS',
 
 
+
   // ? TRD relacion TCa actual
   OPEN_MODAL_TRD_RELACION_TCA_ACTUAL = 'OPEN_MODAL_TRD_RELACION_TCA_ACTUAL',
   CLOSE_MODAL_TRD_RELACION_TCA_ACTUAL = 'CLOSE_MODAL_TRD_RELACION_TCA_ACTUAL',
   
+
 
 
 
@@ -52,6 +54,7 @@ export const initialState = {
 
   // ? TRD relacion TCa actual
   modalTrdRelacionTcaActual: false,
+
 
 
 

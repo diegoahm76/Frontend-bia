@@ -136,7 +136,9 @@ export const get_catalogo_TRD_service = async (
     /* control_success(
       'Se encontró el siguiente registro de catálogo TRD' || data.detail
     ); */
+
     // console.log('data TRD catalogo', data);
+
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(error.response?.data?.detail);
@@ -158,7 +160,9 @@ export const get_catalogo_TCA_service = async (
     /* control_success(
       'Se encontró el siguiente registro de catálogo TCA' || data.detail
     ); */
+
     // console.log('data TCA catalogo', data);
+
     return data.data;
   } catch (error: AxiosError | any) {
     control_warning(
@@ -181,7 +185,9 @@ export const create_item_catalogo_tca_service: any = async (
       control_error('Todos los campos son obligatorios');
       return;
     }
+
     // console.log('bodyPost', bodyPost);
+
     const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
     const { data } = await api.post(url, {
       id_cat_serie_und_ccd_trd,
@@ -221,6 +227,7 @@ export const update_item_catalogo_tca_service = async (
     return data;
   } catch (error: AxiosError | any) {
     control_error(
+
       error.response?.data?.detail || 'Error al actualizar el expediente'
     );
     return error;
@@ -242,7 +249,9 @@ export const delete_item_catalogo_tca_service = async (
     const url = `gestor/tca/catalogo-tca/delete-clasif/${id_clasif_ser_sub_unidad_tca}/`;
     const { data } = await api.delete(url);
     control_success(data.detail);
+
     // console.log('data TCA catalogo', data);
+
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(

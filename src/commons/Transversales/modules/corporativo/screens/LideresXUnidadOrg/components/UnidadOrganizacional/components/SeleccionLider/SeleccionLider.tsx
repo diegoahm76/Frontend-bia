@@ -8,7 +8,7 @@ import { containerStyles } from '../../../../../../../../../gestorDocumental/tca
 import { Title } from '../../../../../../../../../../components';
 import { Controller } from 'react-hook-form';
 import SearchIcon from '@mui/icons-material/Search';
-import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrganizacional';
+import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';
 import Select from 'react-select';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -79,9 +79,7 @@ export const SeleccionLider = (): JSX.Element => {
 
   // ? useEffect to get unidades organizacionales organigrama
   useEffect(() => {
-
-    if(!organigrama_lideres_current?.id_organigrama) return;
-
+    if (!organigrama_lideres_current?.id_organigrama) return;
     void get_unidades_organizacionales_by_id_organigrama_service(
       organigrama_lideres_current?.id_organigrama
     ).then((res: any) => {
@@ -99,9 +97,18 @@ export const SeleccionLider = (): JSX.Element => {
 
   const cleanElementComponent = (): void =>
     reset_seleccionar_lideres({
-      tipo_documento: '',
+      tipo_documento: {
+        label: '',
+        value: ''
+      },
       numero_documento: '',
-      nombre_persona: ''
+      nombre_persona: '',
+      id_persona: '',
+      id_unidad_organizacional: {
+        label: '',
+        value: ''
+      },
+      observaciones_asignacion: ''
     });
 
   //* onSubmit busqueda persona
@@ -117,7 +124,11 @@ export const SeleccionLider = (): JSX.Element => {
         },
         numero_documento: res?.numero_documento,
         nombre_persona: res?.nombre_completo,
-        id_persona: res?.id_persona
+        id_persona: res?.id_persona,
+        id_unidad_organizacional:
+          watch_seleccionar_lideres_value?.id_unidad_organizacional,
+        observaciones_asignacion:
+          watch_seleccionar_lideres_value?.observaciones_asignacion
       });
     });
   };
@@ -137,7 +148,7 @@ export const SeleccionLider = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2} sx={{ mb: '20px', zIndex: 9999 }}>
-              <Grid item xs={12} sm={5} zIndex={9999}>
+              <Grid item xs={12} sm={5} zIndex={3}>
                 <Controller
                   name="id_unidad_organizacional"
                   control={control_seleccionar_lideres}
@@ -156,6 +167,7 @@ export const SeleccionLider = (): JSX.Element => {
                             console.log(res);
                             dispatch(set_catalog_trd_action(res));
                           }); */
+                          console.log(selectedOption);
                           onChange(selectedOption);
                         }}
                         options={unidadesOrganizacionales}
