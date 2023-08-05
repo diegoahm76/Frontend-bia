@@ -28,13 +28,10 @@ export const Email: React.FC = () => {
     if (selected_file != null) {
       set_file_name(selected_file.name);
     }
-    console.log('archivo', selected_file)
   };
 
-  console.log('texto', form_state)
-
   useEffect(() => {
-    void get_datos_remitente()
+    void get_datos_remitente();
   }, [])
 
   return (
@@ -189,7 +186,7 @@ export const Email: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -234,11 +231,7 @@ export const Fisico: React.FC = () => {
     if (selected_file != null) {
       set_file_name(selected_file.name);
     }
-    console.log('archivo', selected_file)
   };
-
-  console.log('fecha', fecha_string)
-  console.log('texto', form_state)
 
   return (
     <>
@@ -427,7 +420,7 @@ export const Fisico: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
           <DialogActions>
@@ -460,10 +453,7 @@ export const Edicto: React.FC = () => {
     if (selected_file != null) {
       set_file_name(selected_file.name);
     }
-    console.log('archivo', selected_file)
   };
-
-  console.log('texto', form_state)
 
   return (
     <>
@@ -589,7 +579,16 @@ export const Edicto: React.FC = () => {
                 variant='contained'
                 startIcon={<Add />}
                 sx={{ marginTop: '30px' }}
-                onClick={handle_open}
+                onClick={() => {
+                  try {
+                    void post_notificacion_email_edicto({
+                      ...form_state
+                    })
+                    handle_open()
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
+                }}
               >
                 Crear Notificación
               </Button>
@@ -608,7 +607,7 @@ export const Edicto: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
           <DialogActions>

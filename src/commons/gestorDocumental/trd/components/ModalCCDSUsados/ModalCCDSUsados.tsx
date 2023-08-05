@@ -1,45 +1,30 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-
 //! libraries or frameworks
 import { type FC, useContext /* useEffect */ } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
-  // Avatar,
-  // Box,
   Button,
-  // Grid,
   Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   Stack
-  // TextField,
-  // Typography
 } from '@mui/material';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 //! helpers
 
-// import { use_trd } from '../../hooks/use_trd';
-// import { useAppDispatch } from '../../../../../hooks';
 import { ModalContextTRD } from '../../context/ModalsContextTrd';
 import { useAppSelector } from '../../../../../hooks';
 import { columnsModalCCDUsados } from './utils/columns';
+import { Title } from '../../../../../components';
 
 //! toolkit-redux values
 
 export const ModalCCDUsados: FC = (): JSX.Element => {
-  //! dispatch hook from react-redux
-  // const dispatch: any = useAppDispatch();
-
-  // ? use_trd hook
-  /* const {
-    list_finished_ccd,
-  } = use_trd(); */
 
   const { ccd_finished } = useAppSelector(
     (state: any) => state.finished_ccd_slice
@@ -97,21 +82,7 @@ export const ModalCCDUsados: FC = (): JSX.Element => {
         onClose={closeModalCCDUsados}
       >
         <DialogTitle>
-          {`CCD's Usados`}
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              closeModalCCDUsados();
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Title title="CCD's Usados" />
         </DialogTitle>
         <Divider />
         <DialogContent

@@ -75,7 +75,7 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 size="small"
                 label="Nombre"
@@ -107,7 +107,7 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 size="small"
                 label="Versión"
@@ -139,7 +139,7 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 size="small"
                 label="Descripción"

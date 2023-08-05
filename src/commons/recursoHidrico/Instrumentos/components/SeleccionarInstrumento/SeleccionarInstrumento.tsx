@@ -19,8 +19,6 @@ import { Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
-// import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
@@ -29,84 +27,157 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
+  set_current_id_cartera_aforos,
+  set_current_id_prueba_bombeo,
+  set_current_info_cartera,
   set_current_info_laboratorio,
+  set_current_info_prueba_bombeo,
   set_current_mode,
+  set_current_mode_bombeo,
+  set_current_mode_cartera,
+  set_currente_id_resultado_laboratorio,
 } from '../../toolkit/slice/instrumentosSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
   // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
 
-  const columns_aforo: GridColDef[] = [
-    // ...columns_result_lab,
+  const columns_prueba_bombeo: GridColDef[] = [
+    {
+      field: 'ubicacion_prueba',
+      headerName: 'LUGAR DE PRUEBA',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'fecha_registro',
+      headerName: 'FECHA DE REGISTRO',
+      sortable: true,
+      width: 300,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                        onClick={() => {
-                          set_id_seccion(params.row.id_seccion);
-                          set_info_seccion(params.row);
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                          }}
-                          variant="rounded"
-                        >
-                          <ChecklistIcon
-                            titleAccess="Seleccionar Sección"
-                            sx={{
-                              color: 'primary.main',
-                              width: '18px',
-                              height: '18px',
-                            }}
-                          />
-                        </Avatar>
-                      </IconButton> */}
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                dispatch(set_current_info_prueba_bombeo(params.row));
+                dispatch(
+                  set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
+                );
+                dispatch(
+                  set_current_mode_bombeo({
+                    ver: true,
+                    crear: false,
+                    editar: false,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar prueba de bombeo">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_cartera(params.row));
+                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
+                dispatch(
+                  set_current_mode_cartera({
+                    ver: false,
+                    crear: false,
+                    editar: true,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
   ];
-  const columns_prueba_bombeo: GridColDef[] = [
-    // ...columns_result_lab,
+  const columns_aforo: GridColDef[] = [
+    {
+      field: 'ubicacion_aforo',
+      headerName: 'LUGAR DE AFORO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'fecha_registro',
+      headerName: 'FECHA DE REGISTRO',
+      sortable: true,
+      width: 300,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                        onClick={() => {
-                          set_id_seccion(params.row.id_seccion);
-                          set_info_seccion(params.row);
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                          }}
-                          variant="rounded"
-                        >
-                          <ChecklistIcon
-                            titleAccess="Seleccionar Sección"
-                            sx={{
-                              color: 'primary.main',
-                              width: '18px',
-                              height: '18px',
-                            }}
-                          />
-                        </Avatar>
-                      </IconButton> */}
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                dispatch(set_current_info_cartera(params.row));
+                dispatch(
+                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+                );
+                dispatch(
+                  set_current_mode_cartera({
+                    ver: true,
+                    crear: false,
+                    editar: false,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar cartera de aforo">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_cartera(params.row));
+                dispatch(
+                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+                );
+                dispatch(
+                  set_current_mode_cartera({
+                    ver: false,
+                    crear: false,
+                    editar: true,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
@@ -139,6 +210,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               onClick={() => {
                 dispatch(set_current_info_laboratorio(params.row));
                 dispatch(
+                  set_currente_id_resultado_laboratorio(params.row.id_resultado_laboratorio)
+                );
+                dispatch(
                   set_current_mode({
                     ver: true,
                     crear: false,
@@ -162,6 +236,9 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               startIcon={<EditIcon />}
               onClick={() => {
                 dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_currente_id_resultado_laboratorio(params.row.id_resultado_laboratorio)
+                );
                 dispatch(
                   set_current_mode({
                     ver: false,
@@ -227,8 +304,6 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     fecha_creacion,
     fecha_vigencia,
     tipo_agua_selected,
-    row_cartera_aforo,
-    row_prueba_bombeo,
     set_fecha_creacion,
     set_fecha_vigencia,
     handle_date_change,
@@ -245,9 +320,11 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     nombre_subseccion,
     nombre_seccion,
     // info_instrumentos,
+    rows_prueba_bombeo,
     info_busqueda_instrumentos,
     rows_cuencas_instrumentos,
     rows_laboratorio,
+    rows_cartera,
     rows_anexos,
     id_instrumento,
     rows_edit_pozo,
@@ -256,6 +333,8 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
     fetch_data_anexos,
     fetch_data_pozo_id,
     fetch_data_laboratorio,
+    fetch_data_cartera,
+    fetch_data_prueba_bombeo,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -266,7 +345,16 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       void fetch_data_cuencas_instrumentos();
       void fetch_data_instrumento();
       void fetch_data_anexos();
+      if (info_busqueda_instrumentos?.cod_tipo_agua === 'OTR') {
+        return;
+      }
       void fetch_data_laboratorio();
+      if (info_busqueda_instrumentos?.cod_tipo_agua === 'SUB') {
+        void fetch_data_prueba_bombeo();
+      }
+      if (info_busqueda_instrumentos?.cod_tipo_agua === 'SUP') {
+        void fetch_data_cartera();
+      }
     }
   }, [id_instrumento]);
 
@@ -567,12 +655,12 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 </Typography>
                 <Divider />
               </Grid>
-              {row_cartera_aforo.length > 0 && (
+              {rows_cartera.length > 0 && (
                 <>
                   <Grid item xs={12}>
                     <DataGrid
                       autoHeight
-                      rows={row_cartera_aforo}
+                      rows={rows_cartera}
                       columns={columns_aforo}
                       getRowId={(row) => uuidv4()}
                       pageSize={5}
@@ -616,12 +704,12 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 </Typography>
                 <Divider />
               </Grid>
-              {row_prueba_bombeo.length > 0 && (
+              {rows_prueba_bombeo.length > 0 && (
                 <>
                   <Grid item xs={12}>
                     <DataGrid
                       autoHeight
-                      rows={row_prueba_bombeo}
+                      rows={rows_prueba_bombeo}
                       columns={columns_prueba_bombeo}
                       getRowId={(row) => uuidv4()}
                       pageSize={5}
@@ -637,6 +725,13 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                     color="primary"
                     type="submit"
                     onClick={() => {
+                      dispatch(
+                        set_current_mode_bombeo({
+                          ver: false,
+                          crear: true,
+                          editar: false,
+                        })
+                      );
                       navigate(
                         '/app/recurso_hidrico/instrumentos/prueba_bombeo',
                         {

@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type FacilidadPagoSolicitud, type ObligacionesUsuario } from "../interfaces/interfaces";
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
+import dayjs from 'dayjs';
 
 interface RootStateFacilidad {
   solicitud_facilidad: {
@@ -77,7 +78,7 @@ export const EncabezadoAdmin: React.FC = () => {
                   label="Fecha Solicitud"
                   size="small"
                   fullWidth
-                  value={`${solicitud_facilidad.facilidad_pago.fecha_generacion}`}
+                  value={`${dayjs(solicitud_facilidad.facilidad_pago.fecha_generacion.slice(0, 10)).format('DD/MM/YYYY')}`}
                   disabled
                 />
               </Grid>

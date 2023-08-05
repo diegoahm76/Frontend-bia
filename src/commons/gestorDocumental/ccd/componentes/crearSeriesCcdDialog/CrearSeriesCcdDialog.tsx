@@ -41,6 +41,7 @@ import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
 import { get_subseries_service } from '../../store/thunks/subseriesThunks';
 import use_ccd from '../../hooks/useCCD';
 import { getCatalogoSeriesYSubseries } from '../CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
+import { Title } from '../../../../../components';
 
 const CrearSeriesCcdDialog = ({
   is_modal_active,
@@ -222,8 +223,8 @@ const CrearSeriesCcdDialog = ({
       }}
     >
       <DialogTitle>
-        {title}
-        <IconButton
+      <Title title={title}/>
+      {/*  <IconButton
           aria-label="close"
           onClick={() => {
             set_is_modal_active(false);
@@ -236,7 +237,7 @@ const CrearSeriesCcdDialog = ({
           }}
         >
           <CloseIcon />
-        </IconButton>
+        </IconButton> */}
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>

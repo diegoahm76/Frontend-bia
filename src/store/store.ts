@@ -1,49 +1,50 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage";
-import thunk from "redux-thunk";
-import { persistReducer } from "redux-persist";
-import { layout_slice } from "./layoutSlice";
-import { auth_slice } from "../commons/auth/store/authSlice";
-import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
-import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
-import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
-import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
-import { distribucion_slice } from "../commons/conservacion/distribucion/store/slice/distribucionSlice";
-import { produccion_slice } from "../commons/conservacion/produccion/store/slice/produccionSlice";
-import { bien_slice } from "../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes";
-import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
-import { organigrama_slice } from "../commons/gestorDocumental/organigrama/store/slices/organigramSlice";
-import { ccd_slice } from "../commons/gestorDocumental/ccd/store/slices/ccdSlice";
-import { series_slice } from "../commons/gestorDocumental/ccd/store/slices/seriesSlice";
-import { subseries_slice } from "../commons/gestorDocumental/ccd/store/slices/subseriesSlice";
-import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/assignmentsSlice";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import thunk from 'redux-thunk';
+import { persistReducer } from 'redux-persist';
+import { layout_slice } from './layoutSlice';
+import { auth_slice } from '../commons/auth/store/authSlice';
+import { seguridad_slice } from '../commons/seguridad/store/seguridadSlice';
+import { nursery_slice } from '../commons/conservacion/gestorVivero/store/slice/viveroSlice';
+import { material_vegetal_slice } from '../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice';
+import { configuracion_slice } from '../commons/conservacion/configuracion/store/slice/configuracionSlice';
+import { distribucion_slice } from '../commons/conservacion/distribucion/store/slice/distribucionSlice';
+import { produccion_slice } from '../commons/conservacion/produccion/store/slice/produccionSlice';
+import { bien_slice } from '../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes';
+import { cv_computo_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo';
+import { organigrama_slice } from '../commons/gestorDocumental/organigrama/store/slices/organigramSlice';
+import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice';
+import { series_slice } from '../commons/gestorDocumental/ccd/store/slices/seriesSlice';
+import { subseries_slice } from '../commons/gestorDocumental/ccd/store/slices/subseriesSlice';
+import { assignments_slice } from '../commons/gestorDocumental/ccd/store/slices/assignmentsSlice';
 import {
   marcas_slice,
   porcentajes_slice,
-  medida_slice,
-} from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
-import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
-import { despacho_slice } from "../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho";
-import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos";
-import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
-import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
-import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
-import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
-import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
-import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
-import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
-import { seriesAndSubseriesSlice } from "../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice";
-import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud";
-import { finished_ccd_slice } from "../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice";
-import { trd_slice } from "./../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice";
-import { entrega_slice } from "../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega";
-import { instrumentos_slice } from "../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice";
-import { TCASlice } from "../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice";
+  medida_slice
+} from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
+import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
+import { despacho_slice } from '../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho';
+import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
+import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
+import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
+import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
+import { facilidades_slice } from '../commons/recaudo/facilidadPago/slices/FacilidadesSlice';
+import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/SolicitudSlice';
+import { reportes_recaudo_slice } from '../commons/recaudo/reportes/slices/ReportesSlice';
+import { seriesAndSubseriesSlice } from '../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice';
+import { solicitud_vivero_slice } from '../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud';
+import { finished_ccd_slice } from '../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice';
+import { trd_slice } from './../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice';
+import { entrega_slice } from '../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega';
+import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice';
+import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
+import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
 
 const persist_config = {
-  key: "macarenia_app",
+  key: 'macarenia_app',
   storage,
-  whitelist: ["auth", "layout"],
+  whitelist: ['auth', 'layout']
 };
 
 const app_reducers = combineReducers({
@@ -84,17 +85,20 @@ const app_reducers = combineReducers({
   // ! tca slices open
   tca_slice: TCASlice.reducer,
   // ! tca slices close
+  // ? lideres slices open
+  lideres_slice: lideres_slice.reducer,
+  // ? lideres slices close
   // * recurso hidrico slices open
   instrumentos_slice: instrumentos_slice.reducer,
   // * recurso hidrico slices close
-  entrega_otros: entrega_slice.reducer,
+  entrega_otros: entrega_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
 
 export const store = configureStore({
   middleware: [thunk],
-  reducer: persist_reducer,
+  reducer: persist_reducer
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -57,8 +57,8 @@ export const CarteraGeneralFecha: React.FC = () => {
         type: 'array'
       });
       save_as_excel_file(excel_buffer, `Reporte General de Cartera Fecha de Corte ${fecha_seleccionada}`);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      throw new Error(error);
     }
   };
 
@@ -74,8 +74,8 @@ export const CarteraGeneralFecha: React.FC = () => {
         });
         save_as_fn(data, fileName + excel_extension);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((error: any) => {
+        throw new Error(error);
       });
   };
 

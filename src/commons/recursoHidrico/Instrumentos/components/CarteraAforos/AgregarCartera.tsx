@@ -41,6 +41,33 @@ export const AgregarCartera: React.FC = () => {
       width: 200,
       renderCell: (params) => (
         <>
+          <Tooltip title="Editar registro de cartera de aforo">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                // Llena los campos del formulario con los valores del registro a editar
+                set_value_cartera_aforo(
+                  'distancia_a_la_orilla',
+                  params.row.distancia_a_la_orilla
+                );
+                set_value_cartera_aforo('profundidad', params.row.profundidad);
+                set_value_cartera_aforo(
+                  'velocidad_superficial',
+                  params.row.velocidad_superficial
+                );
+                set_value_cartera_aforo(
+                  'velocidad_profunda',
+                  params.row.velocidad_profunda
+                );
+
+                // Establece el modo de edición
+                setEditingId(params.row.id);
+              }}
+            />
+          </Tooltip>
           <Tooltip title="Eliminar registro de cartera de aforo">
             <Button
               variant="outlined"
@@ -51,23 +78,6 @@ export const AgregarCartera: React.FC = () => {
                 handle_delete(params.row.id);
               }}
             />
-          </Tooltip>
-          <Tooltip title="Editar registro de cartera de aforo">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                // Llena los campos del formulario con los valores del registro a editar
-                set_value_cartera_aforo('distancia_a_la_orilla', params.row.distancia_a_la_orilla);
-                set_value_cartera_aforo('profundidad', params.row.profundidad);
-                set_value_cartera_aforo('velocidad_superficial', params.row.velocidad_superficial);
-                set_value_cartera_aforo('velocidad_profunda', params.row.velocidad_profunda);
-                
-                // Establece el modo de edición
-                setEditingId(params.row.id);
-              }}            />
           </Tooltip>
         </>
       ),
@@ -87,7 +97,7 @@ export const AgregarCartera: React.FC = () => {
     handle_date_change,
     handle_agregar,
     handle_delete,
-
+    watch_aforo,
     // *onSubmit
     onSubmit,
     is_saving,
@@ -584,6 +594,12 @@ export const AgregarCartera: React.FC = () => {
                 variant="outlined"
                 color="primary"
                 onClick={handle_agregar}
+                disabled={
+                  !watch_aforo.distancia_a_la_orilla ||
+                  !watch_aforo.profundidad ||
+                  !watch_aforo.velocidad_superficial ||
+                  !watch_aforo.velocidad_profunda
+                }
               >
                 Agregar
               </Button>
@@ -618,7 +634,7 @@ export const AgregarCartera: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving}
+                disabled={is_saving || row_aforo.length === 0}
                 loading={is_saving}
               >
                 Guardar
