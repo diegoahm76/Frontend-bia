@@ -27,7 +27,8 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
     }));
   };
 
-  const handle_liquidar = (): void => {
+  const handle_liquidar = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
     const re = new RegExp(Object.keys(variables_datos).join('|'), 'gi');
     const formula = opcion_liquidacion.funcion.replace(re, matched => variables_datos[matched]);
     add_new_row(formula, variables_datos);
@@ -43,6 +44,7 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
     >
       <Box
         component="form"
+        onSubmit={handle_liquidar}
         sx={{
           width: '500px'
         }}
@@ -54,12 +56,6 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
           <Grid container direction='row'>
             <Grid item xs={11} md={5} margin={1}>
               <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
-              {/* <Divider />
-              <InputLabel sx={{ p: '18.5px' }}>Volumen Promedio</InputLabel>
-              <Divider />
-              <InputLabel sx={{ p: '18.5px' }}>Es rural</InputLabel>
-              <Divider />
-              <InputLabel sx={{ p: '18.5px' }}>Estrato</InputLabel> */}
               {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
                 <div key={index}>
                   <Divider />
@@ -70,32 +66,16 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
 
             <Grid item xs={11} md={5} margin={1}>
               <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
-              {/* <Divider />
-              <TextField sx={{ p: '10px' }} size="small" />
-              <Divider />
-              <Checkbox sx={{ p: '18px' }} />
-              <Divider />
-              <FormControl sx={{ p: '10px' }} required size='small' fullWidth>
-                <Select
-                  value={tipo}
-                  onChange={handle_change}
-                >
-                  {tipo_articulo.map(({ value, label }) => (
-                    <MenuItem key={value} value={value}>
-                      {label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl> */}
-              {opcion_liquidacion
-               && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+              {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
                 <div key={index}>
                   <Divider />
                   <TextField
+                    type="number"
                     sx={{ p: '10px' }}
                     size="small"
                     value={variables_datos[key] || ''}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => {handle_input_change(event, key)}}
+                    required
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => { handle_input_change(event, key) }}
                   />
                 </div>
               ))}
@@ -112,13 +92,17 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
+              type="button"
               variant="outlined"
-              onClick={handle_close}
               startIcon={<CloseIcon />}
+              onClick={handle_close}
             >
               Cerrar
             </Button>
-            <Button variant="contained" onClick={handle_liquidar}>
+            <Button
+              type="submit"
+              variant="contained"
+            >
               Liquidar
             </Button>
           </Stack>
