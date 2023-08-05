@@ -63,10 +63,11 @@ export interface FormDetalleLiquidacion {
 }
 
 export interface FormLiquidacion {
-  cod_deudor: string;
-  cod_expediente: string;
+  id_deudor: string;
+  id_expediente: string;
   fecha_liquidacion: string;
   vencimiento: string;
   periodo_liquidacion: string;
-  estado: string;
+  valor?: number;
+  estado?: string;
 }
