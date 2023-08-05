@@ -386,6 +386,87 @@ export const put_resultado_aforo_select = async (
   }
 };
 
+export const post_prueba_bombeo = async (
+  form: any,
+  secciones_prueba_bombeo: any,
+  datos_prueba_bombeo: any,
+  datos: FormData,
+  archivo: any
+): Promise<any> => {
+  // Crear un nuevo array con los datos de la prueba de bombeo
+  const new_array = secciones_prueba_bombeo.map((seccion: any) => ({
+    id_sesion_prueba_bombeo: seccion.id_sesion_prueba_bombeo,
+    hora_inicio: seccion.hora_inicio,
+    cod_tipo_sesion: seccion.cod_tipo_sesion,
+    datos_prueba_bombeo: seccion.datos_prueba_bombeo.map((dato: any) => ({
+      tiempo_transcurrido: dato.tiempo_transcurrido,
+      nivel: dato.nivel,
+      resultado: dato.resultado,
+      caudal: dato.caudal,
+    })),
+  }));
+
+  // Validation before request
+  const validated_array = new_array.filter(
+    (item: any) =>
+      item.id_sesion_prueba_bombeo !== null &&
+      item.hora_inicio !== null &&
+      item.cod_tipo_sesion !== '' &&
+      item.datos_prueba_bombeo.every(
+        (dato: any) =>
+          dato.tiempo_transcurrido !== '' &&
+          dato.nivel !== '' &&
+          dato.resultado !== '' &&
+          dato.caudal !== ''
+      )
+  );
+
+  // API call
+  const response = await api.post(
+    'hidrico/bibliotecas/pruebas_bombeo/create/',
+    {
+      ...form,
+      id_instrumento: form.id_instrumento,
+      id_pozo: form.id_pozo,
+      descripcion: form.descripcion,
+      latitud: form.latitud,
+      longitud: form.longitud,
+      fecha_prueba_bombeo: dayjs(form.fecha_prueba_bombeo).format(
+        'YYYY-MM-DDTHH:mm:ss'
+      ),
+      ubicacion_prueba: form.ubicacion_prueba,
+      secciones_prueba_bombeo: validated_array,
+    }
+  );
+
+  // If there's an attached file, make another post request
+  if (
+    archivo.length > 0 &&
+    archivo[0] !== null &&
+    response?.data?.data?.prueba_bombeo?.data?.id_prueba_bombeo
+  ) {
+    const id_prueba_bombeo =
+      response?.data?.data?.prueba_bombeo?.data?.id_prueba_bombeo;
+
+    // Append id_prueba_bombeo to datos
+    datos.append('id_prueba_bombeo', id_prueba_bombeo);
+
+    const response_archivos = await api.post(
+      `hidrico/bibliotecas/archivos_instrumento/create/`,
+      datos
+    );
+
+    return {
+      reponse_general: response.data,
+      response_archivos: response_archivos.data,
+    };
+  } else {
+    return {
+      reponse_general: response.data,
+    };
+  }
+};
+
 export const get_cuenca_id = async (
   id_cuenca: number
 ): Promise<CuencasId[]> => {

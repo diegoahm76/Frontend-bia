@@ -3,10 +3,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
+import { post_prueba_bombeo } from '../../../request/request';
+import { control_error } from '../../../../../../helpers';
+import { useAppSelector } from '../../../../../../hooks';
+import { DataContext } from '../../../context/contextData';
 // import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 export const use_register_bombeo_hook = () => {
@@ -45,6 +49,20 @@ export const use_register_bombeo_hook = () => {
       caudal: '',
     },
   });
+
+  const {
+    archivos,
+    nombres_archivos,
+    set_archivos,
+    set_nombres_archivos,
+
+    // * editar archivo
+  } = useContext(DataContext);
+
+  const {
+    id_instrumento: id_instrumento_slice,
+    // id_cartera_aforos: id_cartera_aforos_slice,
+  } = useAppSelector((state) => state.instrumentos_slice);
 
   // Datos generales
 
@@ -131,8 +149,33 @@ export const use_register_bombeo_hook = () => {
     try {
       set_is_saving(true);
       console.log(data);
-    } catch (error) {
-      console.log(error);
+
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
+      const codigo_archivo = 'CDA';
+      const archivos_aforo = new FormData();
+
+      archivos.forEach((archivo: any, index: any) => {
+        if (archivo != null) {
+          archivos_aforo.append(`ruta_archivo`, archivo);
+          archivos_aforo.append(`nombre_archivo`, nombres_archivos[index]);
+        }
+      });
+      archivos_aforo.append('id_instrumento', String(id_instrumento_slice));
+      archivos_aforo.append('cod_tipo_de_archivo', codigo_archivo);
+
+      await post_prueba_bombeo(
+        data,
+        row_prueba,
+        row_data_prueba,
+        archivos_aforo,
+        archivos
+      );
+    } catch (error: any) {
+      control_error(error.response.data.detail);
     } finally {
       set_is_saving(false);
     }
