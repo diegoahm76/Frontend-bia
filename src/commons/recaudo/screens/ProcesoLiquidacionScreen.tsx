@@ -1,81 +1,36 @@
 import { type SyntheticEvent, useState, useEffect } from 'react';
-import { Box, Grid, type SelectChangeEvent, Tab } from "@mui/material"
+import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
-import type { FormDetalleLiquidacion, FormLiquidacion, Liquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
+import type { Deudor, FormDetalleLiquidacion, FormLiquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
 import { DataGrid, type GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { api } from '../../../api/axios';
-
-interface Row {
-  id: number;
-  deudor: string;
-  identificacion: string;
-  monto_inicial: number;
-  fecha_liquidacion: string;
-  periodo: string;
-}
-
-const columns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'ID Liquidación',
-    minWidth: 110,
-    flex: 1,
-  },
-  {
-    field: 'deudor',
-    headerName: 'Deudor',
-    minWidth: 150,
-    flex: 1,
-  },
-  {
-    field: 'identificacion',
-    headerName: 'Identificación',
-    minWidth: 110,
-    flex: 1,
-  },
-  {
-    field: 'monto_inicial',
-    headerName: 'Monto Inicial',
-    minWidth: 110,
-    flex: 1,
-  },
-  {
-    field: 'fecha_liquidacion',
-    headerName: 'Fecha Liquidación',
-    minWidth: 160,
-    flex: 1,
-  },
-  {
-    field: 'periodo',
-    headerName: 'Periodo',
-    minWidth: 100,
-    flex: 1,
-  }
-];
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import { NotificationModal } from '../components/NotificationModal';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
-  const [liquidaciones, set_liquidaciones] = useState<Liquidacion[]>([]);
+  const [deudores, set_deudores] = useState<Deudor[]>([]);
+  const [nombre_deudor, set_nombre_deudor] = useState('');
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
-    cod_deudor: '',
-    cod_expediente: '',
+    id_deudor: '',
+    id_expediente: '',
     fecha_liquidacion: '',
     vencimiento: '',
     periodo_liquidacion: '',
-    estado: 'G',
+    valor: 0,
   });
   const [form_detalle_liquidacion, set_form_detalle_liquidacion] = useState<FormDetalleLiquidacion[]>([]);
-  const [total_obligacion, set_total_obligacion] = useState<number>(0);
-  const [position_tab, set_position_tab_organigrama] = useState('1');
-  const [rows, set_rows] = useState<Row[]>([]);
+  const [position_tab, set_position_tab] = useState('1');
+  const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
+  const [notification_info, set_notification_info] = useState({ type: '', message: '' });
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/liquidacion-base')
+    api.get('recaudo/liquidaciones/deudores/')
       .then((response) => {
-        set_liquidaciones(response.data.data);
+        set_deudores(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -92,20 +47,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const new_rows = liquidaciones.map((liquidacion) => ({
-      id: liquidacion.id,
-      deudor: liquidacion.id_deudor.nombres.concat(' ', liquidacion.id_deudor.apellidos),
-      identificacion: liquidacion.id_deudor.identificacion,
-      monto_inicial: liquidacion.valor,
-      fecha_liquidacion: liquidacion.fecha_liquidacion,
-      periodo: liquidacion.periodo_liquidacion,
-    }));
-    set_rows(new_rows);
-  }, [liquidaciones]);
-
-  const handle_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab_organigrama(newValue)
+  const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
+    set_position_tab(newValue)
   }
 
   const handle_input_form_liquidacion_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -118,12 +61,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_form_liquidacion((prevDetalles) => ({ ...prevDetalles, [name]: value }));
   }
 
-  const handle_submit_detalles_liquidacion = (id: number): void => {
+  const handle_submit_detalles_liquidacion = (id_liquidacion: number): void => {
     form_detalle_liquidacion.forEach((form) => {
       const new_objeto = {
         ...form,
         id_opcion_liq: Number(form.id_opcion_liq),
-        id_liquidacion: id
+        id_liquidacion,
       };
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
@@ -138,18 +81,94 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const handle_submit_liquidacion = (): void => {
     api.post('recaudo/liquidaciones/liquidacion-base/', {
       ...form_liquidacion,
-      cod_deudor: Number(form_liquidacion.cod_deudor),
-      cod_expediente: Number(form_liquidacion.cod_expediente),
-      valor: total_obligacion
+      id_deudor: Number(form_liquidacion.id_deudor),
+      id_expediente: Number(form_liquidacion.id_expediente),
     })
       .then((response) => {
         console.log(response);
         handle_submit_detalles_liquidacion(response.data.id);
+        set_notification_info({ type: 'success', message: `Se ha guardado correctamente la liquidacion.` });
+        set_open_notification_modal(true);
       })
       .catch((error) => {
         console.log(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
       });
   };
+
+  const columns_deudores: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      minWidth: 110,
+      flex: 0.1,
+    },
+    {
+      field: 'identificacion',
+      headerName: 'Identificación',
+      minWidth: 150,
+      flex: 0.3,
+    },
+    {
+      field: 'nombres',
+      headerName: 'Nombres',
+      minWidth: 110,
+      flex: 0.1,
+    },
+    {
+      field: 'apellidos',
+      headerName: 'Apellidos',
+      minWidth: 110,
+      flex: 0.1,
+    },
+    {
+      field: 'deudor',
+      headerName: 'Deudor',
+      minWidth: 160,
+      flex: 1,
+      valueGetter: (params) => {
+        return `${params.row.nombres as string || ''} ${params.row.apellidos as string || ''}`;
+      }
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      minWidth: 100,
+      flex: 0.2,
+      renderCell: (params) => {
+        return (
+          <Tooltip title='Liquidar'>
+            <IconButton
+              onClick={() => {
+                set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
+                set_nombre_deudor(`${params.row.nombres as string || ''} ${params.row.apellidos as string || ''}`);
+                set_position_tab('2');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <RequestQuoteIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px'
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        );
+      }
+    }
+  ];
 
   return (
     <>
@@ -175,9 +194,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
             <TabContext value={position_tab}>
 
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList onChange={handle_change}>
-                  <Tab label="Liquidacion" value="1" />
-                  <Tab label="Generar Liquidacion" value="2" />
+                <TabList onChange={handle_position_tab_change}>
+                  <Tab label="Deudores" value="1" />
+                  <Tab label="Generar Liquidación" value="2" />
                 </TabList>
               </Box>
 
@@ -186,21 +205,30 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 <DataGrid
                   density='compact'
                   autoHeight
-                  rows={rows}
-                  columns={columns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
+                  rows={deudores}
+                  columns={columns_deudores}
+                  pageSize={100}
+                  rowsPerPageOptions={[100]}
                   experimentalFeatures={{ newEditingApi: true }}
                   getRowId={(row) => row.id}
                   components={{ Toolbar: GridToolbar }}
+                  loading={!deudores.length}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {
+                        nombres: false,
+                        apellidos: false,
+                      }
+                    }
+                  }}
                 />
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
-                  total_obligacion={total_obligacion}
                   form_liquidacion={form_liquidacion}
+                  nombre_deudor={nombre_deudor}
                   handle_input_form_liquidacion_change={handle_input_form_liquidacion_change}
                   handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
                   handle_submit_liquidacion={handle_submit_liquidacion}
@@ -216,11 +244,16 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
             opciones_liquidacion={opciones_liquidacion}
-            set_total_obligacion={set_total_obligacion}
+            set_form_liquidacion={set_form_liquidacion}
             set_form_detalle_liquidacion={set_form_detalle_liquidacion}
           />
         </TabPanel>
       </TabContext>
+      <NotificationModal
+        open_notification_modal={open_notification_modal}
+        set_open_notification_modal={set_open_notification_modal}
+        notification_info={notification_info}
+      />
     </>
   )
 }
