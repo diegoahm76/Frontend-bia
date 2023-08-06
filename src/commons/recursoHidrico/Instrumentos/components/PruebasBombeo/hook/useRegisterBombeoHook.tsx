@@ -8,7 +8,7 @@ import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { post_prueba_bombeo } from '../../../request/request';
-import { control_error } from '../../../../../../helpers';
+import { control_error, control_success } from '../../../../../../helpers';
 import { useAppSelector } from '../../../../../../hooks';
 import { DataContext } from '../../../context/contextData';
 // import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -85,6 +85,7 @@ export const use_register_bombeo_hook = () => {
       switch (fieldName) {
         case 'fecha_prueba':
           set_fecha_prubea_bombeo(value);
+          setValue_bombeo('fecha_prueba_bombeo', value.format('YYYY-MM-DD'));
           break;
         default:
           break;
@@ -100,6 +101,7 @@ export const use_register_bombeo_hook = () => {
   const handle_agregar = () => {
     // obtener los valores actuales del formulario
     const values = getValues_bombeo();
+    console.log(values, 'values');
 
     // convertir el tiempo transcurrido a milisegundos
     const tiempoTranscurridoMs =
@@ -145,17 +147,42 @@ export const use_register_bombeo_hook = () => {
   };
 
   const [is_saving, set_is_saving] = useState<boolean>(false);
+  const [id_sesion_prueba_bombeo, set_id_sesion_prueba_bombeo] = useState<
+    number | null
+  >(null);
+
+  const limpiar_formulario = (): void => {
+    set_row_prueba([]);
+    set_row_data_prueba([]);
+    setValue_bombeo('id_sesion_prueba_bombeo', '');
+    setValue_bombeo('hora_inicio', '');
+    setValue_bombeo('cod_tipo_sesion', '');
+    setValue_bombeo('tiempo_transcurrido', '');
+    setValue_bombeo('nivel', '');
+    setValue_bombeo('resultado', '');
+    setValue_bombeo('caudal', '');
+    setHoraPruebaBombeo(null);
+    set_nombres_archivos([]);
+    set_archivos([]);
+  };
+
   const onSubmit = handleSubmit_bombeo(async (data: any) => {
     try {
       set_is_saving(true);
+      set_id_sesion_prueba_bombeo(null);
       console.log(data);
-
+      console.log(row_prueba);
+      console.log(row_data_prueba);
+      console.log(archivos);
+      console.log(nombres_archivos);
+      data.id_sesion_prueba_bombeo = id_sesion_prueba_bombeo;
+      data.id_instrumento = id_instrumento_slice;
       const nombre_archivos_set = new Set(nombres_archivos);
       if (nombre_archivos_set.size !== nombres_archivos.length) {
         control_error('No se permiten nombres de archivo duplicados');
         return;
       }
-      const codigo_archivo = 'CDA';
+      const codigo_archivo = 'LAB';
       const archivos_aforo = new FormData();
 
       archivos.forEach((archivo: any, index: any) => {
@@ -169,13 +196,19 @@ export const use_register_bombeo_hook = () => {
 
       await post_prueba_bombeo(
         data,
-        row_prueba,
         row_data_prueba,
+        row_prueba,
         archivos_aforo,
         archivos
       );
+      control_success('Prueba de bombeo guardada correctamente');
+      limpiar_formulario();
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response?.data?.detail ||
+          'Ha ocurrido un error, vuelva a intentarlo más tarde'
+      );
+      console.log(error, 'error');
     } finally {
       set_is_saving(false);
     }

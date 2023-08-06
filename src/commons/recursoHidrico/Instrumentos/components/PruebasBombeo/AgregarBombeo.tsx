@@ -31,12 +31,13 @@ import { useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { get_header_name } from './utils/functions/functions';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import { tipo_sesion } from './utils/choices/choices';
 import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarBombeo: React.FC = () => {
@@ -97,12 +98,24 @@ export const AgregarBombeo: React.FC = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
+          <Tooltip title="Editar prueba de bombeo">
             <Button
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<ChecklistOutlinedIcon />}
+              startIcon={<EditIcon />}
+              onClick={() => {
+                // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
+                // set_info_sesion_bombeo(params.row);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Eliminar prueba de bombeo">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<DeleteIcon />}
               onClick={() => {
                 // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
                 // set_info_sesion_bombeo(params.row);
@@ -262,7 +275,20 @@ export const AgregarBombeo: React.FC = () => {
                   handle_date_change('fecha_prueba', value);
                 }}
                 renderInput={(params: any) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_bombeo('fecha_prueba_bombeo', {
+                      required: true,
+                    })}
+                    error={!!errors_bombeo.fecha_prueba_bombeo}
+                    helperText={
+                      errors_bombeo.fecha_prueba_bombeo
+                        ? 'Es obligatorio la fecha de la prueba de bombeo'
+                        : 'Ingrese la fecha de la prueba de bombeo'
+                    }
+                  />
                 )}
               />
             </LocalizationProvider>

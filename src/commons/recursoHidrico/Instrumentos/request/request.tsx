@@ -398,7 +398,7 @@ export const post_prueba_bombeo = async (
     id_sesion_prueba_bombeo: seccion.id_sesion_prueba_bombeo,
     hora_inicio: seccion.hora_inicio,
     cod_tipo_sesion: seccion.cod_tipo_sesion,
-    datos_prueba_bombeo: seccion.datos_prueba_bombeo.map((dato: any) => ({
+    datos_prueba_bombeo: datos_prueba_bombeo.map((dato: any) => ({
       tiempo_transcurrido: dato.tiempo_transcurrido,
       nivel: dato.nivel,
       resultado: dato.resultado,
@@ -429,10 +429,11 @@ export const post_prueba_bombeo = async (
       id_instrumento: form.id_instrumento,
       id_pozo: form.id_pozo,
       descripcion: form.descripcion,
+      cod_tipo_sesion: form.cod_tipo_sesion,
       latitud: form.latitud,
       longitud: form.longitud,
       fecha_prueba_bombeo: dayjs(form.fecha_prueba_bombeo).format(
-        'YYYY-MM-DDTHH:mm:ss'
+        'YYYY-MM-DD'
       ),
       ubicacion_prueba: form.ubicacion_prueba,
       secciones_prueba_bombeo: validated_array,
