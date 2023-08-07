@@ -53,6 +53,11 @@ export const use_register_bombeo_hook = () => {
   const {
     archivos,
     nombres_archivos,
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    fetch_data_general_sesion,
+    set_id_bombeo_general,
+
     set_archivos,
     set_nombres_archivos,
 
@@ -200,7 +205,19 @@ export const use_register_bombeo_hook = () => {
         row_prueba,
         archivos_aforo,
         archivos
-      );
+      ).then((response) => {
+        console.log(response?.data, 'response crear prueba de bombeo');
+        console.log(
+          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo,
+          'response?.data?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo'
+        );
+        set_id_sesion_prueba_bombeo(
+          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
+        );
+        set_id_bombeo_general(
+          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
+        );
+      });
       control_success('Prueba de bombeo guardada correctamente');
       limpiar_formulario();
     } catch (error: any) {
@@ -237,5 +254,10 @@ export const use_register_bombeo_hook = () => {
     // * onSubmit
     onSubmit,
     is_saving,
+
+    // * datos de sesion
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    fetch_data_general_sesion,
   };
 };

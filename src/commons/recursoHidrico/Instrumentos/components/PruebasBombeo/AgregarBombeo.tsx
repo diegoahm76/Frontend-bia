@@ -105,6 +105,7 @@ export const AgregarBombeo: React.FC = () => {
               size="small"
               startIcon={<EditIcon />}
               onClick={() => {
+                console.log(params.row, 'params.row');
                 // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
                 // set_info_sesion_bombeo(params.row);
               }}
@@ -117,6 +118,7 @@ export const AgregarBombeo: React.FC = () => {
               size="small"
               startIcon={<DeleteIcon />}
               onClick={() => {
+                console.log(params.row, 'params.row');
                 // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
                 // set_info_sesion_bombeo(params.row);
               }}
@@ -150,6 +152,11 @@ export const AgregarBombeo: React.FC = () => {
     // *OnSubmit
     onSubmit,
     is_saving,
+
+    // * datos de sesion
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    fetch_data_general_sesion,
   } = use_register_bombeo_hook();
 
   const {
@@ -175,10 +182,11 @@ export const AgregarBombeo: React.FC = () => {
   }, [instrumentos.id_pozo]);
 
   useEffect(() => {
-    if (row_data_prueba) {
-      console.log(row_data_prueba, 'row_data_prueba');
+    if (id_bombeo_general) {
+      console.log(id_bombeo_general, 'id_bombeo_general');
+      void fetch_data_general_sesion();
     }
-  }, [row_data_prueba]);
+  }, [id_bombeo_general]);
 
   return (
     <>
@@ -651,6 +659,24 @@ export const AgregarBombeo: React.FC = () => {
           )}
           <Grid item xs={12}></Grid>
           <AgregarArchivo multiple={true} />
+          {rows_sesion_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Secciones" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <DataGrid
+                  autoHeight
+                  rows={rows_sesion_bombeo}
+                  columns={columns_sesion}
+                  getRowId={(row) => uuidv4()}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </Grid>
+            </>
+          )}
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <ButtonSalir />

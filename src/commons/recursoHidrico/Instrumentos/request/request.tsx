@@ -399,10 +399,10 @@ export const post_prueba_bombeo = async (
     hora_inicio: seccion.hora_inicio,
     cod_tipo_sesion: seccion.cod_tipo_sesion,
     datos_prueba_bombeo: datos_prueba_bombeo.map((dato: any) => ({
-      tiempo_transcurrido: dato.tiempo_transcurrido,
-      nivel: dato.nivel,
-      resultado: dato.resultado,
-      caudal: dato.caudal,
+      tiempo_transcurrido: Number(dato.tiempo_transcurrido),
+      nivel: Number(dato.nivel),
+      resultado: Number(dato.resultado),
+      caudal: Number(dato.caudal),
     })),
   }));
 
@@ -432,9 +432,7 @@ export const post_prueba_bombeo = async (
       cod_tipo_sesion: form.cod_tipo_sesion,
       latitud: form.latitud,
       longitud: form.longitud,
-      fecha_prueba_bombeo: dayjs(form.fecha_prueba_bombeo).format(
-        'YYYY-MM-DD'
-      ),
+      fecha_prueba_bombeo: dayjs(form.fecha_prueba_bombeo).format('YYYY-MM-DD'),
       ubicacion_prueba: form.ubicacion_prueba,
       secciones_prueba_bombeo: validated_array,
     }
