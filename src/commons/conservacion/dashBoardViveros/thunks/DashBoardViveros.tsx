@@ -4,7 +4,7 @@ import { api } from '../../../../api/axios';
 import { type AxiosResponse, type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type crear_entrada } from '../interfaces/entradas';
+// import { type crear_entrada } from '../interfaces/entradas';
 import { type ResponseServer } from '../../../../interfaces/globalModels';
 
 
@@ -35,7 +35,7 @@ const control_success = (message: ToastContent) =>
   });
 
 // Crear entrada
-export const crear_entrada_bien: any = (form_data: crear_entrada) => {
+export const crear_entrada_bien: any = (form_data: any) => {
   return async () => {
     try {
       const { data } = await api.post('almacen/bienes/entradas/create/', form_data);
@@ -49,7 +49,7 @@ export const crear_entrada_bien: any = (form_data: crear_entrada) => {
 };
 
 // Actualizar entrada
-export const actualizar_entrada_bien: any = (id_entrada_almacen: number, form_data: crear_entrada) => {
+export const actualizar_entrada_bien: any = (id_entrada_almacen: number, form_data: any) => {
   return async () => {
     try {
       const { data } = await api.put(`almacen/bienes/entradas/update/${id_entrada_almacen}/`, form_data);

@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC } from 'react';
 import { RenderDataGrid } from '../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../hooks';
 import { Avatar, Button, Chip, IconButton } from '@mui/material';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import { AvatarStyles } from '../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesLideres/columnsAsignacionLideres';
+import { set_asignacion_lideres_current } from '../../../toolkit/LideresSlices/LideresSlice';
 
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
+  //* dispatch declarations
+  const dispatch = useAppDispatch();
+
   //* states declarations
   const { asignaciones_lideres_list } = useAppSelector(
     (state: any) => state.lideres_slice
@@ -26,7 +33,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
             <IconButton
               onClick={() => {
                 console.log(params.row);
-                // dispatch(set_organigrama_lideres_current(params.row));
+                dispatch(set_asignacion_lideres_current(params.row));
                 // closeModal();
               }}
             >

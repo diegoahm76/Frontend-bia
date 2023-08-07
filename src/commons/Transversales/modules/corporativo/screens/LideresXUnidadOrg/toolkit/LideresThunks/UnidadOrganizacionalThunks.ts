@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { api } from '../../../../../../../../api/axios';
-import { control_error } from '../../../../../../../../helpers';
+import {
+  control_error,
+  control_success
+} from '../../../../../../../../helpers';
 
 export const getPersonaByTipoDocumentoAndNumeroDocumento = async (
   tipoDocumento: string,
@@ -12,6 +16,62 @@ export const getPersonaByTipoDocumentoAndNumeroDocumento = async (
     }&tipo_documento=${tipoDocumento ?? ''}`;
     const response = await api.get(url);
     return response.data.data;
+  } catch (error: any) {
+    console.error(error);
+    control_error(error?.response?.data?.detail);
+  }
+};
+
+// ? crear asignacion de lider a unidad organizacional
+export const createLiderUnidadOrganizacional = async (
+  dataPost: any,
+  setLoadingButton: any,
+  cleanElementComponent: any
+): Promise<any> => {
+  try {
+    setLoadingButton(true);
+    const url = `transversal/lideres/crear-asignacion/`;
+    const { data } = await api.post(url, dataPost);
+    control_success(data.detail);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+    control_error(error?.response?.data?.detail);
+  } finally {
+    setLoadingButton(false);
+    cleanElementComponent();
+  }
+};
+
+// ? actualizar asignacion de lider a unidad organizacional
+export const updateLiderUnidadOrganizacional = async (
+  dataPost: any,
+  setLoadingButton: any,
+  cleanElementComponent: any
+): Promise<any> => {
+  try {
+    setLoadingButton(true);
+    const url = `transversal/lideres/actualizar-asignacion/${dataPost.id_lider_unidad_org}/`;
+    const { data } = await api.put(url, dataPost);
+    control_success(data.detail);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+    control_error(error?.response?.data?.detail);
+  } finally {
+    setLoadingButton(false);
+    cleanElementComponent();
+  }
+};
+
+// ? get asginaciones de lideres by id organigrama
+export const getAsignacionesLideresByIdOrganigrama = async (
+  idOrganigrama: string
+): Promise<any> => {
+  try {
+    const url = `transversal/lideres/get-list/${idOrganigrama}/`;
+    const { data } = await api.get(url);
+    return data.data;
   } catch (error: any) {
     console.error(error);
     control_error(error?.response?.data?.detail);

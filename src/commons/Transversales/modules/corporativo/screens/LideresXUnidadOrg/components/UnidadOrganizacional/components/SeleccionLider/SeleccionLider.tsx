@@ -1,7 +1,8 @@
+/* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Button, Divider, Grid, Stack, TextField } from '@mui/material';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
@@ -12,13 +13,31 @@ import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUni
 import Select from 'react-select';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useAppSelector } from '../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../../hooks';
 import { getTipoDocumento } from './services/getTipoDocumento.service';
 import type { ISeleccionLideresProps } from './types/seleccionLideres.types';
-import { getPersonaByTipoDocumentoAndNumeroDocumento } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
+import {
+  createLiderUnidadOrganizacional,
+  getAsignacionesLideresByIdOrganigrama,
+  getPersonaByTipoDocumentoAndNumeroDocumento,
+  updateLiderUnidadOrganizacional
+} from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
 import { get_unidades_organizacionales_by_id_organigrama_service } from '../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
-
+import SaveIcon from '@mui/icons-material/Save';
+import { ModalContextLideres } from '../../../../context/ModalContextLideres';
+import { LoadingButton } from '@mui/lab';
+import SyncIcon from '@mui/icons-material/Sync';
+import {
+  get_list_asignaciones_lideres,
+  set_asignacion_lideres_current
+} from '../../../../toolkit/LideresSlices/LideresSlice';
 export const SeleccionLider = (): JSX.Element => {
+  //* dispatch declarations
+  const dispatch = useAppDispatch();
+
   //* ----- form control declarations -------
   const {
     control_seleccionar_lideres,
@@ -27,9 +46,11 @@ export const SeleccionLider = (): JSX.Element => {
   } = useLideresXUnidadOrganizacional();
 
   //* states redux selectors
-  const { organigrama_lideres_current } = useAppSelector(
-    (state) => state.lideres_slice
-  );
+  const { organigrama_lideres_current, asignacion_lideres_current } =
+    useAppSelector((state) => state.lideres_slice);
+
+  //* context declararion
+  const { loadingButton, setLoadingButton } = useContext(ModalContextLideres);
 
   // ? ------- use states declarations -------
   const [tiposDocumentos, setTiposDocumentos] = useState<
@@ -93,9 +114,30 @@ export const SeleccionLider = (): JSX.Element => {
     });
   }, [organigrama_lideres_current]);
 
+  // ? useEffect asingaciones lideres current
+  useEffect(() => {
+    if (!organigrama_lideres_current?.id_organigrama) return;
+    reset_seleccionar_lideres({
+      tipo_documento: {
+        label: asignacion_lideres_current?.tipo_documento,
+        value: asignacion_lideres_current?.tipo_documento
+      },
+      numero_documento: asignacion_lideres_current?.numero_documento,
+      nombre_persona: asignacion_lideres_current?.nombre_completo,
+      id_persona: asignacion_lideres_current?.id_persona,
+      id_unidad_organizacional: {
+        label: asignacion_lideres_current?.nombre_unidad_org,
+        value: asignacion_lideres_current?.id_unidad_organizacional
+      },
+      observaciones_asignacion:
+        asignacion_lideres_current?.observaciones_asignacion
+    });
+  }, [asignacion_lideres_current]);
+
   // * functions
 
-  const cleanElementComponent = (): void =>
+  const cleanElementComponent = (): void => {
+    dispatch(set_asignacion_lideres_current({}));
     reset_seleccionar_lideres({
       tipo_documento: {
         label: '',
@@ -110,9 +152,10 @@ export const SeleccionLider = (): JSX.Element => {
       },
       observaciones_asignacion: ''
     });
+  };
 
   //* onSubmit busqueda persona
-  const onSubmit = (): void => {
+  const BusquedaPersona = (): void => {
     void getPersonaByTipoDocumentoAndNumeroDocumento(
       watch_seleccionar_lideres_value.tipo_documento.value,
       watch_seleccionar_lideres_value.numero_documento
@@ -141,7 +184,46 @@ export const SeleccionLider = (): JSX.Element => {
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
-              onSubmit();
+
+              const data = {
+                id_persona: watch_seleccionar_lideres_value?.id_persona,
+                id_unidad_organizacional:
+                  watch_seleccionar_lideres_value?.id_unidad_organizacional
+                    ?.value,
+                observaciones_asignacion:
+                  watch_seleccionar_lideres_value?.observaciones_asignacion
+              };
+
+              const updateDataFunction = {
+                id_lider_unidad_org:
+                  asignacion_lideres_current?.id_lider_unidad_org,
+                id_persona: watch_seleccionar_lideres_value?.id_persona,
+                observaciones_asignacion:
+                  watch_seleccionar_lideres_value?.observaciones_asignacion
+              };
+
+              asignacion_lideres_current?.id_lider_unidad_org
+                ? void updateLiderUnidadOrganizacional(updateDataFunction, setLoadingButton,
+                  cleanElementComponent).then(() => {
+                    void getAsignacionesLideresByIdOrganigrama(
+                      organigrama_lideres_current?.id_organigrama
+                    ).then((res: any) => {
+                      console.log(res);
+                      dispatch(get_list_asignaciones_lideres(res));
+                    });
+                  })
+                : void createLiderUnidadOrganizacional(
+                    data,
+                    setLoadingButton,
+                    cleanElementComponent
+                  ).then(() => {
+                    void getAsignacionesLideresByIdOrganigrama(
+                      organigrama_lideres_current?.id_organigrama
+                    ).then((res: any) => {
+                      console.log(res);
+                      dispatch(get_list_asignaciones_lideres(res));
+                    });
+                  });
             }}
             style={{
               marginTop: '20px'
@@ -159,6 +241,9 @@ export const SeleccionLider = (): JSX.Element => {
                   }) => (
                     <div>
                       <Select
+                        isDisabled={
+                          asignacion_lideres_current?.observaciones_asignacion
+                        }
                         value={value}
                         onChange={(selectedOption) => {
                           /* void get_catalogo_TRD_service(
@@ -305,12 +390,12 @@ export const SeleccionLider = (): JSX.Element => {
             >
               <Button
                 color="primary"
-                type="submit"
+                // type="submit"
                 variant="contained"
                 startIcon={<SearchIcon />}
-                /*  onClick={() => {
-                  console.log('BUSCANDO LÍDER...');
-                }} */
+                onClick={() => {
+                  BusquedaPersona();
+                }}
               >
                 BUSCAR
               </Button>
@@ -336,46 +421,81 @@ export const SeleccionLider = (): JSX.Element => {
                 BÚSQUEDA AVANZADA LÍDER
               </Button>
             </Stack>
+
+            <Divider />
+            <Grid container spacing={2} sx={{ mt: '20px' }}>
+              <Grid item xs={12} sm={1.8}>
+                <TextField
+                  fullWidth
+                  label="Fecha asignación"
+                  size="small"
+                  variant="outlined"
+                  value={currentDate}
+                  InputLabelProps={{ shrink: true }}
+                  disabled={true}
+                />
+              </Grid>
+              <Grid item xs={12} sm={10.2}>
+                <Controller
+                  name="observaciones_asignacion"
+                  control={control_seleccionar_lideres}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      fullWidth
+                      label="Observaciones de la asignación"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      InputLabelProps={{ shrink: true }}
+                      disabled={
+                        organigrama_lideres_current?.fecha_retiro_produccion
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: '15px' }}>
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                spacing={2}
+                sx={{
+                  mb: '20px',
+                  mt: '20px',
+                  alignItems: 'center',
+                  ml: '20px'
+                }}
+              >
+                <LoadingButton
+                  loading={loadingButton}
+                  color="primary"
+                  type="submit"
+                  variant="contained"
+                  startIcon={
+                    asignacion_lideres_current?.observaciones_asignacion ? (
+                      <SyncIcon />
+                    ) : (
+                      <SaveIcon />
+                    )
+                  }
+                  onClick={() => {
+                    console.log('GUARDANDO LÍDER...');
+                  }}
+                >
+                  {asignacion_lideres_current?.observaciones_asignacion
+                    ? 'ACTUALIZAR LÍDER'
+                    : 'GUARDAR LÍDER'}
+                </LoadingButton>
+              </Stack>
+            </Grid>
           </form>
-          <Divider />
-          <Grid container spacing={2} sx={{ mt: '20px' }}>
-            <Grid item xs={12} sm={1.8}>
-              <TextField
-                fullWidth
-                label="Fecha asignación"
-                size="small"
-                variant="outlined"
-                value={currentDate}
-                InputLabelProps={{ shrink: true }}
-                disabled={true}
-              />
-            </Grid>
-            <Grid item xs={12} sm={10.2}>
-              <Controller
-                name="observaciones_asignacion"
-                control={control_seleccionar_lideres}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <TextField
-                    fullWidth
-                    label="Observaciones de la asignación"
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    InputLabelProps={{ shrink: true }}
-                    disabled={
-                      organigrama_lideres_current?.fecha_retiro_produccion
-                    }
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
 

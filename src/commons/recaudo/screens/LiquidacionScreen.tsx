@@ -42,8 +42,8 @@ export const LiquidacionScreen = (): JSX.Element => {
       .then((response) => {
         const cloned_opcion: OpcionLiquidacion = response.data.data;
         add_cloned_opcion(cloned_opcion);
-        set_notification_info({ type: 'success', message: `Se ha clonado correctamente la opción de liquidación "${cloned_opcion.nombre}" al final de la tabla.` });
-        set_open_notification_modal(true);
+        // set_notification_info({ type: 'success', message: `Se ha clonado correctamente la opción de liquidación "${cloned_opcion.nombre}" al final de la tabla.` });
+        // set_open_notification_modal(true);
       })
       .catch((error) => {
         console.log(error);
