@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesLideres/columnsAsignacionLideres';
 import { set_asignacion_lideres_current } from '../../../toolkit/LideresSlices/LideresSlice';
+import { BusquedaAsignacionesLideresModal } from '../components/BusquedaAsignacionesLideres/BusquedaAsignacionesLideresModal';
 
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   //* dispatch declarations
@@ -89,6 +90,12 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
           </Button>
         }
       />
+
+      {/* modal busqueda asignaciones de lideres   */}
+
+      <BusquedaAsignacionesLideresModal />
+
+      {/* modal busqueda asignaciones de lideres   */}
     </>
   );
 };
