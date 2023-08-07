@@ -19,6 +19,7 @@ import type {
   IObjCreateOrganigram
 } from '../../interfaces/organigrama';
 import { api } from '../../../../../api/axios';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -347,6 +348,7 @@ export const cambio_organigrama_actual: any = (
         data_cambio
       );
       control_success('Proceso exitoso');
+      control_warning('No olvides asignar los líderes a las unidades organizacionales del nuevo organigrama actual')
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
