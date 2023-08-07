@@ -25,7 +25,6 @@ import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
-import Select from 'react-select';
 import { Controller } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -167,7 +166,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="nombre"
+                  name="nombre_organigrama"
                   control={control_buscar_asignaciones_lideres_por_unidad}
                   defaultValue=""
                   render={({
@@ -189,7 +188,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="version"
+                  name="version_organigrama"
                   control={control_buscar_asignaciones_lideres_por_unidad}
                   defaultValue=""
                   // rules={{ required: false }}
@@ -211,61 +210,195 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{
-                  zIndex: 2
-                }}
-              >
-                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+              <Grid item xs={12} sm={3}>
                 <Controller
-                  name="actual"
+                  name="codigo_unidad_org"
                   control={control_buscar_asignaciones_lideres_por_unidad}
-                  rules={{ required: true }}
+                  defaultValue=""
+                  // rules={{ required: false }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        onChange={(selectedOption) => {
-                          /* void get_catalogo_TRD_service(
-                            selectedOption.value
-                          ).then((res) => {
-                            console.log(res);
-                            dispatch(set_catalog_trd_action(res));
-                          }); */
-                          onChange(selectedOption);
-                        }}
-                        options={[
-                          {
-                            label: 'SI',
-                            value: true
-                          },
-                          {
-                            label: 'NO',
-                            value: false
-                          }
-                        ]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem'
-                          }}
-                        >
-                          ACTUAL
-                        </small>
-                      </label>
-                    </div>
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Cód. Unidad organizacional"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="nombre_unidad_org"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Nombre Unidad organizacional"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="tipo_documento"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Tipo de documento"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="numero_documento"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Número de documento"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="primer_nombre"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Primer nombre"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="segundo_nombre"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Segundo Nombre"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="primer_apellido"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Primer apellido"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="segundo_apellido"
+                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      // margin="dense"
+                      fullWidth
+                      label="Segundo apellido"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={onChange}
+                      error={!!error}
+                    />
                   )}
                 />
               </Grid>
@@ -304,7 +437,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 onClick={() => {
-                 // resetFunction();
+                  // resetFunction();
                   console.log('cerrando');
                 }}
                 startIcon={<CleanIcon />}

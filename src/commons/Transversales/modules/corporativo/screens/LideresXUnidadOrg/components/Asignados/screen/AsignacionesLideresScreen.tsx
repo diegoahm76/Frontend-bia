@@ -14,6 +14,7 @@ import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesLideres
 import { set_asignacion_lideres_current } from '../../../toolkit/LideresSlices/LideresSlice';
 import { BusquedaAsignacionesLideresModal } from '../components/BusquedaAsignacionesLideres/BusquedaAsignacionesLideresModal';
 
+
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   //* dispatch declarations
   const dispatch = useAppDispatch();

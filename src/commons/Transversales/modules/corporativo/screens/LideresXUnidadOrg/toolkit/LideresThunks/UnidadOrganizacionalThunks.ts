@@ -22,6 +22,9 @@ export const getPersonaByTipoDocumentoAndNumeroDocumento = async (
   }
 };
 
+// ! --------  POST Y PUT ASIGNACIONES DE LIDERES POR UNIDAD ORGANZIZACIONAL --------
+
+
 // ? crear asignacion de lider a unidad organizacional
 export const createLiderUnidadOrganizacional = async (
   dataPost: any,
@@ -77,3 +80,6 @@ export const getAsignacionesLideresByIdOrganigrama = async (
     control_error(error?.response?.data?.detail);
   }
 };
+
+
+// ? get asginaciones de lideres by filter
