@@ -190,6 +190,11 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
 
   const { pozos_selected, fetch_data_pozo_instrumentos_select } =
     use_register_laboratorio_hook();
+
+  useEffect(() => {
+    console.log(pozos_selected, 'pozos_selected');
+  }, [pozos_selected]);
+
   const {
     fecha_prubea_bombeo,
     horaPruebaBombeo,
@@ -281,7 +286,10 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
     setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
     setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
 
-    void fetch_data_pozo_instrumentos_select(instrumentos?.id_pozo);
+    if (instrumentos?.id_pozo) {
+      console.log(instrumentos?.id_pozo, 'instrumentos?.id_pozo');
+      void fetch_data_pozo_instrumentos_select(instrumentos?.id_pozo);
+    }
   }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
