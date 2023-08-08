@@ -313,7 +313,6 @@ export const SeleccionLider = (): JSX.Element => {
                           });
 */
                           onChange(selectedOption);
-                          
                         }}
                         isDisabled={
                           false
@@ -483,6 +482,9 @@ export const SeleccionLider = (): JSX.Element => {
                   color="primary"
                   type="submit"
                   variant="contained"
+                  disabled={
+                    organigrama_lideres_current?.fecha_retiro_produccion
+                  }
                   startIcon={
                     asignacion_lideres_current?.observaciones_asignacion ? (
                       <SyncIcon />
