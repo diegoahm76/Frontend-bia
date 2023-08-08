@@ -28,6 +28,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { tipo_parametro_choices } from '../../Instrumentos/components/ResultadoLaboratorio/utils/choices/choices';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 interface IProps {
   is_modal_active: boolean;
@@ -39,6 +40,17 @@ export const DialogLaboratorio: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
 }) => {
+  const get_header_name = (code: string): any => {
+    switch (code) {
+      case 'SUB':
+        return 'Subterraneo';
+      case 'SUP':
+        return 'Superficial';
+      default:
+        return '';
+    }
+  };
+
   const colums_laboratorio: GridColDef[] = [
     {
       field: 'lugar_muestra',
@@ -69,8 +81,6 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                   params.row.id_resultado_laboratorio
                 );
                 set_info_laboratorio(params.row);
-                // set_id_parametro(params.row.id_parametro);
-                console.log(params.row, 'params.row');
               }}
             />
           </Tooltip>
@@ -113,11 +123,33 @@ export const DialogLaboratorio: React.FC<IProps> = ({
       width: 150,
     },
   ];
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ARCHIVO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'ARCHIVO',
+      width: 200,
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.value}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+  ];
+
   const {
     id_instrumento,
     info_laboratorio,
     id_resultado_laboratorio,
     rows_laboratorio,
+    rows_anexos_laboratorio,
     rows_resultado_laboratorio,
     tipo_parametro,
     set_tipo_parametro,
@@ -125,6 +157,7 @@ export const DialogLaboratorio: React.FC<IProps> = ({
     set_id_resultado_laboratorio,
     set_info_laboratorio,
     fetch_data_resultado_laboratorio,
+    fetch_data_anexos_laboratorio,
   } = useContext(DataContext);
 
   const handle_close = (): void => {
@@ -135,14 +168,19 @@ export const DialogLaboratorio: React.FC<IProps> = ({
     if (id_instrumento) {
       void fetch_data_laboratorio();
     }
-  }, [id_instrumento, is_modal_active]);
+  }, [is_modal_active]);
 
   useEffect(() => {
     if (id_resultado_laboratorio && tipo_parametro) {
       void fetch_data_resultado_laboratorio();
     }
-    // void fetch_data_laboratorio();
   }, [id_resultado_laboratorio, tipo_parametro]);
+
+  useEffect(() => {
+    if (id_resultado_laboratorio) {
+      void fetch_data_anexos_laboratorio(id_resultado_laboratorio);
+    }
+  }, [id_resultado_laboratorio]);
 
   return (
     <Dialog
@@ -185,6 +223,7 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         value={info_laboratorio.lugar_muestra}
                         fullWidth
                         disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -193,14 +232,18 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         value={info_laboratorio.fecha_toma_muestra}
                         fullWidth
                         disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                       <TextField
                         label="Analisis realizado en:"
-                        value={info_laboratorio.cod_clase_muestra}
+                        value={get_header_name(
+                          info_laboratorio.cod_clase_muestra
+                        )}
                         fullWidth
                         disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -209,6 +252,7 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         value={info_laboratorio.fecha_envio_lab}
                         fullWidth
                         disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -217,6 +261,7 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         value={info_laboratorio.fecha_resultados_lab}
                         fullWidth
                         disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -230,6 +275,7 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         value={info_laboratorio.latitud}
                         fullWidth
                         disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -238,16 +284,7 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         value={info_laboratorio.longitud}
                         fullWidth
                         disabled
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <TextField
-                        label="Altitud"
-                        value={
-                          info_laboratorio.id_cuenca ?? info_laboratorio.id_pozo
-                        }
-                        fullWidth
-                        disabled
+                        size="small"
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -257,8 +294,44 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                         fullWidth
                         disabled
                         multiline
+                        size="small"
                       />
                     </Grid>
+                    {info_laboratorio.cod_clase_muestra === 'SUP' && (
+                      <>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Cuenca Asociada"
+                            value={info_laboratorio.nombre_cuenca}
+                            fullWidth
+                            disabled
+                            multiline
+                            size="small"
+                          />
+                        </Grid>
+                      </>
+                    )}
+                    {info_laboratorio.cod_clase_muestra === 'SUB' && (
+                      <>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Pozo Asociado"
+                            value={info_laboratorio.nombre_pozo}
+                            fullWidth
+                            disabled
+                            multiline
+                            size="small"
+                          />
+                        </Grid>
+                      </>
+                    )}
+
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        Selecciones un tipo de parámetro
+                      </Typography>
+                    </Grid>
+
                     <Grid item xs={12} sm={6} md={4}>
                       <TextField
                         label="Tipo parámetro "
@@ -301,6 +374,21 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                     </Grid>
                   </>
                 )}
+                <Grid item xs={12}>
+                  <Title title="Resultados de laboratorio" />
+                </Grid>
+                <Grid item xs={12}>
+                  <>
+                    <DataGrid
+                      autoHeight
+                      rows={rows_laboratorio}
+                      columns={columns_anexos}
+                      getRowId={(row) => uuidv4()}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </>
+                </Grid>
               </>
             )}
           </Grid>

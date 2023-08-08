@@ -1,7 +1,20 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, Grid, Input, Stack, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Input,
+  Stack,
+  TextField,
+} from '@mui/material';
 import { Title } from '../../../components';
-import { control_error, control_success, validate_password } from '../../../helpers';
+import {
+  control_error,
+  control_success,
+  validate_password,
+} from '../../../helpers';
 import type { AxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import type { AuthSlice } from '../../auth/interfaces';
@@ -18,7 +31,7 @@ export const DatosAccesoScreen: React.FC = () => {
     register,
     handleSubmit: handle_submit,
     formState: { errors },
-    watch
+    watch,
   } = useForm();
   const [datos, set_datos] = useState<Users>();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -47,10 +60,13 @@ export const DatosAccesoScreen: React.FC = () => {
   // };
   const [errorfilesize, seterrorfilesize] = useState<string>('');
 
-  const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const selected_file = event.target.files != null ? event.target.files[0] : null;
+  const handle_file_select = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const selected_file =
+      event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
-      if (selected_file.size >  854000) {
+      if (selected_file.size > 854000) {
         set_file_name('');
         set_image_url(null);
         seterrorfilesize('El tamaño de la imagen excede el límite de  844 kb');
@@ -95,7 +111,7 @@ export const DatosAccesoScreen: React.FC = () => {
       const {
         data: { data },
       } = await get_user_by_id(id_usuario);
-      set_datos(data)
+      set_datos(data);
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {
@@ -112,31 +128,48 @@ export const DatosAccesoScreen: React.FC = () => {
     try {
       set_loading_natural(true);
       const datos_persona = new FormData();
-      if (data.password !== undefined && data.password !== '' && data.password.length > 0) {
+      if (
+        data.password !== undefined &&
+        data.password !== '' &&
+        data.password.length > 0
+      ) {
         datos_persona.append('password', data.password);
       }
       if (data.profile_img.length > 0) {
-        datos_persona.append(
-          'profile_img',
-          data.profile_img[0]
-        );
+        datos_persona.append('profile_img', data.profile_img[0]);
       }
-      console.log(datos_persona)
+      console.log(datos_persona);
       await editar_datos_acceso(datos_persona);
       reset_file_state();
       set_loading_natural(false);
       control_success('Se actualizaron los datos correctamente');
     } catch (error) {
       set_loading_natural(false);
-      control_error('hubo un error al actualizar los datos, intente nuevamente');
+      control_error(
+        'hubo un error al actualizar los datos, intente nuevamente'
+      );
     }
   };
+
+  useEffect(() => {
+    if (datos) {
+      console.log(datos, 'datos');
+      if (datos.profile_img) {
+        set_image_url(datos.profile_img);
+      } else {
+        set_image_url(
+          'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
+        );
+      }
+    }
+  }, [datos]);
 
   return (
     <>
       {datos !== undefined && (
         <>
-          <Box component="form"
+          <Box
+            component="form"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={handle_submit(on_submit_persona)}
           >
@@ -157,54 +190,56 @@ export const DatosAccesoScreen: React.FC = () => {
                 <Title title="Mis datos de acceso" />
               </Grid>
               <Grid item xs={12} container justifyContent="center">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <img
-                    height={250}
-                    width={250}
-                    // datos?.profile_img !== '' ? datos?.profile_img : 
-                    src={image_url != null ? image_url : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'}
-                    alt="Imagen de perfil"
-                  />
-                  {/* <Button
-                    variant="outlined"
-                    component="label"
-                    startIcon={<CloudUploadIcon />}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    height: '500px', // Establecer un tamaño fijo para el contenedor padre
+                    width: '500px',
+                  }}
+                >
+                  <div
                     style={{
-                      marginTop: '1rem', justifyContent: 'center', width: '100%', height: '13%',
+                      height: '100%',
+                      width: '100%',
+                      // borderRadius: '100%',
+                      backgroundImage: `url(${
+                        image_url != null
+                          ? image_url
+                          : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
+                      })`,
+                      backgroundSize: 'contain',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
                     }}
-                    size='small'
-                  >
-                    {file_name !== ''
-                      ? file_name
-                      : 'Seleccione foto de perfil '}
-                    <Input
-                      hidden
-                      id="foto-peril"
-                      type="file"
-                      autoFocus
+                  />
+                  {/* <img
+                      src={
+                        image_url != null
+                          ? image_url
+                          : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
+                      }
+                      alt="Imagen de perfil"
                       style={{
-                        opacity: 0,
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
                         height: '100%',
-                        cursor: 'pointer',
+                        width: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        imageRendering: '-webkit-optimize-contrast'
                       }}
-                      {...register('profile_img')}
-                      inputProps={{ accept: 'image/*',  }}
-                      error={Boolean(errors.profile_img)}
-                      onChange={handle_file_select}
-                    />
-                  </Button> */}
+                    /> */}
                   <Button
                     variant="outlined"
                     component="label"
                     startIcon={<CloudUploadIcon />}
                     style={{
-                      marginTop: '1rem', justifyContent: 'center', width: '100%', height: '13%',
+                      marginTop: '1rem',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: '13%',
                     }}
-                    size='small'
+                    size="small"
                   >
                     {file_name !== ''
                       ? file_name
@@ -230,12 +265,15 @@ export const DatosAccesoScreen: React.FC = () => {
                     />
                   </Button>
                   {errorfilesize !== '' && (
-                    <p style={{ color: 'red', marginTop: '0.5rem' }}>{errorfilesize}</p>
+                    <p style={{ color: 'red', marginTop: '0.5rem' }}>
+                      {errorfilesize}
+                    </p>
                   )}
                 </div>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
-                <TextField label="Nombre de usuario"
+                <TextField
+                  label="Nombre de usuario"
                   size="small"
                   disabled
                   value={datos?.nombre_de_usuario}
@@ -243,7 +281,8 @@ export const DatosAccesoScreen: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
-                <TextField label="Tipo usuario"
+                <TextField
+                  label="Tipo usuario"
                   size="small"
                   fullWidth
                   disabled
@@ -258,7 +297,7 @@ export const DatosAccesoScreen: React.FC = () => {
                   disabled
                   value={datos?.activated_at}
                 />
-              </Grid >
+              </Grid>
               {is_cambio_password && (
                 <>
                   <Grid item xs={12}>
@@ -279,31 +318,39 @@ export const DatosAccesoScreen: React.FC = () => {
                     <TextField
                       label="Nueva contraseña"
                       fullWidth
-                      size='small'
-                      error={is_error_password || errors.password?.type === 'required'}
+                      size="small"
+                      error={
+                        is_error_password ||
+                        errors.password?.type === 'required'
+                      }
                       helperText={message_error}
                       {...register('password', {
                         required: true,
                         minLength: {
                           value: 8,
-                          message: 'La contraseña debe tener 8 carácteres mínimio'
-                        }
+                          message:
+                            'La contraseña debe tener 8 carácteres mínimio',
+                        },
                       })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={12} md={6}>
                     <TextField
                       label="Confirme su contraseña"
-                      size='small'
+                      size="small"
                       fullWidth
-                      error={is_error_password || errors.password2?.type === 'required'}
+                      error={
+                        is_error_password ||
+                        errors.password2?.type === 'required'
+                      }
                       helperText={message_error}
                       {...register('password2', {
                         required: true,
                         minLength: {
                           value: 8,
-                          message: 'La contraseña debe tener 8 carácteres mínimio'
-                        }
+                          message:
+                            'La contraseña debe tener 8 carácteres mínimio',
+                        },
                       })}
                     />
                   </Grid>
@@ -318,7 +365,9 @@ export const DatosAccesoScreen: React.FC = () => {
                 >
                   {is_cambio_password && (
                     <>
-                      <Button color="error" variant="outlined"
+                      <Button
+                        color="error"
+                        variant="outlined"
                         onClick={() => {
                           set_is_cambio_password(false);
                         }}
@@ -327,7 +376,8 @@ export const DatosAccesoScreen: React.FC = () => {
                       </Button>
                     </>
                   )}
-                  <Button variant="contained"
+                  <Button
+                    variant="contained"
                     startIcon={<UpdateIcon />}
                     onClick={() => {
                       set_is_cambio_password(true);
@@ -335,9 +385,10 @@ export const DatosAccesoScreen: React.FC = () => {
                   >
                     Cambiar contraseña
                   </Button>
-                  <Button color="success"
+                  <Button
+                    color="success"
                     variant="contained"
-                    type='submit'
+                    type="submit"
                     startIcon={
                       loading_natural ? (
                         <CircularProgress
@@ -350,7 +401,8 @@ export const DatosAccesoScreen: React.FC = () => {
                       )
                     }
                     aria-label="Actualizar"
-                    disabled={loading_natural}>
+                    disabled={loading_natural}
+                  >
                     Actualizar
                   </Button>
                 </Stack>

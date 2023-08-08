@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
+import dayjs from 'dayjs';
 
 interface RootState {
   obligaciones: {
@@ -106,12 +107,12 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
       ),
     },
     {
-      field: 'fecha_inicio',
+      field: 'inicio',
       headerName: 'Fecha Inicio',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value).format('DD/MM/YYYY')}
         </div>
       ),
     },

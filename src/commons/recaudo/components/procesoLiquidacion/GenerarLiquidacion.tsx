@@ -67,6 +67,12 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               label='Selecciona deudor'
               name="cod_deudor"
               value={form_liquidacion.cod_deudor}
+              MenuProps={{
+                style: {
+                  maxHeight: 224,
+                  maxWidth: 124
+                }
+              }}
               onChange={handle_select_form_liquidacion_change}
             >
               {deudores.map((deudor) => (
@@ -84,6 +90,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               label='Selecciona expediente'
               name="cod_expediente"
               value={form_liquidacion.cod_expediente}
+              MenuProps={{
+                style: {
+                  maxHeight: 224,
+                }
+              }}
               onChange={handle_select_form_liquidacion_change}
             >
               {expedientes.map((expediente) => (
@@ -123,6 +134,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               label='Selecciona periodo'
               name="periodo_liquidacion"
               value={form_liquidacion.periodo_liquidacion}
+              MenuProps={{
+                style: {
+                  maxHeight: 224,
+                }
+              }}
               onChange={handle_select_form_liquidacion_change}
             >
               {periodos.map((periodo) => (

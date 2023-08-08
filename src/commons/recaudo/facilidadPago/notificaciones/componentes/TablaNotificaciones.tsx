@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Avatar, IconButton, Tooltip, Button, Stack, FormControl, InputLabel, Select, MenuItem, TextField } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -10,7 +11,6 @@ import { type event } from '../../interfaces/interfaces';
 export const TablaNotificaciones: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
-  console.log('filter', filter, 'search', search);
 
   const visible_rows = [
     {
