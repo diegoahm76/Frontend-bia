@@ -24,7 +24,6 @@ export const getPersonaByTipoDocumentoAndNumeroDocumento = async (
 
 // ! --------  POST Y PUT ASIGNACIONES DE LIDERES POR UNIDAD ORGANZIZACIONAL --------
 
-
 // ? crear asignacion de lider a unidad organizacional
 export const createLiderUnidadOrganizacional = async (
   dataPost: any,
@@ -81,5 +80,38 @@ export const getAsignacionesLideresByIdOrganigrama = async (
   }
 };
 
-
 // ? get asginaciones de lideres by filter
+export const getAsignacionesLideresByFilter = async ({
+  nombre_organigrama,
+  version_organigrama,
+  codigo_unidad_org,
+  nombre_unidad_org,
+  tipo_documento,
+  numero_documento,
+  primer_nombre,
+  segundo_nombre,
+  primer_apellido,
+  segundo_apellido
+}: any): Promise<any> => {
+  try {
+    const url = `transversal/lideres/get-list-filter/?nombre_organigrama=${
+      nombre_organigrama ?? ''
+    }&version_organigrama=${version_organigrama ?? ''}&codigo_unidad_org=${
+      codigo_unidad_org ?? ''
+    }&nombre_unidad_org=${nombre_unidad_org ?? ''}&tipo_documento=${
+      tipo_documento ?? ''
+    }&numero_documento=${numero_documento ?? ''}&primer_nombre=${
+      primer_nombre ?? ''
+    }&segundo_nombre=${segundo_nombre ?? ''}&primer_apellido=${
+      primer_apellido ?? ''
+    }&segundo_apellido=${segundo_apellido ?? ''}
+
+      `;
+    const { data } = await api.get(url);
+    console.log(data);
+    return data.data;
+  } catch (error: any) {
+    console.error(error);
+    control_error(error?.response?.data?.detail);
+  }
+};
