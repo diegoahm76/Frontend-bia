@@ -81,18 +81,18 @@ export const getAsignacionesLideresByIdOrganigrama = async (
 };
 
 // ? get asginaciones de lideres by filter
-export const getAsignacionesLideresByFilter = async ({
-  nombre_organigrama,
-  version_organigrama,
-  codigo_unidad_org,
-  nombre_unidad_org,
-  tipo_documento,
-  numero_documento,
-  primer_nombre,
-  segundo_nombre,
-  primer_apellido,
-  segundo_apellido
-}: any): Promise<any> => {
+export const getAsignacionesLideresByFilter = async (
+  nombre_organigrama: string,
+  version_organigrama: string,
+  codigo_unidad_org: string,
+  nombre_unidad_org: string,
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  segundo_nombre: string,
+  primer_apellido: string,
+  segundo_apellido: string
+): Promise<any> => {
   try {
     const url = `transversal/lideres/get-list-filter/?nombre_organigrama=${
       nombre_organigrama ?? ''
@@ -108,7 +108,7 @@ export const getAsignacionesLideresByFilter = async ({
 
       `;
     const { data } = await api.get(url);
-    console.log(data);
+    control_success(data.detail);
     return data.data;
   } catch (error: any) {
     console.error(error);

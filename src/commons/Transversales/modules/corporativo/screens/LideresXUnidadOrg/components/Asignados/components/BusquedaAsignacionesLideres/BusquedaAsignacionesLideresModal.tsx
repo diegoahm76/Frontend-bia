@@ -32,15 +32,28 @@ import { columnsBusquedaAsignacion } from './columnsBusquedaAsignacion/columnsBu
 import { AvatarStyles } from '../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../../../components';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';
+import { getAsignacionesLideresByFilter } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../../hooks';
+import { get_list_busqueda_avanzada_personas } from '../../../../toolkit/LideresSlices/LideresSlice';
 
 export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
   // * dispatch to use in the component * //
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   //* -------- hook declaration -------- *//
-  const { control_buscar_asignaciones_lideres_por_unidad } =
-    useLideresXUnidadOrganizacional();
-  // const { organigramas_list } = useAppSelector((state) => state.lideres_slice);
+  const {
+    control_buscar_asignaciones_lideres_por_unidad,
+    // reset_buscar_asignaciones_lideres_por_unidad,
+    watch_asignaciones_lider_by_unidad_value
+  } = useLideresXUnidadOrganizacional();
+
+  //* -------- use selector declaration -------- *//
+  const { busqueda_avanzada_personas_list } = useAppSelector(
+    (state) => state.lideres_slice
+  );
 
   // ? useContext declaration
   /* const {
@@ -148,9 +161,20 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
             console.log(
               'buscando asiganciones de lideres de las unidades organizacionales'
             );
-            /* void onSubmitSearchOrganigramas(
-              watch_organigrama_lideres_por_unidad_value
-            ); */
+            void getAsignacionesLideresByFilter(
+              watch_asignaciones_lider_by_unidad_value?.nombre_organigrama,
+              watch_asignaciones_lider_by_unidad_value?.version_organigrama,
+              watch_asignaciones_lider_by_unidad_value?.codigo_unidad_org,
+              watch_asignaciones_lider_by_unidad_value?.nombre_unidad_org,
+              watch_asignaciones_lider_by_unidad_value?.tipo_documento,
+              watch_asignaciones_lider_by_unidad_value?.numero_documento,
+              watch_asignaciones_lider_by_unidad_value?.primer_nombre,
+              watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
+              watch_asignaciones_lider_by_unidad_value?.primer_apellido,
+              watch_asignaciones_lider_by_unidad_value?.segundo_apellido
+            ).then((data: any) => {
+              dispatch(get_list_busqueda_avanzada_personas(data));
+            });
           }}
         >
           <DialogTitle>
@@ -418,7 +442,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={[]}
+              rows={busqueda_avanzada_personas_list || []}
               columns={columns_busqueda_asignaciones_de_lider}
               pageSize={5}
               rowsPerPageOptions={[7]}

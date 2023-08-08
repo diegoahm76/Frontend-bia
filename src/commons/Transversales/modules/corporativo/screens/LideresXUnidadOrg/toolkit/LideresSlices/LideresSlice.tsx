@@ -12,7 +12,10 @@ const initial_state: lideresInterface = {
 
   //* -- unidades interaction -- *//
   unidades_list: [],
-  unidad_current: null
+  unidad_current: null,
+
+  //* busqueda avanzada personas interaction *//
+  busqueda_avanzada_personas_list: []
 };
 
 export const lideres_slice = createSlice({
@@ -59,6 +62,14 @@ export const lideres_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.unidades_list = action.payload;
+    },
+
+    // ? busqueda avanzada personas interaction
+    get_list_busqueda_avanzada_personas: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.busqueda_avanzada_personas_list = action.payload;
     }
   }
 });
@@ -70,5 +81,11 @@ export const {
 
   //* asignacion lideres interaction
   get_list_asignaciones_lideres,
-  set_asignacion_lideres_current
+  set_asignacion_lideres_current,
+
+  //* unidades interaction
+  get_list_unidades,
+
+  //* busqueda avanzada personas interaction
+  get_list_busqueda_avanzada_personas
 } = lideres_slice.actions;
