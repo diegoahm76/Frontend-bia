@@ -59,23 +59,23 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
   } = useLideresXUnidadOrganizacional();
 
   //* -------- use selector declaration -------- *//
-  const { busqueda_avanzada_personas_list } = useAppSelector(
+ /* const { busqueda_avanzada_personas_list } = useAppSelector(
     (state) => state.lideres_slice
-  );
+  ); */
 
   // ? useContext declaration
   const {
-    modalBusquedaAvanzadaLideres,
-    // openModalBusquedaAvanzadaLideres,
+ /*   modalBusquedaAvanzadaLideres,
+    openModalBusquedaAvanzadaLideres,
 
-    closeModalBusquedaAvanzadaLideres,
+    closeModalBusquedaAvanzadaLideres, */
     loadingButton,
     setLoadingButton
   } = useContext(ModalContextLideres);
 
   const resetFunction = (): void => {
     console.log('resetFunction');
-    reset_buscar_asignaciones_lideres_por_unidad({
+ /*   reset_buscar_asignaciones_lideres_por_unidad({
       nombre_organigrama: '',
       version_organigrama: '',
       codigo_unidad_org: '',
@@ -86,13 +86,13 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
       segundo_nombre: '',
       primer_apellido: '',
       segundo_apellido: ''
-    });
+    }); */
   };
 
   const closeModal = (): any => {
-    closeModalBusquedaAvanzadaLideres();
+   /* closeModalBusquedaAvanzadaLideres();
     dispatch(get_list_busqueda_avanzada_personas([]));
-    resetFunction();
+    resetFunction(); */
     console.log('Im the close function');
   };
 
@@ -210,100 +210,9 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="nombre_organigrama"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre del Organigrama"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="version_organigrama"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
-                  defaultValue=""
-                  // rules={{ required: false }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      // margin="dense"
-                      fullWidth
-                      label="Versión del Organigrama"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="codigo_unidad_org"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
-                  defaultValue=""
-                  // rules={{ required: false }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      // margin="dense"
-                      fullWidth
-                      label="Cód. Unidad organizacional"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="nombre_unidad_org"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
-                  defaultValue=""
-                  // rules={{ required: false }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      // margin="dense"
-                      fullWidth
-                      label="Nombre Unidad organizacional"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
+             
+             
+              
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="tipo_documento"
@@ -464,8 +373,8 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={busqueda_avanzada_personas_list || []}
-              columns={columns_busqueda_asignaciones_de_lider}
+              rows={[]}
+              columns={[]}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
@@ -483,7 +392,8 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 onClick={() => {
-                  resetFunction();
+                  // resetFunction();
+                  console.log('reset');
                 }}
                 startIcon={<CleanIcon />}
               >

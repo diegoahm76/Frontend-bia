@@ -5,6 +5,7 @@ import {
   control_error,
   control_success
 } from '../../../../../../../../helpers';
+import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const getPersonaByTipoDocumentoAndNumeroDocumento = async (
   tipoDocumento: string,
@@ -112,6 +113,59 @@ export const getAsignacionesLideresByFilter = async (
 
       `;
     const { data } = await api.get(url);
+
+    if (data.data.length === 0) {
+      control_warning(
+        'No se encontraron resultados que coincidan con la busqueda'
+      );
+      return [];
+    }
+
+    control_success(data.detail);
+    return data.data;
+  } catch (error: any) {
+    console.error(error);
+    control_error(error?.response?.data?.detail);
+  } finally {
+    control_loading(false);
+    clean_function();
+  }
+};
+
+// ? busqueda avanzada persona por filtros
+export const getPersonaByFilter = async (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  segundo_nombre: string,
+  primer_apellido: string,
+  segundo_apellido: string,
+  id_unidad_organizacional_actual: string,
+  control_loading: any,
+  clean_function: any
+): Promise<any> => {
+  try {
+    control_loading(true);
+    const url = `transversal/lideres/get-lideres-filter/?tipo_documento=${
+      tipo_documento ?? ''
+    }&numero_documento=${numero_documento ?? ''}&primer_nombre=${
+      primer_nombre ?? ''
+    }&segundo_nombre=${segundo_nombre ?? ''}&primer_apellido=${
+      primer_apellido ?? ''
+    }&segundo_apellido=${
+      segundo_apellido ?? ''
+    }&id_unidad_organizacional_actual=${id_unidad_organizacional_actual ?? ''}
+
+      `;
+    const { data } = await api.get(url);
+
+    if (data.data.length === 0) {
+      control_warning(
+        'No se encontraron resultados que coincidan con la busqueda'
+      );
+      return [];
+    }
+
     control_success(data.detail);
     return data.data;
   } catch (error: any) {

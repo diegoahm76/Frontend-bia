@@ -14,6 +14,11 @@ const ModalContextLideres = createContext<ModalContextState>({
   openModalBusquedaAvanzadaOrganigrama: () => {},
   closeModalBusquedaAvanzadaOrganigrama: () => {},
 
+  // * -------------------------------------------> MODAL BUSQUEDA AVANZADA LIDERES
+  modalBusquedaAvanzadaLideres: false,
+  openModalBusquedaAvanzadaLideres: () => {},
+  closeModalBusquedaAvanzadaLideres: () => {},
+
   // ? ----- | LOAD BUTTONS | -----
   loadingButton: false,
   setLoadingButton: () => {}
@@ -31,6 +36,15 @@ const ModalProviderLideres: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_AVANZADA_ORGANIGRAMA' });
   }, []);
 
+  // * -------------------------------------------> MODAL BUSQUEDA AVANZADA LIDERES
+  const openModalBusquedaAvanzadaLideres = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_BUSQUEDA_AVANZADA_LIDERES' });
+  }, []);
+
+  const closeModalBusquedaAvanzadaLideres = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_AVANZADA_LIDERES' });
+  }, []);
+
   // ? ----- | LOAD BUTTONS | -----
   const setLoadingButton = useCallback((loading: boolean) => {
     dispatch({ type: 'SET_LOADING_BUTTON', payload: loading });
@@ -44,6 +58,11 @@ const ModalProviderLideres: FC<any> = ({ children }: any) => {
           state.modalBusquedaAvanzadaOrganigrama,
         openModalBusquedaAvanzadaOrganigrama,
         closeModalBusquedaAvanzadaOrganigrama,
+
+        // * -------------------------------------------> MODAL BUSQUEDA AVANZADA LIDERES
+        modalBusquedaAvanzadaLideres: state.modalBusquedaAvanzadaLideres,
+        openModalBusquedaAvanzadaLideres,
+        closeModalBusquedaAvanzadaLideres,
 
         // ? ----- | LOAD BUTTONS | -----
         loadingButton: state.loadingButton,

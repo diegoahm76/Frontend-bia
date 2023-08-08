@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC } from 'react';
+import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   useAppDispatch,
@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { columnsAsignacionesDeLideres } from '../utils/columsAsignacionesLideres/columnsAsignacionLideres';
 import { set_asignacion_lideres_current } from '../../../toolkit/LideresSlices/LideresSlice';
 import { BusquedaAsignacionesLideresModal } from '../components/BusquedaAsignacionesLideres/BusquedaAsignacionesLideresModal';
+import { ModalContextLideres } from '../../../context/ModalContextLideres';
 
 
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
@@ -23,6 +24,9 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   const { asignaciones_lideres_list } = useAppSelector(
     (state: any) => state.lideres_slice
   );
+
+  //* CONTEXT
+  const { openModalBusquedaAvanzadaLideres } = useContext(ModalContextLideres);
 
   const columnsLideres = [
     {
@@ -83,9 +87,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
             color="primary"
             variant="outlined"
             startIcon={<SearchIcon />}
-            onClick={() => {
-              console.log('buscando asignaciones de lideres');
-            }}
+            onClick={openModalBusquedaAvanzadaLideres}
           >
             BUSCAR ASIGNACIONES DE LÍDERES
           </Button>
