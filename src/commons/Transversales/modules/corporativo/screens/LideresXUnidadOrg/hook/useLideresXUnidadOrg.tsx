@@ -71,16 +71,13 @@ export const useLideresXUnidadOrganizacional = ():
     watch: watch_buscar_asignaciones_lideres_por_unidad
   } = useForm({
     defaultValues: {
-      nombre_organigrama: '',
-      version_organigrama: '',
-      nombre_unidad_org: '',
-      codigo_unidad_org: '',
       tipo_documento: '',
       numero_documento: '',
       primer_nombre: '',
       segundo_nombre: '',
       primer_apellido: '',
-      segundo_apellido: ''
+      segundo_apellido: '',
+      id_unidad_organizacional_actual: ''
     }
   });
   const watch_asignaciones_lider_by_unidad_value =

@@ -34,6 +34,7 @@ import {
   get_list_asignaciones_lideres,
   set_asignacion_lideres_current
 } from '../../../../toolkit/LideresSlices/LideresSlice';
+import { BusqueAsignacionesLiderModal } from '../ModalBusAvanLider/ModalBusAvanLider';
 export const SeleccionLider = (): JSX.Element => {
   //* dispatch declarations
   const dispatch = useAppDispatch();
@@ -203,8 +204,11 @@ export const SeleccionLider = (): JSX.Element => {
               };
 
               asignacion_lideres_current?.id_lider_unidad_org
-                ? void updateLiderUnidadOrganizacional(updateDataFunction, setLoadingButton,
-                  cleanElementComponent).then(() => {
+                ? void updateLiderUnidadOrganizacional(
+                    updateDataFunction,
+                    setLoadingButton,
+                    cleanElementComponent
+                  ).then(() => {
                     void getAsignacionesLideresByIdOrganigrama(
                       organigrama_lideres_current?.id_organigrama
                     ).then((res: any) => {
@@ -500,7 +504,7 @@ export const SeleccionLider = (): JSX.Element => {
       </Grid>
 
       {/* modal búsqueda avanzada de lideres */}
-
+      <BusqueAsignacionesLiderModal />
       {/* modal búsqueda avanzada de lideres */}
     </>
   );
