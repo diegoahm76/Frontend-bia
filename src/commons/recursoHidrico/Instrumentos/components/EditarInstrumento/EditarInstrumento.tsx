@@ -10,6 +10,7 @@ import {
   IconButton,
   MenuItem,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -23,7 +24,18 @@ import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
-import { setCurrentInstrumento } from '../../toolkit/slice/instrumentosSlice';
+import {
+  setCurrentInstrumento,
+  set_current_id_cartera_aforos,
+  set_current_id_prueba_bombeo,
+  set_current_info_cartera,
+  set_current_info_laboratorio,
+  set_current_info_prueba_bombeo,
+  set_current_mode,
+  set_current_mode_bombeo,
+  set_current_mode_cartera,
+  set_currente_id_resultado_laboratorio,
+} from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
 import { useRegisterInstrumentoHook } from '../RegistroInstrumentos/hook/useRegisterInstrumentoHook';
 import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
@@ -31,116 +43,226 @@ import { v4 as uuidv4 } from 'uuid';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
 export const EditarInstrumento: React.FC = (): JSX.Element => {
-  // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
-  const columns_aforo: GridColDef[] = [
-    // ...columns_result_lab,
-    {
-      field: 'ACCIONES',
-      headerName: 'ACCIONES',
-      width: 120,
-      renderCell: (params) => (
-        <>
-          {/* <IconButton
-                        onClick={() => {
-                          set_id_seccion(params.row.id_seccion);
-                          set_info_seccion(params.row);
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                          }}
-                          variant="rounded"
-                        >
-                          <ChecklistIcon
-                            titleAccess="Seleccionar Sección"
-                            sx={{
-                              color: 'primary.main',
-                              width: '18px',
-                              height: '18px',
-                            }}
-                          />
-                        </Avatar>
-                      </IconButton> */}
-        </>
-      ),
-    },
-  ];
   const columns_prueba_bombeo: GridColDef[] = [
-    // ...columns_result_lab,
+    {
+      field: 'ubicacion_prueba',
+      headerName: 'LUGAR DE PRUEBA',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'fecha_registro',
+      headerName: 'FECHA DE REGISTRO',
+      sortable: true,
+      width: 300,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                        onClick={() => {
-                          set_id_seccion(params.row.id_seccion);
-                          set_info_seccion(params.row);
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                          }}
-                          variant="rounded"
-                        >
-                          <ChecklistIcon
-                            titleAccess="Seleccionar Sección"
-                            sx={{
-                              color: 'primary.main',
-                              width: '18px',
-                              height: '18px',
-                            }}
-                          />
-                        </Avatar>
-                      </IconButton> */}
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                dispatch(set_current_info_prueba_bombeo(params.row));
+                dispatch(
+                  set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
+                );
+                dispatch(
+                  set_current_mode_bombeo({
+                    ver: true,
+                    crear: false,
+                    editar: false,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar prueba de bombeo">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_cartera(params.row));
+                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
+                dispatch(
+                  set_current_mode_cartera({
+                    ver: false,
+                    crear: false,
+                    editar: true,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
   ];
-  const columns_laboratorio: GridColDef[] = [
-    // ...columns_result_lab,
+  const columns_aforo: GridColDef[] = [
+    {
+      field: 'ubicacion_aforo',
+      headerName: 'LUGAR DE AFORO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'fecha_registro',
+      headerName: 'FECHA DE REGISTRO',
+      sortable: true,
+      width: 300,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-                        onClick={() => {
-                          set_id_seccion(params.row.id_seccion);
-                          set_info_seccion(params.row);
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                          }}
-                          variant="rounded"
-                        >
-                          <ChecklistIcon
-                            titleAccess="Seleccionar Sección"
-                            sx={{
-                              color: 'primary.main',
-                              width: '18px',
-                              height: '18px',
-                            }}
-                          />
-                        </Avatar>
-                      </IconButton> */}
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                dispatch(set_current_info_cartera(params.row));
+                dispatch(
+                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+                );
+                dispatch(
+                  set_current_mode_cartera({
+                    ver: true,
+                    crear: false,
+                    editar: false,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar cartera de aforo">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_cartera(params.row));
+                dispatch(
+                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+                );
+                dispatch(
+                  set_current_mode_cartera({
+                    ver: false,
+                    crear: false,
+                    editar: true,
+                  })
+                );
+                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+                  replace: true,
+                });
+              }}
+            />
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
+  const colums_laboratorio: GridColDef[] = [
+    {
+      field: 'lugar_muestra',
+      headerName: 'LUGAR DE MUESTRA',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'fecha_registro',
+      headerName: 'FECHA DE REGISTRO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_currente_id_resultado_laboratorio(
+                    params.row.id_resultado_laboratorio
+                  )
+                );
+                dispatch(
+                  set_current_mode({
+                    ver: true,
+                    crear: false,
+                    editar: false,
+                  })
+                );
+                navigate(
+                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                  {
+                    replace: true,
+                  }
+                );
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar Registro de laboratorio">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                dispatch(set_current_info_laboratorio(params.row));
+                dispatch(
+                  set_currente_id_resultado_laboratorio(
+                    params.row.id_resultado_laboratorio
+                  )
+                );
+                dispatch(
+                  set_current_mode({
+                    ver: false,
+                    crear: false,
+                    editar: true,
+                  })
+                );
+                navigate(
+                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                  {
+                    replace: true,
+                  }
+                );
+              }}
+            />
+          </Tooltip>
         </>
       ),
     },
@@ -246,10 +368,14 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
     id_instrumento,
     info_busqueda_instrumentos,
     rows_edit_pozo,
-    row_cartera_aforo,
-    row_prueba_bombeo,
-    row_result_laboratorio,
+    rows_cartera,
+    rows_prueba_bombeo,
+    rows_laboratorio,
     rows_anexos,
+    fetch_data_cartera,
+    fetch_data_prueba_bombeo,
+    fetch_data_laboratorio,
+    fetch_data_cuencas_instrumentos,
     set_rows_anexos,
     fetch_data_instrumento,
     fetch_data_pozo_id,
@@ -363,6 +489,59 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       void fetch_data_anexos();
     }
   }, [id_instrumento]);
+
+  useEffect(() => {
+    if (id_instrumento) {
+      void fetch_data_cuencas_instrumentos();
+      void fetch_data_instrumento();
+      void fetch_data_anexos();
+      if (info_busqueda_instrumentos?.cod_tipo_agua === 'OTR') {
+        return;
+      }
+      void fetch_data_laboratorio();
+      if (info_busqueda_instrumentos?.cod_tipo_agua === 'SUB') {
+        void fetch_data_prueba_bombeo();
+      }
+      if (info_busqueda_instrumentos?.cod_tipo_agua === 'SUP') {
+        void fetch_data_cartera();
+      }
+    }
+  }, [id_instrumento]);
+
+  useEffect(() => {
+    if (info_busqueda_instrumentos) {
+      console.log('info_busqueda_instrumentos', info_busqueda_instrumentos);
+      reset_instrumento({
+        nombre: info_busqueda_instrumentos.nombre,
+        fecha_creacion_instrumento:
+          info_busqueda_instrumentos.fecha_creacion_instrumento,
+        fecha_fin_vigencia: info_busqueda_instrumentos.fecha_fin_vigencia,
+      });
+      setValue('nombre', info_busqueda_instrumentos.nombre);
+      setValue(
+        'fecha_creacion_instrumento',
+        info_busqueda_instrumentos.fecha_creacion_instrumento
+      );
+      setValue(
+        'fecha_fin_vigencia',
+        info_busqueda_instrumentos.fecha_fin_vigencia
+      );
+      setValue('cod_tipo_agua', info_busqueda_instrumentos.cod_tipo_agua);
+      set_fecha_creacion(
+        info_busqueda_instrumentos.fecha_creacion_instrumento
+          ? dayjs(info_busqueda_instrumentos.fecha_creacion_instrumento)
+          : null
+      );
+      set_fecha_vigencia(
+        info_busqueda_instrumentos.fecha_fin_vigencia
+          ? dayjs(info_busqueda_instrumentos.fecha_fin_vigencia)
+          : null
+      );
+      if (info_busqueda_instrumentos.id_pozo) {
+        void fetch_data_pozo_id();
+      }
+    }
+  }, [info_busqueda_instrumentos]);
 
   useEffect(() => {
     if (info_busqueda_instrumentos) {
@@ -618,7 +797,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               ) : null}
             </>
           ) : null}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Anexos asociados al instrumento:
             </Typography>
@@ -697,12 +876,12 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   </Typography>
                   <Divider />
                 </Grid>
-                {row_cartera_aforo.length > 0 && (
+                {rows_cartera.length > 0 && (
                   <>
                     <Grid item xs={12}>
                       <DataGrid
                         autoHeight
-                        rows={row_cartera_aforo}
+                        rows={rows_cartera}
                         columns={columns_aforo}
                         getRowId={(row) => uuidv4()}
                         pageSize={5}
@@ -739,12 +918,12 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   </Typography>
                   <Divider />
                 </Grid>
-                {row_prueba_bombeo.length > 0 && (
+                {rows_prueba_bombeo.length > 0 && (
                   <>
                     <Grid item xs={12}>
                       <DataGrid
                         autoHeight
-                        rows={row_prueba_bombeo}
+                        rows={rows_prueba_bombeo}
                         columns={columns_prueba_bombeo}
                         getRowId={(row) => uuidv4()}
                         pageSize={5}
@@ -780,13 +959,13 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
               </Typography>
               <Divider />
             </Grid>
-            {row_result_laboratorio.length > 0 && (
+            {rows_laboratorio.length > 0 && (
               <>
                 <Grid item xs={12}>
                   <DataGrid
                     autoHeight
-                    rows={row_result_laboratorio}
-                    columns={columns_laboratorio}
+                    rows={rows_laboratorio}
+                    columns={colums_laboratorio}
                     getRowId={(row) => uuidv4()}
                     pageSize={5}
                     rowsPerPageOptions={[5]}

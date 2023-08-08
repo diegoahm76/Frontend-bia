@@ -54,7 +54,7 @@ export const MostrarEntidad: React.FC = () => {
                 <Title title="Entidad" />
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
                     <Grid item container spacing={5}>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={2}>
 
                             <TextField
                                 label="   Tipo Documento ID"
@@ -76,7 +76,7 @@ export const MostrarEntidad: React.FC = () => {
                                 value={numero_documento.toString()}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={1}>
 
                             <TextField
                                 label="DV"
@@ -87,7 +87,7 @@ export const MostrarEntidad: React.FC = () => {
                                 value={digito_verificacion.toString()}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={6}>
 
                             <TextField
                                 label="Nombre"

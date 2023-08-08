@@ -49,6 +49,10 @@ import {
   add_tipologia_documental_to_trd,
   set_selected_item_from_catalogo_trd_action
 } from '../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+
+import { LoadingButton } from '@mui/lab';
+
 
 export const FormTRDAdmin = (): JSX.Element => {
   //* dispatch declaration
@@ -60,7 +64,9 @@ export const FormTRDAdmin = (): JSX.Element => {
     closeModalAdministracionTRD,
     openModalHistorialCambios,
     buttonSpecialEditionActualTRD,
-    setButtonSpecialEditionActualTRD
+    setButtonSpecialEditionActualTRD,
+    setCreateTRDLoadingButton,
+    createTRDLoadingButton,
   } = useContext(ModalContextTRD);
   // * state from trd_slice
   const {
@@ -127,7 +133,7 @@ export const FormTRDAdmin = (): JSX.Element => {
       descripcion_procedimiento:
         form_data_administrar_trd.descripcion_procedimiento
     };
-    dispatch(create_item_catalogo_trd(elementsToSendCreate, tipologias)).then(
+    dispatch(create_item_catalogo_trd(elementsToSendCreate, tipologias, setCreateTRDLoadingButton)).then(
       (res: any) => {
         closeModalAdministracionTRD();
         reset_administrar_trd({
@@ -149,13 +155,6 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   const edit_item_onSubmit_trd_catalogo = (): any => {
     const formData = new FormData();
-    /*    formData.append('id_ccd', trd_current.id_ccd);
-    formData.append('id_organigrama', trd_current.id_organigrama);
-    formData.append('id_trd', trd_current.id_trd); */
-    /*   formData.append(
-      'id_cat_serie_und',
-      selected_item_from_catalogo_trd?.id_cat_serie_und
-    ); */
     formData.append(
       'cod_disposicion_final',
       form_data_administrar_trd.cod_disposicion_final.value
@@ -213,7 +212,8 @@ export const FormTRDAdmin = (): JSX.Element => {
       update_item_catalogo_trd(
         formData,
         selected_item_from_catalogo_trd?.id_catserie_unidadorg,
-        trd_current
+        trd_current,
+        setCreateTRDLoadingButton
       )
     ).then((res: any) => {
       closeModalAdministracionTRD();
@@ -517,14 +517,18 @@ export const FormTRDAdmin = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
+                            accept="application/pdf"
                             // disabled={control_administrar_trd?.actual}
                             onChange={(e) => {
-                              // console.log('valueeee', value);
-                              const files = (e.target as HTMLInputElement)
-                                .files;
+                              const files = (e.target as HTMLInputElement).files;
                               if (files && files.length > 0) {
-                                onChange(files[0]);
-                                // console.log(files[0]);
+                                const file = files[0];
+                                if (file.type !== 'application/pdf') {
+                                  control_warning('Solo formato pdf')
+                                  // dejar vacio el input file
+                                } else {
+                                  onChange(file);
+                                }
                               }
                             }}
                           />
@@ -552,7 +556,6 @@ export const FormTRDAdmin = (): JSX.Element => {
                     )}
                   />
                 </Grid>
-
                 {/* <Grid item xs={12} sm={2}>
                   <DownloadButton
                     fileName="ruta_archivo_cambio"
@@ -573,7 +576,8 @@ export const FormTRDAdmin = (): JSX.Element => {
             {/* tipologias asociadas a trd fin */}
           </Grid>
           <Stack direction="row" spacing={2} sx={{ marginTop: '1.5rem' }}>
-            <Button
+            <LoadingButton
+            loading={createTRDLoadingButton}
               variant="contained"
               color="primary"
               type="submit"
@@ -589,7 +593,7 @@ export const FormTRDAdmin = (): JSX.Element => {
               {selected_item_from_catalogo_trd?.nombre_unidad
                 ? 'Actualizar'
                 : 'Guardar'}
-            </Button>
+            </LoadingButton>
             <Button
               variant="outlined"
               color="error"

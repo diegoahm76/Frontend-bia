@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useForm } from 'react-hook-form';
 import {
+  default_values_administracion_tca,
   default_values_busqueda_tca,
   default_values_create_update_tca
 } from './utils/defaultValuesUseForm/defaultValuesUseForm';
@@ -11,7 +12,9 @@ import { useEffect, useState } from 'react';
 import { getTRDsUsados } from '../components/MainScreenComponents/view/TRDSUsados/services/TRDUsados.service';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
 import {
+  set_catalog_TCA_action,
   set_catalog_trd_action,
+  set_current_catalog_TCA_action,
   set_current_catalog_trd_action,
   set_current_tca_action,
   set_get_tcas_action
@@ -55,6 +58,20 @@ export const use_tca = () => {
   const watch_search_tca_value = watch_search_tca();
   // console.log('watch_search_tca_value', watch_search_tca_value);
 
+  const {
+    control: control_administrar_tca,
+    handleSubmit: handleSubmit_administrar_tca,
+    formState: formState_administrar_tca,
+    reset: reset_administrar_tca,
+    watch: watch_administrar_tca
+  } = useForm({
+    defaultValues: default_values_administracion_tca,
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
+  });
+  const watch_administrar_tca_value = watch_administrar_tca();
+
+
   // ! -------- cleaning funcion for all tca screen ----------------->
 
   const cleaning_function = () => {
@@ -62,6 +79,8 @@ export const use_tca = () => {
     dispatch(set_current_tca_action(null));
     dispatch(set_catalog_trd_action([]));
     dispatch(set_current_catalog_trd_action(null));
+    dispatch(set_catalog_TCA_action([]));
+    dispatch(set_current_catalog_TCA_action(null));
     reset_create_update_tca(default_values_create_update_tca);
   };
 
@@ -142,8 +161,7 @@ export const use_tca = () => {
         // id_organigrama: tca_current?.id_organigrama,
       };
       // console.log(obj, 'obj');
-      console.log(obj, 'obj');
-      console.log('tca_current', tca_current);
+      // console.log('tca_current', tca_current);
       reset_create_update_tca(obj);
     }
   }, [tca_current]);
@@ -162,6 +180,13 @@ export const use_tca = () => {
     formState_search_tca,
     reset_search_tca,
     watch_search_tca_value,
+
+    // ? useForm - administrar tca
+    control_administrar_tca,
+    handleSubmit_administrar_tca,
+    formState_administrar_tca,
+    reset_administrar_tca,
+    watch_administrar_tca_value,
 
     // ? non used trds
     set_list_non_used_trds,

@@ -8,13 +8,13 @@ const initial_state = {
 
 // Listar Deudores desde Pag. Usuario Interno
 export const get_deudores = createAsyncThunk('facilidades_pago/get_deudores', async () => {
-  const { data } = await api.get(`recaudo/pagos/listado-deudores/`)
+  const { data } = await api.get(`recaudo/facilidades-pagos/listado-deudores/`)
   return data.data
 })
 
 // Filtrar Deudores desde Pag. Usuario Interno
 export const get_filtro_deudores = createAsyncThunk('facilidades_pago/get_filtro_deudores', async (filtro: Filtro) => {
-  const { data } = await api.get(`recaudo/pagos/listado-deudores/?${filtro.parametro}=${filtro.valor}`)
+  const { data } = await api.get(`recaudo/facilidades-pagos/listado-deudores/?${filtro.parametro}=${filtro.valor}`)
   return data.data
 })
 

@@ -156,10 +156,15 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
           nombreUnidad: unidad?.nombre
         };
       });
-      /* console.log(
+
+      if(new_data.length === 0) {
+        control_error('No se encontró data relacionada');
+      }
+
+    console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         new_data
-      ); */
+      );
       dispatch(get_catalogo_series_subseries_unidad_organizacional(new_data));
       return data;
     } catch (error: any) {
@@ -510,7 +515,8 @@ export const get_catalogo_trd = (id_trd: number): any => {
 // ? create item catalogo TRD ---------------------------------------------->
 export const create_item_catalogo_trd = (
   bodyPost: any,
-  tipologias: any
+  tipologias: any,
+  setCreateTRDLoadingButton: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
@@ -518,6 +524,7 @@ export const create_item_catalogo_trd = (
     const tipologiasPost = tipologias.length > 0 ? tipologias : [];
 
     try {
+      setCreateTRDLoadingButton(true);
       const obj: any = {
         id_trd,
         id_cat_serie_und: bodyPost.id_cat_serie_und,
@@ -550,6 +557,8 @@ export const create_item_catalogo_trd = (
       control_error(error.response.data.detail);
       dispatch(set_selected_item_from_catalogo_trd_action(null));
       return error as AxiosError;
+    }finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -560,11 +569,13 @@ export const update_item_catalogo_trd = (
   formData: any,
   id_catserie_unidadorg: number,
   trd_current: any,
+  setCreateTRDLoadingButton: any,
 ): any => {
   return async (
     dispatch: Dispatch<AnyAction | any>
   ): Promise<AxiosResponse | AxiosError | any> => {
     try {
+      setCreateTRDLoadingButton(true);
       const { data } = await api.put(
         `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
         formData
@@ -585,6 +596,8 @@ export const update_item_catalogo_trd = (
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
+    }finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -647,7 +660,7 @@ export const get_historical_trd = (id_trd: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       if (!id_trd) return control_error('No se ha podido realizar la acción');
-      const url = `gestor/trd/historico/?id_trd=${id_trd}/`;
+      const url = `gestor/trd/historico/?id_trd=${id_trd}`;
       const { data } = await api.get(url);
 
       if (data.data.length > 0) {

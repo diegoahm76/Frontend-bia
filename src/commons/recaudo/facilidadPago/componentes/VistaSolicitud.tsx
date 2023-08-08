@@ -183,19 +183,26 @@ export const VistaSolicitud: React.FC = () => {
             </Button>
           </a>
         </Grid>
-        <Grid item xs={12} sm={5}>
-          <a href={solicitud_facilidad.documento_garantia} target="_blank" rel="noreferrer">
-            <Button
-              fullWidth
-              color='primary'
-              variant='outlined'
-              size='medium'
-              startIcon={<CloudDownloadIcon />}
-            >
-              Ver Garantías Ofrecidas
-            </Button>
-          </a>
-        </Grid>
+        {
+          solicitud_facilidad.facilidad_pago.periodicidad === 12 && solicitud_facilidad.facilidad_pago.cuotas > 1 ||
+          solicitud_facilidad.facilidad_pago.periodicidad === 6 && solicitud_facilidad.facilidad_pago.cuotas > 2 ||
+          solicitud_facilidad.facilidad_pago.periodicidad === 3 && solicitud_facilidad.facilidad_pago.cuotas > 4 ||
+          solicitud_facilidad.facilidad_pago.periodicidad === 1 && solicitud_facilidad.facilidad_pago.cuotas > 12 ? (
+            <Grid item xs={12} sm={5}>
+              <a href={solicitud_facilidad.documento_garantia} target="_blank" rel="noreferrer">
+                <Button
+                  fullWidth
+                  color='primary'
+                  variant='outlined'
+                  size='medium'
+                  startIcon={<CloudDownloadIcon />}
+                >
+                  Ver Garantías Ofrecidas
+                </Button>
+              </a>
+            </Grid>
+          ) : null
+        }
       </Grid>
       <p><strong>Relación de bienes</strong></p>
       <Grid item xs={12}>
