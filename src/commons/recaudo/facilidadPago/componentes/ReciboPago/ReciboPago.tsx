@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, Grid, Stack } from '@mui/material';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CloudDownload } from '@mui/icons-material';
 import './Estilos.css';
 import dayjs from 'dayjs';
 // import logo from '../../assets/logo_cormacarena.png';
@@ -108,7 +108,7 @@ export const ReciboPagoModulo: React.FC = () => {
             fullWidth
             color='primary'
             variant='contained'
-            startIcon={<CloudDownloadIcon />}
+            startIcon={<CloudDownload />}
             onClick={() => {
             }}
           >

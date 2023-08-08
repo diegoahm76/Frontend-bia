@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, Stack, TextField } from '@mui/material';
-import { Add, Close } from '@mui/icons-material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Add, Close, CloudUpload } from '@mui/icons-material';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -120,7 +119,7 @@ export const Email: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Documento Adjunto'}
                     <input
@@ -344,7 +343,7 @@ export const Fisico: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Documento Adjunto'}
                     <input
@@ -542,7 +541,7 @@ export const Edicto: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Documento Adjunto'}
                     <input

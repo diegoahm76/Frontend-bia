@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, Checkbox, TextField, Stack, Button, DialogActions, Dialog, DialogTitle } from '@mui/material';
-import { Add, Close } from '@mui/icons-material';
+import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
+import { DialogoInformativo } from './DialogoInformativo';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
@@ -301,30 +302,15 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
         </Stack>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form">
-          {
-            modal_opcion === 1 ?
-              <DialogTitle>{`El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`}</DialogTitle> :
-            modal_opcion === 2 ?
-              <DialogTitle>Para continuar a la página de registro seleccione al menos una de las obligaciones</DialogTitle> : null
-          }
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoInformativo
+        tipo_notificacion={ modal_opcion === 1 ? 'error' : 'warn' }
+        mensaje_notificacion={
+          modal_opcion === 1 ? `El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago` :
+          'Para continuar a la página de registro seleccione al menos una de las obligaciones'
+        }
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   );
 }

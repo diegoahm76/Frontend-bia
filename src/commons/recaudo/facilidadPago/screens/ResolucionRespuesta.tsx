@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent, Divider, DialogActions } from "@mui/material";
-import { Close } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Close, Save, CloudUpload } from '@mui/icons-material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { EditorTexto } from '../componentes/EditorTexto/EditorTexto';
@@ -118,7 +116,7 @@ export const ResolucionRespuesta: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Cargar Resolución'}
                     <input
@@ -142,7 +140,7 @@ export const ResolucionRespuesta: React.FC = () => {
               <Button
                 color='primary'
                 variant='contained'
-                startIcon={<SaveIcon />}
+                startIcon={<Save />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
                   handle_open()

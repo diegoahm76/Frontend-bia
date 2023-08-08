@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
 import { EditorTexto } from '../../componentes/EditorTexto/EditorTexto';
-import { Add } from '@mui/icons-material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Add, CloudUpload } from '@mui/icons-material';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -154,7 +153,7 @@ export const RegistroRecepcion: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {name_files.doc_firmado !== undefined ? name_files.doc_firmado : 'Documento Firmado'}
                     <input
@@ -174,7 +173,7 @@ export const RegistroRecepcion: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {name_files.guia !== undefined ? name_files.guia : 'Guía Transportador'}
                     <input

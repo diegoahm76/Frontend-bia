@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Box, TextField, Button } from "@mui/material";
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CloudDownload } from '@mui/icons-material';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { useSelector } from 'react-redux';
 
@@ -31,7 +31,7 @@ export const PersonaNatural: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                 >
                   Ver Documento de Identidad
                 </Button>
@@ -95,7 +95,7 @@ export const PersonaJuridica: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Documento de Identidad Apoderado
                         </Button>
@@ -116,7 +116,7 @@ export const PersonaJuridica: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Documento Poder
                         </Button>
@@ -137,7 +137,7 @@ export const PersonaJuridica: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Cert. Existencia y Representación Legal
                         </Button>
@@ -205,7 +205,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Documento Deudor Solidario
                         </Button>
@@ -226,7 +226,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Oficio Respaldando Deuda
                         </Button>
@@ -294,7 +294,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Documento Deudor Solidario
                         </Button>
@@ -315,7 +315,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Oficio Respaldando Deuda
                         </Button>
@@ -336,7 +336,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Cert. Existencia y Representación Legal
                         </Button>
