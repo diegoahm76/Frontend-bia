@@ -9,18 +9,9 @@ export const EditorTexto: React.FC = () => {
     <CKEditor
       editor={ ClassicEditor }
       data="<p></p>"
-      onReady={ editor => {
-        console.log( 'Editor is ready to use!', editor );
-      } }
       onChange={ ( event, editor ) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const data = editor.getData();
-        console.log( { event, editor, data } );
-      } }
-      onBlur={ ( event, editor ) => {
-        console.log( 'Blur.', editor );
-      } }
-      onFocus={ ( event, editor ) => {
-      console.log( 'Focus.', editor );
       } }
       config={ {
         placeholder: 'Redacte aquí el contenido del mensaje o cargue una plantilla predefinida.',

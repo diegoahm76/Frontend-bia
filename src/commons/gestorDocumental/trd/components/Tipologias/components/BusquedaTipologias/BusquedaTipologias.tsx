@@ -44,6 +44,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { LoadingButton } from '@mui/lab';
 
+import { Title } from '../../../../../../../components';
+
+
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
@@ -54,7 +57,7 @@ export const BusquedaTipologias = (): JSX.Element => {
     closeModalBusquedaTipologiasDocumentales,
     openModalAdministracionTipologiasDocumentales,
     createTRDLoadingButton,
-    setCreateTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   const {
@@ -185,25 +188,13 @@ export const BusquedaTipologias = (): JSX.Element => {
             dispatch(
               get_tipologias_documentales_by_name(
                 setCreateTRDLoadingButton,
-                form_data_searched_tipologia_documental.nombre,
+                form_data_searched_tipologia_documental.nombre
               )
             );
           }}
         >
           <DialogTitle>
-            Búsqueda de Tipologias Documentales
-            <IconButton
-              aria-label="close"
-              onClick={resetOnCloseModal}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500]
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
+            <Title title="Búsqueda de Tipologias Documentales" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -244,8 +235,7 @@ export const BusquedaTipologias = (): JSX.Element => {
                 />
               </Grid>
               <Grid item xs={12} sm={5.5}>
-
-              <LoadingButton
+                <LoadingButton
                   loading={createTRDLoadingButton}
                   variant="outlined"
                   type="submit"
@@ -280,9 +270,9 @@ export const BusquedaTipologias = (): JSX.Element => {
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
-              getRowId={
-                (row) => row.id_tipologia_documental
-              }
+
+              getRowId={(row) => row.id_tipologia_documental}
+
             />
           </DialogContent>
           <Divider />

@@ -7,25 +7,25 @@ interface Funcionario {
 
 // Listar Obligaciones desde Pag. Usuario Externo
 export const get_obligaciones_usuario = async (): Promise<any> => {
-  const data = await api.get('recaudo/pagos/listado-obligaciones/')
+  const data = await api.get('recaudo/facilidades-pagos/listado-obligaciones/')
   return data
 };
 
 // Listar Deudores desde Pag. Usuario Interno
 export const get_deudores = async (): Promise<any> => {
-  const data = await api.get(`recaudo/pagos/listado-deudores/`)
+  const data = await api.get(`recaudo/facilidades-pagos/listado-deudores/`)
   return data.data
 }
 
 // Filtrar Deudores desde Pag. Usuario Interno
 export const get_filtro_deudores = async (parametro: string, valor: string): Promise<any> => {
-  const data = await api.get(`recaudo/pagos/listado-deudores/?${parametro}=${valor}`)
+  const data = await api.get(`recaudo/facilidades-pagos/listado-deudores/?${parametro}=${valor}`)
   return data.data
 }
 
 // Listar Obligaciones de Usuario Externo desde Pag. Usuario Interno
 export const get_obligaciones_deudores = async (identificacion: string): Promise<any> => {
-  const data = await api.get(`recaudo/pagos/consulta-obligaciones-deudores/${identificacion}/`)
+  const data = await api.get(`recaudo/facilidades-pagos/consulta-obligaciones-deudores/${identificacion}/`)
   return data
 }
 
@@ -89,7 +89,7 @@ export const get_datos_deudor = async (id: number): Promise<any> => {
 
 // Ver la información de contacto del Deudor desde Pag. Usuario Interno
 export const get_datos_contacto_solicitud = async (id: number): Promise<any> => {
-  return await api.get(`recaudo/pagos/datos-contacto-deudor/${id}/`)
+  return await api.get(`recaudo/facilidades-pagos/datos-contacto-deudor/${id}/`)
 }
 
 // Listar Bienes del Deudor desde Pag. Usuario Interno
@@ -127,5 +127,11 @@ export const post_registro_bienes = async (bien: Bien): Promise<any> => {
 // Ver los tipos de bienes desde Pag. Usuario Externo
 export const get_tipo_bienes = async (): Promise<any> => {
   const data = await api.get(`recaudo/facilidades-pagos/tipos-bienes/`)
+  return data
+}
+
+// Ver los tipos de garantias desde Pag. Usuario Externo
+export const get_roles_garantia = async (): Promise<any> => {
+  const data = await api.get(`recaudo/garantias/roles-garantias/`)
   return data
 }

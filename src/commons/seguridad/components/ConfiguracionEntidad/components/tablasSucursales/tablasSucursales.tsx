@@ -1,11 +1,12 @@
-import {  Box, Button, Grid, Chip } from "@mui/material";
+import {  Box, Button, Grid, Chip, ButtonGroup,  } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "../../../../../../api/axios";
 import { useEffect, useState } from "react";
 import type { Itablaucursales } from "../../interfaces/interfacesConEntidad";
-
-
+import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
+import { useNavigate } from "react-router-dom";
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaSucursales: React.FC = () => {
@@ -77,7 +78,9 @@ export const TablaSucursales: React.FC = () => {
             },
         },
     ];
+    const filtered_data = dataEntidad.filter((row) => row.es_principal);
 
+    const navigate = useNavigate();
     return (
         <Grid
             container
@@ -92,21 +95,36 @@ export const TablaSucursales: React.FC = () => {
         >
             <Grid item xs={12}>
                 <Title title="Tabla sucursales" />
+                <ButtonGroup
+                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                    {download_xls({ nurseries: dataEntidad, columns })}
+            
+                </ButtonGroup>
+
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
                     <DataGrid
                         density="compact"
                         autoHeight
                         columns={columns}
-                        rows={dataEntidad}
+                        rows={filtered_data}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => row.id_sucursal_empresa}
                     />
                 </Box>
             </Grid>
-            <Button style={{ margin: 8 }} color="primary" variant="contained">
+
+            <Button
+                style={{ margin: 8 }}
+                color="primary"
+                variant="contained"
+                startIcon={<ArrowOutwardIcon />}
+                onClick={() => {navigate("/app/Seguridad/sucursal_entidad")}}
+            >
                 Ir a sucursales
             </Button>
+        
         </Grid>
     );
 };

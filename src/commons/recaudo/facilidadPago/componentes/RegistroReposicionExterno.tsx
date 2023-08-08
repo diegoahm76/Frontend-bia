@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions, DialogContent, Divider } from "@mui/material";
 import { Close } from '@mui/icons-material';
@@ -15,11 +16,6 @@ export const RegistroReposicionExterno: React.FC = () => {
   const { form_multiple_files, name_multiple_files, handle_change_multiple_files } = useFormMultipleFiles({});
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
-
-
-  console.log('texto', form_state);
-  console.log('archivo', form_file);
-  console.log('multiples archivos', form_multiple_files);
 
   return (
     <>

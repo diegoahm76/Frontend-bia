@@ -37,6 +37,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { getCatalogoSeriesYSubseries } from '../CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
+import { Title } from '../../../../../components';
 const CrearSubSerieCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
@@ -222,8 +223,8 @@ const CrearSubSerieCcdDialog = ({
       }}
     >
       <DialogTitle>
-        {title}
-        <IconButton
+        <Title title={title} />
+     {/*   <IconButton
           aria-label="close"
           onClick={() => {
             set_is_modal_active(false);
@@ -236,7 +237,7 @@ const CrearSubSerieCcdDialog = ({
           }}
         >
           <CloseIcon />
-        </IconButton>
+        </IconButton> */}
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
@@ -263,7 +264,7 @@ const CrearSubSerieCcdDialog = ({
 
             <Grid item xs={12} sm={6}>
               <TextField
-               //  margin="dense"
+                //  margin="dense"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"
