@@ -45,10 +45,9 @@ export const PruebasBombeoScreen: React.FC = () => {
           <Title title="PRUEBAS DE BOMBEO " />
         </Grid>
       </Grid>
-      <AgregarBombeo />
       {mode_bombeo.crear && <AgregarBombeo />}
-      {mode_bombeo.ver && <EditarPruebaBombeo />}
-      {mode_bombeo.editar && <SeleccionarPruebaBombeo />}
+      {mode_bombeo.editar && <EditarPruebaBombeo />}
+      {mode_bombeo.ver && <SeleccionarPruebaBombeo />}
     </>
   );
 };

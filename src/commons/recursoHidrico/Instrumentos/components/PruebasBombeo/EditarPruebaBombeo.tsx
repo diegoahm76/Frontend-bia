@@ -195,7 +195,7 @@ export const EditarPruebaBombeo: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE PRUEBAS DE BOMBEO " />
+            <Title title=" EDICIÓN DE PRUEBAS DE BOMBEO " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
