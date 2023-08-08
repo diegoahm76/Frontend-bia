@@ -159,13 +159,13 @@ export const getPersonaByFilter = async (
       `;
     const { data } = await api.get(url);
 
-   /* if (data.data.length === 0) {
+  /* if (data.data.length === 0) {
       control_warning(
         'No se encontraron resultados que coincidan con la busqueda'
       );
-      return [];
-    }
-*/
+      return;
+    } */
+
     control_success(data.detail);
     return data.data;
   } catch (error: any) {
