@@ -56,6 +56,7 @@ export const initial_state_entrada: IObjEntrada = {
     valor_total_entrada: null,
     fecha_ultima_actualizacion_diferente_creador: new Date().toString(),
     entrada_anulada: false,
+    ruta_archivo_doc_con_recibido: null,
     justificacion_anulacion: '',
     fecha_anulacion: new Date().toString(),
     id_proveedor: null,

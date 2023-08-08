@@ -145,19 +145,7 @@ const SeleccionarBodega = () => {
                         },
                     ]}
                     modal_select_model_title="Buscar bodega"
-                    modal_form_filters={[{
-                        datum_type: 'input_controller',
-                        xs: 12,
-                        md: 2,
-                        control_form: control_bodega,
-                        control_name: 'id_bodega',
-                        default_value: '',
-                        rules: {},
-                        label: 'Número de bodega',
-                        type: 'number',
-                        disabled: false,
-                        helper_text: '',
-                    },]}
+                    modal_form_filters={[]}
                     title_table_modal={'Bodegas'}
                 />
             </Grid>

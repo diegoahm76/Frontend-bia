@@ -226,7 +226,7 @@ const DespachoBienesConsumoScreen = () => {
         id_solicitud_consumo: current_solicitud.id_solicitud_consumibles,
         fecha_solicitud: current_solicitud.fecha_solicitud,
         numero_solicitud_por_tipo: current_solicitud.nro_solicitud_por_tipo,
-        // ruta_archivo_doc_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
+        ruta_archivo_doc_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
         id_unidad_para_la_que_solicita:
           current_solicitud.id_unidad_para_la_que_solicita,
         id_funcionario_responsable_unidad:

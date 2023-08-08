@@ -40,9 +40,7 @@ const ListadoBienesEntrega = () => {
           aux_items.push({
             ...option,
             cantidad_despachada: despachada,
-            cantidad_faltante:
-              //    (option.cantidad_disponible ?? 0) - despachada,
-              (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
+            cantidad_faltante: ((option.cantidad_disponible ?? option.cantidad ?? 0) - despachada) < 0 ? (option.cantidad_disponible ?? option.cantidad ?? 0) : (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
           });
         });
         console.log(aux_items);
@@ -79,7 +77,7 @@ const ListadoBienesEntrega = () => {
           aux_items.push({
             ...option,
             cantidad_despachada: despachada,
-            cantidad_faltante: (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
+            cantidad_faltante: ((option.cantidad_disponible ?? option.cantidad ?? 0) - despachada) < 0 ? (option.cantidad_disponible ?? option.cantidad ?? 0) : (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
 
           });
         });

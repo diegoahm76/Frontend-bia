@@ -177,7 +177,7 @@ export const get_uni_organizacional = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('transversal/organigrama/unidades/get-list/organigrama-actual/');
-            console.log(data.data, "data")
+
             dispatch(get_unidad_organizacional(data.data));
             return data;
         } catch (error: any) {
@@ -192,12 +192,9 @@ export const get_medida_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('almacen/unidades-medida/get-list/');
-            console.log("medida")
-            console.log(data)
             dispatch(set_unidades_medida(data));
             return data;
         } catch (error: any) {
-            console.log('get_medida_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -212,7 +209,6 @@ export const get_bienes_consumo = (id: string | null, nombre: string | null): an
         try {
 
             const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitud/?nombre=${nombre ?? ""}&codigo_bien=${id ?? ""}`);
-            console.log(data)
             if ('detail' in data) {
                 dispatch(set_bienes(data.detail));
 
@@ -226,7 +222,6 @@ export const get_bienes_consumo = (id: string | null, nombre: string | null): an
             }
             return data;
         } catch (error: any) {
-            console.log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -240,7 +235,6 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
         try {
 
             const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitable-vivero/?codigo_bien=${id ?? ""}&nombre_cientifico=${nombre_cientifico ?? ""}&nombre=${nombre ?? ""}&cod_tipo_elemento_vivero=${cod_tipo_elemento_vivero ?? ""}`);
-            console.log(data)
             if ('detail' in data) {
                 dispatch(set_bienes_vivero(data.detail));
 
@@ -254,7 +248,6 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
             }
             return data;
         } catch (error: any) {
-            console.log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -269,7 +262,7 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
         try {
 
             const { data } = await api.get(`almacen/solicitudes/get-bienes-solicitud/?codigo_bien=${codigo ?? ""}`);
-            console.log(data)
+
             if ('detail' in data) {
                 dispatch(set_current_bien(data.detail[0]))
                 if (data.detail.length > 0) {
@@ -284,7 +277,6 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
 
             return data;
         } catch (error: any) {
-            console.log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -298,7 +290,6 @@ export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): an
         try {
 
             const { data } = await api.get(`almacen/solicitudes/get-bien-solicitable-vivero/?codigo_bien=${codigo ?? ""}`);
-            console.log(data)
             if ('detail' in data) {
                 dispatch(set_current_bien_vivero(data.detail[0]))
                 if (data.detail.length > 0) {
@@ -313,7 +304,6 @@ export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): an
 
             return data;
         } catch (error: any) {
-            console.log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -326,10 +316,9 @@ export const get_bienes_solicitud = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(`almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ""}`)
+
             const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ""}/`);
             dispatch(set_bienes_solicitud(data.detail.info_items));
-            console.log(data)
             if (data.data.length > 0) {
                 // control_success("Se encontrarón bienes")
             } else {
@@ -350,13 +339,11 @@ export const get_solicitud_service = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id ?? ""}/`);
-            console.log('Solicitudes recuperadas:', data);
             dispatch(set_current_solicitud(data.detail.info_solicitud));
             dispatch(set_bienes_solicitud(data.detail.info_items));
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }

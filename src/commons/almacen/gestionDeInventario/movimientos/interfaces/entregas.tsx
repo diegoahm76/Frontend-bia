@@ -21,6 +21,7 @@ export interface IObjBien {
     bodega: string | null;
     cantidad_disponible: number | null;
     codigo_bien: string | null;
+    cantidad?: number | null;
     disponible: boolean | null;
     id_bien: number | null;
     id_bodega: number | null;
@@ -43,7 +44,7 @@ export interface IObjEntrega {
     despacho_anulado?: boolean;
     justificacion_anulacion?: null;
     fecha_anulacion?: string | null;
-    ruta_archivo_doc_con_recibido?: null;
+    ruta_archivo_doc_con_recibido?: string | null;
     id_solicitud_consumo?: number | null;
     id_persona_despacha?: number | null;
     id_persona_solicita?: number | null;
@@ -118,6 +119,7 @@ export interface IObjEntrada {
     id_proveedor?: number | null;
     id_tipo_entrada?: number | null;
     id_bodega?: number | null;
+    ruta_archivo_doc_con_recibido: string | null;
     id_creador?: number | null;
     id_persona_ult_act_dif_creador?: number | null;
     id_persona_anula?: number | null;

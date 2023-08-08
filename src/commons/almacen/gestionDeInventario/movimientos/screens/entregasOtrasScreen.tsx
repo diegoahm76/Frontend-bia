@@ -21,6 +21,7 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import AnularEliminar from '../../../../conservacion/componentes/AnularEliminar';
 import { Block } from '@mui/icons-material';
 import Limpiar from '../../../../conservacion/componentes/Limpiar';
+import { get_bodega_service } from '../../../configuracion/store/thunks/BodegaThunks';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -43,12 +44,13 @@ const EntregaScreen = () => {
         void dispatch(get_num_entrega())
         void dispatch(get_tipo_entrada())
         void dispatch(get_entregas_services());
+        void dispatch(get_bodega_service());
         dispatch(
             set_persona_entrega({
                 nombre_completo: userinfo.nombre,
                 id_persona: userinfo.id_persona,
             }))
-        set_action('crear');
+        set_action('guardar');
 
     }
 
@@ -84,6 +86,7 @@ const EntregaScreen = () => {
         void dispatch(get_num_entrega())
         void dispatch(get_tipo_entrada())
         void dispatch(get_entregas_services());
+        void dispatch(get_bodega_service());
         dispatch(
             set_persona_entrega({
                 nombre_completo: userinfo.nombre,
@@ -137,19 +140,19 @@ const EntregaScreen = () => {
             bienes_entrega.forEach((element: IObjBienEntrega, index: number) => {
                 aux_items.push({ ...element, numero_posicion_despacho: index });
             });
-
-            const entrega = {
-                data_entrega: { ...data },
+            const data_edit = {
+                ...data,
+                motivo: String(data.motivo)
+            }
+            const data_update = {
+                data_entrega: data_edit,
                 data_items_entrega: aux_items
             }
 
-            void dispatch(
-                editar_entrega(
-                    current_entrega.id_despacho_consumo,
-                    entrega)
-            );
+
+            void dispatch(editar_entrega(current_entrega.id_despacho_consumo, data_update));
         } else {
-            set_action('crear');
+            set_action('Guardar');
             const fecha = new Date(data.fecha_despacho ?? '').toISOString();
 
             const data_edit: IObjEntrega = {
@@ -157,7 +160,7 @@ const EntregaScreen = () => {
                 id_bodega_general: bodega_seleccionada.id_bodega,
                 fecha_despacho: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
                 id_entrada_almacen_cv: current_entrada.id_entrada_almacen,
-                // ruta_archivo_doc_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
+                ruta_archivo_doc_con_recibido: current_entrada.ruta_archivo_doc_con_recibido,
 
             };
             const aux_items: IObjBienEntrega[] = [];

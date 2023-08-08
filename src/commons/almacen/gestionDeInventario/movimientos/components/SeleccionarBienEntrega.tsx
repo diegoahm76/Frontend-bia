@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import type { IObjBien, IObjBienEntrega } from '../interfaces/entregas';
 import {
+
     initial_state_current_bien,
     set_bienes,
     set_bienes_entrada,
@@ -255,7 +256,7 @@ const SeleccionarBienEntrega = () => {
 
                 if (
                     (data.cantidad_despachada ?? 0) <=
-                    (current_bien.cantidad_disponible ?? 0)
+                    (current_bien.cantidad_disponible ?? current_bien.cantidad ?? 0)
                 ) {
                     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     console.log(asignada, bien_selected.cantidad_disponible);
@@ -324,14 +325,14 @@ const SeleccionarBienEntrega = () => {
                         }
                     } else {
                         control_error(
-                            'La cantidad asignada debe ser maximo ' +
+                            'La cantidad asignada debe ser máximo ' +
                             String(bien_selected.cantidad_disponible)
                         );
                     }
                 } else {
                     control_error(
-                        'La cantidad asignada debe ser maximo ' +
-                        String(current_bien.cantidad_disponible)
+                        'La cantidad asignada debe ser máximo ' +
+                        String(current_bien.cantidad_disponible ?? current_bien.cantidad)
                     );
                 }
             } else {
@@ -385,7 +386,7 @@ const SeleccionarBienEntrega = () => {
                     models={bienes}
                     get_filters_models={null}
                     set_models={set_bienes}
-                    show_search_button={false}
+                    show_search_button={true}
                     button_submit_label="Buscar bien"
                     form_inputs={[
                         {
@@ -395,7 +396,7 @@ const SeleccionarBienEntrega = () => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 5,
+                            md: 4,
                             control_form: control_bien,
                             control_name: 'codigo_bien',
                             default_value: '',
@@ -415,7 +416,7 @@ const SeleccionarBienEntrega = () => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 7,
+                            md: 5,
                             control_form: control_bien,
                             control_name: 'nombre',
                             default_value: '',
@@ -533,56 +534,7 @@ const SeleccionarBienEntrega = () => {
                     columns_list={columns_bienes_despacho}
                     row_list_id={'id_item_despacho_consumo'}
                     modal_select_model_title="Buscar bien"
-                    modal_form_filters={[
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: 'codigo_bien',
-                            default_value: '',
-                            rules: {
-                                required_rule: { rule: true, message: 'Codigo bien requerido' },
-                            },
-                            label: 'Codigo bien',
-                            type: 'number',
-                            disabled: false,
-                            helper_text: '',
-                            on_blur_function: search_bien,
-                        },
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: 'nombre_bien',
-                            default_value: '',
-                            rules: {},
-                            label: 'Nombre',
-                            type: 'text',
-                            disabled: false,
-                            helper_text: '',
-                        },
-                        {
-                            datum_type: 'select_controller',
-                            xs: 12,
-                            md: 2,
-                            control_form: control_bien,
-                            control_name: 'cod_etapa_lote',
-                            default_value: '',
-                            rules: {},
-                            label: 'Etapa de lote',
-                            helper_text: '',
-                            disabled: false,
-                            select_options: [
-                                { label: 'Germinación', value: 'G' },
-                                { label: 'Producción', value: 'P' },
-                                { label: 'Distribucción', value: 'D' },
-                            ],
-                            option_label: 'label',
-                            option_key: 'value',
-                        },
-                    ]}
+                    modal_form_filters={[]}
                 />
 
                 <SeleccionarModeloDialogForm
