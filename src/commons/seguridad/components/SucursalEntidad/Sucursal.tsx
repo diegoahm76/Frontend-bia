@@ -31,6 +31,7 @@ export const Sucursal: FC = () => {
   const initial_data: ISucursalEmpresa[] = [];
   const [selected_id, setselected_id] = useState<number | null>(null);
   const [data_entidad, setdata_entidad] = useState<ISucursalEmpresa[]>(initial_data);
+  const [new_number, setnew_number] = useState<number>(0)
 
   const fetchand_update_data = async (): Promise<void> => {
     try {
@@ -39,7 +40,7 @@ export const Sucursal: FC = () => {
       const sucursales_data = res.data.data;
       setdata_entidad(sucursales_data);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -52,7 +53,7 @@ export const Sucursal: FC = () => {
       fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 30);
+    }, 200);
 
     return () => { clearInterval(interval) };
   }, []);
@@ -63,6 +64,13 @@ export const Sucursal: FC = () => {
       const res = await api.get(url);
       const sucursales_data = res.data.data;
       setdata_entidad(sucursales_data);
+
+const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => sucursal.numero_sucursal));
+
+      setnew_number(max_numero_sucursal + 1);
+     // const siguiente_numeros_sucursal = max_numero_sucursal + 1;
+
+
     } catch (error) {
       console.error(error);
     }
@@ -87,7 +95,7 @@ export const Sucursal: FC = () => {
         customClass: {
           container: 'my-swal',
         },
-      }); 
+      });
       return;
     }
 
@@ -162,8 +170,8 @@ export const Sucursal: FC = () => {
     },
   ];
 
-  const max_numero_sucursal = Math.max(...data_entidad.map((sucursal) => sucursal.numero_sucursal));
-  const siguiente_numeros_sucursal = max_numero_sucursal + 1;
+ // eslint-disable-next-line @typescript-eslint/naming-convention
+  const esPrincipalExists = data_entidad.some((sucursal) => sucursal.es_principal);
 
   return (
     <>
@@ -183,11 +191,9 @@ export const Sucursal: FC = () => {
       >
         {/* sucursal entidad */}
         <SucursalEntidad />
-
-        <SucursalActuaizar selected_id={selected_id} siguiente_numeros_sucursal={siguiente_numeros_sucursal} />
-
+         <SucursalActuaizar selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
         <Grid item xs={12}>
-          <DataGrid
+          <DataGrid  
             density="compact"
             autoHeight
             columns={columns}

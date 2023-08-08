@@ -469,7 +469,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos adicionales (opcionales) */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS ADICIONALES (OPCIONALES)" />
+                <Title title="Datos de notificación (OPCIONALES)" />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
@@ -564,7 +564,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos de clasificación Cormacarena */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS DE CLASIFICACIÓN" />
+                <Title title="Datos de clasificación" />
               </Grid>
               <Grid item xs={12}>
                 {clase_tercero.length > 0 && (
