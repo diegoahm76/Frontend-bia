@@ -2,7 +2,7 @@ import axios from 'axios';
 import { control_warning } from '../commons/almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const baseURL = "https://back-end-bia-preproduction.up.railway.app/api/"
+export const baseURL = "https://back-end-bia-beta.up.railway.app/api/"
 
 // const baseURL = "http://70.30.6.237/api/"
 
