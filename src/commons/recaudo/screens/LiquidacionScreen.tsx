@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { AgregarEditarOpciones } from "../components/constructorLiquidador/AgregarEditarOpciones";
+// import { AgregarEditarOpciones } from "../components/constructorLiquidador/AgregarEditarOpciones";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -230,14 +230,14 @@ export const LiquidacionScreen = (): JSX.Element => {
                 />
               </TabPanel>
               <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <AgregarEditarOpciones
+               {/*  <AgregarEditarOpciones
                   opciones_liquidaciones={opciones_liquidaciones}
                   id_opcion_liquidacion={id_opcion_liquidacion}
                   form_data={form_data}
                   set_id_opcion_liquidacion={set_id_opcion_liquidacion}
                   set_refresh_page={set_refresh_page}
                   set_form_data={set_form_data}
-                />
+                /> */}
               </TabPanel>
             </TabContext>
           </Box>

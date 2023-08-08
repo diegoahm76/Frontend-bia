@@ -487,7 +487,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
         {/* Datos adicionales (opcionales) */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS ADICIONALES (OPCIONALES)" />
+            <Title title="Datos de notificación (OPCIONALES)" />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField
@@ -517,7 +517,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
         {/* Autorización de notificación y tratamiento de datos */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
+            <Title title="Autorización de notificación y tratamiento de datos" />
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
@@ -547,7 +547,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
         {/* Datos de clasificación Cormacarena */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS DE CLASIFICACIÓN" />
+            <Title title="Datos de clasificación" />
           </Grid>
           <Grid item xs={12}>
             {clase_tercero.length > 0 && (

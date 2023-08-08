@@ -74,7 +74,7 @@ export const NotificacionPage: React.FC = () => {
     >
       <Grid container spacing={2} mt={0.1}>
         <Grid item xs={12}>
-          <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
+          <Title title="Autorización de notificación y tratamiento de datos" />
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
