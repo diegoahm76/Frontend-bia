@@ -7,7 +7,7 @@ import { useContext, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import { post_prueba_bombeo } from '../../../request/request';
+import { post_archivos, post_prueba_bombeo } from '../../../request/request';
 import { control_error, control_success } from '../../../../../../helpers';
 import { useAppSelector } from '../../../../../../hooks';
 import { DataContext } from '../../../context/contextData';
@@ -30,7 +30,10 @@ export const use_register_bombeo_hook = () => {
       // Datos generales
       id_prueba_bombeo: '',
       id_instrumento: '',
-      id_pozo: '',
+      id_pozo: {
+        value: '',
+        label: '',
+      },
       descripcion: '',
       fecha_prueba_bombeo: '',
       latitud: '',
@@ -72,10 +75,8 @@ export const use_register_bombeo_hook = () => {
     // * editar archivo
   } = useContext(DataContext);
 
-  const {
-    id_instrumento: id_instrumento_slice,
-    // id_cartera_aforos: id_cartera_aforos_slice,
-  } = useAppSelector((state) => state.instrumentos_slice);
+  const { id_instrumento: id_instrumento_slice, id_prueba_bombeo } =
+    useAppSelector((state) => state.instrumentos_slice);
 
   // Datos generales
 
@@ -183,11 +184,6 @@ export const use_register_bombeo_hook = () => {
     try {
       set_is_saving(true);
       set_id_sesion_prueba_bombeo(null);
-      console.log(data);
-      console.log(row_prueba);
-      console.log(row_data_prueba);
-      console.log(archivos);
-      console.log(nombres_archivos);
       data.id_sesion_prueba_bombeo = id_sesion_prueba_bombeo;
       data.id_instrumento = id_instrumento_slice;
       const nombre_archivos_set = new Set(nombres_archivos);
@@ -196,22 +192,22 @@ export const use_register_bombeo_hook = () => {
         return;
       }
       const codigo_archivo = 'LAB';
-      const archivos_aforo = new FormData();
+      const archivos_bombeo = new FormData();
 
       archivos.forEach((archivo: any, index: any) => {
         if (archivo != null) {
-          archivos_aforo.append(`ruta_archivo`, archivo);
-          archivos_aforo.append(`nombre_archivo`, nombres_archivos[index]);
+          archivos_bombeo.append(`ruta_archivo`, archivo);
+          archivos_bombeo.append(`nombre_archivo`, nombres_archivos[index]);
         }
       });
-      archivos_aforo.append('id_instrumento', String(id_instrumento_slice));
-      archivos_aforo.append('cod_tipo_de_archivo', codigo_archivo);
+      archivos_bombeo.append('id_instrumento', String(id_instrumento_slice));
+      archivos_bombeo.append('cod_tipo_de_archivo', codigo_archivo);
 
       await post_prueba_bombeo(
         data,
         row_data_prueba,
         row_prueba,
-        archivos_aforo,
+        archivos_bombeo,
         archivos
       ).then((response) => {
         set_id_sesion_prueba_bombeo(
@@ -226,6 +222,42 @@ export const use_register_bombeo_hook = () => {
       });
       control_success('Prueba de bombeo guardada correctamente');
       limpiar_formulario();
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail ||
+          'Ha ocurrido un error, vuelva a intentarlo más tarde'
+      );
+      console.log(error, 'error');
+    } finally {
+      set_is_saving(false);
+    }
+  });
+  const onSubmit_archivos = handleSubmit_bombeo(async (data: any) => {
+    try {
+      set_is_saving(true);
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
+      const codigo_archivo = 'LAB';
+      const archivos_bombeo = new FormData();
+
+      archivos.forEach((archivo: any, index: any) => {
+        if (archivo != null) {
+          archivos_bombeo.append(`ruta_archivo`, archivo);
+          archivos_bombeo.append(`nombre_archivo`, nombres_archivos[index]);
+        }
+      });
+      archivos_bombeo.append('id_prueba_bombeo', String(id_prueba_bombeo));
+      archivos_bombeo.append('id_instrumento', String(id_instrumento_slice));
+      archivos_bombeo.append('cod_tipo_de_archivo', codigo_archivo);
+
+      await post_archivos(archivos_bombeo);
+      await fetch_data_anexos_bombeo(id_prueba_bombeo);
+      control_success('Archivo añadido correctamente');
+      set_archivos([]);
+      set_nombres_archivos([]);
     } catch (error: any) {
       control_error(
         error.response?.data?.detail ||
@@ -260,6 +292,7 @@ export const use_register_bombeo_hook = () => {
 
     // * onSubmit
     onSubmit,
+    onSubmit_archivos,
     is_saving,
 
     // * datos de sesion

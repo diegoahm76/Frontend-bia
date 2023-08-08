@@ -92,7 +92,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               size="small"
               startIcon={<EditIcon />}
               onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
+                dispatch(set_current_info_prueba_bombeo(params.row));
                 set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
                   dispatch(
                     set_current_mode_bombeo({

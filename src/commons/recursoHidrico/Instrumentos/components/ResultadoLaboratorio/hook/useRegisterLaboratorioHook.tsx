@@ -153,7 +153,7 @@ export const use_register_laboratorio_hook = () => {
     (state) => state.instrumentos_slice
   );
   const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
-  const [pozos_selected, set_pozos_selected] = useState<ValueProps[]>([]);
+  const [pozos_selected, set_pozos_selected] = useState<any[]>([]);
   const [parametros_select, set_parametros_select] = useState<ValueProps[]>([]);
   const [undidad_medida_select, set_undidad_medida_select] = useState('');
   const [cuenca_laboratorio, set_cuenca_id_laboratorio] = useState<
