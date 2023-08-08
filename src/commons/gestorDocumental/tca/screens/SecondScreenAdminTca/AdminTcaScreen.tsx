@@ -29,7 +29,9 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* REDUX ELEMENTS
+
   const { catalog_trd, catalog_TCA, tca_current } = useAppSelector(
+
     (state) => state.tca_slice
   );
 
@@ -38,10 +40,12 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
   const {
     modalAdministracionTca,
     // openModalAdministracionTca,
+
     closeModalAdministracionTca,
     modalTrdRelacionTcaActual,
     openModalTrdRelacionTcaActual,
     closeModalTrdRelacionTcaActual,
+
   } = useContext(ModalContextTCA);
 
   return (
@@ -78,7 +82,9 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
 
         {/* poner la condicional de la longitud del array para que tenga un mejor manejo visual */}
 
+
         {/*  <CatalogoTRDAdministracionScreen
+
           rows={
             (catalog_TCA.length > 0 &&
               catalog_trd?.filter((item: any) => {
@@ -109,6 +115,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
                   if (catalog_TCA.length === 0) {
                     console.log('catalog_TCA.length === 0');
                     return true;
+
                   }
                   return !catalog_TCA.some(
                     (otherItem: any) =>

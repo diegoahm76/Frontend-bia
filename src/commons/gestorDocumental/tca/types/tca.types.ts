@@ -5,6 +5,7 @@ export interface dataGridTypes {
   columns: any[];
   title: string;
   aditionalElement?: React.ReactNode | React.ReactElement | JSX.Element;
+
 } // END: abpxx6d04wxr
 
 // BEGIN: ed8c6549bwf9

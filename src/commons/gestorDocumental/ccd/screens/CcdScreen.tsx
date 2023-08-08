@@ -48,7 +48,9 @@ import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubse
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 import { get_assignments_service } from '../store/thunks/assignmentsThunks';
+
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -412,6 +414,7 @@ export const CcdScreen: React.FC = () => {
                           style={{ display: 'none' }}
                           type="file"
                           accept="application/pdf"
+
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
                             const files = (e.target as HTMLInputElement).files;

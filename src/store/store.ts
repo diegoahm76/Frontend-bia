@@ -39,7 +39,7 @@ import { trd_slice } from './../commons/gestorDocumental/trd/toolkit/TRDResource
 import { entrega_slice } from '../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega';
 import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice';
 import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
-import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrganizacional/toolkit/LideresSlices/LideresSlice';
+import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
 
 const persist_config = {
   key: 'macarenia_app',
