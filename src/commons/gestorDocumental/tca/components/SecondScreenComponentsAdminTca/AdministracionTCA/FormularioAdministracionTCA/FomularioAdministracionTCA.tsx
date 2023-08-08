@@ -230,7 +230,9 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           fontSize: '0.75rem'
                         }}
                       >
+
                         Disposición final
+
                       </small>
                     </label>
                   </div>
