@@ -4,7 +4,6 @@ import { api } from '../../../../api/axios';
 import { type AxiosResponse, type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type crear_entrada } from '../interfaces/entradas';
 import { type ResponseServer } from '../../../../interfaces/globalModels';
 
 
@@ -20,47 +19,6 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
     progress: undefined,
     theme: 'light'
   });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light'
-  });
-
-// Crear entrada
-export const crear_entrada_bien: any = (form_data: crear_entrada) => {
-  return async () => {
-    try {
-      const { data } = await api.post('almacen/bienes/entradas/create/', form_data);
-      control_success('La entrada se creo correctamente');
-      return data;
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Actualizar entrada
-export const actualizar_entrada_bien: any = (id_entrada_almacen: number, form_data: crear_entrada) => {
-  return async () => {
-    try {
-      const { data } = await api.put(`almacen/bienes/entradas/update/${id_entrada_almacen}/`, form_data);
-      control_success('La entrada se actualizó correctamente');
-      return data;
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
 
 // Obtiene viveros
 export const obtener_viveros: any = () => {
