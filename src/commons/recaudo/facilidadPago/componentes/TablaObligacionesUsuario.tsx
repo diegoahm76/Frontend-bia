@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
+import dayjs from 'dayjs';
 
 interface RootState {
   obligaciones: {
@@ -138,12 +139,12 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'fecha_inicio',
+      field: 'inicio',
       headerName: 'Fecha Inicio',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value).format('DD/MM/YYYY')}
         </div>
       ),
     },
@@ -158,7 +159,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'nro_resolucion',
+      field: 'numero_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (

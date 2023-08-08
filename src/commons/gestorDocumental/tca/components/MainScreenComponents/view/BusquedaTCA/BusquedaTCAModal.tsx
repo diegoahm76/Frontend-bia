@@ -43,6 +43,7 @@ import {
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { columnsBusquedaTca } from './columns/BusquedaTcaColums';
 import { LoadingButton } from '@mui/lab';
+import { Title } from '../../../../../../../components';
 
 export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
   // ? useDispatch
@@ -112,6 +113,12 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                       dispatch(set_catalog_TCA_action(res));
                     }
                   );
+
+                })
+                .catch((err) => {
+
+                  console.log(err);
+                  dispatch(set_catalog_TCA_action([]));
                 });
               // reset_searched_trd_modal();
               // console.log(params.row);
@@ -156,7 +163,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
       headerName: 'Actual',
       width: 80,
       renderCell: (params: any) =>
-        params.value.actual ? (
+        params.row.actual ? (
           <Chip label="SI" color="primary" variant="outlined" />
         ) : (
           <Chip label="NO" color="error" variant="outlined" />
@@ -218,7 +225,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
           }}
         >
           <DialogTitle>
-            Consultar los TCA que coincidan con el criterio de búsqueda
+            <Title title="Consultar los TCA que coincidan con el criterio de búsqueda" />
           </DialogTitle>
           <Divider />
           <DialogContent

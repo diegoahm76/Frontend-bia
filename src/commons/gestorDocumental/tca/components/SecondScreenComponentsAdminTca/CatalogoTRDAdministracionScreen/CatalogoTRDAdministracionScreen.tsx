@@ -1,23 +1,38 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { type FC } from 'react';
+import { type FC, useContext } from 'react';
 import { RenderDataGrid } from '../../../Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Chip, IconButton } from '@mui/material';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 
 //* icons
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { useAppSelector } from '../../../../../../hooks';
+import type { dataGridTypes } from '../../../types/tca.types';
+import { useAppDispatch } from '../../../../../../hooks';
+import { ModalContextTCA } from '../../../context/ModalContextTca';
+import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
 
-export const CatalogoTRDAdministracionScreen: FC<any> = ({
+export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
   columns,
-  title
-}: any): JSX.Element => {
-  const { catalog_trd } = useAppSelector((state) => state.tca_slice);
+  title,
+  aditionalElement
+}: dataGridTypes): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
-  const newColums = [
+
+  //* context declaration
+  // eslint-disable-next-line no-empty-pattern
+  const {
+    // modalAdministracionTca,
+    openModalAdministracionTca
+    // closeModalAdministracionTca,
+  } = useContext(ModalContextTCA);
+
+  const newColums: any = [
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -30,14 +45,9 @@ export const CatalogoTRDAdministracionScreen: FC<any> = ({
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
-                // ? this is the function to get data asociated to trd
-                // dispatch(get_tipologia_doc_asociadas_trd(params.row.id_cat_serie_und));
                 console.log(params.row);
-                /*   openModalAdministracionTRD();
-                dispatch(
-                  set_selected_item_from_catalogo_trd_action(params.row)
-                );
-                dispatch(get_tipologias_asociadas_a_trd([])); */
+                openModalAdministracionTca();
+                dispatch(set_selected_item_from_catalogo_action(params.row));
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -86,11 +96,14 @@ export const CatalogoTRDAdministracionScreen: FC<any> = ({
 
   return (
     <>
+
       <RenderDataGrid
-        rows={catalog_trd || []}
-        columns={newColums}
+        rows={rows || []}
+        columns={newColums || []}
         title={title}
+        aditionalElement={aditionalElement}
       />
+
       {/*
         mirar si se debe añadir componente adicional
 

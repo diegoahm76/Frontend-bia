@@ -1,4 +1,4 @@
-import { SelectChangeEvent } from "@mui/material";
+import { type SelectChangeEvent } from "@mui/material";
 
 export interface ISucursalEditar {
   email_sucursal: string;

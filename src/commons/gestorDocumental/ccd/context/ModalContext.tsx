@@ -13,29 +13,65 @@ const ModalContext = createContext<ModalContextState | any>({
   closeModalBusquedaCreacionCCD: () => {},
   loadingButton: false,
   activateLoadingButton: () => {},
-  desactivateLoadingButton: () => {},
+  desactivateLoadingButton: () => {}
   // openModal3: () => {},
   // closeModal3: () => {},
 });
 
 const ModalProvider: React.FC<any> = ({ children }: any) => {
-  const [modalSeriesAndSubseries, setModalSeriesAndSubseries] = useState(false)
-
-  // const [modalBusquedaCCD, setModalBusquedaCCD] = useState(false);
-
-  const [busquedaCreacionCCDModal, setBusquedaCreacionCCDModal] = useState(false);
+  const [modalSeriesAndSubseries, setModalSeriesAndSubseries] = useState(false);
+  const [busquedaCreacionCCDModal, setBusquedaCreacionCCDModal] =
+    useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
-  // const [modal3, setModal3] = useState(false);
 
-  const openModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(true), []);
-  const closeModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(false), []);
+  const openModalModalSeriesAndSubseries = useCallback(
+    () => setModalSeriesAndSubseries(true),
+    []
+  );
+  const closeModalModalSeriesAndSubseries = useCallback(
+    () => setModalSeriesAndSubseries(false),
+    []
+  );
 
-  const openModalBusquedaCreacionCCD = useCallback(() => setBusquedaCreacionCCDModal(true), []);
-  const closeModalBusquedaCreacionCCD = useCallback(() => setBusquedaCreacionCCDModal(false), []);
+  const openModalBusquedaCreacionCCD = useCallback(
+    () => setBusquedaCreacionCCDModal(true),
+    []
+  );
+  const closeModalBusquedaCreacionCCD = useCallback(
+    () => setBusquedaCreacionCCDModal(false),
+    []
+  );
   const activateLoadingButton = useCallback(() => setLoadingButton(true), []);
-  const desactivateLoadingButton = useCallback(() => setLoadingButton(false), []);
-  // const openModal3 = useCallback(() => setModal3(true), []);
-  // const closeModal3 = useCallback(() => setModal3(false), []);
+  const desactivateLoadingButton = useCallback(
+    () => setLoadingButton(false),
+    []
+  );
+
+  // - states loading button
+  const [loadingButtonBusquedaCCD, setLoadingButtonBusquedaCCD] =
+    useState(false);
+
+  const activateLoadingButtonBusquedaCCD = useCallback(
+    () => setLoadingButtonBusquedaCCD(true),
+    []
+  );
+  const desactivateLoadingButtonBusquedaCCD = useCallback(
+    () => setLoadingButtonBusquedaCCD(false),
+    []
+  );
+
+  //* states loading button guardarRelacion
+  const [loadingButtonGuardarRelacion, setLoadingButtonGuardarRelacion] =
+    useState(false);
+
+  const activateLoadingButtonGuardarRelacion = useCallback(
+    () => setLoadingButtonGuardarRelacion(true),
+    []
+  );
+  const desactivateLoadingButtonGuardarRelacion = useCallback(
+    () => setLoadingButtonGuardarRelacion(false),
+    []
+  );
 
   return (
     <ModalContext.Provider
@@ -48,10 +84,17 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
         openModalBusquedaCreacionCCD,
         closeModalBusquedaCreacionCCD,
         activateLoadingButton,
-        desactivateLoadingButton
-        // modal3,
-        // openModal3,
-        // closeModal3,
+        desactivateLoadingButton,
+
+        //* loading busqueda
+        loadingButtonBusquedaCCD,
+        activateLoadingButtonBusquedaCCD,
+        desactivateLoadingButtonBusquedaCCD,
+
+        //* loading guardarRelacion
+        loadingButtonGuardarRelacion,
+        activateLoadingButtonGuardarRelacion,
+        desactivateLoadingButtonGuardarRelacion
       }}
     >
       {children}

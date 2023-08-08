@@ -6,13 +6,15 @@ import { containerStyles } from '../../screens/utils/constants/constants';
 import { Title } from '../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import type { dataGridTypesWithAdditionalElement } from '../../types/tca.types';
 
-export const RenderDataGrid: FC<any> = ({
+
+export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
   rows,
   columns,
   title,
-  aditionalElement
-}: any): JSX.Element => {
+  aditionalElement,
+}: dataGridTypesWithAdditionalElement): JSX.Element => {
   return (
     <Grid container sx={containerStyles}>
       <Grid item xs={12}>

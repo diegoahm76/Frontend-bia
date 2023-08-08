@@ -11,7 +11,6 @@ import { ISucursalForm, Props } from "./utils/interfac";
  
 
 
- 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
@@ -24,7 +23,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     direccion_notificacion: "",
     direccion_notificacion_referencia: "",
     municipio_notificacion: null,
-    email_sucursal: "",
+    email_sucursal: "", 
     confirmar_email: "",
     telefono_sucursal: "",
     es_principal: false,
@@ -34,16 +33,13 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     numero_sucursal: siguiente_numeros_sucursal,
   };
   const [exiting, set_exiting] = useState(false);
-
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
-  const [form_updated, setform_updated] = useState(false);
-
+ 
   useEffect(() => {
     if (isediting) {
 
-      setform_updated(false); // Reset the form_updated state when the selected_id prop changes
-      void fetch_data();
+       void fetch_data();
     }
   }, [selected_id]);
 
@@ -93,8 +89,8 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       .then((response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
-        setform_updated(true); // Set the form_updated state to true after successful update
-        setform_values(initial_state);
+         setform_values(initial_state);
+         
         
       })
       .catch((error) => {
@@ -107,8 +103,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
   const handle_clear_fields = (): void => {
     // Set all form field values to their initial_state (empty values)
     setform_values(initial_state);
-    setform_updated(false);
-  };
+   };
 
   const handle_exit = (): void => {
     set_exiting(true);
@@ -123,6 +118,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       window.history.back();
     }
   }, [exiting]);
+  
   return (
     <Grid container
       spacing={2}
@@ -260,7 +256,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       </Grid>
       <Grid item xs={12} sm={2}>
         <Button variant="contained" color="primary" onClick={handleform_submit}>
-          {isediting && !form_updated ? "Actualizar" : "Guardar"}
+          {isediting  ? "Actualizar" : "Guardar"}
         </Button>
 
       </Grid>
