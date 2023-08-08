@@ -25,7 +25,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   );
 
   //* CONTEXT
-  const { openModalBusquedaPersona } = useContext(ModalContextLideres);
+  const { openModalBusquedaAvanzadaLideres } = useContext(ModalContextLideres);
 
   const columnsLideres = [
     {
@@ -86,7 +86,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
             color="primary"
             variant="outlined"
             startIcon={<SearchIcon />}
-            onClick={openModalBusquedaPersona}
+            onClick={openModalBusquedaAvanzadaLideres}
           >
             BUSCAR ASIGNACIONES DE LÍDERES
           </Button>

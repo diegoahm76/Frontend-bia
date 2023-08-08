@@ -51,7 +51,8 @@ export const SeleccionLider = (): JSX.Element => {
     useAppSelector((state) => state.lideres_slice);
 
   //* context declararion
-  const { loadingButton, setLoadingButton } = useContext(ModalContextLideres);
+  const { loadingButton, setLoadingButton, openModalBusquedaPersona } =
+    useContext(ModalContextLideres);
 
   // ? ------- use states declarations -------
   const [tiposDocumentos, setTiposDocumentos] = useState<
@@ -417,10 +418,7 @@ export const SeleccionLider = (): JSX.Element => {
                 color="primary"
                 variant="outlined"
                 startIcon={<SearchIcon />}
-                onClick={() => {
-                  console.log('abrir modal de busqueda avanzada de lideres');
-                  // onSubmit();
-                }}
+                onClick={openModalBusquedaPersona}
               >
                 BÚSQUEDA AVANZADA LÍDER
               </Button>

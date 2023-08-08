@@ -46,7 +46,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
     control_buscar_asignaciones_lideres_por_unidad,
     reset_buscar_asignaciones_lideres_por_unidad,
     watch_asignaciones_lider_by_unidad_value,
-    watch_seleccionar_lideres
+    watch_seleccionar_lideres_value,
   } = useLideresXUnidadOrganizacional();
 
   //* -------- use selector declaration -------- *//
@@ -153,6 +153,18 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
           onSubmit={(e) => {
             e.preventDefault();
             // console.log('buscando personas para asignar como líderes');
+
+            const dataToGet = {
+              a: watch_asignaciones_lider_by_unidad_value?.tipo_documento,
+              b: watch_asignaciones_lider_by_unidad_value?.numero_documento,
+              c: watch_asignaciones_lider_by_unidad_value?.primer_nombre,
+              d: watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
+              e: watch_asignaciones_lider_by_unidad_value?.primer_apellido,
+              f: watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
+              //* revisar esto, ya que se está enviando el valor seleccionado y no el objeto completo o el id de la unidad organizacional correspondiente
+              g: watch_seleccionar_lideres_value,
+            };
+            console.log(dataToGet);
             void getPersonaByFilter(
               watch_asignaciones_lider_by_unidad_value?.tipo_documento,
               watch_asignaciones_lider_by_unidad_value?.numero_documento,
@@ -161,7 +173,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               watch_asignaciones_lider_by_unidad_value?.primer_apellido,
               watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
               //* revisar esto, ya que se está enviando el valor seleccionado y no el objeto completo o el id de la unidad organizacional correspondiente
-              watch_seleccionar_lideres?.value,
+              watch_seleccionar_lideres_value?.value,
               setLoadingButton,
               resetFunction
             ); /* .then((data: any) => {
