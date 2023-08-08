@@ -150,7 +150,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
         {/* Datos personales */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS BÁSICOS" />
+            <Title title="Datos básicos" />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField

@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { AgregarEditarOpciones } from "../components/constructorLiquidador/AgregarEditarOpciones";
+// import { AgregarEditarOpciones } from './../components/constructorLiquidador/AgregarEditarOpciones';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -17,8 +17,8 @@ export const LiquidacionScreen = (): JSX.Element => {
   const [position_tab, set_position_tab] = useState('1');
   const [tab_name, set_tab_name] = useState('Agregar opciones');
   const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
-  const [form_data, set_form_data] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
-  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
+ // const [form_data, set_form_data] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
+ // const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
   const [refresh_page, set_refresh_page] = useState<boolean>(false);
 
 
@@ -116,8 +116,8 @@ export const LiquidacionScreen = (): JSX.Element => {
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
-                  set_id_opcion_liquidacion(params.row.id);
-                  set_form_data((previousState) => ({...previousState, nombre_opcion_liquidacion: params.row.nombre, estado: params.row.estado}));
+                  // set_id_opcion_liquidacion(params.row.id);
+                  // set_form_data((previousState) => ({...previousState, nombre_opcion_liquidacion: params.row.nombre, estado: params.row.estado}));
 
                   set_tab_name('Editar opciones');
                   set_position_tab('2');
@@ -208,8 +208,8 @@ export const LiquidacionScreen = (): JSX.Element => {
                     variant="outlined"
                     startIcon={<AddIcon />}
                     onClick={() => {
-                      set_id_opcion_liquidacion('');
-                      set_form_data({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
+                      // set_id_opcion_liquidacion('');
+                      // set_form_data({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
                       set_tab_name('Agregar opciones');
                       set_position_tab('2');
                     }}
@@ -230,14 +230,14 @@ export const LiquidacionScreen = (): JSX.Element => {
                 />
               </TabPanel>
               <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <AgregarEditarOpciones
+               {/* <AgregarEditarOpciones
                   opciones_liquidaciones={opciones_liquidaciones}
                   id_opcion_liquidacion={id_opcion_liquidacion}
                   form_data={form_data}
                   set_id_opcion_liquidacion={set_id_opcion_liquidacion}
                   set_refresh_page={set_refresh_page}
                   set_form_data={set_form_data}
-                />
+                /> */}
               </TabPanel>
             </TabContext>
           </Box>

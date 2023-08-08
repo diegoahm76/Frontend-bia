@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -6,35 +7,12 @@ import { control_error, control_success } from "./utils/control_error_or_success
 import { SucursalDirecciones } from "./SucursalDirecciones";
 import { Title } from "../../../../components";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-// import { ISucursalForm } from "./utils/interfac";
+import { ISucursalForm, Props } from "./utils/interfac";
+ 
 
 
-interface Props {
-  selected_id: number | null;
-  siguiente_numeros_sucursal: any | null | boolean | string;
-}
-
-export interface ISucursalForm {
-  descripcion_sucursal: string;
-  direccion: string;
-  direccion_sucursal_georeferenciada: string | null;
-  municipio: string | null;
-  pais_sucursal_exterior: string | null;
-  direccion_notificacion: string;
-  direccion_notificacion_referencia: string | null;
-  municipio_notificacion: string | null;
-  email_sucursal: string;
-  confirmar_email: string;
-  telefono_sucursal: number | null | string;
-  es_principal: boolean;
-  activo: boolean;
-  item_ya_usado: boolean;
-  id_persona_empresa: number;
-  numero_sucursal: number | null;
-
-}
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_numeros_sucursal }: Props) => {
+export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
   const initial_state: ISucursalForm = {
     descripcion_sucursal: "",
@@ -45,7 +23,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     direccion_notificacion: "",
     direccion_notificacion_referencia: "",
     municipio_notificacion: null,
-    email_sucursal: "",
+    email_sucursal: "", 
     confirmar_email: "",
     telefono_sucursal: "",
     es_principal: false,
@@ -54,18 +32,16 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     id_persona_empresa: 3,
     numero_sucursal: siguiente_numeros_sucursal,
   };
-
+  const [exiting, set_exiting] = useState(false);
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
-  const [form_updated, setform_updated] = useState(false);
-
+ 
   useEffect(() => {
     if (isediting) {
-      setform_updated(false); // Reset the form_updated state when the selected_id prop changes
-      void fetch_data();
+
+       void fetch_data();
     }
   }, [selected_id]);
-
 
   const fetch_data = async (): Promise<void> => {
     try {
@@ -109,12 +85,13 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
         method: isediting ? "put" : "post",
         url: endpoint,
         data: form_values,
-      })
+      })  
       .then((response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
-        setform_updated(true); // Set the form_updated state to true after successful update
-        setform_values(initial_state);
+         setform_values(initial_state);
+         
+        
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
@@ -126,8 +103,22 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
   const handle_clear_fields = (): void => {
     // Set all form field values to their initial_state (empty values)
     setform_values(initial_state);
+   };
+
+  const handle_exit = (): void => {
+    set_exiting(true);
   };
 
+
+  useEffect(() => {
+    if (exiting) {
+      // Here, you can perform any necessary actions before leaving the page
+      // For example, show a confirmation dialog or directly redirect to another page.
+      // For the purpose of this example, we'll just go back to the previous page.
+      window.history.back();
+    }
+  }, [exiting]);
+  
   return (
     <Grid container
       spacing={2}
@@ -136,9 +127,6 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
         <Title title="Sucursal" />
       </Grid>
-
-
-
       <Grid item xs={12} sm={1.5}>
         <TextField
           variant="outlined"
@@ -146,12 +134,12 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           label="N sucursal"
           fullWidth
           disabled
-
           InputLabelProps={{
             shrink: true,
           }}
           name="N sucursal"
-          value={form_values.numero_sucursal}
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          value={form_values.numero_sucursal || siguiente_numeros_sucursal}
           onChange={handleinput_change}
         />
       </Grid>
@@ -222,15 +210,17 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           onChange={handleinput_change}
         />
       </Grid>
+
+
       <Grid item xs={12} sm={3}>
         <FormControl fullWidth size="small">
-          <InputLabel id="demo-simple-select-label">es-principal-select-label</InputLabel>
+          <InputLabel id="demo-simple-select-label">es principal </InputLabel>
           <Select
             labelId="es-principal-select-label"
             id="es-principal-select"
             required
             value={form_values.es_principal}
-            label="es-principal-select-label"
+            label="es principal "
             onChange={(e) => {
               setform_values((prevValues) => ({
                 ...prevValues,
@@ -238,7 +228,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
               }));
             }}
           >
-            <MenuItem value="true">Sí</MenuItem>
+            <MenuItem value="true" disabled={esPrincipalExists}>Sí</MenuItem>
             <MenuItem value="false">No</MenuItem>
           </Select>
         </FormControl>
@@ -266,7 +256,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       </Grid>
       <Grid item xs={12} sm={2}>
         <Button variant="contained" color="primary" onClick={handleform_submit}>
-          {isediting && !form_updated ? "Actualizar" : "Guardar"}
+          {isediting  ? "Actualizar" : "Guardar"}
         </Button>
 
       </Grid>
@@ -275,6 +265,12 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           Borrar
         </Button>
       </Grid>
+      <Grid item xs={12} sm={2}>
+        <Button variant="contained" color="error" onClick={handle_exit}>
+          Salir
+        </Button>
+      </Grid>
+
     </Grid>
   );
 };
