@@ -91,9 +91,13 @@ export const getAsignacionesLideresByFilter = async (
   primer_nombre: string,
   segundo_nombre: string,
   primer_apellido: string,
-  segundo_apellido: string
+  segundo_apellido: string,
+
+  control_loading: any,
+  clean_function: any
 ): Promise<any> => {
   try {
+    control_loading(true);
     const url = `transversal/lideres/get-list-filter/?nombre_organigrama=${
       nombre_organigrama ?? ''
     }&version_organigrama=${version_organigrama ?? ''}&codigo_unidad_org=${
@@ -113,5 +117,8 @@ export const getAsignacionesLideresByFilter = async (
   } catch (error: any) {
     console.error(error);
     control_error(error?.response?.data?.detail);
+  } finally {
+    control_loading(false);
+    clean_function();
   }
 };

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 //! libraries or frameworks
-import { /* useContext */ type FC } from 'react';
+import { /* useContext */ useContext, type FC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -38,6 +38,7 @@ import {
   useAppSelector
 } from '../../../../../../../../../../hooks';
 import { get_list_busqueda_avanzada_personas } from '../../../../toolkit/LideresSlices/LideresSlice';
+import { ModalContextLideres } from '../../../../context/ModalContextLideres';
 
 export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
   // * dispatch to use in the component * //
@@ -46,7 +47,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
   //* -------- hook declaration -------- *//
   const {
     control_buscar_asignaciones_lideres_por_unidad,
-    // reset_buscar_asignaciones_lideres_por_unidad,
+    reset_buscar_asignaciones_lideres_por_unidad,
     watch_asignaciones_lider_by_unidad_value
   } = useLideresXUnidadOrganizacional();
 
@@ -56,22 +57,22 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
   );
 
   // ? useContext declaration
-  /* const {
-    modalBusquedaAvanzadaOrganigrama,
-    openModalBusquedaAvanzadaOrganigrama,
-    closeModalBusquedaAvanzadaOrganigrama,
+  const {
+    // modalBusquedaAvanzadaOrganigrama,
+    // openModalBusquedaAvanzadaOrganigrama,
+    //  closeModalBusquedaAvanzadaOrganigrama,
     loadingButton,
     setLoadingButton
-  } = useContext(ModalContextLideres); */
+  } = useContext(ModalContextLideres);
 
-  /* const resetFunction = (): void => {
+  const resetFunction = (): void => {
     console.log('resetFunction');
-    reset_organigrama_lideres_por_unidad({
+    reset_buscar_asignaciones_lideres_por_unidad({
       nombre: '',
       version: '',
       actual: false
     });
-  }; */
+  };
 
   const closeModal = (): any => {
     // closeModalBusquedaAvanzadaOrganigrama();
@@ -171,7 +172,9 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               watch_asignaciones_lider_by_unidad_value?.primer_nombre,
               watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
               watch_asignaciones_lider_by_unidad_value?.primer_apellido,
-              watch_asignaciones_lider_by_unidad_value?.segundo_apellido
+              watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
+              setLoadingButton,
+              resetFunction
             ).then((data: any) => {
               dispatch(get_list_busqueda_avanzada_personas(data));
             });
@@ -428,7 +431,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <LoadingButton
-                  loading={false}
+                  loading={loadingButton}
                   variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
