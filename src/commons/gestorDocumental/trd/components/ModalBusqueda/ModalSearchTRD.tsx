@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 //! libraries or frameworks
-import { type FC, useContext /* useEffect */ } from 'react';
+import { type FC, useContext} from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -41,6 +41,8 @@ import {
   get_searched_trd
 } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columnsModalBusquedaTRD } from './utils/colums';
+import { LoadingButton } from '@mui/lab';
+import { Title } from '../../../../../components';
 //! toolkit-redux values
 
 export const ModalSearchTRD: FC = (): JSX.Element => {
@@ -52,20 +54,20 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
   // ? use_trd hook
   const {
     // ? searched_trd_modal - name and version
-    // handle_submit_searched_trd_modal,
     control_searched_trd_modal,
     form_data_searched_trd_modal,
     // watch_searched_trd_modal,
-    // reset_searched_trd_modal,
-    // errors_searched_trd_modal
-
     // ? reset functions
     reset_searched_trd_modal
   } = use_trd();
 
   // ? context destructuring useModalContextTRD
-  const { modalSearchTRD, closeModalModalSearchTRD } =
-    useContext(ModalContextTRD);
+  const {
+    modalSearchTRD,
+    closeModalModalSearchTRD,
+    setCreateTRDLoadingButton,
+    createTRDLoadingButton
+  } = useContext(ModalContextTRD);
 
   const columns_trd_busqueda: GridColDef[] = [
     ...columnsModalBusquedaTRD,
@@ -124,11 +126,8 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               dispatch(
                 getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
               ).then((res: any) => {
-                // console.log(res);
-              dispatch(get_catalogo_trd(params.row.id_trd));
+                dispatch(get_catalogo_trd(params.row.id_trd));
               });
-              // reset_searched_trd_modal();
-              // console.log(params.row);
             }}
           >
             <Avatar
@@ -175,25 +174,14 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
             dispatch(
               get_searched_trd(
                 form_data_searched_trd_modal.nombre,
-                form_data_searched_trd_modal.version
+                form_data_searched_trd_modal.version,
+                setCreateTRDLoadingButton
               )
             );
           }}
         >
           <DialogTitle>
-            Consultar los TRD que coincidan con el criterio de búsqueda
-            <IconButton
-              aria-label="close"
-              onClick={closeModal}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500]
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
+            <Title title="Consultar los TRD que coincidan con el criterio de búsqueda" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -208,13 +196,11 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                   name="nombre"
                   control={control_searched_trd_modal}
                   defaultValue=""
-                  // rules={{ required: false }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       label="Nombre del TRD"
                       size="small"
@@ -223,14 +209,8 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
                       }}
                       error={!!error}
-                      /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
                     />
                   )}
                 />
@@ -258,25 +238,20 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                         // console.log(e.target.value);
                       }}
                       error={!!error}
-                      /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <Button
+                <LoadingButton
+                  loading={createTRDLoadingButton}
                   variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
-                  // sx={{ mt: '15px' }}
                   color="primary"
                 >
                   BUSCAR
-                </Button>
+                </LoadingButton>
               </Grid>
             </Grid>
             <DataGrid

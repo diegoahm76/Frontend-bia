@@ -1,32 +1,32 @@
 import {
   Box,
   Grid,
-  Stack,
-  type SelectChangeEvent,
-  Button
+  // Stack,
+  // type SelectChangeEvent,
+  // Button
 } from "@mui/material"
 import { Title } from "../../../components"
 import { useCallback, useEffect, useState } from 'react';
 import { FlowChart } from '../components/flowChart/FlowChart';
 import { getLayoutedElements } from "../components/flowChart/LayoutedElements/getLayoutedElements";
-import { AddFlujoProcesoModal } from "../components/flujoProcesos/modal/AddFlujoProcesoModal";
-import type { EtapaProceso } from "../interfaces/proceso";
-import type { Dataflow, FormDataFlujo } from "../interfaces/flujoProceso";
+// import { AddFlujoProcesoModal } from "../components/flujoProcesos/modal/AddFlujoProcesoModal";
+// import type { EtapaProceso } from "../interfaces/proceso";
+import type { Dataflow } from "../interfaces/flujoProceso";
 import { api } from "../../../api/axios";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FlujoProcesosScreen: React.FC = () => {
   const [dataflow, set_dataflow] = useState<Dataflow>();
-  const [etapas_proceso, set_etapas_proceso] = useState<EtapaProceso[]>([]);
-  const [form_data_flujo, set_form_data_flujo] = useState<FormDataFlujo>({
-    id_etapa_origen: '',
-    id_etapa_destino: '',
-    fecha_flujo: '',
-    descripcion: '',
-    requisitos: '',
-  });
-  const [add_flujo_proceso, set_add_flujo_proceso] = useState<boolean>(false);
-  const [is_submit, set_is_submit] = useState<boolean>(false);
+  // const [etapas_proceso, set_etapas_proceso] = useState<EtapaProceso[]>([]);
+  // const [form_data_flujo, set_form_data_flujo] = useState<FormDataFlujo>({
+  //   id_etapa_origen: '',
+  //   id_etapa_destino: '',
+  //   fecha_flujo: '',
+  //   descripcion: '',
+  //   requisitos: '',
+  // });
+  // const [add_flujo_proceso, set_add_flujo_proceso] = useState<boolean>(false);
+  // const [is_submit, set_is_submit] = useState<boolean>(false);
 
   useEffect(() => {
     api.get('recaudo/procesos/grafica')
@@ -36,17 +36,17 @@ export const FlujoProcesosScreen: React.FC = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [is_submit]);
-
-  useEffect(() => {
-    api.get('recaudo/procesos/etapas/')
-      .then((response) => {
-        set_etapas_proceso(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }, []);
+
+  // useEffect(() => {
+  //   api.get('recaudo/procesos/etapas/')
+  //     .then((response) => {
+  //       set_etapas_proceso(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   // const { nodes, edges } = getLayoutedElements(dataflow?.nodes, dataflow?.edges);
   const nodes_edges = useCallback(() => {
@@ -76,32 +76,32 @@ export const FlujoProcesosScreen: React.FC = () => {
     return getLayoutedElements(new_nodes, new_edges);
   }, [dataflow]);
 
-  const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = event.target;
-    set_form_data_flujo(prevFormData => ({ ...prevFormData, [name]: value }));
-  };
+  // const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  //   const { name, value } = event.target;
+  //   set_form_data_flujo(prevFormData => ({ ...prevFormData, [name]: value }));
+  // };
 
-  const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-    const { name, value } = event.target;
-    set_form_data_flujo(prevFormData => ({ ...prevFormData, [name]: value }));
-  };
+  // const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
+  //   const { name, value } = event.target;
+  //   set_form_data_flujo(prevFormData => ({ ...prevFormData, [name]: value }));
+  // };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handle_submit = (): void => {
-    api.post('recaudo/procesos/flujos/', {
-      ...form_data_flujo
-    })
-      .then((response) => {
-        console.log(response);
-        set_is_submit(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        set_is_submit(false);
-      });
-  };
+  // const handle_submit = (): void => {
+  //   api.post('recaudo/procesos/flujos/', {
+  //     ...form_data_flujo
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       set_is_submit(true);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     })
+  //     .finally(() => {
+  //       set_is_submit(false);
+  //     });
+  // };
 
   return (
     <>
@@ -136,7 +136,7 @@ export const FlujoProcesosScreen: React.FC = () => {
               {/* AQUI ES DONDE ESTARIA EL FLUJO DE PROCESO */}
               <FlowChart initialNodes={nodes_edges().nodes} initialEdges={nodes_edges().edges} />
             </Grid>
-            <Grid container spacing={0} justifyContent={"space-between"}>
+            {/* <Grid container spacing={0} justifyContent={"space-between"}>
               <Stack
                 justifyContent="flex-end"
               >
@@ -150,11 +150,11 @@ export const FlujoProcesosScreen: React.FC = () => {
                   Agregar nuevo flujo
                 </Button>
               </Stack>
-            </Grid>
+            </Grid> */}
           </Box>
         </Grid>
       </Grid>
-      <AddFlujoProcesoModal
+      {/* <AddFlujoProcesoModal
         is_modal_active={add_flujo_proceso}
         set_is_modal_active={set_add_flujo_proceso}
         etapas_proceso={etapas_proceso}
@@ -162,7 +162,7 @@ export const FlujoProcesosScreen: React.FC = () => {
         handle_input_change={handle_input_change}
         handle_select_change={handle_select_change}
         handle_submit={handle_submit}
-      />
+      /> */}
     </>
   )
 }

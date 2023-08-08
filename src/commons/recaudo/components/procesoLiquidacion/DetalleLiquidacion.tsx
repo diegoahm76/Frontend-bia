@@ -149,6 +149,11 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set
                 <Select
                   label='Selecciona opción liquidación'
                   value={id_opcion_liquidacion}
+                  MenuProps={{
+                    style: {
+                      maxHeight: 224,
+                    }
+                  }}
                   onChange={handle_select_change}
                 >
                   {opciones_liquidacion.map((opc_liquidacion) => (

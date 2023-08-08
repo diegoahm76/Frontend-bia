@@ -94,6 +94,7 @@ const SeleccionarComputer = () => {
                 direction="row"
                 padding={2}
                 borderRadius={2}
+                marginTop={2}
 
             >
                 <BuscarModelo

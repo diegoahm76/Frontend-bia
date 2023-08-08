@@ -35,7 +35,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
-import  SyncIcon  from '@mui/icons-material/Sync';
+import SyncIcon from '@mui/icons-material/Sync';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContextTRD } from '../../../context/ModalsContextTrd';
@@ -52,7 +52,8 @@ import {
 import { columsTRD } from './utils/colums';
 import { options_search_trd } from './utils/options';
 import InfoIcon from '@mui/icons-material/Info';
-
+import { LoadingButton } from '@mui/lab';
+import { Title } from '../../../../../../components';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -75,8 +76,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   } = use_trd();
 
   //! context for the modal interacion
-  const { modalCreacionFormatoTipo, closeModalCreacionFormatoTipo } =
-    useContext(ModalContextTRD);
+  const {
+    modalCreacionFormatoTipo,
+    closeModalCreacionFormatoTipo,
+
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
+  } = useContext(ModalContextTRD);
 
   // ? function that allow us to create a format documental type
   const onSubmitCreateFormate = async () => {
@@ -84,6 +90,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
       nombre
     } = data_format_documental_type_watch_form;
+    console.log('cod_tipo_medio_doc', cod_tipo_medio_doc);
 
     try {
       await dispatch(
@@ -94,9 +101,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       );
 
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
-      reset_all_format_documental_type_modal();
+      // reset_all_format_documental_type_modal();
       // set_title_button('Actualizar');
     } catch (err) {
       console.log(err);
@@ -123,9 +134,13 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       );
 
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
-      reset_all_format_documental_type_modal();
+      // reset_all_format_documental_type_modal();
     } catch (err) {
       console.log(err);
     }
@@ -139,7 +154,11 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         delete_formato_by_tipo_medio_service(id_formato_tipo_medio)
       );
       await dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+        get_formatos_by_tipo_medio_by_format_and_name(
+          setCreateTRDLoadingButton,
+          '',
+          cod_tipo_medio_doc
+        )
       );
     } catch (err) {
       console.log(err);
@@ -244,19 +263,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       onClose={closeModalCreacionFormatoTipo}
     >
       <DialogTitle>
-        Módulo creación de Formatos para cada tipo de medio documental
-        <IconButton
-          aria-label="close"
-          onClick={closeModalCreacionFormatoTipo}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500]
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+        <Title title=" Módulo creación de Formatos para cada tipo de medio documental" />
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
@@ -361,9 +368,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                       field: { onChange, value },
                       fieldState: { error }
                     }) => (
-                      <FormControl
-                        fullWidth
-                      >
+                      <FormControl fullWidth>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -424,7 +429,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 spacing={2}
                 sx={{ mt: '0' }}
               >
-                <Button
+                <LoadingButton
+                  loading={createTRDLoadingButton}
                   color="primary"
                   variant="outlined"
                   startIcon={<SearchIcon />}
@@ -434,9 +440,9 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }
                   title={'Buscar datos de los formatos relacionados'}
                   onClick={() => {
-
                     void dispatch(
                       get_formatos_by_tipo_medio_by_format_and_name(
+                        setCreateTRDLoadingButton,
                         data_format_documental_type_watch_form.nombre,
                         data_format_documental_type_watch_form[
                           'cod-tipo-medio'
@@ -446,8 +452,10 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   }}
                 >
                   BUSCAR
-                </Button>
+                </LoadingButton>
+
                 <Button
+                  // loading={createTRDLoadingButton}
                   type="submit"
                   color="primary"
                   variant="contained"

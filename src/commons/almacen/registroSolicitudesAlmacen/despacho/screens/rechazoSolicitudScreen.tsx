@@ -83,6 +83,7 @@ const RechazoSolicitudScreen = () => {
         <Grid
             container
             spacing={2}
+            marginTop={2}
             sx={{
                 position: 'relative',
                 background: '#FAFAFA',

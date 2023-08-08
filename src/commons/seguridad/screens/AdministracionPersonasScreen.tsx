@@ -68,7 +68,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
     }}>
       <Grid container>
         <Grid item xs={12}>
-          <Title title="ADMINISTRADOR DE PERSONAS" />
+          <Title title="Administrador de personas" />
         </Grid>
       </Grid>
       <BuscadorPersona

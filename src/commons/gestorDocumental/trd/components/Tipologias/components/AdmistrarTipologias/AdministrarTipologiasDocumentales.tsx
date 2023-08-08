@@ -52,6 +52,8 @@ import {
   get_current_tipologia_documental_action,
   get_data_format_documental_type
 } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { LoadingButton } from '@mui/lab';
+import { Title } from '../../../../../../../components';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones
@@ -81,7 +83,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   const {
     closeModalAdministracionTipologiasDocumentales,
     modalAdministracionTipologiasDocumentales,
-    openModalBusquedaTipologiasDocumentales
+    openModalBusquedaTipologiasDocumentales,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   const options = [
@@ -191,7 +195,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         form_data_searched_tipologia_documental.cod_tipo_medio_doc.value
     };
 
-    dispatch(create_tipologia_documental_service(data))
+    dispatch(
+      create_tipologia_documental_service(data, setCreateTRDLoadingButton)
+    )
       .then((response: any) => {
         if (response?.success) {
           clearAutocomplete();
@@ -222,7 +228,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         form_data_searched_tipologia_documental.id_tipologia_documental
     };
 
-    dispatch(update_tipologia_documental_service(data))
+    dispatch(
+      update_tipologia_documental_service(data, setCreateTRDLoadingButton)
+    )
       .then((response: any) => {
         if (response?.success) {
           clearAutocomplete();
@@ -259,7 +267,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               : edit_tipologia();
           }}
         >
-          <DialogTitle>Administración de Tipologias Documentales</DialogTitle>
+          <DialogTitle>
+            <Title title="Administración de Tipologias Documentales" />
+          </DialogTitle>
           <Divider />
           <DialogContent
             sx={{
@@ -492,7 +502,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               spacing={2}
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
-              <Button
+              <LoadingButton
+                loading={createTRDLoadingButton}
                 variant="contained"
                 type="submit"
                 startIcon={
@@ -508,7 +519,25 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 {title_button_administrar_tipologias === 'Guardar'
                   ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
                   : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
-              </Button>
+              </LoadingButton>
+
+              {/*  <Button
+                variant="contained"
+                type="submit"
+                startIcon={
+                  title_button_administrar_tipologias === 'Guardar' ? (
+                    <SaveIcon />
+                  ) : (
+                    <SyncIcon />
+                  )
+                }
+                color="primary"
+                // sx={{ ml: '10px' }}
+              >
+                {title_button_administrar_tipologias === 'Guardar'
+                  ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
+                  : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
+              </Button> */}
               <Button
                 variant="outlined"
                 startIcon={<SearchIcon />}

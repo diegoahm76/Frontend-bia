@@ -2,12 +2,12 @@
 
 export const colums_bombeo = [
     {
-        field: 'tiempo',
+        field: 'tiempo_transcurrido',
         headerName: 'Tiempo transcurrido (min)',
         width: 200,
     },
     {
-        field: 'hora',
+        field: 'hora_inicio',
         headerName: 'Hora',
         width: 200,
     },
@@ -17,8 +17,8 @@ export const colums_bombeo = [
         width: 200,
     },
     {
-        field: 'abatimiento_recuperacion',
-        headerName: 'PROFUNDIDAD PROMEDIO (m)',
+        field: 'resultado',
+        headerName: 'ABATIMIENTO/RECUPERACIÓN (m)',
         width: 220,
     },
     {

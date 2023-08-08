@@ -1,9 +1,29 @@
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { AgregarBombeo } from '../components/PruebasBombeo/AgregarBombeo';
+import { useAppSelector } from '../../../../hooks';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { EditarPruebaBombeo } from '../components/PruebasBombeo/EditarPruebaBombeo';
+import { SeleccionarPruebaBombeo } from '../components/PruebasBombeo/SeleccionarPruebaBombeo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PruebasBombeoScreen: React.FC = () => {
+  const { mode_bombeo } = useAppSelector((state) => state.instrumentos_slice);
+
+  const { id_instrumento } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (id_instrumento === 0) {
+      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+        replace: true,
+      });
+    }
+  }, []);
+
   return (
     <>
       <Grid
@@ -25,7 +45,9 @@ export const PruebasBombeoScreen: React.FC = () => {
           <Title title="PRUEBAS DE BOMBEO " />
         </Grid>
       </Grid>
-      <AgregarBombeo />
+      {mode_bombeo.crear && <AgregarBombeo />}
+      {mode_bombeo.editar && <EditarPruebaBombeo />}
+      {mode_bombeo.ver && <SeleccionarPruebaBombeo />}
     </>
   );
 };

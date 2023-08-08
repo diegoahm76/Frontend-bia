@@ -32,7 +32,7 @@ import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
-  to_finished_ccds_service,
+  to_finished_ccds_service
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -48,16 +48,20 @@ import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubse
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {
-  get_assignments_service
-} from '../store/thunks/assignmentsThunks';
+
+import { get_assignments_service } from '../store/thunks/assignmentsThunks';
+
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const {
     openModalModalSeriesAndSubseries,
     busquedaCreacionCCDModal,
-    loadingButton
+    loadingButton,
+    loadingButtonGuardarRelacion,
+    activateLoadingButtonGuardarRelacion,
+    desactivateLoadingButtonGuardarRelacion
   } = useContext(ModalContext);
 
   const dispatch: any = useAppDispatch();
@@ -66,9 +70,7 @@ export const CcdScreen: React.FC = () => {
   const { series_ccd, serie_ccd_current } = useAppSelector(
     (state: any) => state.series
   );
-  const { subseries_ccd, subserie_ccd_current } = useAppSelector(
-    (state: any) => state.subseries
-  );
+  const { subseries_ccd } = useAppSelector((state: any) => state.subseries);
   const { seriesAndSubseries } = useAppSelector(
     (state: any) => state.slice_series_and_subseries
   );
@@ -82,12 +84,8 @@ export const CcdScreen: React.FC = () => {
         ccd_current?.fecha_terminado !== '' &&
         ccd_current?.fecha_terminado !== undefined
     );
-   /* console.log(
-      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ ccd_current?.fecha_terminado',
-      ccd_current?.fecha_terminado
-    ); */
   }, [ccd_current?.fecha_terminado]);
-const [isFileSelected, setIsFileSelected] = useState(false);
+
   useEffect(() => {
     dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
     get_assignments_service(ccd_current?.id_ccd)(dispatch);
@@ -120,9 +118,10 @@ const [isFileSelected, setIsFileSelected] = useState(false);
     set_consulta_ccd_is_active,
     // // Functions
     on_submit_create_ccd,
-    on_submit_create_or_delete_relation_unidad,
+    // on_submit_create_or_delete_relation_unidad,
     create_or_delete_relation_unidad,
-    clean_ccd
+    clean_ccd,
+    reset
   } = use_ccd() as any;
 
   return (
@@ -139,7 +138,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
         }}
       >
         <Grid item xs={12}>
-          <Title title="Cuadro de clasificación documental - Busca CCD por nombre y versión" />
+          <Title title="Cuadro de clasificación documental" />
           <form
             style={{
               marginTop: '20px'
@@ -196,7 +195,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                   </div>
                 )}
               </Grid>
-              <Grid
+              {/*  <Grid
                 item
                 xs={12}
                 sm={3}
@@ -232,7 +231,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                     </div>
                   )}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="nombre_ccd"
@@ -251,8 +250,17 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       label="Nombre CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        if (e.target.value.length === 50)
+                          control_warning('máximo 50 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       error={!(error == null)}
+                      inputProps={{
+                        maxLength: 50
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un nombre'
@@ -280,8 +288,17 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       label="Versión CCD"
                       variant="outlined"
                       value={value}
-                      onChange={onChange}
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       error={!(error == null)}
+                      onChange={(e) => {
+                        if (e.target.value.length === 10)
+                          control_warning('máximo 10 caracteres');
+
+                        onChange(e.target.value);
+                        // console.log(e.target.value);
+                      }}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar una versión'
@@ -303,18 +320,19 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
-                      /* sx={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
-                      }} */
                       style={{
-                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
+                        color:
+                          series_ccd.length > 0 || ccd_current?.fecha_terminado
+                            ? 'red'
+                            : 'blue'
                       }}
                       disabled={
-                        series_ccd.length > 0 || ccd_current?.fecha_terminado || ccd_current?.actual
+                        series_ccd.length > 0 ||
+                        ccd_current?.fecha_terminado ||
+                        ccd_current?.actual
                       }
                       variant="outlined"
                       value={value}
@@ -346,7 +364,11 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       size="small"
                       label="valor aumento subseries CCD"
                       variant="outlined"
-                      disabled={subseries_ccd.length > 0 || ccd_current?.fecha_terminado || ccd_current?.actual}
+                      disabled={
+                        subseries_ccd.length > 0 ||
+                        ccd_current?.fecha_terminado ||
+                        ccd_current?.actual
+                      }
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -391,13 +413,19 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                         <input
                           style={{ display: 'none' }}
                           type="file"
+                          accept="application/pdf"
+
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
-                            // console.log('valueeee', value);
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
-                              onChange(files[0]);
-                              // console.log(files[0]);
+                              const file = files[0];
+                              if (file.type !== 'application/pdf') {
+                                control_warning('Solo formato pdf');
+                                // dejar vacio el input file
+                              } else {
+                                onChange(file);
+                              }
                             }
                           }}
                         />
@@ -450,7 +478,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  set_consulta_ccd_is_active(true)
+                  set_consulta_ccd_is_active(true);
                 }}
               >
                 BUSCAR CCD
@@ -513,7 +541,6 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                             styles={{
                               control: (provided) => ({
                                 ...provided,
-                                // maxHeight: '200px',
                                 overflowY: 'auto'
                               })
                             }}
@@ -523,10 +550,6 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                               dispatch(
                                 get_serie_ccd_current(selectedOption.value)
                               );
-                            /*  console.log(
-                                'Valor seleccionado:',
-                                selectedOption
-                              ); */
                             }}
                             options={list_sries}
                             // isSearchable
@@ -540,26 +563,12 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                                 fontSize: '0.75rem'
                               }}
                             >
-                              {/* {error ? (
-                                <span className="text-danger text-small d-block mb-2">
-                                  {error.message}
-                                </span>
-                              ) : (
-                                ''
-                              )} */}
                               series
                             </small>
                           </label>
                         </>
                       )}
                     />
-                    {/* {errors.sries !== null && (
-                      <div className="col-12">
-                        <small className="text-center text-danger">
-                          Campo obligatorio
-                        </small>
-                      </div>
-                    )} */}
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <ButtonGroup
@@ -630,13 +639,6 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                         </>
                       )}
                     />
-                    {/* {errors.subserie !== null && (
-                      <div className="col-12">
-                        <small className="text-center text-danger">
-                          Campo obligatorio
-                        </small>
-                      </div>
-                    )} */}
                   </Grid>
 
                   <Grid item xs={12} sm={4}>
@@ -649,7 +651,9 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                           set_create_sub_serie_active(true);
                           set_title('Administrar subseries');
                         }}
-                        disabled={serie_ccd_current === null || ccd_current?.actual}
+                        disabled={
+                          serie_ccd_current === null || ccd_current?.actual
+                        }
                       >
                         ADMINISTRAR SUBSERIES
                       </Button>
@@ -724,7 +728,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={4.5}
                     sx={{
                       zIndex: 5
                     }}
@@ -761,7 +765,7 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                   <Grid
                     item
                     xs={12}
-                    sm={5}
+                    sm={4.5}
                     sx={{
                       zIndex: 5
                     }}
@@ -810,17 +814,45 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       marginTop: '25px'
                     }}
                   >
-                    <Button
+                    <LoadingButton
+                      loading={loadingButtonGuardarRelacion}
                       fullWidth
                       onClick={() => {
-                        void dispatch(create_or_delete_relation_unidad);
-                        void dispatch(get_assignments_service(ccd_current));
+                        void create_or_delete_relation_unidad(
+                          reset,
+                          activateLoadingButtonGuardarRelacion,
+                          desactivateLoadingButtonGuardarRelacion
+                        );
+                        // void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
                       variant="contained"
                       startIcon={<SaveIcon />}
                     >
                       {title_button_asing}
+                    </LoadingButton>
+                    <br />
+                    <Button
+                      fullWidth
+                      sx={{
+                        marginTop: '7px'
+                      }}
+                      onClick={() => {
+                        reset({
+                          catalogo_asignacion: [],
+                          sries_asignacion: { label: '', value: 0 },
+                          sries: '',
+                          subserie_asignacion: [],
+                          subserie: '',
+                          unidades_asignacion: { label: '', value: 0 }
+                        });
+                        // void dispatch(get_assignments_service(ccd_current));
+                      }}
+                      color="success"
+                      variant="contained"
+                      startIcon={<CleanIcon />}
+                    >
+                      LIMPIAR CAMPOS
                     </Button>
                   </Grid>
                 </Grid>
@@ -868,7 +900,8 @@ const [isFileSelected, setIsFileSelected] = useState(false);
                       void dispatch(
                         to_finished_ccds_service(
                           set_flag_btn_finish,
-                          ccd_current
+                          ccd_current,
+                          assignments_ccd
                         )
                       );
                     }}

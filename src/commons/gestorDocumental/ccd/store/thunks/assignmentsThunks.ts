@@ -16,7 +16,7 @@ import { get_assignments_ccd } from '../slices/assignmentsSlice';
 // import { ccd_slice } from './../slices/ccdSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+/* const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
   toast.error(message, {
     position: 'bottom-left',
     autoClose: 2000,
@@ -26,7 +26,7 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
     draggable: true,
     progress: undefined,
     theme: 'light'
-  });
+  }); */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_success = (message: ToastContent) =>
@@ -42,10 +42,10 @@ const control_success = (message: ToastContent) =>
   });
 
 //! Obtiene ccd tabla intermedia de asignaciones usar en TRD tambien
-export const get_assignments_service = (
-  ccd_current: any,
-): any => {
-  return async (dispatch: Dispatch<any>): Promise<AxiosResponse | AxiosError> => {
+export const get_assignments_service = (ccd_current: any): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
     try {
       const promise1 = api.get(
         `transversal/organigrama/unidades/get-by-organigrama/${ccd_current.id_organigrama}/`
@@ -62,13 +62,14 @@ export const get_assignments_service = (
 
       const new_data = data.data.map((item: any, index: number) => {
         const unidad = dataUnidadOrganigrama.data.find(
-          (unidad: any) => unidad.id_unidad_organizacional === item.id_unidad_organizacional
+          (unidad: any) =>
+            unidad.id_unidad_organizacional === item.id_unidad_organizacional
         );
 
         return {
           ...item,
           id: index + 1,
-          nombreUnidad: unidad?.nombre,
+          nombreUnidad: unidad?.nombre
         };
       });
 
@@ -80,20 +81,32 @@ export const get_assignments_service = (
   };
 };
 
-
 export const create_or_delete_assignments_service: any = (
   new_items: any[],
-  ccd_current: any
+  ccd_current: any,
+  reset?: any,
+  activateLoadingButtonGuardarRelacion?: any,
+  desactivateLoadingButtonGuardarRelacion?: any
 ) => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse[] | AxiosError> => {
     try {
+      activateLoadingButtonGuardarRelacion();
       const id_ccd: number = ccd_current.id_ccd;
+
+      console.log(new_items);
+
+      const requests = new_items.map((item: any) => {
+        return {
+          id_unidad_organizacional: item.id_unidad_organizacional,
+          id_catalogo_serie: item.id_catalogo_serie
+        };
+      });
 
       const { data } = await api.put(
         `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
-        new_items
+        requests
       );
 
       // const responses = await Promise.all(requests);
@@ -101,13 +114,24 @@ export const create_or_delete_assignments_service: any = (
       dispatch(get_assignments_service(ccd_current));
       control_success(data.detail);
 
+      reset({
+        catalogo_asignacion: [],
+        sries_asignacion: { label: '', value: 0 },
+        sries: '',
+        subserie_asignacion: [],
+        subserie: '',
+        unidades_asignacion: { label: '', value: 0 }
+      });
+
       return data;
     } catch (error: any) {
       // console.log(error);
-      control_error(error.response?.data?.detail);
       dispatch(get_assignments_service(ccd_current));
+      // control_error(error.response?.data?.detail);
 
       return error as AxiosError;
+    } finally {
+      desactivateLoadingButtonGuardarRelacion();
     }
   };
 };

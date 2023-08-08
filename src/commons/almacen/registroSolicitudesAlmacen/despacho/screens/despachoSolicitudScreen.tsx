@@ -301,6 +301,7 @@ const DespachoBienesConsumoScreen = () => {
     <Grid
       container
       spacing={2}
+      marginTop={2}
       sx={{
         position: 'relative',
         background: '#FAFAFA',
@@ -318,7 +319,7 @@ const DespachoBienesConsumoScreen = () => {
           set_open_modal={set_open_search_modal}
         />
         <SeleccionarSolicitudDespacho
-          title={'INFORMACIÓN DE LA SOLICITUD'}
+          title={'Información de la solicitud'}
           control_solicitud_despacho={control_solicitud_despacho}
           get_values={get_values_solicitud_despacho} />
 

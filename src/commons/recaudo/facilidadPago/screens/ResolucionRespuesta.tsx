@@ -5,14 +5,29 @@ import { Close } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { EditorTexto } from '../componentes/EditorTexto/EditorTexto';
+import dayjs from 'dayjs';
+
+interface RootState {
+  deudores: {
+    deudores: {
+      identificacion: string;
+      nombre: string;
+      apellido: string;
+      numero_facilidad: string;
+    }
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [file_name, set_file_name] = useState('');
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const { deudores } = useSelector((state: RootState) => state.deudores);
+
+  const handle_open = () => { set_modal(true) }
+  const handle_close = () => { set_modal(false) }
 
   const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected_file =
@@ -50,7 +65,7 @@ export const ResolucionRespuesta: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={"1140239284"}
+                  value={`${deudores.identificacion}`}
                   disabled
                 />
               </Grid>
@@ -59,7 +74,7 @@ export const ResolucionRespuesta: React.FC = () => {
                   label="Nombre Deudor"
                   size="small"
                   fullWidth
-                  value={"Maria Cardenas"}
+                  value={''.concat(deudores.nombre, ' ', deudores.apellido)}
                   disabled
                 />
               </Grid>
@@ -68,7 +83,7 @@ export const ResolucionRespuesta: React.FC = () => {
                   label="Número Facilidad Pago"
                   size="small"
                   fullWidth
-                  value={"SDWE2300"}
+                  value={`${deudores.numero_facilidad}`}
                   disabled
                 />
               </Grid>
@@ -150,7 +165,7 @@ export const ResolucionRespuesta: React.FC = () => {
           <Divider />
           <DialogContent sx={{ mb: '0px' }}>
             <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
             </Grid>
           </DialogContent>
           <DialogActions>

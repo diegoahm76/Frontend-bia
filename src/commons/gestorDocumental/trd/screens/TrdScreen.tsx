@@ -38,13 +38,18 @@ import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/C
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
+// import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
 // import { AdminTRDScreen } from '../components/AdministrarTRD/components/AdministrarTRD/screens/AdminTRDScreen';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { trd_current } = useAppSelector((state: any) => state.trd_slice);
+  const {
+    trd_current,
+    catalado_series_subseries_unidad_organizacional,
+  } = useAppSelector((state: any) => state.trd_slice);
 
   //! use_trd hook
   const {
@@ -87,7 +92,9 @@ export const TrdScreen: FC = (): JSX.Element => {
   const {
     openModalModalSearchTRD,
     openModalCCDUsados,
-    openModalCreacionFormatoTipo
+    openModalCreacionFormatoTipo,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -97,9 +104,13 @@ export const TrdScreen: FC = (): JSX.Element => {
       control_error('datos requeridos');
       return;
     }
-    trd_current != null
-      ? dispatch(update_trd_service(data_create_trd_modal))
-      : dispatch(create_trd_service(data_create_trd_modal));
+    trd_current !== null
+      ? dispatch(
+          update_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        )
+      : dispatch(
+          create_trd_service(data_create_trd_modal, setCreateTRDLoadingButton)
+        );
   };
 
   return (
@@ -209,8 +220,11 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
+                        e.target.value.length === 50 &&
+                          control_warning('máximo 50 caracteres');
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 50 }}
                       // error={!!error}
                       /* helperText={
                         error
@@ -247,8 +261,11 @@ export const TrdScreen: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
+                        e.target.value.length === 10 &&
+                          control_warning('máximo 10 carácteres');
                         // console.log(e.target.value);
                       }}
+                      inputProps={{ maxLength: 10 }}
                     />
                   )}
                 />
@@ -278,7 +295,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 BUSCAR TRD
               </Button>
               <LoadingButton
-                // loading={loadingButton}
+                loading={createTRDLoadingButton}
                 type="submit"
                 color="primary"
                 variant="contained"
@@ -293,6 +310,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
+                  // dispatch(set_selected_item_from_catalogo_trd_action(null));
                   // console.log('reset_create_trd_modal');
                   // setTrdCurrent(null);
                 }}
@@ -315,17 +333,25 @@ export const TrdScreen: FC = (): JSX.Element => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
+          boxShadow: '0px 3px 6px #042F4A26',
+          display: catalado_series_subseries_unidad_organizacional.length > 0
+            ? ''
+            : 'none'
         }}
       >
-        <Grid item xs={12}>
-          <CCDSeleccionadoCatalogo />
-        </Grid>
+        {catalado_series_subseries_unidad_organizacional.length > 0 ? (
+          <Grid item xs={12}>
+            <CCDSeleccionadoCatalogo />
+          </Grid>
+        ) : null}
 
         {/* CATALOGO TRD */}
-        <Grid item xs={12}>
-          <CatalogoTRD />
-        </Grid>
+        {catalado_series_subseries_unidad_organizacional.length > 0 ? (
+          <Grid item xs={12}>
+            <CatalogoTRD />
+          </Grid>
+        ) : null}
+
         {/* CATALOGO TRD */}
 
         {/* ------------------ */}

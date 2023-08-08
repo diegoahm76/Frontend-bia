@@ -11,17 +11,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
-import { put_asignacion_funcionario } from '../requests/requests';
+import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
+import dayjs from 'dayjs';
 
 interface RootStateFacilidades {
   facilidades: {
     facilidades: FacilidadPago[];
-  }
-}
-
-interface RootStateFuncionarios {
-  funcionarios: {
-    funcionarios: Funcionario[];
   }
 }
 
@@ -34,10 +29,11 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [sub_modal, set_sub_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('no');
   const [modal_asignacion, set_modal_asignacion] = useState(false);
+  const [asignacion, set_asignacion] = useState(true);
+  const [funcionarios_options, set_funcionarios_options] = useState<Funcionario[]>([]);
   const [funcionario_selected, set_funcionario_selected] = useState(0);
   const [facilidad_selected, set_facilidad_selected] = useState(0);
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
-  const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
@@ -46,6 +42,19 @@ export const TablaObligacionesAdmin: React.FC = () => {
 
   const handle_open_sub = () => { set_sub_modal(true) };
   const handle_close_sub = () => { set_sub_modal(false) };
+
+  const get_lista_funcionarios = async (): Promise<void> => {
+    try {
+      const { data: { data: res_funcionarios } } = await get_funcionarios();
+      set_funcionarios_options(res_funcionarios ?? []);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  useEffect(() => {
+    void get_lista_funcionarios();
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -84,41 +93,40 @@ export const TablaObligacionesAdmin: React.FC = () => {
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value.slice(0, 10)).format('DD/MM/YYYY')}
         </div>
       ),
     },
     {
       field: 'acciones',
-      headerName: 'Ver',
+      headerName: 'Acción',
       width: 150,
       renderCell: (params) => {
         return (
           <>
             <Tooltip title="Ver">
-                <IconButton
-                  onClick={() => {
-                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                    navigate('../solicitud');
+              <IconButton
+                onClick={() => {
+                  void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                  navigate('../solicitud');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
+                  variant="rounded"
                 >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ArticleIcon
-                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    />
-
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </>
+                  <ArticleIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
         )
       },
     },
@@ -136,9 +144,9 @@ export const TablaObligacionesAdmin: React.FC = () => {
                 defaultValue={params.value}
                 onChange={(event: event) => {
                   const { value } = event.target
-                  for(let i=0; i<funcionarios.length; i++){
-                    if(funcionarios[i].nombre_funcionario === value){
-                      set_funcionario_selected(funcionarios[i].id_persona);
+                  for(let i=0; i<funcionarios_options.length; i++){
+                    if(funcionarios_options[i].nombre_funcionario === value){
+                      set_funcionario_selected(funcionarios_options[i].id_persona);
                       set_facilidad_selected(params.row.id_facilidad);
                       handle_open();
                     }
@@ -146,18 +154,21 @@ export const TablaObligacionesAdmin: React.FC = () => {
                 }}
               >
                 {
-                  funcionarios.map((funcionario) => (
-                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>{funcionario.nombre_funcionario}</MenuItem>
+                  funcionarios_options.map((funcionario) => (
+                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>
+                      {funcionario.nombre_funcionario}
+                    </MenuItem>
                   ))
                 }
               </Select>
           </FormControl>
         ) : (
           <>
-            <Tooltip title="Reasignar">
+            <Tooltip title={params.row.asignar as boolean ? "Asignar" : "Reasignar"}>
               <IconButton
                 onClick={() => {
                   set_modal_asignacion(true)
+                  set_asignacion(params.row.asignar)
                 }}
               >
                 <Avatar
@@ -286,7 +297,13 @@ export const TablaObligacionesAdmin: React.FC = () => {
         maxWidth="xs"
       >
         <Box component="form">
-          <DialogTitle>¿Está seguro de realizar la reasignación de usuario?</DialogTitle>
+          <DialogTitle>
+            {
+              asignacion ?
+              '¿Está seguro de realizar la asignación de usuario?' :
+              '¿Está seguro de realizar la reasignación de usuario?'
+            }
+          </DialogTitle>
           <DialogActions>
             <Button
               variant='outlined'
@@ -330,7 +347,17 @@ export const TablaObligacionesAdmin: React.FC = () => {
         maxWidth="xs"
       >
         <Box component="form">
-          <DialogTitle>{modal_option === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</DialogTitle>
+          {
+            modal_option === 'si' && asignacion ? (
+              <DialogTitle>Asignación ejecutada con éxito</DialogTitle>
+            ) : modal_option === 'no' && asignacion ? (
+              <DialogTitle>Asignación cancelada</DialogTitle>
+            ) : modal_option === 'si' && !asignacion ? (
+              <DialogTitle>Reasignación ejecutada con éxito</DialogTitle>
+            ) : modal_option === 'no' && !asignacion ? (
+              <DialogTitle>Reasignación cancelada</DialogTitle>
+            ) : null
+          }
           <DialogActions>
             <Button
               variant='outlined'

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable no-unneeded-ternary */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -13,19 +16,24 @@ import {
   get_data_format_documental_type,
   get_data_tipologias_documentales,
   get_catalogo_trd_action,
-  get_tipologias_asociadas_a_trd
+  get_tipologias_asociadas_a_trd,
+  get_historial_cambios_action,
+  set_selected_item_from_catalogo_trd_action
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
+import { type AnyAction } from '@reduxjs/toolkit';
 
 // ? Obtener TRD's ------------------------------>
 export const get_searched_trd = (
   nombre: string,
-  version: string
+  version: string,
+  setCreateTRDLoadingButton: any
 ): ((dispatch: Dispatch<any>) => Promise<AxiosResponse<any> | AxiosError>) => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse<any> | AxiosError> => {
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/buscar/trd/nombre-version/?nombre=${nombre}&version=${version}`;
       const { data } = await api.get(url);
       /* console.log(
@@ -44,22 +52,20 @@ export const get_searched_trd = (
       // dispatch(get_assignments_service(ccd_current));
 
       return error;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
 
 // ? crear TRD ------------------------------>
 export const create_trd_service: any = (
-  /* ccd: any,
-  set_save_ccd: (arg0: boolean) => void,
-  openModalBusquedaCreacionCCD: any,
-  activateLoadingButton: any,
-  desactivateLoadingButton: any */
-  bodyPost: any
+  bodyPost: any,
+  setCreateTRDLoadingButton: any
 ) => {
   return async (dispatch: Dispatch<any>) => {
-    // activateLoadingButton();
     try {
+      setCreateTRDLoadingButton(true);
       // console.log(bodyPost, 'bodyPost');
       const { data } = await api.post('gestor/trd/create/', {
         id_ccd: bodyPost.id_ccd.item.id_ccd,
@@ -76,15 +82,19 @@ export const create_trd_service: any = (
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
-      // desactivateLoadingButton();
+      setCreateTRDLoadingButton(false);
     }
   };
 };
 
 // ? Actualizar TRD ------------------------------>
-export const update_trd_service = (bodyPost: any): any => {
+export const update_trd_service = (
+  bodyPost: any,
+  setCreateTRDLoadingButton: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/update/${bodyPost.id_trd}/`;
 
       const { nombre, version } = bodyPost;
@@ -107,6 +117,8 @@ export const update_trd_service = (bodyPost: any): any => {
       // console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -144,10 +156,15 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
           nombreUnidad: unidad?.nombre
         };
       });
-      /* console.log(
+
+      if(new_data.length === 0) {
+        control_error('No se encontró data relacionada');
+      }
+
+    console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         new_data
-      ); */
+      );
       dispatch(get_catalogo_series_subseries_unidad_organizacional(new_data));
       return data;
     } catch (error: any) {
@@ -158,16 +175,20 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
 
 // ? get formatos por tipo de medio - busqueda por nombre y codigo tipo de medio ------------------------------>
 export const get_formatos_by_tipo_medio_by_format_and_name = (
-  name?: string,
-  cod_tipo_medio?: string
+  setCreateTRDLoadingButton: any,
+  name: string,
+  cod_tipo_medio: string
 ): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+    setCreateTRDLoadingButton(true);
       const url = `gestor/trd/formatos/get-by-params/?nombre=${
-        name ?? ''
-      }&cod-tipo-medio=${cod_tipo_medio ?? ''}`;
+        name || ''
+      }&cod-tipo-medio=${cod_tipo_medio || ''}`;
+      // console.log(url, 'url')
+
       const { data } = await api.get(url);
       /* console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 159 ~ return ~ data',
@@ -184,6 +205,8 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
           'Ha ocurrido un error, no se han encontrado data'
       );
       return error as AxiosError;
+    } finally {
+     setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -256,12 +279,14 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
 
 // ? get tipologias documentales asociadas a un TRD -------------------------------------->
 
-export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
+export const get_tipologia_doc_asociadas_trd = (
+  id_cat_series_und_org: number
+): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-      const url = `gestor/trd/catalogo-trd/get-tipologias/${id_trd}/`;
+      const url = `gestor/trd/catalogo-trd/get-tipologias/${id_cat_series_und_org}/`;
       const { data } = await api.get(url);
 
       data.data.length > 0
@@ -270,7 +295,6 @@ export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
           )
         : control_error('Sin tipologías asociadas a este TRD');
       dispatch(get_tipologias_asociadas_a_trd(data.data));
-      console.log(data.data, 'data.data');
       return data.data;
     } catch (error: any) {
       control_error(
@@ -284,11 +308,15 @@ export const get_tipologia_doc_asociadas_trd = (id_trd: number): any => {
 
 // ? get documentary typologies by name -------------------------------------->
 
-export const get_tipologias_documentales_by_name = (name?: string): any => {
+export const get_tipologias_documentales_by_name = (
+  setCreateTRDLoadingButton: any,
+  name?: string
+): any => {
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+      setCreateTRDLoadingButton(true);
       const url = `gestor/trd/buscar/tipologia/documental/?nombre=${
         name ?? ''
       }`;
@@ -308,6 +336,8 @@ export const get_tipologias_documentales_by_name = (name?: string): any => {
           'Ha ocurrido un error, no se han encontrado data'
       );
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -375,8 +405,10 @@ export const get_formatos_documentales_by_id_tipologia = (
 };
 
 // ? create documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-
-export const create_tipologia_documental_service = (bodyPost: any): any => {
+export const create_tipologia_documental_service = (
+  bodyPost: any,
+  setCreateTRDLoadingButton: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
       !bodyPost.nombre ||
@@ -388,6 +420,7 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
     }
 
     try {
+      setCreateTRDLoadingButton(true);
       const { data } = await api.post(
         'gestor/trd/crear/tipologia/documental/',
         bodyPost
@@ -398,12 +431,17 @@ export const create_tipologia_documental_service = (bodyPost: any): any => {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
 
 // ? update documentary typologies (name, cod_tipo_medio_doc, formats) -------------------------------------->
-export const update_tipologia_documental_service = (bodyPost: any): any => {
+export const update_tipologia_documental_service = (
+  bodyPost: any,
+  setCreateTRDLoadingButton: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
     if (
       !bodyPost.nombre ||
@@ -414,6 +452,7 @@ export const update_tipologia_documental_service = (bodyPost: any): any => {
       return;
     }
     try {
+      setCreateTRDLoadingButton(true);
       const { data } = await api.put(
         `gestor/trd/update/tipologia/documental/${bodyPost.id_tipologia_documental}/`,
         {
@@ -429,6 +468,8 @@ export const update_tipologia_documental_service = (bodyPost: any): any => {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -461,10 +502,6 @@ export const get_catalogo_trd = (id_trd: number): any => {
       const { data } = await api.get(
         `gestor/trd/catalogo-trd/get-list/${id_trd}/`
       );
-      /* console.log(
-        '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
-        data
-      ); */
       dispatch(get_catalogo_trd_action(data.data));
 
       return data;
@@ -476,33 +513,91 @@ export const get_catalogo_trd = (id_trd: number): any => {
 };
 
 // ? create item catalogo TRD ---------------------------------------------->
-export const create_item_catalogo_trd = (bodyPost: any): any => {
+export const create_item_catalogo_trd = (
+  bodyPost: any,
+  tipologias: any,
+  setCreateTRDLoadingButton: any
+): any => {
   return async (dispatch: Dispatch<any>) => {
     const { id_trd, id_ccd, id_organigrama } = bodyPost;
 
+    const tipologiasPost = tipologias.length > 0 ? tipologias : [];
+
     try {
+      setCreateTRDLoadingButton(true);
+      const obj: any = {
+        id_trd,
+        id_cat_serie_und: bodyPost.id_cat_serie_und,
+        cod_disposicion_final: bodyPost.cod_disposicion_final,
+        digitalizacion_dis_final: bodyPost.digitalizacion_dis_final,
+        tiempo_retencion_ag: bodyPost.tiempo_retencion_ag,
+        tiempo_retencion_ac: bodyPost.tiempo_retencion_ac,
+        descripcion_procedimiento: bodyPost.descripcion_procedimiento,
+        tipologias: tipologiasPost
+      };
+
+      console.log(obj, 'obj');
       const { data } = await api.post(
         `gestor/trd/catalogo-trd/add/${id_trd}/`,
-        bodyPost
+        obj
       );
 
-      const otherPeticiones = [
-        get_catalogo_trd(id_trd),
-        get_tipologia_doc_asociadas_trd(id_trd),
+      dispatch(get_catalogo_trd(id_trd));
+      dispatch(
         getServiceSeriesSubseriesXUnidadOrganizacional({
           id_ccd,
           id_organigrama
         })
-      ];
-
-      await Promise.all(otherPeticiones);
+      );
 
       control_success(data.detail);
       return data;
     } catch (error: any) {
       // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
+      dispatch(set_selected_item_from_catalogo_trd_action(null));
       return error as AxiosError;
+    }finally {
+      setCreateTRDLoadingButton(false);
+    }
+  };
+};
+
+// ? edit item catalogo TRD --------------------------------->
+
+export const update_item_catalogo_trd = (
+  formData: any,
+  id_catserie_unidadorg: number,
+  trd_current: any,
+  setCreateTRDLoadingButton: any,
+): any => {
+  return async (
+    dispatch: Dispatch<AnyAction | any>
+  ): Promise<AxiosResponse | AxiosError | any> => {
+    try {
+      setCreateTRDLoadingButton(true);
+      const { data } = await api.put(
+        `gestor/trd/catalogo-trd/update/${id_catserie_unidadorg}/`,
+        formData
+      );
+
+      dispatch(get_catalogo_trd(trd_current.id_trd));
+      dispatch(
+        getServiceSeriesSubseriesXUnidadOrganizacional({
+          id_ccd: trd_current.id_ccd,
+          id_organigrama: trd_current.id_organigrama
+        })
+      );
+      dispatch(get_tipologias_asociadas_a_trd(id_catserie_unidadorg));
+
+      control_success(data.detail);
+      dispatch(set_selected_item_from_catalogo_trd_action(null));
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }finally {
+      setCreateTRDLoadingButton(false);
     }
   };
 };
@@ -517,7 +612,6 @@ export const delete_item_catalogo_trd = (id_item_catalogo_trd: number): any => {
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -552,6 +646,31 @@ export const resume_trd_service = (id_trd: number, setFlag: any): any => {
       const { data } = await api.put(url);
       control_success(data.detail);
       setFlag(false);
+      return data.data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ! get historical data from TRD
+
+export const get_historical_trd = (id_trd: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if (!id_trd) return control_error('No se ha podido realizar la acción');
+      const url = `gestor/trd/historico/?id_trd=${id_trd}`;
+      const { data } = await api.get(url);
+
+      if (data.data.length > 0) {
+        dispatch(get_historial_cambios_action(data.data));
+        control_success(
+          data.detail || 'Proceso exitoso, se encontró la siguiente data'
+        );
+      } else {
+        control_error('No hay histórico de datos relacionados aún');
+      }
       return data.data;
     } catch (error: any) {
       control_error(error.response.data.detail);

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { useContext } from 'react';
 import {
   Avatar,
@@ -39,12 +38,14 @@ import {
   get_data_tipologias_documentales
 } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../hooks/use_trd';
-//* icons
-// import VisibilityIcon from '@mui/icons-material/Visibility';
+//* icons;
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
-// import { v4 as uuidv4 } from 'uuid';
+import { LoadingButton } from '@mui/lab';
+
+import { Title } from '../../../../../../../components';
+
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -54,7 +55,9 @@ export const BusquedaTipologias = (): JSX.Element => {
   const {
     modalBusquedaTipologiasDocumentales,
     closeModalBusquedaTipologiasDocumentales,
-    openModalAdministracionTipologiasDocumentales
+    openModalAdministracionTipologiasDocumentales,
+    createTRDLoadingButton,
+    setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
 
   const {
@@ -62,8 +65,6 @@ export const BusquedaTipologias = (): JSX.Element => {
     form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales
 
-    //* state to update data in the administre data
-    // set_list_format_documental_type,
   } = use_trd();
 
   const resetOnCloseModal = (): any => {
@@ -106,7 +107,7 @@ export const BusquedaTipologias = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              closeModalBusquedaTipologiasDocumentales();
+              resetOnCloseModal();
               openModalAdministracionTipologiasDocumentales();
 
               dispatch(
@@ -121,7 +122,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                   })
                 );
               });
-
               // console.log('params edit formato', params.row);
             }}
           >
@@ -148,11 +148,11 @@ export const BusquedaTipologias = (): JSX.Element => {
                 ).then((res: any) => {
                   dispatch(
                     get_tipologias_documentales_by_name(
+                      setCreateTRDLoadingButton,
                       form_data_searched_tipologia_documental.nombre
                     )
                   );
                 });
-                // void deleteFormat(params);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -187,25 +187,14 @@ export const BusquedaTipologias = (): JSX.Element => {
             // console.log('buscando tipologias documentales');
             dispatch(
               get_tipologias_documentales_by_name(
+                setCreateTRDLoadingButton,
                 form_data_searched_tipologia_documental.nombre
               )
             );
           }}
         >
           <DialogTitle>
-            Búsqueda de Tipologias Documentales
-            <IconButton
-              aria-label="close"
-              onClick={resetOnCloseModal}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500]
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
+            <Title title="Búsqueda de Tipologias Documentales" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -226,7 +215,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
@@ -235,7 +223,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
                       }}
                       error={!!error}
                       /* helperText={
@@ -248,14 +235,16 @@ export const BusquedaTipologias = (): JSX.Element => {
                 />
               </Grid>
               <Grid item xs={12} sm={5.5}>
-                <Button
+                <LoadingButton
+                  loading={createTRDLoadingButton}
                   variant="outlined"
                   type="submit"
                   startIcon={<SearchIcon />}
+                  // sx={{ mt: '15px' }}
                   color="primary"
                 >
                   BUSCAR
-                </Button>
+                </LoadingButton>
                 <Button
                   variant="contained"
                   startIcon={<CleanIcon />}
@@ -265,7 +254,6 @@ export const BusquedaTipologias = (): JSX.Element => {
                     resetBusquedaTipologiasDocumentales({
                       nombre: ''
                     });
-                    // dispatch(get_tipologias_documentales_by_name(''));
                   }}
                 >
                   LIMPIAR
@@ -282,11 +270,9 @@ export const BusquedaTipologias = (): JSX.Element => {
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
-              getRowId={
-                (row) => row.id_tipologia_documental
-                /* ? row.id_tipologia_documental
-                  : uuidv4() */
-              }
+
+              getRowId={(row) => row.id_tipologia_documental}
+
             />
           </DialogContent>
           <Divider />

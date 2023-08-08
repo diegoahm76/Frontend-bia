@@ -44,8 +44,8 @@ export const CarteraGeneralEdad: React.FC = () => {
         type: 'array'
       });
       save_as_excel_file(excel_buffer, 'Reporte General de Cartera por Edades');
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      throw new Error(error);
     }
   };
 
@@ -61,8 +61,8 @@ export const CarteraGeneralEdad: React.FC = () => {
         });
         save_as_fn(data, fileName + excel_extension);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((error: any) => {
+        throw new Error(error);
       });
   };
 
