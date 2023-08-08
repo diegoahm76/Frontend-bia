@@ -51,18 +51,30 @@ export const SucursalEntidad: FC = (): any => {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
-     
     const [same_address, setsame_address] = useState(false);
 
-    const handle_checkbox = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }): void => {
+    const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setsame_address(event.target.checked);
+        // setsame_address(event.target.checked);
+        // When the checkbox is checked, update the direccion_notificacion_referencia field
+        // with the value of direccion_sucursal_georeferenciada
         if (event.target.checked) {
-            // If "Misma dirección física" checkbox is checked, copy the value from "direccion" to "direccion_notificacion"
+            handleinput_change({
+                target: {
+                    name: 'direccion_notificacion_referencia',
+                    value: form_values.direccion_sucursal_georeferenciada,
+                },
+
+            });
             handleinput_change({
                 target: {
                     name: 'direccion_notificacion',
                     value: form_values.direccion,
                 },
+<<<<<<< HEAD
+
+            });
+=======
             } as ChangeEvent<HTMLInputElement>);
         }
     };
@@ -71,38 +83,16 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         if (!same_address) {
             // Update the value of "direccion_notificacion" if the checkbox is not checked
             handleinput_change(event as ChangeEvent<HTMLInputElement>);
+>>>>>>> d254e6f03ffe1149e66be4f532df79a682a43dd7
         }
     };
+
+
+
     return (
         <>
-        <Grid
-            container
-            spacing={2}
-            direction="row"
-            border={1}
-            padding={2}
-            borderColor="lightgray"
-            borderRadius={2}
-            sx={{ marginTop: '10px', marginLeft: '7px' }}
-        >
 
-<Grid item xs={12} sm={4}>
-                    <TextField
-                        variant="outlined"
-                        size="small"
-                        label="direccion geografica  "
-                        fullWidth
-                        required
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        name="direccion_sucursal_georeferenciada"
-                        value={form_values.direccion_sucursal_georeferenciada}
-                        onChange={handleinput_change}
-                    />
-                </Grid>
-            
-            <Grid item xs={12} sm={4}>
+            <>
                 <TextField
                     variant="outlined"
                     size="small"
@@ -116,44 +106,202 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     value={form_values.direccion}
                     onChange={handleinput_change}
                 />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <FormControlLabel
-                    control={<Checkbox checked={same_address} onChange={handle_checkbox} />}
-                    label="Misma dirección física"
-                />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <TextField
-                    variant="outlined"
-                    size="small"
-                    label="direccion_notificacion"
-                    fullWidth
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    name="direccion_notificacion"
-                    value={form_values.direccion_notificacion}
-                    onChange={handle_direccion_notificacion}
-                />
-            </Grid>
-            <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
                         size="small"
-                        label="direccion_notificacion_geografica"
+                        label="direccion geografica"
+                        fullWidth
+                        required
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        name="direccion_sucursal_georeferenciada"
+                        value={form_values.direccion_sucursal_georeferenciada}
+                        onChange={handleinput_change}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={same_address}
+                                onChange={handle_checkbox}
+                            />
+                        }
+                        label="Misma dirección física"
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        variant="outlined"
+                        size="small"
+                        label="direccion_notificacion_referencia"
                         fullWidth
                         InputLabelProps={{
                             shrink: true,
                         }}
                         name="direccion_notificacion_referencia"
-                        value={form_values.direccion_notificacion_referencia}
+                        value={same_address ? form_values.direccion_sucursal_georeferenciada : form_values.direccion_notificacion_referencia}
                         onChange={handleinput_change}
                     />
                 </Grid>
-        </Grid>
-    </>
+                <TextField
+                    variant="outlined"
+                    size="small"
+                    label="direccion_notificacion"
+                    fullWidth
+                    required
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    name="direccion_notificacion"
+                    value={same_address ? form_values.direccion : form_values.direccion_notificacion}
+                    onChange={handleinput_change}
+                />
+
+            </>
+
+        </>
     );
 }
 
+<<<<<<< HEAD
+// // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+// import { Grid, } from '@mui/material';
+// import Checkbox from '@mui/material/Checkbox';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import TextField from '@mui/material/TextField';
+// // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+// import {    useState, type FC,   } from 'react';
+// // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+// import { SucursalDireccionesProps } from './utils/interfac';
+
+// // eslint-disable-next-line @typescript-eslint/naming-convention
+// export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
+//     // eslint-disable-next-line @typescript-eslint/naming-convention  
+//     const [same_address, setsame_address] = useState(false);
+
+//     const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
+//         setsame_address(event.target.checked);
+//         // When the checkbox is checked, update the direccion_notificacion_referencia field
+//         // with the value of direccion_sucursal_georeferenciada
+//         if (event.target.checked) {
+//             handleinput_change({
+//                 target: {
+//                     name: 'direccion_notificacion_referencia',
+//                     value: form_values.direccion_sucursal_georeferenciada,
+//                 },
+//             });
+//         }
+//     };
+//     // const [same_address, setsame_address] = useState(false); // Estado para manejar el checkbox
+    
+//     // const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
+//     //     setsame_address(event.target.checked); // Actualizar el estado cuando cambia el checkbox
+//     //   };
+      
+  
+//     return (
+//         <>
+
+// <>
+//             <Grid item xs={12} sm={4}>
+//                 <TextField
+//                     variant="outlined"
+//                     size="small"
+//                     label="direccion geografica"
+//                     fullWidth
+//                     required
+//                     InputLabelProps={{
+//                         shrink: true,
+//                     }}
+//                     name="direccion_sucursal_georeferenciada"
+//                     value={form_values.direccion_sucursal_georeferenciada}
+//                     onChange={handleinput_change}
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12} sm={4}>
+//                 <FormControlLabel
+//                     control={
+//                         <Checkbox
+//                             checked={same_address}
+//                             onChange={handle_checkbox}
+//                         />
+//                     }
+//                     label="Misma dirección física"
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12} sm={4}>
+//                 <TextField
+//                     variant="outlined"
+//                     size="small"
+//                     label="direccion_notificacion_referencia"
+//                     fullWidth
+//                     InputLabelProps={{
+//                         shrink: true,
+//                     }}
+//                     name="direccion_notificacion_referencia"
+//                     value={same_address ? form_values.direccion_sucursal_georeferenciada : form_values.direccion_notificacion_referencia}
+//                     onChange={handleinput_change}
+//                 />
+//             </Grid>
+//         </>
+ 
+//             <>
+//             <Grid item xs={12} sm={4}>
+//                 <TextField
+//                     variant="outlined"
+//                     size="small"
+//                     label="direccion geografica"
+//                     fullWidth
+//                     required
+//                     InputLabelProps={{
+//                         shrink: true,
+//                     }}
+//                     name="direccion_sucursal_georeferenciada"
+//                     value={form_values.direccion_sucursal_georeferenciada}
+//                     onChange={handleinput_change}
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12} sm={4}>
+//                 <FormControlLabel
+//                     control={
+//                         <Checkbox
+//                             checked={same_address} // Estado del checkbox
+//                             onChange={handle_checkbox} // Evento al cambiar el checkbox
+//                         />
+//                     }
+//                     label="Misma dirección física"
+//                 />
+//             </Grid>
+
+//             <Grid item xs={12} sm={4}>
+//                 <TextField
+//                     variant="outlined"
+//                     size="small"
+//                     label="direccion_notificacion_referencia"
+//                     fullWidth
+//                     InputLabelProps={{
+//                         shrink: true,
+//                     }}
+//                     name="direccion_notificacion_referencia"
+//                     value={same_address ? form_values.direccion_sucursal_georeferenciada : form_values.direccion_notificacion_referencia}
+//                     onChange={handleinput_change}
+//                 />
+//             </Grid>
+//         </>
+
+                 
+            
+//         </>
+//     );
+// }
+=======
+>>>>>>> d254e6f03ffe1149e66be4f532df79a682a43dd7
 
