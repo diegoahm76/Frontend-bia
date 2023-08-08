@@ -38,12 +38,14 @@ import {
   useAppSelector
 } from '../../../../../../../../../../hooks';
 import {
+  get_list_asignaciones_lideres,
   // get_list_asignaciones_lideres,
   get_list_busqueda_avanzada_personas,
-  set_asignacion_lideres_current
-  // set_organigrama_lideres_current
+  set_asignacion_lideres_current,
+  set_organigrama_lideres_current
 } from '../../../../toolkit/LideresSlices/LideresSlice';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
+import { get_asignaciones_lideres_by_id_organigrama_service } from '../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
 // import { get_asignaciones_lideres_by_id_organigrama_service } from '../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
 // import { get_asignaciones_lideres_by_id_organigrama_service } from '../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
 
@@ -110,17 +112,17 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               //* REVISAR LO DEL ID ORGANIGRAMA
 
               // ! ACTUALIZA EL ORGANIGRAMA
-              //  dispatch(set_organigrama_lideres_current(params.row));
+              dispatch(set_organigrama_lideres_current(params.row));
 
               // ! ACTUALIZA LA ASIGNACION DE LIDER
               dispatch(set_asignacion_lideres_current(params.row));
 
               // ! ACTUALIZA LA LISTA DE UNIDADES ORGANIZACIONALES
-              /* void get_asignaciones_lideres_by_id_organigrama_service(52).then(
-                (data: any) => {
-                  dispatch(get_list_asignaciones_lideres(data));
-                }
-              ); */
+              void get_asignaciones_lideres_by_id_organigrama_service(
+                params.row.id_organigrama
+              ).then((data: any) => {
+                dispatch(get_list_asignaciones_lideres(data));
+              });
 
               // ! ACTUALIZA LA LISTA DE ASIGNACIONES DE LIDERES
               /*
