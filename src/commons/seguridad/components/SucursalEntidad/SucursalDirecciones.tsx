@@ -29,6 +29,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
+    const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
+
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -121,17 +123,17 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     }, [selected_departamento_noti]);
 
 
-    const set_value_direction = (_value: string, type: string): void => {
+    // const set_value_direction = (_value: string, type: string): void => {
 
-        switch (type) {
-            case 'residencia':
-                break;
-            case 'notificacion':
-                break;
-            case 'laboral':
-                break;
-        }
-    };
+    //     switch (type) {
+    //         case 'residencia':
+    //             break;
+    //         case 'notificacion':
+    //             break;
+    //         case 'laboral':
+    //             break;
+    //     }
+    // };
     const [error] = useState<any>('');
 
     const is_error = error !== '';
@@ -141,16 +143,119 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
     ] = useState('');
     console.log(is_error);
+    const [type_directionn,
+        // set_type_direction  
+
+    ] = useState('');
+    console.log(is_error);
+
+    const [same_address, setsame_address] = useState(false);
+
+    const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setsame_address(event.target.checked);
+        // setsame_address(event.target.checked);
+        // When the checkbox is checked, update the direccion_notificacion_referencia field
+        // with the value of direccion_sucursal_georeferenciada
+        if (event.target.checked) {
+            handleinput_change({
+                target: {
+                    name: 'direccion_notificacion_referencia',
+                    value: form_values.direccion_sucursal_georeferenciada,
+                },
+
+            }); handleinput_change({
+                target: {
+                    name: 'direccion_notificacion',
+                    value: form_values.direccion,
+                },
+
+            }); handleinput_change({
+                target: {
+                    name: 'municipio_notificacion',
+                    value: form_values.municipio,
+                },
+
+            });
+            handleinput_change({
+                target: {
+                    name: 'municipio_notificacion',
+                    value: form_values.municipio,
+                },
+
+            });
+        }
+    };
+
+
+
+
+    const [
+        // direccion_generada
+        , setdireccion_generada] = useState('');
+
+
+    const [
+        // direccionGeneradaActiva
+        , set_direccion_generada_activa] = useState(false);
+
+    const mostrardireccion_generada = (direccion: any): void => {
+        setdireccion_generada(direccion);
+        set_direccion_generada_activa(true);
+        handleinput_change({
+            target: {
+                name: 'direccion',
+                value: direccion, // Actualiza form_values.direccion con la dirección generada
+            },
+        });
+    };
+
+
+
+    const [
+        // direccion_generada
+        , setdireccion_generadaa] = useState('');
+
+        const [
+            // direccionGeneradaActiva
+            , set_direccion_generada_activaa] = useState(false);
+
+    const set_value_direction = (direccion_notificacion: any): void => {
+        setdireccion_generadaa(direccion_notificacion);
+        set_direccion_generada_activaa(true);
+        handleinput_change({
+            target: {
+                name: 'direccion_notificacion',
+                value: direccion_notificacion, // Actualiza form_values.direccion con la dirección generada
+            },
+        });
+    };
+
 
     return (
         <>
             <DialogGeneradorDeDirecciones
+                open={opengeneradordireccioness}
+                openDialog={setopengeneradordireccioness}
+                onChange={set_value_direction}
+                type={type_directionn}
+            />
+
+            <DialogGeneradorDeDirecciones
                 open={opengeneradordirecciones}
                 openDialog={setopengeneradordirecciones}
-                onChange={set_value_direction}
+                onChange={mostrardireccion_generada} // Pasa la función para mostrar la dirección generada
                 type={type_direction}
-
             />
+            <div>
+                {/* Aquí muestras la dirección generada */}
+                {/* <>
+       {direccion_generada}
+       </>
+     */}
+
+
+            </div>
+
             <Grid
                 container
                 spacing={2}
@@ -167,7 +272,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>pais</InputLabel>
+                        <InputLabel shrink={true}>pais</InputLabel>
                         <Select
                             label="pais"
                             value={selected_pais}
@@ -185,7 +290,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>Departamento</InputLabel>
+                        <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
                             value={selected_departamento}
@@ -201,25 +306,25 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
-                
-<Grid item xs={12} sm={4}>
-    <FormControl required size="small" fullWidth>
-        <InputLabel shrink={true}>Municipio</InputLabel>
-        <Select
-            label="Municipio"
-            name="municipio"
-            value={form_values.municipio}
-            onChange={handleinput_change}
-            inputProps={{ shrink: true }}
-        >
-            {municipios.map((municipio) => (
-                <MenuItem key={municipio.value} value={municipio.value}>
-                    {municipio.label}
-                </MenuItem>
-            ))}
-        </Select>
-    </FormControl>
-</Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel shrink={true}>Municipio</InputLabel>
+                        <Select
+                            label="Municipio"
+                            name="municipio"
+                            value={form_values.municipio}
+                            onChange={handleinput_change}
+                            inputProps={{ shrink: true }}
+                        >
+                            {municipios.map((municipio) => (
+                                <MenuItem key={municipio.value} value={municipio.value}>
+                                    {municipio.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
@@ -256,11 +361,11 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         onClick={() => {
                             setopengeneradordirecciones(true);
                         }}
-                    >
-                        Generar dirección
+                    > Generar dirección
                     </Button>
                 </Grid>
             </Grid>
+
             <Grid
                 container
                 spacing={2}
@@ -275,7 +380,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>Departamento</InputLabel>
+                        <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
                             value={selected_departamento_noti}
@@ -293,12 +398,13 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel  shrink={true}>Municipio</InputLabel>
+                        <InputLabel shrink={true}>Municipio</InputLabel>
                         <Select
                             label="Municipio"
                             name="municipio_notificacion"
+                            value={same_address ? form_values.municipio : form_values.municipio_notificacion}
 
-                            value={form_values.municipio_notificacion}
+                            // value={form_values.municipio_notificacion}
                             onChange={handleinput_change}
                         >
                             {municipios_noti.map((municipio) => (
@@ -310,7 +416,15 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}   >
-                    <FormControlLabel control={<Checkbox />} label="Misma dirección física" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={same_address}
+                                onChange={handle_checkbox}
+                            />
+                        }
+                        label="Misma dirección física"
+                    />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
@@ -322,7 +436,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             shrink: true,
                         }}
                         name="direccion_notificacion"
-                        value={form_values.direccion_notificacion}
+                        // value={form_values.direccion_notificacion}
+                        value={same_address ? form_values.direccion : form_values.direccion_notificacion}
+
                         onChange={handleinput_change}
                     />
                 </Grid>
@@ -336,7 +452,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             shrink: true,
                         }}
                         name="direccion_notificacion_referencia"
-                        value={form_values.direccion_notificacion_referencia}
+                        value={same_address ? form_values.direccion_sucursal_georeferenciada : form_values.direccion_notificacion_referencia}
+
+                        // value={form_values.direccion_notificacion_referencia}
                         onChange={handleinput_change}
                     />
                 </Grid>
@@ -344,7 +462,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <Button
                         variant="contained"
                         onClick={() => {
-                            setopengeneradordirecciones(true);
+                            setopengeneradordireccioness(true);
                         }}
                     >
                         Generar dirección
@@ -356,4 +474,3 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         </>
     );
 }
-

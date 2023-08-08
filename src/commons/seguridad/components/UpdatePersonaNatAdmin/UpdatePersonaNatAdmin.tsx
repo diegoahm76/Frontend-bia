@@ -267,7 +267,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos personales */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS BÁSICOS" />
+                <Title title="Datos básicos" />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
@@ -424,7 +424,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos de residencia */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS DE RESIDENCIA" />
+                <Title title="Datos de residencia" />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <CustomSelect
@@ -528,7 +528,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos de notificación */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS DE NOTIFICACIÓN" />
+                <Title title="Datos de notificación" />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -675,7 +675,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos adicionales (opcionales) */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS ADICIONALES (opcionales)" />
+                <Title title="Datos de notificación (opcionales)" />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
@@ -836,7 +836,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Datos de clasificación Cormacarena */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="DATOS DE CLASIFICACIÓN" />
+                <Title title="Datos de clasificación" />
               </Grid>
               <Grid item xs={12}>
                 {clase_tercero.length > 0 && (
