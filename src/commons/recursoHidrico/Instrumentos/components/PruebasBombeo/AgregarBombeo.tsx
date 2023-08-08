@@ -38,6 +38,7 @@ import { tipo_sesion } from './utils/choices/choices';
 import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import { EditarSesionPrueba } from './EditarSesionPrueba';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarBombeo: React.FC = () => {
@@ -165,7 +166,9 @@ export const AgregarBombeo: React.FC = () => {
     control,
   } = useRegisterInstrumentoHook();
 
-  const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
+  const { instrumentos, mode_editar_bombeo } = useAppSelector(
+    (state) => state.instrumentos_slice
+  );
 
   useEffect(() => {
     reset_instrumento({
@@ -180,13 +183,6 @@ export const AgregarBombeo: React.FC = () => {
       void fetch_data_pozo_instrumentos_select(instrumentos.id_pozo);
     }
   }, [instrumentos.id_pozo]);
-
-  useEffect(() => {
-    if (id_bombeo_general) {
-      console.log(id_bombeo_general, 'id_bombeo_general');
-      void fetch_data_general_sesion();
-    }
-  }, [id_bombeo_general]);
 
   return (
     <>
@@ -446,199 +442,204 @@ export const AgregarBombeo: React.FC = () => {
               </Grid>
             </>
           ) : null}
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Registro de Sección de prueba de bombeo
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="cod_tipo_sesion"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label=" Prueba de bombeo / caudal "
-                  size="small"
-                  margin="dense"
-                  select
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.caudal}
-                  helperText={
-                    errors_bombeo.caudal
-                      ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
-                      : 'ingrese el tipo de prueba de bombeo / caudal'
-                  }
-                >
-                  {tipo_sesion.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <TimePicker
-                label="Hora de prueba de bombeo"
-                value={horaPruebaBombeo}
-                onChange={(value) => {
-                  handle_time_change(value);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    size="small"
-                    {...register_bombeo('hora_inicio', { required: true })}
-                    error={!!errors_bombeo.hora_inicio}
-                    helperText={
-                      errors_bombeo.hora_inicio
-                        ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
-                        : 'Ingrese la hora de inicio de la prueba de bombeo'
-                    }
+          {mode_editar_bombeo.crear ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Registro de Sección de prueba de bombeo
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="cod_tipo_sesion"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label=" Prueba de bombeo / caudal "
+                      size="small"
+                      margin="dense"
+                      select
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.caudal}
+                      helperText={
+                        errors_bombeo.caudal
+                          ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
+                          : 'ingrese el tipo de prueba de bombeo / caudal'
+                      }
+                    >
+                      {tipo_sesion.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    label="Hora de prueba de bombeo"
+                    value={horaPruebaBombeo}
+                    onChange={(value) => {
+                      handle_time_change(value);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        size="small"
+                        {...register_bombeo('hora_inicio', { required: true })}
+                        error={!!errors_bombeo.hora_inicio}
+                        helperText={
+                          errors_bombeo.hora_inicio
+                            ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
+                            : 'Ingrese la hora de inicio de la prueba de bombeo'
+                        }
+                      />
+                    )}
+                    ampm={true}
                   />
-                )}
-                ampm={true}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Registro de medición
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="tiempo_transcurrido"
-              control={control_bombeo}
-              rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <TextField
-                  value={value}
-                  label="Tiempo transcurrido (min)"
-                  size="small"
-                  margin="dense"
-                  type="number"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  onChange={onChange}
-                  error={!!errors_bombeo.tiempo_transcurrido}
-                  helperText={
-                    errors_bombeo.tiempo_transcurrido
-                      ? 'Es obligatorio ingresar el tiempo transcurrido'
-                      : 'Ingrese el tiempo transcurrido'
-                  }
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Registro de medición
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="tiempo_transcurrido"
+                  control={control_bombeo}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      value={value}
+                      label="Tiempo transcurrido (min)"
+                      size="small"
+                      margin="dense"
+                      type="number"
+                      disabled={false}
+                      fullWidth
+                      required={true}
+                      onChange={onChange}
+                      error={!!errors_bombeo.tiempo_transcurrido}
+                      helperText={
+                        errors_bombeo.tiempo_transcurrido
+                          ? 'Es obligatorio ingresar el tiempo transcurrido'
+                          : 'Ingrese el tiempo transcurrido'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="nivel"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Nivel (m)"
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.nivel}
-                  helperText={
-                    errors_bombeo.nivel
-                      ? 'Es obligatorio ingresar el nivel'
-                      : 'Ingrese el nivel'
-                  }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nivel"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Nivel (m)"
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.nivel}
+                      helperText={
+                        errors_bombeo.nivel
+                          ? 'Es obligatorio ingresar el nivel'
+                          : 'Ingrese el nivel'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="resultado"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Abatimiento / Recuperación (m)"
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.resultado}
-                  helperText={
-                    errors_bombeo.resultado
-                      ? 'Es obligatorio ingresar el abatimiento / recuperación'
-                      : 'Ingrese el abatimiento / recuperación'
-                  }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="resultado"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Abatimiento / Recuperación (m)"
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.resultado}
+                      helperText={
+                        errors_bombeo.resultado
+                          ? 'Es obligatorio ingresar el abatimiento / recuperación'
+                          : 'Ingrese el abatimiento / recuperación'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="caudal"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Caudal (l/s)"
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.caudal}
-                  helperText={
-                    errors_bombeo.caudal
-                      ? 'Es obligatorio ingresar el caudal'
-                      : 'Ingrese el caudal'
-                  }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="caudal"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Caudal (l/s)"
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.caudal}
+                      helperText={
+                        errors_bombeo.caudal
+                          ? 'Es obligatorio ingresar el caudal'
+                          : 'Ingrese el caudal'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>{' '}
-          <Box sx={{ flexGrow: 1 }}>
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="flex-end"
-              sx={{ mt: '10px' }}
-            >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handle_agregar}
-              >
-                Agregar
-              </Button>
-            </Stack>
-          </Box>
+              </Grid>{' '}
+              <Box sx={{ flexGrow: 1 }}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  justifyContent="flex-end"
+                  sx={{ mt: '10px' }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handle_agregar}
+                  >
+                    Agregar
+                  </Button>
+                </Stack>
+              </Box>
+            </>
+          ) : null}
+          {mode_editar_bombeo.editar ? <EditarSesionPrueba /> : null}
           {row_prueba.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -664,7 +665,6 @@ export const AgregarBombeo: React.FC = () => {
               <Grid item xs={12}>
                 <Title title="Secciones" />
               </Grid>
-
               <Grid item xs={12}>
                 <DataGrid
                   autoHeight

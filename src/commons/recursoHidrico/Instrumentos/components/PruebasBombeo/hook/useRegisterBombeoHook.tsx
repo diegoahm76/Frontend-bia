@@ -55,12 +55,20 @@ export const use_register_bombeo_hook = () => {
     nombres_archivos,
     rows_sesion_bombeo,
     id_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    id_sesion_bombeo,
+    rows_anexos_bombeo,
     fetch_data_general_sesion,
     set_id_bombeo_general,
-
+    set_id_sesion_bombeo,
+    set_info_sesion_bombeo,
     set_archivos,
     set_nombres_archivos,
-
+    fetch_data_sesion,
+    set_info_data_sesion_bombeo,
+    fetch_data_anexos_bombeo,
     // * editar archivo
   } = useContext(DataContext);
 
@@ -206,17 +214,15 @@ export const use_register_bombeo_hook = () => {
         archivos_aforo,
         archivos
       ).then((response) => {
-        console.log(response?.data, 'response crear prueba de bombeo');
-        console.log(
-          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo,
-          'response?.data?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo'
-        );
         set_id_sesion_prueba_bombeo(
           response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
         );
         set_id_bombeo_general(
           response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
         );
+        if (id_bombeo_general) {
+          void fetch_data_general_sesion();
+        }
       });
       control_success('Prueba de bombeo guardada correctamente');
       limpiar_formulario();
@@ -236,6 +242,7 @@ export const use_register_bombeo_hook = () => {
     horaPruebaBombeo,
     row_prueba,
     row_data_prueba,
+    setHoraPruebaBombeo,
     set_fecha_prubea_bombeo,
     handle_agregar,
     handle_date_change,
@@ -258,6 +265,17 @@ export const use_register_bombeo_hook = () => {
     // * datos de sesion
     rows_sesion_bombeo,
     id_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    id_sesion_bombeo,
+    rows_anexos_bombeo,
+    set_id_sesion_bombeo,
+    set_info_data_sesion_bombeo,
+    set_info_sesion_bombeo,
+    set_id_bombeo_general,
     fetch_data_general_sesion,
+    fetch_data_sesion,
+    fetch_data_anexos_bombeo,
   };
 };

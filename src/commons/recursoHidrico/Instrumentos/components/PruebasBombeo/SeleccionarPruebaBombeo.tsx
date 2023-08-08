@@ -38,6 +38,7 @@ import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchi
 import { tipo_sesion } from './utils/choices/choices';
 import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
 import dayjs from 'dayjs';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarPruebaBombeo: React.FC = () => {
@@ -105,8 +106,8 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
-                // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
-                // set_info_sesion_bombeo(params.row);
+                set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
+                set_info_sesion_bombeo(params.row);
               }}
             />
           </Tooltip>
@@ -114,6 +115,79 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       ),
     },
   ];
+  const columns_data_sesion: GridColDef[] = [
+    {
+      field: 'tiempo_transcurrido',
+      headerName: 'TIEMPO TRANSCURRIDO',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'hora',
+      headerName: 'HORA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nivel',
+      headerName: 'NIVEL',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'resultado',
+      headerName: 'ABATIMIENTO/RECUPERACION',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'caudal',
+      headerName: 'CAUDAL',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 80,
+      renderCell: (params) => (
+        <>
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                set_info_data_sesion_bombeo(params.row);
+              }}
+            />
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ARCHIVO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'ARCHIVO',
+      width: 200,
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.value}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+  ];
+
   const { pozos_selected, fetch_data_pozo_instrumentos_select } =
     use_register_laboratorio_hook();
   const {
@@ -139,6 +213,23 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
     // *OnSubmit
     onSubmit,
     is_saving,
+
+    // * informacion sesiones
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    id_sesion_bombeo,
+    rows_anexos_bombeo,
+    setHoraPruebaBombeo,
+    set_id_sesion_bombeo,
+    set_info_data_sesion_bombeo,
+    set_info_sesion_bombeo,
+    set_id_bombeo_general,
+    fetch_data_general_sesion,
+    fetch_data_sesion,
+    fetch_data_anexos_bombeo,
   } = use_register_bombeo_hook();
 
   const { reset_instrumento, control } = useRegisterInstrumentoHook();
@@ -156,6 +247,8 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
   }, [instrumentos]);
 
   useEffect(() => {
+    set_id_bombeo_general(info_prueba_bombeo?.id_prueba_bombeo);
+    console.log(info_prueba_bombeo, 'info_prueba_bombeo');
     reset_bombeo({
       descripcion: info_prueba_bombeo.descripcion,
       latitud: info_prueba_bombeo.latitud,
@@ -165,22 +258,44 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       id_pozo: info_prueba_bombeo.id_pozo as any,
       id_prueba_bombeo: info_prueba_bombeo.id_prueba_bombeo as any,
       fecha_prueba_bombeo: info_prueba_bombeo.fecha_prueba_bombeo,
+
+      // * datos de sesion
+      id_sesion_prueba_bombeo:
+        info_sesion_bombeo?.id_sesion_prueba_bombeo as any,
+      hora_inicio: info_sesion_bombeo?.fecha_inicio,
+      cod_tipo_sesion: info_sesion_bombeo?.cod_tipo_sesion as any,
+
+      // * data prueba de bombeo por sesión
+      tiempo_transcurrido: info_data_sesion_bombeo?.tiempo_transcurrido,
+      nivel: info_data_sesion_bombeo?.nivel,
+      resultado: info_data_sesion_bombeo?.resultado,
+      caudal: info_data_sesion_bombeo?.caudal,
     });
-    // set_fecha_prubea_bombeo(info_prueba_bombeo.fecha_prueba_bombeo.format('YYYY-MM-DD') ?? '');
-    // setValue_bombeo('fecha_prueba_bombeo', info_prueba_bombeo.fecha_prueba_bombeo.format('YYYY-MM-DD') ?? '');
-  }, [info_prueba_bombeo]);
+    set_fecha_prubea_bombeo(
+      dayjs(info_prueba_bombeo.fecha_prueba_bombeo) ?? null
+    );
+    setValue_bombeo(
+      'fecha_prueba_bombeo',
+      dayjs(info_prueba_bombeo.fecha_prueba_bombeo)?.format('YYYY-MM-DD') ?? ''
+    );
+    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
+    setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
+
+    void fetch_data_pozo_instrumentos_select(instrumentos?.id_pozo);
+  }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
-    if (instrumentos.id_pozo) {
-      void fetch_data_pozo_instrumentos_select(instrumentos.id_pozo);
+    if (id_bombeo_general) {
+      void fetch_data_general_sesion();
+      void fetch_data_anexos_bombeo(id_bombeo_general);
     }
-  }, [instrumentos.id_pozo]);
+  }, [id_bombeo_general]);
 
   useEffect(() => {
-    if (row_data_prueba) {
-      console.log(row_data_prueba, 'row_data_prueba');
+    if (id_sesion_bombeo) {
+      void fetch_data_sesion();
     }
-  }, [row_data_prueba]);
+  }, [id_sesion_bombeo]);
 
   return (
     <>
@@ -210,7 +325,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE PRUEBAS DE BOMBEO " />
+            <Title title=" INFORMACIÓN DE PRUEBAS DE BOMBEO " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -261,7 +376,6 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
                   }}
                   error={!!error}
                 />
@@ -277,7 +391,20 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   handle_date_change('fecha_prueba', value);
                 }}
                 renderInput={(params: any) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_bombeo('fecha_prueba_bombeo', {
+                      required: true,
+                    })}
+                    error={!!errors_bombeo.fecha_prueba_bombeo}
+                    helperText={
+                      errors_bombeo.fecha_prueba_bombeo
+                        ? 'Es obligatorio la fecha de la prueba de bombeo'
+                        : 'Ingrese la fecha de la prueba de bombeo'
+                    }
+                  />
                 )}
               />
             </LocalizationProvider>
@@ -371,15 +498,19 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               control={control_bombeo}
               defaultValue=""
               rules={{ required: true }}
-              render={({ field }) => (
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
                 <TextField
-                  {...field}
                   label="Descripción"
                   size="small"
                   margin="dense"
                   disabled={false}
                   fullWidth
                   multiline
+                  value={value}
+                  onChange={onChange}
                   rows={2}
                   required={true}
                   error={!!errors_bombeo.descripcion}
@@ -427,9 +558,26 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               </Grid>
             </>
           ) : null}
+          {rows_sesion_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Secciones" />
+              </Grid>
+              <Grid item xs={12}>
+                <DataGrid
+                  autoHeight
+                  rows={rows_sesion_bombeo}
+                  columns={columns_sesion}
+                  getRowId={(row) => uuidv4()}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </Grid>
+            </>
+          )}
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
-              Registro de Sección de prueba de bombeo
+              Sección de prueba de bombeo
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -492,6 +640,25 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
+          {rows_data_sesion_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Datos de la medición" />
+              </Grid>
+              <Grid item xs={12}>
+                <>
+                  <DataGrid
+                    autoHeight
+                    rows={rows_data_sesion_bombeo}
+                    columns={columns_data_sesion}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </>
+              </Grid>
+            </>
+          )}
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Registro de medición
@@ -638,7 +805,26 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               </Grid>
             </>
           )}
-          <Grid item xs={12}></Grid>
+          {/* <Grid item xs={12}></Grid> */}
+          {rows_anexos_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Anexos Asociados" />
+              </Grid>
+              <Grid item xs={12}>
+                <>
+                  <DataGrid
+                    autoHeight
+                    rows={rows_anexos_bombeo}
+                    columns={columns_anexos}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </>
+              </Grid>
+            </>
+          )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
