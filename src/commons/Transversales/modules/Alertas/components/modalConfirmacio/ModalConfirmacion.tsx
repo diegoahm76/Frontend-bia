@@ -39,7 +39,7 @@ export const ModalConfirmacionArchivar: React.FC= () => {
     return (
         <div>
             <Button
-                style={{ margin: 3, marginTop: 10, marginRight: 10 }}
+  
                 onClick={handleClick}
             >
                 <ArchiveIcon /> 

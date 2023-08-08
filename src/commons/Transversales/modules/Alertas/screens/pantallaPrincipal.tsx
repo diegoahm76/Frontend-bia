@@ -6,9 +6,9 @@ import { Title } from '../../../../../components/Title';
 import type { InterAlertas } from '../interfaces/interfacesAlertas';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { ButtonOfDialog } from '../components/dialogo/dialogo';
-import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import { ModalConfirmacionArchivar } from '../components/modalConfirmacio/ModalConfirmacion';
 import { ModalInfoAlerta } from '../components/modalInformacionAlenta/InfoAlerta';
+import { SuspenderAlerta } from '../components/SuspenderAlerta/SuspenderAlerta';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
@@ -61,18 +61,21 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       renderCell: (params: any) => (
         <ButtonGroup variant="text">
           <IconButton
-            onClick={() => {
-              handleDoNotDisturbOn();
-            }}
+            // onClick={() => {
+            //   handleDoNotDisturbOn();
+            // }}
           >
-            <DoNotDisturbOnIcon />
+            <SuspenderAlerta />
           </IconButton>
           <IconButton
-            onClick={() => {
-              handleArchive();
-            }}
+            // onClick={() => {
+            //   handleArchive();
+            // }}
           >
             <ModalConfirmacionArchivar />
+          </IconButton>
+          <IconButton>
+            <ModalInfoAlerta/>
           </IconButton>
         </ButtonGroup>
       ),
@@ -80,15 +83,15 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   ];
 
   // Funciones para manejar los clics en los iconos
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const handleDoNotDisturbOn = (): void => {
-    console.log(`Clic en DoNotDisturbOnIcon para el id`);
-  };
+  // // eslint-disable-next-line @typescript-eslint/naming-convention
+  // const handleDoNotDisturbOn = (): void => {
+  //   console.log(`Clic en DoNotDisturbOnIcon para el id`);
+  // };
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const handleArchive = (): void => {
-    console.log(`Clic en ArchiveIcon para el id`);
-  };
+  // // eslint-disable-next-line @typescript-eslint/naming-convention
+  // const handleArchive = (): void => {
+  //   console.log(`Clic en ArchiveIcon para el id`);
+  // };
 
   return (
     <Grid
@@ -122,7 +125,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_persona}
           />
-          <ModalInfoAlerta />
+         
         </Box>
       </Grid>
     </Grid>
