@@ -3,10 +3,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
+import { post_prueba_bombeo } from '../../../request/request';
+import { control_error, control_success } from '../../../../../../helpers';
+import { useAppSelector } from '../../../../../../hooks';
+import { DataContext } from '../../../context/contextData';
 // import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 export const use_register_bombeo_hook = () => {
@@ -46,6 +50,33 @@ export const use_register_bombeo_hook = () => {
     },
   });
 
+  const {
+    archivos,
+    nombres_archivos,
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    id_sesion_bombeo,
+    rows_anexos_bombeo,
+    fetch_data_general_sesion,
+    set_id_bombeo_general,
+    set_id_sesion_bombeo,
+    set_info_sesion_bombeo,
+    set_archivos,
+    set_nombres_archivos,
+    fetch_data_sesion,
+    set_info_data_sesion_bombeo,
+    fetch_data_anexos_bombeo,
+    // * editar archivo
+  } = useContext(DataContext);
+
+  const {
+    id_instrumento: id_instrumento_slice,
+    // id_cartera_aforos: id_cartera_aforos_slice,
+  } = useAppSelector((state) => state.instrumentos_slice);
+
   // Datos generales
 
   const [fecha_prubea_bombeo, set_fecha_prubea_bombeo] = useState<Dayjs | null>(
@@ -67,6 +98,7 @@ export const use_register_bombeo_hook = () => {
       switch (fieldName) {
         case 'fecha_prueba':
           set_fecha_prubea_bombeo(value);
+          setValue_bombeo('fecha_prueba_bombeo', value.format('YYYY-MM-DD'));
           break;
         default:
           break;
@@ -82,6 +114,7 @@ export const use_register_bombeo_hook = () => {
   const handle_agregar = () => {
     // obtener los valores actuales del formulario
     const values = getValues_bombeo();
+    console.log(values, 'values');
 
     // convertir el tiempo transcurrido a milisegundos
     const tiempoTranscurridoMs =
@@ -127,12 +160,78 @@ export const use_register_bombeo_hook = () => {
   };
 
   const [is_saving, set_is_saving] = useState<boolean>(false);
+  const [id_sesion_prueba_bombeo, set_id_sesion_prueba_bombeo] = useState<
+    number | null
+  >(null);
+
+  const limpiar_formulario = (): void => {
+    set_row_prueba([]);
+    set_row_data_prueba([]);
+    setValue_bombeo('id_sesion_prueba_bombeo', '');
+    setValue_bombeo('hora_inicio', '');
+    setValue_bombeo('cod_tipo_sesion', '');
+    setValue_bombeo('tiempo_transcurrido', '');
+    setValue_bombeo('nivel', '');
+    setValue_bombeo('resultado', '');
+    setValue_bombeo('caudal', '');
+    setHoraPruebaBombeo(null);
+    set_nombres_archivos([]);
+    set_archivos([]);
+  };
+
   const onSubmit = handleSubmit_bombeo(async (data: any) => {
     try {
       set_is_saving(true);
+      set_id_sesion_prueba_bombeo(null);
       console.log(data);
-    } catch (error) {
-      console.log(error);
+      console.log(row_prueba);
+      console.log(row_data_prueba);
+      console.log(archivos);
+      console.log(nombres_archivos);
+      data.id_sesion_prueba_bombeo = id_sesion_prueba_bombeo;
+      data.id_instrumento = id_instrumento_slice;
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
+      const codigo_archivo = 'LAB';
+      const archivos_aforo = new FormData();
+
+      archivos.forEach((archivo: any, index: any) => {
+        if (archivo != null) {
+          archivos_aforo.append(`ruta_archivo`, archivo);
+          archivos_aforo.append(`nombre_archivo`, nombres_archivos[index]);
+        }
+      });
+      archivos_aforo.append('id_instrumento', String(id_instrumento_slice));
+      archivos_aforo.append('cod_tipo_de_archivo', codigo_archivo);
+
+      await post_prueba_bombeo(
+        data,
+        row_data_prueba,
+        row_prueba,
+        archivos_aforo,
+        archivos
+      ).then((response) => {
+        set_id_sesion_prueba_bombeo(
+          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
+        );
+        set_id_bombeo_general(
+          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
+        );
+        if (id_bombeo_general) {
+          void fetch_data_general_sesion();
+        }
+      });
+      control_success('Prueba de bombeo guardada correctamente');
+      limpiar_formulario();
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail ||
+          'Ha ocurrido un error, vuelva a intentarlo más tarde'
+      );
+      console.log(error, 'error');
     } finally {
       set_is_saving(false);
     }
@@ -143,6 +242,7 @@ export const use_register_bombeo_hook = () => {
     horaPruebaBombeo,
     row_prueba,
     row_data_prueba,
+    setHoraPruebaBombeo,
     set_fecha_prubea_bombeo,
     handle_agregar,
     handle_date_change,
@@ -161,5 +261,21 @@ export const use_register_bombeo_hook = () => {
     // * onSubmit
     onSubmit,
     is_saving,
+
+    // * datos de sesion
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    id_sesion_bombeo,
+    rows_anexos_bombeo,
+    set_id_sesion_bombeo,
+    set_info_data_sesion_bombeo,
+    set_info_sesion_bombeo,
+    set_id_bombeo_general,
+    fetch_data_general_sesion,
+    fetch_data_sesion,
+    fetch_data_anexos_bombeo,
   };
 };
