@@ -33,25 +33,31 @@ import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUni
 import Select from 'react-select';
 
 import { columnsModalBusAvanLider } from './columns/columsBusAvanLider';
-import { useAppSelector } from '../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector
+} from '../../../../../../../../../../hooks';
 import { getPersonaByFilter } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
+import { get_list_busqueda_avanzada_personas, set_asignacion_lideres_current } from '../../../../toolkit/LideresSlices/LideresSlice';
 
 export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
   // * dispatch to use in the component * //
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   //* -------- hook declaration -------- *//
   const {
     control_buscar_asignaciones_lideres_por_unidad,
     reset_buscar_asignaciones_lideres_por_unidad,
-    watch_asignaciones_lider_by_unidad_value,
+    watch_asignaciones_lider_by_unidad_value
   } = useLideresXUnidadOrganizacional();
 
   //* -------- use selector declaration -------- *//
-  const { organigrama_lideres_current, unidad_current } = useAppSelector(
-    (state) => state.lideres_slice
-  );
+  const {
+    organigrama_lideres_current,
+    unidad_current,
+    busqueda_avanzada_personas_list
+  } = useAppSelector((state) => state.lideres_slice);
 
   // ? useContext declaration
   const {
@@ -79,9 +85,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
 
   const closeModal = (): any => {
     closeModalBusquedaPersona();
-    /* 
     dispatch(get_list_busqueda_avanzada_personas([]));
-    resetFunction(); */
+    resetFunction();
     console.log('Im the close function');
   };
 
@@ -102,7 +107,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               //  dispatch(set_organigrama_lideres_current(params.row));
 
               // ! ACTUALIZA LA ASIGNACION DE LIDER
-              // dispatch(set_asignacion_lideres_current(params.row));
+              dispatch(set_asignacion_lideres_current(params.row));
 
               // ! ACTUALIZA LA LISTA DE UNIDADES ORGANIZACIONALES
               /* void get_asignaciones_lideres_by_id_organigrama_service(52).then(
@@ -123,12 +128,12 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                     });
               */
 
-              // closeModal();
+              closeModal();
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
               <HowToRegIcon
-                titleAccess="Ver Organigrama"
+                titleAccess="Seleccionar Persona"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -158,12 +163,12 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
               watch_asignaciones_lider_by_unidad_value?.primer_apellido,
               watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
-              unidad_current.value,
+              unidad_current?.value,
               setLoadingButton,
               resetFunction
-            ); /* .then((data: any) => {
+            ).then((data: any) => {
               dispatch(get_list_busqueda_avanzada_personas(data));
-            }); */
+            });
           }}
         >
           <DialogTitle>
@@ -386,7 +391,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={[]}
+              rows={busqueda_avanzada_personas_list}
               columns={columns_busqueda_avanzada_persona}
               pageSize={5}
               rowsPerPageOptions={[7]}

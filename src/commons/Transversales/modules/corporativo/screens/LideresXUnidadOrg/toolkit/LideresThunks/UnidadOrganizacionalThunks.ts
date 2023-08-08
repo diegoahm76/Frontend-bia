@@ -140,7 +140,7 @@ export const getPersonaByFilter = async (
   segundo_nombre: string,
   primer_apellido: string,
   segundo_apellido: string,
-  id_unidad_organizacional_actual: string,
+  id_unidad_organizacional_actual: number,
   control_loading: any,
   clean_function: any
 ): Promise<any> => {
@@ -159,13 +159,13 @@ export const getPersonaByFilter = async (
       `;
     const { data } = await api.get(url);
 
-    if (data.data.length === 0) {
+   /* if (data.data.length === 0) {
       control_warning(
         'No se encontraron resultados que coincidan con la busqueda'
       );
       return [];
     }
-
+*/
     control_success(data.detail);
     return data.data;
   } catch (error: any) {
