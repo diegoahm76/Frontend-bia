@@ -15,7 +15,6 @@ import { set_asignacion_lideres_current } from '../../../toolkit/LideresSlices/L
 import { BusquedaAsignacionesLideresModal } from '../components/BusquedaAsignacionesLideres/BusquedaAsignacionesLideresModal';
 import { ModalContextLideres } from '../../../context/ModalContextLideres';
 
-
 export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   //* dispatch declarations
   const dispatch = useAppDispatch();
@@ -26,7 +25,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
   );
 
   //* CONTEXT
-  const { openModalBusquedaAvanzadaLideres } = useContext(ModalContextLideres);
+  const { openModalBusquedaPersona } = useContext(ModalContextLideres);
 
   const columnsLideres = [
     {
@@ -87,7 +86,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
             color="primary"
             variant="outlined"
             startIcon={<SearchIcon />}
-            onClick={openModalBusquedaAvanzadaLideres}
+            onClick={openModalBusquedaPersona}
           >
             BUSCAR ASIGNACIONES DE LÍDERES
           </Button>

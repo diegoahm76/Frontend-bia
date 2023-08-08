@@ -9,6 +9,12 @@ export interface ModalContextState {
   openModalBusquedaAvanzadaLideres: () => void;
   closeModalBusquedaAvanzadaLideres: () => void;
 
+  //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+  modalBusquedaPersona: false;
+  openModalBusquedaPersona: () => void;
+  closeModalBusquedaPersona: () => void;
+
+
   //* LOAD BUTTONS
   loadingButton: boolean;
   setLoadingButton: (value: boolean) => void;

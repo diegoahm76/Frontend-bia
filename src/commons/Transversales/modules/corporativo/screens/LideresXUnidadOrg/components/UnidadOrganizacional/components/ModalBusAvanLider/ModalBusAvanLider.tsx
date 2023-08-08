@@ -45,7 +45,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
   const {
     control_buscar_asignaciones_lideres_por_unidad,
     reset_buscar_asignaciones_lideres_por_unidad,
-    watch_asignaciones_lider_by_unidad_value
+    watch_asignaciones_lider_by_unidad_value,
+    watch_seleccionar_lideres
   } = useLideresXUnidadOrganizacional();
 
   //* -------- use selector declaration -------- *//
@@ -55,9 +56,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
 
   // ? useContext declaration
   const {
-    //  modalBusquedaAvanzadaLideres,
-    // openModalBusquedaAvanzadaLideres,
-    // closeModalBusquedaAvanzadaLideres,
+    modalBusquedaPersona,
+    closeModalBusquedaPersona,
     loadingButton,
     setLoadingButton
   } = useContext(ModalContextLideres);
@@ -79,7 +79,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
   };
 
   const closeModal = (): any => {
-    /* closeModalBusquedaAvanzadaLideres();
+    closeModalBusquedaPersona();
+    /* 
     dispatch(get_list_busqueda_avanzada_personas([]));
     resetFunction(); */
     console.log('Im the close function');
@@ -141,7 +142,12 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
 
   return (
     <>
-      <Dialog fullWidth maxWidth="md" open={true} onClose={closeModal}>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={modalBusquedaPersona}
+        onClose={closeModal}
+      >
         <Box
           component="form"
           onSubmit={(e) => {
@@ -155,8 +161,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               watch_asignaciones_lider_by_unidad_value?.primer_apellido,
               watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
               //* revisar esto, ya que se está enviando el valor seleccionado y no el objeto completo o el id de la unidad organizacional correspondiente
-              watch_asignaciones_lider_by_unidad_value
-                ?.id_unidad_organizacional_actual?.value,
+              watch_seleccionar_lideres?.value,
               setLoadingButton,
               resetFunction
             ); /* .then((data: any) => {

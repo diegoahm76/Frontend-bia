@@ -19,6 +19,11 @@ const ModalContextLideres = createContext<ModalContextState>({
   openModalBusquedaAvanzadaLideres: () => {},
   closeModalBusquedaAvanzadaLideres: () => {},
 
+  //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+  modalBusquedaPersona: false,
+  openModalBusquedaPersona: () => {},
+  closeModalBusquedaPersona: () => {},
+
   // ? ----- | LOAD BUTTONS | -----
   loadingButton: false,
   setLoadingButton: () => {}
@@ -45,6 +50,15 @@ const ModalProviderLideres: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_AVANZADA_LIDERES' });
   }, []);
 
+  //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+  const openModalBusquedaPersona = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_BUSQUEDA_PERSONA' });
+  }, []);
+
+  const closeModalBusquedaPersona = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_PERSONA' });
+  }, []);
+
   // ? ----- | LOAD BUTTONS | -----
   const setLoadingButton = useCallback((loading: boolean) => {
     dispatch({ type: 'SET_LOADING_BUTTON', payload: loading });
@@ -63,6 +77,11 @@ const ModalProviderLideres: FC<any> = ({ children }: any) => {
         modalBusquedaAvanzadaLideres: state.modalBusquedaAvanzadaLideres,
         openModalBusquedaAvanzadaLideres,
         closeModalBusquedaAvanzadaLideres,
+
+        //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+        modalBusquedaPersona: state.modalBusquedaPersona,
+        openModalBusquedaPersona,
+        closeModalBusquedaPersona,
 
         // ? ----- | LOAD BUTTONS | -----
         loadingButton: state.loadingButton,
