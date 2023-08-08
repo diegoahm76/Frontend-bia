@@ -32,7 +32,8 @@ import { LoadingButton } from '@mui/lab';
 import SyncIcon from '@mui/icons-material/Sync';
 import {
   get_list_asignaciones_lideres,
-  set_asignacion_lideres_current
+  set_asignacion_lideres_current,
+  set_unidad_current
 } from '../../../../toolkit/LideresSlices/LideresSlice';
 import { BusqueAsignacionesLiderModal } from '../ModalBusAvanLider/ModalBusAvanLider';
 export const SeleccionLider = (): JSX.Element => {
@@ -257,6 +258,7 @@ export const SeleccionLider = (): JSX.Element => {
                             console.log(res);
                             dispatch(set_catalog_trd_action(res));
                           }); */
+                          dispatch(set_unidad_current(selectedOption));
                           console.log(selectedOption);
                           onChange(selectedOption);
                         }}
@@ -311,6 +313,7 @@ export const SeleccionLider = (): JSX.Element => {
                           });
 */
                           onChange(selectedOption);
+                          
                         }}
                         isDisabled={
                           false

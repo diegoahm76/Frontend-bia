@@ -64,6 +64,10 @@ export const lideres_slice = createSlice({
       state.unidades_list = action.payload;
     },
 
+    set_unidad_current: (state: any, action: PayloadAction<any>) => {
+      state.unidad_current = action.payload;
+    },
+
     // ? busqueda avanzada personas interaction
     get_list_busqueda_avanzada_personas: (
       state: any,
@@ -85,6 +89,7 @@ export const {
 
   //* unidades interaction
   get_list_unidades,
+  set_unidad_current,
 
   //* busqueda avanzada personas interaction
   get_list_busqueda_avanzada_personas

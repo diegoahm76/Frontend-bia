@@ -46,11 +46,13 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
     control_buscar_asignaciones_lideres_por_unidad,
     reset_buscar_asignaciones_lideres_por_unidad,
     watch_asignaciones_lider_by_unidad_value,
-    watch_seleccionar_lideres_value,
+    watch_seleccionar_lideres_value
   } = useLideresXUnidadOrganizacional();
 
+  console.log('seleccionar lideres value lineaaaa, ', watch_seleccionar_lideres_value);
+
   //* -------- use selector declaration -------- *//
-  const { organigrama_lideres_current } = useAppSelector(
+  const { organigrama_lideres_current, unidad_current } = useAppSelector(
     (state) => state.lideres_slice
   );
 
@@ -162,7 +164,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               e: watch_asignaciones_lider_by_unidad_value?.primer_apellido,
               f: watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
               //* revisar esto, ya que se está enviando el valor seleccionado y no el objeto completo o el id de la unidad organizacional correspondiente
-              g: watch_seleccionar_lideres_value,
+              g: unidad_current,
             };
             console.log(dataToGet);
             void getPersonaByFilter(
