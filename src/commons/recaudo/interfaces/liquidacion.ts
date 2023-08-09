@@ -23,6 +23,7 @@ export interface Expediente {
   numero_resolucion: string;
   cod_auto: string;
   cod_recurso: string;
+  liquidado: boolean;
   id_deudor: number;
 }
 

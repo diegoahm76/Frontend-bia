@@ -2,9 +2,10 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction, type ChangeEvent, useEffect, useMemo } from 'react';
 import type { OpcionLiquidacion } from "../../../interfaces/liquidacion";
-import { api } from "../../../../../api/axios";
+// import { api } from "../../../../../api/axios";
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
+import axios from "axios";
 
 interface IProps {
   is_modal_active: boolean;
@@ -22,7 +23,7 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
   const opcion_liquidacion: OpcionLiquidacion = useMemo(() => opciones_liquidacion.filter(opcion_liquidacion => opcion_liquidacion.id === Number(id_opcion_liquidacion))[0], [id_opcion_liquidacion]);
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/opciones-liquidacion-base/')
+    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base/')
       .then((response) => {
         set_opciones_liquidacion(response.data.data);
       })

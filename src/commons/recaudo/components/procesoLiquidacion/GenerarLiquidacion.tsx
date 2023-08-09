@@ -1,12 +1,14 @@
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
-import type { Expediente, FormLiquidacion } from "../../interfaces/liquidacion";
-import { useEffect, useState } from 'react';
+import type { Expediente, FormDetalleLiquidacion, FormLiquidacion } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
+import { useEffect, useState } from "react";
 import { api } from "../../../../api/axios";
+// import { api } from "../../../../api/axios";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
   nombre_deudor: string;
+  form_detalle_liquidacion: FormDetalleLiquidacion[];
   handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
   handle_submit_liquidacion: () => void;
@@ -31,11 +33,13 @@ const periodos = [
 export const GenerarLiquidacion: React.FC<IProps> = ({
   form_liquidacion,
   nombre_deudor,
+  form_detalle_liquidacion,
   handle_input_form_liquidacion_change,
   handle_select_form_liquidacion_change,
   handle_submit_liquidacion
 }: IProps) => {
   const [expedientes_deudor, set_expedientes_deudor] = useState<Expediente[]>([]);
+  const [expediente_liquidado, set_expediente_liquidado] = useState(false);
 
   useEffect(() => {
     if (form_liquidacion.id_deudor) {
@@ -48,6 +52,18 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         });
     }
   }, [form_liquidacion.id_deudor]);
+
+  useEffect(() => {
+    if (form_liquidacion.id_expediente) {
+      api.get(`recaudo/liquidaciones/expedientes/${form_liquidacion.id_expediente}`)
+        .then((response) => {
+          set_expediente_liquidado(response.data.data.liquidado);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+  }, [form_liquidacion.id_expediente]);
 
   return (
     <>
@@ -147,17 +163,22 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         <Typography color='black' variant="h4">Total de la obligacion</Typography>
         <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>${form_liquidacion.valor}</Typography>
       </Grid>
+
       <Grid container justifyContent={'center'}>
         <Grid item xs={12} sm={3}>
-          <Button
-            color="primary"
-            variant="contained"
-            startIcon={<SaveIcon />}
-            fullWidth
-            onClick={handle_submit_liquidacion}
-          >
-            Guardar nueva liquidación
-          </Button>
+          {expediente_liquidado ?
+            <Typography variant="h5" color={'green'} sx={{ textAlign: 'center' }}>Expediente ya liquidado</Typography> :
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              fullWidth
+              disabled={form_liquidacion.id_deudor === '' || form_liquidacion.id_expediente === '' || form_liquidacion.fecha_liquidacion === '' || form_liquidacion.vencimiento === '' || form_liquidacion.periodo_liquidacion === '' || form_detalle_liquidacion.length === 0}
+              onClick={handle_submit_liquidacion}
+            >
+              Guardar nueva liquidación
+            </Button>
+          }
         </Grid>
       </Grid>
     </>

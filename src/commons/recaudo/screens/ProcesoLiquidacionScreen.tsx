@@ -27,7 +27,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/deudores/')
+    api.get('recaudo/liquidaciones/deudores')
       .then((response) => {
         set_deudores(response.data.data);
       })
@@ -37,7 +37,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   }, []);
 
   const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab(newValue)
+    set_position_tab(newValue);
+    if (newValue === '1') {
+      set_form_liquidacion(previousState => ({ ...previousState, id_expediente: '' }));
+    }
   }
 
   const handle_input_form_liquidacion_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -60,6 +63,16 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
           console.log(response);
+          set_position_tab('1');
+          set_form_liquidacion({
+            id_deudor: '',
+            id_expediente: '',
+            fecha_liquidacion: '',
+            vencimiento: '',
+            periodo_liquidacion: '',
+            valor: 0,
+          });
+          set_form_detalle_liquidacion([]);
         })
         .catch((error) => {
           console.log(error);
@@ -218,6 +231,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 <GenerarLiquidacion
                   form_liquidacion={form_liquidacion}
                   nombre_deudor={nombre_deudor}
+                  form_detalle_liquidacion={form_detalle_liquidacion}
                   handle_input_form_liquidacion_change={handle_input_form_liquidacion_change}
                   handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
                   handle_submit_liquidacion={handle_submit_liquidacion}
