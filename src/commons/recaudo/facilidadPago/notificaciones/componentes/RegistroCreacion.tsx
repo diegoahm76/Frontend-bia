@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, Stack, TextField } from '@mui/material';
-import { Add, Close, CloudUpload } from '@mui/icons-material';
+import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
+import { Add, CloudUpload } from '@mui/icons-material';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { use_form } from '../../../../../hooks/useForm';
 import { post_notificacion_fisica, post_notificacion_email_edicto, get_datos_remitente } from '../requests/requests';
 import { ModuloDireccion } from './ModuloDireccion';
+import { DialogoRegistro } from '../../componentes/DialogoRegistro';
 
 export const Email: React.FC = () => {
   const [file_name, set_file_name] = useState('');
@@ -174,32 +175,13 @@ export const Email: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la notificación con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Notificación fue Registrada con Éxito'
+        tipo='Notificación'
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }
@@ -408,32 +390,13 @@ export const Fisico: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la notificación con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Notificación fue Registrada con Éxito'
+        tipo='Notificación'
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }
@@ -595,32 +558,13 @@ export const Edicto: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la notificación con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Notificación fue Registrada con Éxito'
+        tipo='Notificación'
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }
