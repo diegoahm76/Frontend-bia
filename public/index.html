@@ -44,8 +44,87 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <style>
+      /* #next-app-container {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        z-index: 9999;
+      }
+
+      #next-app-container iframe {
+        width: 300px;
+        height: 300px;
+        border: 0;
+      }*/
+
+      #next-app-container .loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 1;
+      }
+
+      #next-app-container .loader .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #next-app-container button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #fff;
+        border: none;
+        color: #000;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      #next-app-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        font-size: 24px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 9999;
+      }
+    </style>
   </body>
-  <script>
+  <!--  <script>
     let isNextAppOpen = false;
     const nextAppContainer = document.getElementById('next-app-container');
     const nextAppIcon = document.getElementById('next-app-icon');
@@ -64,6 +143,43 @@
         nextAppCloseButton.id = 'next-app-close-button';
         nextAppCloseButton.textContent = 'Cerrar';
         nextAppCloseButton.style = 'position: absolute; top: 0; right: 0;';
+        nextAppContainer.appendChild(nextAppCloseButton);
+        nextAppCloseButton.addEventListener('click', () => {
+          nextAppContainer.removeChild(nextAppIframe);
+          nextAppContainer.removeChild(nextAppCloseButton);
+          isNextAppOpen = false;
+        });
+      }
+    });
+  </script>-->
+
+  <script>
+    let isNextAppOpen = false;
+    const nextAppContainer = document.getElementById('next-app-container');
+    const nextAppIcon = document.getElementById('next-app-icon');
+    const nextAppIframe = document.createElement('iframe');
+    nextAppIframe.style =
+      'width: 300px; height: 300px; border: 0; position: absolute; bottom: 0; left: 0;';
+    nextAppIframe.src = 'https://rick-morty-app-c905f.firebaseapp.com/'; // Reemplaza con la URL de tu proyecto de Next.js
+    nextAppIframe.addEventListener('load', () => {
+      nextAppContainer.removeChild(nextAppContainer.querySelector('.loader'));
+    });
+    nextAppIcon.addEventListener('click', () => {
+      if (isNextAppOpen) {
+        nextAppContainer.removeChild(nextAppIframe);
+        isNextAppOpen = false;
+      } else {
+        const loader = document.createElement('div');
+        loader.classList.add('loader');
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner');
+        loader.appendChild(spinner);
+        nextAppContainer.appendChild(loader);
+        nextAppContainer.appendChild(nextAppIframe);
+        isNextAppOpen = true;
+        const nextAppCloseButton = document.createElement('button');
+        nextAppCloseButton.id = 'next-app-close-button';
+        nextAppCloseButton.textContent = 'Cerrar';
         nextAppContainer.appendChild(nextAppCloseButton);
         nextAppCloseButton.addEventListener('click', () => {
           nextAppContainer.removeChild(nextAppIframe);
