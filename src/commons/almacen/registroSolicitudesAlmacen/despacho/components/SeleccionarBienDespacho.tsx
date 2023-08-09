@@ -3,7 +3,7 @@ import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import SeleccionarModeloDialogForm from '../../../../../components/partials/getModels/SeleccionarModeloDialogForm';
 import { type GridColDef } from '@mui/x-data-grid';
-import type { IObjBienDespacho, IObjBienConsumo, } from '../interfaces/despacho';
+import type { IObjBienDespacho, IObjBienConsumo, IObjBienesSolicitud } from '../interfaces/despacho';
 import {
   set_current_bien, set_bienes_despacho, set_bienes,
   initial_state_current_bien,
@@ -35,6 +35,7 @@ const SeleccionarBienDespacho = () => {
     useState<boolean>(false);
   const [action, set_action] = useState<string>('agregar');
   const [aux_insumos, set_aux_insumos] = useState<IObjBienDespacho[]>([]);
+  const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
 
   const {
     current_bien,
@@ -204,9 +205,9 @@ const SeleccionarBienDespacho = () => {
         <>
           <Tooltip title="Borrar">
             <IconButton
-            //   onClick={() => {
-            //     delete_bien_despacho(params.row);
-            //   }}
+              onClick={() => {
+                delete_bien_despacho(params.row);
+              }}
             >
               <Avatar
                 sx={{
@@ -421,7 +422,22 @@ const SeleccionarBienDespacho = () => {
       control_error('Debe seleccionar el bien');
     }
   };
+  const delete_bien_despacho = (item: IObjBienesSolicitud): void => {
+    const bien: IObjBienConsumo | undefined = bienes.find((p: IObjBienConsumo) => p.id_bien === item.id_bien)
+    console.log("bien", bien)
+    if (bien !== undefined) {
+      console.log(bien)
+      dispatch(set_current_bien(bien))
+    }
+    const aux_items: IObjBienesSolicitud[] = []
+    aux_bienes_solicitud.forEach((option) => {
+      if (option.id_bien !== item.id_bien) {
+        aux_items.push(option)
+      }
+    })
+    set_aux_bienes_solicitud(aux_items)
 
+  };
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>

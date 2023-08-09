@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Chip, Grid } from '@mui/material';
 import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import { useAppDispatch, useAppSelector, } from '../../../../../hooks';
 import { set_current_entrega, set_entregas } from '../store/slice/indexEntrega';
@@ -20,7 +20,10 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
     const dispatch = useAppDispatch();
     const { entregas, current_entrega, persona_entrega } = useAppSelector((state: { entrega_otros: IEntrega; }) => state.entrega_otros)
     const [file, set_file] = useState<any>(null);
-    const [file_name, set_file_name] = useState<any>('');
+    const [file_name, set_file_name] = useState<string>('');
+
+    useEffect(() => { console.log(entregas) }, [entregas])
+
     useEffect(() => {
         if (file !== null) {
             if ('name' in file) {
@@ -39,20 +42,24 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
         }
     }, [file]);
     useEffect(() => {
-        if (current_entrega.id_entrada_almacen !== null) {
-            if (
-                current_entrega.ruta_archivo_doc_con_recibido !== null &&
-                current_entrega.ruta_archivo_doc_con_recibido !== undefined
-            ) {
-                set_file_name(String(current_entrega.ruta_archivo_doc_con_recibido));
+
+        if (current_entrega.ruta_archivo_doc_con_recibido !== null) {
+            if (typeof current_entrega.ruta_archivo_doc_con_recibido === 'string') {
+                const name =
+                    current_entrega.ruta_archivo_doc_con_recibido?.split('/').pop() ?? '';
+                set_file_name(name);
             }
+        } else {
+            set_file_name('');
         }
+
     }, [current_entrega]);
+
     const columns_despacho: GridColDef[] = [
-        { field: 'numero_despacho_consumo', headerName: 'Número de despacho', width: 100 },
+        { field: 'numero_despacho_consumo', headerName: 'Número de entrega', width: 200 },
         {
             field: 'fecha_despacho',
-            headerName: 'Fecha de despacho',
+            headerName: 'Fecha de entrega',
             width: 400,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -64,12 +71,24 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
         {
             field: 'motivo',
             headerName: 'Motivo',
-            width: 400,
+            width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
                 </div>
             ),
+        },
+        {
+            field: 'despacho_anulado',
+            headerName: 'Entrega anulada',
+            width: 250,
+            renderCell: (params) => {
+                return params.row.despacho_anulado === true ? (
+                    <Chip size="small" label="Anulada" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="No" color="error" variant="outlined" />
+                );
+            },
         },
 
     ];
@@ -127,6 +146,10 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                             helper_text: '',
                             set_value: set_file,
                             file_name,
+                            value_file:
+                                current_entrega.id_despacho_consumo !== null
+                                    ? current_entrega.ruta_archivo_doc_con_recibido ?? null
+                                    : null,
                         },
 
 
@@ -137,9 +160,7 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                             control_form: control_entrega,
                             control_name: 'fecha_despacho',
                             default_value: '',
-                            rules: {
-
-                            },
+                            rules: {},
                             label: 'Fecha de entrega',
                             disabled: false,
                             helper_text: '',
@@ -175,8 +196,8 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                             helper_text: '',
                         },
                     ]}
-                    modal_select_model_title="Buscar despacho"
-                    modal_form_filters={[]} />
+                    title_table_modal="Entregas"
+                    modal_form_filters={[]} modal_select_model_title={''} />
             </Grid>
         </>
     );

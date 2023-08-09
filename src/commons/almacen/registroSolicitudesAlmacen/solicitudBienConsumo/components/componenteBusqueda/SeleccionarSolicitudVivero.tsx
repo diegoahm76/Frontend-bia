@@ -34,7 +34,7 @@ const SeleccionarSolicitudVivero = ({
     const dispatch = useAppDispatch();
 
     const columns_solicitudes_vivero: GridColDef[] = [
-        { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
+
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',

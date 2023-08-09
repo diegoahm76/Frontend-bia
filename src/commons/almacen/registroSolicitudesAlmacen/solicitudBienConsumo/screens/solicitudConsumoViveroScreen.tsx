@@ -221,7 +221,7 @@ const SolicitudConsumoViveroScreen = () => {
       </Grid>
 
       <Grid container direction="row" padding={2} spacing={2}>
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1}>
           <FormButton
             variant_button="contained"
             on_click_function={handle_submit(on_submit)}
@@ -265,7 +265,7 @@ const SolicitudConsumoViveroScreen = () => {
           </Button>
 
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1}>
           <Limpiar
             dispatch={dispatch}
             reset_state={reset_state}

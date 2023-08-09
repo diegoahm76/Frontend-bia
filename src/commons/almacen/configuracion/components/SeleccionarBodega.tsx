@@ -177,9 +177,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega, open_modal, set_open_
               option_label: 'label',
               option_key: 'value',
             },
-          ]}
-          modal_select_model_title="Buscar bodega"
-          modal_form_filters={[
+          ]} modal_select_model_title="Buscar bodega" modal_form_filters={[
             {
               datum_type: 'input_controller',
               xs: 12,
@@ -194,6 +192,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega, open_modal, set_open_
               helper_text: '',
             },
           ]}
+
         />
       </Grid>
     </>
