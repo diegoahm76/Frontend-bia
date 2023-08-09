@@ -58,10 +58,10 @@ export const obtener_etapa_meterial_vegetal: any = () => {
 };
 
 // Obtiene bienes para viveros
-export const obtener_bienes_viveros: any = (filtros: {seleccion_vivero: number|string,seleccion_tipo_bien: string,seleccion_material_vegetal: string}) => {
+export const obtener_bienes_viveros: any = (filtros: {seleccion_tipo_bien: string}) => {
   return async () => {
     try {
-      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}&cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}&cod_etapa_lote=${filtros.seleccion_material_vegetal === 'Todos' ? '': filtros.seleccion_material_vegetal}`);
+      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

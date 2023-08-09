@@ -200,7 +200,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       is_modal_active={abrir_modal_bien}
                       set_is_modal_active={set_abrir_modal_bien}
                       title={"Busqueda de bien"}
-                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_vivero, seleccion_tipo_bien, seleccion_material_vegetal }} />
+                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
                   )}
                 </Stack>
               </Grid>

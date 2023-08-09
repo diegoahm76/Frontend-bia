@@ -1,8 +1,9 @@
 /* eslint-disable array-callback-return */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField } from "@mui/material"
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
+import SearchIcon from '@mui/icons-material/Search';
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../components/Title';
@@ -22,17 +23,41 @@ const BuscarBienViveros = (props: IProps) => {
   const dispatch = useAppDispatch();
   const [seleccion_bien, set_seleccion_bien] = useState<any | null>(null);
   const [data_bienes, set_data_bienes] = useState<any[]>([]);
+  const [data_filtrada, set_data_filtrada] = useState<any[]>([]);
+  const [nombre, set_nombre] = useState<string>("");
+  const [codigo_bien, set_codigo_bien] = useState<string>("");
 
   useEffect(() => {
     dispatch(obtener_bienes_viveros(props.filtros)).then((response: any) => {
       response.data.map((resp: any, index: number) => {
         resp.id = index;
-        if(resp.codigo_bien === null || resp.codigo_bien === undefined)
+        if (resp.codigo_bien === null || resp.codigo_bien === undefined)
           resp.codigo_bien = 'N/A';
       });
       set_data_bienes(response.data);
-      });
+      set_data_filtrada(response.data);
+    });
   }, []);
+
+  const cambio_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_nombre(e.target.value);
+  };
+  const cambio_codigo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_codigo_bien(e.target.value);
+  };
+
+  const buscar_bien = (): void => {
+    let data_filter: any = [...data_bienes];
+    if (nombre === "" && codigo_bien === "") {
+      set_data_filtrada(data_bienes);
+      return
+    }
+    if (nombre !== "")
+      data_filter = [...data_filter.filter((da: any) => da.nombre.includes(nombre))];
+    if (codigo_bien !== "")
+      data_filter = [...data_filter.filter((da: any) => da.placa.includes(codigo_bien))];
+    set_data_filtrada(data_filter);
+  }
 
   const seleccionar_bien = (): void => {
     props.seleccion_bien(seleccion_bien);
@@ -67,12 +92,46 @@ const BuscarBienViveros = (props: IProps) => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="Nombre"
+                    helperText=" "
+                    size="small"
+                    required
+                    fullWidth
+                    value={nombre}
+                    onChange={cambio_nombre}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="Código bien"
+                    helperText=" "
+                    size="small"
+                    required
+                    fullWidth
+                    value={codigo_bien}
+                    onChange={cambio_codigo_bien}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                <Stack direction="row" justifyContent="center"
+                >
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<SearchIcon />}
+                    onClick={buscar_bien}>Buscar</Button>
+                </Stack>
+                </Grid>
+              </Grid>
               <Grid item xs={12} sm={12}>
                 <Title title="Resultados" />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
                     <DataTable
-                      value={data_bienes}
+                      value={data_filtrada}
                       sortField="codigo_bien"
                       stripedRows
                       paginator
