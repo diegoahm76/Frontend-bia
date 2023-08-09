@@ -7,7 +7,6 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
     const chart_data: ApexOptions =  {
-        series: [44, 55, 13, 43, 22],
         chart: {
         width: 380,
         type: 'pie',
