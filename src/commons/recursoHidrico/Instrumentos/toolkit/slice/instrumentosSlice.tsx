@@ -85,6 +85,10 @@ const initialState = {
     crear: false,
     editar: false,
   },
+  mode_editar_bombeo: {
+    crear: true,
+    editar: false,
+  },
 };
 
 export const instrumentos_slice = createSlice({
@@ -188,6 +192,10 @@ export const instrumentos_slice = createSlice({
     set_current_id_prueba_bombeo: (state, action: PayloadAction<number>) => {
       state.id_prueba_bombeo = action.payload;
     },
+    set_current_mode_editar_bombeo: (state, action: PayloadAction<any>) => {
+      state.mode_editar_bombeo.crear = action.payload.crear;
+      state.mode_editar_bombeo.editar = action.payload.editar;
+    },
   },
 });
 // {...state, mode: {...state.mode, ver: true}}
@@ -204,4 +212,5 @@ export const {
   set_current_mode_bombeo,
   set_current_id_prueba_bombeo,
   set_current_id_cartera_aforos,
+  set_current_mode_editar_bombeo,
 } = instrumentos_slice.actions;

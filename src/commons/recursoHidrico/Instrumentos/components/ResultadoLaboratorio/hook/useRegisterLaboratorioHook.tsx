@@ -206,6 +206,10 @@ export const use_register_laboratorio_hook = () => {
   ): Promise<void> => {
     try {
       if (id_pozo) {
+        console.log(
+          'id_pozo entrooooooooooooooooooooooooooooooooooooo',
+          id_pozo
+        );
         const response = await get_data_pozo_id(id_pozo);
         if (response?.length > 0) {
           const data_pozo = response.map((item: IpropsPozos) => ({
@@ -213,7 +217,6 @@ export const use_register_laboratorio_hook = () => {
             label: ` ${item.cod_pozo} - ${item.nombre} `,
           }));
           set_pozos_selected(data_pozo);
-          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
       }
     } catch (err: any) {
@@ -472,7 +475,9 @@ export const use_register_laboratorio_hook = () => {
     set_fecha_analisis(null);
   };
 
-  const [selectedRow_edit, setSelectedRow_edit] = useState<Laboratorio | null>(null);
+  const [selectedRow_edit, setSelectedRow_edit] = useState<Laboratorio | null>(
+    null
+  );
 
   const handleEdit_select = (row: any): void => {
     setSelectedRow_edit(row);
@@ -657,7 +662,6 @@ export const use_register_laboratorio_hook = () => {
     handleEdit_select,
     handleDelete_select,
     setSelectedRow_edit,
-
 
     // *Autocomplete
     cuenca_select,

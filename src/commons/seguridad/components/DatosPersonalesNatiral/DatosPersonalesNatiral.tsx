@@ -335,7 +335,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         {/* Datos de residencia */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS DE RESIDENCIA" />
+            <Title title="Datos de residencia" />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <CustomSelect
@@ -422,7 +422,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         {/* Datos de notificación */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS DE NOTIFICACIÓN" />
+            <Title title="Datos de notificación" />
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
@@ -552,7 +552,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         {/* Datos adicionales (opcionales) */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS ADICIONALES (opcionales)" />
+            <Title title="Datos de notificación (opcionales)" />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <TextField
@@ -641,7 +641,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         {/* Autorización de notificación y tratamiento de datos */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
+            <Title title="Autorización de notificación y tratamiento de datos" />
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
