@@ -279,7 +279,6 @@ export const EditarPruebaBombeo: React.FC = () => {
   }, [instrumentos]);
 
   useEffect(() => {
-    console.log(info_prueba_bombeo, 'info_prueba_bombeo');
     set_id_bombeo_general(info_prueba_bombeo?.id_prueba_bombeo);
     reset_bombeo({
       descripcion: info_prueba_bombeo.descripcion,
@@ -326,7 +325,6 @@ export const EditarPruebaBombeo: React.FC = () => {
 
   useEffect(() => {
     if (instrumentos?.id_pozo) {
-      console.log(instrumentos?.id_pozo, 'instrumentos?.id_pozo');
       void fetch_data_pozo_instrumentos_select(instrumentos?.id_pozo);
     }
   }, [instrumentos?.id_pozo]);
@@ -576,7 +574,6 @@ export const EditarPruebaBombeo: React.FC = () => {
                       <Select
                         value={value}
                         onChange={(selectedOption) => {
-                          console.log(selectedOption);
                           onChange(selectedOption);
                         }}
                         options={pozos_selected}
