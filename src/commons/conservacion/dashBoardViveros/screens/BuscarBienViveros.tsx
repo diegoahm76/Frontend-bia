@@ -98,7 +98,6 @@ const BuscarBienViveros = (props: IProps) => {
                     label="Nombre"
                     helperText=" "
                     size="small"
-                    required
                     fullWidth
                     value={nombre}
                     onChange={cambio_nombre}
@@ -109,7 +108,6 @@ const BuscarBienViveros = (props: IProps) => {
                     label="Código bien"
                     helperText=" "
                     size="small"
-                    required
                     fullWidth
                     value={codigo_bien}
                     onChange={cambio_codigo_bien}
