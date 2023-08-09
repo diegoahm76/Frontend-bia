@@ -127,7 +127,11 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                           ? new Date(
                               organigrama_lideres_current?.fecha_puesta_produccion
                             ).toLocaleString()
-                          : ''
+                          : '' ||
+                            (organigrama_lideres_current?.fecha_puesta_produccion_organigrama &&
+                              new Date(
+                                organigrama_lideres_current?.fecha_puesta_produccion_organigrama
+                              ).toLocaleString())
                       }
                       disabled={true}
                       InputLabelProps={{ shrink: true }}

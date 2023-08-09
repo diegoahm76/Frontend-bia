@@ -32,6 +32,12 @@ export const createLiderUnidadOrganizacional = async (
   cleanElementComponent: any
 ): Promise<any> => {
   try {
+
+    if(!dataPost.id_lider ||     !dataPost.id_unidad_organizacional){
+      control_warning('Todos los campos son obligatorios');
+      return;
+    }
+
     setLoadingButton(true);
     const url = `transversal/lideres/crear-asignacion/`;
     const { data } = await api.post(url, dataPost);
@@ -53,6 +59,13 @@ export const updateLiderUnidadOrganizacional = async (
   cleanElementComponent: any
 ): Promise<any> => {
   try {
+
+    if(dataPost.id_lider_unidad_org === undefined){
+      control_warning('Todos los campos son obligatorios');
+      return;
+    }
+
+
     setLoadingButton(true);
     const url = `transversal/lideres/actualizar-asignacion/${dataPost.id_lider_unidad_org}/`;
     const { data } = await api.put(url, dataPost);
@@ -159,12 +172,12 @@ export const getPersonaByFilter = async (
       `;
     const { data } = await api.get(url);
 
-  /* if (data.data.length === 0) {
+    if (data.data.length === 0) {
       control_warning(
         'No se encontraron resultados que coincidan con la busqueda'
       );
-      return;
-    } */
+      return data.data;
+    }
 
     control_success(data.detail);
     return data.data;

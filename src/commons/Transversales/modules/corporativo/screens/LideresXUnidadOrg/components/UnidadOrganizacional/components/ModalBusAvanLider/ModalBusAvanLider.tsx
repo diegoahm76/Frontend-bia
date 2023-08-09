@@ -39,7 +39,10 @@ import {
 } from '../../../../../../../../../../hooks';
 import { getPersonaByFilter } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
-import { get_list_busqueda_avanzada_personas, set_asignacion_lideres_current } from '../../../../toolkit/LideresSlices/LideresSlice';
+import {
+  get_list_busqueda_avanzada_personas,
+  set_asignacion_lideres_current
+} from '../../../../toolkit/LideresSlices/LideresSlice';
 
 export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
   // * dispatch to use in the component * //
@@ -56,7 +59,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
   const {
     organigrama_lideres_current,
     unidad_current,
-    busqueda_avanzada_personas_list
+    busqueda_avanzada_personas_list,
+    asignacion_lideres_current
   } = useAppSelector((state) => state.lideres_slice);
 
   // ? useContext declaration
@@ -156,6 +160,9 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
+
+            console.log(watch_asignaciones_lider_by_unidad_value);
+            console.log(unidad_current);
             void getPersonaByFilter(
               watch_asignaciones_lider_by_unidad_value?.tipo_documento,
               watch_asignaciones_lider_by_unidad_value?.numero_documento,
@@ -163,7 +170,11 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
               watch_asignaciones_lider_by_unidad_value?.primer_apellido,
               watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
-              unidad_current?.value,
+              watch_asignaciones_lider_by_unidad_value
+                ?.id_unidad_organizacional_actual?.value
+                ? unidad_current?.value ||
+                    asignacion_lideres_current?.id_unidad_organizacional
+                : '',
               setLoadingButton,
               resetFunction
             ).then((data: any) => {
