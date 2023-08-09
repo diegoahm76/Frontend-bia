@@ -84,6 +84,19 @@ export const obtiene_analitica: any = (filtros: {seleccion_vivero: number|string
   };
 };
 
+// Obtiene ultimos movimientos
+export const obtiene_ultimos_movimientos: any = (filtros: {seleccion_vivero: number|string}) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`conservacion/analitica/historico-movimientos/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene los tipos de entrada
 export const obtener_tipos_entrada = async (): Promise<AxiosResponse<ResponseServer<any[]>>> => {
   return await api.get<ResponseServer<any[]>>('almacen/bienes/entradas/tipos-entradas/');
