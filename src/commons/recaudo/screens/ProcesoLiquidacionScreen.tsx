@@ -26,6 +26,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [position_tab, set_position_tab] = useState('1');
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
+  const [loading, set_loading] = useState(true);
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/deudores')
@@ -34,6 +35,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       })
       .catch((error) => {
         console.log(error);
+      }).finally(() => {
+        set_loading(false);
       });
   }, []);
 
@@ -131,7 +134,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       minWidth: 160,
       flex: 1,
       valueGetter: (params) => {
-        return `${params.row.nombres as string || ''} ${params.row.apellidos as string || ''}`;
+        return `${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`;
       }
     },
     {
@@ -145,7 +148,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
             <IconButton
               onClick={() => {
                 set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
-                set_nombre_deudor(`${params.row.nombres as string || ''} ${params.row.apellidos as string || ''}`);
+                set_nombre_deudor(`${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`);
                 set_position_tab('2');
               }}
             >
@@ -215,7 +218,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   experimentalFeatures={{ newEditingApi: true }}
                   getRowId={(row) => row.id}
                   components={{ Toolbar: GridToolbar }}
-                  loading={!deudores.length}
+                  loading={loading}
                   initialState={{
                     columns: {
                       columnVisibilityModel: {

@@ -5,7 +5,6 @@ import type { Expediente, FormDetalleLiquidacion, FormLiquidacion } from "../../
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from "react";
 import { api } from "../../../../api/axios";
-// import { api } from "../../../../api/axios";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
@@ -44,7 +43,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   const [expediente_liquidado, set_expediente_liquidado] = useState(false);
 
   useEffect(() => {
-    if (form_liquidacion.id_deudor) {
+    if (form_liquidacion.id_deudor !== '') {
       api.get(`recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`)
         .then((response) => {
           set_expedientes_deudor(response.data.data);
@@ -56,7 +55,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   }, [form_liquidacion.id_deudor]);
 
   useEffect(() => {
-    if (form_liquidacion.id_expediente) {
+    if (form_liquidacion.id_expediente !== '') {
       api.get(`recaudo/liquidaciones/expedientes/${form_liquidacion.id_expediente}`)
         .then((response) => {
           set_expediente_liquidado(response.data.data.liquidado);
