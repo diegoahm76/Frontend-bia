@@ -15,8 +15,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-// import { add_organigrams_service } from '../../store/thunks/organigramThunks';
-// import { useAppDispatch } from '../../../../../hooks';
+import { add_organigrams_service } from '../../store/thunks/organigramThunks';
+import { useAppDispatch } from '../../../../../hooks';
 import type { FormValues, IProps } from './types/type';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -28,14 +28,14 @@ const DialogCrearOrganigrama = ({
   set_is_modal_active,
   set_position_tab_organigrama
 }: IProps) => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const {
     control: control_organigrama,
     handleSubmit: handle_submit,
     reset: reset_creacion_organigrama,
-    watch: watch_creacion_organigrama,
+    watch: watch_creacion_organigrama
   } = useForm<FormValues>({
     defaultValues: {
       nombre: '',
@@ -47,40 +47,30 @@ const DialogCrearOrganigrama = ({
 
   const creacion_organigrama_values = watch_creacion_organigrama();
 
-
   const handle_close_crear_organigrama = (): void => {
     set_is_modal_active(false);
   };
 
   const on_submit = (data: FormValues): void => {
+    console.log(creacion_organigrama_values);
 
-    console.log(creacion_organigrama_values)
-
-/*    const new_ccd: any = {
-      id_organigrama: data_create_ccd.organigrama.value,
-      version: data_create_ccd.version,
-      nombre: data_create_ccd.nombre_ccd,
-      valor_aumento_serie: data_create_ccd.valor_aumento_serie,
-      valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
-      ruta_soporte: data_create_ccd.ruta_soporte
+    const dataToSendCreacionOrganigrama: any = {
+      nombre: creacion_organigrama_values.nombre,
+      version: creacion_organigrama_values.version,
+      descripcion: creacion_organigrama_values.descripcion,
+      ruta_resolucion: creacion_organigrama_values.ruta_resolucion
     };
 
     // Convertir el objeto new_ccd en un objeto FormData
     const formData: any = new FormData();
-    for (const key in new_ccd) {
-      if (new_ccd[key] !== null) {
-        formData.append(key, new_ccd[key]);
+    for (const key in dataToSendCreacionOrganigrama) {
+      if (dataToSendCreacionOrganigrama[key]) {
+        formData.append(key, dataToSendCreacionOrganigrama[key]);
       }
     }
-    
-    */
 
-
-
-
-
-    // void dispatch(add_organigrams_service(data, set_position_tab_organigrama));
-    // handle_close_crear_organigrama();
+    void dispatch(add_organigrams_service(dataToSendCreacionOrganigrama, set_position_tab_organigrama));
+    handle_close_crear_organigrama();
   };
 
   return (
