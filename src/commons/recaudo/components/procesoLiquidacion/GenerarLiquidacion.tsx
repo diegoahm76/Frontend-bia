@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
 import type { Expediente, FormDetalleLiquidacion, FormLiquidacion } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
