@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Controller, useForm } from 'react-hook-form';
 import {
   TextField,
@@ -9,7 +10,7 @@ import {
   Stack,
   Button,
   Box,
-  Divider,
+  Divider
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
@@ -17,17 +18,29 @@ import { add_organigrams_service } from '../../store/thunks/organigramThunks';
 import { useAppDispatch } from '../../../../../hooks';
 import type { FormValues, IProps } from './types/type';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
   is_modal_active,
   set_is_modal_active,
-  set_position_tab_organigrama,
+  set_position_tab_organigrama
 }: IProps) => {
   const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { control: control_organigrama, handleSubmit: handle_submit } =
-    useForm<FormValues>();
+  const {
+    control: control_organigrama,
+    handleSubmit: handle_submit,
+    reset: reset_creacion_organigrama
+  } = useForm<FormValues>({
+    defaultValues: {
+      nombre: '',
+      version: '',
+      descripcion: '',
+      ruta_resolucion: ''
+    }
+  });
 
   const handle_close_crear_organigrama = (): void => {
     set_is_modal_active(false);
@@ -60,7 +73,7 @@ const DialogCrearOrganigrama = ({
               position: 'absolute',
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: (theme) => theme.palette.grey[500]
             }}
           >
             <CloseIcon />
@@ -155,6 +168,60 @@ const DialogCrearOrganigrama = ({
               />
             )}
           />
+          {/*   ruta para soporte de organigrama */}
+          <Controller
+            name="ruta_resolucion"
+            control={control_organigrama}
+            defaultValue=""
+            rules={{ required: false }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <Button
+                  variant={
+                    value === '' || value === null ? 'outlined' : 'contained'
+                  }
+                  component="label"
+                  style={{
+                    marginTop: '.15rem',
+                    width: '100%'
+                  }}
+                  startIcon={<CloudUploadIcon />}
+                >
+                  {value === '' || value === null
+                    ? 'Subir archivo'
+                    : 'Archivo subido'}
+                  <input
+                    style={{ display: 'none' }}
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(e) => {
+                      const files = (e.target as HTMLInputElement).files;
+                      if (files && files.length > 0) {
+                        const file = files[0];
+                        if (file.type !== 'application/pdf') {
+                          control_warning('Solo formato pdf');
+                          // dejar vacio el input file
+                        } else {
+                          onChange(file);
+                        }
+                      }
+                    }}
+                  />
+                </Button>
+                <label htmlFor="">
+                  <small
+                    style={{
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      fontWeight: 'thin',
+                      fontSize: '0.75rem'
+                    }}
+                  >
+                    Archivo Soporte Organigrama
+                  </small>
+                </label>
+              </>
+            )}
+          />
         </DialogContent>
         <Divider />
         <DialogActions>
@@ -163,6 +230,21 @@ const DialogCrearOrganigrama = ({
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => {
+                reset_creacion_organigrama({
+                  nombre: '',
+                  version: '',
+                  descripcion: '',
+                  ruta_resolucion: ''
+                })
+              }}
+              startIcon={<CleanIcon />}
+            >
+              LIMPIAR
+            </Button>
             <Button
               variant="outlined"
               onClick={handle_close_crear_organigrama}
