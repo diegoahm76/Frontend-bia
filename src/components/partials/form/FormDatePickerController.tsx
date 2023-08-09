@@ -75,7 +75,7 @@ const FormDatePickerController = ({
                     label={label}
                     value={value}
                     onChange={onChange}
-                    inputFormat={format ?? 'YYYY/MM/DD'}
+                    inputFormat={'YYYY-MM-DD'}
                     minDate={min_date ?? null}
                     maxDate={max_date ?? null}
                     renderInput={(
@@ -97,8 +97,8 @@ const FormDatePickerController = ({
                     ? error.type === 'required'
                       ? rules.required_rule?.message
                       : error.type === 'min'
-                      ? rules.min_rule?.message
-                      : rules.max_rule?.message
+                        ? rules.min_rule?.message
+                        : rules.max_rule?.message
                     : helper_text}
                 </FormHelperText>
               </FormControl>

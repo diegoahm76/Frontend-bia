@@ -2,7 +2,7 @@ import { Chip, Grid } from '@mui/material';
 import BuscarModelo from '../../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_solicitudes_pendientes_despacho } from '../../store/solicitudBienConsumoThunks';
+import { get_solicitudes_despacho_fecha, } from '../../store/solicitudBienConsumoThunks';
 import {
   set_current_solicitud,
   set_solicitudes,
@@ -14,15 +14,13 @@ interface IProps {
   title: string;
   control_solicitud_despacho: any;
   get_values: any;
-  open_modal: boolean;
-  set_open_modal: any;
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudDespacho = ({
   title,
   control_solicitud_despacho,
-  get_values, open_modal,
-  set_open_modal,
+  get_values,
 }: IProps) => {
   // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
@@ -82,7 +80,8 @@ const SeleccionarSolicitudDespacho = ({
   ];
 
   const get_solicitudes_filtro: any = async () => {
-    void dispatch(get_solicitudes_pendientes_despacho());
+    const fecha_despacho = get_values('fecha_despacho') ?? '';
+    void dispatch(get_solicitudes_despacho_fecha(fecha_despacho));
   };
 
   return (
@@ -94,10 +93,10 @@ const SeleccionarSolicitudDespacho = ({
           columns_model={columns_solicitudes_despacho}
           models={solicitudes}
           get_filters_models={get_solicitudes_filtro}
+          title_table_modal={'Solicitudes encontradas'}
+          button_submit_label="Buscar solicitud"
           set_models={set_solicitudes}
-          show_search_button={false}
-          open_search_modal={open_modal}
-          set_open_search_modal={set_open_modal}
+
           form_inputs={[
             {
               datum_type: 'title',
@@ -105,7 +104,7 @@ const SeleccionarSolicitudDespacho = ({
             },
 
             {
-              datum_type: 'date_picker_controller',
+              datum_type: 'date_picker_',
               xs: 12,
               md: 6,
               control_form: control_solicitud_despacho,
@@ -181,15 +180,15 @@ const SeleccionarSolicitudDespacho = ({
           modal_select_model_title="Buscar solicitud"
           modal_form_filters={[
             {
-              datum_type: 'input_controller',
+              datum_type: 'date_picker_controller',
               xs: 12,
               md: 2,
               control_form: control_solicitud_despacho,
-              control_name: 'nro_solicitud_por_tipo',
-              default_value: '',
-              rules: { required_rule: { rule: false, message: 'requerido' } },
-              label: 'Número de solicitud',
-              type: 'number',
+              control_name: 'fecha_despacho',
+              default_value: new Date().toString(),
+              rules: { required_rule: { rule: true, message: 'requerido' } },
+              label: 'Fecha del despacho',
+              type: 'text',
               disabled: false,
               helper_text: '',
             },

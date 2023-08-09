@@ -80,6 +80,7 @@ export const despacho_slice = createSlice({
   name: 'despacho',
   initialState: initial_state,
   reducers: {
+    reset_state: () => initial_state,
     set_persona_despacha: (
       state: IDespacho,
       action: PayloadAction<Persona>
@@ -143,6 +144,7 @@ export const despacho_slice = createSlice({
   },
 });
 export const {
+  reset_state,
   set_bienes,
   set_current_bien,
   set_bienes_despacho,

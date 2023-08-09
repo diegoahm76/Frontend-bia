@@ -44,8 +44,9 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
 
     const get_entradas: any = async () => {
         console.log("buscar...");
-
-        void dispatch(get_entradas_disponible());
+        const numero_entrada = get_values('numero_entrada_almacen') ?? '';
+        const id_tipo_entrada = get_values('id_tipo_entrada') ?? '';
+        void dispatch(get_entradas_disponible(numero_entrada, id_tipo_entrada));
 
     };
 
@@ -59,6 +60,7 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                     models={entradas}
                     get_filters_models={get_entradas}
                     set_models={set_entradas}
+                    title_table_modal={'Resultados de la búsqueda'}
                     button_submit_label="Buscar entradas"
                     form_inputs={[
                         {
@@ -95,7 +97,7 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                         },
 
                     ]}
-                    modal_select_model_title="Buscar Entregas"
+                    modal_select_model_title="Buscar Entradas"
                     modal_form_filters={[
 
                         {
@@ -103,13 +105,13 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                             xs: 12,
                             md: 2,
                             control_form: control_entrada_entrega,
-                            control_name: "tipo_entrada",
+                            control_name: "id_tipo_entrada",
                             default_value: "",
                             rules: {},
                             label: "Tipo de entrada",
                             helper_text: "",
                             disabled: false,
-                            select_options: [{ label: "Donación", value: "Donación" }, { label: "Resarcimiento", value: 3 }],
+                            select_options: [{ label: "Donación", value: 2 }, { label: "Resarcimiento", value: 3 }, { label: "Compensación", value: 4 }],
                             option_label: "label",
                             option_key: "value"
                         },
@@ -117,7 +119,7 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_entrada_entrega,
                             control_name: 'numero_entrada_almacen',
                             default_value: '',
@@ -127,9 +129,6 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
                             disabled: false,
                             helper_text: '',
                         },
-
-
-
 
                     ]}
                 />

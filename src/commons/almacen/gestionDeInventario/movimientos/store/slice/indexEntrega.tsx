@@ -31,6 +31,7 @@ export const initial_state_current_entrega: IObjEntrega = {
     id_entrada_almacen_cv: null,
     motivo: '',
     id_bodega_general: null,
+    id_despacho_consumo: null
 };
 
 export const initial_state_bien_entrega: IObjBienEntrega = {
@@ -55,6 +56,7 @@ export const initial_state_entrada: IObjEntrada = {
     valor_total_entrada: null,
     fecha_ultima_actualizacion_diferente_creador: new Date().toString(),
     entrada_anulada: false,
+    ruta_archivo_doc_con_recibido: null,
     justificacion_anulacion: '',
     fecha_anulacion: new Date().toString(),
     id_proveedor: null,
@@ -107,6 +109,7 @@ export const entrega_slice = createSlice({
     name: 'entrega_otros',
     initialState: initial_state,
     reducers: {
+        reset_state: () => initial_state,
         set_persona_entrega: (state: IEntrega, action: PayloadAction<Persona>) => {
             state.persona_entrega = action.payload;
         },
@@ -190,6 +193,7 @@ export const {
     set_tipo_entrada,
     set_bienes_entrada,
     set_current_entrada,
+    reset_state,
     set_entradas,
     set_bienes_entrada_aux,
     set_bien_selected,
