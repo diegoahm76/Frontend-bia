@@ -21,7 +21,7 @@ const ListadoBienesEntrega = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(bienes_entrada, bienes_entrega.length);
+    console.log(bienes_entrada, bienes_entrega);
     if (bienes_entrada.length > 0) {
       if (bienes_entrega.length > 0) {
         const aux_items: IObjBienesEntrada[] = [];
@@ -58,6 +58,8 @@ const ListadoBienesEntrega = () => {
 
 
   useEffect(() => {
+
+    console.log(bienes_entrada, bienes_entrega);
     if (bienes_entrada.length > 0) {
       console.log("Bienes entrega")
       if (bienes_entrega.length > 0) {

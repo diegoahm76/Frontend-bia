@@ -184,6 +184,7 @@ const SeleccionarBienEntrega = () => {
             const fecha = new Date(
                 current_entrega.fecha_despacho ?? ''
             ).toISOString();
+            console.log(fecha.slice(0, 10) + ' ' + fecha.slice(11, 19))
             const data = await dispatch(
                 get_bien_code_service(
                     bien_selected.codigo_bien ?? '',

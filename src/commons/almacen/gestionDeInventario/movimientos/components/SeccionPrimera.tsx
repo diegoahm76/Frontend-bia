@@ -22,6 +22,8 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
     const [file, set_file] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>('');
 
+    useEffect(() => { console.log(entregas) }, [entregas])
+
     useEffect(() => {
         if (file !== null) {
             if ('name' in file) {
@@ -144,6 +146,10 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                             helper_text: '',
                             set_value: set_file,
                             file_name,
+                            value_file:
+                                current_entrega.id_despacho_consumo !== null
+                                    ? current_entrega.ruta_archivo_doc_con_recibido ?? null
+                                    : null,
                         },
 
 

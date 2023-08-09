@@ -42,7 +42,6 @@ const EntregaScreen = () => {
     const initial_values = (): void => {
         void dispatch(get_uni_organizacional());
         void dispatch(get_num_entrega())
-        void dispatch(get_tipo_entrada())
         void dispatch(get_entregas_services());
         void dispatch(get_bodega_service());
         dispatch(
@@ -122,6 +121,7 @@ const EntregaScreen = () => {
             void dispatch(get_bienes_entrada(current_entrada.id_entrada_almacen));
             console.log(current_entrada)
         }
+
         reset_entrada_entrega(current_entrada)
     },
         [current_entrada]);

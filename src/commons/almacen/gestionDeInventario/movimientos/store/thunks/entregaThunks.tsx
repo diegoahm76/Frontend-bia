@@ -113,10 +113,10 @@ export const get_entrada_id = (
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/bienes/entradas/get-list/?id_entrada=${id_entrada ?? ''}`);
-
+            console.log(data)
             if (data.success === true) {
                 dispatch(set_current_entrada(data.data.info_entrada));
-                dispatch(set_bienes_entrada(data.data.info_items_entrada));
+                // dispatch(set_bienes_entrada(data.data.info_items_entrada));
                 console.log(data);
 
             }
@@ -186,7 +186,7 @@ export const get_tipo_entrada = (): any => {
         try {
             const { data } = await api.get(`almacen/bienes/entradas/tipos-entradas/`);
             if (data.success === true) {
-                dispatch(set_entregas(data.data));
+                // dispatch(set_entregas(data.data));
                 console.log(data);
                 //  control_success(data.detail);
             }
@@ -211,6 +211,7 @@ export const get_bienes_entrada = (id_entrada_almacen: number | null): any => {
                 `almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ''
                 }/`
             );
+            console.log(data)
             if (data.success === true) {
                 dispatch(set_bienes_entrada(data.data));
                 console.log(data);
