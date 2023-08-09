@@ -341,7 +341,7 @@ const SeleccionarBienSiembra = () => {
         } else {
           control_error(
             'La cantidad asignada debe ser máximo ' +
-              String(current_good.cantidad_disponible_bien)
+            String(current_good.cantidad_disponible_bien)
           );
         }
       } else {

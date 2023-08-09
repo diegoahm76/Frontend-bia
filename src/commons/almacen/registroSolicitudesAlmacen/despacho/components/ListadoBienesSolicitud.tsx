@@ -107,7 +107,7 @@ const ListadoBienesSolicitud = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -127,7 +127,7 @@ const ListadoBienesSolicitud = () => {
     {
       field: 'cantidad_despachada',
       headerName: 'Cantidad despachada',
-      width: 140,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? 0}
@@ -147,7 +147,7 @@ const ListadoBienesSolicitud = () => {
     {
       field: 'observaciones',
       headerName: 'Observación',
-      width: 150,
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -181,7 +181,7 @@ const ListadoBienesSolicitud = () => {
           marginTop={2}
         >
           <Box sx={{ width: '100%' }}>
-            <Title title="Bienes solicitados"></Title>
+            <Title title="Bienes de despacho solicitados"></Title>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"
