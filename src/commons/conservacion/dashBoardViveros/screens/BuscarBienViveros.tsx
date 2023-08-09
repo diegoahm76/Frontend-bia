@@ -55,7 +55,7 @@ const BuscarBienViveros = (props: IProps) => {
     if (nombre !== "")
       data_filter = [...data_filter.filter((da: any) => da.nombre.includes(nombre))];
     if (codigo_bien !== "")
-      data_filter = [...data_filter.filter((da: any) => da.placa.includes(codigo_bien))];
+      data_filter = [...data_filter.filter((da: any) => da.codigo_bien.includes(codigo_bien))];
     set_data_filtrada(data_filter);
   }
 
