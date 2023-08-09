@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -20,6 +21,7 @@ import type { FormValues, IProps } from './types/type';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import { FILEWEIGHT } from '../../../../../fileWeight/fileWeight';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
   is_modal_active,
@@ -199,8 +201,17 @@ const DialogCrearOrganigrama = ({
                       if (files && files.length > 0) {
                         const file = files[0];
                         if (file.type !== 'application/pdf') {
-                          control_warning('Solo formato pdf');
-                          // dejar vacio el input file
+                          control_warning(
+                            'Precaución: Solo es admitido archivos en formato pdf'
+                          );
+                        } else if (file.size > FILEWEIGHT.PDF) {
+                          const MAX_FILE_SIZE_MB = (
+                            FILEWEIGHT.PDF /
+                            (1024 * 1024)
+                          ).toFixed(1);
+                          control_warning(
+                            `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                          );
                         } else {
                           onChange(file);
                         }
@@ -239,7 +250,7 @@ const DialogCrearOrganigrama = ({
                   version: '',
                   descripcion: '',
                   ruta_resolucion: ''
-                })
+                });
               }}
               startIcon={<CleanIcon />}
             >
