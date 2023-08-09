@@ -94,14 +94,14 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               onClick={() => {
                 dispatch(set_current_info_cartera(params.row));
                 set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                  dispatch(
+                    set_current_mode_bombeo({
+                      ver: false,
+                      crear: false,
+                      editar: true,
+                    })
+                  );
+                  navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
                   replace: true,
                 });
               }}
@@ -360,7 +360,6 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (info_busqueda_instrumentos) {
-      console.log('info_busqueda_instrumentos', info_busqueda_instrumentos);
       reset_instrumento({
         nombre: info_busqueda_instrumentos.nombre,
         fecha_creacion_instrumento:
