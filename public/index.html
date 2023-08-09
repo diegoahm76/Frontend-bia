@@ -12,15 +12,6 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <!-- Material icons -->
     <link
       rel="stylesheet"
@@ -34,26 +25,12 @@
     <div id="root"></div>
     <div id="next-app-container"></div>
     <i class="material-icons" id="next-app-icon">chat</i>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <style>
-
       #next-app-container .loader {
         position: fixed;
-        /*top: 0;
-        left: 0;*/
         bottom: 30px;
         right: 110px;
-       /* width: 100vw;
-        height: 100vh;*/
         border-radius: 100%;
         display: flex;
         justify-content: center;
@@ -111,41 +88,11 @@
       }
     </style>
   </body>
-  <!--  <script>
+  <script>
     let isNextAppOpen = false;
     const nextAppContainer = document.getElementById('next-app-container');
     const nextAppIcon = document.getElementById('next-app-icon');
     const nextAppIframe = document.createElement('iframe');
-    nextAppIframe.src = 'https://rick-morty-app-c905f.firebaseapp.com/'; // Reemplaza con la URL de tu proyecto de Next.js
-    nextAppIframe.style =
-      'width: 300px; height: 300px; border: 0; position: absolute; bottom: 0; left: 0;';
-    nextAppIcon.addEventListener('click', () => {
-      if (isNextAppOpen) {
-        nextAppContainer.removeChild(nextAppIframe);
-        isNextAppOpen = false;
-      } else {
-        nextAppContainer.appendChild(nextAppIframe);
-        isNextAppOpen = true;
-        const nextAppCloseButton = document.createElement('button');
-        nextAppCloseButton.id = 'next-app-close-button';
-        nextAppCloseButton.textContent = 'Cerrar';
-        nextAppCloseButton.style = 'position: absolute; top: 0; right: 0;';
-        nextAppContainer.appendChild(nextAppCloseButton);
-        nextAppCloseButton.addEventListener('click', () => {
-          nextAppContainer.removeChild(nextAppIframe);
-          nextAppContainer.removeChild(nextAppCloseButton);
-          isNextAppOpen = false;
-        });
-      }
-    });
-  </script>-->
-
-    <script>
-    let isNextAppOpen = false;
-    const nextAppContainer = document.getElementById('next-app-container');
-    const nextAppIcon = document.getElementById('next-app-icon');
-    const nextAppIframe = document.createElement('iframe');
-    // nextAppContainer.style = 'position: relative;';
     nextAppIframe.style =
       'width: 300px; height: 300px; border: 0; position: fixed; bottom: 50px; left: 50px; border-radius: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); z-index: 9999;';
     nextAppIframe.src = 'https://rick-morty-app-c905f.firebaseapp.com/'; // Reemplaza con la URL de tu proyecto de Next.js
@@ -176,37 +123,4 @@
       }
     });
   </script>
-
-<!--  <script>
-    let isNextAppOpen = false;
-    const nextAppContainer = document.getElementById('next-app-container');
-    const nextAppIcon = document.getElementById('next-app-icon');
-    const nextAppCloseIcon = document.getElementById('next-app-close-icon');
-    const nextAppIframe = document.createElement('iframe');
-    nextAppIframe.style =
-      'width: 300px; height: 300px; border: 0; position: absolute; bottom: 0; left: 20px; border-radius: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);';
-    nextAppIframe.src = 'https://rick-morty-app-c905f.firebaseapp.com/'; // Reemplaza con la URL de tu proyecto de Next.js
-    nextAppIframe.addEventListener('load', () => {
-      nextAppContainer.removeChild(nextAppContainer.querySelector('.loader'));
-    });
-    nextAppIcon.addEventListener('click', () => {
-      if (isNextAppOpen) {
-        nextAppContainer.removeChild(nextAppIframe);
-        nextAppCloseIcon.style.display = 'none';
-        nextAppIcon.style.display = 'block';
-        isNextAppOpen = false;
-      } else {
-        const loader = document.createElement('div');
-        loader.classList.add('loader');
-        const spinner = document.createElement('div');
-        spinner.classList.add('spinner');
-        loader.appendChild(spinner);
-        nextAppContainer.appendChild(loader);
-        nextAppContainer.appendChild(nextAppIframe);
-        nextAppCloseIcon.style.display = 'block';
-        nextAppIcon.style.display = 'none';
-        isNextAppOpen = true;
-      }
-    });
-  </script>-->
 </html>
