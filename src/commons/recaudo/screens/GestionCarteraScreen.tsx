@@ -18,6 +18,7 @@ import { CreateProcesoModal } from '../components/GestionCartera/modal/CreatePro
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
   const [carteras, set_carteras] = useState<Cartera[]>([]);
+  const [loading, set_loading] = useState(true);
   const [procesos, set_procesos] = useState<Proceso[]>([]);
   const [position_tab, set_position_tab_organigrama] = useState('1');
   const [selected_proceso, set_selected_proceso] = useState({
@@ -200,6 +201,9 @@ export const GestionCarteraScreen: React.FC = () => {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        set_loading(false);
       });
   }, [carteras]);
 
@@ -430,7 +434,7 @@ export const GestionCarteraScreen: React.FC = () => {
                   getRowId={(row) => row.id}
                   getRowHeight={() => 'auto'}
                   components={{ Toolbar: GridToolbar }}
-                  loading={!carteras.length}
+                  loading={loading}
                   initialState={{
                     columns: {
                       columnVisibilityModel: {
