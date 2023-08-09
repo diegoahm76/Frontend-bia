@@ -114,7 +114,7 @@ export const DashBoardViverosScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <FormControl required size='small' fullWidth>
+                <FormControl size='small' fullWidth>
                   <InputLabel>Vivero</InputLabel>
                   <Select
                     value={seleccion_vivero}
@@ -131,7 +131,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <FormControl required size='small' fullWidth>
+                <FormControl size='small' fullWidth>
                   <InputLabel>Tipo de bien</InputLabel>
                   <Select
                     value={seleccion_tipo_bien}
@@ -152,7 +152,7 @@ export const DashBoardViverosScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <FormControl required size='small' fullWidth>
+                <FormControl size='small' fullWidth>
                   <InputLabel>Etapa material vegetal</InputLabel>
                   <Select
                     value={seleccion_material_vegetal}
