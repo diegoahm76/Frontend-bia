@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { api } from '../../../../../../../../api/axios';
@@ -32,8 +33,7 @@ export const createLiderUnidadOrganizacional = async (
   cleanElementComponent: any
 ): Promise<any> => {
   try {
-
-    if(!dataPost.id_lider ||     !dataPost.id_unidad_organizacional){
+    if (!dataPost.id_lider || !dataPost.id_unidad_organizacional) {
       control_warning('Todos los campos son obligatorios');
       return;
     }
@@ -59,12 +59,10 @@ export const updateLiderUnidadOrganizacional = async (
   cleanElementComponent: any
 ): Promise<any> => {
   try {
-
-    if(dataPost.id_lider_unidad_org === undefined){
+    if (dataPost.id_lider_unidad_org === undefined) {
       control_warning('Todos los campos son obligatorios');
       return;
     }
-
 
     setLoadingButton(true);
     const url = `transversal/lideres/actualizar-asignacion/${dataPost.id_lider_unidad_org}/`;
