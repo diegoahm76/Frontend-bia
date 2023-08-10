@@ -6,7 +6,7 @@ import { Unidad_A_Unidad } from '../screens/Unidad_A_Unidad/screen/Unidad_A_Unid
 
 
 const routes = [
-  { path: '/traslado_masivo_unidad_organizacional', element: <>Traslado masivo unidad organizacional</> },
+  { path: '/traslado_masivo_unidad_organizacional', element: <>Traslado masivo unidad por Entidad</> },
   { path: '/traslado_masivo_unidad_a_unidad', element: <Unidad_A_Unidad/> },
   { path: '/cambio_organigrama_actual', element: <OrganigramaScreen /> },
 ];
