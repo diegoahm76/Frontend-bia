@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import { get_marks, set_computers, set_current_cv_computer, } from '../../store/slices/indexCvComputo';
+import { get_marks, set_computers, set_current_cv_computer, set_maintenance, } from '../../store/slices/indexCvComputo';
 import { type Dispatch } from 'react'
 import { type NavigateFunction } from 'react-router-dom';
 
@@ -88,6 +88,25 @@ export const get_cv_computer_id = (id: number): any => {
     };
 };
 
+// Obtener programados 
+
+export const get_maintenance = (id: number | null): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/mantenimientos/programados/get-list/${id ?? ''}/`);
+
+            if (data.status === true) {
+                dispatch(set_maintenance(data.detail));
+
+            }
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
 export const get_cv_computer_service: (id: any) => any = (id: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {

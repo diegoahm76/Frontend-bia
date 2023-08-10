@@ -1,7 +1,7 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type Icv, type IMarca, type IVehicles, type IcvVehicles } from "../../interfaces/CvVehiculo";
+import type { Icv, IMarca, IVehicles, IcvVehicles, IObjMantenimiento } from "../../interfaces/CvVehiculo";
 
 const initial_state_current_vehicle = {
     id_bien: null,
@@ -77,7 +77,8 @@ const initial_state: Icv = {
     current_vehicle: initial_state_current_vehicle,
     current_cv_vehicle: initial_state_current_cv_vehicle,
     marcas: [],
-    cv_vehicle: []
+    cv_vehicle: [],
+    maintenance_vehicle: []
 
 };
 
@@ -85,6 +86,12 @@ export const cve_vehicle_slice = createSlice({
     name: "cve",
     initialState: initial_state,
     reducers: {
+        set_maintenance_vehicle: (
+            state: Icv,
+            action: PayloadAction<IObjMantenimiento[]>
+        ) => {
+            state.maintenance_vehicle = action.payload;
+        },
         set_vehicles: (
             state: Icv,
             action: PayloadAction<IVehicles[]>
@@ -123,4 +130,4 @@ export const cve_vehicle_slice = createSlice({
 })
 
 
-export const { set_current_cv_vehicle, set_current_vehicles, set_cv_vehicle, get_marks, set_vehicles } = cve_vehicle_slice.actions;
+export const { set_maintenance_vehicle, set_current_cv_vehicle, set_current_vehicles, set_cv_vehicle, get_marks, set_vehicles } = cve_vehicle_slice.actions;

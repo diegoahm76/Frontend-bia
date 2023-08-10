@@ -219,7 +219,7 @@ const PersonaSiembra = ({ title }: IProps) => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Nombre',
               type: 'text',
-              disabled: true,
+              disabled: false,
               helper_text: '',
             },
           ]}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import {
   Dialog,
@@ -220,18 +221,18 @@ const SeleccionarModeloDialogForm = ({
     set_selected_row(selection);
   };
 
-    const select_model = (): void => {
-        const model = models.find((p) => p[row_id] === selected_row[0])
-        if (model !== undefined) {
-            dispatch(set_current_model(model));
-            set_models([])
-            handle_close_select_model();
-        }
-    };
-    const search_models = (): void => {
-        search_model_function()
-    };
-    
+  const select_model = (): void => {
+    const model = models.find((p) => p[row_id] === selected_row[0])
+    if (model !== undefined) {
+      dispatch(set_current_model(model));
+      set_models([])
+      handle_close_select_model();
+    }
+  };
+  const search_models = (): void => {
+    search_model_function()
+  };
+
 
 
   return (
@@ -304,8 +305,8 @@ const SeleccionarModeloDialogForm = ({
 
 
 
-                                    </ButtonGroup>
-                                </Grid>
+                  </ButtonGroup>
+                </Grid>
 
                 <DataGrid
                   onSelectionModelChange={handle_selection_change}
@@ -325,8 +326,8 @@ const SeleccionarModeloDialogForm = ({
                 />
               </Box>
             </Grid>
-      }
-      
+          }
+
         </DialogContent>
         <Divider />
         <DialogActions>

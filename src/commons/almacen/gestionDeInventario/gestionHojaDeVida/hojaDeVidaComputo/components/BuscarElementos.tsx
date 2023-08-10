@@ -1,4 +1,4 @@
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
@@ -56,12 +56,20 @@ const SeleccionarComputer = () => {
             field: 'cod_tipo_activo',
             headerName: 'Tipo de bien',
             width: 200, flex: 1,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
 
+
+        },
+        {
+            field: 'tiene_hoja_vida',
+            headerName: 'Tiene hoja de vida',
+            width: 200, flex: 1,
+            renderCell: (params) => {
+                return params.row.tiene_hoja_vida === true ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
         },
 
     ];
