@@ -4,7 +4,7 @@
 import { historicoTrasladosMasivos } from '../columns/columnsHistorico';
 import { v4 as uuidv4 } from 'uuid';
 // ? types
-import { type FC } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import {
   Button,
@@ -18,7 +18,11 @@ import {
 } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 import CloseIcon from '@mui/icons-material/Close';
-import { type IHistoricoTraslados } from '../types/HistoricoTraslados.types';
+import {
+  type DataHistorico,
+  type IHistoricoTraslados
+} from '../types/HistoricoTraslados.types';
+import { getHistoricoTrasladosU_U } from '../services/getHistorico.service';
 
 // ? component to show the history of "traslados masivos UNIDAD A UNIDAD"
 export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
@@ -43,7 +47,23 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
     }
   ];
 
-  const closeModalHistoricoTraslados = (): void => setModalHistoricoTraslados(false)
+  const closeModalHistoricoTraslados = (): void =>
+    setModalHistoricoTraslados(false);
+
+  // ! useEffect to load data to render
+  const [dataHistorico, setDataHistorico] = useState<DataHistorico[]>([]);
+
+  useEffect(() => {
+    if (modalHistoricoTraslados) {
+      void getHistoricoTrasladosU_U().then((res) => {
+        setDataHistorico(res);
+        console.log(res);
+      });
+    }
+    return () => {
+      setDataHistorico([]);
+    };
+  }, [modalHistoricoTraslados]);
 
   return (
     <>
@@ -67,7 +87,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
             sx={{ mt: '15px' }}
             density="compact"
             autoHeight
-            rows={[]}
+            rows={[] || dataHistorico}
             columns={columnsTraslados || []}
             pageSize={5}
             rowsPerPageOptions={[7]}
