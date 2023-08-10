@@ -246,8 +246,7 @@ const EntregaScreen = () => {
                 <ListadoBienesEntrega />
             </Grid>
             <Grid item xs={12} marginY={2}>
-
-                <SeleccionarBienEntrega />
+                <SeleccionarBienEntrega get_values={get_values} />
             </Grid>
 
             <Grid

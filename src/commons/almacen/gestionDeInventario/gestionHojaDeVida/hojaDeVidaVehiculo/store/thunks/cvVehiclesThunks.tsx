@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import { set_cv_vehicle, set_vehicles, get_marks, set_current_cv_vehicle } from '../../store/slices/indexCvVehiculo';
+import { set_cv_vehicle, set_vehicles, get_marks, set_current_cv_vehicle, set_maintenance_vehicle } from '../../store/slices/indexCvVehiculo';
 import { type Dispatch } from 'react';
 
 
@@ -48,6 +48,25 @@ export const get_marca_service = (): any => {
   };
 };
 
+// Obtener programados 
+
+export const get_maintenance_vehicle = (id: number | null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`almacen/mantenimientos/programados/get-list/${id ?? ''}/`);
+
+      if (data.status === true) {
+        dispatch(set_maintenance_vehicle(data.detail));
+
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+
+      return error as AxiosError;
+    }
+  };
+};
 
 export const get_vehicles_all_service: any = () => {
   return async (dispatch: Dispatch<any>) => {
