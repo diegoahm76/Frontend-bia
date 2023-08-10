@@ -168,12 +168,12 @@ const BuscarBienViveros = (props: IProps) => {
       </DialogContent>
       <DialogActions>
         <Button
-          color='inherit'
-          variant='contained'
+          color='error'
+          variant='outlined'
           startIcon={<ClearIcon />}
           onClick={() => { props.set_is_modal_active(false); }}>Cancelar</Button>
         <Button
-          color='primary'
+          color='success'
           variant='contained'
           startIcon={<SaveIcon />}
           onClick={seleccionar_bien}>Seleccionar</Button>
