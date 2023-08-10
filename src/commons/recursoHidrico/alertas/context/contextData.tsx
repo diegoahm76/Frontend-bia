@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { createContext } from 'react';
@@ -28,6 +29,12 @@ interface UserContext {
 
   mode: string;
   set_mode: (mode: string) => void;
+
+  selectedValueFromSelect: {
+    label: string;
+    value: string;
+  };
+  setSelectValueFromSelect: any;
 
   // * selected
   alertas_selected: ValueProps[];
@@ -69,6 +76,13 @@ export const DataContext = createContext<UserContext>({
   mode: '',
   set_mode: () => {},
   // * selected
+
+  selectedValueFromSelect: {
+    label: '',
+    value: '',
+  },
+  setSelectValueFromSelect: () => {},
+
   alertas_selected: [],
   set_alertas_selected: () => {},
   perfiles_selected: [],
@@ -136,6 +150,15 @@ export const UserProvider = ({
     set_is_perfil(false);
     set_is_lider(true);
   }
+
+  const [selectedValueFromSelect, setSelectValueFromSelect] =
+    React.useState<{
+      label: string;
+      value: string;
+    }>({
+      label: '',
+      value: '',
+    });
 
   // * selected
   const [alertas_selected, set_alertas_selected] = React.useState<ValueProps[]>(
@@ -232,6 +255,10 @@ export const UserProvider = ({
 
     mode,
     set_mode,
+
+    setSelectValueFromSelect,
+    selectedValueFromSelect,
+
     // * selected
     alertas_selected,
     set_alertas_selected,

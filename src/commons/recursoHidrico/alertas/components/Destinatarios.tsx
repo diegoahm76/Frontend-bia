@@ -7,6 +7,7 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
+  IconButton,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import SaveIcon from '@mui/icons-material/Save';
@@ -18,6 +19,7 @@ import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Destinatarios: React.FC = () => {
@@ -26,24 +28,24 @@ export const Destinatarios: React.FC = () => {
       field: 'destinatario',
       headerName: 'DESTINATARIO',
       width: 250,
-      hide: true,
+      valueGetter: (params) => params.row.datos_reordenados.destinatario,
     },
     {
       field: 'detalle',
       headerName: 'DETALLE',
       width: 250,
+      valueGetter: (params) => params.row.datos_reordenados.detalle,
     },
     {
       field: 'nombre',
       headerName: 'NOMBRE',
       width: 250,
-      hide: true,
+      valueGetter: (params) => params.row.datos_reordenados.nombre,
     },
     {
       field: 'principal',
       headerName: 'PRINCIPAL',
       width: 250,
-      hide: true,
       renderCell: (params) => {
         return params.row.principal === true ? (
           <Chip size="small" label="Si" color="success" variant="outlined" />
@@ -52,7 +54,30 @@ export const Destinatarios: React.FC = () => {
         );
       },
     },
+    {
+      field: 'Action',
+      headerName: 'ACCIONES',
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <>
+            <IconButton
+              aria-label="delete"
+              size="small"
+              onClick={() => {
+                confirmar_eliminar_persona_alerta(
+                  params.row.id_persona_alertar
+                );
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
+        );
+      },
+    },
   ];
+
   const {
     // * use form destinatario
     control_destinatario,
@@ -72,6 +97,8 @@ export const Destinatarios: React.FC = () => {
 
     // limpiar
     limpiar_destinatario,
+
+    confirmar_eliminar_persona_alerta,
   } = useAlertaHook();
 
   const { rows_personas_alertas, is_persona, is_lider, is_perfil, set_mode } =
@@ -97,7 +124,12 @@ export const Destinatarios: React.FC = () => {
         <Title title="Destinatarios" />
       </Grid>
 
-      <Grid container item justifyContent="center" spacing={2}>
+      <Grid
+        container
+        item
+        // justifyContent="center"
+        spacing={2}
+      >
         <Grid item>
           <Button
             variant="contained"
@@ -274,6 +306,7 @@ export const Destinatarios: React.FC = () => {
             color="success"
             fullWidth
             startIcon={<SaveIcon />}
+            type="submit"
           >
             Guardar
           </Button>

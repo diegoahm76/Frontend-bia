@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Divider, Grid, Typography } from '@mui/material';
+import { Button, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { useAlertaHook } from '../utils/useAlertaHook';
 import dayjs from 'dayjs';
@@ -8,23 +8,58 @@ import 'dayjs/locale/es'; // Importar la localización en español
 import SaveIcon from '@mui/icons-material/Save';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { DataContext } from '../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const ProgramacionAlerta: React.FC = () => {
+  const mesesEnEspanol: any = {
+    1: 'Enero',
+    2: 'Febrero',
+    3: 'Marzo',
+    4: 'Abril',
+    5: 'Mayo',
+    6: 'Junio',
+    7: 'Julio',
+    8: 'Agosto',
+    9: 'Septiembre',
+    10: 'Octubre',
+    11: 'Noviembre',
+    12: 'Diciembre',
+  };
   const colums_alerta_programada: GridColDef[] = [
     {
       field: 'mes_cumplimiento',
       headerName: 'MES',
       width: 150,
-      hide: true,
+      renderCell: (params) => mesesEnEspanol[params.value] || params.value,
     },
     {
       field: 'dia_cumplimiento',
       headerName: 'DIA',
       width: 150,
+    },
+    {
+      field: 'Action',
+      headerName: 'ACCIONES',
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <>
+            <IconButton
+              aria-label="delete"
+              size="small"
+              onClick={() => {
+                confirmar_eliminar_fecha_alerta(params.row.id_fecha);
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
+        );
+      },
     },
   ];
 
@@ -36,6 +71,7 @@ export const ProgramacionAlerta: React.FC = () => {
     daysArray,
     setSelectedMonth,
     setSelectedDay,
+    confirmar_eliminar_fecha_alerta,
   } = useAlertaHook();
 
   const { rows_alerta_programada } = useContext(DataContext);
@@ -46,10 +82,6 @@ export const ProgramacionAlerta: React.FC = () => {
     }
     return false;
   };
-
-  useEffect(() => {
-    console.log(rows_alerta_programada, 'rows_alerta_programada');
-  }, [rows_alerta_programada]);
 
   return (
     <Grid
@@ -171,16 +203,23 @@ export const ProgramacionAlerta: React.FC = () => {
         )}
       </Grid>
       {rows_alerta_programada.length > 0 && (
-        <Grid item xs={12} sm={6}>
-          <DataGrid
-            autoHeight
-            rows={rows_alerta_programada}
-            columns={colums_alerta_programada}
-            getRowId={(row) => uuidv4()}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
-        </Grid>
+        <>
+          <Grid item xs={12}>
+            <Typography variant="body2" color="text.secondary">
+              <strong>Alertas programadas</strong>
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <DataGrid
+              autoHeight
+              rows={rows_alerta_programada}
+              columns={colums_alerta_programada}
+              getRowId={(row) => uuidv4()}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+            />
+          </Grid>
+        </>
       )}
       <Grid container item justifyContent="flex-end" spacing={2}>
         <Grid item>
@@ -188,11 +227,7 @@ export const ProgramacionAlerta: React.FC = () => {
             variant="contained"
             color="success"
             startIcon={<SaveIcon />}
-            onClick={() => {
-              if (isValidDate()) {
-                // Procede con la adición de la fecha
-              }
-            }}
+            type="submit"
             disabled={!isValidDate()}
           >
             Guardar

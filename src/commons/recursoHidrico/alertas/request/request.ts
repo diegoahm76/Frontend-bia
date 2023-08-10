@@ -1,5 +1,5 @@
 import type { AxiosError, AxiosResponse } from "axios";
-import type { AlertaProgramada, ConfiguracionAlerta, DataAlertaPersona } from "../interfaces/types";
+import type { AlertaProgramada, ConfiguracionAlerta, CrearAlerta, CrearPersonaAlerta, DataAlertaPersona, PutConfigutracionAlerta } from "../interfaces/types";
 import type { ResponseServer } from "../../../../interfaces/globalModels";
 import { api } from "../../../../api/axios";
 import { control_error } from "../../../../helpers";
@@ -57,4 +57,50 @@ export const get_alerta_programada = async (
         ResponseServer<AlertaProgramada[]>
     >(`transversal/alertas/fecha_clase_alert/get-by-configuracion/${cod_clase_alerta}/`);
     return response.data.data;
+}
+
+export const post_fecha_alerta = async (
+    data: CrearAlerta
+): Promise<any> => {
+    const response: AxiosResponse<ResponseServer<any>> = await api.post<
+        ResponseServer<any>
+    >(`transversal/alertas/fecha_clase_alert/create/`, data);
+    return response.data;
+}
+
+export const post_persona_alerta = async (
+    data: CrearPersonaAlerta
+): Promise<any> => {
+    const response: AxiosResponse<ResponseServer<any>> = await api.post<
+        ResponseServer<any>
+    >(`transversal/alertas/personas_alertar/create/`, data);
+    return response.data;
+}
+
+export const put_configuracion_alerta = async (
+    data: PutConfigutracionAlerta,
+    cod_clase_alerta: string
+): Promise<any> => {
+    const response: AxiosResponse<ResponseServer<any>> = await api.put<
+        ResponseServer<any>
+    >(`transversal/alertas/configuracion_clase_alerta/update/${cod_clase_alerta}/`, data);
+    return response.data;
+}
+
+export const delete_fecha_alerta = async (
+    id_fecha: number
+): Promise<any> => {
+    const response: AxiosResponse<ResponseServer<any>> = await api.delete<
+        ResponseServer<any>
+    >(`transversal/alertas/fecha_clase_alert/delete/${id_fecha}/`);
+    return response.data;
+}
+
+export const delete_persona_alerta = async (
+    id_persona_alertar: number
+): Promise<any> => {
+    const response: AxiosResponse<ResponseServer<any>> = await api.delete<
+        ResponseServer<any>
+    >(`transversal/alertas/personas_alertar/delete/${id_persona_alertar}/`);
+    return response.data;
 }

@@ -48,3 +48,20 @@ export interface AlertaProgramada {
     age_cumplimiento: null;
     cod_clase_alerta: string;
 }
+export interface CrearAlerta {
+    cod_clase_alerta: string;
+    dia_cumplimiento: number;
+    mes_cumplimiento: number;
+}
+export interface CrearPersonaAlerta {
+    cod_clase_alerta:       string;
+    id_persona:             null | number;
+    id_unidad_org_lider:    number;
+    perfil_sistema:         null | number;
+    es_responsable_directo: boolean;
+}
+export interface PutConfigutracionAlerta {
+    envios_email:    boolean;
+    nivel_prioridad: string;
+    activa:          boolean;
+}

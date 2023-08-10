@@ -4,9 +4,15 @@ import { Title } from '../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useAlertaHook } from '../utils/useAlertaHook';
 import Select from 'react-select';
+import { useContext } from 'react';
+import { DataContext } from '../context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionAlerta: React.FC = () => {
+  // ? context
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { setSelectValueFromSelect } = useContext(DataContext);
+
   const {
     control_alertas,
     // errors_alertas
@@ -51,7 +57,11 @@ export const SeleccionAlerta: React.FC = () => {
                 value={value}
                 options={alertas_selected as any}
                 placeholder="Seleccione alerta"
-                onChange={onChange}
+                onChange={(selectedoption) => {
+                  // console.log(selectedoption)
+                  setSelectValueFromSelect(selectedoption);
+                  onChange(selectedoption);
+                }}
               />
               <label>
                 <small
@@ -69,7 +79,7 @@ export const SeleccionAlerta: React.FC = () => {
             </div>
           )}
         />
-      </Grid>{' '}
+      </Grid>
       <Grid item xs={12} sm={6}></Grid>
       {alertas ? (
         <>
