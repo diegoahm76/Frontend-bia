@@ -1,7 +1,8 @@
 // Components Material UI
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { RegisterForm2 } from '../Ventanilla17/components/RegisterForm2';
+import { RegisterForm } from '../../../auth/components/RegisterForm/RegisterForm';
+
 // import { RegisterForm } from '../../../auth/components/RegisterForm/RegisterForm';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -22,8 +23,8 @@ export const CrearPersonaScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Crear Personas - Formulario de registro" />
           <br />
-          {/* <RegisterForm /> */}
-          <RegisterForm2/>
+          <RegisterForm />
+       
         </Grid>
       </Grid>
     </>
