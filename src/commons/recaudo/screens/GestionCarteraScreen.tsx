@@ -20,7 +20,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [carteras, set_carteras] = useState<Cartera[]>([]);
   const [loading, set_loading] = useState(true);
   const [procesos, set_procesos] = useState<Proceso[]>([]);
-  const [position_tab, set_position_tab_organigrama] = useState('1');
+  const [position_tab, set_position_tab] = useState('1');
   const [selected_proceso, set_selected_proceso] = useState({
     fecha_facturacion: '',
     numero_factura: '',
@@ -156,7 +156,7 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_proceso(params.row.proceso_cartera[0]?.id ?? '');
                   set_id_etapa(params.row.proceso_cartera[0]?.id_etapa ?? '');
                   set_id_cartera(params.row.id);
-                  set_position_tab_organigrama('2');
+                  set_position_tab('2');
                 }}
               >
                 <Avatar
@@ -205,7 +205,7 @@ export const GestionCarteraScreen: React.FC = () => {
       .finally(() => {
         set_loading(false);
       });
-  }, [carteras]);
+  }, [carteras, loading]);
 
   useEffect(() => {
     api.get('recaudo/procesos/flujos')
@@ -227,7 +227,10 @@ export const GestionCarteraScreen: React.FC = () => {
   }, [id_etapa]);
 
   const handle_tablist_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab_organigrama(newValue)
+    set_position_tab(newValue);
+    if (newValue === '1') {
+      set_id_flujo('');
+    }
   };
 
   const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
@@ -247,6 +250,16 @@ export const GestionCarteraScreen: React.FC = () => {
   const mover_estado_actual = (): void => {
     if (id_flujo) {
       const etapa_destino_actual = flujos_proceso.filter(flujo => flujo.id === Number(id_flujo))[0]?.id_etapa_destino.id;
+      api.post(`recaudo/procesos/actualizar-proceso/${id_proceso}/`, {
+        id_etapa: etapa_destino_actual,
+      })
+        .then((response) => {
+          console.log(response);
+          set_loading(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       api.get(`recaudo/procesos/atributos/${etapa_destino_actual}`)
         .then((response) => {
           set_values(response.data.data);
@@ -302,7 +315,7 @@ export const GestionCarteraScreen: React.FC = () => {
     })
       .then((response) => {
         set_carteras([]);
-        set_position_tab_organigrama('1');
+        set_position_tab('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
         set_open_notification_modal(true);
       })
