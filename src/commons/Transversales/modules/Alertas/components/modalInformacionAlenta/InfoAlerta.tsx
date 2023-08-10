@@ -154,7 +154,7 @@ export const ModalInfoAlerta: React.FC = () => {
               
                   
 
-                <Grid item xs={12} sm={3} >
+                <Grid item xs={12} sm={4} >
 
                         <TextField
                             style={{ margin: 6, width: "85%" }}
@@ -166,7 +166,7 @@ export const ModalInfoAlerta: React.FC = () => {
                            
                         />
                     </Grid>
-                <Grid item xs={12} sm={3} >
+                <Grid item xs={12} sm={4} >
 
                     <TextField
                         style={{ margin: 6 , width: "85%"}}

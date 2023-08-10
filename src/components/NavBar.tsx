@@ -123,7 +123,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             </IconButton>
             <Link to="/app/transversal/bandeja_alertas">
               <Badge
-                variant="dot" // El punto que indica la alerta
+                badgeContent={2} // Número que se mostrará en el círculo
                 color="error" // El color del círculo (rojo en este caso)
                 invisible={!tiene_alerta} // Si no hay alerta, el círculo no se mostrará
                 overlap="circular" // Superposición circular para acercar el círculo al icono

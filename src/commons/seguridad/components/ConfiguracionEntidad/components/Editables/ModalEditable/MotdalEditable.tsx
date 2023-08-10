@@ -26,8 +26,9 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleGuardarYPoner = (): void => {
-        setVisible(false)
         onClick();
+        setVisible(false)
+        
         setValue("");
         set_persona(undefined);
     };
@@ -211,14 +212,18 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
                 control_error(error.response.data.detail);
             });
-    };
+    
+        setDataEntidad(updatedDataEntidad);
+
+    
+        };
+
+
     useEffect(() => {
-        fetchDataGet().catch((error: any) => {
+        fetchDataGet().catch((error) => {
             console.error(error);
         });
-    }, []);
-
-
+    }, [handleChangeEmail]);
 
     return (
         <div>

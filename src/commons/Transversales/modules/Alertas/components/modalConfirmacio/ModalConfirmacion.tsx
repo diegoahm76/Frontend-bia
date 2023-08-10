@@ -1,12 +1,7 @@
 import React from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import { Dialog } from 'primereact/dialog';
-import {
-    Button,
-    
-    Grid
-} from "@mui/material";
-
+import {Button,Grid} from "@mui/material";
 
 import ArchiveIcon from '@mui/icons-material/Archive';
 
@@ -14,7 +9,6 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 export const ModalConfirmacionArchivar: React.FC= () => {
 
 
-   
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [visible, setVisible] = React.useState<boolean>(false);
