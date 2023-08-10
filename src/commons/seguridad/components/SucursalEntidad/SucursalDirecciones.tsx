@@ -16,7 +16,7 @@ import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Pai
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
+export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change}) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
     const [selected_pais, setselected_pais] = useState('');
     const [paises, setpaises] = useState<Paises[]>([]);
@@ -26,15 +26,18 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     const [selected_departamento_noti, setselected_departamento_noti] = useState('');
     const [departamentos_noti, set_departamentos_noti] = useState<Departamento[]>([]);
     const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
-
+    const [departamentos_noti_retur, set_departamentos_noti_retur] = useState<Departamento[]>([]);
+    const [ , setselected_municipionoti] = useState('');
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
     const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
+    const [ , setselected_municipio] = useState('');
+    const [departamentos_retur, set_departamentos_retur] = useState<Departamento[]>([]);
 
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch(`${baseURL}api/listas/paises/`);
+                const response = await fetch(`${baseURL}listas/paises/`);
                 const data: PaisesResponse = await response.json();
                 if (data.success) {
                     setpaises(data.data);
@@ -51,6 +54,38 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     useEffect(() => {
         set_link(`${baseURL}listas/departamentos/?pais=${selected_pais}`);
     }, [selected_pais]);
+
+
+
+   
+useEffect(() => {
+    if (form_values.municipio === null) {
+        set_departamentos_retur([]); // Establece el estado como vacío si municipio es null
+        return; // Sale de la función para evitar el fetch
+    }
+
+    const fetch_data = async (): Promise<any> => {
+        try {
+            if (form_values.municipio !== null) {
+                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio}`);
+                const data: DepartamentoResponse = await response.json();
+                if (data.success) {
+                    set_departamentos_retur(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } else {
+                console.log('form_values.municipio es null.');
+            }
+        } catch (error) {
+            console.log('Error fetching departamentos de notificación:', error);
+        }
+    };
+    
+
+    void fetch_data();
+}, [form_values.municipio]);
+
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -72,7 +107,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch(`${baseURL}listas/municipios/?cod_departamento=`);
+                const response = await fetch(`${baseURL}listas/municipios/?cod_departamento=${selected_departamento}`);
                 const data: MunicipiosResponse = await response.json();
                 if (data.success) {
                     setmunicipios(data.data);
@@ -87,6 +122,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         void fetch_data();
     }, [selected_departamento]);
 
+    // select de notificaciones 
+    // sss
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -104,6 +141,39 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         void fetch_data();
     }, [selected_pais]);
 
+
+
+    useEffect(() => {
+        if (form_values.municipio_notificacion === null) {
+            set_departamentos_noti_retur([]); // Establece el estado como vacío si municipio es null
+            return; // Sale de la función para evitar el fetch
+        }
+        const fetch_data = async (): Promise<any> => {
+            try {
+                if (form_values.municipio_notificacion === null || form_values.municipio_notificacion === undefined) {
+                    console.log('municipio_notificacion is null or undefined');
+                    return;
+                }
+        
+                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio_notificacion}`);
+                const data: DepartamentoResponse = await response.json();
+        
+                if (data.success) {
+                    set_departamentos_noti_retur(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching departamentos de notificación:', error);
+            }
+        };
+        
+        
+        void fetch_data();
+    }, [form_values.municipio_notificacion]);
+
+    
+
     // Nuevo useEffect para obtener municipios de notificación del departamento seleccionado
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
@@ -112,6 +182,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 const data: MunicipiosResponse = await response.json();
                 if (data.success) {
                     set_municipios_noti(data.data);
+                    console.log(municipios_noti)
+                    console.log(1111)
+
                 } else {
                     console.log(data.detail);
                 }
@@ -207,17 +280,14 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 value: direccion, // Actualiza form_values.direccion con la dirección generada
             },
         });
-    };
-
-
-
+    }; 
     const [
         // direccion_generada
         , setdireccion_generadaa] = useState('');
 
-        const [
-            // direccionGeneradaActiva
-            , set_direccion_generada_activaa] = useState(false);
+    const [
+        // direccionGeneradaActiva
+        , set_direccion_generada_activaa] = useState(false);
 
     const set_value_direction = (direccion_notificacion: any): void => {
         setdireccion_generadaa(direccion_notificacion);
@@ -230,7 +300,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         });
     };
 
-
+ 
     return (
         <>
             <DialogGeneradorDeDirecciones
@@ -247,12 +317,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 type={type_direction}
             />
             <div>
-                {/* Aquí muestras la dirección generada */}
-                {/* <>
-       {direccion_generada}
-       </>
-     */}
-
+             
 
             </div>
 
@@ -275,9 +340,11 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         <InputLabel shrink={true}>pais</InputLabel>
                         <Select
                             label="pais"
-                            value={selected_pais}
+                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
+                            value={selected_pais || "dd"}
                             onChange={(event) => {
                                 setselected_pais(event.target.value);
+                                handleinput_change(event)
                             }}
                         >
                             {paises.map((Paises) => (
@@ -293,11 +360,19 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
-                            value={selected_departamento}
+                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
+                            value={selected_departamento || "departametoo"}
                             onChange={(event) => {
                                 setselected_departamento(event.target.value);
                             }}
-                        >
+                        >  
+                            {departamentos_retur.length === 1 && (
+                                <MenuItem value="departametoo">
+                                    {departamentos_retur.map((departamento) => (
+                                        <span key={departamento.value}>{departamento.label}</span>
+                                    ))}
+                                </MenuItem>
+                            )}
                             {departamentos.map((departamento) => (
                                 <MenuItem key={departamento.value} value={departamento.value}>
                                     {departamento.label}
@@ -306,6 +381,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
+                
+
 
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
@@ -314,7 +391,12 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             label="Municipio"
                             name="municipio"
                             value={form_values.municipio}
-                            onChange={handleinput_change}
+                            // onChange={handleinput_change}
+                            onChange={(event) => {
+                                const new_valor = event.target.value !== null ? event.target.value : '';
+                                setselected_municipio(new_valor);
+                                handleinput_change(event);
+                            }}
                             inputProps={{ shrink: true }}
                         >
                             {municipios.map((municipio) => (
@@ -325,6 +407,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
+ 
+
+                
                 <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
@@ -383,11 +468,22 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
-                            value={selected_departamento_noti}
+                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
+                            value={selected_departamento_noti || "departameto"}
                             onChange={(event) => {
                                 setselected_departamento_noti(event.target.value);
                             }}
                         >
+
+                            {departamentos_noti_retur.length === 1 && (
+                                <MenuItem value="departameto">
+                                    {departamentos_noti_retur.map((departamento) => (
+                                        <span key={departamento.value}>{departamento.label}</span>
+                                    ))}
+                                </MenuItem>
+                            )}
+
+
                             {departamentos_noti.map((departamento) => (
                                 <MenuItem key={departamento.value} value={departamento.value}>
                                     {departamento.label}
@@ -398,14 +494,21 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
-                        <InputLabel shrink={true}>Municipio</InputLabel>
+                        <InputLabel
+                            shrink={true}
+                        >Municipio</InputLabel>
                         <Select
                             label="Municipio"
+
                             name="municipio_notificacion"
                             value={same_address ? form_values.municipio : form_values.municipio_notificacion}
-
-                            // value={form_values.municipio_notificacion}
-                            onChange={handleinput_change}
+                            // onChange={handleinput_change}
+                            // value={same_address ? form_values.municipio : selected_municipionoti}
+                            onChange={(event) => {
+                                const new_value = event.target.value !== null ? event.target.value : '';
+                                setselected_municipionoti(new_value);
+                                handleinput_change(event);
+                            }}
                         >
                             {municipios_noti.map((municipio) => (
                                 <MenuItem key={municipio.value} value={municipio.value}>

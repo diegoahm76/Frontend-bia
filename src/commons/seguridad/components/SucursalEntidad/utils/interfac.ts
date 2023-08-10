@@ -69,9 +69,8 @@ export interface ISucursalForm {
   activo: boolean;
   item_ya_usado: boolean;
   id_persona_empresa: number;
-  numero_sucursal: number | null;
-
-}
+  numero_sucursal: number | null; 
+ }
 
 
 export interface Paises {
@@ -118,4 +117,33 @@ export interface Props {
   selected_id: number | null;
   siguiente_numeros_sucursal: any | boolean | string;
   esPrincipalExists: any;
+  setselected_id:number | null| any ; 
+  data_entidad:any ;
+  sucursal:any;
+}
+export interface ISucursalEmpresa {
+  id_sucursal_empresa: number;
+  numero_sucursal: number;
+  descripcion_sucursal: string;
+  direccion: string;
+  direccion_sucursal_georeferenciada: string | null;
+  municipio: string | null;
+  pais_sucursal_exterior: string | null;
+  direccion_notificacion: string;
+  direccion_notificacion_referencia: string | null;
+  municipio_notificacion: string | null;
+  email_sucursal: string;
+  telefono_sucursal: string;
+  es_principal: boolean;
+  activo: boolean;
+  item_ya_usado: boolean;
+  id_persona_empresa: number;
+}
+ 
+export interface IDataentidad {
+  id_persona: number;
+  numero_documento: string;
+  nombre_tipo_documento: string;
+  digito_verificacion: string;
+  razon_social: string;
 }

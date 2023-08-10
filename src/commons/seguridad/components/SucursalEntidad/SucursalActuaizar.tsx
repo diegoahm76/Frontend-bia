@@ -8,11 +8,11 @@ import { SucursalDirecciones } from "./SucursalDirecciones";
 import { Title } from "../../../../components";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { ISucursalForm, Props } from "./utils/interfac";
- 
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
+export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, selected_id, setselected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
   const initial_state: ISucursalForm = {
     descripcion_sucursal: "",
@@ -23,7 +23,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     direccion_notificacion: "",
     direccion_notificacion_referencia: "",
     municipio_notificacion: null,
-    email_sucursal: "", 
+    email_sucursal: "",
     confirmar_email: "",
     telefono_sucursal: "",
     es_principal: false,
@@ -31,15 +31,16 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     item_ya_usado: false,
     id_persona_empresa: 3,
     numero_sucursal: siguiente_numeros_sucursal,
+
   };
   const [exiting, set_exiting] = useState(false);
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
- 
+
   useEffect(() => {
     if (isediting) {
 
-       void fetch_data();
+      void fetch_data();
     }
   }, [selected_id]);
 
@@ -85,13 +86,13 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
         method: isediting ? "put" : "post",
         url: endpoint,
         data: form_values,
-      })  
+      })
       .then((response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
-         setform_values(initial_state);
-         
-        
+        setform_values(initial_state);
+        setselected_id(null);
+
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
@@ -101,9 +102,9 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
 
 
   const handle_clear_fields = (): void => {
-    // Set all form field values to their initial_state (empty values)
+    // Set all form field values to their i2nitial_state (empty values)
     setform_values(initial_state);
-   };
+  };
 
   const handle_exit = (): void => {
     set_exiting(true);
@@ -118,10 +119,11 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       window.history.back();
     }
   }, [exiting]);
-  
+
   return (
     <Grid container
       spacing={2}
+      marginTop={2}
     >
 
       <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
@@ -143,7 +145,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           onChange={handleinput_change}
         />
       </Grid>
-      <Grid item xs={12} sm={10}>
+      <Grid item xs={12} sm={10.5}>
         <TextField
           variant="outlined"
           size="small"
@@ -155,10 +157,11 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           name="descripcion_sucursal"
           value={form_values.descripcion_sucursal}
           onChange={handleinput_change}
+          disabled={selected_id !== null && data_entidad.find((sucursal: { id_sucursal_empresa: number; }) => sucursal.id_sucursal_empresa === selected_id)?.item_ya_usado}
         />
       </Grid>
 
-      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} />
+
 
       <Grid item xs={12} sm={6}>
         <TextField
@@ -254,21 +257,26 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={12} sm={2}>
-        <Button variant="contained" color="primary" onClick={handleform_submit}>
-          {isediting  ? "Actualizar" : "Guardar"}
-        </Button>
 
-      </Grid>
-      <Grid item xs={12} sm={2}>
-        <Button variant="contained" color="secondary" onClick={handle_clear_fields}>
-          Borrar
-        </Button>
-      </Grid>
-      <Grid item xs={12} sm={2}>
-        <Button variant="contained" color="error" onClick={handle_exit}>
-          Salir
-        </Button>
+      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} />
+
+      <Grid  container marginTop={2} direction="row" justifyContent="flex-end" >
+        <Grid item xs={12} sm={1.5}>
+          <Button variant="contained" color="primary" onClick={handleform_submit}>
+            {isediting ? "Actualizar" : "Guardar"}
+          </Button>
+
+        </Grid>
+        <Grid item xs={12} sm={1.5}>
+          <Button variant="contained" color="secondary" onClick={handle_clear_fields}>
+            Borrar
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={1}>
+          <Button variant="contained" color="error" onClick={handle_exit}>
+            Salir
+          </Button>
+        </Grid>
       </Grid>
 
     </Grid>
