@@ -192,7 +192,7 @@ export const GestionCarteraScreen: React.FC = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [carteras]);
+  }, [carteras, loading]);
 
   useEffect(() => {
     api.get('recaudo/cobros/carteras')
@@ -215,7 +215,7 @@ export const GestionCarteraScreen: React.FC = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     if (id_etapa) {
