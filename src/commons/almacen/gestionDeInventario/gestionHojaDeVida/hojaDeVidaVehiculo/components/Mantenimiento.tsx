@@ -12,8 +12,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 const Mantenimiento_vehicle = () => {
 
     const { maintenance_vehicle } = useAppSelector((state) => state.cve);
-    //    const dispatch = useAppDispatch();
-    //  void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0)    );
+
 
     const columns_mantenimientos: GridColDef[] = [
 

@@ -36,13 +36,15 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     if (current_cv_computer.id_hoja_de_vida !== null) {
       set_action("editar")
     }
-
+    if (current_cv_computer.id_articulo !== null) {
+      void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0))
+    }
   }, [current_cv_computer]);
 
   const programacion_mantenimiento = (): void => {
     navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_computadores');
   };
-  void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0))
+
 
 
 
@@ -155,7 +157,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
               variant="contained"
               onClick={programacion_mantenimiento}
             >
-              Programar mantenimiento
+              MANTENIMIENTOS
             </Button>
           </Grid>
         </Grid>

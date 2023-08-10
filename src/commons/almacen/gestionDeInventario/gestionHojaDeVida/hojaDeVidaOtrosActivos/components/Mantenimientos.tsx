@@ -3,19 +3,17 @@ import { Box, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../../../components/Title';
+import { useAppSelector } from '../../../../../../hooks';
 
-import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_maintenance_other } from '../store/thunks/cvOtrosActivosThunks';
+
 
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const Mantenimiento_other = () => {
 
-    const { current_cv_other, maintenance_other } = useAppSelector((state) => state.cvo);
-    const dispatch = useAppDispatch();
-    void dispatch(get_maintenance_other(current_cv_other.id_articulo ?? 0)
-    );
+    const { maintenance_other } = useAppSelector((state) => state.cvo);
+
 
     const columns_mantenimientos: GridColDef[] = [
 
