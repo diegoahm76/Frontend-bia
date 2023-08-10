@@ -74,7 +74,7 @@ const DialogCrearOrganigrama = ({
         formData,
         set_position_tab_organigrama,
         handle_close_crear_organigrama,
-        setLoadingButton,
+        setLoadingButton
       )
     );
   };
@@ -253,7 +253,14 @@ const DialogCrearOrganigrama = ({
                       fontSize: '0.75rem'
                     }}
                   >
-                    Archivo Soporte Organigrama
+                    {control_organigrama_creacion._formValues.ruta_resolucion
+                      ? control_organigrama_creacion._formValues.ruta_resolucion
+                          .name ??
+                        control_organigrama_creacion._formValues.ruta_resolucion.replace(
+                          /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                          ''
+                        )
+                      : 'Seleccione archivo'}
                   </small>
                 </label>
               </>

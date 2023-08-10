@@ -39,9 +39,9 @@ import { control_warning } from '../../../../almacen/configuracion/store/thunks/
 import { set_special_edit } from '../../store/slices/organigramSlice';
 import { FILEWEIGHT } from '../../../../../fileWeight/fileWeight';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+// import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
-import SyncIcon  from '@mui/icons-material/Sync';
+import SyncIcon from '@mui/icons-material/Sync';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -313,7 +313,13 @@ export const EditarOrganigrama = ({
                           fontSize: '0.75rem'
                         }}
                       >
-                        Archivo Soporte Organigrama
+                        {control_organigrama._formValues.ruta_resolucion
+                          ? control_organigrama._formValues.ruta_resolucion.name ??
+                          control_organigrama._formValues.ruta_resolucion.replace(
+                              /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                              ''
+                            )
+                          : 'Seleccione archivo'}
                       </small>
                     </label>
                   </>
@@ -321,17 +327,16 @@ export const EditarOrganigrama = ({
               />
             </Grid>
 
-            <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
+           {/* <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
               <DownloadButton
                 fileName="ruta_soporte"
                 condition={
-                  // organigram_current === null ||
                   organigram_current?.ruta_resolucion === null ||
                   organigram_current?.ruta_resolucion === ''
                 }
-                fileUrl={organigram_current?.ruta_resolucion}
+                fileUrl={control_organigrama._formValues.ruta_resolucion}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
 
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
