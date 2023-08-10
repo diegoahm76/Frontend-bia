@@ -193,7 +193,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                     startIcon={<SearchIcon />}
                     onClick={() => { set_abrir_modal_bien(true); }}
                   >
-                    Buscar
+                    Buscar bien
                   </Button>
                   {abrir_modal_bien && (
                     <BuscarBienViveros
@@ -236,7 +236,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                   <Button
                     color='primary'
                     variant='contained'
-                    // startIcon={<SearchIcon />}
+                    startIcon={<SearchIcon />}
                     onClick={() => { realizar_analistica(); }}
                   >
                     Buscar
@@ -383,6 +383,8 @@ export const DashBoardViverosScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
+              <Card variant="outlined">
+                <CardContent>
               <Stack
                       direction="row"
                       justifyContent="center"
@@ -392,8 +394,12 @@ export const DashBoardViverosScreen: React.FC = () => {
                       </Typography>
                 </Stack>
                 <DistribucionBienes resumen={resumen}></DistribucionBienes>
+                </CardContent>
+                </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
+              <Card variant="outlined">
+                <CardContent>
               <Stack
                       direction="row"
                       justifyContent="center"
@@ -403,12 +409,16 @@ export const DashBoardViverosScreen: React.FC = () => {
                       </Typography>
                 </Stack>
                 <EtapasMaterialVegetal resumen={resumen}></EtapasMaterialVegetal>
+                </CardContent>
+                </Card>
               </Grid>
             </Grid>
           </Box>
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
+              <Card variant="outlined">
+                <CardContent>
               <Stack
                       direction="row"
                       justifyContent="center"
@@ -418,6 +428,8 @@ export const DashBoardViverosScreen: React.FC = () => {
                       </Typography>
                 </Stack>
                 <OrigenBienes resumen={resumen}></OrigenBienes>
+                </CardContent>
+                </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <UltimosMovimientos movimientos={ultimos_movimientos}></UltimosMovimientos>

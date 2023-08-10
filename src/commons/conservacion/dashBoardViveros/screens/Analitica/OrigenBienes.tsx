@@ -31,7 +31,7 @@ export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
     }
     return (
         <>
-                <ReactApexChart options={chart_data} series={state.series} type="pie" height={215}/>
+                <ReactApexChart options={chart_data} series={state.series} type="pie" height={191}/>
         </>
     );
 }
