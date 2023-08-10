@@ -1,7 +1,7 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type Icv, type IMarca, type IComputers, type ICvcomputers, } from "../../interfaces/CvComputo";
+import type { Icv, IMarca, IComputers, ICvcomputers, IObjMantenimiento, } from "../../interfaces/CvComputo";
 
 const initial_state_current_computer = {
   id_bien: null,
@@ -68,14 +68,20 @@ const initial_state: Icv = {
   current_computer: initial_state_current_computer,
   current_cv_computer: initial_state_current_cv_computer,
   marcas: [],
-  cv_computer: []
-
+  cv_computer: [],
+  maintenance: []
 };
 
 export const cv_computo_slice = createSlice({
   name: "cv",
   initialState: initial_state,
   reducers: {
+    set_maintenance: (
+      state: Icv,
+      action: PayloadAction<IObjMantenimiento[]>
+    ) => {
+      state.maintenance = action.payload;
+    },
     set_computers: (
       state: Icv,
       action: PayloadAction<IComputers[]>
@@ -109,5 +115,5 @@ export const cv_computo_slice = createSlice({
   }
 })
 
-export const { set_current_computer, set_cv_computer, get_marks, set_computers, set_current_cv_computer } = cv_computo_slice.actions;
+export const { set_maintenance, set_current_computer, set_cv_computer, get_marks, set_computers, set_current_cv_computer } = cv_computo_slice.actions;
 

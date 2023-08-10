@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import SaveIcon from '@mui/icons-material/Save';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { create_cv_computers_service, delete_cv_computers_service, get_marca_service, update_cv_computers_service, } from '../store/thunks/cvComputoThunks';
+import { create_cv_computers_service, delete_cv_computers_service, get_maintenance, get_marca_service, update_cv_computers_service, } from '../store/thunks/cvComputoThunks';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { type ICvcomputers as FormValues } from '../interfaces/CvComputo';
@@ -15,6 +16,7 @@ import EspecificacionesTec from '../components/EspecificacionesTec';
 import Caracteristicas from '../components/Caracteristicas';
 import FormButton from '../../../../../../components/partials/form/FormButton';
 import { Title } from '../../../../../../components';
+import Mantenimiento from '../components/Mantenimientos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
@@ -26,13 +28,22 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_marca_service());
+
+
   }, []);
 
   useEffect(() => {
     if (current_cv_computer.id_hoja_de_vida !== null) {
       set_action("editar")
     }
+
   }, [current_cv_computer]);
+
+  const programacion_mantenimiento = (): void => {
+    navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_computadores');
+  };
+  void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0))
+
 
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -109,6 +120,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           control_computo={control_cv_computo}
           get_values={get_values}
           title="Características" />
+        <Mantenimiento />
 
 
         <Grid
@@ -127,14 +139,24 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
             />
           </Grid>
 
-          <Grid item xs={12} md={2}>
-            <FormButton
-              variant_button="outlined"
-              on_click_function={delete_hoja_vida}
-              icon_class={<CloseIcon />}
-              label={"Eliminar"}
-              type_button="button"
-            />
+          {current_cv_computer.id_hoja_de_vida !== null &&
+            <Grid item xs={12} md={2}>
+              <FormButton
+                variant_button="outlined"
+                on_click_function={delete_hoja_vida}
+                icon_class={<CloseIcon />}
+                label={"Eliminar"}
+                type_button="button"
+              />
+            </Grid>}
+
+          <Grid item xs={12} md={3}>
+            <Button
+              variant="contained"
+              onClick={programacion_mantenimiento}
+            >
+              Programar mantenimiento
+            </Button>
           </Grid>
         </Grid>
 

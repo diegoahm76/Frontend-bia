@@ -67,7 +67,7 @@ export interface IObjEntrega {
 
 export interface IObjBienEntrega {
     id_item_despacho_consumo?: number | null;
-    id_despacho_consumo?: number | null | undefined;
+    id_despacho_consumo?: number | null
     id_bien_despachado?: number | null;
     id_entrada_almacen_bien?: number | null;
     id_bodega?: number | null;
