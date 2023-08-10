@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import CloseIcon from '@mui/icons-material/Close';
 import { type IcvVehicles as FormValues } from '../interfaces/CvVehiculo';
@@ -14,6 +14,7 @@ import FormButton from '../../../../../../components/partials/form/FormButton';
 import EspecificacionAdicional from '../components/CaracteristicasAdicionales';
 import { get_marca_service } from '../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { Title } from '../../../../../../components';
+import Mantenimiento_vehicle from '../components/Mantenimiento';
 
 
 
@@ -79,6 +80,9 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
       void dispatch(delete_cv_vehicle_service(current_cv_vehicle.id_hoja_de_vida));
     }
   };
+  const programacion_mantenimiento = (): void => {
+    navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_vehiculos');
+  };
 
   return (
     <>
@@ -103,6 +107,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
         <EspecificacionesVehicle
           control_vehicle={control_vehicle} get_values={get_values} title={''} />
         <EspecificacionAdicional control_vehicle={control_vehicle} get_values={get_values} />
+        <Mantenimiento_vehicle />
 
 
         <Grid
@@ -122,14 +127,23 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
               type_button="button"
             />
           </Grid>
-          <Grid item xs={12} md={2}>
-            <FormButton
-              variant_button="outlined"
-              on_click_function={delete_hoja_vida}
-              icon_class={<CloseIcon />}
-              label={"Eliminar"}
-              type_button="button"
-            />
+          {current_cv_vehicle.id_hoja_de_vida !== null &&
+            <Grid item xs={12} md={2}>
+              <FormButton
+                variant_button="outlined"
+                on_click_function={delete_hoja_vida}
+                icon_class={<CloseIcon />}
+                label={"Eliminar"}
+                type_button="button"
+              />
+            </Grid>}
+          <Grid item xs={12} md={3}>
+            <Button
+              variant="contained"
+              onClick={programacion_mantenimiento}
+            >
+              Programar mantenimiento
+            </Button>
           </Grid>
 
 

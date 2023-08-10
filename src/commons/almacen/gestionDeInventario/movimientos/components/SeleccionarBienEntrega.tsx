@@ -7,11 +7,16 @@ import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
-import type { IObjBien, IObjBienEntrega } from '../interfaces/entregas';
+import type {
+    IEntrega,
+    IObjBien,
+    IObjBienEntrega,
+    IObjBienesEntrada,
+} from '../interfaces/entregas';
 import {
-
+    initial_state_bien_selected,
     initial_state_current_bien,
-    set_bienes,
+    set_bien_selected,
     set_bienes_entrada,
     set_bienes_entrega,
     set_current_bien,
@@ -20,9 +25,11 @@ import {
     control_error,
     get_bien_code_service,
 } from '../store/thunks/entregaThunks';
-
+interface IProps {
+    get_values: any;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBienEntrega = () => {
+const SeleccionarBienEntrega = ({ get_values }: IProps) => {
     const {
         control: control_bien,
         reset: reset_bien,
@@ -39,6 +46,8 @@ const SeleccionarBienEntrega = () => {
         useState<boolean>(false);
     const [action, set_action] = useState<string>('agregar');
     const [aux_insumos, set_aux_insumos] = useState<IObjBienEntrega[]>([]);
+    const [aux_bien_selected, set_aux_bien_selected] =
+        useState<IObjBienesEntrada>();
 
     const dispatch = useAppDispatch();
 
@@ -49,7 +58,7 @@ const SeleccionarBienEntrega = () => {
         bienes_entrega,
         current_entrega,
         current_entrada,
-    } = useAppSelector((state) => state.entrega_otros);
+    } = useAppSelector((state: { entrega_otros: IEntrega; }) => state.entrega_otros);
 
     // tabla de bienes solicitud de consumo
     const columns_bienes: GridColDef[] = [
@@ -123,7 +132,6 @@ const SeleccionarBienEntrega = () => {
             field: 'cantidad_despachada',
             headerName: 'Cantidad despachada',
             width: 150,
-
         },
 
         {
@@ -181,16 +189,15 @@ const SeleccionarBienEntrega = () => {
 
     const search_bien: any = async () => {
         try {
-            const fecha = new Date(
-                current_entrega.fecha_despacho ?? ''
-            ).toISOString();
-            console.log(fecha.slice(0, 10) + ' ' + fecha.slice(11, 19))
+            const fecha = new Date(get_values('fecha_despacho') ?? '').toISOString();
+            console.log(fecha.slice(0, 10) + ' ' + fecha.slice(11, 19));
             const data = await dispatch(
                 get_bien_code_service(
-                    bien_selected.codigo_bien ?? '',
+                    bien_selected?.codigo_bien ?? '',
                     fecha.slice(0, 10) + ' ' + fecha.slice(11, 19)
                 )
             );
+            dispatch(set_bien_selected(initial_state_bien_selected));
             set_bienes_aux(data);
         } catch (error) {
             console.error(error);
@@ -222,13 +229,18 @@ const SeleccionarBienEntrega = () => {
     }, [current_entrega]);
 
     useEffect(() => {
-        console.log('hshs');
         if (bien_selected.id_bien !== null) {
+            set_aux_bien_selected(bien_selected);
             console.log(bien_selected);
             dispatch(set_current_bien(initial_state_current_bien));
             search_bien();
         }
     }, [bien_selected]);
+    useEffect(() => {
+        if (aux_bien_selected?.id_bien !== null) {
+            console.log(aux_bien_selected);
+        }
+    }, [aux_bien_selected]);
 
     useEffect(() => {
         set_aux_insumos(bienes_entrega);
@@ -260,8 +272,7 @@ const SeleccionarBienEntrega = () => {
                     (current_bien.cantidad_disponible ?? current_bien.cantidad ?? 0)
                 ) {
                     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                    console.log(asignada, bien_selected.cantidad_disponible);
-                    if (asignada <= (bien_selected.cantidad_disponible ?? 0)) {
+                    if (asignada <= (aux_bien_selected?.cantidad_disponible ?? 0)) {
                         const new_bien: IObjBienEntrega = {
                             id_item_despacho_consumo: data.id_item_despacho_consumo ?? null,
                             id_entrada_almacen_bien:
@@ -327,7 +338,7 @@ const SeleccionarBienEntrega = () => {
                     } else {
                         control_error(
                             'La cantidad asignada debe ser máximo ' +
-                            String(bien_selected.cantidad_disponible)
+                            String(aux_bien_selected?.cantidad_disponible)
                         );
                     }
                 } else {
@@ -382,12 +393,12 @@ const SeleccionarBienEntrega = () => {
             <Grid container direction="row" padding={2} borderRadius={2}>
                 <BuscarModelo
                     set_current_model={set_current_bien}
-                    row_id={'id_bien'}
+                    row_id={'id_inventario'}
                     columns_model={columns_bienes}
                     models={bienes}
                     get_filters_models={null}
-                    set_models={set_bienes}
-                    show_search_button={true}
+                    set_models={set_bienes_entrada}
+                    show_search_button={false}
                     button_submit_label="Buscar bien"
                     form_inputs={[
                         {
@@ -397,7 +408,7 @@ const SeleccionarBienEntrega = () => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 4,
+                            md: 5,
                             control_form: control_bien,
                             control_name: 'codigo_bien',
                             default_value: '',
@@ -417,7 +428,7 @@ const SeleccionarBienEntrega = () => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 5,
+                            md: 7,
                             control_form: control_bien,
                             control_name: 'nombre',
                             default_value: '',
@@ -526,7 +537,6 @@ const SeleccionarBienEntrega = () => {
                             disabled: false,
                             helper_text: '',
                         },
-
                     ]}
                     title_list="Bienes entregados"
                     list={aux_insumos}
