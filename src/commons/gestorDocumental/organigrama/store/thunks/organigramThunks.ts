@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SetStateAction, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 import Swal from 'sweetalert2'; // , { type SweetAlertResult }
@@ -94,10 +95,13 @@ export const get_finished_organigrams_service = (): any => {
 // Agregar Organigrama
 export const add_organigrams_service: any = (
   organigrama: any,
-  set_position_tab_organigrama: Dispatch<SetStateAction<string>>
+  set_position_tab_organigrama: Dispatch<SetStateAction<string>>,
+  handle_close_crear_organigrama: () => void,
+  setLoadingButton: Dispatch<SetStateAction<boolean>>
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setLoadingButton(true);
       // console.log(organigrama);
       const { data } = await api.post(
         'transversal/organigrama/create/',
@@ -108,13 +112,16 @@ export const add_organigrams_service: any = (
       dispatch(current_organigram(data.detail));
       control_success('El organigrama se agrego correctamente');
       set_position_tab_organigrama('2');
+      handle_close_crear_organigrama();
       return data;
     } catch (error: any) {
       // console.log('add_organigrams_service');
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Error al crear organigrama');
       // console.log(error.response.data);
       set_position_tab_organigrama('1');
       return error as AxiosError;
+    } finally {
+      setLoadingButton(false);
     }
   };
 };
@@ -122,10 +129,12 @@ export const add_organigrams_service: any = (
 // Editar Organigrama
 export const edit_organigrams_service: any = (
   organigrama: IObjCreateOrganigram,
-  id: string
+  id: string,
+  setLoadingEdicionOrgan: Dispatch<SetStateAction<boolean>>
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setLoadingEdicionOrgan(true);
       // console.log(api.defaults);
       const { data } = await api.patch(
         `transversal/organigrama/update/${id}/`,
@@ -140,6 +149,8 @@ export const edit_organigrams_service: any = (
       // console.log('edit_organigrams_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setLoadingEdicionOrgan(false);
     }
   };
 };
@@ -180,7 +191,7 @@ export const to_resume_organigram_service: any = (id: string) => {
       const { data } = await api.put(
         `transversal/organigrama/reanudar-organigrama/${id}/`
       );
-     // console.log(data);
+      // console.log(data);
       dispatch(get_organigrams_service());
       void Swal.fire({
         position: 'center',
@@ -250,7 +261,7 @@ export const get_unitys_service: any = (id: string | number) => {
       dispatch(get_unitys(data.data));
       return data;
     } catch (error: any) {
-     // console.log('get_unitys_service');
+      // console.log('get_unitys_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -271,7 +282,7 @@ export const update_unitys_service: any = (
       );
       dispatch(get_unitys_service(id));
       control_success('Proceso Exitoso');
-      clean_unitys()
+      clean_unitys();
       return data;
     } catch (error: any) {
       // console.log('update_unitys_service fail');
@@ -331,7 +342,7 @@ export const delegar_organigrama_persona: any = (
       control_success('Delegacion de organigrama exitosa');
       return data;
     } catch (error: any) {
-     // console.log('delegate_organigram_user');
+      // console.log('delegate_organigram_user');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -348,7 +359,9 @@ export const cambio_organigrama_actual: any = (
         data_cambio
       );
       control_success('Proceso exitoso');
-      control_warning('No olvides asignar los líderes a las unidades organizacionales del nuevo organigrama actual')
+      control_warning(
+        'No olvides asignar los líderes a las unidades organizacionales del nuevo organigrama actual'
+      );
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -378,7 +391,7 @@ export const get_organigramas_posibles: any = () => {
       const { data } = await api.get(
         'transversal/organigrama/get-organigramas-posibles/'
       );
-     //  console.log(data);
+      //  console.log(data);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

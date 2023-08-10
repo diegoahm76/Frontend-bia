@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import {
   TextField,
   Dialog,
@@ -22,6 +22,9 @@ import { control_warning } from '../../../../almacen/configuracion/store/thunks/
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { FILEWEIGHT } from '../../../../../fileWeight/fileWeight';
+import use_editar_organigrama from '../../hooks/useEditarOrganigrama';
+import { LoadingButton } from '@mui/lab';
+import { useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
@@ -32,21 +35,16 @@ const DialogCrearOrganigrama = ({
   const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const {
-    control: control_organigrama,
-    handleSubmit: handle_submit,
-    reset: reset_creacion_organigrama,
-    watch: watch_creacion_organigrama
-  } = useForm<FormValues>({
-    defaultValues: {
-      nombre: '',
-      version: '',
-      descripcion: '',
-      ruta_resolucion: ''
-    }
-  });
 
-  const creacion_organigrama_values = watch_creacion_organigrama();
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  //* hook
+  const {
+    control_organigrama_creacion,
+    handle_submit,
+    reset_creacion_organigrama,
+    creacion_organigrama_values
+  } = use_editar_organigrama();
 
   const handle_close_crear_organigrama = (): void => {
     set_is_modal_active(false);
@@ -72,9 +70,13 @@ const DialogCrearOrganigrama = ({
     }
 
     void dispatch(
-      add_organigrams_service(formData, set_position_tab_organigrama)
+      add_organigrams_service(
+        formData,
+        set_position_tab_organigrama,
+        handle_close_crear_organigrama,
+        setLoadingButton,
+      )
     );
-    handle_close_crear_organigrama();
   };
 
   return (
@@ -109,7 +111,7 @@ const DialogCrearOrganigrama = ({
         <DialogContent sx={{ mb: '0px' }}>
           <Controller
             name="nombre"
-            control={control_organigrama}
+            control={control_organigrama_creacion}
             defaultValue=""
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -141,7 +143,7 @@ const DialogCrearOrganigrama = ({
           />
           <Controller
             name="version"
-            control={control_organigrama}
+            control={control_organigrama_creacion}
             defaultValue=""
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -173,7 +175,7 @@ const DialogCrearOrganigrama = ({
           />
           <Controller
             name="descripcion"
-            control={control_organigrama}
+            control={control_organigrama_creacion}
             defaultValue=""
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -197,7 +199,7 @@ const DialogCrearOrganigrama = ({
           {/*   ruta para soporte de organigrama */}
           <Controller
             name="ruta_resolucion"
-            control={control_organigrama}
+            control={control_organigrama_creacion}
             defaultValue=""
             rules={{ required: false }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -287,9 +289,14 @@ const DialogCrearOrganigrama = ({
             >
               CERRAR
             </Button>
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+            <LoadingButton
+              loading={loadingButton}
+              type="submit"
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
               CREAR
-            </Button>
+            </LoadingButton>
           </Stack>
         </DialogActions>
       </Box>
