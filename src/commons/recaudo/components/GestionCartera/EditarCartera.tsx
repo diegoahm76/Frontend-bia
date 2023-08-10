@@ -272,11 +272,6 @@ export const EditarCartera: React.FC<IProps> = ({
                     value={id_flujo}
                     onChange={handle_select_change}
                   >
-                    {/* {etapas_destino.map(({ id, etapa }) => (
-                  <MenuItem key={id} value={id}>
-                    {etapa}
-                  </MenuItem>
-                ))} */}
                     {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
                       <MenuItem key={id} value={id}>
                         {etapa}
