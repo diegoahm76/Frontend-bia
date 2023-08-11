@@ -79,4 +79,5 @@ export interface IObjBienConsumo {
   bodega?: string | null;
   id_entrada_bien?: number | null;
   id_unidad_medida?: number | null;
+
 }

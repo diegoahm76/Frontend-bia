@@ -11,12 +11,13 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, editar_solicitud, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
-import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
+import { set_current_solicitud, set_persona_solicita, reset_state } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 import SearchIcon from '@mui/icons-material/Search';
 import PrintIcon from '@mui/icons-material/Print';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import Limpiar from '../../../../conservacion/componentes/Limpiar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoScreen = () => {
@@ -30,6 +31,15 @@ const SolicitudConsumoScreen = () => {
     const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
     const handle_open_select_model = (): void => { set_open_search_modal(true); };
 
+
+    const initial_values = (): void => {
+        void dispatch(get_uni_organizacional());
+        void dispatch(get_num_solicitud());
+        void dispatch(get_medida_service());
+        dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
+        set_action('crear');
+
+    }
 
     useEffect(() => {
         void dispatch(get_uni_organizacional());
@@ -164,7 +174,7 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -201,9 +211,18 @@ const SolicitudConsumoScreen = () => {
                             set_anular("Anular")
                             set_anular_solicitud(true);
                         }}
+
                     >
                         ANULAR
                     </Button>
+                </Grid>
+                <Grid item xs={12} md={1}>
+                    <Limpiar
+                        dispatch={dispatch}
+                        reset_state={reset_state}
+                        set_initial_values={initial_values}
+                        variant_button={'contained'}
+                    />
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <ButtonSalir

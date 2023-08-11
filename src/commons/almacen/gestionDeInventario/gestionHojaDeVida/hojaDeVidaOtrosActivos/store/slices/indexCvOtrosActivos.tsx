@@ -1,7 +1,7 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type Icv, type IMarca, type IOthers, type IcvOthers, } from "../../interfaces/CvOtrosActivos";
+import type { Icv, IMarca, IOthers, IcvOthers, IObjMantenimiento, } from "../../interfaces/CvOtrosActivos";
 
 const initial_state_current_other = {
     id_bien: null,
@@ -55,7 +55,8 @@ const initial_state: Icv = {
     current_other: initial_state_current_other,
     current_cv_other: initial_state_current_cv_other,
     marcas: [],
-    cv_other: []
+    cv_other: [],
+    maintenance_other: []
 
 };
 
@@ -63,6 +64,12 @@ export const cv_others_slice = createSlice({
     name: "cvo",
     initialState: initial_state,
     reducers: {
+        set_maintenance_other: (
+            state: Icv,
+            action: PayloadAction<IObjMantenimiento[]>
+        ) => {
+            state.maintenance_other = action.payload;
+        },
         set_others: (
             state: Icv,
             action: PayloadAction<IOthers[]>
@@ -103,5 +110,5 @@ export const cv_others_slice = createSlice({
     }
 })
 
-export const { set_current_cv_others, set_cv_others, get_marks, set_others, set_current_others } = cv_others_slice.actions;
+export const { set_maintenance_other, set_current_cv_others, set_cv_others, get_marks, set_others, set_current_others } = cv_others_slice.actions;
 
