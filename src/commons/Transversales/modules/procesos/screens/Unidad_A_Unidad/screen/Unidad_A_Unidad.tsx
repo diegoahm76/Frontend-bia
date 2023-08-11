@@ -1,12 +1,21 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState, type FC } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import { HistoricoTraslados } from '../components/HistoricoTraslados/screen/HistoricoTraslados';
 import { OrgAnteriorScreen } from '../components/OrganigramaAnterior/screen/OrgAnteriorScreen';
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
+  // ! ------ USE STATES DECLARATIONS ------
   const [modalHistoricoTraslados, setmModalHistoricoTraslados] =
     useState<boolean>(false);
+
+  // ! ------ USE EFFECTS DECLARATIONS------
+
+  // ?  use effect that allow us to get the data to fill the select of unidad a unidad (unidades retiradas (organigrama anterior))
+
+  useEffect(() => {
+    console.log('hi from useeffect');
+  }, []);
 
   return (
     <>

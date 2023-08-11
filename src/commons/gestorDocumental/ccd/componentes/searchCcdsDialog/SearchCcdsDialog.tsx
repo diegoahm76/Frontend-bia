@@ -161,21 +161,6 @@ const SearchCcdModal = ({
     >
       <DialogTitle>
         <Title title="Consultar los CCD's que coincidan con el criterio de búsqueda" />
-        {/* <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-              closeModalBusquedaCreacionCCD();
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <CloseIcon />
-          </IconButton> */}
       </DialogTitle>
       {/*    <Divider /> */}
       <DialogContent sx={{ mb: '0px' }}>

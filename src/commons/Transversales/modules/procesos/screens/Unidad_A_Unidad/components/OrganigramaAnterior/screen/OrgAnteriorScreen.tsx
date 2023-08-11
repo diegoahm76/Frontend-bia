@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Button, Grid, Stack, TextField } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { Title } from '../../../../../../../../../components';
-import SearchIcon from '@mui/icons-material/Search';
+// import SearchIcon from '@mui/icons-material/Search';
 import { useUnidadAUnidad } from '../../../hook/useUnidadAUnidad';
 
 export const OrgAnteriorScreen = (): JSX.Element => {
@@ -53,7 +53,7 @@ export const OrgAnteriorScreen = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3.3}>
+              <Grid item xs={12} sm={3.5}>
                 <Controller
                   name="nombre"
                   control={control_organigrama_anterior}
@@ -79,7 +79,7 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4.5}>
+              <Grid item xs={12} sm={5.5}>
                 <Controller
                   name="descripcion"
                   control={control_organigrama_anterior}
@@ -101,6 +101,31 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                         value
                         /* organigrama_lideres_current?.descripcion ||
                         organigrama_lideres_current?.descripcion_organigrama */
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      disabled={true}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="verison"
+                  control={control_organigrama_anterior}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      fullWidth
+                      label="Versión"
+                      size="small"
+                      variant="outlined"
+                      value={
+                        value
+                        /* organigrama_lideres_current?.version ||
+                        organigrama_lideres_current?.version_organigra */
                       }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
@@ -141,33 +166,41 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={1.5}>
+              <Grid item xs={12} sm={2.6}>
                 <Controller
-                  name="verison"
+                  name="fecha_retiro_produccion"
                   control={control_organigrama_anterior}
+                  defaultValue=""
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
                     <TextField
                       fullWidth
-                      label="Versión"
+                      label="Fecha Retiro en Producción"
                       size="small"
                       variant="outlined"
                       value={
                         value
-                        /* organigrama_lideres_current?.version ||
-                        organigrama_lideres_current?.version_organigra */
+                        /*  organigrama_lideres_current?.fecha_puesta_produccion
+                          ? new Date(
+                              organigrama_lideres_current?.fecha_puesta_produccion
+                            ).toLocaleString()
+                          : '' ||
+                            (organigrama_lideres_current?.fecha_puesta_produccion_organigrama &&
+                              new Date(
+                                organigrama_lideres_current?.fecha_puesta_produccion_organigrama
+                              ).toLocaleString()) */
                       }
-                      InputLabelProps={{ shrink: true }}
                       disabled={true}
+                      InputLabelProps={{ shrink: true }}
                     />
                   )}
                 />
               </Grid>
             </Grid>
 
-            <Stack
+            {/* <Stack
               direction="row"
               justifyContent="flex-end"
               spacing={2}
@@ -183,7 +216,7 @@ export const OrgAnteriorScreen = (): JSX.Element => {
               >
                 SIUUUUUU
               </Button>
-            </Stack>
+            </Stack> */}
           </form>
         </Grid>
       </Grid>
