@@ -6,6 +6,7 @@ import {
   get_alerta,
   get_alerta_cod,
   get_alerta_programada,
+  get_prioridad_alerta,
   perfiles_sistema,
   personas_alertas,
 } from '../request/request';
@@ -151,14 +152,13 @@ export const UserProvider = ({
     set_is_lider(true);
   }
 
-  const [selectedValueFromSelect, setSelectValueFromSelect] =
-    React.useState<{
-      label: string;
-      value: string;
-    }>({
-      label: '',
-      value: '',
-    });
+  const [selectedValueFromSelect, setSelectValueFromSelect] = React.useState<{
+    label: string;
+    value: string;
+  }>({
+    label: '',
+    value: '',
+  });
 
   // * selected
   const [alertas_selected, set_alertas_selected] = React.useState<ValueProps[]>(
@@ -238,6 +238,20 @@ export const UserProvider = ({
       const response = await get_alerta_programada(cod_clase_alerta);
       if (response) {
         set_rows_alerta_programada(response);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+  const [alertas_prioridad, set_alertas_prioridad] = React.useState<
+    ValueProps[]
+  >([]);
+
+  const fetch_data_prioridad_alertas = async (): Promise<any> => {
+    try {
+      const response = await get_prioridad_alerta();
+      if (response) {
+        set_alertas_prioridad(response);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);

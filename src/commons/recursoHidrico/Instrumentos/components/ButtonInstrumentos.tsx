@@ -1,19 +1,21 @@
 import { LoadingButton } from '@mui/lab';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { DataContext } from '../context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ButtonSalir: React.FC = () => {
+export const ButtonInstrumentos: React.FC = () => {
   const navigate = useNavigate();
-
-  const confirmar_salir = (): void => {
+  const { set_mode } = useContext(DataContext);
+  const confirmar_ir_instruemntos = (): void => {
     void Swal.fire({
       customClass: {
         confirmButton: 'square-btn',
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estás seguro?, al salir de la página puede perder información.',
+      text: '¡Desea ir a la ventana de gestión de instrumentos de Biblioteca?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',
@@ -22,7 +24,9 @@ export const ButtonSalir: React.FC = () => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/app/home');
+        navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+          replace: true,
+        });
       }
     });
   };
@@ -30,10 +34,13 @@ export const ButtonSalir: React.FC = () => {
   return (
     <LoadingButton
       variant="contained"
-      color="error"
-      onClick={confirmar_salir}
+      color="primary"
+      onClick={() => {
+        set_mode('register_instrumento');
+        confirmar_ir_instruemntos();
+      }}
     >
-      Salir
+      Volver a instrumentos
     </LoadingButton>
   );
 };

@@ -35,6 +35,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarCartera: React.FC = () => {
@@ -771,6 +772,9 @@ export const EditarCartera: React.FC = () => {
           )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

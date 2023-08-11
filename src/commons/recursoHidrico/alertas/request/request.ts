@@ -3,6 +3,7 @@ import type { AlertaProgramada, ConfiguracionAlerta, CrearAlerta, CrearPersonaAl
 import type { ResponseServer } from "../../../../interfaces/globalModels";
 import { api } from "../../../../api/axios";
 import { control_error } from "../../../../helpers";
+import type{ ValueProps } from "../../Instrumentos/interfaces/interface";
 
 
 
@@ -103,4 +104,10 @@ export const delete_persona_alerta = async (
         ResponseServer<any>
     >(`transversal/alertas/personas_alertar/delete/${id_persona_alertar}/`);
     return response.data;
+}
+export const get_prioridad_alerta = async (): Promise<ValueProps[]> => {
+    const response: AxiosResponse<ResponseServer<ValueProps[]>> = await api.get<
+        ResponseServer<ValueProps[]>
+    >(`listas/niveles_prioridad_alerta/`);
+    return response.data.data;
 }

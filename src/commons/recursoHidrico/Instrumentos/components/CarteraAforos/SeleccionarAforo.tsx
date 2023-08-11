@@ -33,6 +33,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarAforo: React.FC = () => {
@@ -701,6 +702,9 @@ export const SeleccionarAforo: React.FC = () => {
           </Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+          <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

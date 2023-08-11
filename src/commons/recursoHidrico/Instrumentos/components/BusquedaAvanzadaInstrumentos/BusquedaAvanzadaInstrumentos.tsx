@@ -123,6 +123,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
 
   const {
     register,
+    reset,
     handleSubmit: handle_submit,
     formState: { errors },
   } = useForm();
@@ -165,6 +166,8 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
     }
   );
   useEffect(() => {
+    reset();
+    set_rows([]);
     set_is_search(false);
   }, []);
 

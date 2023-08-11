@@ -36,6 +36,7 @@ import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButt
 import { Laboratorio } from '../../../ConsultaBiblioteca/interfaces/interfaces';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
@@ -863,6 +864,9 @@ export const SeleccionarLaboratorio: React.FC = () => {
           </Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+          <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

@@ -39,6 +39,7 @@ import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useR
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { EditarSesionPrueba } from './EditarSesionPrueba';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarBombeo: React.FC = () => {
@@ -678,6 +679,9 @@ export const AgregarBombeo: React.FC = () => {
             </>
           )}
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>
