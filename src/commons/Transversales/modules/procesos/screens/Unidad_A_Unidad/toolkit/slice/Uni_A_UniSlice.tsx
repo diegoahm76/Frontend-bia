@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Unidad_A_Unidad } from './types/Uni_A_Uni.types';
+import { type Unidad_A_Unidad_Interface } from './types/Uni_A_Uni.types';
 
-const initialState: Unidad_A_Unidad = {
+const initialState: Unidad_A_Unidad_Interface = {
   organigrama_anterior: null,
   unidades_org_anterior: [],
   unidades_org_actual: [],
