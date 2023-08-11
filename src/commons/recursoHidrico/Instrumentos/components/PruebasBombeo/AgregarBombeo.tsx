@@ -413,11 +413,9 @@ export const AgregarBombeo: React.FC = () => {
                 <Controller
                   name="id_pozo"
                   control={control_bombeo}
-                  defaultValue=""
                   rules={{ required: true }}
-                  render={({ field }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
-                      {...field}
                       label="Seleccione un pozo"
                       select
                       size="small"
@@ -425,6 +423,8 @@ export const AgregarBombeo: React.FC = () => {
                       disabled={false}
                       fullWidth
                       required
+                      value={value}
+                      onChange={onChange}
                       error={!!errors_bombeo.id_pozo}
                       helperText={
                         errors_bombeo?.id_pozo?.type === 'required' &&

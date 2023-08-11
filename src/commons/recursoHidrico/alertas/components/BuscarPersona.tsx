@@ -14,32 +14,31 @@ import {
 } from '@mui/material';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useState, useEffect } from 'react';
-import { CustomSelect } from './CustomSelect';
 // import { LoadingButton } from '@mui/lab';
 import { Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { control_error } from '../helpers';
-import {
-  get_person_by_document,
-  get_tipo_documento,
-  search_avanzada,
-} from '../request';
+import type { AxiosError } from 'axios';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { LoadingButton } from '@mui/lab';
 import type {
   IList,
   InfoPersona,
   ResponseServer,
-} from '../interfaces/globalModels';
-import type { AxiosError } from 'axios';
-import { Title } from './Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { LoadingButton } from '@mui/lab';
+} from '../../../../interfaces/globalModels';
+import {
+  get_person_by_document,
+  get_tipo_documento,
+  search_avanzada,
+} from '../../../../request';
+import { control_error } from '../../../../helpers';
+import { CustomSelect, Title } from '../../../../components';
 
 interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BuscadorPersona: React.FC<PropsBuscador> = ({
+export const BuscarPersona: React.FC<PropsBuscador> = ({
   onResult,
 }: PropsBuscador) => {
   const columns: GridColDef[] = [
@@ -232,8 +231,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         data: { data: res_tipo_documento },
       } = await get_tipo_documento();
       set_tipo_documento_opt(res_tipo_documento ?? []);
-    } catch (err) {
-      control_error(err);
+    } catch (error: any) {
+      control_error(error.response.data.detail);
     } finally {
       set_is_loading(false);
     }
@@ -261,7 +260,6 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         ) {
           set_nombre_completo(data.nombre_completo);
         }
-      } else {
         const new_data = {
           id: 0,
           id_persona: 0,
@@ -333,34 +331,109 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
 
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          void on_submit(e);
-        }}
-      >
-        <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomSelect
-              onChange={handle_change_select}
-              label="Tipo de documento *"
-              name="tipo_documento"
-              value={tipo_documento}
-              options={tipo_documento_opt}
-              disabled={is_loading}
-              required={true}
-              errors={errors}
-              register={register}
-            />
-          </Grid>
+      <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <CustomSelect
+            onChange={handle_change_select}
+            label="Tipo de documento *"
+            name="tipo_documento"
+            value={tipo_documento}
+            options={tipo_documento_opt}
+            disabled={is_loading}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            {is_loading ? (
-              <Skeleton variant="rectangular" width="100%" height={45} />
-            ) : (
+        <Grid item xs={12} sm={6} md={3}>
+          {is_loading ? (
+            <Skeleton variant="rectangular" width="100%" height={45} />
+          ) : (
+            <Controller
+              name="numero_documento"
+              control={control_form}
+              rules={{ required: true }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  label="Número de documento *"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors}
+                  helperText={
+                    errors.numero_documento?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                />
+              )}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            fullWidth
+            label="Nombre"
+            size="small"
+            disabled={true}
+            value={nombre_completo}
+            // {...register('primer_nombre')}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={1}>
+          <LoadingButton
+            aria-label="toggle password visibility"
+            variant="contained"
+            type="submit"
+            style={{ marginRight: '10px' }}
+            loading={is_search}
+            disabled={is_search}
+            onClick={(e) => {
+              void on_submit(e);
+            }}
+          >
+            Buscar
+          </LoadingButton>{' '}
+        </Grid>
+        <Grid item xs={12} sm={6} md={2}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handle_click_open}
+          >
+            Búsqueda avanzada
+          </Button>
+        </Grid>
+      </Grid>
+      {/* Dialog para búsqueda avanzada */}
+      <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
+        <DialogContent>
+          <Title title="Búsqueda avanzada" />
+          <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <CustomSelect
+                onChange={handle_change_select}
+                label="Tipo de documento *"
+                name="tipo_documento"
+                value={tipo_documento_av}
+                options={tipo_documento_opt}
+                disabled={is_loading}
+                required={true}
+                errors={errors}
+                register={register}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
               <Controller
                 name="numero_documento"
                 control={control_form}
-                rules={{ required: true }}
+                rules={{ required: false }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -372,182 +445,102 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                     size="small"
                     onChange={onChange}
                     value={value}
-                    error={!!errors}
-                    helperText={
-                      errors.numero_documento?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
+                    // error={!!errors}
+                    // helperText={
+                    //   errors.numero_documento?.type === 'required'
+                    //     ? 'Este campo es obligatorio'
+                    //     : ''
+                    // }
                   />
                 )}
               />
+            </Grid>
+            {tipo_documento_av !== 'NT' ? (
+              <>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    fullWidth
+                    label="Primer nombre"
+                    size="small"
+                    {...register('primer_nombre')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    fullWidth
+                    label="Primer apellido"
+                    size="small"
+                    {...register('primer_apellido')}
+                  />
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    fullWidth
+                    label="Razón social"
+                    size="small"
+                    {...register('razon_social')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    fullWidth
+                    label="Nombre comercial"
+                    size="small"
+                    {...register('nombre_comercial')}
+                  />
+                </Grid>
+              </>
+            )}
+            <Grid item xs={12} container justifyContent="end">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                loading={is_search}
+                disabled={is_search}
+                onClick={(e) => {
+                  void on_submit_advance(e);
+                }}
+              >
+                Buscar
+              </LoadingButton>
+            </Grid>
+            {rows.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <Typography>Resultados de la búsqueda</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box sx={{ height: 400, width: '100%' }}>
+                    {tipo_documento_av === 'NT' ? (
+                      <>
+                        <DataGrid
+                          rows={rows}
+                          columns={columns_juridica}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                          getRowId={(row) => row.id_persona}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <DataGrid
+                          rows={rows}
+                          columns={columns}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                          getRowId={(row) => row.id_persona}
+                        />
+                      </>
+                    )}
+                  </Box>
+                </Grid>
+              </>
             )}
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              fullWidth
-              label="Nombre"
-              size="small"
-              disabled={true}
-              value={nombre_completo}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={1}>
-            <LoadingButton
-              aria-label="toggle password visibility"
-              variant="contained"
-              type="submit"
-              style={{ marginRight: '10px' }}
-              loading={is_search}
-              disabled={is_search}
-            >
-              Buscar
-            </LoadingButton>{' '}
-          </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handle_click_open}
-            >
-              Búsqueda avanzada
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-      {/* Dialog para búsqueda avanzada */}
-      <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
-        <DialogContent>
-          <Title title="Búsqueda avanzada" />
-          <form
-            onSubmit={(e) => {
-              void on_submit_advance(e);
-            }}
-          >
-            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={3}>
-                <CustomSelect
-                  onChange={handle_change_select}
-                  label="Tipo de documento *"
-                  name="tipo_documento"
-                  value={tipo_documento_av}
-                  options={tipo_documento_opt}
-                  disabled={is_loading}
-                  required={true}
-                  errors={errors}
-                  register={register}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="numero_documento"
-                  control={control_form}
-                  rules={{ required: false }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      label="Número de documento *"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      onChange={onChange}
-                      value={value}
-                      // error={!!errors}
-                      // helperText={
-                      //   errors.numero_documento?.type === 'required'
-                      //     ? 'Este campo es obligatorio'
-                      //     : ''
-                      // }
-                    />
-                  )}
-                />
-              </Grid>
-              {tipo_documento_av !== 'NT' ? (
-                <>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      label="Primer nombre"
-                      size="small"
-                      {...register('primer_nombre')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      label="Primer apellido"
-                      size="small"
-                      {...register('primer_apellido')}
-                    />
-                  </Grid>
-                </>
-              ) : (
-                <>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      label="Razón social"
-                      size="small"
-                      {...register('razon_social')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      label="Nombre comercial"
-                      size="small"
-                      {...register('nombre_comercial')}
-                    />
-                  </Grid>
-                </>
-              )}
-              <Grid item xs={12} container justifyContent="end">
-                <LoadingButton
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  loading={is_search}
-                  disabled={is_search}
-                >
-                  Buscar
-                </LoadingButton>
-              </Grid>
-              {rows.length > 0 && (
-                <>
-                  <Grid item xs={12}>
-                    <Typography>Resultados de la búsqueda</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box sx={{ height: 400, width: '100%' }}>
-                      {tipo_documento_av === 'NT' ? (
-                        <>
-                          <DataGrid
-                            rows={rows}
-                            columns={columns_juridica}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => row.id_persona}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => row.id_persona}
-                          />
-                        </>
-                      )}
-                    </Box>
-                  </Grid>
-                </>
-              )}
-            </Grid>
-          </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handle_close}>Salir</Button>
