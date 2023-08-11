@@ -1,12 +1,15 @@
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
-import type { Deudor, Expediente, FormLiquidacion } from "../../interfaces/liquidacion";
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
+import type { Expediente, FormDetalleLiquidacion, FormLiquidacion } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
+import { useEffect, useState } from "react";
 import { api } from "../../../../api/axios";
 
 interface IProps {
-  total_obligacion: number;
   form_liquidacion: FormLiquidacion;
+  nombre_deudor: string;
+  form_detalle_liquidacion: FormDetalleLiquidacion[];
   handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
   handle_submit_liquidacion: () => void;
@@ -29,67 +32,60 @@ const periodos = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
-  total_obligacion, form_liquidacion,
+  form_liquidacion,
+  nombre_deudor,
+  form_detalle_liquidacion,
   handle_input_form_liquidacion_change,
   handle_select_form_liquidacion_change,
   handle_submit_liquidacion
 }: IProps) => {
-  const [deudores, set_deudores] = useState<Deudor[]>([]);
-  const [expedientes, set_expedientes] = useState<Expediente[]>([]);
+  const [expedientes_deudor, set_expedientes_deudor] = useState<Expediente[]>([]);
+  const [expediente_liquidado, set_expediente_liquidado] = useState(false);
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/deudores/')
-      .then((response) => {
-        set_deudores(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    if (form_liquidacion.id_deudor !== '') {
+      api.get(`recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`)
+        .then((response) => {
+          set_expedientes_deudor(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [form_liquidacion.id_deudor]);
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/expedientes')
-      .then((response) => {
-        set_expedientes(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    if (form_liquidacion.id_expediente !== '') {
+      api.get(`recaudo/liquidaciones/expedientes/${form_liquidacion.id_expediente}`)
+        .then((response) => {
+          set_expediente_liquidado(response.data.data.liquidado);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+  }, [form_liquidacion.id_expediente]);
 
   return (
     <>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>Selecciona deudor</InputLabel>
-            <Select
-              label='Selecciona deudor'
-              name="cod_deudor"
-              value={form_liquidacion.cod_deudor}
-              MenuProps={{
-                style: {
-                  maxHeight: 224,
-                  maxWidth: 124
-                }
-              }}
-              onChange={handle_select_form_liquidacion_change}
-            >
-              {deudores.map((deudor) => (
-                <MenuItem key={deudor.id} value={deudor.id}>
-                  {`${deudor.nombres} ${deudor.apellidos}`}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <TextField
+            label='Deudor'
+            value={nombre_deudor}
+            size="small"
+            fullWidth
+            disabled
+            onChange={handle_input_form_liquidacion_change}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl size="small" fullWidth>
-            <InputLabel>Selecciona expediente</InputLabel>
+            <InputLabel>Expediente</InputLabel>
             <Select
-              label='Selecciona expediente'
-              name="cod_expediente"
-              value={form_liquidacion.cod_expediente}
+              label='Expediente'
+              name="id_expediente"
+              value={form_liquidacion.id_expediente}
               MenuProps={{
                 style: {
                   maxHeight: 224,
@@ -97,18 +93,21 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               }}
               onChange={handle_select_form_liquidacion_change}
             >
-              {expedientes.map((expediente) => (
+              {expedientes_deudor.map((expediente) => (
                 <MenuItem key={expediente.id} value={expediente.id}>
                   {expediente.cod_expediente}
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>Seleccione el expediente</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
             type="date"
-            helperText='Ingrese fecha de liquidación'
+            label='Fecha de liquidación'
+            InputLabelProps={{ shrink: true }}
+            helperText='Ingrese la fecha de liquidación'
             size="small"
             fullWidth
             name="fecha_liquidacion"
@@ -119,7 +118,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         <Grid item xs={12} sm={4}>
           <TextField
             type="date"
-            helperText='Ingrese vencimiento'
+            label='Fecha de vencimiento'
+            InputLabelProps={{ shrink: true }}
+            helperText='Ingrese la fecha de vencimiento'
             size="small"
             fullWidth
             name="vencimiento"
@@ -129,9 +130,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl size="small" fullWidth>
-            <InputLabel>Selecciona periodo</InputLabel>
+            <InputLabel>Periodo</InputLabel>
             <Select
-              label='Selecciona periodo'
+              label='Periodo'
               name="periodo_liquidacion"
               value={form_liquidacion.periodo_liquidacion}
               MenuProps={{
@@ -147,6 +148,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>Seleccione el periodo</FormHelperText>
           </FormControl>
         </Grid>
       </Grid>
@@ -160,28 +162,26 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         }}
       >
         <Typography color='black' variant="h4">Total de la obligacion</Typography>
-        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>${total_obligacion}</Typography>
+        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>${form_liquidacion.valor}</Typography>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="center"
-        spacing={2}
-        sx={{
-          py: '20px'
-        }}
-      >
-        <Grid xs={12} sm={3}>
-          <Button
-            color="primary"
-            variant="contained"
-            startIcon={<SaveIcon />}
-            fullWidth
-            onClick={handle_submit_liquidacion}
-          >
-            Guardar nueva liquidación
-          </Button>
+
+      <Grid container justifyContent={'center'}>
+        <Grid item xs={12} sm={3}>
+          {expediente_liquidado ?
+            <Typography variant="h5" color={'green'} sx={{ textAlign: 'center' }}>Expediente ya liquidado</Typography> :
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              fullWidth
+              disabled={form_liquidacion.id_deudor === '' || form_liquidacion.id_expediente === '' || form_liquidacion.fecha_liquidacion === '' || form_liquidacion.vencimiento === '' || form_liquidacion.periodo_liquidacion === '' || form_detalle_liquidacion.length === 0}
+              onClick={handle_submit_liquidacion}
+            >
+              Guardar nueva liquidación
+            </Button>
+          }
         </Grid>
-      </Stack>
+      </Grid>
     </>
   )
 }
