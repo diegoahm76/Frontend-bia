@@ -4,7 +4,7 @@ import { Title } from '../../../../../../components/Title';
 import { useAppSelector } from '../../../../../../hooks';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
-// import { get_maintenance_vehicle } from '../store/thunks/cvVehiclesThunks';
+
 
 
 
@@ -12,14 +12,12 @@ import type { GridColDef } from '@mui/x-data-grid';
 const Mantenimiento_vehicle = () => {
 
     const { maintenance_vehicle } = useAppSelector((state) => state.cve);
-
-
     const columns_mantenimientos: GridColDef[] = [
 
         {
             field: 'tipo_descripcion',
             headerName: 'Tipo de mantenimiento',
-            width: 150,
+            width: 250,
             cellClassName: 'truncate-cell',
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -31,7 +29,7 @@ const Mantenimiento_vehicle = () => {
         {
             field: 'fecha',
             headerName: 'Fecha de mantenimiento',
-            width: 150,
+            width: 250,
 
             cellClassName: 'truncate-cell',
             renderCell: (params) => (
@@ -45,7 +43,7 @@ const Mantenimiento_vehicle = () => {
             field: 'estado',
             headerName: 'Estado',
 
-            width: 150,
+            width: 250,
             cellClassName: 'truncate-cell',
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -58,7 +56,7 @@ const Mantenimiento_vehicle = () => {
         {
             field: 'responsable',
             headerName: 'Responsable',
-            width: 150,
+            width: 250,
             cellClassName: 'truncate-cell',
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -83,7 +81,7 @@ const Mantenimiento_vehicle = () => {
                     marginTop={2}
                 >
                     <Box sx={{ width: '100%' }}>
-                        <Title title="Mantenimiento_vehicles programados" />
+                        <Title title="Mantenimientos" />
                         <DataGrid
                             density="compact"
                             autoHeight

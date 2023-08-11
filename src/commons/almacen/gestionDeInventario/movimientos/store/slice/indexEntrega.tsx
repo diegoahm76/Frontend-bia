@@ -31,7 +31,8 @@ export const initial_state_current_entrega: IObjEntrega = {
     id_entrada_almacen_cv: null,
     motivo: '',
     id_bodega_general: null,
-    id_despacho_consumo: null
+    id_despacho_consumo: null,
+    ruta_archivo_doc_con_recibido: null
 };
 
 export const initial_state_bien_entrega: IObjBienEntrega = {

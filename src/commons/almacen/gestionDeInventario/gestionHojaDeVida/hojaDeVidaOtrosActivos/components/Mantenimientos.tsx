@@ -5,16 +5,10 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../../../components/Title';
 import { useAppSelector } from '../../../../../../hooks';
 
-
-
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const Mantenimiento_other = () => {
 
     const { maintenance_other } = useAppSelector((state) => state.cvo);
-
-
     const columns_mantenimientos: GridColDef[] = [
 
         {
@@ -61,7 +55,7 @@ const Mantenimiento_other = () => {
                     marginTop={2}
                 >
                     <Box sx={{ width: '100%' }}>
-                        <Title title="Mantenimiento_others programados" />
+                        <Title title="Mantenimientos" />
                         <DataGrid
                             density="compact"
                             autoHeight

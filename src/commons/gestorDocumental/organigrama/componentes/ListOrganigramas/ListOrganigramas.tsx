@@ -84,7 +84,12 @@ export function ListOrganigramas({
       field: 'descripcion',
       headerName: 'Descripción',
       type: 'number',
-      width: 200
+      width: 280,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      )
     },
     {
       field: 'version',

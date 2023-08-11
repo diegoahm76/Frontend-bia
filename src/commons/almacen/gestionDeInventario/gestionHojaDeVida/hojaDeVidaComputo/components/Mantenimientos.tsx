@@ -11,8 +11,6 @@ import { useAppSelector } from '../../../../../../hooks';
 const Mantenimiento = () => {
 
     const { maintenance } = useAppSelector((state) => state.cv);
-    //   void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0)    );
-
     const columns_mantenimientos: GridColDef[] = [
 
         {
@@ -59,7 +57,7 @@ const Mantenimiento = () => {
                     marginTop={2}
                 >
                     <Box sx={{ width: '100%' }}>
-                        <Title title="Mantenimientos programados" />
+                        <Title title="Mantenimientos" />
                         <DataGrid
                             density="compact"
                             autoHeight
