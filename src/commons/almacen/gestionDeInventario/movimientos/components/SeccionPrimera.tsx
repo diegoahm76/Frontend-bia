@@ -33,6 +33,7 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
                         ...current_entrega,
                         fecha_despacho: get_values('fecha_despacho'),
                         motivo: get_values('motivo'),
+                        numero_despacho_consumo: get_values('numero_despacho_consumo'),
                         id_persona_despacha: persona_entrega.id_persona,
                         persona_crea: persona_entrega.nombre_completo ?? '',
                         ruta_archivo_doc_con_recibido: file,

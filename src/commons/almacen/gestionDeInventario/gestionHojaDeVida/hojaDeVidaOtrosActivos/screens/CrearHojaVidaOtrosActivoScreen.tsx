@@ -34,6 +34,9 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
         if (current_cv_other.id_hoja_de_vida !== null) {
             set_action("editar")
         }
+        if (current_cv_other.id_articulo !== null) {
+            void dispatch(get_maintenance_other(current_cv_other.id_articulo ?? 0))
+        }
     }, [current_cv_other]);
 
     const programacion_mantenimiento = (): void => {

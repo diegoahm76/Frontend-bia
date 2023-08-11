@@ -7,7 +7,7 @@ import { type IcvVehicles as FormValues } from '../interfaces/CvVehiculo';
 import { useForm } from 'react-hook-form';
 import SeleccionarVehiculo from '../components/BuscarElemento';
 import { useNavigate } from 'react-router-dom';
-import { create_cv_vehicles_service, delete_cv_vehicle_service, update_cv_vehicle_service } from '../store/thunks/cvVehiclesThunks';
+import { create_cv_vehicles_service, delete_cv_vehicle_service, get_maintenance_vehicle, update_cv_vehicle_service } from '../store/thunks/cvVehiclesThunks';
 import SaveIcon from '@mui/icons-material/Save';
 import EspecificacionesVehicle from '../components/Caracteristicas';
 import FormButton from '../../../../../../components/partials/form/FormButton';
@@ -23,7 +23,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { current_cv_vehicle, } = useAppSelector((state) => state.cve);
-  const [action] = useState<string>("guardar");
+  const [action, set_action] = useState<string>("guardar");
   const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values } = useForm<FormValues>();
 
   useEffect(() => {
@@ -35,6 +35,14 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     console.log(current_cv_vehicle)
   }, [current_cv_vehicle]);
 
+  useEffect(() => {
+    if (current_cv_vehicle.id_hoja_de_vida !== null) {
+      set_action("editar")
+    }
+    if (current_cv_vehicle.id_articulo !== null) {
+      void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0))
+    }
+  }, [current_cv_vehicle]);
 
   const on_submit = (data: FormValues): void => {
     const form_data: any = new FormData();
