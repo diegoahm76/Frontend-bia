@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState, type FC } from 'react';
 import { HistoricoTraslados } from '../components/HistoricoTraslados/screen/HistoricoTraslados';
+import { OrgAnteriorScreen } from '../components/OrganigramaAnterior/screen/OrgAnteriorScreen';
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const [modalHistoricoTraslados, setmModalHistoricoTraslados] =
@@ -14,7 +15,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
         open historicos
       </button>
 
-      <h3>Informacion del organigrama anterior</h3>
+      <OrgAnteriorScreen />
 
       {/* Parte Dos - Proceso de traslado de unidad a unidad  */}
       <h3>Proceso de traslado de unidad a unidad</h3>
