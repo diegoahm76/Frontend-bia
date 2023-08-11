@@ -60,7 +60,14 @@ export const AgregarLaboratorio: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar registro de laboratorio"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />}
               onClick={() => {
                 handleDelete(params.row.id);
               }}

@@ -130,7 +130,14 @@ export const EditarCartera: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar registro de cartera de aforo"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />}
               onClick={() => {
                 handle_delete_select(params.row.id);
               }}

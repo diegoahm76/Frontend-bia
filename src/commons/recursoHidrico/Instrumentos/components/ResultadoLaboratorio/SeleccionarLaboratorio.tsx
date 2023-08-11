@@ -64,7 +64,14 @@ export const SeleccionarLaboratorio: React.FC = () => {
     //           variant="outlined"
     //           color="primary"
     //           size="small"
-    //           startIcon={<DeleteIcon />}
+    //           startIcon={<DeleteIcon
+    // titleAccess="Eliminar elemento"
+    //       sx={{
+    //         color: 'red',
+    //         width: '18px',
+    //         height: '18px',
+    //       }}
+    //       />}
     //           onClick={() => {
     //             handleDelete(params.row.id);
     //           }}
@@ -127,7 +134,13 @@ export const SeleccionarLaboratorio: React.FC = () => {
       //         variant="outlined"
       //         color="primary"
       //         size="small"
-      //         startIcon={<DeleteIcon />}
+      //         startIcon={<DeleteIcon 
+      // titleAccess="Eliminar elemento"
+      //     sx={{
+      //       color: 'red',
+      //       width: '18px',
+      //       height: '18px',
+      //     }}/>}
       //         onClick={() => {
       //           handleDelete(params.row.id);
       //         }}
@@ -864,7 +877,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
           </Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
-          <Grid item>
+            <Grid item>
               <ButtonInstrumentos />
             </Grid>
             <Grid item>

@@ -71,7 +71,14 @@ export const Destinatarios: React.FC = () => {
                 );
               }}
             >
-              <DeleteIcon />
+              <DeleteIcon
+                titleAccess="Eliminar elemento"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
             </IconButton>
           </>
         );

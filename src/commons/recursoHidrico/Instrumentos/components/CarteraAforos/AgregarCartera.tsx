@@ -74,7 +74,14 @@ export const AgregarCartera: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar elemento"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+                />}
               onClick={() => {
                 handle_delete(params.row.id);
               }}

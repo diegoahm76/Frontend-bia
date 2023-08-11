@@ -88,7 +88,7 @@ export const CuencaScreen: React.FC = () => {
               >
                 <DeleteIcon
                   titleAccess="Eliminar cuenca"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>

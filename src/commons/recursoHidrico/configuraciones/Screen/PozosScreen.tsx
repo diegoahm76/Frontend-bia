@@ -103,7 +103,7 @@ export const PozosScreen: React.FC = () => {
                   <DeleteIcon
                     titleAccess="Eliminar Pozo"
                     sx={{
-                      color: 'primary.main',
+                      color: 'red',
                       width: '18px',
                       height: '18px',
                     }}

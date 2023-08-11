@@ -122,6 +122,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
 
   useEffect(() => {
     void get_datos_clase_tercero();
+    reset();
   }, []);
 
   const on_submit_create_natural = handle_submit(async (data: any) => {
