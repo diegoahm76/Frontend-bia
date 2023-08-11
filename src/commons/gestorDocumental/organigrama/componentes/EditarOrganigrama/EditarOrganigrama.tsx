@@ -122,7 +122,7 @@ export const EditarOrganigrama = ({
         <Box sx={{ m: '0 0 20px 0' }}>
           <Typography>
             Estado del organigrama:{' '}
-            {organigram_current.fecha_terminado !== null ? (
+            {organigram_current.fecha_terminado ? (
               <Chip
                 size="small"
                 label="Terminado"
@@ -263,6 +263,7 @@ export const EditarOrganigrama = ({
                 }) => (
                   <>
                     <Button
+                      disabled={organigram_current.fecha_terminado !== null}
                       variant={
                         value === '' || value === null
                           ? 'outlined'
@@ -314,8 +315,9 @@ export const EditarOrganigrama = ({
                         }}
                       >
                         {control_organigrama._formValues.ruta_resolucion
-                          ? control_organigrama._formValues.ruta_resolucion.name ??
-                          control_organigrama._formValues.ruta_resolucion.replace(
+                          ? control_organigrama._formValues.ruta_resolucion
+                              .name ??
+                            control_organigrama._formValues.ruta_resolucion.replace(
                               /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
                               ''
                             )
@@ -327,7 +329,7 @@ export const EditarOrganigrama = ({
               />
             </Grid>
 
-           {/* <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
+            {/* <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
               <DownloadButton
                 fileName="ruta_soporte"
                 condition={
