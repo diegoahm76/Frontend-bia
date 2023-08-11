@@ -83,17 +83,19 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
             justifyContent: 'center'
           }}
         >
-          <DataGrid
-            sx={{ mt: '15px' }}
-            density="compact"
-            autoHeight
-            rows={[] || dataHistorico}
-            columns={columnsTraslados || []}
-            pageSize={5}
-            rowsPerPageOptions={[7]}
-            experimentalFeatures={{ newEditingApi: true }}
-            getRowId={(row) => uuidv4()}
-          />
+         
+            <DataGrid
+              sx={{ mt: '15px' }}
+              density="compact"
+              autoHeight
+              rows={dataHistorico || []}
+              columns={columnsTraslados || []}
+              pageSize={5}
+              rowsPerPageOptions={[7]}
+              experimentalFeatures={{ newEditingApi: true }}
+              getRowId={(row) => uuidv4()}
+            />
+        
         </DialogContent>
         <Divider />
         <DialogActions>
