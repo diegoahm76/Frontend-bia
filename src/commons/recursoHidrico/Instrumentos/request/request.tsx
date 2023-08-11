@@ -475,6 +475,16 @@ export const get_cuenca_id = async (
   return response.data.data;
 };
 
+export const post_archivos = async (
+  datos: FormData,
+): Promise<any> => {
+  const response_archivos = await api.post(
+    `hidrico/bibliotecas/archivos_instrumento/create/`,
+    datos
+  );
+  return response_archivos.data;
+};
+
 export const put_archivos = async (
   id_archivo: number,
   nombre_archivo: string
@@ -487,3 +497,40 @@ export const put_archivos = async (
   );
   return response.data;
 };
+export const put_general_bombeo = async (
+  id_prueba_bombeo: number,
+  datos: any
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/pruebas_bombeo/update/${id_prueba_bombeo}/`,
+    {
+      datos,
+    }
+  );
+  return response.data;
+};
+export const put_sesion_bombeo = async (
+  id_sesion: number,
+  datos: any
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/sesiones_prueba_bombeo/update/${id_sesion}/`,
+    {
+      datos,
+    }
+  );
+  return response.data;
+};
+export const put_datos_sesion_bombeo = async (
+  id_dato_sesion: number,
+  datos: any
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/update/${id_dato_sesion}/`,
+    {
+      datos,
+    }
+  );
+  return response.data;
+};
+
