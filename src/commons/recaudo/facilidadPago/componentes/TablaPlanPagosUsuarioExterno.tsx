@@ -3,7 +3,8 @@ import { Grid, Box, TextField, Stack, Tooltip, IconButton, Avatar } from '@mui/m
 import { Preview } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import './EstilosPlanPagos.css';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaPlanPagosUsuarioExterno: React.FC = () => {
@@ -109,7 +110,26 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <Link to=''>Pagar en Linea</Link>
+          <Tooltip title="Pagar en Linea">
+            <IconButton
+              onClick={() => {
+                navigate('../recibo');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <figure className='pse_icon'>
+                </figure>
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         )
       }
     },

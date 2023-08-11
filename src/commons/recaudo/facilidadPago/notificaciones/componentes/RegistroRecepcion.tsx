@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState } from 'react';
 import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
-import { EditorTexto } from '../../componentes/EditorTexto/EditorTexto';
 import { Add, CloudUpload } from '@mui/icons-material';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -110,7 +109,7 @@ export const RegistroRecepcion: React.FC = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha de Radicación en Cormacarena"
-                      inputFormat="YYYY/MM/DD"
+                      inputFormat="DD/MM/YYYY"
                       openTo="day"
                       views={[ 'day', 'month', 'year' ]}
                       value={date}
@@ -155,14 +154,14 @@ export const RegistroRecepcion: React.FC = () => {
                   component="label"
                   startIcon={<CloudUpload />}
                 >
-                  {name_files.doc_firmado !== undefined ? name_files.doc_firmado : 'Documento Firmado'}
+                  {name_files.doc_asociado !== undefined ? name_files.doc_asociado : 'Documento Firmado'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='doc_firmado'
+                      name='doc_asociado'
                       onChange={handle_change_file}
                     />
                 </Button>
@@ -175,20 +174,31 @@ export const RegistroRecepcion: React.FC = () => {
                   component="label"
                   startIcon={<CloudUpload />}
                 >
-                  {name_files.guia !== undefined ? name_files.guia : 'Guía Transportador'}
+                  {name_files.doc_guia !== undefined ? name_files.doc_guia : 'Guía Transportador'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='guia'
+                      name='doc_guia'
                       onChange={handle_change_file}
                     />
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  required
+                  multiline
+                  rows={4}
+                  label="Observación"
+                  size="small"
+                  fullWidth
+                  name='observaciones'
+                  onChange={on_input_change}
+                />
+              </Grid>
             </Grid>
-            <EditorTexto />
             <Stack
               direction="row"
               justifyContent="right"
@@ -205,6 +215,10 @@ export const RegistroRecepcion: React.FC = () => {
                     void post_recepcion_fisica({
                       ...form_state,
                       fecha_prestacion: fecha_string,
+                      doc_asocioando: form_files.doc_asociado,
+                      id_notificacion: 1,
+                      id_despacho_notificacion: 1,
+                      numero_guia: "Prueba"
                     })
                   } catch (error: any) {
                     throw new Error(error);
