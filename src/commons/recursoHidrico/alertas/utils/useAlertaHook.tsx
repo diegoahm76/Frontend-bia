@@ -61,8 +61,6 @@ export const useAlertaHook = () => {
     },
   });
 
-  const data_watch_alertas = watch_alertas();
-
   // * Crear destinatario
   const {
     register: register_destinatario,
@@ -77,9 +75,12 @@ export const useAlertaHook = () => {
     defaultValues: {
       cod_clase_alerta: selectedValueFromSelect.value,
       id_persona: '',
-      id_unidad_org_lider: '',
+      id_unidad_org_lider: {
+        value: null,
+        label: '',
+      },
       perfil_sistema: {
-        value: '',
+        value: null,
         label: '',
       },
       es_responsable_directo: false,
@@ -107,18 +108,34 @@ export const useAlertaHook = () => {
   });
   const watch_configuracion_general_alertas =
     watchConfiguracionGeneralAlertas();
-  console.log(
-    watch_configuracion_general_alertas,
-    'watch_configuracion_general_alertas'
-  );
   const watch_destinatario_alertas = watch_destinatario();
 
   const limpiar_destinatario = () => {
     reset_destinatario();
+    set_persona({
+      id: 0,
+      id_persona: 0,
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: '',
+      primer_nombre: '',
+      segundo_nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
+      nombre_completo: '',
+      razon_social: '',
+      nombre_comercial: '',
+      tiene_usuario: false,
+      digito_verificacion: '',
+      cod_naturaleza_empresa: '',
+    });
   };
   const limpiar_alertas = () => {
     setValue_alertas('dia_cumplimiento', 0);
     setValue_alertas('mes_cumplimiento', 0);
+    setSelectedMonth(null);
+    setSelectedDay(null);
+    setDaysArray([]);
   };
 
   // * Context
@@ -199,57 +216,73 @@ export const useAlertaHook = () => {
   const [persona, set_persona] = useState<InfoPersona>();
 
   const on_result = async (info_persona: InfoPersona): Promise<void> => {
-    set_persona(info_persona);
+    if (info_persona.id_persona !== 0) {
+      set_persona(info_persona);
+    }
   };
+
+  // * is_loading
+
+  const [is_loading_alerta, set_is_loading_alerta] = useState<boolean>(false);
+  const [is_loading_persona, set_is_loading_persona] = useState<boolean>(false);
+  const [
+    is_loading_configuracion_general_alertas,
+    set_is_loading_configuracion_general_alertas,
+  ] = useState<boolean>(false);
 
   // * Onsubmit
 
   // * <------------------ Crear fecha alerta ------------------>
   const onSubmit_alertas = handleSubmit_alertas(async (data) => {
     try {
+      set_is_loading_alerta(true);
       const data_alerta = {
         cod_clase_alerta: selectedValueFromSelect.value,
         dia_cumplimiento: data.dia_cumplimiento,
         mes_cumplimiento: data.mes_cumplimiento,
       };
-      const res = await post_fecha_alerta(data_alerta);
+      await post_fecha_alerta(data_alerta);
       control_success('Fecha creada con éxito');
+      await fetch_data_alerta_programada(selectedValueFromSelect.value);
       limpiar_alertas();
     } catch (error: any) {
       control_error(error.response.data.detail);
     } finally {
-      console.log('final');
+      set_is_loading_alerta(false);
     }
   });
 
   const onSubmit_destinatario = handleSubmit_destinatario(async (data) => {
     try {
+      set_is_loading_persona(true);
       const data_destinatario = {
         cod_clase_alerta: selectedValueFromSelect.value,
-        id_persona: persona?.id_persona,
-        id_unidad_org_lider: data.id_unidad_org_lider,
-        perfil_sistema: data.perfil_sistema.value,
+        id_persona: persona?.id_persona === 0 ? null : persona?.id_persona,
+        id_unidad_org_lider: data.id_unidad_org_lider.value ?? null,
+        perfil_sistema: data.perfil_sistema?.value ?? null,
         es_responsable_directo: data.es_responsable_directo,
       };
-      const res = await post_persona_alerta(data_destinatario as any);
+      await post_persona_alerta(data_destinatario as any);
       control_success('Destinatario creado con éxito');
+      await fetch_data_personas(selectedValueFromSelect.value);
       limpiar_destinatario();
     } catch (error: any) {
       control_error(error.response.data.detail);
     } finally {
-      console.log('final');
+      set_is_loading_persona(false);
     }
   });
 
   const onSubmit_configuracion_general_alertas =
     handleSubmitConfiguracionGeneralAlertas(async (data) => {
       try {
+        set_is_loading_configuracion_general_alertas(true);
         const data_configuracion_general_alertas = {
           envios_email: data.notificacionEmail,
-          nivel_prioridad: data.prioridadAlerta,
+          nivel_prioridad: data.prioridadAlerta.value,
           activa: data.estadoAlerta,
         };
-        const res = await put_configuracion_alerta(
+        await put_configuracion_alerta(
           data_configuracion_general_alertas as any,
           selectedValueFromSelect.value
         );
@@ -258,7 +291,7 @@ export const useAlertaHook = () => {
       } catch (error: any) {
         control_error(error.response.data.detail);
       } finally {
-        console.log('final');
+        set_is_loading_configuracion_general_alertas(false);
       }
     });
 
@@ -323,6 +356,7 @@ export const useAlertaHook = () => {
     errors_alertas,
     control_alertas,
     getValues_alertas,
+    setValue_alertas,
     watch_alertas,
 
     // * use form destinatario
@@ -372,5 +406,10 @@ export const useAlertaHook = () => {
     // * delete
     confirmar_eliminar_fecha_alerta,
     confirmar_eliminar_persona_alerta,
+
+    // * is_loading
+    is_loading_alerta,
+    is_loading_persona,
+    is_loading_configuracion_general_alertas,
   };
 };
