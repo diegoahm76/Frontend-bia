@@ -30,6 +30,7 @@ export interface IObjOrganigram extends baseName {
 export interface IObjCreateOrganigram extends baseName {
   version: string;
   descripcion: string;
+  ruta_resolucion: any;
 }
 
 export interface IObjLevels extends baseName {
