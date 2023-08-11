@@ -160,7 +160,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
         );
         set_clase_tercero_persona(data_persona_clase_tercero);
       }
-      return;
+      // return;
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {

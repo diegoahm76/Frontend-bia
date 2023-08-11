@@ -10,4 +10,5 @@ export interface FormValues {
   nombre: string;
   version: string;
   descripcion: string;
+  ruta_resolucion?: any;
 }

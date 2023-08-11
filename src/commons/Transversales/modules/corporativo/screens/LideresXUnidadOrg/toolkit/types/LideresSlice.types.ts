@@ -10,4 +10,7 @@ export interface lideresInterface {
   //* --------- --------- //
   unidades_list: any[];
   unidad_current: any;
+
+  //* --------- --------- //
+  busqueda_avanzada_personas_list: any[];
 }

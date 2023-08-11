@@ -40,9 +40,10 @@ import {
   update_item_catalogo_tca_service
 } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { LoadingButton } from '@mui/lab';
-import  CloudUploadIcon  from '@mui/icons-material/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
+import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -114,7 +115,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       },
       id_cat_serie_und_ccd_trd:
         selected_item_from_catalogo?.id_cat_serie_und_ccd_trd,
-      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio,
+      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio
     });
   }, [selected_item_from_catalogo]);
 
@@ -230,9 +231,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           fontSize: '0.75rem'
                         }}
                       >
-
                         Disposición final
-
                       </small>
                     </label>
                   </div>
@@ -309,15 +308,24 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
-                            accept='application/pdf'
+                            accept="application/pdf"
                             onChange={(e) => {
                               const files = (e.target as HTMLInputElement)
                                 .files;
                               if (files && files.length > 0) {
                                 const file = files[0];
                                 if (file.type !== 'application/pdf') {
-                                  control_warning('Solo formato pdf');
-                                  // dejar vacio el input file
+                                  control_warning(
+                                    'Precaución: Solo es admitido archivos en formato pdf'
+                                  );
+                                } else if (file.size > FILEWEIGHT.PDF) {
+                                  const MAX_FILE_SIZE_MB = (
+                                    FILEWEIGHT.PDF /
+                                    (1024 * 1024)
+                                  ).toFixed(1);
+                                  control_warning(
+                                    `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                                  );
                                 } else {
                                   onChange(file);
                                 }
@@ -417,7 +425,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       </Grid>
 
       {/* Modal historial de cambios TRD ACTUAL */}
-       <HistorialCambiosTCA /> 
+      <HistorialCambiosTCA />
       {/* Modal historial de cambios TRD ACTUAL */}
     </>
   );
