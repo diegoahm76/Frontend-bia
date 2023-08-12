@@ -40,6 +40,7 @@ import { entrega_slice } from '../commons/almacen/gestionDeInventario/movimiento
 import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice';
 import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
 import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
+import { uni_a_uni_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -91,6 +92,9 @@ const app_reducers = combineReducers({
   // * recurso hidrico slices open
   instrumentos_slice: instrumentos_slice.reducer,
   // * recurso hidrico slices close
+  // ! entrega de unidad a unidad
+  uni_a_uni_slice: uni_a_uni_slice.reducer,
+
   entrega_otros: entrega_slice.reducer
 });
 
