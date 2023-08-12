@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { type ProcesoTypes } from '../types/procesoTraslado.types';
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { Button, Grid, Stack, TextField } from '@mui/material';
@@ -10,6 +10,7 @@ import { containerStyles } from '../../../../../../../../gestorDocumental/tca/sc
 import { type AuthSlice } from '../../../../../../../../auth/interfaces';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import dayjs from 'dayjs';
 
 export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
   setmModalHistoricoTraslados
@@ -21,19 +22,19 @@ export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
   console.log(userinfo);
 
   // ? use state to set the currentDate
-  // const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [currentDate, setCurrentDate] = useState(dayjs().format('DD-MM-YYYY'));
 
   // ? useEffect to update the current date each day
 
-  /*  useEffect(() => {
-      const intervalId = setInterval(() => {
-        setCurrentDate(dayjs().format('YYYY-MM-DD'));
-      }, dayjs().endOf('day').diff(dayjs(), 'millisecond'));
-  
-      return () => {
-        clearInterval(intervalId);
-      };
-    }, []); */
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentDate(dayjs().format('DD-MM-YYYY'));
+    }, dayjs().endOf('day').diff(dayjs(), 'millisecond'));
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <>
@@ -78,13 +79,14 @@ export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
           </form>
           <Stack
             direction="row"
-            justifyContent="flex-end"
+            justifyContent="center"
             spacing={3}
             sx={{ mt: '40px' }}
           >
             <TextField
-              fullWidth
-              
+              sx={{
+                minWidth: '300px'
+              }}
               label="Persona que realiza el traslado"
               variant="outlined"
               value={userinfo.nombre}
@@ -92,11 +94,16 @@ export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
               disabled={true}
             />
 
+            <TextField
+              label="Fecha de traslado"
+              variant="outlined"
+              value={currentDate}
+              InputLabelProps={{ shrink: true }}
+              disabled={true}
+            />
+
             <Button
               color="warning"
-              sx={{
-                height: '56px'
-              }}
               variant="contained"
               startIcon={<VisibilityIcon />}
               onClick={() => {
