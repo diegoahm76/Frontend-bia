@@ -39,6 +39,7 @@ import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useR
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { EditarSesionPrueba } from './EditarSesionPrueba';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarBombeo: React.FC = () => {
@@ -117,7 +118,16 @@ export const AgregarBombeo: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={
+                <DeleteIcon
+                  titleAccess="Eliminar prueba de bombeo"
+                  sx={{
+                    color: 'red',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              }
               onClick={() => {
                 console.log(params.row, 'params.row');
                 // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
@@ -413,11 +423,9 @@ export const AgregarBombeo: React.FC = () => {
                 <Controller
                   name="id_pozo"
                   control={control_bombeo}
-                  defaultValue=""
                   rules={{ required: true }}
-                  render={({ field }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
-                      {...field}
                       label="Seleccione un pozo"
                       select
                       size="small"
@@ -425,6 +433,8 @@ export const AgregarBombeo: React.FC = () => {
                       disabled={false}
                       fullWidth
                       required
+                      value={value}
+                      onChange={onChange}
                       error={!!errors_bombeo.id_pozo}
                       helperText={
                         errors_bombeo?.id_pozo?.type === 'required' &&
@@ -678,6 +688,9 @@ export const AgregarBombeo: React.FC = () => {
             </>
           )}
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

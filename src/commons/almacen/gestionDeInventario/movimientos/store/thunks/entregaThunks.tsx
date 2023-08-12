@@ -371,7 +371,7 @@ export const get_bien_entrega_services = (id: number | null | undefined): any =>
             return data;
         } catch (error: any) {
 
-            control_error(error.response.data.detail);
+            //  control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };

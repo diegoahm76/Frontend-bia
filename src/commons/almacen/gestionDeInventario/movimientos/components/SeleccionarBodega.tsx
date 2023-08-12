@@ -4,7 +4,7 @@ import { Chip, Grid } from '@mui/material';
 
 import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+
 import {
     set_bodega_seleccionada,
     get_bodega,
@@ -14,12 +14,13 @@ import { api } from '../../../../../api/axios';
 import type { IList } from '../../../../../interfaces/globalModels';
 import { type IBodega } from '../../../configuracion/interfaces/Bodega';
 import { useForm } from 'react-hook-form';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBodega = () => {
     const { control: control_bodega, reset: reset_bodega } = useForm<IBodega>();
     const { bodegas, bodega_seleccionada } = useAppSelector(
-        (state: { bodegas: any }) => state.bodegas
+        (state) => state.bodegas
     );
 
     const [municipalities, set_municipalities] = useState<IList[]>([]);

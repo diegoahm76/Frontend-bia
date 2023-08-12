@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { SeleccionAlerta } from '../components/SeleccionAlerta';
 import { ProgramacionAlerta } from '../components/ProgramacionAlerta';
 import { Destinatarios } from '../components/Destinatarios';
 import { ConfiguracionGeneral } from '../components/ConfiguracionGeneral';
+import { useAlertaHook } from '../utils/useAlertaHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionAlertasScreen: React.FC = () => {
+  const { alertas } = useAlertaHook();
+
   return (
     <>
       <Grid
@@ -29,9 +33,13 @@ export const ConfiguracionAlertasScreen: React.FC = () => {
         </Grid>
       </Grid>
       <SeleccionAlerta />
-      <ProgramacionAlerta />
-      <Destinatarios  />
-      <ConfiguracionGeneral />
+      {alertas ? (
+        <>
+          <ProgramacionAlerta />
+          <Destinatarios />
+          <ConfiguracionGeneral />
+        </>
+      ) : null}
     </>
   );
 };

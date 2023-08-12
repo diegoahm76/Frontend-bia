@@ -112,7 +112,14 @@ export const EditarSesionPrueba: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar prueba de bombeo"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />}
               onClick={() => {
                 // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
                 // set_info_sesion_bombeo(params.row);

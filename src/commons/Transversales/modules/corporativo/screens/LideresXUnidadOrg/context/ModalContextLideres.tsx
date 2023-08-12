@@ -14,6 +14,16 @@ const ModalContextLideres = createContext<ModalContextState>({
   openModalBusquedaAvanzadaOrganigrama: () => {},
   closeModalBusquedaAvanzadaOrganigrama: () => {},
 
+  // * -------------------------------------------> MODAL BUSQUEDA AVANZADA LIDERES
+  modalBusquedaAvanzadaLideres: false,
+  openModalBusquedaAvanzadaLideres: () => {},
+  closeModalBusquedaAvanzadaLideres: () => {},
+
+  //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+  modalBusquedaPersona: false,
+  openModalBusquedaPersona: () => {},
+  closeModalBusquedaPersona: () => {},
+
   // ? ----- | LOAD BUTTONS | -----
   loadingButton: false,
   setLoadingButton: () => {}
@@ -31,6 +41,24 @@ const ModalProviderLideres: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_AVANZADA_ORGANIGRAMA' });
   }, []);
 
+  // * -------------------------------------------> MODAL BUSQUEDA AVANZADA LIDERES
+  const openModalBusquedaAvanzadaLideres = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_BUSQUEDA_AVANZADA_LIDERES' });
+  }, []);
+
+  const closeModalBusquedaAvanzadaLideres = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_AVANZADA_LIDERES' });
+  }, []);
+
+  //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+  const openModalBusquedaPersona = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_BUSQUEDA_PERSONA' });
+  }, []);
+
+  const closeModalBusquedaPersona = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_PERSONA' });
+  }, []);
+
   // ? ----- | LOAD BUTTONS | -----
   const setLoadingButton = useCallback((loading: boolean) => {
     dispatch({ type: 'SET_LOADING_BUTTON', payload: loading });
@@ -44,6 +72,16 @@ const ModalProviderLideres: FC<any> = ({ children }: any) => {
           state.modalBusquedaAvanzadaOrganigrama,
         openModalBusquedaAvanzadaOrganigrama,
         closeModalBusquedaAvanzadaOrganigrama,
+
+        // * -------------------------------------------> MODAL BUSQUEDA AVANZADA LIDERES
+        modalBusquedaAvanzadaLideres: state.modalBusquedaAvanzadaLideres,
+        openModalBusquedaAvanzadaLideres,
+        closeModalBusquedaAvanzadaLideres,
+
+        //* -------------------------------------------> MODAL BUSQUEDA PERSONA
+        modalBusquedaPersona: state.modalBusquedaPersona,
+        openModalBusquedaPersona,
+        closeModalBusquedaPersona,
 
         // ? ----- | LOAD BUTTONS | -----
         loadingButton: state.loadingButton,

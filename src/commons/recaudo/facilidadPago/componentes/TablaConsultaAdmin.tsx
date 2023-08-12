@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
-import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
-import ArticleIcon from '@mui/icons-material/Article';
+import { SearchOutlined, FilterAltOffOutlined, Article } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { TablaObligacionesUsuarioConsulta } from './TablaObligacionesUsuarioConsulta';
@@ -81,7 +80,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                   }}
                   variant="rounded"
                 >
-                  <ArticleIcon
+                  <Article
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                   />
                 </Avatar>

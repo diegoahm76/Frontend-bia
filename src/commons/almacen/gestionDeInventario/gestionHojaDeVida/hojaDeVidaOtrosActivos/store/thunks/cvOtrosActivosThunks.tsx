@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 import { type Dispatch } from 'react';
-import { get_marks, set_others, set_current_cv_others } from '../slices/indexCvOtrosActivos';
+import { get_marks, set_others, set_current_cv_others, set_maintenance_other } from '../slices/indexCvOtrosActivos';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -155,6 +155,27 @@ export const delete_cv_others_service: any = (id: string) => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// Obtener programados 
+
+export const get_maintenance_other = (id: number | null): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/mantenimientos/programados/get-list/${id ?? ''}/`);
+
+            if (data.status === true) {
+                dispatch(set_maintenance_other(data.detail));
+
+            }
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
             return error as AxiosError;
         }
     };

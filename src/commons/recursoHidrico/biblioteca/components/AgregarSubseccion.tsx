@@ -89,7 +89,7 @@ export const AgregarSubseccion: React.FC = () => {
               <DeleteIcon
                 titleAccess="Eliminar subsección"
                 sx={{
-                  color: 'primary.main',
+                  color: 'red',
                   width: '18px',
                   height: '18px',
                 }}

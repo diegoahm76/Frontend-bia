@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Grid, Box, TextField, Stack, Button } from '@mui/material';
-import { FileDownloadOutlined, Visibility } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
+import { FileDownloadOutlined, Visibility, Save } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -263,7 +262,7 @@ export const TablaProyeccionPagos: React.FC = () => {
               fullWidth
               color='primary'
               variant='contained'
-              startIcon={<SaveIcon />}
+              startIcon={<Save />}
               onClick={() => {}}
             >
               Guardar Plan de Pagos

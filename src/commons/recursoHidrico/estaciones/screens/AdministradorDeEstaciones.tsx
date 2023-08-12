@@ -87,7 +87,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                             variant="rounded"
                         >
                             <DeleteIcon
-                                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                sx={{ color: 'red', width: '18px', height: '18px' }}
                             />
                         </Avatar>
                     </IconButton>

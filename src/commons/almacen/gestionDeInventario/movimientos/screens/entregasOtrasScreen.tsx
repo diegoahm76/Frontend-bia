@@ -160,7 +160,7 @@ const EntregaScreen = () => {
                 id_bodega_general: bodega_seleccionada.id_bodega,
                 fecha_despacho: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
                 id_entrada_almacen_cv: current_entrada.id_entrada_almacen,
-                ruta_archivo_doc_con_recibido: current_entrada.ruta_archivo_doc_con_recibido,
+
 
             };
             const aux_items: IObjBienEntrega[] = [];
@@ -176,14 +176,12 @@ const EntregaScreen = () => {
             };
             console.log(aux);
             form_data.append('data_entrega', JSON.stringify({ ...data_edit }));
-            form_data.append(
-                'ruta_archivo_doc_con_recibido',
-                data.ruta_archivo_doc_con_recibido
-            );
             form_data.append('data_items_entrega', JSON.stringify(aux_items));
-            void dispatch(
-                crear_entrega(form_data)
-            );
+            form_data.append('ruta_archivo_doc_con_recibido', data.ruta_archivo_doc_con_recibido);
+            void dispatch(crear_entrega(form_data));
+            dispatch(reset_state());
+            initial_values();
+
         }
     };
     const on_submit_annul = (data: IObjEntrega): void => {
@@ -246,8 +244,7 @@ const EntregaScreen = () => {
                 <ListadoBienesEntrega />
             </Grid>
             <Grid item xs={12} marginY={2}>
-
-                <SeleccionarBienEntrega />
+                <SeleccionarBienEntrega get_values={get_values} />
             </Grid>
 
             <Grid
@@ -333,10 +330,12 @@ const EntregaScreen = () => {
                                     xs: 12,
                                     md: 4,
                                     control_form: control_entrega,
-                                    control_name: '',
+                                    control_name: current_entrega.despacho_anulado === true
+                                        ? 'fecha_anulacion'
+                                        : 'fecha',
                                     default_value: new Date().toString(),
                                     rules: { required_rule: { rule: true, message: 'requerido' } },
-                                    label: 'Fecha actual',
+                                    label: 'Fecha',
                                     type: 'text',
                                     disabled: true,
                                     helper_text: '',
@@ -345,7 +344,7 @@ const EntregaScreen = () => {
                                     datum_type: 'input_controller',
                                     xs: 12,
                                     md: 12,
-                                    control_form: control_entrada_entrega,
+                                    control_form: control_entrega,
                                     control_name: 'justificacion_anulacion',
                                     default_value: '',
                                     rules: {
