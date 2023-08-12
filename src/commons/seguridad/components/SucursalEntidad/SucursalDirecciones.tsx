@@ -16,7 +16,7 @@ import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Pai
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change}) => {
+export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
     const [selected_pais, setselected_pais] = useState('');
     const [paises, setpaises] = useState<Paises[]>([]);
@@ -27,14 +27,17 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     const [departamentos_noti, set_departamentos_noti] = useState<Departamento[]>([]);
     const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
     const [departamentos_noti_retur, set_departamentos_noti_retur] = useState<Departamento[]>([]);
-    const [ , setselected_municipionoti] = useState('');
+    const [pais_retur, set_pais_retur] = useState<Paises[]>([]);
+
+    const [, setselected_municipionoti] = useState('');
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
     const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
-    const [ , setselected_municipio] = useState('');
+    const [, setselected_municipio] = useState('');
     const [departamentos_retur, set_departamentos_retur] = useState<Departamento[]>([]);
 
     useEffect(() => {
+
         const fetch_data = async (): Promise<any> => {
             try {
                 const response = await fetch(`${baseURL}listas/paises/`);
@@ -51,40 +54,71 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         void fetch_data();
     }, []);
 
+
+    useEffect(() => {
+        if (form_values.municipio === null) {
+            set_pais_retur([]); // Establece el estado como vacío si municipio es null
+            return; // Sale de la función para evitar el fetch
+        }
+        const fetch_data = async (): Promise<any> => {
+            try {
+                if (form_values.municipio === null || form_values.municipio === undefined) {
+                    console.log('municipio is null or undefined');
+                    return;
+                }
+
+                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/paises/?cod_municipio=${form_values.municipio}`);
+                const data: DepartamentoResponse = await response.json();
+
+                if (data.success) {
+                    set_pais_retur(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching departamentos de notificación:', error);
+            }
+        };
+
+
+        void fetch_data();
+    }, [form_values.municipio]);
+
+
+
     useEffect(() => {
         set_link(`${baseURL}listas/departamentos/?pais=${selected_pais}`);
     }, [selected_pais]);
 
 
-
-   
-useEffect(() => {
-    if (form_values.municipio === null) {
-        set_departamentos_retur([]); // Establece el estado como vacío si municipio es null
-        return; // Sale de la función para evitar el fetch
-    }
-
-    const fetch_data = async (): Promise<any> => {
-        try {
-            if (form_values.municipio !== null) {
-                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio}`);
-                const data: DepartamentoResponse = await response.json();
-                if (data.success) {
-                    set_departamentos_retur(data.data);
-                } else {
-                    console.log(data.detail);
-                }
-            } else {
-                console.log('form_values.municipio es null.');
-            }
-        } catch (error) {
-            console.log('Error fetching departamentos de notificación:', error);
+    useEffect(() => {
+        if (form_values.municipio === null) {
+            set_departamentos_retur([]);
+            // Establece el estado como vacío si municipio es null
+            return; // Sale de la función para evitar el fetch
         }
-    };
-    
 
-    void fetch_data();
-}, [form_values.municipio]);
+        const fetch_data = async (): Promise<any> => {
+            try {
+                if (form_values.municipio !== null) {
+                    const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=${selected_pais}&municipio=${form_values.municipio}`);
+                    const data: DepartamentoResponse = await response.json();
+                    if (data.success) {
+                        set_departamentos_retur(data.data);
+                    } else {
+                        console.log(data.detail);
+                    }
+                } else {
+                    console.log('form_values.municipio es null.');
+                }
+            } catch (error) {
+                console.log('Error fetching departamentos de notificación:', error);
+            }
+        };
+
+
+        void fetch_data();
+    }, [form_values.municipio]);
 
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
@@ -125,6 +159,7 @@ useEffect(() => {
     // select de notificaciones 
     // sss
     useEffect(() => {
+
         const fetch_data = async (): Promise<any> => {
             try {
                 const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=`);
@@ -154,10 +189,10 @@ useEffect(() => {
                     console.log('municipio_notificacion is null or undefined');
                     return;
                 }
-        
+
                 const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio_notificacion}`);
                 const data: DepartamentoResponse = await response.json();
-        
+
                 if (data.success) {
                     set_departamentos_noti_retur(data.data);
                 } else {
@@ -167,15 +202,16 @@ useEffect(() => {
                 console.log('Error fetching departamentos de notificación:', error);
             }
         };
-        
-        
+
+
         void fetch_data();
     }, [form_values.municipio_notificacion]);
 
-    
+
 
     // Nuevo useEffect para obtener municipios de notificación del departamento seleccionado
     useEffect(() => {
+
         const fetch_data = async (): Promise<any> => {
             try {
                 const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=${selected_departamento_noti}`);
@@ -280,7 +316,7 @@ useEffect(() => {
                 value: direccion, // Actualiza form_values.direccion con la dirección generada
             },
         });
-    }; 
+    };
     const [
         // direccion_generada
         , setdireccion_generadaa] = useState('');
@@ -300,7 +336,7 @@ useEffect(() => {
         });
     };
 
- 
+
     return (
         <>
             <DialogGeneradorDeDirecciones
@@ -317,7 +353,7 @@ useEffect(() => {
                 type={type_direction}
             />
             <div>
-             
+
 
             </div>
 
@@ -340,13 +376,24 @@ useEffect(() => {
                         <InputLabel shrink={true}>pais</InputLabel>
                         <Select
                             label="pais"
+                            name="pais_sucursal_exterior"
                             /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
-                            value={selected_pais || "dd"}
+                            value={form_values.pais_sucursal_exterior ?? "dd"}
+
                             onChange={(event) => {
                                 setselected_pais(event.target.value);
                                 handleinput_change(event)
                             }}
                         >
+
+                            {pais_retur.length === 1 && (
+                                <MenuItem value="dd">
+                                    {pais_retur.map((Paises) => (
+                                        <span key={Paises.value}>{Paises.label}</span>
+                                    ))}
+                                </MenuItem>
+                            )}
+
                             {paises.map((Paises) => (
                                 <MenuItem key={Paises.value} value={Paises.value}>
                                     {Paises.label}
@@ -355,17 +402,43 @@ useEffect(() => {
                         </Select>
                     </FormControl>
                 </Grid>
+                {/* <Grid item xs={12} sm={4}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel shrink={true}>Departamento</InputLabel>
+                        <Select
+                            label="Departamento"
+ 
+                            value={selected_departamento || "departametoo"}
+                            onChange={(event) => {
+                                setselected_departamento(event.target.value);
+                            }}
+                        >
+                            {departamentos_retur.length === 1 && (
+                                <MenuItem value="departametoo">
+                                    {departamentos_retur.map((departamento) => (
+                                        <span key={departamento.value}>{departamento.label}</span>
+                                    ))}
+                                </MenuItem>
+                            )}
+                            {departamentos.map((departamento) => (
+                                <MenuItem key={departamento.value} value={departamento.value}>
+                                    {departamento.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid> */}
+
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
-                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
-                            value={selected_departamento || "departametoo"}
+                            value={form_values.pais_sucursal_exterior === null ? 'departametoo' : selected_departamento}
                             onChange={(event) => {
                                 setselected_departamento(event.target.value);
                             }}
-                        >  
+                        >
                             {departamentos_retur.length === 1 && (
                                 <MenuItem value="departametoo">
                                     {departamentos_retur.map((departamento) => (
@@ -381,7 +454,8 @@ useEffect(() => {
                         </Select>
                     </FormControl>
                 </Grid>
-                
+
+
 
 
                 <Grid item xs={12} sm={4}>
@@ -407,9 +481,9 @@ useEffect(() => {
                         </Select>
                     </FormControl>
                 </Grid>
- 
 
-                
+
+
                 <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
@@ -469,8 +543,10 @@ useEffect(() => {
                         <Select
                             label="Departamento"
                             /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
-                            value={selected_departamento_noti || "departameto"}
-                            onChange={(event) => {
+                            // value={selected_departamento_noti || "departameto"}
+                            value={form_values.pais_sucursal_exterior === null ? "departameto" : selected_departamento_noti}
+
+                            onChange={(event) => {  
                                 setselected_departamento_noti(event.target.value);
                             }}
                         >

@@ -38,7 +38,7 @@ export const Sucursal: FC = () => {
       fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 6100);
+    }, 5000);
 
     return () => { clearInterval(interval) };
   }, []);
@@ -123,7 +123,7 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
     { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
     { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
-    { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
+    // { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
 
     {
       field: "accion",

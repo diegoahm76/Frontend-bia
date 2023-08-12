@@ -8,6 +8,7 @@ import { SucursalDirecciones } from "./SucursalDirecciones";
 import { Title } from "../../../../components";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { ISucursalForm, Props } from "./utils/interfac";
+import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 
 
 
@@ -31,9 +32,12 @@ export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, sel
     item_ya_usado: false,
     id_persona_empresa: 3,
     numero_sucursal: siguiente_numeros_sucursal,
+    
 
   };
-  const [exiting, set_exiting] = useState(false);
+  const [exiting, 
+    // set_exiting
+  ] = useState(false);
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
 
@@ -106,9 +110,9 @@ export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, sel
     setform_values(initial_state);
   };
 
-  const handle_exit = (): void => {
-    set_exiting(true);
-  };
+  // const handle_exit = (): void => {
+  //   set_exiting(true);
+  // };
 
 
   useEffect(() => {
@@ -273,9 +277,9 @@ export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, sel
           </Button>
         </Grid>
         <Grid item xs={12} sm={1}>
-          <Button variant="contained" color="error" onClick={handle_exit}>
-            Salir
-          </Button>
+          <ButtonSalir />
+             
+          
         </Grid>
       </Grid>
 
