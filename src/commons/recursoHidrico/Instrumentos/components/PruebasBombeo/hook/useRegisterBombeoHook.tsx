@@ -7,7 +7,11 @@ import { useContext, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
-import { post_archivos, post_prueba_bombeo } from '../../../request/request';
+import {
+  post_archivos,
+  post_prueba_bombeo,
+  put_general_bombeo,
+} from '../../../request/request';
 import { control_error, control_success } from '../../../../../../helpers';
 import { useAppSelector } from '../../../../../../hooks';
 import { DataContext } from '../../../context/contextData';
@@ -180,6 +184,7 @@ export const use_register_bombeo_hook = () => {
     set_archivos([]);
   };
 
+  // * <--- onSubmit --->
   const onSubmit = handleSubmit_bombeo(async (data: any) => {
     try {
       set_is_saving(true);
@@ -258,6 +263,25 @@ export const use_register_bombeo_hook = () => {
       control_success('Archivo añadido correctamente');
       set_archivos([]);
       set_nombres_archivos([]);
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail ||
+          'Ha ocurrido un error, vuelva a intentarlo más tarde'
+      );
+      console.log(error, 'error');
+    } finally {
+      set_is_saving(false);
+    }
+  });
+
+  // * editar
+  // ? datos generales
+  const onSubmit_editar = handleSubmit_bombeo(async (data: any) => {
+    try {
+      set_is_saving(true);
+      data.id_instrumento = id_instrumento_slice;
+      await put_general_bombeo(1, data);
+      control_success('Prueba de bombeo editada correctamente');
     } catch (error: any) {
       control_error(
         error.response?.data?.detail ||
