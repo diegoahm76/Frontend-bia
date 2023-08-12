@@ -14,6 +14,7 @@ import {
   setUnidadesOrgAnterior
 } from '../toolkit/slice/Uni_A_UniSlice';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { ProcesoTrasladoScreen } from '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen';
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
   // ! -------------- dispatch declaration --------------------------------
@@ -38,7 +39,6 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   // ?  use effect that allow us to get the data to fill the select of unidad a unidad (unidades retiradas (organigrama anterior))
 
   useEffect(() => {
-    console.log('hi from useeffect');
     void getUnidadesOrgAnterior().then((unidades) => {
       const unidadesEditedToSelect = unidades.map((unidad: any) => {
         return {
@@ -61,14 +61,12 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   return (
     <>
       {/* Parte Uno - Organigrama Anterior  */}
-      <button type="button" onClick={() => setmModalHistoricoTraslados(true)}>
-        open historicos
-      </button>
-
       <OrgAnteriorScreen />
 
       {/* Parte Dos - Proceso de traslado de unidad a unidad  */}
-      <h3>Proceso de traslado de unidad a unidad</h3>
+      <ProcesoTrasladoScreen
+        setmModalHistoricoTraslados={setmModalHistoricoTraslados}
+      />
 
       {/* Parte Tres - Historico de traslados masivos de unidad a unidad  */}
       <HistoricoTraslados

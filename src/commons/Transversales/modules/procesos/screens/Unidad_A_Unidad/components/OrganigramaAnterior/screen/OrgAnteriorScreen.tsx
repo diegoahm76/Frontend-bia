@@ -113,7 +113,7 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={2.6}>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name="fecha_puesta_produccion"
                   control={control_organigrama_anterior}
@@ -140,7 +140,7 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={2.6}>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name="fecha_retiro_produccion"
                   control={control_organigrama_anterior}
@@ -167,31 +167,9 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                 />
               </Grid>
             </Grid>
-
-            {/* <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mb: '20px', mt: '20px', alignItems: 'center' }}
-            >
-              <Button
-                color="primary"
-                variant="outlined"
-                startIcon={<SearchIcon />}
-                onClick={() => {
-                  console.log('click on siuuuu');
-                }}
-              >
-                SIUUUUUU
-              </Button>
-            </Stack> */}
           </form>
         </Grid>
       </Grid>
-
-      {/* modal búsqueda avanzada organigrama */}
-      {/* <BusquedaAvanOrgModal /> */}
-      {/* modal búsqueda avanzada organigrama */}
     </>
   );
 };
