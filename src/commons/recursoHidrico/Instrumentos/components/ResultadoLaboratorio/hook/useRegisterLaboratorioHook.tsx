@@ -153,7 +153,7 @@ export const use_register_laboratorio_hook = () => {
     (state) => state.instrumentos_slice
   );
   const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
-  const [pozos_selected, set_pozos_selected] = useState<ValueProps[]>([]);
+  const [pozos_selected, set_pozos_selected] = useState<any[]>([]);
   const [parametros_select, set_parametros_select] = useState<ValueProps[]>([]);
   const [undidad_medida_select, set_undidad_medida_select] = useState('');
   const [cuenca_laboratorio, set_cuenca_id_laboratorio] = useState<
@@ -206,6 +206,10 @@ export const use_register_laboratorio_hook = () => {
   ): Promise<void> => {
     try {
       if (id_pozo) {
+        console.log(
+          'id_pozo entrooooooooooooooooooooooooooooooooooooo',
+          id_pozo
+        );
         const response = await get_data_pozo_id(id_pozo);
         if (response?.length > 0) {
           const data_pozo = response.map((item: IpropsPozos) => ({
@@ -213,7 +217,6 @@ export const use_register_laboratorio_hook = () => {
             label: ` ${item.cod_pozo} - ${item.nombre} `,
           }));
           set_pozos_selected(data_pozo);
-          // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
       }
     } catch (err: any) {
@@ -472,7 +475,9 @@ export const use_register_laboratorio_hook = () => {
     set_fecha_analisis(null);
   };
 
-  const [selectedRow_edit, setSelectedRow_edit] = useState<Laboratorio | null>(null);
+  const [selectedRow_edit, setSelectedRow_edit] = useState<Laboratorio | null>(
+    null
+  );
 
   const handleEdit_select = (row: any): void => {
     setSelectedRow_edit(row);
@@ -658,7 +663,6 @@ export const use_register_laboratorio_hook = () => {
     handleDelete_select,
     setSelectedRow_edit,
 
-
     // *Autocomplete
     cuenca_select,
     pozos_selected,
@@ -685,6 +689,7 @@ export const use_register_laboratorio_hook = () => {
     onSubmit_select,
     onSubmit_editar,
     is_saving,
+    reset_formulario,
 
     // * ver resultados de laboratorio
     parametro_select,

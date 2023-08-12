@@ -72,8 +72,9 @@ export const useRegisterInstrumentoHook = () => {
     setValue('cod_tipo_agua', tipo_agua_selected);
   }, [tipo_agua_selected]);
 
-  // informacion instrumento
 
+  // informacion instrumento
+  const [tipo_agua_instrumento, set_tipo_agua_instrumento] = useState<string>('');
   const [fecha_creacion, set_fecha_creacion] = useState<Dayjs | null>(null);
   const [fecha_vigencia, set_fecha_vigencia] = useState<Dayjs | null>(null);
 
@@ -219,6 +220,8 @@ export const useRegisterInstrumentoHook = () => {
     row_cartera_aforo,
     row_prueba_bombeo,
     row_result_laboratorio,
+    tipo_agua_instrumento,
+    set_tipo_agua_instrumento,
     set_is_loading_submit,
     set_fecha_creacion,
     set_fecha_vigencia,

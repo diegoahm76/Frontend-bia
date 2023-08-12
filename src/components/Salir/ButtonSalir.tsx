@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 export const ButtonSalir: React.FC = () => {
   const navigate = useNavigate();
 
-  const confirmar_eliminar = (): void => {
+  const confirmar_salir = (): void => {
     void Swal.fire({
       customClass: {
         confirmButton: 'square-btn',
@@ -31,7 +31,7 @@ export const ButtonSalir: React.FC = () => {
     <LoadingButton
       variant="contained"
       color="error"
-      onClick={confirmar_eliminar}
+      onClick={confirmar_salir}
     >
       Salir
     </LoadingButton>

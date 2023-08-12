@@ -386,6 +386,86 @@ export const put_resultado_aforo_select = async (
   }
 };
 
+export const post_prueba_bombeo = async (
+  form: any,
+  secciones_prueba_bombeo: any,
+  datos_prueba_bombeo: any,
+  datos: FormData,
+  archivo: any
+): Promise<any> => {
+  // Crear un nuevo array con los datos de la prueba de bombeo
+  const new_array = secciones_prueba_bombeo.map((seccion: any) => ({
+    id_sesion_prueba_bombeo: seccion.id_sesion_prueba_bombeo,
+    hora_inicio: seccion.hora_inicio,
+    cod_tipo_sesion: seccion.cod_tipo_sesion,
+    datos_prueba_bombeo: datos_prueba_bombeo.map((dato: any) => ({
+      tiempo_transcurrido: Number(dato.tiempo_transcurrido),
+      nivel: Number(dato.nivel),
+      resultado: Number(dato.resultado),
+      caudal: Number(dato.caudal),
+    })),
+  }));
+
+  // Validation before request
+  const validated_array = new_array.filter(
+    (item: any) =>
+      item.id_sesion_prueba_bombeo !== null &&
+      item.hora_inicio !== null &&
+      item.cod_tipo_sesion !== '' &&
+      item.datos_prueba_bombeo.every(
+        (dato: any) =>
+          dato.tiempo_transcurrido !== '' &&
+          dato.nivel !== '' &&
+          dato.resultado !== '' &&
+          dato.caudal !== ''
+      )
+  );
+
+  // API call
+  const response = await api.post(
+    'hidrico/bibliotecas/pruebas_bombeo/create/',
+    {
+      ...form,
+      id_instrumento: form.id_instrumento,
+      id_pozo: form.id_pozo,
+      descripcion: form.descripcion,
+      cod_tipo_sesion: form.cod_tipo_sesion,
+      latitud: form.latitud,
+      longitud: form.longitud,
+      fecha_prueba_bombeo: dayjs(form.fecha_prueba_bombeo).format('YYYY-MM-DD'),
+      ubicacion_prueba: form.ubicacion_prueba,
+      secciones_prueba_bombeo: validated_array,
+    }
+  );
+
+  // If there's an attached file, make another post request
+  if (
+    archivo.length > 0 &&
+    archivo[0] !== null &&
+    response?.data?.data?.prueba_bombeo?.data?.id_prueba_bombeo
+  ) {
+    const id_prueba_bombeo =
+      response?.data?.data?.prueba_bombeo?.data?.id_prueba_bombeo;
+
+    // Append id_prueba_bombeo to datos
+    datos.append('id_prueba_bombeo', id_prueba_bombeo);
+
+    const response_archivos = await api.post(
+      `hidrico/bibliotecas/archivos_instrumento/create/`,
+      datos
+    );
+
+    return {
+      reponse_general: response.data,
+      response_archivos: response_archivos.data,
+    };
+  } else {
+    return {
+      reponse_general: response.data,
+    };
+  }
+};
+
 export const get_cuenca_id = async (
   id_cuenca: number
 ): Promise<CuencasId[]> => {
@@ -393,6 +473,14 @@ export const get_cuenca_id = async (
     ResponseServer<CuencasId[]>
   >(`hidrico/bibliotecas/cuencas/get-id/${id_cuenca}/`);
   return response.data.data;
+};
+
+export const post_archivos = async (datos: FormData): Promise<any> => {
+  const response_archivos = await api.post(
+    `hidrico/bibliotecas/archivos_instrumento/create/`,
+    datos
+  );
+  return response_archivos.data;
 };
 
 export const put_archivos = async (
@@ -404,6 +492,113 @@ export const put_archivos = async (
     {
       nombre_archivo,
     }
+  );
+  return response.data;
+};
+export const put_general_bombeo = async (
+  id_prueba_bombeo: number,
+  datos: any
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/pruebas_bombeo/update/${id_prueba_bombeo}/`,
+    {
+      datos,
+    }
+  );
+  return response.data;
+};
+export const put_sesion_bombeo = async (
+  id_sesion: number,
+  datos: any
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/sesiones_prueba_bombeo/update/${id_sesion}/`,
+    {
+      datos,
+    }
+  );
+  return response.data;
+};
+export const put_datos_sesion_bombeo = async (
+  id_dato_sesion: number,
+  datos: any
+): Promise<any> => {
+  const response = await api.put(
+    `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/update/${id_dato_sesion}/`,
+    {
+      datos,
+    }
+  );
+  return response.data;
+};
+
+// * <---------------------  DELETE --------------------->
+
+// ? instrumentos
+export const delete_instrumeto = async (
+  id_instrumento: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/instrumentos/delete/${id_instrumento}/`
+  );
+  return response.data;
+};
+// ? Carteras de aforo
+export const delete_cartera_aforo = async (
+  id_cartera_aforo: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/cartera_aforos/delete/${id_cartera_aforo}/`
+  );
+  return response.data;
+};
+export const delete_dato_cartera_aforo = async (
+  id_dato_cartera_aforo: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/cartera_aforos/delete/${id_dato_cartera_aforo}/`
+  );
+  return response.data;
+};
+// ? pruebas de bombeo y sesiones
+export const delete_prueba_bombeo = async (
+  id_prueba_bombeo: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/pruebas_bombeo/delete/${id_prueba_bombeo}/`
+  );
+  return response.data;
+};
+export const delete_sesion_prueba_bombeo = async (
+  id_sesion_prueba_bombeo: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/sesiones_prueba_bombeo/delete/${id_sesion_prueba_bombeo}/`
+  );
+  return response.data;
+};
+export const delete_dato_sesion_prueba_bombeo = async (
+  id_dato_sesion_prueba_bombeo: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/delete/${id_dato_sesion_prueba_bombeo}/`
+  );
+  return response.data;
+};
+// ? resultados de laboratorio
+export const delete_resultado_laboratorio = async (
+  id_resultado_laboratorio: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/resultados_laboratorio/delete/${id_resultado_laboratorio}/`
+  );
+  return response.data;
+};
+export const delete_dato_registro_laboratorio = async (
+  id_dato_registro_laboratorio: number
+): Promise<any> => {
+  const response = await api.delete(
+    `hidrico/bibliotecas/dato_registro_laboratorio/delete/${id_dato_registro_laboratorio}/`
   );
   return response.data;
 };

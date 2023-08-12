@@ -85,6 +85,27 @@ const initialState = {
     crear: false,
     editar: false,
   },
+  mode_editar_bombeo: {
+    crear: true,
+    editar: false,
+  },
+  info_destinatatio: {
+    id_persona_alertar: 0,
+    nombre_completo: '',
+    nombre_unidad: '',
+    perfil_sistema: '',
+    es_responsable_directo: false,
+    registro_editable: false,
+    cod_clase_alerta: '',
+    id_persona: 0,
+    id_unidad_org_lider: '',
+  },
+  datos_destinatario: {
+    destinatario: false,
+    detalle: false,
+    nombre: false,
+    principal: false,
+  },
 };
 
 export const instrumentos_slice = createSlice({
@@ -101,12 +122,6 @@ export const instrumentos_slice = createSlice({
       state.instrumentos.cod_tipo_agua = action.payload.cod_tipo_agua;
       state.instrumentos.id_cuencas = action.payload.id_cuencas;
       state.instrumentos.id_pozo = action.payload.id_pozo;
-      /* state.instrumentos.cod_tipo_agua = action.payload.cod_tipo_agua;
-      state.instrumentos.fecha_creacion_instrumento =
-        action.payload.fecha_creacion_instrumento;
-      state.instrumentos.fecha_fin_vigencia = action.payload.fecha_fin_vigencia;
-      state.instrumentos.id_cuencas = action.payload.id_cuencas;
-      state.instrumentos.id_pozo = action.payload.id_pozo; */
     },
     set_current_id_instrumento: (state, action: PayloadAction<number>) => {
       state.id_instrumento = action.payload;
@@ -188,9 +203,32 @@ export const instrumentos_slice = createSlice({
     set_current_id_prueba_bombeo: (state, action: PayloadAction<number>) => {
       state.id_prueba_bombeo = action.payload;
     },
+    set_current_mode_editar_bombeo: (state, action: PayloadAction<any>) => {
+      state.mode_editar_bombeo.crear = action.payload.crear;
+      state.mode_editar_bombeo.editar = action.payload.editar;
+    },
+    setCurrentInfoDestinatatio: (state, action: PayloadAction<any>) => {
+      state.info_destinatatio.nombre_completo = action.payload.nombre_completo;
+      state.info_destinatatio.nombre_unidad = action.payload.nombre_unidad;
+      state.info_destinatatio.perfil_sistema = action.payload.perfil_sistema;
+      state.info_destinatatio.es_responsable_directo =
+        action.payload.es_responsable_directo;
+      state.info_destinatatio.registro_editable =
+        action.payload.registro_editable;
+      state.info_destinatatio.cod_clase_alerta =
+        action.payload.cod_clase_alerta;
+      state.info_destinatatio.id_persona = action.payload.id_persona;
+      state.info_destinatatio.id_unidad_org_lider =
+        action.payload.id_unidad_org_lider;
+    },
+    setCurrentDatosDestinatario: (state, action: PayloadAction<any>) => {
+      state.datos_destinatario.destinatario = action.payload.destinatario;
+      state.datos_destinatario.detalle = action.payload.detalle;
+      state.datos_destinatario.nombre = action.payload.nombre;
+      state.datos_destinatario.principal = action.payload.principal;
+    },
   },
 });
-// {...state, mode: {...state.mode, ver: true}}
 
 export const {
   setCurrentInstrumento,
@@ -204,4 +242,7 @@ export const {
   set_current_mode_bombeo,
   set_current_id_prueba_bombeo,
   set_current_id_cartera_aforos,
+  set_current_mode_editar_bombeo,
+  setCurrentInfoDestinatatio,
+  setCurrentDatosDestinatario,
 } = instrumentos_slice.actions;

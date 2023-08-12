@@ -9,7 +9,8 @@ import {
   IconButton,
   Avatar,
   Chip,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -27,7 +28,10 @@ import DialogCrearOrganigrama from '../DialogCrearOrganigrama/DialogCrearOrganig
 import DialogElegirOrganigramaActual from '../DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
 import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarOrganigrama';
 // Slices
-import { current_organigram, set_special_edit } from '../../store/slices/organigramSlice';
+import {
+  current_organigram,
+  set_special_edit
+} from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
 import DialogElegirCcdActual from '../DialogElegirCcdActual/DialogElegirCcdActual';
@@ -84,7 +88,12 @@ export function ListOrganigramas({
       field: 'descripcion',
       headerName: 'Descripción',
       type: 'number',
-      width: 200
+      width: 280,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      )
     },
     {
       field: 'version',
@@ -268,48 +277,46 @@ export function ListOrganigramas({
             </Tooltip>
           )}
 
-
-         { /*  edición especial  */ }
+          {/*  edición especial  */}
 
           {params.row.actual && (
             <Tooltip title="Edición especial">
-            <IconButton
-            //! revisar esto detalladamente con el ing de backend
-           //  disabled={params.row.id_persona_cargo !== userinfo.id_persona}
-            onClick={() => {
-
-              console.log('params.row.id_persona_cargo', params.row);
-              console.log('userinfo.id_persona', userinfo);
-              dispatch(set_special_edit(true));
-              dispatch(current_organigram(params.row));
-              set_position_tab_organigrama('2');
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background:
-                  params.row.id_persona_cargo !== userinfo.id_persona
-                    ? ''
-                    : '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
-              <AutoFixHighIcon
-                sx={{
-                  color:
-                    params.row.id_persona_cargo !== userinfo.id_persona
-                      ? ''
-                      : 'primary.main',
-                  width: '18px',
-                  height: '18px'
+              <IconButton
+                //! revisar esto detalladamente con el ing de backend
+                //  disabled={params.row.id_persona_cargo !== userinfo.id_persona}
+                onClick={() => {
+                  console.log('params.row.id_persona_cargo', params.row);
+                  console.log('userinfo.id_persona', userinfo);
+                  dispatch(set_special_edit(true));
+                  dispatch(current_organigram(params.row));
+                  set_position_tab_organigrama('2');
                 }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background:
+                      params.row.id_persona_cargo !== userinfo.id_persona
+                        ? ''
+                        : '#fff',
+                    border: '2px solid'
+                  }}
+                  variant="rounded"
+                >
+                  <AutoFixHighIcon
+                    sx={{
+                      color:
+                        params.row.id_persona_cargo !== userinfo.id_persona
+                          ? ''
+                          : 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           )}
         </>
       )
@@ -319,6 +326,20 @@ export function ListOrganigramas({
   useEffect(() => {
     void dispatch(get_organigrams_service());
   }, []);
+
+  if (organigram.length === 0)
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}
+      >
+        <CircularProgress size={80} />
+      </Box>
+    );
 
   return (
     <>

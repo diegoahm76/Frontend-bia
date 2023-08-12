@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -38,6 +39,9 @@ import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchi
 import { tipo_sesion } from './utils/choices/choices';
 import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useRegisterLaboratorioHook';
 import dayjs from 'dayjs';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import Select from 'react-select';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarPruebaBombeo: React.FC = () => {
@@ -105,8 +109,8 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
-                // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
-                // set_info_sesion_bombeo(params.row);
+                set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
+                set_info_sesion_bombeo(params.row);
               }}
             />
           </Tooltip>
@@ -114,13 +118,86 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       ),
     },
   ];
+  const columns_data_sesion: GridColDef[] = [
+    {
+      field: 'tiempo_transcurrido',
+      headerName: 'TIEMPO TRANSCURRIDO',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'hora',
+      headerName: 'HORA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nivel',
+      headerName: 'NIVEL',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'resultado',
+      headerName: 'ABATIMIENTO/RECUPERACION',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'caudal',
+      headerName: 'CAUDAL',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 80,
+      renderCell: (params) => (
+        <>
+          <Tooltip title="Seleccionar">
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<ChecklistOutlinedIcon />}
+              onClick={() => {
+                set_info_data_sesion_bombeo(params.row);
+              }}
+            />
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
+  const columns_anexos: GridColDef[] = [
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ARCHIVO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ruta_archivo',
+      headerName: 'ARCHIVO',
+      width: 200,
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.value}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+  ];
+
   const { pozos_selected, fetch_data_pozo_instrumentos_select } =
     use_register_laboratorio_hook();
+
   const {
     fecha_prubea_bombeo,
     horaPruebaBombeo,
     row_prueba,
-    row_data_prueba,
     set_fecha_prubea_bombeo,
     handle_agregar,
     handle_date_change,
@@ -128,17 +205,31 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
 
     // * use form
     register_bombeo,
-    handleSubmit_bombeo,
     errors_bombeo,
     control_bombeo,
     reset_bombeo,
     setValue_bombeo,
-    getValues_bombeo,
-    watch_bombeo,
 
-    // *OnSubmit
-    onSubmit,
+    // *onSubmit_archivos
+    onSubmit_archivos,
     is_saving,
+
+    // * informacion sesiones
+    rows_sesion_bombeo,
+    id_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    id_sesion_bombeo,
+    rows_anexos_bombeo,
+    setHoraPruebaBombeo,
+    set_id_sesion_bombeo,
+    set_info_data_sesion_bombeo,
+    set_info_sesion_bombeo,
+    set_id_bombeo_general,
+    fetch_data_general_sesion,
+    fetch_data_sesion,
+    fetch_data_anexos_bombeo,
   } = use_register_bombeo_hook();
 
   const { reset_instrumento, control } = useRegisterInstrumentoHook();
@@ -156,36 +247,66 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
   }, [instrumentos]);
 
   useEffect(() => {
+    set_id_bombeo_general(info_prueba_bombeo?.id_prueba_bombeo);
     reset_bombeo({
       descripcion: info_prueba_bombeo.descripcion,
       latitud: info_prueba_bombeo.latitud,
       longitud: info_prueba_bombeo.longitud,
       ubicacion_prueba: info_prueba_bombeo.ubicacion_prueba,
       id_instrumento: info_prueba_bombeo.id_instrumento as any,
-      id_pozo: info_prueba_bombeo.id_pozo as any,
+      id_pozo: {
+        value: String(info_prueba_bombeo.id_pozo),
+        label: info_prueba_bombeo.nombre_pozo,
+      },
       id_prueba_bombeo: info_prueba_bombeo.id_prueba_bombeo as any,
       fecha_prueba_bombeo: info_prueba_bombeo.fecha_prueba_bombeo,
+
+      // * datos de sesion
+      id_sesion_prueba_bombeo:
+        info_sesion_bombeo?.id_sesion_prueba_bombeo as any,
+      hora_inicio: info_sesion_bombeo?.fecha_inicio,
+      cod_tipo_sesion: info_sesion_bombeo?.cod_tipo_sesion as any,
+
+      // * data prueba de bombeo por sesión
+      tiempo_transcurrido: info_data_sesion_bombeo?.tiempo_transcurrido,
+      nivel: info_data_sesion_bombeo?.nivel,
+      resultado: info_data_sesion_bombeo?.resultado,
+      caudal: info_data_sesion_bombeo?.caudal,
     });
-    // set_fecha_prubea_bombeo(info_prueba_bombeo.fecha_prueba_bombeo.format('YYYY-MM-DD') ?? '');
-    // setValue_bombeo('fecha_prueba_bombeo', info_prueba_bombeo.fecha_prueba_bombeo.format('YYYY-MM-DD') ?? '');
-  }, [info_prueba_bombeo]);
+    set_fecha_prubea_bombeo(
+      dayjs(info_prueba_bombeo.fecha_prueba_bombeo) ?? null
+    );
+    setValue_bombeo(
+      'fecha_prueba_bombeo',
+      dayjs(info_prueba_bombeo.fecha_prueba_bombeo)?.format('YYYY-MM-DD') ?? ''
+    );
+    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
+    setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
+  }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
-    if (instrumentos.id_pozo) {
-      void fetch_data_pozo_instrumentos_select(instrumentos.id_pozo);
+    if (id_bombeo_general) {
+      void fetch_data_general_sesion();
+      void fetch_data_anexos_bombeo(id_bombeo_general);
     }
-  }, [instrumentos.id_pozo]);
+  }, [id_bombeo_general]);
 
   useEffect(() => {
-    if (row_data_prueba) {
-      console.log(row_data_prueba, 'row_data_prueba');
+    if (instrumentos?.id_pozo) {
+      void fetch_data_pozo_instrumentos_select(instrumentos?.id_pozo);
     }
-  }, [row_data_prueba]);
+  }, [instrumentos?.id_pozo]);
+
+  useEffect(() => {
+    if (id_sesion_bombeo) {
+      void fetch_data_sesion();
+    }
+  }, [id_sesion_bombeo]);
 
   return (
     <>
       <form
-        onSubmit={onSubmit}
+        onSubmit={onSubmit_archivos}
         style={{
           width: '100%',
           height: 'auto',
@@ -210,7 +331,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE PRUEBAS DE BOMBEO " />
+            <Title title=" INFORMACIÓN DE PRUEBAS DE BOMBEO " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -261,7 +382,6 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
                   }}
                   error={!!error}
                 />
@@ -273,11 +393,26 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               <DatePicker
                 label="Fecha de prueba de bombeo"
                 value={fecha_prubea_bombeo}
+                disabled={true}
                 onChange={(value) => {
                   handle_date_change('fecha_prueba', value);
                 }}
                 renderInput={(params: any) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    disabled={true}
+                    {...register_bombeo('fecha_prueba_bombeo', {
+                      required: true,
+                    })}
+                    error={!!errors_bombeo.fecha_prueba_bombeo}
+                    helperText={
+                      errors_bombeo.fecha_prueba_bombeo
+                        ? 'Es obligatorio la fecha de la prueba de bombeo'
+                        : 'Ingrese la fecha de la prueba de bombeo'
+                    }
+                  />
                 )}
               />
             </LocalizationProvider>
@@ -296,7 +431,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   size="small"
                   margin="dense"
                   required
-                  disabled={false}
+                  disabled={true}
                   error={!!errors_bombeo.ubicacion_prueba}
                   helperText={
                     errors_bombeo.ubicacion_prueba
@@ -327,7 +462,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   label="Latitud"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_bombeo.latitud}
@@ -352,7 +487,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   label="Longitud"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   required={true}
                   error={!!errors_bombeo.longitud}
@@ -371,17 +506,21 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               control={control_bombeo}
               defaultValue=""
               rules={{ required: true }}
-              render={({ field }) => (
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
                 <TextField
-                  {...field}
                   label="Descripción"
                   size="small"
                   margin="dense"
-                  disabled={false}
                   fullWidth
                   multiline
+                  value={value}
+                  onChange={onChange}
                   rows={2}
                   required={true}
+                  disabled={true}
                   error={!!errors_bombeo.descripcion}
                   helperText={
                     errors_bombeo.descripcion
@@ -398,25 +537,91 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                 <Controller
                   name="id_pozo"
                   control={control_bombeo}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                          onChange(selectedOption);
+                        }}
+                        options={pozos_selected}
+                        placeholder="Seleccionar"
+                        isDisabled={true}
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Pozo seleccioando
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
+            </>
+          ) : null}
+          {rows_sesion_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Secciones" />
+              </Grid>
+              <Grid item xs={12}>
+                <DataGrid
+                  autoHeight
+                  rows={rows_sesion_bombeo}
+                  columns={columns_sesion}
+                  getRowId={(row) => uuidv4()}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </Grid>
+            </>
+          )}
+          {info_sesion_bombeo ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Sección de prueba de bombeo
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="cod_tipo_sesion"
+                  control={control_bombeo}
                   defaultValue=""
                   rules={{ required: true }}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      label="Seleccione un pozo"
-                      select
+                      label=" Prueba de bombeo / caudal "
                       size="small"
                       margin="dense"
-                      disabled={false}
+                      select
                       fullWidth
-                      required
-                      error={!!errors_bombeo.id_pozo}
+                      disabled={true}
+                      required={true}
+                      error={!!errors_bombeo.caudal}
                       helperText={
-                        errors_bombeo?.id_pozo?.type === 'required' &&
-                        'Este campo es obligatorio'
+                        errors_bombeo.caudal
+                          ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
+                          : 'ingrese el tipo de prueba de bombeo / caudal'
                       }
                     >
-                      {pozos_selected.map((option) => (
+                      {tipo_sesion.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
@@ -425,201 +630,188 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   )}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    label="Hora de prueba de bombeo"
+                    value={horaPruebaBombeo}
+                    onChange={(value) => {
+                      handle_time_change(value);
+                    }}
+                    disabled={true}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        size="small"
+                        {...register_bombeo('hora_inicio', { required: true })}
+                        error={!!errors_bombeo.hora_inicio}
+                        disabled={true}
+                        helperText={
+                          errors_bombeo.hora_inicio
+                            ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
+                            : 'Ingrese la hora de inicio de la prueba de bombeo'
+                        }
+                      />
+                    )}
+                    ampm={true}
+                  />
+                </LocalizationProvider>
+              </Grid>
             </>
           ) : null}
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Registro de Sección de prueba de bombeo
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="cod_tipo_sesion"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label=" Prueba de bombeo / caudal "
-                  size="small"
-                  margin="dense"
-                  select
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.caudal}
-                  helperText={
-                    errors_bombeo.caudal
-                      ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
-                      : 'ingrese el tipo de prueba de bombeo / caudal'
-                  }
-                >
-                  {tipo_sesion.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <TimePicker
-                label="Hora de prueba de bombeo"
-                value={horaPruebaBombeo}
-                onChange={(value) => {
-                  handle_time_change(value);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    size="small"
-                    {...register_bombeo('hora_inicio', { required: true })}
-                    error={!!errors_bombeo.hora_inicio}
-                    helperText={
-                      errors_bombeo.hora_inicio
-                        ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
-                        : 'Ingrese la hora de inicio de la prueba de bombeo'
-                    }
+          {rows_data_sesion_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Datos de la medición" />
+              </Grid>
+              <Grid item xs={12}>
+                <>
+                  <DataGrid
+                    autoHeight
+                    rows={rows_data_sesion_bombeo}
+                    columns={columns_data_sesion}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
                   />
-                )}
-                ampm={true}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Registro de medición
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="tiempo_transcurrido"
-              control={control_bombeo}
-              rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <TextField
-                  value={value}
-                  label="Tiempo transcurrido (min)"
-                  size="small"
-                  margin="dense"
-                  type="number"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  onChange={onChange}
-                  error={!!errors_bombeo.tiempo_transcurrido}
-                  helperText={
-                    errors_bombeo.tiempo_transcurrido
-                      ? 'Es obligatorio ingresar el tiempo transcurrido'
-                      : 'Ingrese el tiempo transcurrido'
-                  }
+                </>
+              </Grid>
+            </>
+          )}
+          {info_data_sesion_bombeo ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Registro de medición
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="tiempo_transcurrido"
+                  control={control_bombeo}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      value={value}
+                      label="Tiempo transcurrido (min)"
+                      size="small"
+                      margin="dense"
+                      type="number"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      onChange={onChange}
+                      error={!!errors_bombeo.tiempo_transcurrido}
+                      helperText={
+                        errors_bombeo.tiempo_transcurrido
+                          ? 'Es obligatorio ingresar el tiempo transcurrido'
+                          : 'Ingrese el tiempo transcurrido'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="nivel"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Nivel (m)"
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.nivel}
-                  helperText={
-                    errors_bombeo.nivel
-                      ? 'Es obligatorio ingresar el nivel'
-                      : 'Ingrese el nivel'
-                  }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nivel"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Nivel (m)"
+                      size="small"
+                      margin="dense"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.nivel}
+                      helperText={
+                        errors_bombeo.nivel
+                          ? 'Es obligatorio ingresar el nivel'
+                          : 'Ingrese el nivel'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="resultado"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Abatimiento / Recuperación (m)"
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.resultado}
-                  helperText={
-                    errors_bombeo.resultado
-                      ? 'Es obligatorio ingresar el abatimiento / recuperación'
-                      : 'Ingrese el abatimiento / recuperación'
-                  }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="resultado"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Abatimiento / Recuperación (m)"
+                      size="small"
+                      margin="dense"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.resultado}
+                      helperText={
+                        errors_bombeo.resultado
+                          ? 'Es obligatorio ingresar el abatimiento / recuperación'
+                          : 'Ingrese el abatimiento / recuperación'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="caudal"
-              control={control_bombeo}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Caudal (l/s)"
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required={true}
-                  error={!!errors_bombeo.caudal}
-                  helperText={
-                    errors_bombeo.caudal
-                      ? 'Es obligatorio ingresar el caudal'
-                      : 'Ingrese el caudal'
-                  }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="caudal"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Caudal (l/s)"
+                      size="small"
+                      margin="dense"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.caudal}
+                      helperText={
+                        errors_bombeo.caudal
+                          ? 'Es obligatorio ingresar el caudal'
+                          : 'Ingrese el caudal'
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
-          </Grid>{' '}
-          <Box sx={{ flexGrow: 1 }}>
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="flex-end"
-              sx={{ mt: '10px' }}
-            >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handle_agregar}
-              >
-                Agregar
-              </Button>
-            </Stack>
-          </Box>
+              </Grid>{' '}
+              <Box sx={{ flexGrow: 1 }}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  justifyContent="flex-end"
+                  sx={{ mt: '10px' }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    disabled={true}
+                    onClick={handle_agregar}
+                  >
+                    Agregar
+                  </Button>
+                </Stack>
+              </Box>
+            </>
+          ) : null}
           {row_prueba.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -638,9 +830,31 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
               </Grid>
             </>
           )}
-          <Grid item xs={12}></Grid>
+          {/* <Grid item xs={12}></Grid> */}
+          {rows_anexos_bombeo.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="Anexos Asociados" />
+              </Grid>
+              <Grid item xs={12}>
+                <>
+                  <DataGrid
+                    autoHeight
+                    rows={rows_anexos_bombeo}
+                    columns={columns_anexos}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
+                </>
+              </Grid>
+            </>
+          )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

@@ -7,7 +7,6 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
     const chart_data: ApexOptions =  {
-        series: [44, 55, 13, 43, 22],
         chart: {
         width: 380,
         type: 'pie',
@@ -32,7 +31,7 @@ export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
     }
     return (
         <>
-                <ReactApexChart options={chart_data} series={state.series} type="pie" height={215}/>
+                <ReactApexChart options={chart_data} series={state.series} type="pie" height={191}/>
         </>
     );
 }

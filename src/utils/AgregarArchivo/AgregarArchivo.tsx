@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingButton } from '@mui/lab';
 import { Button, Grid, TextField } from '@mui/material';
@@ -5,6 +6,7 @@ import { Fragment, useContext, useState } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import type { Iprops } from './types/types';
 import { DataContext } from '../../commons/recursoHidrico/Instrumentos/context/contextData';
+import { control_warning } from '../../commons/almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 export const AgregarArchivo = ({ multiple }: Iprops) => {
@@ -16,11 +18,8 @@ export const AgregarArchivo = ({ multiple }: Iprops) => {
     set_nombres_archivos([...nombres_archivos, '']);
   };
 
-  const handle_file_select = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ): any => {
-    const file = e.target.files?.[0];
+  const handle_file_select = (file: any, index: number): any => {
+    // const file = e.target.files?.[0];
     const updated_archivos = [...archivos];
     if (file != null) {
       updated_archivos[index] = file;
@@ -108,10 +107,30 @@ export const AgregarArchivo = ({ multiple }: Iprops) => {
                   type="file"
                   disabled={false}
                   required={false}
+                  accept="application/pdf"
                   autoFocus
                   style={{ opacity: 0 }}
                   onChange={(e) => {
-                    handle_file_select(e, index);
+                    // handle_file_select(e, index);
+                    const files = (e.target as HTMLInputElement).files;
+                    if (files && files.length > 0) {
+                      const file = files[0];
+                      if (file.type !== 'application/pdf') {
+                        control_warning(
+                          'Precaución: Solo es admitido archivos en formato pdf'
+                        );
+                      } else if (file.size > 1024 * 1024 * 5) {
+                        const MAX_FILE_SIZE_MB = (
+                          (1024 * 1024 * 5) /
+                          (1024 * 1024)
+                        ).toFixed(1);
+                        control_warning(
+                          `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                        );
+                      } else {
+                        handle_file_select(file, index);
+                      }
+                    }
                   }}
                 />
               </Button>

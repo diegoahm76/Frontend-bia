@@ -2,11 +2,12 @@
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../../screens/404';
 import { OrganigramaScreen } from '../../../../gestorDocumental/organigrama/screens/OrganigramaScreen';
-import { TrasladoMasivoUnidadOrganizacional } from '../screens/TrasladoMasivoUnidadOrganizacional/screens/TrasladoMasivoUnidadOrganizacional';
+import { Unidad_A_Unidad } from '../screens/Unidad_A_Unidad/screen/Unidad_A_Unidad';
+
 
 const routes = [
-  { path: '/traslado_masivo_unidad_organizacional', element: <TrasladoMasivoUnidadOrganizacional/> },
-  { path: '/traslado_masivo_unidad_a_unidad', element: <>Traslado masivo de unidad a unidad</> },
+  { path: '/traslado_masivo_unidad_organizacional', element: <>Traslado masivo unidad por Entidad</> },
+  { path: '/traslado_masivo_unidad_a_unidad', element: <Unidad_A_Unidad/> },
   { path: '/cambio_organigrama_actual', element: <OrganigramaScreen /> },
 ];
 

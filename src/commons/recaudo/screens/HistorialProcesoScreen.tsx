@@ -339,9 +339,9 @@ export const HistorialProceso: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
-        <CollapsibleButton categoria={state?.proceso?.id_etapa?.etapa}>
+        <CollapsibleButton texto_boton={state?.proceso?.id_etapa?.etapa}>
           {rows_valores_proceso.map((arreglo_objetos, index) => (
-            <CollapsibleButton key={index} categoria={arreglo_objetos[0].id_atributo.id_categoria.categoria}>
+            <CollapsibleButton key={index} texto_boton={arreglo_objetos[0].id_atributo.id_categoria.categoria}>
               <DataGrid
                 density={state?.editar ? 'standard' : 'compact'}
                 autoHeight

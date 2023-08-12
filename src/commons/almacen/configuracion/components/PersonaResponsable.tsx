@@ -46,7 +46,7 @@ const PersonaResponsable = ({
         {
             field: 'numero_documento',
             headerName: 'Número de documento',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -56,7 +56,7 @@ const PersonaResponsable = ({
         {
             field: 'nombre_completo',
             headerName: 'Nombre',
-            width: 300,flex:1,
+            width: 300, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -67,7 +67,7 @@ const PersonaResponsable = ({
         {
             field: 'razon_social',
             headerName: 'Razón social',
-            width: 250,flex:1,
+            width: 250, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -77,7 +77,7 @@ const PersonaResponsable = ({
         {
             field: 'nombre_comercial',
             headerName: 'Nombre comercial',
-            width: 200,flex:1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -317,7 +317,7 @@ const PersonaResponsable = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 4,
+                            md: 2,
                             control_form: control_persona,
                             control_name: "primer_nombre",
                             default_value: "",
@@ -327,23 +327,11 @@ const PersonaResponsable = ({
                             disabled: false,
                             helper_text: ""
                         },
+
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 4,
-                            control_form: control_persona,
-                            control_name: "segundo_nombre",
-                            default_value: "",
-                            rules: {},
-                            label: "Segundo nombre",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 4,
+                            md: 3,
                             control_form: control_persona,
                             control_name: "primer_apellido",
                             default_value: "",
@@ -353,19 +341,7 @@ const PersonaResponsable = ({
                             disabled: false,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 4,
-                            control_form: control_persona,
-                            control_name: "segundo_apellido",
-                            default_value: "",
-                            rules: {},
-                            label: "Segundo Apellido",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
+
 
 
                     ]}

@@ -30,6 +30,7 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarCartera: React.FC = () => {
@@ -73,7 +74,14 @@ export const AgregarCartera: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar elemento"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+                />}
               onClick={() => {
                 handle_delete(params.row.id);
               }}
@@ -626,6 +634,9 @@ export const AgregarCartera: React.FC = () => {
           <Grid item xs={12}></Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

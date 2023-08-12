@@ -18,8 +18,10 @@ import type {
   Archivos,
   CuencasInstrumentos,
   DataGeneralAforo,
-  DataGeneralBombeo,
   DataCarteraAforo,
+  GeneralSesionBombeo,
+  DataGeneralBombeo,
+  DatoSesionBombeo,
 } from '../../ConsultaBiblioteca/interfaces/interfaces';
 import {
   get_archivos,
@@ -31,6 +33,8 @@ import {
   get_data_cartera_id,
   get_data_cuenca_instrumentos,
   get_data_laboratorio_id,
+  get_data_sesion_bombeo,
+  get_data_sesion_bombeo_general,
   get_instrumento_id,
 } from '../../ConsultaBiblioteca/request/request';
 import { get_pozo_id } from '../request/request';
@@ -141,6 +145,32 @@ interface UserContext {
   fetch_data_anexos_laboratorio: (id_laboratorio: number) => Promise<void>;
   fetch_data_anexos_carteras: (id_cartera_aforo: number) => Promise<any>;
   fetch_data_anexos_bombeo: (id_prueba_bombeo: number) => Promise<any>;
+
+  // * Pruebas de bombeo
+
+  id_bombeo_general: number | null;
+  id_sesion_bombeo: number | null;
+  id_data_sesion_bombeo: number | null;
+  rows_bombeo_general: DataGeneralBombeo[];
+  rows_sesion_bombeo: GeneralSesionBombeo[];
+  rows_data_sesion_bombeo: DatoSesionBombeo[];
+  info_bombeo_general: DataGeneralBombeo | undefined;
+  info_sesion_bombeo: GeneralSesionBombeo | undefined;
+  info_data_sesion_bombeo: DatoSesionBombeo | undefined;
+  set_id_bombeo_general: (value: number | null) => void;
+  set_id_sesion_bombeo: (value: number | null) => void;
+  set_id_data_sesion_bombeo: (value: number | null) => void;
+  set_rows_bombeo_general: (rows: DataGeneralBombeo[]) => void;
+  set_rows_sesion_bombeo: (rows: GeneralSesionBombeo[]) => void;
+  set_rows_data_sesion_bombeo: (rows: DatoSesionBombeo[]) => void;
+  set_info_bombeo_general: (info_bombeo_general: DataGeneralBombeo) => void;
+  set_info_sesion_bombeo: (info_sesion_bombeo: GeneralSesionBombeo) => void;
+  set_info_data_sesion_bombeo: (
+    info_data_sesion_bombeo: DatoSesionBombeo
+  ) => void;
+  fetch_data_general_bombeo: () => Promise<any>;
+  fetch_data_general_sesion: () => Promise<any>;
+  fetch_data_sesion: () => Promise<any>;
 }
 
 // <--------------------- Data context --------------------->
@@ -263,6 +293,55 @@ export const DataContext = createContext<UserContext>({
   fetch_data_anexos_laboratorio: async (id_laboratorio: number) => {},
   fetch_data_anexos_carteras: async (id_cartera: number) => {},
   fetch_data_anexos_bombeo: async (id_prueba_bombeo: number) => {},
+
+  // * Pruebas de bombeo
+  id_bombeo_general: null,
+  id_sesion_bombeo: null,
+  id_data_sesion_bombeo: null,
+  rows_bombeo_general: [],
+  rows_sesion_bombeo: [],
+  rows_data_sesion_bombeo: [],
+  info_bombeo_general: {
+    id_prueba_bombeo: 0,
+    descripcion: '',
+    fecha_registro: '',
+    fecha_prueba_bombeo: '',
+    latitud: '',
+    longitud: '',
+    ubicacion_prueba: '',
+    id_instrumento: 0,
+    id_pozo: 0,
+    nombre_pozo: '',
+  },
+  info_sesion_bombeo: {
+    id_sesion_prueba_bombeo: 0,
+    id_prueba_bombeo: 0,
+    consecutivo_sesion: 0,
+    fecha_inicio: '',
+    cod_tipo_sesion: '',
+    datos: [],
+  },
+  info_data_sesion_bombeo: {
+    id_dato_sesion_prueba_bombeo: 0,
+    tiempo_transcurrido: '',
+    hora: '',
+    nivel: '',
+    resultado: '',
+    caudal: '',
+    id_sesion_prueba_bombeo: 0,
+  },
+  set_id_bombeo_general: () => {},
+  set_id_sesion_bombeo: () => {},
+  set_id_data_sesion_bombeo: () => {},
+  set_rows_bombeo_general: () => {},
+  set_rows_sesion_bombeo: () => {},
+  set_rows_data_sesion_bombeo: () => {},
+  set_info_bombeo_general: () => {},
+  set_info_sesion_bombeo: () => {},
+  set_info_data_sesion_bombeo: () => {},
+  fetch_data_general_bombeo: async () => {},
+  fetch_data_general_sesion: async () => {},
+  fetch_data_sesion: async () => {},
 });
 
 export const UserProvider = ({
@@ -289,6 +368,16 @@ export const UserProvider = ({
   const [id_subseccion, set_id_subseccion] = React.useState<number | null>(
     null
   );
+
+  const [id_bombeo_general, set_id_bombeo_general] = React.useState<
+    number | null
+  >(null);
+  const [id_sesion_bombeo, set_id_sesion_bombeo] = React.useState<
+    number | null
+  >(null);
+  const [id_data_sesion_bombeo, set_id_data_sesion_bombeo] = React.useState<
+    number | null
+  >(null);
 
   // modos instrumentos
   const [register_instrumento, set_register_instrumento] = React.useState(true);
@@ -334,6 +423,13 @@ export const UserProvider = ({
   const [info_busqueda_instrumentos, set_info_busqueda_instrumentos] =
     React.useState<BusquedaInstrumentos>();
   const [info_instrumentos, set_info_instrumentos] = React.useState<any>();
+  const [info_bombeo_general, set_info_bombeo_general] =
+    React.useState<DataGeneralBombeo>();
+  const [info_sesion_bombeo, set_info_sesion_bombeo] =
+    React.useState<GeneralSesionBombeo>();
+  const [info_data_sesion_bombeo, set_info_data_sesion_bombeo] =
+    React.useState<DatoSesionBombeo>();
+
   const [rows_cuencas_instrumentos, set_rows_cuencas_instrumentos] =
     React.useState<CuencasInstrumentos[]>([]);
   const [rows_anexos, set_rows_anexos] = React.useState<Archivos[]>([]);
@@ -349,6 +445,16 @@ export const UserProvider = ({
   const [rows_data_cartera, set_rows_data_cartera] = React.useState<
     DataCarteraAforo[]
   >([]);
+  const [rows_bombeo_general, set_rows_bombeo_general] = React.useState<
+    DataGeneralBombeo[]
+  >([]);
+  const [rows_sesion_bombeo, set_rows_sesion_bombeo] = React.useState<
+    GeneralSesionBombeo[]
+  >([]);
+  const [rows_data_sesion_bombeo, set_rows_data_sesion_bombeo] = React.useState<
+    DatoSesionBombeo[]
+  >([]);
+
   const [nombre_seccion, set_nombre_seccion] = React.useState('');
   const [nombre_subseccion, set_nombre_subseccion] = React.useState('');
 
@@ -582,6 +688,44 @@ export const UserProvider = ({
     }
   };
 
+  // * fetch pruebas de bombeo
+
+  const fetch_data_general_bombeo = async (): Promise<void> => {
+    try {
+      set_rows_bombeo_general([]);
+      if (id_instrumento) {
+        const response = await get_data_bombeo_general(id_instrumento);
+        set_rows_bombeo_general(response);
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+  const fetch_data_general_sesion = async (): Promise<void> => {
+    try {
+      set_rows_sesion_bombeo([]);
+      if (id_bombeo_general) {
+        const response = await get_data_sesion_bombeo_general(
+          id_bombeo_general
+        );
+        set_rows_sesion_bombeo(response);
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+  const fetch_data_sesion = async (): Promise<void> => {
+    try {
+      set_rows_data_sesion_bombeo([]);
+      if (id_sesion_bombeo) {
+        const response = await get_data_sesion_bombeo(id_sesion_bombeo);
+        set_rows_data_sesion_bombeo(response);
+      }
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
+
   const value = {
     // *modos instrumentos
     register_instrumento,
@@ -678,6 +822,29 @@ export const UserProvider = ({
     fetch_data_anexos_laboratorio,
     fetch_data_anexos_carteras,
     fetch_data_anexos_bombeo,
+
+    // * Pruebas de bombeo
+    id_bombeo_general,
+    id_sesion_bombeo,
+    id_data_sesion_bombeo,
+    rows_bombeo_general,
+    rows_sesion_bombeo,
+    rows_data_sesion_bombeo,
+    info_bombeo_general,
+    info_sesion_bombeo,
+    info_data_sesion_bombeo,
+    set_id_bombeo_general,
+    set_id_sesion_bombeo,
+    set_id_data_sesion_bombeo,
+    set_rows_bombeo_general,
+    set_rows_sesion_bombeo,
+    set_rows_data_sesion_bombeo,
+    set_info_bombeo_general,
+    set_info_sesion_bombeo,
+    set_info_data_sesion_bombeo,
+    fetch_data_general_bombeo,
+    fetch_data_general_sesion,
+    fetch_data_sesion,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
