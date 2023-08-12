@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, Stack, TextField } from '@mui/material';
-import { Add, Close } from '@mui/icons-material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
+import { Add, CloudUpload } from '@mui/icons-material';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { use_form } from '../../../../../hooks/useForm';
-import { post_notificacion_fisica, post_notificacion_email_edicto, get_datos_remitente } from '../requests/requests';
+import { post_notificacion_fisica, post_notificacion_email_edicto } from '../requests/requests';
 import { ModuloDireccion } from './ModuloDireccion';
+import { DialogoRegistro } from '../../componentes/DialogoRegistro';
 
 export const Email: React.FC = () => {
   const [file_name, set_file_name] = useState('');
+  const [file, set_file] = useState({});
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
 
@@ -26,13 +27,10 @@ export const Email: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
+      set_file(selected_file);
       set_file_name(selected_file.name);
     }
   };
-
-  useEffect(() => {
-    void get_datos_remitente();
-  }, [])
 
   return (
     <>
@@ -120,7 +118,7 @@ export const Email: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Documento Adjunto'}
                     <input
@@ -129,13 +127,14 @@ export const Email: React.FC = () => {
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='doc_adjunto'
+                      name='doc_asociado'
                       onChange={handle_file_selected}
                     />
                 </Button>
               </Grid>
               <Grid item xs={12} sm={15}>
                 <TextField
+                  required
                   multiline
                   rows={4}
                   label="Observación"
@@ -160,7 +159,14 @@ export const Email: React.FC = () => {
                 onClick={() => {
                   try {
                     void post_notificacion_email_edicto({
-                      ...form_state
+                      ...form_state,
+                      doc_asociado: file,
+                      id_medio_notificacion: 1, // aún no están definidos los medios
+                      id_modulo_generador: 1,
+                      email: 'mientrashaydatos@gmail.com',
+                      id_destinatario: 1,
+                      id_expediente: 1
+
                     })
                     handle_open()
                   } catch (error: any) {
@@ -175,38 +181,20 @@ export const Email: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la notificación con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Notificación fue Registrada con Éxito'
+        tipo='Notificación'
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }
 
 export const Fisico: React.FC = () => {
   const [file_name, set_file_name] = useState('');
+  const [file, set_file] = useState({});
   const [date, set_date] = useState<Date | null>(new Date());
   const [fecha_string, set_fecha_string] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const { form_state, on_input_change } = use_form({});
@@ -229,6 +217,7 @@ export const Fisico: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
+      set_file(selected_file);
       set_file_name(selected_file.name);
     }
   };
@@ -301,7 +290,7 @@ export const Fisico: React.FC = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha de Despacho a Destino"
-                      inputFormat="YYYY/MM/DD"
+                      inputFormat="DD/MM/YYYY"
                       openTo="day"
                       views={[ 'day', 'month', 'year' ]}
                       value={date}
@@ -344,7 +333,7 @@ export const Fisico: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Documento Adjunto'}
                     <input
@@ -353,13 +342,14 @@ export const Fisico: React.FC = () => {
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='documento_adjunto'
+                      name='documento_asociaoo'
                       onChange={handle_file_selected}
                     />
                 </Button>
               </Grid>
               <Grid item xs={12} sm={15}>
                 <TextField
+                  required
                   multiline
                   rows={4}
                   label="Observación"
@@ -395,7 +385,11 @@ export const Fisico: React.FC = () => {
                   try {
                     void post_notificacion_fisica({
                       ...form_state,
+                      doc_asociado: file,
+                      id_notificacion: 2, // aún no están definidos los medios
                       fecha_despacho: fecha_string,
+                      id_funcionario: 1
+
                     })
                     handle_open()
                   } catch (error: any) {
@@ -409,38 +403,20 @@ export const Fisico: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la notificación con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Notificación fue Registrada con Éxito'
+        tipo='Notificación'
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }
 
 export const Edicto: React.FC = () => {
   const [file_name, set_file_name] = useState('');
+  const [file, set_file] = useState({});
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
 
@@ -451,6 +427,7 @@ export const Edicto: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
+      set_file(selected_file);
       set_file_name(selected_file.name);
     }
   };
@@ -542,7 +519,7 @@ export const Edicto: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Documento Adjunto'}
                     <input
@@ -551,13 +528,14 @@ export const Edicto: React.FC = () => {
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='doc_adjunto'
+                      name='doc_asociado'
                       onChange={handle_file_selected}
                     />
                 </Button>
               </Grid>
               <Grid item xs={12} sm={15}>
                 <TextField
+                  required
                   multiline
                   rows={4}
                   label="Observación"
@@ -582,7 +560,12 @@ export const Edicto: React.FC = () => {
                 onClick={() => {
                   try {
                     void post_notificacion_email_edicto({
-                      ...form_state
+                      ...form_state,
+                      doc_asociado: file,
+                      id_medio_notificacion: 3, // aún no están definidos los medios
+                      id_modulo_generador: 1,
+                      id_destinatario: 1,
+                      id_expediente: 1
                     })
                     handle_open()
                   } catch (error: any) {
@@ -596,32 +579,13 @@ export const Edicto: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la notificación con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Notificación fue Registrada con Éxito'
+        tipo='Notificación'
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }

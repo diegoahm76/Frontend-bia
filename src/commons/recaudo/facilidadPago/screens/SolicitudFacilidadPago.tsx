@@ -2,19 +2,18 @@
 import { Title } from '../../../../components/Title';
 import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
+import { DialogoRegistro } from '../componentes/DialogoRegistro';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Close } from '@mui/icons-material';
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
+import { Save, CloudUpload } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
 import { post_registro_fac_pago, get_tipo_bienes, get_roles_garantia } from '../requests/requests';
-import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
 interface RootState {
@@ -210,7 +209,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     fullWidth
                     size='medium'
                     component="label"
-                    startIcon={<CloudUploadIcon />}
+                    startIcon={<CloudUpload />}
                   >
                     {name_files.documento_soporte !== undefined ? name_files.documento_soporte : 'Carga Documento Solicitud'}
                       <input
@@ -230,7 +229,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     fullWidth
                     size='medium'
                     component="label"
-                    startIcon={<CloudUploadIcon />}
+                    startIcon={<CloudUpload />}
                   >
                     {name_files.consignacion_soporte !== undefined ? name_files.consignacion_soporte : 'Carga Soporte Consignación'}
                       <input
@@ -307,7 +306,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad'}
                           <input
@@ -387,7 +386,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_apoderado !== undefined ? name_files.documento_apoderado : 'Carga Documento de Identidad Apoderado'}
                           <input
@@ -407,7 +406,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_poder !== undefined ? name_files.documento_poder :'Carga Documento Poder'}
                           <input
@@ -427,7 +426,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
@@ -507,7 +506,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
                           <input
@@ -527,7 +526,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
@@ -607,7 +606,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
                           <input
@@ -627,7 +626,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
@@ -647,7 +646,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
@@ -805,7 +804,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {name_files.documento_garantia !== undefined ? name_files.documento_garantia : 'Carga Garantía Ofrecida'}
                           <input
@@ -828,7 +827,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {name_files.documento_no_enajenacion !== undefined ? name_files.documento_no_enajenacion : 'Carga Documento No Enajenación'}
                     <input
@@ -924,7 +923,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {name_files.documento_soporte_bien !== undefined ? name_files.documento_soporte_bien : 'Carga el Documento Impuesto'}
                     <input
@@ -1037,7 +1036,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 <Button
                   color='primary'
                   variant='contained'
-                  startIcon={<SaveIcon />}
+                  startIcon={<Save />}
                   onClick={() => {
                       const post_registro = async (): Promise<void> => {
                         try {
@@ -1073,33 +1072,13 @@ export const SolicitudFacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>La solicitud de facilidad de pago fue registrada con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Número de radicación:</strong> {respuesta_registro?.numero_radicacion}</p>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Solicitud de Facilidad de Pago fue Registrada con Éxito'
+        tipo='Radicación'
+        numero_registro={respuesta_registro?.numero_radicacion}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }

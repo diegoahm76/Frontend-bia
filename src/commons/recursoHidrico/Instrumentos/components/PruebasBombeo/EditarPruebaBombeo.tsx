@@ -43,6 +43,7 @@ import dayjs from 'dayjs';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
 import EditIcon from '@mui/icons-material/Edit';
 import Select from 'react-select';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarPruebaBombeo: React.FC = () => {
@@ -867,6 +868,9 @@ export const EditarPruebaBombeo: React.FC = () => {
           )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

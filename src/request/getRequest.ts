@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type AxiosResponse } from 'axios';
 import { select_adapter } from '../adapters/globalAdapters';
 import { api } from '../api/axios';
@@ -9,6 +10,7 @@ import type {
   CompleteInfoPersona
 } from '../interfaces/globalModels';
 import { type Users } from '../commons/seguridad/interfaces';
+import { control_warning } from '../commons/almacen/configuracion/store/thunks/BodegaThunks';
 
 export const get_direcciones = async (): Promise<any> => {
   return await api.get('choices/direcciones/');
@@ -77,6 +79,9 @@ export const get_person_by_document = async (
   tipo_documento: string,
   numero_documento: string
 ): Promise<AxiosResponse<ResponseServer<InfoPersona>>> => {
+  if (!tipo_documento)
+    control_warning('No se puede realizar la búsqueda sin los datos completos');
+
   return await api.get<ResponseServer<InfoPersona>>(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
   );
@@ -96,7 +101,6 @@ export const get_user_by_id = async (
 ): Promise<AxiosResponse<ResponseServer<Users>>> => {
   return await api.get(`users/get-by-pk/${id_usuario}`);
 };
-
 
 export const search_avanzada = async ({
   tipo_documento,

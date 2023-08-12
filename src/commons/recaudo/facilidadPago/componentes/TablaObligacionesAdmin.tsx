@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { SearchOutlined, FilterAltOffOutlined, Close, ManageAccounts } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import ArticleIcon from '@mui/icons-material/Article';
+import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
+import { SearchOutlined, FilterAltOffOutlined, Close, ManageAccounts, Help, Save, Article, Info } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -120,7 +118,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
                   }}
                   variant="rounded"
                 >
-                  <ArticleIcon
+                  <Article
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                   />
                 </Avatar>
@@ -294,89 +292,109 @@ export const TablaObligacionesAdmin: React.FC = () => {
       <Dialog
         open={modal}
         onClose={handle_close}
-        maxWidth="xs"
       >
-        <Box component="form">
-          <DialogTitle>
-            {
-              asignacion ?
-              '¿Está seguro de realizar la asignación de usuario?' :
-              '¿Está seguro de realizar la reasignación de usuario?'
-            }
-          </DialogTitle>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={() => {
-                try {
-                  handle_open_sub();
-                  set_modal_option('no');
-                  handle_close();
-                } catch (error: any) {
-                  throw new Error(error);
+        <DialogContent>
+          <DialogContentText>
+            <Grid container>
+              <Grid item textAlign="center" xs={12}>
+                <Help style={{ color: "#009BFF", fontSize: "60px" }} />
+              </Grid>
+              <Grid item textAlign="center" xs={12}>
+                <strong>
+                {
+                  asignacion ?
+                  '¿Está seguro de realizar la asignación de usuario?' :
+                  '¿Está seguro de realizar la reasignación de usuario?'
                 }
+                </strong>
+              </Grid>
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant='outlined'
+            color="primary"
+            autoFocus
+            startIcon={<Close />}
+            onClick={() => {
+              try {
+                handle_open_sub();
+                set_modal_option('no');
+                handle_close();
+              } catch (error: any) {
+                throw new Error(error);
+              }
             }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<SaveIcon />}
-              onClick={() => {
-                try {
-                  void put_asignacion_funcionario(facilidad_selected, {id_funcionario: funcionario_selected});
-                  handle_open_sub();
-                  set_modal_option('si');
-                  handle_close();
-                } catch (error: any) {
-                  throw new Error(error);
-                }
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Save />}
+            onClick={() => {
+              try {
+                void put_asignacion_funcionario(facilidad_selected, {id_funcionario: funcionario_selected});
+                handle_open_sub();
+                set_modal_option('si');
+                handle_close();
+              } catch (error: any) {
+                throw new Error(error);
+              }
             }}
-            >
-              Guardar
-            </Button>
-          </DialogActions>
-        </Box>
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
       </Dialog>
       <Dialog
         open={sub_modal}
         onClose={handle_close_sub}
-        maxWidth="xs"
       >
-        <Box component="form">
-          {
-            modal_option === 'si' && asignacion ? (
-              <DialogTitle>Asignación ejecutada con éxito</DialogTitle>
-            ) : modal_option === 'no' && asignacion ? (
-              <DialogTitle>Asignación cancelada</DialogTitle>
-            ) : modal_option === 'si' && !asignacion ? (
-              <DialogTitle>Reasignación ejecutada con éxito</DialogTitle>
-            ) : modal_option === 'no' && !asignacion ? (
-              <DialogTitle>Reasignación cancelada</DialogTitle>
-            ) : null
-          }
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={() => {
-                try {
-                  void dispatch(get_facilidades_ingresadas());
-                  set_modal_asignacion(false);
-                  handle_close_sub();
-                } catch (error: any) {
-                  throw new Error(error);
+        <DialogContent>
+          <DialogContentText>
+            <Grid container>
+              <Grid item textAlign="center" xs={12}>
+                <Info style={{ color: "#009BFF", fontSize: "60px" }} />
+              </Grid>
+              <Grid item textAlign="center" xs={12}>
+                <strong>
+                {
+                  modal_option === 'si' && asignacion ? (
+                    <DialogTitle>Asignación ejecutada con éxito</DialogTitle>
+                  ) : modal_option === 'no' && asignacion ? (
+                    <DialogTitle>Asignación cancelada</DialogTitle>
+                  ) : modal_option === 'si' && !asignacion ? (
+                    <DialogTitle>Reasignación ejecutada con éxito</DialogTitle>
+                  ) : modal_option === 'no' && !asignacion ? (
+                    <DialogTitle>Reasignación cancelada</DialogTitle>
+                  ) : null
                 }
-              }}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
+                </strong>
+              </Grid>
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant='outlined'
+            color="primary"
+            autoFocus
+            startIcon={<Close />}
+            onClick={() => {
+              try {
+                void dispatch(get_facilidades_ingresadas());
+                set_modal_asignacion(false);
+                handle_close_sub();
+              } catch (error: any) {
+                throw new Error(error);
+              }
+            }}
+          >
+            Cerrar
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

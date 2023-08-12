@@ -2,10 +2,8 @@
 import { Title } from '../../../../components/Title';
 import { EncabezadoAdmin } from '../componentes/EncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox } from "@mui/material";
-import { Close } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox, DialogContent, DialogContentText } from "@mui/material";
+import { Close, Save, CloudUpload, Help } from '@mui/icons-material';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
@@ -138,7 +136,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                         fullWidth
                         size='medium'
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<CloudUpload />}
                       >
                         {file_name !== '' ? file_name : 'Informe BDME'}
                           <input
@@ -298,32 +296,40 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   <Dialog
                     open={modal_anular}
                     onClose={handle_close_anular}
-                    maxWidth="xs"
                   >
-                    <Box component="form"
-                      onSubmit={()=>{}}>
-                      <DialogTitle>¿Desea establecer la facilidad de pago como Cancelada / Anulada?</DialogTitle>
-                      <DialogActions>
-                        <Button
-                          variant='outlined'
-                          color="primary"
-                          startIcon={<Close />}
-                          onClick={handle_close_anular}
-                        >
-                          No
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          startIcon={<SaveIcon />}
-                          onClick={() => {
-                            navigate('../incumplimiento')
+                    <DialogContent>
+                      <DialogContentText>
+                        <Grid container>
+                          <Grid item textAlign="center" xs={12}>
+                            <Help style={{ color: "#009BFF", fontSize: "60px" }} />
+                          </Grid>
+                          <Grid item textAlign="center" xs={12}>
+                            <strong>¿Desea establecer la facilidad de pago como Cancelada / Anulada?</strong>
+                          </Grid>
+                        </Grid>
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        variant='outlined'
+                        color="primary"
+                        autoFocus
+                        startIcon={<Close />}
+                        onClick={handle_close_anular}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<Save />}
+                        onClick={() => {
+                          navigate('../incumplimiento')
                         }}
-                        >
-                          Si
-                        </Button>
-                      </DialogActions>
-                    </Box>
+                      >
+                        Aceptar
+                      </Button>
+                    </DialogActions>
                   </Dialog>
                   <Dialog
                     open={modal_plan_pagos}
@@ -372,7 +378,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     <Button
                       color='primary'
                       variant='contained'
-                      startIcon={<SaveIcon />}
+                      startIcon={<Save />}
                       sx={{ marginTop: '30px' }}
                       onClick={() => {
                         void post_respuesta_fac_pago({

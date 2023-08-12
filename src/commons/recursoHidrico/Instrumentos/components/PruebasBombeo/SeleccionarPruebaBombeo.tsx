@@ -41,6 +41,7 @@ import { use_register_laboratorio_hook } from '../ResultadoLaboratorio/hook/useR
 import dayjs from 'dayjs';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import Select from 'react-select';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarPruebaBombeo: React.FC = () => {
@@ -851,6 +852,9 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
           )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>
