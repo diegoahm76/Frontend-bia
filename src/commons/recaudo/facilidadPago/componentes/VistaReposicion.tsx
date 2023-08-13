@@ -1,5 +1,5 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CloudDownload } from '@mui/icons-material';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VistaReposicion: React.FC = () => {
@@ -91,7 +91,7 @@ export const VistaReposicion: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                   onClick={()=>{}}
                 >
                   Ver Recurso de Reposición
@@ -103,7 +103,7 @@ export const VistaReposicion: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                 >
                   Ver Anexos y Pruebas
                 </Button>

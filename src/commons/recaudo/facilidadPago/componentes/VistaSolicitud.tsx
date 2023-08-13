@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CloudDownload } from '@mui/icons-material';
 import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
 import { useSelector } from 'react-redux';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
@@ -75,7 +75,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='small'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Documento
             </Button>
@@ -96,7 +96,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='medium'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Documento Solicitud
             </Button>
@@ -109,7 +109,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='medium'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Soporte Consignación
             </Button>
@@ -177,7 +177,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='medium'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Documento No Enajenación
             </Button>
@@ -195,7 +195,7 @@ export const VistaSolicitud: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                 >
                   Ver Garantías Ofrecidas
                 </Button>
