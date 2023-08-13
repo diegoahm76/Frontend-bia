@@ -188,7 +188,7 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_sucursal_empresa}
           />
-        </Grid>
+        </Grid> 
       </Grid>
     </>
   );

@@ -28,7 +28,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
     const [departamentos_noti_retur, set_departamentos_noti_retur] = useState<Departamento[]>([]);
     const [pais_retur, set_pais_retur] = useState<Paises[]>([]);
-
     const [, setselected_municipionoti] = useState('');
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
@@ -295,9 +294,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
         }
     };
 
-
-
-
     const [
         // direccion_generada
         , setdireccion_generada] = useState('');
@@ -352,11 +348,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 onChange={mostrardireccion_generada} // Pasa la función para mostrar la dirección generada
                 type={type_direction}
             />
-            <div>
-
-
-            </div>
-
             <Grid
                 container
                 spacing={2}
@@ -369,8 +360,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
                     <Title title="Dirección física" />
                 </Grid>
-
-
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel shrink={true}>pais</InputLabel>
@@ -379,13 +368,11 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             name="pais_sucursal_exterior"
                             /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
                             value={form_values.pais_sucursal_exterior ?? "dd"}
-
                             onChange={(event) => {
                                 setselected_pais(event.target.value);
                                 handleinput_change(event)
                             }}
                         >
-
                             {pais_retur.length === 1 && (
                                 <MenuItem value="dd">
                                     {pais_retur.map((Paises) => (
@@ -393,7 +380,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                                     ))}
                                 </MenuItem>
                             )}
-
                             {paises.map((Paises) => (
                                 <MenuItem key={Paises.value} value={Paises.value}>
                                     {Paises.label}
@@ -402,33 +388,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
-                {/* <Grid item xs={12} sm={4}>
-                    <FormControl required size="small" fullWidth>
-                        <InputLabel shrink={true}>Departamento</InputLabel>
-                        <Select
-                            label="Departamento"
- 
-                            value={selected_departamento || "departametoo"}
-                            onChange={(event) => {
-                                setselected_departamento(event.target.value);
-                            }}
-                        >
-                            {departamentos_retur.length === 1 && (
-                                <MenuItem value="departametoo">
-                                    {departamentos_retur.map((departamento) => (
-                                        <span key={departamento.value}>{departamento.label}</span>
-                                    ))}
-                                </MenuItem>
-                            )}
-                            {departamentos.map((departamento) => (
-                                <MenuItem key={departamento.value} value={departamento.value}>
-                                    {departamento.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid> */}
-
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel shrink={true}>Departamento</InputLabel>
@@ -438,14 +397,15 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             onChange={(event) => {
                                 setselected_departamento(event.target.value);
                             }}
+                            // disabled={!form_values.pais_sucursal_exterior || departamentos.length === null}
+                            //  disabled={form_values.pais_sucursal_exterior !== null || form_values.pais_sucursal_exterior === "dd"}
+                            disabled={form_values.pais_sucursal_exterior === null && departamentos_retur.length !== 1}  
                         >
                             {departamentos_retur.length === 1 && (
                                 <MenuItem value="departametoo">
                                     {departamentos_retur.map((departamento) => (
-                                        <span key={departamento.value}>{departamento.label}</span>
-                                    ))}
-                                </MenuItem>
-                            )}
+                                        <span key={departamento.value}>{departamento.label}</span>))}
+                                </MenuItem>)}
                             {departamentos.map((departamento) => (
                                 <MenuItem key={departamento.value} value={departamento.value}>
                                     {departamento.label}
@@ -454,9 +414,6 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
-
-
-
 
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
@@ -472,6 +429,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                                 handleinput_change(event);
                             }}
                             inputProps={{ shrink: true }}
+                            disabled={!selected_departamento &&  departamentos_retur.length !== 1}
                         >
                             {municipios.map((municipio) => (
                                 <MenuItem key={municipio.value} value={municipio.value}>
@@ -483,6 +441,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 </Grid>
 
 
+                {/* disabled={  departamentos_retur.length !== 1} */}
 
                 <Grid item xs={12} sm={4}>
                     <TextField
@@ -542,24 +501,21 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
                             label="Departamento"
-                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
-                            // value={selected_departamento_noti || "departameto"}
-                            value={form_values.pais_sucursal_exterior === null ? "departameto" : selected_departamento_noti}
-
-                            onChange={(event) => {  
+                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */ 
+                            value={form_values.pais_sucursal_exterior === null ? "departameto" : selected_departamento_noti} 
+                            onChange={(event) => {
                                 setselected_departamento_noti(event.target.value);
                             }}
-                        >
+                            disabled={form_values.pais_sucursal_exterior === null && departamentos_retur.length !== 1}  
 
+                        > 
                             {departamentos_noti_retur.length === 1 && (
                                 <MenuItem value="departameto">
                                     {departamentos_noti_retur.map((departamento) => (
                                         <span key={departamento.value}>{departamento.label}</span>
                                     ))}
                                 </MenuItem>
-                            )}
-
-
+                            )} 
                             {departamentos_noti.map((departamento) => (
                                 <MenuItem key={departamento.value} value={departamento.value}>
                                     {departamento.label}
@@ -568,6 +524,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         </Select>
                     </FormControl>
                 </Grid>
+
                 <Grid item xs={12} sm={4}>
                     <FormControl required size="small" fullWidth>
                         <InputLabel
@@ -577,14 +534,14 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                             label="Municipio"
 
                             name="municipio_notificacion"
-                            value={same_address ? form_values.municipio : form_values.municipio_notificacion}
-                            // onChange={handleinput_change}
-                            // value={same_address ? form_values.municipio : selected_municipionoti}
+                            value={same_address ? form_values.municipio : form_values.municipio_notificacion} 
                             onChange={(event) => {
                                 const new_value = event.target.value !== null ? event.target.value : '';
                                 setselected_municipionoti(new_value);
                                 handleinput_change(event);
                             }}
+                            disabled={!selected_departamento_noti &&  departamentos_noti_retur.length !== 1}
+
                         >
                             {municipios_noti.map((municipio) => (
                                 <MenuItem key={municipio.value} value={municipio.value}>
