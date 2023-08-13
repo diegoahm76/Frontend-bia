@@ -17,7 +17,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, selected_id, setselected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
+export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucursal, data_entidad, selected_id, setselected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
   const initial_state: ISucursalForm = {
     descripcion_sucursal: "",
@@ -95,13 +95,13 @@ export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, sel
         url: endpoint,
         data: form_values,
       })
-      .then((response) => {
+      .then(async (response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         setform_values(initial_state);
         setselected_id(null);
         set_loading(false);
-
+        await fetchand_update_data();
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
@@ -116,7 +116,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ sucursal, data_entidad, sel
   const handle_clear_fields = (): void => {
     // Set all form field values to their i2nitial_state (empty values)
     setform_values(initial_state);
-
+     setselected_id(null);
     
   };
 

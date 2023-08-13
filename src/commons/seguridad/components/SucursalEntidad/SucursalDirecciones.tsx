@@ -429,6 +429,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                                 handleinput_change(event);
                             }}
                             inputProps={{ shrink: true }}
+                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
                             disabled={!selected_departamento &&  departamentos_retur.length !== 1}
                         >
                             {municipios.map((municipio) => (
@@ -540,6 +541,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                                 setselected_municipionoti(new_value);
                                 handleinput_change(event);
                             }}
+                            /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
                             disabled={!selected_departamento_noti &&  departamentos_noti_retur.length !== 1}
 
                         >

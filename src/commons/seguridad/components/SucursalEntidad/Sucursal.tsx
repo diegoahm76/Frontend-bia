@@ -29,19 +29,19 @@ export const Sucursal: FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchand_update_data().catch((error) => {
-      console.error(error);
-    });
+  // useEffect(() => {
+  //   fetchand_update_data().catch((error) => {
+  //     console.error(error);
+  //   });
 
-    const interval = setInterval(() => {
-      fetchand_update_data().catch((error) => {
-        console.error(error);
-      });
-    }, 5000);
+  //   const interval = setInterval(() => {
+  //     fetchand_update_data().catch((error) => {
+  //       console.error(error);
+  //     });
+  //   }, 5000);
 
-    return () => { clearInterval(interval) };
-  }, []);
+  //   return () => { clearInterval(interval) };
+  // }, []);
 
   const fetch_dataget = async (): Promise<void> => {
     try {
@@ -95,9 +95,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       customClass: {
         container: 'my-swal',
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
+        await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
           })
@@ -177,7 +178,6 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       >
         {/* sucursal entidad */}
         <SucursalEntidad />
-         <SucursalActuaizar sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
         <Grid item xs={12}>
           <DataGrid  
             density="compact"
@@ -189,6 +189,7 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
             getRowId={(row) => row.id_sucursal_empresa}
           />
         </Grid> 
+         <SucursalActuaizar fetchand_update_data={fetchand_update_data} sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
       </Grid>
     </>
   );

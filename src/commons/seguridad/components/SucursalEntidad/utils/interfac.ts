@@ -104,6 +104,7 @@ export interface Props {
   setselected_id:number | null| any ; 
   data_entidad:any ;
   sucursal:any;
+  fetchand_update_data: any;
 }
 export interface ISucursalEmpresa {
   id_sucursal_empresa: number;
