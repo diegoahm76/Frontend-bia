@@ -11,13 +11,12 @@ import { type AuthSlice } from '../../../../../../../../auth/interfaces';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import dayjs from 'dayjs';
+import { Traslado } from '../components/Traslado/Traslado';
+import { InfoProcesoTraslado } from '../components/InfoProcesoTraslado/InfoProcesoTraslado';
 
 export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
   setmModalHistoricoTraslados
 }: ProcesoTypes): JSX.Element => {
-  const { unidades_org_anterior } = useAppSelector(
-    (state) => state.uni_a_uni_slice
-  );
   const { userinfo } = useAppSelector((state: AuthSlice) => state.auth);
   console.log(userinfo);
 
@@ -38,83 +37,10 @@ export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
 
   return (
     <>
-      <Grid container sx={containerStyles}>
-        <Grid item xs={12}>
-          <Title title="Proceso de traslado unidad a unidad" />
-          <form
-            onSubmit={(w) => {
-              w.preventDefault();
-              console.log('submit');
-              // onSubmit();
-            }}
-            style={{
-              marginTop: '20px'
-            }}
-          >
-            <Grid container spacing={2}>
-              {/* <Grid item xs={12} sm={3.5}>
-                <Controller
-                  name="nombre"
-                  control={control_organigrama_anterior}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre del Organigrama"
-                      size="small"
-                      variant="outlined"
-                      onChange={onChange}
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      disabled={true}
-                    />
-                  )}
-                />
-              </Grid> */}
-            </Grid>
-          </form>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={3}
-            sx={{ mt: '40px' }}
-          >
-            <TextField
-              sx={{
-                minWidth: '300px'
-              }}
-              label="Persona que realiza el traslado"
-              variant="outlined"
-              value={userinfo.nombre}
-              InputLabelProps={{ shrink: true }}
-              disabled={true}
-            />
-
-            <TextField
-              label="Fecha de traslado"
-              variant="outlined"
-              value={currentDate}
-              InputLabelProps={{ shrink: true }}
-              disabled={true}
-            />
-
-            <Button
-              color="warning"
-              variant="contained"
-              startIcon={<VisibilityIcon />}
-              onClick={() => {
-                setmModalHistoricoTraslados(true);
-              }}
-            >
-              HISTORIAL DE TRASLADOS
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
+      <Traslado />
+      <InfoProcesoTraslado
+        setmModalHistoricoTraslados={setmModalHistoricoTraslados}
+      />
     </>
   );
 };

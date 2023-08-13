@@ -23,7 +23,6 @@ import {
   type IHistoricoTraslados
 } from '../types/HistoricoTraslados.types';
 import { getHistoricoTrasladosU_U } from '../services/getHistorico.service';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 
 // ? component to show the history of "traslados masivos UNIDAD A UNIDAD"
 export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
@@ -62,10 +61,6 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
       });
     }
 
-    setTimeout(() => {
-      dataHistorico.length === 0 && closeModalHistoricoTraslados();
-    }, 4500);
-
     return () => {
       setDataHistorico([]);
     };
@@ -89,21 +84,17 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
             justifyContent: 'center'
           }}
         >
-          {dataHistorico.length === 0 ? (
-            <Loader altura="150px" />
-          ) : (
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={dataHistorico || []}
-              columns={columnsTraslados || []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => uuidv4()}
-            />
-          )}
+          <DataGrid
+            sx={{ mt: '15px' }}
+            density="compact"
+            autoHeight
+            rows={dataHistorico || []}
+            columns={columnsTraslados || []}
+            pageSize={5}
+            rowsPerPageOptions={[7]}
+            experimentalFeatures={{ newEditingApi: true }}
+            getRowId={(row) => uuidv4()}
+          />
         </DialogContent>
         <Divider />
         <DialogActions>

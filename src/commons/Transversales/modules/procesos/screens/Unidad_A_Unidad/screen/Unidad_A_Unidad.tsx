@@ -6,11 +6,13 @@ import { HistoricoTraslados } from '../components/HistoricoTraslados/screen/Hist
 import { OrgAnteriorScreen } from '../components/OrganigramaAnterior/screen/OrgAnteriorScreen';
 import {
   getOrganigramaAnterior,
+  getUnidadesOrgActual,
   getUnidadesOrgAnterior
 } from '../toolkit/thunks/thunks_uni_a_uni';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import {
   setOrganigramaAnterior,
+  setUnidadesOrgActual,
   setUnidadesOrgAnterior
 } from '../toolkit/slice/Uni_A_UniSlice';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
@@ -39,21 +41,42 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   // ?  use effect that allow us to get the data to fill the select of unidad a unidad (unidades retiradas (organigrama anterior))
 
   useEffect(() => {
-    void getUnidadesOrgAnterior().then((unidades) => {
-      const unidadesEditedToSelect = unidades.map((unidad: any) => {
-        return {
-          unidad,
-          value: unidad.id_unidad_organizacional,
-          label: unidad.nombre
-        };
-      });
+    //* get unidades organigrama actual
+    void getUnidadesOrgActual().then((unidades: any) => {
+      const unidadesEditedOrganigramaActual = unidades
+        .filter((el: any) => el.activo)
+        .map((unidad: any) => {
+          return {
+            unidad,
+            value: unidad.id_unidad_organizacional,
+            label: unidad.nombre
+          };
+        });
+        //* setear unidades ogrnigrama actual
+        dispatch(setUnidadesOrgActual(unidadesEditedOrganigramaActual));
+      })
+
+    //* get unidades organigrama anterior
+    void getUnidadesOrgAnterior().then((unidades: any) => {
+      const unidadesEditedToSelect = unidades
+        .filter((el: any) => el.activo)
+        .map((unidad: any) => {
+          return {
+            unidad,
+            value: unidad.id_unidad_organizacional,
+            label: unidad.nombre
+          };
+        });
+      //* setear unidades ogrnigrama anterior
       dispatch(setUnidadesOrgAnterior(unidadesEditedToSelect));
-      console.log('unidades', unidades);
+
+      //* get organigrama retirado recientemente de producción
       void getOrganigramaAnterior(unidades[0].id_organigrama).then((org) => {
         dispatch(setOrganigramaAnterior(org));
       });
     });
-  }, []);
+  }, [])
+
 
   if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
     return <Loader />;

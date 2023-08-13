@@ -6,6 +6,9 @@
 
 import { api } from '../../../../../../../../api/axios';
 
+// ? ------------------ UNIDADES OPERATIONS -----------------
+
+// ! get unidades del aorganigrama anterior
 export const getUnidadesOrgAnterior = async (): Promise<any[]> => {
   const url =
     'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
@@ -18,6 +21,21 @@ export const getUnidadesOrgAnterior = async (): Promise<any[]> => {
   }
 };
 
+// ! get unidades del aorganigrama ACTUAL
+export const getUnidadesOrgActual = async (): Promise<any[]> => {
+  const url = 'transversal/organigrama/unidades/get-list/organigrama-actual/';
+  try {
+    const { data } = await api.get(url);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching unidades:', error);
+    throw error;
+  }
+};
+
+// ? ------------------ ORGANIGRAMA OPERATIONS -----------------
+
+// ! get organigrama anterior
 export const getOrganigramaAnterior = async (id_org: number): Promise<any> => {
   const url = 'transversal/organigrama/get/';
   try {
