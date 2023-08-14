@@ -30,55 +30,53 @@
   background-color: white;
 }
 
-.descripcion, .empresa {
+.descripcionRecibo, .empresaRecibo {
   margin-bottom: 0;
   margin-top: 0;
 }
 
-.empresa--space {
+.empresaRecibo--space {
   margin-top: 0;
   margin-bottom: 3em;
 }
 
-.encabezado__logo {
-  width: 20%;
-  background-image: url('../../assets/logo_cormacarena.png');
-  background-position: center;
+.encabezadoRecibo__logo {
+  width: 15%;
 }
 
-.encabezado__empresa {
+.encabezadoRecibo__empresa {
   width: 50%;
   text-align: center;
 }
 
-.encabezado__pago {
-  width: 30%;
+.encabezadoRecibo__pago {
+  width: 35%;
   background-color: #b3b3b3;
   padding: 5px;
 }
 
-.pago__referencia {
+.pagoRecibo__referencia {
   display: flex;
   flex-direction: row;
   margin-top: 0.5em;
 }
 
-.referencia__titulo {
+.referenciaRecibo__titulo {
   width: 50%;
 }
 
-.referencia__info {
+.referenciaRecibo__info {
   width: 50%;
   background-color: white;
   text-align: center;
 }
 
-.pago__fecha--titulo {
+.pagoRecibo__fecha--titulo {
   text-align: center;
   margin-top: 1.5em;
 }
 
-.pago__fecha--info {
+.pagoRecibo__fecha--info {
   text-align: center;
   background-color: white;
 }
@@ -89,34 +87,34 @@
   background-color: white;
 }
 
-.datos {
+.datosRecibo {
   display: flex;
   flex-direction: row;
 }
 
-.datos__titulo {
+.datosRecibo__titulo {
   width: 20%;
   border-right: solid 1px black;
 }
 
-.datos__info {
+.datosRecibo__info {
   width: 80%;
   border-bottom: solid 1px black;
   padding-left: 5px;
 }
 
-.datos__info--ultimo {
+.datosRecibo__info--ultimo {
   width: 80%;
   display: flex;
   flex-direction: row;
 }
 
-.datos__info--fila {
+.datosRecibo__info--fila {
   width: 40%;
   padding-left: 5px;
 }
 
-.datos__info--fila2 {
+.datosRecibo__info--fila2 {
   width: 20%;
   border-left: solid 1px black;
   border-right: solid 1px black;
@@ -131,22 +129,22 @@
   border: solid 1px black;
 }
 
-.fecha-impresion {
+.fechaRecibo-impresion {
   color: gray;
   font-size: small;
   font-weight: 600;
 }
 
-.codigo__fecha {
+.codigoRecibo__fecha {
   width: 40%;
   padding-top: 4em;
 }
 
-.codigo__barras {
+.codigoRecibo__barras {
   width: 60%;
 }
 
-.codigo__imagen {
+.codigoRecibo__imagen {
   width: 30%;
 }
 
