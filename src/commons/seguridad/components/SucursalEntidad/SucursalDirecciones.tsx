@@ -503,7 +503,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                         <Select
                             label="Departamento"
                             /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */ 
-                            value={form_values.pais_sucursal_exterior === null ? "departameto" : selected_departamento_noti} 
+                            value={selected_departamento_noti ||"departameto"  } 
+                            // value={form_values.pais_sucursal_exterior === null ? "departameto" : selected_departamento_noti} 
                             onChange={(event) => {
                                 setselected_departamento_noti(event.target.value);
                             }}
