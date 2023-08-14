@@ -101,6 +101,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
         setform_values(initial_state);
         setselected_id(null);
         set_loading(false);
+        
         await fetchand_update_data();
       })
       .catch((error) => {

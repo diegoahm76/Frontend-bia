@@ -29,19 +29,19 @@ export const Sucursal: FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchand_update_data().catch((error) => {
-  //     console.error(error);
-  //   });
+  useEffect(() => {
+    fetchand_update_data().catch((error) => {
+      console.error(error);
+    });
 
-  //   const interval = setInterval(() => {
-  //     fetchand_update_data().catch((error) => {
-  //       console.error(error);
-  //     });
-  //   }, 5000);
+    const interval = setInterval(() => {
+      fetchand_update_data().catch((error) => {
+        console.error(error);
+      });
+    }, 5000);
 
-  //   return () => { clearInterval(interval) };
-  // }, []);
+    return () => { clearInterval(interval) };
+  }, []);
 
   const fetch_dataget = async (): Promise<void> => {
     try {
@@ -95,10 +95,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       customClass: {
         container: 'my-swal',
       },
-    }).then(async (result) => {
+    }).then(  (result) => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
-        await fetchand_update_data()
+          // fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
           })

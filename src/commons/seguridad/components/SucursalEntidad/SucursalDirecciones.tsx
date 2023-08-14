@@ -261,6 +261,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
 
     const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setsame_address(event.target.checked);
+        setselected_departamento_noti("");
         // setsame_address(event.target.checked);
         // When the checkbox is checked, update the direccion_notificacion_referencia field
         // with the value of direccion_sucursal_georeferenciada
@@ -331,7 +332,17 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
             },
         });
     };
+    useEffect(() => {
+        if (form_values.pais_sucursal_exterior === null && form_values.municipio === null) {
+            setselected_departamento_noti(""); // Asigna una cadena no nula en lugar de null
+        }
+    }, [form_values.pais_sucursal_exterior, form_values.municipio]);
 
+    useEffect(() => {
+        if (form_values.pais_sucursal_exterior === null && form_values.municipio === null) {
+            setselected_departamento(""); // Asigna una cadena no nula en lugar de null
+        }
+    }, [form_values.pais_sucursal_exterior, form_values.municipio]);
 
     return (
         <>
