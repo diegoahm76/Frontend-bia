@@ -83,6 +83,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             <DataTable
                                 value={props.analitica}
                                 sortField="nombre_vivero"
+                                sortMode="multiple"
                                 stripedRows
                                 paginator
                                 rows={5}
@@ -92,7 +93,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                 header={header}
                             >
                                 {cols.map((col, index) => (
-                                    <Column key={index} field={col.field} header={col.header} style={{ width: col.width }} />
+                                    <Column key={index} field={col.field} header={col.header} style={{ width: col.width }} sortable/>
                                 ))}
                             </DataTable>
                         </div>
