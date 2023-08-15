@@ -277,14 +277,25 @@ const use_ccd = () => {
   useEffect(() => {
     console.log('uniry_organigram', unity_organigram);
     const filteredUnityOrganigram = unity_organigram.filter(
-      (item: any) => item.cod_agrupacion_documental !== null
+      (item: any) => item.cod_agrupacion_documental !== null && item.activo
     );
-    set_list_unitys(
-      filteredUnityOrganigram.map((item: any) => ({
 
+    const filter = filteredUnityOrganigram
+      .map((item: any) => ({
+        item,
         label: item?.nombre,
         value: item.id_unidad_organizacional!
-      }))
+      }));
+
+    console.log(filter, 'filter');
+
+    set_list_unitys(
+      filteredUnityOrganigram
+        .filter((item: any) => item.activo)
+        .map((item: any) => ({
+          label: item?.nombre,
+          value: item.id_unidad_organizacional!
+        }))
     );
   }, [unity_organigram]);
 

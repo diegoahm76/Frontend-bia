@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Box, Button, Dialog, DialogActions, DialogTitle, Grid } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Box, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { TablaObligacionesAdminAsignadas } from '../componentes/TablaObligacionesAdminAsignadas';
+import { DialogoInformativo } from '../componentes/DialogoInformativo';
 import { get_facilidades_asignadas } from '../slices/FacilidadesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,25 +60,12 @@ export const ObligacionesAdminAsignadas: React.FC = () => {
             </Grid>
           </Grid>
         ) : (
-          <Dialog
-            open={modal}
-            onClose={handle_close}
-            maxWidth="xs"
-          >
-            <Box component="form">
-              <DialogTitle>Usted no tiene facilidades de pago asignadas.</DialogTitle>
-              <DialogActions>
-                <Button
-                  variant='outlined'
-                  color="primary"
-                  startIcon={<Close />}
-                  onClick={handle_close}
-                >
-                  Cerrar
-                </Button>
-              </DialogActions>
-            </Box>
-          </Dialog>
+          <DialogoInformativo
+            tipo_notificacion='info'
+            mensaje_notificacion='Usted no tiene facilidades de pago asignadas'
+            abrir_modal={modal}
+            abrir_dialog={handle_close}
+          />
         )
       }
     </>

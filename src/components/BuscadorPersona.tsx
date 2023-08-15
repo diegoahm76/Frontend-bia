@@ -403,6 +403,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               disabled={is_search}
             >
               Buscar
+<<<<<<< Updated upstream
             </LoadingButton>{' '}
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -413,6 +414,18 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             >
               Búsqueda avanzada
             </Button>
+=======
+            </LoadingButton></Grid>
+            <  Grid item xs={12} sm={6}  lg={4}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+                onClick={handle_click_open}
+              >
+                Búsqueda avanzada
+              </Button>           
+>>>>>>> Stashed changes
           </Grid>
         </Grid>
       </form>
