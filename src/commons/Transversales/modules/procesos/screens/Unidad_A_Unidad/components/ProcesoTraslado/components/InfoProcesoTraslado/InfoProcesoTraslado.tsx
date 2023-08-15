@@ -17,7 +17,6 @@ export const InfoProcesoTraslado: FC<ProcesoTypes> = ({
   setmModalHistoricoTraslados
 }: ProcesoTypes): JSX.Element => {
   const { userinfo } = useAppSelector((state: AuthSlice) => state.auth);
-  console.log(userinfo);
 
   // ? use state to set the currentDate
   const [currentDate, setCurrentDate] = useState(dayjs().format('DD-MM-YYYY'));

@@ -33,6 +33,32 @@ export const getUnidadesOrgActual = async (): Promise<any[]> => {
   }
 };
 
+
+// ! get personas by id unidadorgnizacional - listado de personas de la unidad del organigrama actual seleccionada
+
+export const getListPersonasUnidades = (id_unidad: number) => async (): Promise<any[]> => {
+  const url = `transversal/organigrama/get-unidad-organizacional-desactualizada`;
+  try {
+    const { data } = await api.get(url);
+
+    const dataToReturn =  data.data.filter((data: any) => data.id_unidad_organizacional_actual === id_unidad);
+    if (dataToReturn.length > 0) {
+      console.log('dataToReturn', dataToReturn);
+      return dataToReturn;
+    } else {
+      // throw new Error(`Unidad with id ${id_unidad} not found`);
+      console.error(`Unidad with id ${id_unidad} not found`);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching personas:', error);
+    throw error;
+  }
+};
+
+
+
+
 // ? ------------------ ORGANIGRAMA OPERATIONS -----------------
 
 // ! get organigrama anterior

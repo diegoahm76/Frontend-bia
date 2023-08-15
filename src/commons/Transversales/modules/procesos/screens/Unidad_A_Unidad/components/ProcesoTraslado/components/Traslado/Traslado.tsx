@@ -7,6 +7,7 @@ import { useUnidadAUnidad } from '../../../../hook/useUnidadAUnidad';
 import { useAppSelector } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { getListPersonasUnidades } from '../../../../toolkit/thunks/thunks_uni_a_uni';
 export const Traslado: FC<any> = (): JSX.Element => {
   //* states
   const { unidades_org_anterior, unidades_org_actual } = useAppSelector(
@@ -97,7 +98,8 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       // isDisabled={ccd_current != null || ccd_current?.actual}
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(selectedOption);
+                        console.log(selectedOption.value);
+                        void getListPersonasUnidades(selectedOption.value);
                         onChange(selectedOption);
                       }}
                       options={unidades_org_actual}
