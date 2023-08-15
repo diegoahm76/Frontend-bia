@@ -29,19 +29,19 @@ export const Sucursal: FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchand_update_data().catch((error) => {
-  //     console.error(error);
-  //   });
+  useEffect(() => {
+    fetchand_update_data().catch((error) => {
+      console.error(error);
+    });
 
-  //   const interval = setInterval(() => {
-  //     fetchand_update_data().catch((error) => {
-  //       console.error(error);
-  //     });
-  //   }, 5000);
+    const interval = setInterval(() => {
+      fetchand_update_data().catch((error) => {
+        console.error(error);
+      });
+    }, 4000);
 
-  //   return () => { clearInterval(interval) };
-  // }, []);
+    return () => { clearInterval(interval) };
+  }, []);
 
   const fetch_dataget = async (): Promise<void> => {
     try {
@@ -95,10 +95,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       customClass: {
         container: 'my-swal',
       },
-    }).then(async (result) => {
+    }).then(  (result) => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
-        await fetchand_update_data()
+        // await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
           })
@@ -123,7 +123,9 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
     { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
     { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
-    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
+    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1,  renderCell: (params: any) => (
+      <>{params.value === true ? "Sí" : "No"}</>
+    ), },
     // { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
 
     {
