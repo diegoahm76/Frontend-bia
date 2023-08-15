@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { EncabezadoAdmin } from '../componentes/EncabezadoAdmin';
+import { EncabezadoSolicitud } from '../componentes/EncabezadoSolicitud';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox, DialogContent, DialogContentText } from "@mui/material";
 import { Close, Save, CloudUpload, Help } from '@mui/icons-material';
@@ -24,7 +24,7 @@ interface RootState {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const VisualizarSolicitudAdmin: React.FC = () => {
+export const ConsultaFacilidadFuncionario: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
@@ -76,7 +76,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   noValidate
                   autoComplete="off"
                 >
-                  <EncabezadoAdmin />
+                  <EncabezadoSolicitud />
                   <VistaSolicitud />
                 </Box>
               </Grid>

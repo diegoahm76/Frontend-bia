@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
-import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
+import { put_asignacion_funcionario, get_funcionarios, get_validacion_plan_pagos } from '../requests/requests';
 import dayjs from 'dayjs';
 
 interface RootStateFacilidades {
@@ -19,7 +19,7 @@ interface RootStateFacilidades {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesAdmin: React.FC = () => {
+export const TablaFacilidadesAdmin: React.FC = () => {
   const [visible_rows, set_visible_rows] = useState(Array<FacilidadPago>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
@@ -106,6 +106,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
               <IconButton
                 onClick={() => {
                   void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                  void get_validacion_plan_pagos(params.row.id_facilidad);
                   navigate('../solicitud');
                 }}
               >

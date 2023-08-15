@@ -7,7 +7,7 @@ import { use_form } from '../../../../hooks/useForm';
 import { useFormFile, useFormMultipleFiles } from '../hooks/useFormFile';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegistroReposicionExterno: React.FC = () => {
+export const RegistroReposicionUsuario: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
   const { form_file, name_file, handle_change_one_file } = useFormFile({});

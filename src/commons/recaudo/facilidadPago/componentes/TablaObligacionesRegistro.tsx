@@ -1,19 +1,19 @@
 import { Grid, Box } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+import { type Obligacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 interface RootState {
-  solicitud_facilidad: {
-    solicitud_facilidad: FacilidadPagoSolicitud;
+  obligaciones: {
+    obligaciones: Obligacion[];
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesSolicitud: React.FC = () => {
-  const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
+export const TablaObligacionesRegistro: React.FC = () => {
+  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
 
   const columns: GridColDef[] = [
     {
@@ -119,7 +119,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={solicitud_facilidad.obligaciones_seleccionadas.obligaciones}
+                rows={obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

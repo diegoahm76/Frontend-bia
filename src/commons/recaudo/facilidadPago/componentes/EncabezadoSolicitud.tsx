@@ -21,7 +21,7 @@ interface RootStateObligaciones {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EncabezadoAdmin: React.FC = () => {
+export const EncabezadoSolicitud: React.FC = () => {
   const [modal_obligaciones, set_modal_obligaciones] = useState(false);
   const { solicitud_facilidad } = useSelector((state: RootStateFacilidad) => state.solicitud_facilidad);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);

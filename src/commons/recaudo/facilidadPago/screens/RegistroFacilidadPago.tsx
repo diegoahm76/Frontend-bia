@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
-import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
+import { TablaObligacionesRegistro } from '../componentes/TablaObligacionesRegistro';
 import { DialogoRegistro } from '../componentes/DialogoRegistro';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
@@ -50,7 +50,7 @@ interface RespuestaRegistroFacilidad {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SolicitudFacilidadPago: React.FC = () => {
+export const RegistroFacilidadPago: React.FC = () => {
   const [persona, set_persona] = useState(0);
   const [num_periodicidad, set_num_periodicidad] = useState(0);
   const [periodicidad, set_periodicidad] = useState('');
@@ -183,7 +183,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
       <EncabezadoRegistro />
-      <TablaObligacionesSolicitud />
+      <TablaObligacionesRegistro />
       <Grid
         container
         sx={{
@@ -1053,6 +1053,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                             id_funcionario: 1,
                             notificaciones: notificacion,
                             documento_garantia: form_files.documento_garantia,
+                            // ids_obligaciones:
                             documento_deudor: form_files.documento_identidad,
                             ...form_text,
                             id_ubicacion: 1,

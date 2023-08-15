@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { TablaPlanPagosUsuarioExterno } from '../componentes/TablaPlanPagosUsuarioExterno';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetalleFacilidadPago: React.FC = () => {
+export const ConsultaFacilidadUsuario: React.FC = () => {
   const [estado] = useState('');
   const [plan_pagos, set_plan_pagos] = useState(false);
   const navigate = useNavigate();

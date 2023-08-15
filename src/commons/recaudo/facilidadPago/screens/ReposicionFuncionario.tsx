@@ -9,7 +9,7 @@ import { Title } from '../../../../components/Title';
 import { VistaReposicion } from '../componentes/VistaReposicion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ReposicionUsuarioInterno: React.FC = () => {
+export const ReposicionFuncionario: React.FC = () => {
   const { form_state, on_input_change } = use_form({});
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');

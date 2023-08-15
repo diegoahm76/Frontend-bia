@@ -5,7 +5,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaFacilidadesAutorizadas: React.FC = () => {
+export const TablaFacilidadesUsuario: React.FC = () => {
   const navigate = useNavigate();
 
   const fac_pago = [
