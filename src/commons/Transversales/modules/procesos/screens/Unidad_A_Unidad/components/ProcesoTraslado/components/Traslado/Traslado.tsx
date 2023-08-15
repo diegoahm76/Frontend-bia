@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
 import { type FC } from 'react';
@@ -50,7 +52,9 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       // isDisabled={ccd_current != null || ccd_current?.actual}
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(selectedOption);
+                        void getListPersonasUnidades(
+                          selectedOption.value,
+                        );
                         onChange(selectedOption);
                       }}
                       options={unidades_org_anterior}
@@ -98,8 +102,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       // isDisabled={ccd_current != null || ccd_current?.actual}
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(selectedOption.value);
-                        void getListPersonasUnidades(selectedOption.value);
+                        console.log(selectedOption);
                         onChange(selectedOption);
                       }}
                       options={unidades_org_actual}
