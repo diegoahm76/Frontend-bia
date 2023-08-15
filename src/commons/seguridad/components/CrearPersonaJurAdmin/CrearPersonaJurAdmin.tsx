@@ -135,7 +135,6 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
   return (
     <>
       <Typography variant="h6" textAlign="center" pb={2}>
-        Formulario registro
       </Typography>
       <form
         onSubmit={(e) => {
