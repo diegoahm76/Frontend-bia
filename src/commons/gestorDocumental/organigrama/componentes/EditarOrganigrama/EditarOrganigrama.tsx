@@ -239,7 +239,16 @@ export const EditarOrganigrama = ({
                     variant="outlined"
                     value={value}
                     disabled={organigram_current.fecha_terminado !== null}
-                    onChange={onChange}
+                    inputProps={{
+                      maxLength: 255
+                    }}
+                    onChange={(e: any) => {
+                      if (e.target.value.length === 255)
+                        control_warning('máximo 255 caracteres');
+
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
                     error={!(error == null)}
                     helperText={
                       error != null
@@ -468,8 +477,7 @@ export const EditarOrganigrama = ({
                         variant="outlined"
                         // eslint-disable-next-line eqeqeq
                         disabled={
-                          organigram_current.fecha_terminado !== null ||
-                          title_unidades !== 'Agregar'
+                          organigram_current.fecha_terminado !== null
                         }
                         value={value}
                         onChange={onChange}

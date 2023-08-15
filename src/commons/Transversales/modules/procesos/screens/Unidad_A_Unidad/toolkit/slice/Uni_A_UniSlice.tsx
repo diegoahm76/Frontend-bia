@@ -13,10 +13,24 @@ export const uni_a_uni_slice = createSlice({
   name: 'uni_a_uni_slice',
   initialState,
   reducers: {
-    setOrganigramaAnterior: (state, action: PayloadAction<number>) => {
+    setOrganigramaAnterior: (state, action: PayloadAction<any>) => {
       state.organigrama_anterior = action.payload;
+    },
+    setUnidadesOrgAnterior: (state, action: PayloadAction<any>) => {
+      state.unidades_org_anterior = action.payload;
+    },
+    setUnidadesOrgActual: (state, action: PayloadAction<any>) => {
+      state.unidades_org_actual = action.payload;
+    },
+    setListadoPersonasUnidades: (state, action: PayloadAction<any>) => {
+      state.listado_personas_unidades = action.payload;
     }
   }
 });
 
-export const { setOrganigramaAnterior } = uni_a_uni_slice.actions;
+export const {
+  setOrganigramaAnterior,
+  setUnidadesOrgAnterior,
+  setUnidadesOrgActual,
+  setListadoPersonasUnidades
+} = uni_a_uni_slice.actions;
