@@ -116,6 +116,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
 
   useEffect(() => {
     void get_datos_clase_tercero();
+    reset();
   }, []);
 
   const on_submit_create_juridica = handle_submit(async (data) => {
@@ -134,7 +135,6 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
   return (
     <>
       <Typography variant="h6" textAlign="center" pb={2}>
-        Formulario registro
       </Typography>
       <form
         onSubmit={(e) => {

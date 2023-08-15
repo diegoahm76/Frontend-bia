@@ -56,7 +56,14 @@ export const ProgramacionAlerta: React.FC = () => {
                 confirmar_eliminar_fecha_alerta(params.row.id_fecha);
               }}
             >
-              <DeleteIcon />
+              <DeleteIcon
+                titleAccess="Eliminar fecha"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
             </IconButton>
           </>
         );

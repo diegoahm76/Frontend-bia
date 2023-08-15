@@ -5,7 +5,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useContext, useEffect, useState } from 'react';
-import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { DataContext } from '../context/contextData';
@@ -51,7 +50,7 @@ export const useAlertaHook = () => {
   } = useForm({
     defaultValues: {
       // creacion de fecha
-      cod_clase_alerta: selectedValueFromSelect.value,
+      cod_clase_alerta: selectedValueFromSelect,
       dia_cumplimiento: 0,
       mes_cumplimiento: 0,
 
@@ -170,6 +169,16 @@ export const useAlertaHook = () => {
     }
   }, [selectedValueFromSelect.value]);
 
+  const options: any[] = [
+    { value: '1', label: 'Alta' },
+    { value: '2', label: 'Media' },
+    { value: '3', label: 'Baja' },
+  ];
+
+  function findOptionByValue(value: string, options: any[]) {
+    return options.find((option) => option.value === value);
+  }
+
   useEffect(() => {
     if (alertas) {
       setValue_alertas('nombre_clase_alerta', alertas.nombre_clase_alerta);
@@ -178,10 +187,7 @@ export const useAlertaHook = () => {
         alertas.descripcion_clase_alerta
       );
       resetConfiguracionGeneralAlertas({
-        prioridadAlerta: {
-          value: alertas.nivel_prioridad,
-          label: watch_configuracion_general_alertas.prioridadAlerta.label,
-        },
+        prioridadAlerta: findOptionByValue(alertas.nivel_prioridad, options),
         notificacionEmail: alertas.envios_email,
         estadoAlerta: alertas.activa,
       });
@@ -382,6 +388,7 @@ export const useAlertaHook = () => {
     // * selected
     alertas_selected,
     perfiles_selected,
+    options,
 
     // * info
     alertas,

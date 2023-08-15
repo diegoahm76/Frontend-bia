@@ -89,7 +89,14 @@ export const UsuariosScreen: React.FC = () => {
             className="btn-tablas"
             onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon fontSize="small" 
+            titleAccess="Eliminar elemento"
+            sx={{
+              color: 'red',
+              width: '18px',
+              height: '18px',
+            }}
+            />
           </IconButton>
         </div>
       ),

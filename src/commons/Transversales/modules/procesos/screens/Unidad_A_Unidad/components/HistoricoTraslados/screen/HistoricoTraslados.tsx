@@ -60,6 +60,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
         console.log(res);
       });
     }
+
     return () => {
       setDataHistorico([]);
     };
@@ -87,7 +88,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
             sx={{ mt: '15px' }}
             density="compact"
             autoHeight
-            rows={[] || dataHistorico}
+            rows={dataHistorico || []}
             columns={columnsTraslados || []}
             pageSize={5}
             rowsPerPageOptions={[7]}

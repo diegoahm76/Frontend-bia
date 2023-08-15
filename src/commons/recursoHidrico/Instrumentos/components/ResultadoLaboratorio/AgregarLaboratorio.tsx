@@ -32,6 +32,7 @@ import { tipo_agua } from '../RegistroInstrumentos/choices/choices';
 import { useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarLaboratorio: React.FC = () => {
@@ -59,7 +60,14 @@ export const AgregarLaboratorio: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar registro de laboratorio"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />}
               onClick={() => {
                 handleDelete(params.row.id);
               }}
@@ -88,6 +96,10 @@ export const AgregarLaboratorio: React.FC = () => {
       cod_tipo_agua: instrumentos.cod_tipo_agua,
     });
   }, [instrumentos]);
+
+  useEffect(() => {
+    reset_formulario();
+  }, []);
 
   const {
     tipo_parametro_value,
@@ -122,6 +134,7 @@ export const AgregarLaboratorio: React.FC = () => {
     // * Onsubmit
     onSubmit,
     is_saving,
+    reset_formulario,
   } = use_register_laboratorio_hook();
 
   useEffect(() => {
@@ -662,6 +675,9 @@ export const AgregarLaboratorio: React.FC = () => {
           )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

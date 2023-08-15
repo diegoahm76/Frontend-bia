@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
-import { Add, Close } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Add, Close, Save, CloudUpload } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { use_form } from '../../../../hooks/useForm';
@@ -71,7 +69,7 @@ export const ReposicionUsuarioInterno: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Cargar Oficio Respuesta'}
                     <input
@@ -133,7 +131,7 @@ export const ReposicionUsuarioInterno: React.FC = () => {
                   fullWidth
                   color='primary'
                   variant='contained'
-                  startIcon={<SaveIcon />}
+                  startIcon={<Save />}
                   onClick={()=>{}}
                 >
                   Actualizar Facilidad de Pagos

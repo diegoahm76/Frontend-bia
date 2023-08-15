@@ -26,14 +26,9 @@ export const ConfiguracionGeneral: FC<any> = ({ title }: any): JSX.Element => {
   const {
     controlConfiguracionGeneralAlertas,
     is_loading_configuracion_general_alertas,
+    options,
     onSubmit_configuracion_general_alertas,
   } = useAlertaHook();
-
-  const options: any[] = [
-    { value: '1', label: 'Alta' },
-    { value: '2', label: 'Media' },
-    { value: '3', label: 'Baja' },
-  ];
 
   return (
     <>

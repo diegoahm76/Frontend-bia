@@ -696,8 +696,9 @@ const use_editar_organigrama = () => {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     } */
 
-    if (!ruta_resolucion || typeof ruta_resolucion !== 'string')
+    if (ruta_resolucion instanceof File) {
       formData.append('ruta_resolucion', ruta_resolucion);
+    }
 
     dispatch(
       edit_organigrams_service(formData, id_organigrama, setLoadingEdicionOrgan)

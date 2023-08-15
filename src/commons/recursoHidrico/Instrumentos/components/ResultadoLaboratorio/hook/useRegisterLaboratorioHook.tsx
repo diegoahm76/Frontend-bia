@@ -689,6 +689,7 @@ export const use_register_laboratorio_hook = () => {
     onSubmit_select,
     onSubmit_editar,
     is_saving,
+    reset_formulario,
 
     // * ver resultados de laboratorio
     parametro_select,

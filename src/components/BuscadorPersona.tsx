@@ -109,7 +109,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                     onResult(params.row);
                     set_tipo_documento(params.row.tipo_documento);
                     set_value('numero_documento', params.row.numero_documento);
-                    set_nombre_completo(params.row.nombre_completo);
+                    // set_nombre_completo(params.row.nombre_completo);
                   }
                 }}
               />
@@ -172,7 +172,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   if (params.row !== undefined) {
                     handle_close();
                     onResult(params.row);
-                    set_nombre_completo(params.row.nombre_comercial);
+                    // set_nombre_completo(params.row.nombre_comercial);
                     set_value('numero_documento', params.row.numero_documento);
                   }
                 }}
@@ -207,7 +207,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
   const [tipo_documento_av, set_tipo_documento_av] = useState('');
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoPersona[]>([]);
-  const [nombre_completo, set_nombre_completo] = useState('');
+  // const [nombre_completo, set_nombre_completo] = useState('');
   const handle_click_open = (): void => {
     set_open_dialog(true);
   };
@@ -253,13 +253,13 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
           data.nombre_completo !== undefined &&
           data.nombre_completo !== null
         ) {
-          set_nombre_completo(data.nombre_completo);
+          // set_nombre_completo(data.nombre_completo);
         } else if (
           data.nombre_comercial !== '' &&
           data.nombre_comercial !== undefined &&
           data.nombre_comercial !== null
         ) {
-          set_nombre_completo(data.nombre_completo);
+          // set_nombre_completo(data.nombre_comercial);
         }
       } else {
         const new_data = {
@@ -383,16 +383,17 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               />
             )}
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          {/* <Grid item xs={12} sm={6} md={2}>
             <TextField
               fullWidth
               label="Nombre"
               size="small"
               disabled={true}
+              multiline
               value={nombre_completo}
             />
-          </Grid>
-          <Grid item xs={12} sm={6} md={1}>
+          </Grid> */}
+          <Grid item xs={12} sm={6} md={3}>
             <LoadingButton
               aria-label="toggle password visibility"
               variant="contained"
@@ -402,9 +403,10 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               disabled={is_search}
             >
               Buscar
+<<<<<<< Updated upstream
             </LoadingButton>{' '}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid item xs={12} sm={6} md={3}>
             <Button
               variant="outlined"
               color="primary"
@@ -412,6 +414,18 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             >
               Búsqueda avanzada
             </Button>
+=======
+            </LoadingButton></Grid>
+            <  Grid item xs={12} sm={6}  lg={4}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+                onClick={handle_click_open}
+              >
+                Búsqueda avanzada
+              </Button>           
+>>>>>>> Stashed changes
           </Grid>
         </Grid>
       </form>

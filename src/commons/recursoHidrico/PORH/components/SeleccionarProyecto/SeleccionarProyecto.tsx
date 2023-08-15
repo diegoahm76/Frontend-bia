@@ -111,7 +111,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
                 variant="rounded"
               >
                 <DeleteIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>
@@ -205,7 +205,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
               >
                 <DeleteIcon
                   titleAccess="Eliminar Actividad"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>

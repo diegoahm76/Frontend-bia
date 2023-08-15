@@ -41,7 +41,9 @@
 }
 
 .encabezado__logo {
-  width: 15%;
+  width: 20%;
+  background-image: url('../../assets/logo_cormacarena.png');
+  background-position: center;
 }
 
 .encabezado__empresa {
@@ -50,7 +52,7 @@
 }
 
 .encabezado__pago {
-  width: 35%;
+  width: 30%;
   background-color: #b3b3b3;
   padding: 5px;
 }

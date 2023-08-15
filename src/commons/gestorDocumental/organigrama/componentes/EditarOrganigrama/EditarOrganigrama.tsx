@@ -122,7 +122,7 @@ export const EditarOrganigrama = ({
         <Box sx={{ m: '0 0 20px 0' }}>
           <Typography>
             Estado del organigrama:{' '}
-            {organigram_current.fecha_terminado !== null ? (
+            {organigram_current.fecha_terminado ? (
               <Chip
                 size="small"
                 label="Terminado"
@@ -239,7 +239,16 @@ export const EditarOrganigrama = ({
                     variant="outlined"
                     value={value}
                     disabled={organigram_current.fecha_terminado !== null}
-                    onChange={onChange}
+                    inputProps={{
+                      maxLength: 255
+                    }}
+                    onChange={(e: any) => {
+                      if (e.target.value.length === 255)
+                        control_warning('máximo 255 caracteres');
+
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
                     error={!(error == null)}
                     helperText={
                       error != null
@@ -263,6 +272,7 @@ export const EditarOrganigrama = ({
                 }) => (
                   <>
                     <Button
+                      disabled={organigram_current.fecha_terminado !== null}
                       variant={
                         value === '' || value === null
                           ? 'outlined'
@@ -314,8 +324,9 @@ export const EditarOrganigrama = ({
                         }}
                       >
                         {control_organigrama._formValues.ruta_resolucion
-                          ? control_organigrama._formValues.ruta_resolucion.name ??
-                          control_organigrama._formValues.ruta_resolucion.replace(
+                          ? control_organigrama._formValues.ruta_resolucion
+                              .name ??
+                            control_organigrama._formValues.ruta_resolucion.replace(
                               /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
                               ''
                             )
@@ -327,7 +338,7 @@ export const EditarOrganigrama = ({
               />
             </Grid>
 
-           {/* <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
+            {/* <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
               <DownloadButton
                 fileName="ruta_soporte"
                 condition={
@@ -466,8 +477,7 @@ export const EditarOrganigrama = ({
                         variant="outlined"
                         // eslint-disable-next-line eqeqeq
                         disabled={
-                          organigram_current.fecha_terminado !== null ||
-                          title_unidades !== 'Agregar'
+                          organigram_current.fecha_terminado !== null
                         }
                         value={value}
                         onChange={onChange}
