@@ -63,15 +63,20 @@ export const DashBoardViverosScreen: React.FC = () => {
   const [lista_material_vegetal, set_lista_material_vegetal] = useState<any[]>([]);
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [seleccion_bien_id, set_seleccion_bien_id] = useState<string>("");
-  const [subtitle_resumen, set_subtitle_resumen] = useState<string>("Resumen de inventario de todos los viveros");
+  const [subtitle_resumen, set_subtitle_resumen] = useState<string>("todos los viveros");
   const [viveros_cuarentena, set_viveros_cuarentena] = useState<boolean>(false);
   const [viveros_cerrados, set_viveros_cerrados] = useState<boolean>(false);
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
 
   const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    console.log(e.target);
+    const name_selected = (e.target.value !== 'Todos' &&  e.target.value !== '' ) ?  lista_viveros.find((vn: any) => vn.id_vivero === e.target.value).nombre : "todos los viveros";
+    set_subtitle_resumen(name_selected);
     set_seleccion_vivero(e.target.value);
   }
   const cambio_tipo_bien: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    if(e.target.value === 'PL')
+      set_seleccion_material_vegetal("");
     set_seleccion_tipo_bien(e.target.value);
   }
   const cambio_material_vegetal: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -158,6 +163,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                     value={seleccion_material_vegetal}
                     label="Etapa material vegetal"
                     onChange={cambio_material_vegetal}
+                    disabled={seleccion_tipo_bien === 'PL'}
                   >
                     <MenuItem value={"Todos"}>Todos</MenuItem>
                     {lista_material_vegetal.map((mv: any) => (
@@ -280,7 +286,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       justifyContent="center"
                     >
 
-          <Typography variant="h5">{subtitle_resumen}</Typography>
+          <Typography variant="h5">{"Resumen de inventario de " + subtitle_resumen}</Typography>
                     </Stack>
           <Box component="form" noValidate autoComplete="off">
             <Grid item container spacing={2}>
@@ -309,7 +315,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       justifyContent="center"
                     >
                       <Typography variant="h5">
-                        <GrassOutlinedIcon /> {resumen.plantas_produccion + ' '} Plantas de producción
+                        <GrassOutlinedIcon /> {resumen.plantas_produccion + ' '} Plantas en producción
                       </Typography>
                     </Stack>
                   </CardContent>
@@ -323,7 +329,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       justifyContent="center"
                     >
                       <Typography variant="h5">
-                        <SpaOutlinedIcon /> {resumen.plantas_distribucion + ' '} Plantas de distribución
+                        <SpaOutlinedIcon /> {resumen.plantas_distribucion + ' '} Plantas en distribución
                       </Typography>
                     </Stack>
                   </CardContent>
