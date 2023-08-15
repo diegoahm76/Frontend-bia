@@ -135,11 +135,13 @@ export const DialogLaboratorio: React.FC<IProps> = ({
       headerName: 'ARCHIVO',
       width: 200,
       renderCell: (params) => (
-        <DownloadButton
-          fileUrl={params.value}
-          fileName={params.row.nombre_archivo}
-          condition={false}
-        />
+        <>
+          <DownloadButton
+            fileUrl={params.value}
+            fileName={params.row.nombre_archivo}
+            condition={false}
+          />
+        </>
       ),
     },
   ];
@@ -375,13 +377,13 @@ export const DialogLaboratorio: React.FC<IProps> = ({
                   </>
                 )}
                 <Grid item xs={12}>
-                  <Title title="Resultados de laboratorio" />
+                  <Title title="Anexos asociados" />
                 </Grid>
                 <Grid item xs={12}>
                   <>
                     <DataGrid
                       autoHeight
-                      rows={rows_laboratorio}
+                      rows={rows_anexos_laboratorio}
                       columns={columns_anexos}
                       getRowId={(row) => uuidv4()}
                       pageSize={5}
