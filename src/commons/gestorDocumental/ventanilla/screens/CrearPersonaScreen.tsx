@@ -7,7 +7,6 @@ import { AdminVentanilla } from '../registroPersonas/AdminVentanilla';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaScreen: React.FC = () => {
   return (
-    
     <>
       <Grid
         container
