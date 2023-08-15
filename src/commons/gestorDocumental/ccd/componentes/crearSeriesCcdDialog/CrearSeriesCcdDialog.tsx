@@ -261,6 +261,9 @@ const CrearSeriesCcdDialog = ({
                 // margin="dense"
                 fullWidth
                 {...register('nombre', { required: true })}
+                inputProps={{
+                  maxLength: 150,
+                }}
                 size="small"
                 label="Nombre"
                 variant="outlined"
