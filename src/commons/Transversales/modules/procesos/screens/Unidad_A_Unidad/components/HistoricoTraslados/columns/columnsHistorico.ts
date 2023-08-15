@@ -19,6 +19,6 @@ export const historicoTrasladosMasivos = [
   {
     headerName: 'Justificación traslado',
     field: 'justificacion',
-    width: 200,
+    width: 300,
   }
 ]
