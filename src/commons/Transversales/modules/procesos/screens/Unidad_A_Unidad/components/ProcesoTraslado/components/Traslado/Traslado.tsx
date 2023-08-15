@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useState } from 'react';
-import { Avatar, Grid, IconButton } from '@mui/material';
+import { Avatar, Checkbox, Grid, IconButton } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useUnidadAUnidad } from '../../../../hook/useUnidadAUnidad';
@@ -38,6 +40,20 @@ export const Traslado: FC<any> = (): JSX.Element => {
   //* states for this component
   const [viweGridDataPersons, setviweGridDataPersons] = useState(false);
 
+  const [selectedItems, setSelectedItems] = useState<any>([]);
+
+  const handleCheckboxChange = (event: any, item: any): void => {
+    if (event.target.checked) {
+      setSelectedItems([...selectedItems, item]);
+      console.log(selectedItems);
+    } else {
+      setSelectedItems(
+        selectedItems.filter((selectedItem: any) => selectedItem !== item)
+      );
+      console.log(selectedItems);
+    }
+  };
+
   //! complemento columnas
 
   const columnsToUseDataGrid = [
@@ -48,6 +64,11 @@ export const Traslado: FC<any> = (): JSX.Element => {
       width: 180,
       renderCell: (params: any) => (
         <>
+          <Checkbox
+            checked={selectedItems.includes(params.row)}
+            onChange={(event) => handleCheckboxChange(event, params.row)}
+            inputProps={{ 'aria-label': 'Seleccionar item' }}
+          />
           <IconButton
             aria-label="añadirPersona"
             size="large"
