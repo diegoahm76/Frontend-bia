@@ -47,9 +47,11 @@ export const ModalInfoAlerta: React.FC = () => {
 
             <Button
             
-                onClick={handleClick}
+                
             >
-              <VisibilityIcon/>
+              <VisibilityIcon
+                    onClick={handleClick}
+              />
             </Button>
             <Dialog header={title} visible={visible} style={{ width: '60%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
                 <Grid container sx={{
