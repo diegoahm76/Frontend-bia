@@ -13,7 +13,7 @@ import SpaOutlinedIcon from '@mui/icons-material/SpaOutlined';
 import GrainOutlinedIcon from '@mui/icons-material/GrainOutlined';
 import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
-import { obtener_etapa_meterial_vegetal, obtener_tipos_bien, obtener_viveros, obtiene_analitica, obtiene_ultimos_movimientos } from "../thunks/DashBoardViveros";
+import { obtener_etapa_meterial_vegetal, obtener_tipos_bien, obtener_viveros, obtiene_analitica, obtiene_resumen, obtiene_ultimos_movimientos } from "../thunks/DashBoardViveros";
 import BuscarBienViveros from "./BuscarBienViveros";
 import { ResultadosBusqueda } from "./ResultadosBusqueda";
 import { EtapasMaterialVegetal } from "./Analitica/EtapasMaterialVegetal";
@@ -93,11 +93,22 @@ export const DashBoardViverosScreen: React.FC = () => {
 
   const realizar_analistica: () => void = () => {
     dispatch(obtiene_analitica({ seleccion_vivero, seleccion_tipo_bien, seleccion_material_vegetal, seleccion_bien_id, viveros_cuarentena, viveros_cerrados })).then((response: any) => {
+      response.data.forEach((data: any) => {
+        if (data.tipo_bien !== 'Planta'){
+          data.cantidad_cuarentena = 'N/A';
+          data.etapa_lote = 'N/A';
+          data.nro_lote = 'N/A';
+          data.agno_lote = 'N/A';
+          data.cantidad_cuarentena = 'N/A';
+        }
+      });
       set_analitica(response.data);
-      set_resumen(response.resumen);
-      dispatch(obtiene_ultimos_movimientos({seleccion_vivero})).then((response: any) => {
+      dispatch(obtiene_ultimos_movimientos({seleccion_vivero}, '','','','','')).then((response: any) => {
         set_ultimos_movimientos(response.data);
       })
+    })
+    dispatch(obtiene_resumen({ seleccion_vivero })).then((response: any) => {
+      set_resumen(response.resumen);
     })
   }
 
