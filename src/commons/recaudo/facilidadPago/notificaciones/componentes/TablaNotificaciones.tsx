@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Avatar, IconButton, Tooltip, Button, Stack, FormControl, InputLabel, Select, MenuItem, TextField } from '@mui/material';
-import ArticleIcon from '@mui/icons-material/Article';
+import { Article, FilterAltOffOutlined, SearchOutlined  } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { FilterAltOffOutlined, SearchOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { type event } from '../../interfaces/interfaces';
 
@@ -119,10 +118,9 @@ export const TablaNotificaciones: React.FC = () => {
                     }}
                     variant="rounded"
                   >
-                    <ArticleIcon
+                    <Article
                       sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                     />
-
                   </Avatar>
                 </IconButton>
               </Tooltip>

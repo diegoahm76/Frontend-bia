@@ -36,6 +36,7 @@ export const Crear: React.FC = () => {
     activo: true,
     item_ya_usado: false,
     id_persona_empresa: 3,
+    
   };
 
   const [form_values, setform_values] = useState<ISucursalCrear>(initial_state);

@@ -123,6 +123,11 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
     }
   );
   useEffect(() => {
+    reset();
+    set_nombre_seccion('');
+    set_nombre_subseccion('');
+    set_id_seccion(null);
+    set_id_subseccion(null);
     set_is_search(false);
   }, []);
 
@@ -193,78 +198,85 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Title title="Búsqueda de sección y de subsección" />
-            </Grid>
-            <form onSubmit={on_submit_advance}>
-              <Grid container spacing={2} mt={1} mb={2}>
-                <Grid item xs={12} sm={6} md={4}>
-                  <Controller
-                    name="nombre_seccion"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Nombre sección"
-                        disabled={false}
-                        fullWidth
-                        size="small"
-                        margin="dense"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <Controller
-                    name="nombre_subseccion"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Nombre subsección"
-                        disabled={false}
-                        fullWidth
-                        size="small"
-                        margin="dense"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4} container justifyContent="end">
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    loading={is_search}
-                    disabled={is_search}
-                  >
-                    Buscar
-                  </LoadingButton>
-                </Grid>
-                {rows.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <Title title="Resultados de la búsqueda" />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box sx={{ height: 400, width: '100%' }}>
-                        <DataGrid
-                          rows={rows}
-                          columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
-                          getRowId={(row) => uuidv4()}
-                        />
-                      </Box>
-                    </Grid>
-                  </>
-                )}
+          <form
+            onSubmit={on_submit_advance}
+            style={{
+              width: '100%',
+              height: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Title title="Búsqueda de sección y de subsección" />
               </Grid>
-            </form>
-          </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_seccion"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Nombre sección"
+                      disabled={false}
+                      fullWidth
+                      size="small"
+                      margin="dense"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_subseccion"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Nombre subsección"
+                      disabled={false}
+                      fullWidth
+                      size="small"
+                      margin="dense"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  loading={is_search}
+                  disabled={is_search}
+                >
+                  Buscar
+                </LoadingButton>
+              </Grid>
+              {rows.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Title title="Resultados de la búsqueda" />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                      <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                        getRowId={(row) => uuidv4()}
+                      />
+                    </Box>
+                  </Grid>
+                </>
+              )}
+            </Grid>
+          </form>
         </DialogContent>
       </Dialog>
     </>

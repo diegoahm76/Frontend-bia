@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, Grid, Stack } from '@mui/material';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CloudDownload } from '@mui/icons-material';
 import './Estilos.css';
 import dayjs from 'dayjs';
-// import logo from '../../assets/logo_cormacarena.png';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReciboPagoModulo: React.FC = () => {
-
   return (
     <Stack
       direction="column"
@@ -18,7 +16,8 @@ export const ReciboPagoModulo: React.FC = () => {
           <p className='descripcion'><strong>CORPORACIÓN PARA EL DESARROLLO SOSTENIBLE DEL ÁREA DE MANEJO ESPECIAL LA MACARENA</strong></p>
         </section>
         <section className='recibo__encabezado'>
-          <img className='encabezado__logo' alt='logo' src="https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png" />
+          <figure className='encabezado__logo'>
+          </figure>
           <div className='encabezado__empresa'>
             <h3 className='empresa'>CORMACARENA</h3>
             <h3 className='empresa--space'>822000091-2</h3>
@@ -108,7 +107,7 @@ export const ReciboPagoModulo: React.FC = () => {
             fullWidth
             color='primary'
             variant='contained'
-            startIcon={<CloudDownloadIcon />}
+            startIcon={<CloudDownload />}
             onClick={() => {
             }}
           >

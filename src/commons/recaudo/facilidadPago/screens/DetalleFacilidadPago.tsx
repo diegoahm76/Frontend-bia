@@ -1,7 +1,6 @@
 import { Box, Button, Grid, Stack, TextField } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { Add } from '@mui/icons-material';
+import { Add, CloudDownload } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TablaPlanPagosUsuarioExterno } from '../componentes/TablaPlanPagosUsuarioExterno';
@@ -174,7 +173,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                       color='primary'
                       variant='outlined'
                       size='medium'
-                      startIcon={<CloudDownloadIcon />}
+                      startIcon={<CloudDownload />}
                       onClick={() => {
                         set_plan_pagos(true)
                       }}
@@ -196,7 +195,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                       color='primary'
                       variant='outlined'
                       size='medium'
-                      startIcon={<CloudDownloadIcon />}
+                      startIcon={<CloudDownload />}
                       onClick={() => { }}
                     >
                       Ver
@@ -236,7 +235,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                       color='primary'
                       variant='outlined'
                       size='medium'
-                      startIcon={<CloudDownloadIcon />}
+                      startIcon={<CloudDownload />}
                       onClick={() => { }}
                     >
                       Ver

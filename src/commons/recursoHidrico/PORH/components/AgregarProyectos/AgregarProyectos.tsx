@@ -111,7 +111,7 @@ export const AgregarProyectos: React.FC = () => {
                 <DeleteIcon
                   titleAccess="Eliminar Proyecto"
                   sx={{
-                    color: 'primary.main',
+                    color: 'red',
                     width: '18px',
                     height: '18px',
                   }}
@@ -207,7 +207,7 @@ export const AgregarProyectos: React.FC = () => {
               >
                 <DeleteIcon
                   titleAccess="Eliminar Actividad"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>

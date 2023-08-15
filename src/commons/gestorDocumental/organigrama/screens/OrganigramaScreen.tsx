@@ -15,12 +15,13 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 export const OrganigramaScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [position_tab, set_position_tab_organigrama] = useState('1');
-  const { organigram_current } = useAppSelector((state: any) => state.organigram);
+  const { organigram_current } = useAppSelector(
+    (state: any) => state.organigram
+  );
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab_organigrama(newValue);
     void dispatch(clean_current_organigram());
   };
-
   return (
     <Grid
       container
@@ -29,7 +30,7 @@ export const OrganigramaScreen: React.FC = () => {
         background: '#FAFAFA',
         borderRadius: '15px',
         p: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
+        boxShadow: '0px 3px 6px #042F4A26'
       }}
     >
       <Title title="ORGANIGRAMAS" />
