@@ -37,6 +37,7 @@ export interface AlertaBandejaAlertaPersona {
 }
 
 export interface Alerta_update {
+    id_alerta_bandeja_alerta_persona: number;
     leido: string | boolean;
     fecha_leido: string | null;
     archivado: boolean;

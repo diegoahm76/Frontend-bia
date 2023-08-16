@@ -40,18 +40,14 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetch_data_get().catch((error) => {
-      console.error(error);
-    });
-  }, []);
+ 
 
   const alertaa_inicio: AlertaBandejaAlertaPersona[] = [];
 
   const [bandeja_alerta,set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>(alertaa_inicio);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const buscar_bandeja_alerta  = async (): Promise<void> => {
+  const buscar_bandeja_alerta  = async (): Promise<any> => {
     try {
       if (id_alertas === null) {
         return;
@@ -65,11 +61,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    buscar_bandeja_alerta().catch((error) => {
-      console.error(error);
-    });
-  }, [id_alertas]);
+
 
 
   const columns = [
@@ -134,13 +126,15 @@ export const PantallaPrincipalAlertas: React.FC = () => {
         <>
           <ButtonGroup variant="text">
            
-            <SuspenderAlerta />
-        
-           
+            <SuspenderAlerta 
+            dat={params.row.id_alerta_bandeja_alerta_persona}
+              marcador={params.row.leido}       
+             />
+
               <ModalConfirmacionArchivar />
            
           
-              <ModalInfoAlerta />
+            <ModalInfoAlerta columnnns={params.row} />
             
           </ButtonGroup>
         </>
@@ -148,26 +142,44 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    buscar_bandeja_alerta().catch((error) => {
+      console.error(error);
+    });
+  }, [id_alertas]);
 
 
+  useEffect(() => {
+    fetch_data_get().catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
+
+ 
   
-  const [mostrar_leidos, set_mostrar_leidos] = useState<boolean>(false);
+
+
+
+  const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
   const f_leidos = (): void => {
     set_mostrar_leidos(true);
   };
+
   const f_no_leidos = (): void => {
     set_mostrar_leidos(false);
   };
-  
+
   const f_todos = (): void => {
-console.log("todos");
+    set_mostrar_leidos(null); // Usamos null para indicar que se deben mostrar todos los datos
   };
 
   // Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
-  const filtered_rows = mostrar_leidos
+  const filtered_rows = mostrar_leidos === true
     ? bandeja_alerta.filter((row) => row.leido)
-    : bandeja_alerta.filter((row) => !row.leido);
-
+    : mostrar_leidos === false
+      ? bandeja_alerta.filter((row) => !row.leido)
+      : bandeja_alerta; 
 
   useEffect(() => {
     fetch_data_get().catch((error) => {
@@ -175,6 +187,7 @@ console.log("todos");
     });
   }, [mostrar_leidos]);
 
+  
   return (
     <Grid
       container
@@ -216,6 +229,12 @@ console.log("todos");
           />
 
         </Box>
+        <Button
+          variant="contained"
+          onClick={ () => { void  buscar_bandeja_alerta() }}
+        >
+          Actualizar Datos
+        </Button>
       </Grid>
     </Grid>
   );

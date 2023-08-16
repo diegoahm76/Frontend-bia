@@ -74,12 +74,14 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     const {
         id_persona,
-     } = persona ?? {}; // Usar el operador de encadenamiento opcional (??) para manejar persona undefined
+        primer_nombre,
+        segundo_nombre,
+        primer_apellido,
+        segundo_apellido } = persona ?? {}; // Usar el operador de encadenamiento opcional (??) para manejar persona undefined
 
-   
+    const nombre_completo = `${primer_nombre ?? ""} ${segundo_nombre ?? ""} ${primer_apellido ?? ""} ${segundo_apellido ?? ""}`;
+    const nombre = nombre_completo ?? "";
     const id_personaa: number = id_persona ?? 0;
-
-
 
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -233,7 +235,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             >
                 Cambiar
             </Button>
-            <Dialog header={title} visible={visible} style={{ width: '55%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
+            <Dialog header={title} visible={visible} style={{ width: '50%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
                 <Grid container sx={{
                     background: '#FAFAFA',
                     borderRadius: '15px',
@@ -286,7 +288,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                         }}
                     />
 
-                    {/* <Grid item xs={12} >
+                    <Grid item xs={12} >
 
                         <TextField
                             style={{ margin: 6 }}
@@ -297,7 +299,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                             fullWidth
                             value={nombre}
                         />
-                    </Grid> */}
+                    </Grid>
 
                     <Grid item xs={12}>
                         <TextField
