@@ -37,6 +37,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
   //* states
   const {
     unidades_org_anterior,
+   // unidad_anterior_current,
     unidades_org_actual,
     listado_personas_unidades,
     unidad_actual_current
@@ -90,6 +91,20 @@ export const Traslado: FC<any> = (): JSX.Element => {
       try {
         console.log(selectedItems.map((el: any) => el.id_persona));
         console.log(unidad_actual_current);
+
+        // * se debe actualizar la tabla con las personas que hayan quedado despues de realizado el traslado masivo de unidad a unidad
+
+        /*   void getListPersonasUnidades(
+                          unidad_anterior_current,
+                          setviweGridDataPersons
+                        ).then((res) => {
+                          console.log(res);
+                          dispatch(setListadoPersonasUnidades(res));
+                          // * from this event I have to manage the modal show and hide of the grid
+                        });
+
+*/
+
         /* await delete_subseccion_id(row.id_subseccion);
         await fetch_data_subseccion_por_seccion(); */
         // control_success('Se eliminó correctamente');
