@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type AxiosResponse } from 'axios';
 import { api } from '../../../../api/axios';
@@ -499,11 +500,13 @@ export const put_general_bombeo = async (
   id_prueba_bombeo: number,
   datos: any
 ): Promise<any> => {
+  console.log(datos, 'datos');
+  const dataGeneral = {
+    ...datos,
+  };
   const response = await api.put(
     `hidrico/bibliotecas/pruebas_bombeo/update/${id_prueba_bombeo}/`,
-    {
-      datos,
-    }
+    dataGeneral
   );
   return response.data;
 };

@@ -244,8 +244,13 @@ export const EditarPruebaBombeo: React.FC = () => {
     setValue_bombeo,
 
     // *OnSubmit
-    onSubmit,
-    is_saving,
+    onSubmit_editar_datoprueba,
+    onSubmit_editar_sesion,
+    onSubmit_editar,
+    // * data prueba de bombeo
+    is_saving_general,
+    is_saving_sesion,
+    is_saving_datoprueba,
 
     // * informacion sesiones
     rows_sesion_bombeo,
@@ -339,7 +344,7 @@ export const EditarPruebaBombeo: React.FC = () => {
   return (
     <>
       <form
-        onSubmit={onSubmit}
+        onSubmit={onSubmit_editar}
         style={{
           width: '100%',
           height: 'auto',
@@ -599,6 +604,46 @@ export const EditarPruebaBombeo: React.FC = () => {
               </Grid>
             </>
           ) : null}
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                disabled={is_saving_general}
+                loading={is_saving_general}
+              >
+                Actualizar DATOS GENERALES
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </Grid>
+      </form>
+      <form
+        onSubmit={onSubmit_editar_sesion}
+        style={{
+          width: '100%',
+          height: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
           {rows_sesion_bombeo.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -681,6 +726,46 @@ export const EditarPruebaBombeo: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                disabled={is_saving_sesion}
+                loading={is_saving_sesion}
+              >
+                Actualizar SESIÓN
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </Grid>
+      </form>
+      <form
+        onSubmit={onSubmit_editar_datoprueba}
+        style={{
+          width: '100%',
+          height: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
           {rows_data_sesion_bombeo.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -879,10 +964,10 @@ export const EditarPruebaBombeo: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving}
-                loading={is_saving}
+                disabled={is_saving_datoprueba}
+                loading={is_saving_datoprueba}
               >
-                Actualizar
+                Actualizar datos
               </LoadingButton>
             </Grid>
           </Grid>

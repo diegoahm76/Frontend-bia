@@ -10,7 +10,9 @@ import { useForm } from 'react-hook-form';
 import {
   post_archivos,
   post_prueba_bombeo,
+  put_datos_sesion_bombeo,
   put_general_bombeo,
+  put_sesion_bombeo,
 } from '../../../request/request';
 import { control_error, control_success } from '../../../../../../helpers';
 import { useAppSelector } from '../../../../../../hooks';
@@ -79,8 +81,11 @@ export const use_register_bombeo_hook = () => {
     // * editar archivo
   } = useContext(DataContext);
 
-  const { id_instrumento: id_instrumento_slice, id_prueba_bombeo } =
-    useAppSelector((state) => state.instrumentos_slice);
+  const {
+    id_instrumento: id_instrumento_slice,
+    id_prueba_bombeo,
+    info_prueba_bombeo,
+  } = useAppSelector((state) => state.instrumentos_slice);
 
   // Datos generales
 
@@ -275,12 +280,19 @@ export const use_register_bombeo_hook = () => {
   });
 
   // * editar
+
+  const [is_saving_general, set_is_saving_general] = useState<boolean>(false);
+  const [is_saving_sesion, set_is_saving_sesion] = useState<boolean>(false);
+  const [is_saving_datoprueba, set_is_saving_datoprueba] =
+    useState<boolean>(false);
+
   // ? datos generales
   const onSubmit_editar = handleSubmit_bombeo(async (data: any) => {
     try {
-      set_is_saving(true);
+      set_is_saving_general(true);
       data.id_instrumento = id_instrumento_slice;
-      await put_general_bombeo(1, data);
+      data.id_pozo = data.id_pozo.value;
+      await put_general_bombeo(info_prueba_bombeo.id_prueba_bombeo, data);
       control_success('Prueba de bombeo editada correctamente');
     } catch (error: any) {
       control_error(
@@ -289,7 +301,51 @@ export const use_register_bombeo_hook = () => {
       );
       console.log(error, 'error');
     } finally {
-      set_is_saving(false);
+      set_is_saving_general(false);
+    }
+  });
+
+  // ? datos de sesion
+  const onSubmit_editar_sesion = handleSubmit_bombeo(async (data: any) => {
+    try {
+      set_is_saving_sesion(true);
+      data.id_instrumento = id_instrumento_slice;
+      const data_sesion = {
+        hora_inicio: data.hora_inicio,
+        cod_tipo_sesion: data.cod_tipo_sesion,
+        id_prueba_bombeo: info_prueba_bombeo.id_prueba_bombeo,
+      };
+      await put_sesion_bombeo(id_sesion_bombeo as number, data_sesion);
+      control_success('Sesión de bombeo editada correctamente');
+      void fetch_data_sesion();
+      void fetch_data_sesion();
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail ||
+          'Ha ocurrido un error, vuelva a intentarlo más tarde'
+      );
+      console.log(error, 'error');
+    } finally {
+      set_is_saving_sesion(false);
+    }
+  });
+
+  // ? datos de prueba
+  const onSubmit_editar_datoprueba = handleSubmit_bombeo(async (data: any) => {
+    try {
+      set_is_saving_datoprueba(true);
+      data.id_instrumento = id_instrumento_slice;
+      await put_datos_sesion_bombeo(id_prueba_bombeo, data);
+      control_success('Dato de bombeo editado correctamente');
+      void fetch_data_sesion();
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail ||
+          'Ha ocurrido un error, vuelva a intentarlo más tarde'
+      );
+      console.log(error, 'error');
+    } finally {
+      set_is_saving_datoprueba(false);
     }
   });
 
@@ -317,7 +373,14 @@ export const use_register_bombeo_hook = () => {
     // * onSubmit
     onSubmit,
     onSubmit_archivos,
+    onSubmit_editar_datoprueba,
+    onSubmit_editar_sesion,
+    onSubmit_editar,
     is_saving,
+    // * editar
+    is_saving_general,
+    is_saving_sesion,
+    is_saving_datoprueba,
 
     // * datos de sesion
     rows_sesion_bombeo,
