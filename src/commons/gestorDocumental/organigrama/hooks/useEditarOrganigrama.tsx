@@ -85,6 +85,7 @@ const use_editar_organigrama = () => {
   };
   // Estado Inicial de las unidades
   const initial_state_unitys: FormValuesUnitys = {
+    id_unidad_organizacional: '',
     unidad_raiz: {
       label: 'si',
       value: true
@@ -290,6 +291,7 @@ const use_editar_organigrama = () => {
       hide: organigram_current.fecha_terminado !== null,
       renderCell: (params: {
         row: {
+          id_unidad_organizacional: any;
           cod_unidad_org_padre: null;
           unidad_raiz: boolean;
           codigo: any;
@@ -303,6 +305,7 @@ const use_editar_organigrama = () => {
           <IconButton
             onClick={() => {
               reset_unidades({
+                id_unidad_organizacional: params.row.id_unidad_organizacional,
                 codigo: params.row.codigo,
                 nombre: params.row.nombre,
                 unidad_raiz: {
@@ -579,8 +582,10 @@ const use_editar_organigrama = () => {
     tipo_unidad,
     agrupacion_documental,
     unidad_raiz,
-    nivel_unidad
+    nivel_unidad,
+    id_unidad_organizacional,
   }: FormValuesUnitys) => {
+
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
       nombre,
@@ -589,13 +594,17 @@ const use_editar_organigrama = () => {
       cod_agrupacion_documental: agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current.id_organigrama,
-      cod_unidad_org_padre: nivel_padre?.value ?? null
+      cod_unidad_org_padre: nivel_padre?.value ?? null,
+      id_unidad_organizacional,
     };
-    // console.log(newUnidad, 'newUnidad');
 
     const newUnidades = unity_organigram.map((unidad: any) =>
-      unidad.codigo === codigo ? newUnidad : unidad
+      unidad.id_unidad_organizacional === id_unidad_organizacional
+        ? newUnidad
+        : unidad
     );
+    console.log(nivel_unidad, 'nivel_unidad');
+    console.log(newUnidad, 'newUnidad');
 
     set_title_unidades('Agregar');
     dispatch(
@@ -676,25 +685,11 @@ const use_editar_organigrama = () => {
     descripcion,
     ruta_resolucion
   }: any) => {
-    /* const obj: FormValuesOrganigram = {
-      nombre,
-      descripcion,
-      version,
-      ruta_resolucion,
-    }; */
-
     const formData = new FormData();
 
     formData.append('nombre', nombre);
     formData.append('descripcion', descripcion);
     formData.append('version', version);
-
-    /*  if (
-      !updatedCCD.ruta_soporte ||
-      typeof updatedCCD.ruta_soporte !== 'string'
-    ) {
-      formData.append('ruta_soporte', updatedCCD.ruta_soporte);
-    } */
 
     if (ruta_resolucion instanceof File) {
       formData.append('ruta_resolucion', ruta_resolucion);
