@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useState } from 'react';
-import { Checkbox, Grid } from '@mui/material';
+import { Button, Checkbox, Grid, Stack } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useUnidadAUnidad } from '../../../../hook/useUnidadAUnidad';
@@ -15,11 +15,21 @@ import {
 import { Title } from '../../../../../../../../../../components';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { getListPersonasUnidades } from '../../../../toolkit/thunks/thunks_uni_a_uni';
-import { setListadoPersonasUnidades } from '../../../../toolkit/slice/Uni_A_UniSlice';
+import {
+  setListadoPersonasUnidades,
+  setUnidadActualCurrent,
+  setUnidadAnteriorCurrent
+} from '../../../../toolkit/slice/Uni_A_UniSlice';
 import { columnsTraslado } from './columnsTraslado/columnsTraslado';
 import { Loader } from '../../../../../../../../../../utils/Loader/Loader';
 import './css/style.css';
 import { RenderDataGrid } from '../../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import ClearIcon from '@mui/icons-material/Clear';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 export const Traslado: FC<any> = (): JSX.Element => {
   //* dispatch declararion
   const dispatch = useAppDispatch();
@@ -28,15 +38,20 @@ export const Traslado: FC<any> = (): JSX.Element => {
   const {
     unidades_org_anterior,
     unidades_org_actual,
-    listado_personas_unidades
+    listado_personas_unidades,
+    unidad_actual_current
   } = useAppSelector((state: any) => state.uni_a_uni_slice);
 
   //* hooks
-  const { control_traslado_unidad_a_unidad } = useUnidadAUnidad();
+  const { control_traslado_unidad_a_unidad, reset_traslado_unidad_a_unidad } =
+    useUnidadAUnidad();
 
   //* states for this component
+  // ? controla la visibilidad del grid de personas
   const [viweGridDataPersons, setviweGridDataPersons] = useState(false);
-
+  // ? controla la visibilidad del grid de personas - incluido el select de unidades organizacionales y buttons (proceder, limpiar , salir)
+  const [showSecondPart, setshowSecondPart] = useState(false);
+  // ? acumula los items que selecciono en el datagrid con el checkbox para realizar el traslado masivo
   const [selectedItems, setSelectedItems] = useState<any>([]);
 
   const handleCheckboxChange = (event: any, item: any): void => {
@@ -51,6 +66,53 @@ export const Traslado: FC<any> = (): JSX.Element => {
     }
   };
 
+  const onSubmit = async (): Promise<any> => {
+    /* console.log('submit');
+    setshowSecondPart(false);
+    dispatch(setUnidadActualCurrent(null)); */
+
+    const result = await Swal.fire({
+      customClass: {
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn'
+      },
+      width: 350,
+      text: '¿Estás seguro de realizar el traslado masivo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0EC32C',
+      cancelButtonColor: '#DE1616',
+      confirmButtonText: 'Si, realizar!',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        console.log(selectedItems.map((el: any) => el.id_persona));
+        console.log(unidad_actual_current);
+        /* await delete_subseccion_id(row.id_subseccion);
+        await fetch_data_subseccion_por_seccion(); */
+        // control_success('Se eliminó correctamente');
+        // handle_eliminar_subseccion(row);
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+  };
+
+  const cleanFormAndGrid = (): void => {
+    console.log('clean');
+    reset_traslado_unidad_a_unidad({
+      id_antigua_unidad_organizacional: '',
+      id_nueva_unidad_organizacional: ''
+    });
+    dispatch(setUnidadAnteriorCurrent(null));
+    dispatch(setListadoPersonasUnidades([]));
+    dispatch(setUnidadActualCurrent(null));
+    setSelectedItems([]);
+    //  setshowSecondPart(false);
+  };
+
   //! complemento columnas
 
   const columnsToUseDataGrid = [
@@ -62,6 +124,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <>
           <Checkbox
+            title="Seleccionar item para traslado a nueva unidad"
             checked={selectedItems.includes(params.row)}
             onChange={(event) => handleCheckboxChange(event, params.row)}
             inputProps={{ 'aria-label': 'Seleccionar item' }}
@@ -79,8 +142,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
           <form
             onSubmit={(w) => {
               w.preventDefault();
-              console.log('submit');
-              // onSubmit();
+              void onSubmit();
             }}
             style={{
               marginTop: '20px'
@@ -91,7 +153,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
               xs={12}
               sm={5}
               sx={{
-                zIndex: 99999
+                zIndex: 9999
               }}
             >
               <Controller
@@ -104,6 +166,10 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       className="basic-single"
                       value={value}
                       onChange={(selectedOption) => {
+                        setshowSecondPart(true);
+                        dispatch(
+                          setUnidadAnteriorCurrent(selectedOption.value)
+                        );
                         void getListPersonasUnidades(
                           selectedOption.value,
                           setviweGridDataPersons
@@ -132,73 +198,114 @@ export const Traslado: FC<any> = (): JSX.Element => {
                 )}
               />
             </Grid>
+            {showSecondPart && (
+              <>
+                {viweGridDataPersons ? (
+                  <Loader altura="270px" />
+                ) : (
+                  <>
+                    <RenderDataGrid
+                      title="Personas pertenecientes a la unidad organizacional seleccionada"
+                      rows={listado_personas_unidades}
+                      columns={columnsToUseDataGrid}
+                    />
+                  </>
+                )}
 
-            {/* definir parte 2, debe estar controlada por un boolean para mostrar o no - para carga del grid que muestras las personas que pertenecen a la unidad seleccioanda y las unidades del organigrama actual */}
-            {viweGridDataPersons ? (
-              <Loader altura="270px" />
-            ) : (
-              <RenderDataGrid
-                title="Personas pertenecientes a la unidad organizacional seleccionada"
-                rows={listado_personas_unidades}
-                columns={columnsToUseDataGrid}
-              />
+                <Grid container sx={containerStyles} spacing={2}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={5}
+                    sx={{
+                      zIndex: 999
+                    }}
+                  >
+                    <Controller
+                      name="id_nueva_unidad_organizacional"
+                      rules={{ required: true }}
+                      control={control_traslado_unidad_a_unidad}
+                      render={({ field: { onChange, value, name } }) => (
+                        <div>
+                          <Select
+                            className="basic-single"
+                            value={value}
+                            onChange={(selectedOption) => {
+                              console.log(selectedOption);
+                              dispatch(
+                                setUnidadActualCurrent(selectedOption.value)
+                              );
+                              onChange(selectedOption);
+                            }}
+                            options={unidades_org_actual}
+                            placeholder="Seleccionar unidad organizacional destino"
+                          />
+                          <label htmlFor={name}>
+                            <small
+                              style={{
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                fontWeight: 'thin',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              Unidad organizacional destino
+                            </small>
+                          </label>
+                        </div>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={7}>
+                    <Stack
+                      direction="row"
+                      justifyContent="flex-end"
+                      spacing={2}
+                    >
+                      <Button
+                        type="submit"
+                        fullWidth
+                        title="Trasladar personas seleccionadas a la unidad organizacional destino"
+                        disabled={
+                          selectedItems.length === 0 || !unidad_actual_current
+                        }
+                        variant="contained"
+                        color="primary"
+                        sx={{ height: '100% !important' }}
+                        startIcon={<ChecklistIcon />}
+                      >
+                        PROCEDER
+                      </Button>
+                      <Button
+                        fullWidth
+                        title="Limpiar campos y data de personas"
+                        variant="outlined"
+                        color="primary"
+                        onClick={cleanFormAndGrid}
+                        sx={{ height: '100% !important' }}
+                        startIcon={<CleanIcon />}
+                      >
+                        LIMPIAR CAMPOS
+                      </Button>
+                      <Link to="/app/home" onClick={cleanFormAndGrid}>
+                        <Button
+                          // type="submit"
+                          fullWidth
+                          title="Salir del proceso de traslado de unidad a unidad, volver a home"
+                          variant="outlined"
+                          color="error"
+                          sx={{ height: '100% !important' }}
+                          startIcon={<ClearIcon />}
+                        >
+                          SALIR
+                        </Button>
+                      </Link>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </>
             )}
 
-            <Grid
-              item
-              xs={12}
-              sm={5}
-              sx={{
-                zIndex: 99999
-              }}
-            >
-              <Controller
-                name="id_nueva_unidad_organizacional"
-                rules={{ required: true }}
-                control={control_traslado_unidad_a_unidad}
-                render={({ field: { onChange, value, name } }) => (
-                  <div>
-                    <Select
-                      className="basic-single"
-                      value={value}
-                      onChange={(selectedOption) => {
-                        console.log(selectedOption);
-                        onChange(selectedOption);
-                      }}
-                      options={unidades_org_actual}
-                      placeholder="Seleccionar unidad organizacional destino"
-                    />
-                    <label htmlFor={name}>
-                      <small
-                        style={{
-                          color: 'rgba(0, 0, 0, 0.6)',
-                          fontWeight: 'thin',
-                          fontSize: '0.75rem'
-                        }}
-                      >
-                        Unidad organizacional destino
-                        {/*
-                          {ccd_current
-                            ? `
-                              Organigrama Seleccionado
-                            `
-                            : `Seleccionar Organigrama`} */}
-                      </small>
-                    </label>
-                  </div>
-                )}
-              />
-
-              {/* definir parte 2, debe estar controlada por un moda - para carga del grid que muestras las personas que pertenecen a la unidad seleccioanda y las unidades del organigrama actual */}
-
-              {/* {errors_create_ccd.organigrama != null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )} */}
-            </Grid>
+            {/* definir parte 2, debe estar controlada por un boolean para mostrar o no - para carga del grid que muestras las personas que pertenecen a la unidad seleccioanda y las unidades del organigrama actual */}
           </form>
         </Grid>
       </Grid>
