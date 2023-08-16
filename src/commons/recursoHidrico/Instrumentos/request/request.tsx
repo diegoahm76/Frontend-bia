@@ -516,9 +516,7 @@ export const put_sesion_bombeo = async (
 ): Promise<any> => {
   const response = await api.put(
     `hidrico/bibliotecas/sesiones_prueba_bombeo/update/${id_sesion}/`,
-    {
-      datos,
-    }
+    datos
   );
   return response.data;
 };
@@ -528,9 +526,7 @@ export const put_datos_sesion_bombeo = async (
 ): Promise<any> => {
   const response = await api.put(
     `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/update/${id_dato_sesion}/`,
-    {
-      datos,
-    }
+    datos
   );
   return response.data;
 };

@@ -164,7 +164,11 @@ export const EditarPruebaBombeo: React.FC = () => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
+                console.log(params.row, 'params.row');
                 set_info_data_sesion_bombeo(params.row);
+                set_id_data_sesion_bombeo(
+                  params.row.id_dato_sesion_prueba_bombeo
+                );
               }}
             />
           </Tooltip>
@@ -192,12 +196,9 @@ export const EditarPruebaBombeo: React.FC = () => {
           />
           <IconButton
             onClick={() => {
-              // set_is_open_edit_archivos(true);
-              // set_value_cartera_aforo(
-              //   'nombre_actualizar',
-              //   params.row.nombre_archivo
-              // );
-              // set_id_archivo(params.row.id_archivo_instrumento);
+              set_is_open_edit_archivos(true);
+              setValue_bombeo('nombre_actualizar', params.row.nombre_archivo);
+              set_id_archivo(params.row.id_archivo_instrumento);
             }}
           >
             <Avatar
@@ -242,12 +243,15 @@ export const EditarPruebaBombeo: React.FC = () => {
     control_bombeo,
     reset_bombeo,
     setValue_bombeo,
+    data_watch_bombeo,
 
     // *OnSubmit
     onSubmit_editar_datoprueba,
     onSubmit_editar_sesion,
     onSubmit_editar,
+    onSubmit_editar_archivos,
     // * data prueba de bombeo
+    is_saving,
     is_saving_general,
     is_saving_sesion,
     is_saving_datoprueba,
@@ -265,9 +269,15 @@ export const EditarPruebaBombeo: React.FC = () => {
     set_info_data_sesion_bombeo,
     set_info_sesion_bombeo,
     set_id_bombeo_general,
+    set_id_data_sesion_bombeo,
     fetch_data_general_sesion,
     fetch_data_sesion,
     fetch_data_anexos_bombeo,
+
+    // * Editar archivos
+    is_open_edit_archivos,
+    set_is_open_edit_archivos,
+    set_id_archivo,
   } = use_register_bombeo_hook();
 
   const { reset_instrumento, control } = useRegisterInstrumentoHook();
@@ -318,8 +328,11 @@ export const EditarPruebaBombeo: React.FC = () => {
       'fecha_prueba_bombeo',
       dayjs(info_prueba_bombeo.fecha_prueba_bombeo)?.format('YYYY-MM-DD') ?? ''
     );
-    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
-    setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
+    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio));
+    setValue_bombeo(
+      'hora_inicio',
+      dayjs(info_sesion_bombeo?.fecha_inicio).format('HH:mm:ss') ?? ''
+    );
   }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
@@ -340,6 +353,10 @@ export const EditarPruebaBombeo: React.FC = () => {
       void fetch_data_sesion();
     }
   }, [id_sesion_bombeo]);
+
+  useEffect(() => {
+    setHoraPruebaBombeo(null);
+  }, []);
 
   return (
     <>
@@ -673,7 +690,7 @@ export const EditarPruebaBombeo: React.FC = () => {
             <Controller
               name="cod_tipo_sesion"
               control={control_bombeo}
-              rules={{ required: true }}
+              rules={{ required: false }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label=" Prueba de bombeo / caudal "
@@ -681,15 +698,15 @@ export const EditarPruebaBombeo: React.FC = () => {
                   margin="dense"
                   select
                   fullWidth
-                  required={true}
+                  required={false}
                   value={value}
                   onChange={onChange}
-                  error={!!errors_bombeo.caudal}
-                  helperText={
-                    errors_bombeo.caudal
-                      ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
-                      : 'ingrese el tipo de prueba de bombeo / caudal'
-                  }
+                  // error={!!errors_bombeo.caudal}
+                  // helperText={
+                  //   errors_bombeo.caudal
+                  //     ? 'Es obligatorio seleccionar un tipo de prueba de bombeo / caudal'
+                  //     : 'ingrese el tipo de prueba de bombeo / caudal'
+                  // }
                 >
                   {tipo_sesion.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -713,13 +730,13 @@ export const EditarPruebaBombeo: React.FC = () => {
                     {...params}
                     fullWidth
                     size="small"
-                    {...register_bombeo('hora_inicio', { required: true })}
-                    error={!!errors_bombeo.hora_inicio}
-                    helperText={
-                      errors_bombeo.hora_inicio
-                        ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
-                        : 'Ingrese la hora de inicio de la prueba de bombeo'
-                    }
+                    {...register_bombeo('hora_inicio', { required: false })}
+                    // error={!!errors_bombeo.hora_inicio}
+                    // helperText={
+                    //   errors_bombeo.hora_inicio
+                    //     ? 'Es obligatorio la hora de inicio de la prueba de bombeo'
+                    //     : 'Ingrese la hora de inicio de la prueba de bombeo'
+                    // }
                   />
                 )}
                 ampm={true}
@@ -732,10 +749,14 @@ export const EditarPruebaBombeo: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving_sesion}
+                disabled={
+                  is_saving_sesion ||
+                  !data_watch_bombeo?.cod_tipo_sesion ||
+                  !data_watch_bombeo?.hora_inicio
+                }
                 loading={is_saving_sesion}
               >
-                Actualizar SESIÓN
+                Actualizar sesión
               </LoadingButton>
             </Grid>
           </Grid>
@@ -797,7 +818,7 @@ export const EditarPruebaBombeo: React.FC = () => {
             <Controller
               name="tiempo_transcurrido"
               control={control_bombeo}
-              rules={{ required: true }}
+              rules={{ required: false }}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
@@ -810,14 +831,14 @@ export const EditarPruebaBombeo: React.FC = () => {
                   type="number"
                   disabled={false}
                   fullWidth
-                  required={true}
+                  required={false}
                   onChange={onChange}
-                  error={!!errors_bombeo.tiempo_transcurrido}
-                  helperText={
-                    errors_bombeo.tiempo_transcurrido
-                      ? 'Es obligatorio ingresar el tiempo transcurrido'
-                      : 'Ingrese el tiempo transcurrido'
-                  }
+                  // error={!!errors_bombeo.tiempo_transcurrido}
+                  // helperText={
+                  //   errors_bombeo.tiempo_transcurrido
+                  //     ? 'Es obligatorio ingresar el tiempo transcurrido'
+                  //     : 'Ingrese el tiempo transcurrido'
+                  // }
                 />
               )}
             />
@@ -826,7 +847,7 @@ export const EditarPruebaBombeo: React.FC = () => {
             <Controller
               name="nivel"
               control={control_bombeo}
-              rules={{ required: true }}
+              rules={{ required: false }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Nivel (m)"
@@ -834,15 +855,15 @@ export const EditarPruebaBombeo: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={true}
+                  required={false}
                   value={value}
                   onChange={onChange}
-                  error={!!errors_bombeo.nivel}
-                  helperText={
-                    errors_bombeo.nivel
-                      ? 'Es obligatorio ingresar el nivel'
-                      : 'Ingrese el nivel'
-                  }
+                  //   error={!!errors_bombeo.nivel}
+                  //   helperText={
+                  //     errors_bombeo.nivel
+                  //       ? 'Es obligatorio ingresar el nivel'
+                  //       : 'Ingrese el nivel'
+                  //   }
                 />
               )}
             />
@@ -851,7 +872,7 @@ export const EditarPruebaBombeo: React.FC = () => {
             <Controller
               name="resultado"
               control={control_bombeo}
-              rules={{ required: true }}
+              rules={{ required: false }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Abatimiento / Recuperación (m)"
@@ -859,15 +880,15 @@ export const EditarPruebaBombeo: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={true}
+                  required={false}
                   value={value}
                   onChange={onChange}
-                  error={!!errors_bombeo.resultado}
-                  helperText={
-                    errors_bombeo.resultado
-                      ? 'Es obligatorio ingresar el abatimiento / recuperación'
-                      : 'Ingrese el abatimiento / recuperación'
-                  }
+                  // error={!!errors_bombeo.resultado}
+                  // helperText={
+                  //   errors_bombeo.resultado
+                  //     ? 'Es obligatorio ingresar el abatimiento / recuperación'
+                  //     : 'Ingrese el abatimiento / recuperación'
+                  // }
                 />
               )}
             />
@@ -876,7 +897,7 @@ export const EditarPruebaBombeo: React.FC = () => {
             <Controller
               name="caudal"
               control={control_bombeo}
-              rules={{ required: true }}
+              rules={{ required: false }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Caudal (l/s)"
@@ -884,20 +905,20 @@ export const EditarPruebaBombeo: React.FC = () => {
                   margin="dense"
                   disabled={false}
                   fullWidth
-                  required={true}
+                  required={false}
                   value={value}
                   onChange={onChange}
-                  error={!!errors_bombeo.caudal}
-                  helperText={
-                    errors_bombeo.caudal
-                      ? 'Es obligatorio ingresar el caudal'
-                      : 'Ingrese el caudal'
-                  }
+                  // error={!!errors_bombeo.caudal}
+                  // helperText={
+                  //   errors_bombeo.caudal
+                  //     ? 'Es obligatorio ingresar el caudal'
+                  //     : 'Ingrese el caudal'
+                  // }
                 />
               )}
             />
           </Grid>{' '}
-          <Box sx={{ flexGrow: 1 }}>
+          {/* <Box sx={{ flexGrow: 1 }}>
             <Stack
               direction="row"
               spacing={2}
@@ -912,7 +933,7 @@ export const EditarPruebaBombeo: React.FC = () => {
                 Agregar
               </Button>
             </Stack>
-          </Box>
+          </Box> */}
           {row_prueba.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -931,7 +952,53 @@ export const EditarPruebaBombeo: React.FC = () => {
               </Grid>
             </>
           )}
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                disabled={
+                  is_saving_datoprueba ||
+                  !data_watch_bombeo?.tiempo_transcurrido ||
+                  !data_watch_bombeo?.nivel ||
+                  !data_watch_bombeo?.resultado ||
+                  !data_watch_bombeo?.caudal
+                }
+                loading={is_saving_datoprueba}
+              >
+                Actualizar dato
+              </LoadingButton>
+            </Grid>
+          </Grid>
           {/* <Grid item xs={12}></Grid> */}
+        </Grid>
+      </form>
+      <form
+        onSubmit={onSubmit_editar_archivos}
+        style={{
+          width: '100%',
+          height: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
           {rows_anexos_bombeo.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -951,6 +1018,39 @@ export const EditarPruebaBombeo: React.FC = () => {
               </Grid>
             </>
           )}
+          {is_open_edit_archivos && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nombre_actualizar"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      // label="Nombre a actualizar"
+                      {...field}
+                      label="Nombre a actualizar"
+                      size="small"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      autoFocus
+                      required
+                      error={!!errors_bombeo.nombre_actualizar}
+                      helperText={
+                        errors_bombeo?.nombre_actualizar?.type === 'required'
+                          ? 'Este campo es obligatorio'
+                          : ''
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}></Grid>
+            </>
+          )}
+
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
@@ -964,10 +1064,10 @@ export const EditarPruebaBombeo: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving_datoprueba}
-                loading={is_saving_datoprueba}
+                disabled={is_saving}
+                loading={is_saving}
               >
-                Actualizar datos
+                Actualizar
               </LoadingButton>
             </Grid>
           </Grid>

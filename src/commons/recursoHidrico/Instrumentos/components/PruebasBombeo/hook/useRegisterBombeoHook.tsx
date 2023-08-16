@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import {
   post_archivos,
   post_prueba_bombeo,
+  put_archivos,
   put_datos_sesion_bombeo,
   put_general_bombeo,
   put_sesion_bombeo,
@@ -56,8 +57,12 @@ export const use_register_bombeo_hook = () => {
       nivel: '',
       resultado: '',
       caudal: '',
+
+      // * Anexos
+      nombre_actualizar: '',
     },
   });
+  const data_watch_bombeo = watch_bombeo();
 
   const {
     archivos,
@@ -69,9 +74,11 @@ export const use_register_bombeo_hook = () => {
     rows_data_sesion_bombeo,
     id_sesion_bombeo,
     rows_anexos_bombeo,
+    id_data_sesion_bombeo,
     fetch_data_general_sesion,
     set_id_bombeo_general,
     set_id_sesion_bombeo,
+    set_id_data_sesion_bombeo,
     set_info_sesion_bombeo,
     set_archivos,
     set_nombres_archivos,
@@ -124,7 +131,6 @@ export const use_register_bombeo_hook = () => {
   const handle_agregar = () => {
     // obtener los valores actuales del formulario
     const values = getValues_bombeo();
-    console.log(values, 'values');
 
     // convertir el tiempo transcurrido a milisegundos
     const tiempoTranscurridoMs =
@@ -201,7 +207,7 @@ export const use_register_bombeo_hook = () => {
         control_error('No se permiten nombres de archivo duplicados');
         return;
       }
-      const codigo_archivo = 'LAB';
+      const codigo_archivo = '  PDB';
       const archivos_bombeo = new FormData();
 
       archivos.forEach((archivo: any, index: any) => {
@@ -250,7 +256,7 @@ export const use_register_bombeo_hook = () => {
         control_error('No se permiten nombres de archivo duplicados');
         return;
       }
-      const codigo_archivo = 'LAB';
+      const codigo_archivo = 'PDB';
       const archivos_bombeo = new FormData();
 
       archivos.forEach((archivo: any, index: any) => {
@@ -313,12 +319,11 @@ export const use_register_bombeo_hook = () => {
       const data_sesion = {
         hora_inicio: data.hora_inicio,
         cod_tipo_sesion: data.cod_tipo_sesion,
-        id_prueba_bombeo: info_prueba_bombeo.id_prueba_bombeo,
       };
       await put_sesion_bombeo(id_sesion_bombeo as number, data_sesion);
       control_success('Sesión de bombeo editada correctamente');
       void fetch_data_sesion();
-      void fetch_data_sesion();
+      void fetch_data_general_sesion();
     } catch (error: any) {
       control_error(
         error.response?.data?.detail ||
@@ -335,7 +340,17 @@ export const use_register_bombeo_hook = () => {
     try {
       set_is_saving_datoprueba(true);
       data.id_instrumento = id_instrumento_slice;
-      await put_datos_sesion_bombeo(id_prueba_bombeo, data);
+      const dato_sesion = {
+        id_sesion_prueba_bombeo: id_sesion_bombeo,
+        tiempo_transcurrido: Number(data.tiempo_transcurrido),
+        nivel: Number(data.nivel),
+        resultado: Number(data.resultado),
+        caudal: Number(data.caudal),
+      };
+      await put_datos_sesion_bombeo(
+        id_data_sesion_bombeo as number,
+        dato_sesion
+      );
       control_success('Dato de bombeo editado correctamente');
       void fetch_data_sesion();
     } catch (error: any) {
@@ -346,6 +361,51 @@ export const use_register_bombeo_hook = () => {
       console.log(error, 'error');
     } finally {
       set_is_saving_datoprueba(false);
+    }
+  });
+
+  // * editar archivo
+  const [id_archivo, set_id_archivo] = useState<number | null>(null);
+  const [is_open_edit_archivos, set_is_open_edit_archivos] =
+    useState<boolean>(false);
+
+  const onSubmit_editar_archivos = handleSubmit_bombeo(async (data: any) => {
+    try {
+      set_is_saving(true);
+
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
+      const codigo_archivo = 'PDB';
+      const archivos_bombeo = new FormData();
+
+      archivos.forEach((archivo: any, index: any) => {
+        if (archivo != null) {
+          archivos_bombeo.append(`ruta_archivo`, archivo);
+          archivos_bombeo.append(`nombre_archivo`, nombres_archivos[index]);
+        }
+      });
+      archivos_bombeo.append('id_prueba_bombeo', String(info_prueba_bombeo.id_prueba_bombeo));
+      archivos_bombeo.append('id_instrumento', String(id_instrumento_slice));
+      archivos_bombeo.append('cod_tipo_de_archivo', codigo_archivo);
+      if (archivos.length > 0 && archivos[0] !== null) {
+        await post_archivos(archivos_bombeo);
+      }
+      if (is_open_edit_archivos) {
+        await put_archivos(id_archivo as number, data.nombre_actualizar);
+        set_is_open_edit_archivos(false);
+      }
+      control_success('Actualización de archivos exitosa');
+      await fetch_data_anexos_bombeo(info_prueba_bombeo.id_prueba_bombeo);
+      set_nombres_archivos([]);
+      set_archivos([]);
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    } finally {
+      set_is_saving(false);
+      set_is_open_edit_archivos(false);
     }
   });
 
@@ -369,6 +429,7 @@ export const use_register_bombeo_hook = () => {
     setValue_bombeo,
     getValues_bombeo,
     watch_bombeo,
+    data_watch_bombeo,
 
     // * onSubmit
     onSubmit,
@@ -376,8 +437,8 @@ export const use_register_bombeo_hook = () => {
     onSubmit_editar_datoprueba,
     onSubmit_editar_sesion,
     onSubmit_editar,
+    onSubmit_editar_archivos,
     is_saving,
-    // * editar
     is_saving_general,
     is_saving_sesion,
     is_saving_datoprueba,
@@ -391,11 +452,18 @@ export const use_register_bombeo_hook = () => {
     id_sesion_bombeo,
     rows_anexos_bombeo,
     set_id_sesion_bombeo,
+    set_id_data_sesion_bombeo,
     set_info_data_sesion_bombeo,
     set_info_sesion_bombeo,
     set_id_bombeo_general,
     fetch_data_general_sesion,
     fetch_data_sesion,
     fetch_data_anexos_bombeo,
+
+    // * Editar Archivos
+    is_open_edit_archivos,
+    id_archivo,
+    set_is_open_edit_archivos,
+    set_id_archivo,
   };
 };
