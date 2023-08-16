@@ -6,7 +6,10 @@
 'transversal/organigrama/get/';
 
 import { api } from '../../../../../../../../api/axios';
-import { control_success } from '../../../../../../../../helpers';
+import {
+  control_error,
+  control_success
+} from '../../../../../../../../helpers';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // ? ------------------ UNIDADES OPERATIONS -----------------
@@ -69,6 +72,34 @@ export const getListPersonasUnidades = async (
     throw error;
   } finally {
     setviweGridDataPersons(false);
+  }
+};
+
+export const TrasladoMasivoUnidadAUnidad = async (
+  dataToCreate: any,
+  setLoadingTrasladoMasivo: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<any> => {
+  try {
+    setLoadingTrasladoMasivo(true);
+    const url = `transversal/organigrama/update-unidad-organizacional-actual/`;
+    const { data } = await api.put(url, {
+      personas: dataToCreate.personas,
+      id_nueva_unidad_organizacional:
+        dataToCreate.id_nueva_unidad_organizacional
+    });
+    control_success(
+      'Se ha realizado el traslado masivo de unidad a unidad con éxito'
+    );
+    return data;
+  } catch (error) {
+    control_error('Error al realizar el traslado masivo de unidad a unidad');
+    console.error(
+      `Error fetching personas for unidad with id ${error}:`,
+      error
+    );
+    throw error;
+  } finally {
+    setLoadingTrasladoMasivo(false);
   }
 };
 

@@ -14,7 +14,10 @@ import {
 } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
-import { getListPersonasUnidades } from '../../../../toolkit/thunks/thunks_uni_a_uni';
+import {
+  TrasladoMasivoUnidadAUnidad,
+  getListPersonasUnidades
+} from '../../../../toolkit/thunks/thunks_uni_a_uni';
 import {
   setListadoPersonasUnidades,
   setUnidadActualCurrent,
@@ -29,6 +32,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { LoadingButton } from '@mui/lab';
 
 export const Traslado: FC<any> = (): JSX.Element => {
   //* dispatch declararion
@@ -37,7 +41,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
   //* states
   const {
     unidades_org_anterior,
-   // unidad_anterior_current,
+    // unidad_anterior_current,
     unidades_org_actual,
     listado_personas_unidades,
     unidad_actual_current
@@ -54,6 +58,8 @@ export const Traslado: FC<any> = (): JSX.Element => {
   const [showSecondPart, setshowSecondPart] = useState(false);
   // ? acumula los items que selecciono en el datagrid con el checkbox para realizar el traslado masivo
   const [selectedItems, setSelectedItems] = useState<any>([]);
+  // ? loading realizar traslado masivo
+  const [loadingTrasladoMasivo, setLoadingTrasladoMasivo] = useState(false);
 
   const handleCheckboxChange = (event: any, item: any): void => {
     if (event.target.checked) {
@@ -65,6 +71,19 @@ export const Traslado: FC<any> = (): JSX.Element => {
       );
       console.log(selectedItems);
     }
+  };
+
+  const cleanFormAndGrid = (): void => {
+    console.log('clean');
+    reset_traslado_unidad_a_unidad({
+      id_antigua_unidad_organizacional: '',
+      id_nueva_unidad_organizacional: ''
+    });
+    dispatch(setUnidadAnteriorCurrent(null));
+    dispatch(setListadoPersonasUnidades([]));
+    dispatch(setUnidadActualCurrent(null));
+    setSelectedItems([]);
+    //  setshowSecondPart(false);
   };
 
   const onSubmit = async (): Promise<any> => {
@@ -91,6 +110,20 @@ export const Traslado: FC<any> = (): JSX.Element => {
       try {
         console.log(selectedItems.map((el: any) => el.id_persona));
         console.log(unidad_actual_current);
+        const dataToSend = {
+          personas: selectedItems.map((el: any) => el.id_persona),
+          id_nueva_unidad_organizacional: unidad_actual_current
+        };
+
+        void TrasladoMasivoUnidadAUnidad(
+          dataToSend,
+          setLoadingTrasladoMasivo
+        ).then((res) => {
+          //* realizar la peticion para refresecar el grid con las personas actualizadas de la unidad
+        });
+
+        console.log('submit');
+        cleanFormAndGrid();
 
         // * se debe actualizar la tabla con las personas que hayan quedado despues de realizado el traslado masivo de unidad a unidad
 
@@ -113,19 +146,6 @@ export const Traslado: FC<any> = (): JSX.Element => {
         console.log(error);
       }
     }
-  };
-
-  const cleanFormAndGrid = (): void => {
-    console.log('clean');
-    reset_traslado_unidad_a_unidad({
-      id_antigua_unidad_organizacional: '',
-      id_nueva_unidad_organizacional: ''
-    });
-    dispatch(setUnidadAnteriorCurrent(null));
-    dispatch(setListadoPersonasUnidades([]));
-    dispatch(setUnidadActualCurrent(null));
-    setSelectedItems([]);
-    //  setshowSecondPart(false);
   };
 
   //! complemento columnas
@@ -276,7 +296,8 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       justifyContent="flex-end"
                       spacing={2}
                     >
-                      <Button
+                      <LoadingButton
+                        loading={loadingTrasladoMasivo}
                         type="submit"
                         fullWidth
                         title="Trasladar personas seleccionadas a la unidad organizacional destino"
@@ -289,7 +310,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                         startIcon={<ChecklistIcon />}
                       >
                         PROCEDER
-                      </Button>
+                      </LoadingButton>
                       <Button
                         fullWidth
                         title="Limpiar campos y data de personas"
