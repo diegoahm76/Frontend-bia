@@ -41,7 +41,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
   //* states
   const {
     unidades_org_anterior,
-    // unidad_anterior_current,
+    unidad_anterior_current,
     unidades_org_actual,
     listado_personas_unidades,
     unidad_actual_current
@@ -83,8 +83,18 @@ export const Traslado: FC<any> = (): JSX.Element => {
     dispatch(setListadoPersonasUnidades([]));
     dispatch(setUnidadActualCurrent(null));
     setSelectedItems([]);
-    //  setshowSecondPart(false);
   };
+  /*
+  const cleanAfterCreate = (): void => {
+     console.log('clean');
+    reset_traslado_unidad_a_unidad({
+      id_antigua_unidad_organizacional: '',
+      id_nueva_unidad_organizacional: ''
+    });
+    dispatch(setUnidadAnteriorCurrent(null));
+    dispatch(setListadoPersonasUnidades([]));
+    dispatch(setUnidadActualCurrent(null));
+  }; */
 
   const onSubmit = async (): Promise<any> => {
     const result = await Swal.fire({
@@ -104,8 +114,6 @@ export const Traslado: FC<any> = (): JSX.Element => {
 
     if (result.isConfirmed) {
       try {
-        console.log(selectedItems.map((el: any) => el.id_persona));
-        console.log(unidad_actual_current);
         const dataToSend = {
           personas: selectedItems.map((el: any) => el.id_persona),
           id_nueva_unidad_organizacional: unidad_actual_current
@@ -116,28 +124,16 @@ export const Traslado: FC<any> = (): JSX.Element => {
           setLoadingTrasladoMasivo
         ).then((res) => {
           //* realizar la peticion para refresecar el grid con las personas actualizadas de la unidad
+         void getListPersonasUnidades(
+            unidad_anterior_current,
+            setviweGridDataPersons
+          ).then((res) => {
+            setSelectedItems([]);
+            console.log(res);
+            dispatch(setListadoPersonasUnidades(res));
+            // * from this event I have to manage the modal show and hide of the grid
+          });
         });
-
-        console.log('submit');
-        cleanFormAndGrid();
-
-        // * se debe actualizar la tabla con las personas que hayan quedado despues de realizado el traslado masivo de unidad a unidad
-
-        /*   void getListPersonasUnidades(
-                          unidad_anterior_current,
-                          setviweGridDataPersons
-                        ).then((res) => {
-                          console.log(res);
-                          dispatch(setListadoPersonasUnidades(res));
-                          // * from this event I have to manage the modal show and hide of the grid
-                        });
-
-*/
-
-        /* await delete_subseccion_id(row.id_subseccion);
-        await fetch_data_subseccion_por_seccion(); */
-        // control_success('Se eliminó correctamente');
-        // handle_eliminar_subseccion(row);
       } catch (error: any) {
         console.log(error);
       }
@@ -222,7 +218,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                           fontSize: '0.75rem'
                         }}
                       >
-                        Unidad organizacional origen
+                        Unidad organizacional de origen
                       </small>
                     </label>
                   </div>
@@ -269,7 +265,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                               onChange(selectedOption);
                             }}
                             options={unidades_org_actual}
-                            placeholder="Seleccionar unidad organizacional destino"
+                            placeholder="Seleccionar unidad organizacional"
                           />
                           <label htmlFor={name}>
                             <small
@@ -279,7 +275,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                                 fontSize: '0.75rem'
                               }}
                             >
-                              Unidad organizacional destino
+                              Unidad organizacional de destino
                             </small>
                           </label>
                         </div>

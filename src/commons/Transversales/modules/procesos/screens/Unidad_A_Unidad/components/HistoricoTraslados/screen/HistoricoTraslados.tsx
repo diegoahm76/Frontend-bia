@@ -70,7 +70,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
     <>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
         open={modalHistoricoTraslados}
         onClose={closeModalHistoricoTraslados}
       >

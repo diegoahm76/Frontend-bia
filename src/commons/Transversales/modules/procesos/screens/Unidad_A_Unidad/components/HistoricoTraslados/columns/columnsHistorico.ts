@@ -9,7 +9,7 @@ export const historicoTrasladosMasivos = [
   {
     headerName: 'Persona que trasladó',
     field: 'persona_cambio',
-    width: 160,
+    width: 350,
   },
   {
     headerName: 'Tipo de cambio',
@@ -19,6 +19,6 @@ export const historicoTrasladosMasivos = [
   {
     headerName: 'Justificación traslado',
     field: 'justificacion',
-    width: 300,
+    width: 1100,
   }
 ]
