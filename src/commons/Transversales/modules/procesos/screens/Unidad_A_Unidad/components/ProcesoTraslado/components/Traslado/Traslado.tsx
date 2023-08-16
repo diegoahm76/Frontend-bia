@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useState } from 'react';
-import { Avatar, Checkbox, Grid, IconButton } from '@mui/material';
+import { Checkbox, Grid } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useUnidadAUnidad } from '../../../../hook/useUnidadAUnidad';
@@ -16,13 +16,10 @@ import { Title } from '../../../../../../../../../../components';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { getListPersonasUnidades } from '../../../../toolkit/thunks/thunks_uni_a_uni';
 import { setListadoPersonasUnidades } from '../../../../toolkit/slice/Uni_A_UniSlice';
-import { DataGrid } from '@mui/x-data-grid';
 import { columnsTraslado } from './columnsTraslado/columnsTraslado';
-import { v4 as uuidv4 } from 'uuid';
 import { Loader } from '../../../../../../../../../../utils/Loader/Loader';
 import './css/style.css';
-import AddIcon from '@mui/icons-material/Add';
-import { AvatarStyles } from '../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import { RenderDataGrid } from '../../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 export const Traslado: FC<any> = (): JSX.Element => {
   //* dispatch declararion
   const dispatch = useAppDispatch();
@@ -69,35 +66,6 @@ export const Traslado: FC<any> = (): JSX.Element => {
             onChange={(event) => handleCheckboxChange(event, params.row)}
             inputProps={{ 'aria-label': 'Seleccionar item' }}
           />
-          <IconButton
-            aria-label="añadirPersona"
-            size="large"
-            title="Agregar persona para traslado"
-            onClick={() => {
-              // ? añdir y actualizar tipologias asociadas a trd
-              /* dispatch(
-                add_tipologia_documental_to_trd(
-                  nuevasTipologias.length > 0
-                    ? [...nuevasTipologias, params.row]
-                    : [...tipologias_asociadas_a_trd, params.row]
-                )
-              );
-              control_success('Tipología añadida a la relación TRD'); */
-              console.log(params.row);
-              /* reset_administrar_trd({
-              }); */
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <AddIcon
-                sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px'
-                }}
-              />
-            </Avatar>
-          </IconButton>
         </>
       )
     }
@@ -158,12 +126,6 @@ export const Traslado: FC<any> = (): JSX.Element => {
                         }}
                       >
                         Unidad organizacional origen
-                        {/*
-                          {ccd_current
-                            ? `
-                              Organigrama Seleccionado
-                            `
-                            : `Seleccionar Organigrama`} */}
                       </small>
                     </label>
                   </div>
@@ -175,16 +137,10 @@ export const Traslado: FC<any> = (): JSX.Element => {
             {viweGridDataPersons ? (
               <Loader altura="270px" />
             ) : (
-              <DataGrid
-                sx={{ marginTop: '1.5rem' }}
-                density="compact"
-                autoHeight
+              <RenderDataGrid
+                title="Personas pertenecientes a la unidad organizacional seleccionada"
                 rows={listado_personas_unidades}
                 columns={columnsToUseDataGrid}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => uuidv4()}
               />
             )}
 

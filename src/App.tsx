@@ -5,14 +5,14 @@
 // import { Offline , Online  } from 'react-detect-offline';
 import { AppRouter } from './router/AppRouter';
 import { AppTheme } from './theme';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import './css/App.css';
-import { OfflineScreen } from './utils/OffLineScreen/OffLineScreen';
-import { useNetworkState } from '@uidotdev/usehooks';
+// import { OfflineScreen } from './utils/OffLineScreen/OffLineScreen';
+// import { useNetworkState } from '@uidotdev/usehooks';
 
 export const App = () => {
-  const network = useNetworkState();
+  /*  const network = useNetworkState();
 
   const [net, setNet] = useState(false);
 
@@ -22,17 +22,21 @@ export const App = () => {
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, []); */
 
   return (
     <>
-      {net ? (
+      {/*  {net ? (
         <AppTheme>
           <AppRouter />
         </AppTheme>
       ) : (
         <OfflineScreen />
-      )}
+      )} */}
+
+      <AppTheme>
+        <AppRouter />
+      </AppTheme>
     </>
   );
 };

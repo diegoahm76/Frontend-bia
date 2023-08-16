@@ -327,20 +327,6 @@ export function ListOrganigramas({
     void dispatch(get_organigrams_service());
   }, []);
 
-  if (organigram.length === 0)
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}
-      >
-        <CircularProgress size={80} />
-      </Box>
-    );
-
   return (
     <>
       <Stack direction="row" spacing={2} sx={{ mb: '20px' }}>
@@ -373,17 +359,30 @@ export function ListOrganigramas({
         </Button>
       </Stack>
       <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={organigram}
-            columns={columns}
-            pageSize={15}
-            rowsPerPageOptions={[15]}
-            getRowId={(row) => row.id_organigrama}
-          />
-        </Box>
+        {organigram.length === 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100vh'
+            }}
+          >
+            <CircularProgress size={80} />
+          </Box>
+        ) : (
+          <Box sx={{ width: '100%' }}>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={organigram}
+              columns={columns}
+              pageSize={15}
+              rowsPerPageOptions={[15]}
+              getRowId={(row) => row.id_organigrama}
+            />
+          </Box>
+        )}
       </Grid>
       <DialogCrearOrganigrama
         is_modal_active={crear_organigrama_is_active}
