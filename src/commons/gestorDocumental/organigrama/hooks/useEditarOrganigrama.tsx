@@ -390,6 +390,32 @@ const use_editar_organigrama = () => {
               />
             </Avatar>
           </IconButton>
+
+          {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
+
+          {organigram_current.fecha_terminado ? (
+            <IconButton
+              onClick={() => {
+                delete_unidades(params.row.codigo);
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid'
+                }}
+                variant="rounded"
+              >
+                <DeleteIcon
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          ) : null}
+
+          {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
         </>
       )
     }
@@ -583,9 +609,8 @@ const use_editar_organigrama = () => {
     agrupacion_documental,
     unidad_raiz,
     nivel_unidad,
-    id_unidad_organizacional,
+    id_unidad_organizacional
   }: FormValuesUnitys) => {
-
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
       nombre,
@@ -595,7 +620,7 @@ const use_editar_organigrama = () => {
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      id_unidad_organizacional,
+      id_unidad_organizacional
     };
 
     const newUnidades = unity_organigram.map((unidad: any) =>

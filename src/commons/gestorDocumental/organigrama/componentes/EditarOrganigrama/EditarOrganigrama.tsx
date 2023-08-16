@@ -663,9 +663,10 @@ export const EditarOrganigrama = ({
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={(e) => {
               e.preventDefault();
-              title_unidades === 'Agregar'
+              void handle_submit_unidades(create_unidad)(e)
+             /* title_unidades === 'Agregar'
                 ? void handle_submit_unidades(create_unidad)(e)
-                : void handle_submit_unidades(edit_unidad)(e);
+                : void handle_submit_unidades(edit_unidad)(e); */
             }}
           >
             <Grid container spacing={2}>
