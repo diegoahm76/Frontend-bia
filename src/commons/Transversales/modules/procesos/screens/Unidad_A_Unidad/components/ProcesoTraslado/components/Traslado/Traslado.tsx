@@ -87,10 +87,6 @@ export const Traslado: FC<any> = (): JSX.Element => {
   };
 
   const onSubmit = async (): Promise<any> => {
-    /* console.log('submit');
-    setshowSecondPart(false);
-    dispatch(setUnidadActualCurrent(null)); */
-
     const result = await Swal.fire({
       customClass: {
         confirmButton: 'square-btn',
