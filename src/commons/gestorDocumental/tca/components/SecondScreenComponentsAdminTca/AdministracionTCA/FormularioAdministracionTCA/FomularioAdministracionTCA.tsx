@@ -266,14 +266,21 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                         disabled={false}
                         variant="outlined"
                         value={value}
-                        onChange={onChange}
+                        onChange={(e: any) => {
+                          if (e.target.value.length === 1000) {
+                            control_warning(
+                              'Precaución: El campo justificación del cambio solo permite 1000 caracteres'
+                            );
+                          }
+                          onChange(e.target.value);
+                        }}
                         error={!(error == null)}
                         helperText={
                           error != null
                             ? 'Es obligatorio ingresar una justificación del cambio'
                             : 'Cambio'
                         }
-                        inputProps={{ maxLength: 250 }}
+                        inputProps={{ maxLength: 1000 }}
                       />
                     )}
                   />
