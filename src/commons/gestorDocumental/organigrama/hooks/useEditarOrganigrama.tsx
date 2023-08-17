@@ -410,6 +410,7 @@ const use_editar_organigrama = () => {
           !params.row.cod_agrupacion_documental ? (
             <IconButton
               onClick={() => {
+                console.log(params.row)
                 delete_unidades(params.row.codigo);
               }}
             >
