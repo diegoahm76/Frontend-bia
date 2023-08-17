@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -7,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 // Componentes de material UI
-import { Chip, Avatar, IconButton } from '@mui/material';
+import { Chip, Avatar, IconButton, Checkbox } from '@mui/material';
 import { type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -34,6 +35,7 @@ import {
   update_unitys_service
 } from '../store/thunks/organigramThunks';
 import { type FormValues } from '../componentes/DialogCrearOrganigrama/types/type';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_editar_organigrama = () => {
@@ -173,6 +175,29 @@ const use_editar_organigrama = () => {
   });
 
   const creacion_organigrama_values = watch_creacion_organigrama();
+  const [selectedItems, setSelectedItems] = useState<any>([]);
+
+  const handleCheckboxChange = (event: any, item: any /* id_item */): void => {
+    const isCheckboxChecked = event.target.checked;
+    const updatedItem = {
+      ...item,
+      activo: isCheckboxChecked
+    };
+
+    if (event.target.checked) {
+      setSelectedItems([...selectedItems, updatedItem]);
+      console.log(selectedItems);
+    }
+    if (!event.target.checked) {
+      setSelectedItems(
+        selectedItems.filter(
+          (i: any) =>
+            i.id_unidad_organizacional !== updatedItem.id_unidad_organizacional
+        )
+      );
+      console.log(selectedItems);
+    }
+  };
 
   // ------> Colums <------ //
 
@@ -299,6 +324,7 @@ const use_editar_organigrama = () => {
           cod_tipo_unidad: string | null | undefined;
           id_nivel_organigrama: string | number | null;
           cod_agrupacion_documental: string | null;
+          item_usado?: boolean;
         };
       }) => (
         <>
@@ -408,26 +434,53 @@ const use_editar_organigrama = () => {
 
           {organigram_current.actual &&
           !params.row.cod_agrupacion_documental ? (
-            <IconButton
-              onClick={() => {
-                console.log(params.row)
-                delete_unidades(params.row.codigo);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid'
+            <>
+              <IconButton
+                title={
+                  params.row.item_usado
+                    ? 'Item usado no se puede eliminar'
+                    : 'Eliminar ítem'
+                }
+                onClick={() => {
+                  console.log(params.row);
+
+                  params.row.item_usado
+                    ? control_warning(
+                        'Un ítem (unidad) que está siendo usada no se puede eliminar'
+                      )
+                    : delete_unidades(params.row.codigo);
                 }}
-                variant="rounded"
               >
-                <DeleteIcon
-                  sx={{ color: 'red', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid'
+                  }}
+                  variant="rounded"
+                >
+                  <DeleteIcon
+                    sx={{
+                      color: params.row.item_usado ? 'gray' : 'red',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+
+              <Checkbox
+                title="Seleccionar item para traslado a nueva unidad"
+                checked={selectedItems.some(
+                  (selectedItem: any) =>
+                    selectedItem.id_unidad_organizacional ===
+                      params.row.id_unidad_organizacional && selectedItem.activo
+                )}
+                onChange={(event) => handleCheckboxChange(event, params.row)}
+                inputProps={{ 'aria-label': 'Seleccionar item' }}
+              />
+            </>
           ) : null}
 
           {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}

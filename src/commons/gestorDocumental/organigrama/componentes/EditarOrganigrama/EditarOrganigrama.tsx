@@ -19,6 +19,7 @@ import {
   // InputLabel,
   // FormControl,
 } from '@mui/material';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
 import { DataGrid } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
@@ -437,7 +438,7 @@ export const EditarOrganigrama = ({
 
       <Grid item xs={12}>
         <Title title="Unidades organizacionales" />
-       <Box sx={{ mt: '20px' }}>
+        <Box sx={{ mt: '20px' }}>
           {organigram_current.fecha_terminado === null && (
             <Box
               component="form"
@@ -649,14 +650,14 @@ export const EditarOrganigrama = ({
 
         {organigram_current.actual && specialEdit && (
           <Box
-          sx={{ mt: '20px' }}
+            sx={{ mt: '20px' }}
             component="form"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={(e) => {
               e.preventDefault();
               console.log('jejej siuuuu');
               title_unidades === 'Agregar' &&
-              void handle_submit_unidades(create_unidad_org_actual)(e);
+                void handle_submit_unidades(create_unidad_org_actual)(e);
             }}
           >
             <Grid container spacing={2}>
@@ -847,7 +848,15 @@ export const EditarOrganigrama = ({
                 variant="outlined"
                 startIcon={<AddIcon />}
               >
-                AGREGAR
+                AGREGAR UNIDAD (GRUPO)
+              </Button>
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                startIcon={<ToggleOnIcon />}
+              >
+                DESACTIVAR / ACTIVAR UNIDADES (GRUPO)
               </Button>
             </Stack>
           </Box>
