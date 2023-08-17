@@ -285,10 +285,10 @@ const use_editar_organigrama = () => {
     },
     {
       headerName: 'Acciones',
-      field: 'editar',
+      field: 'acciones',
       minWidth: 140,
       maxWidth: 140,
-      hide: organigram_current.fecha_terminado !== null,
+      // hide: organigram_current.fecha_terminado !== null,
       renderCell: (params: {
         row: {
           id_unidad_organizacional: any;
@@ -302,98 +302,112 @@ const use_editar_organigrama = () => {
         };
       }) => (
         <>
-          <IconButton
-            onClick={() => {
-              reset_unidades({
-                id_unidad_organizacional: params.row.id_unidad_organizacional,
-                codigo: params.row.codigo,
-                nombre: params.row.nombre,
-                unidad_raiz: {
-                  label: option_raiz.filter(
-                    (item) => item.value === params.row.unidad_raiz
-                  )[0].label,
-                  value: params.row.unidad_raiz
-                },
-                tipo_unidad: {
-                  label: options_tipo_unidad.filter(
-                    (tipo) => tipo.value === params.row.cod_tipo_unidad
-                  )[0].label,
-                  value: params.row.cod_tipo_unidad,
-                  isDisabled: false
-                },
-                nivel_unidad: {
-                  label: option_nivel.filter(
-                    (nivel) => nivel.value === params.row.id_nivel_organigrama
-                  )[0].label,
-                  value: params.row.id_nivel_organigrama,
-                  orden: option_nivel.filter(
-                    (nivel) => nivel.value === params.row.id_nivel_organigrama
-                  )[0].orden
-                },
-                agrupacion_documental: {
-                  label:
-                    params.row.cod_agrupacion_documental != null
-                      ? options_agrupacion_d.filter(
-                          (agrupacion) =>
-                            agrupacion.value ===
-                            params.row.cod_agrupacion_documental
-                        )[0].label
-                      : '',
-                  value: params.row.cod_agrupacion_documental,
-                  isDisabled: false
-                },
-                nivel_padre: {
-                  label:
-                    params.row.cod_unidad_org_padre != null
-                      ? option_unidad_padre.filter(
-                          (agrupacion) =>
-                            agrupacion.value === params.row.cod_unidad_org_padre
-                        )[0].label
-                      : '',
-                  value: params.row.cod_unidad_org_padre,
-                  isDisabled: false
-                }
-              });
-              set_title_unidades('Editar Unidad');
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
-              <EditIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              delete_unidades(params.row.codigo);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
-              <DeleteIcon
-                sx={{ color: 'red', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+          {organigram_current.fecha_terminado !== null &&
+            !organigram_current.actual && (
+              <>
+                <IconButton
+                  onClick={() => {
+                    reset_unidades({
+                      id_unidad_organizacional:
+                        params.row.id_unidad_organizacional,
+                      codigo: params.row.codigo,
+                      nombre: params.row.nombre,
+                      unidad_raiz: {
+                        label: option_raiz.filter(
+                          (item) => item.value === params.row.unidad_raiz
+                        )[0].label,
+                        value: params.row.unidad_raiz
+                      },
+                      tipo_unidad: {
+                        label: options_tipo_unidad.filter(
+                          (tipo) => tipo.value === params.row.cod_tipo_unidad
+                        )[0].label,
+                        value: params.row.cod_tipo_unidad,
+                        isDisabled: false
+                      },
+                      nivel_unidad: {
+                        label: option_nivel.filter(
+                          (nivel) =>
+                            nivel.value === params.row.id_nivel_organigrama
+                        )[0].label,
+                        value: params.row.id_nivel_organigrama,
+                        orden: option_nivel.filter(
+                          (nivel) =>
+                            nivel.value === params.row.id_nivel_organigrama
+                        )[0].orden
+                      },
+                      agrupacion_documental: {
+                        label:
+                          params.row.cod_agrupacion_documental != null
+                            ? options_agrupacion_d.filter(
+                                (agrupacion) =>
+                                  agrupacion.value ===
+                                  params.row.cod_agrupacion_documental
+                              )[0].label
+                            : '',
+                        value: params.row.cod_agrupacion_documental,
+                        isDisabled: false
+                      },
+                      nivel_padre: {
+                        label:
+                          params.row.cod_unidad_org_padre != null
+                            ? option_unidad_padre.filter(
+                                (agrupacion) =>
+                                  agrupacion.value ===
+                                  params.row.cod_unidad_org_padre
+                              )[0].label
+                            : '',
+                        value: params.row.cod_unidad_org_padre,
+                        isDisabled: false
+                      }
+                    });
+                    set_title_unidades('Editar Unidad');
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid'
+                    }}
+                    variant="rounded"
+                  >
+                    <EditIcon
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px'
+                      }}
+                    />
+                  </Avatar>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    delete_unidades(params.row.codigo);
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid'
+                    }}
+                    variant="rounded"
+                  >
+                    <DeleteIcon
+                      sx={{ color: 'red', width: '18px', height: '18px' }}
+                    />
+                  </Avatar>
+                </IconButton>
+              </>
+            )}
 
           {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
 
-          {organigram_current.fecha_terminado ? (
+          {organigram_current.actual &&
+          !params.row.cod_agrupacion_documental ? (
             <IconButton
               onClick={() => {
                 delete_unidades(params.row.codigo);
@@ -660,7 +674,42 @@ const use_editar_organigrama = () => {
       id_organigrama: organigram_current.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null
     };
-    // console.log(newUnidad, 'newUnidad');
+    console.log(newUnidad, 'newUnidad');
+
+    const newUnidades = [...unity_organigram, newUnidad];
+
+    set_title_unidades('Agregar');
+    dispatch(
+      update_unitys_service(
+        organigram_current.id_organigrama,
+        newUnidades,
+        clean_unitys
+      )
+    );
+  };
+
+  //* org actual
+  const create_unidad_org_actual = ({
+    codigo,
+    nombre,
+    nivel_padre,
+    tipo_unidad,
+    agrupacion_documental,
+    unidad_raiz,
+    nivel_unidad
+  }: FormValuesUnitys) => {
+    const newUnidad = {
+      id_unidad_organizacional: null,
+      id_nivel_organigrama: nivel_unidad!.value!,
+      nombre,
+      codigo,
+      cod_tipo_unidad: tipo_unidad!.value,
+      cod_agrupacion_documental: agrupacion_documental!.value,
+      unidad_raiz: unidad_raiz!.value,
+      id_organigrama: organigram_current.id_organigrama,
+      cod_unidad_org_padre: nivel_padre?.value ?? null
+    };
+    console.log(newUnidad, 'newUnidad');
 
     const newUnidades = [...unity_organigram, newUnidad];
 
@@ -762,7 +811,8 @@ const use_editar_organigrama = () => {
     reset_creacion_organigrama,
     creacion_organigrama_values,
 
-    loadingEdicionOrgan
+    loadingEdicionOrgan,
+    create_unidad_org_actual
   };
 };
 
