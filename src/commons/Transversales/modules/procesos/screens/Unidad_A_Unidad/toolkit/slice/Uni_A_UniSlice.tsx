@@ -8,7 +8,8 @@ const initialState: Unidad_A_Unidad_Interface = {
   unidad_anterior_current: null,
   unidades_org_actual: [],
   unidad_actual_current: null,
-  listado_personas_unidades: []
+  listado_personas_unidades: [],
+  listado_personas_totales_unidades: [],
 };
 
 export const uni_a_uni_slice = createSlice({
@@ -34,7 +35,10 @@ export const uni_a_uni_slice = createSlice({
     },
     setListadoPersonasUnidades: (state, action: PayloadAction<any>) => {
       state.listado_personas_unidades = action.payload;
-    }
+    },
+    setListadoPersonasTotalesUnidades: (state, action: PayloadAction<any>) => {
+      state.listado_personas_totales_unidades = action.payload;
+    },
   }
 });
 
@@ -44,5 +48,6 @@ export const {
   setUnidadAnteriorCurrent,
   setUnidadesOrgActual,
   setUnidadActualCurrent,
-  setListadoPersonasUnidades
+  setListadoPersonasUnidades,
+  setListadoPersonasTotalesUnidades,
 } = uni_a_uni_slice.actions;

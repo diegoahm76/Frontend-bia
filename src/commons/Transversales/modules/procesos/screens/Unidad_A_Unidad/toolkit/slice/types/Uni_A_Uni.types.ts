@@ -5,4 +5,5 @@ export interface Unidad_A_Unidad_Interface {
   unidades_org_actual: any[];
   unidad_actual_current: any;
   listado_personas_unidades: any[];
+  listado_personas_totales_unidades: any[];
 }

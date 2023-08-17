@@ -19,6 +19,7 @@ import {
   getListPersonasUnidades
 } from '../../../../toolkit/thunks/thunks_uni_a_uni';
 import {
+  setListadoPersonasTotalesUnidades,
   setListadoPersonasUnidades,
   setUnidadActualCurrent,
   setUnidadAnteriorCurrent
@@ -124,7 +125,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
           setLoadingTrasladoMasivo
         ).then((res) => {
           //* realizar la peticion para refresecar el grid con las personas actualizadas de la unidad
-         void getListPersonasUnidades(
+          void getListPersonasUnidades(
             unidad_anterior_current,
             setviweGridDataPersons
           ).then((res) => {
@@ -202,7 +203,10 @@ export const Traslado: FC<any> = (): JSX.Element => {
                           setviweGridDataPersons
                         ).then((res) => {
                           console.log(res);
-                          dispatch(setListadoPersonasUnidades(res));
+                          dispatch(setListadoPersonasUnidades(res.dataFilter));
+                          dispatch(
+                            setListadoPersonasTotalesUnidades(res.dataTotal)
+                          );
                           // * from this event I have to manage the modal show and hide of the grid
                         });
                         onChange(selectedOption);
