@@ -296,20 +296,15 @@ export function ListOrganigramas({
                   sx={{
                     width: 24,
                     height: 24,
-                    background:
-                      params.row.id_persona_cargo !== userinfo.id_persona
-                        ? ''
-                        : '#fff',
-                    border: '2px solid'
+                    background: '#fff',
+                    border: '2px solid',
+                    boxShadow: '0px 0px 5px 0px rgba(105, 105, 105, 0.2)'
                   }}
                   variant="rounded"
                 >
                   <AutoFixHighIcon
                     sx={{
-                      color:
-                        params.row.id_persona_cargo !== userinfo.id_persona
-                          ? ''
-                          : 'primary.main',
+                      color: 'primary.main',
                       width: '18px',
                       height: '18px'
                     }}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -12,6 +13,7 @@ import { Chip, Avatar, IconButton, Checkbox } from '@mui/material';
 import { type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+// import DoneAllIcon from '@mui/icons-material/DoneAll';
 // Interfaces
 import {
   type IObjLevels as FormValuesLevels,
@@ -36,6 +38,7 @@ import {
 } from '../store/thunks/organigramThunks';
 import { type FormValues } from '../componentes/DialogCrearOrganigrama/types/type';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { get_unitys } from '../store/slices/organigramSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_editar_organigrama = () => {
@@ -87,6 +90,7 @@ const use_editar_organigrama = () => {
   };
   // Estado Inicial de las unidades
   const initial_state_unitys: FormValuesUnitys = {
+    activo: true,
     id_unidad_organizacional: '',
     unidad_raiz: {
       label: 'si',
@@ -174,29 +178,28 @@ const use_editar_organigrama = () => {
     }
   });
 
+  const {
+    control: control_edit__value_activo,
+    // handleSubmit: handle_submit_edit_value_activo,
+    reset: reset_edit_value_activo,
+    watch: watch_edit_value_activo
+  } = useForm({});
+
+  const edit_value_activo = watch_edit_value_activo();
+
   const creacion_organigrama_values = watch_creacion_organigrama();
-  const [selectedItems, setSelectedItems] = useState<any>([]);
+  // const [selectedItems, setSelectedItems] = useState<any>([]);
 
-  const handleCheckboxChange = (event: any, item: any /* id_item */): void => {
-    const isCheckboxChecked = event.target.checked;
-    const updatedItem = {
-      ...item,
-      activo: isCheckboxChecked
-    };
-
-    if (event.target.checked) {
-      setSelectedItems([...selectedItems, updatedItem]);
-      console.log(selectedItems);
-    }
-    if (!event.target.checked) {
-      setSelectedItems(
-        selectedItems.filter(
-          (i: any) =>
-            i.id_unidad_organizacional !== updatedItem.id_unidad_organizacional
-        )
-      );
-      console.log(selectedItems);
-    }
+  const handleCheckboxChange = (
+    event: any,
+    id_unidad_organizacional: number
+  ): void => {
+    const newUnidadesActualizaciónActivo = unity_organigram.map((unidad: any) =>
+      unidad.id_unidad_organizacional === id_unidad_organizacional
+        ? { ...unidad, activo: event.target.checked }
+        : unidad
+    );
+    dispatch(get_unitys(newUnidadesActualizaciónActivo));
   };
 
   // ------> Colums <------ //
@@ -269,19 +272,20 @@ const use_editar_organigrama = () => {
     }
   ];
   const columns_unidades: GridColDef[] = [
-    { headerName: 'Código', field: 'codigo', minWidth: 100, maxWidth: 100 },
-    { headerName: 'Nombre', field: 'nombre', minWidth: 250 },
+    { headerName: 'Código', field: 'codigo', headerAlign: 'center', minWidth: 100, maxWidth: 100 },
+    { headerName: 'Nombre', field: 'nombre',headerAlign: 'center', minWidth: 250 },
     {
       headerName: 'Tipo unidad',
       field: 'cod_tipo_unidad',
-      minWidth: 130,
-      maxWidth: 130
+      headerAlign: 'center',
+      minWidth: 115,
+      maxWidth: 115
     },
     {
       headerName: 'Agrupacion documental',
       field: 'cod_agrupacion_documental',
-      minWidth: 200,
-      maxWidth: 200,
+      minWidth: 180,
+      maxWidth: 180,
       valueFormatter: (params) => {
         // eslint-disable-next-line no-extra-boolean-cast
         if (!Boolean(params.value)) {
@@ -309,13 +313,28 @@ const use_editar_organigrama = () => {
       }
     },
     {
+      headerName: 'Ítem activo',
+      headerAlign: 'center',
+      field: 'activo',
+      renderCell: (params: { row: { activo: any } }) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.activo ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      }
+    },
+    {
       headerName: 'Acciones',
+      headerAlign: 'center',
       field: 'acciones',
-      minWidth: 140,
+      minWidth: 120,
       maxWidth: 140,
       // hide: organigram_current.fecha_terminado !== null,
       renderCell: (params: {
         row: {
+          activo: boolean | undefined;
           id_unidad_organizacional: any;
           cod_unidad_org_padre: null;
           unidad_raiz: boolean;
@@ -471,13 +490,14 @@ const use_editar_organigrama = () => {
               </IconButton>
 
               <Checkbox
-                title="Seleccionar item para traslado a nueva unidad"
-                checked={selectedItems.some(
-                  (selectedItem: any) =>
-                    selectedItem.id_unidad_organizacional ===
-                      params.row.id_unidad_organizacional && selectedItem.activo
-                )}
-                onChange={(event) => handleCheckboxChange(event, params.row)}
+                title="Activar o desactivar unidad"
+                checked={params.row.activo}
+                onChange={(event) =>
+                  handleCheckboxChange(
+                    event,
+                    params.row.id_unidad_organizacional
+                  )
+                }
                 inputProps={{ 'aria-label': 'Seleccionar item' }}
               />
             </>
@@ -866,7 +886,11 @@ const use_editar_organigrama = () => {
     creacion_organigrama_values,
 
     loadingEdicionOrgan,
-    create_unidad_org_actual
+    create_unidad_org_actual,
+
+    control_edit__value_activo,
+    reset_edit_value_activo,
+    edit_value_activo
   };
 };
 

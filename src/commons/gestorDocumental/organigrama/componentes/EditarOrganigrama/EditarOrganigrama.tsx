@@ -44,6 +44,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
 import SyncIcon from '@mui/icons-material/Sync';
+import { v4 as uuidv4 } from 'uuid';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -656,8 +657,7 @@ export const EditarOrganigrama = ({
             onSubmit={(e) => {
               e.preventDefault();
               console.log('jejej siuuuu');
-              title_unidades === 'Agregar' &&
-                void handle_submit_unidades(create_unidad_org_actual)(e);
+              void handle_submit_unidades(create_unidad_org_actual)(e);
             }}
           >
             <Grid container spacing={2}>
@@ -851,7 +851,10 @@ export const EditarOrganigrama = ({
                 AGREGAR UNIDAD (GRUPO)
               </Button>
               <Button
-                type="submit"
+                onClick={() => {
+                  // void dispatch(set_special_edit(false));
+                  console.log('editando unidades propiedad activo');
+                }}
                 color="primary"
                 variant="outlined"
                 startIcon={<ToggleOnIcon />}
@@ -872,9 +875,13 @@ export const EditarOrganigrama = ({
               pageSize={10}
               rowsPerPageOptions={[5]}
               experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id_unidad_organizacional}
+              getRowId={(row) => uuidv4()}
             />
           </Box>
+        </Grid>
+
+        <Grid item>
+          <Box sx={{ width: '100%' }}></Box>
         </Grid>
 
         <Stack
