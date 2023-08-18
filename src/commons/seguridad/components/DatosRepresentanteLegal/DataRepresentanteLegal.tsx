@@ -370,7 +370,7 @@ export const DatosRepresentanteLegal: React.FC<
                 size="small"
                 label="E-mail"
                 disabled
-                required
+                required={false}
                 autoFocus
                 value={datos_representante?.email_empresarial}
               />
@@ -417,6 +417,7 @@ export const DatosRepresentanteLegal: React.FC<
                   <>
                     <Button
                       variant="outlined"
+                      color='warning'
                       startIcon={<RemoveRedEyeIcon />}
                       onClick={() => {
                         handle_open_historico_representante();

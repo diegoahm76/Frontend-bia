@@ -9,11 +9,11 @@ import { use_register } from '../../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../../../seguridad/request/Request';
 import { control_error } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
-import { UpdatePersonaNatAdmin } from '../registroPersonas/UpdatePersonaNatAdmin';
-import { UpdatePersonaJurAdmin } from '../../../seguridad/components/UpdatePersonaJurAdmin/UpdatePersonaJurAdmin';
-import { CrearPersonaJurAdmin } from '../../../seguridad/components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
-import { CrearPersonaNatAdmin } from '../../../seguridad/components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
-import { BuscadorPersona } from '../../../../components/BuscadorPersonaV';
+import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
+import { BuscarPersonaNatural } from './BuscarPersonaNatural';
+import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
+import { BuscarPersonaJuridica } from './BuscarPersonaJuridica';
+import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -84,7 +84,7 @@ export const AdminVentanilla: React.FC = () => {
           <>
             {datos_persona && datos_persona?.tipo_persona === 'N' && (
               <>
-                <UpdatePersonaNatAdmin
+                <BuscarPersonaNatural
                   id_persona={datos_persona.id_persona}
                   numero_documento={datos_persona.numero_documento}
                   data={datos_persona}
@@ -103,7 +103,7 @@ export const AdminVentanilla: React.FC = () => {
             )}
             {datos_persona !== undefined && datos_persona?.tipo_persona === 'J' && (
               <>
-                <UpdatePersonaJurAdmin
+                <BuscarPersonaJuridica
                   id_persona={datos_persona.id_persona}
                   data={datos_persona}
                   numero_documento={datos_persona?.numero_documento}
@@ -126,7 +126,7 @@ export const AdminVentanilla: React.FC = () => {
           <>
             {persona?.tipo_persona === 'N' && (
               <>
-                <CrearPersonaNatAdmin
+                <CrearPersonaNatural
                   numero_documento={persona.numero_documento}
                   tipo_persona={persona.tipo_persona}
                   tipo_documento={persona.tipo_documento}
@@ -143,7 +143,7 @@ export const AdminVentanilla: React.FC = () => {
             )}
             {persona?.tipo_persona === 'J' && (
               <>
-                <CrearPersonaJurAdmin
+                <CrearPersonaJuridica
                   numero_documento={persona?.numero_documento}
                   tipo_persona={persona.tipo_persona}
                   tipo_documento={persona.tipo_documento}
