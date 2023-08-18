@@ -8,7 +8,7 @@ import pse from '../assets/pse.png';
 import './Estilos/PlanPagos.css';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaPlanPagosUsuarioExterno: React.FC = () => {
+export const TablaPlanPagosUsuario: React.FC = () => {
   const [total, set_total] = useState(0);
   const navigate = useNavigate();
 

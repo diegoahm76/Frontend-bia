@@ -1,7 +1,7 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
-import { TablaObligacionesSolicitud } from "./TablaObligacionesSolicitud";
-import { TablaObligacionesUsuarioInterno } from "./TablaObligacionesUsuarioInterno";
+import { TablaObligacionesSeleccionadasSolicitud } from "./TablaObligacionesSeleccionadasSolicitud";
+import { TablaObligacionesUsuarioSolicitud } from "./TablaObligacionesUsuarioSolicitud";
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type FacilidadPagoSolicitud, type ObligacionesUsuario } from "../interfaces/interfaces";
@@ -108,13 +108,13 @@ export const EncabezadoSolicitud: React.FC = () => {
         </Grid>
         <>
           <p><strong>Obligaciones objeto de la solicitud</strong></p>
-          <TablaObligacionesSolicitud />
+          <TablaObligacionesSeleccionadasSolicitud />
         </>
         {
           modal_obligaciones && obligaciones.obligaciones !== undefined ? (
             <>
               <p><strong>Obligaciones Pendiente por Pago</strong></p>
-              <TablaObligacionesUsuarioInterno />
+              <TablaObligacionesUsuarioSolicitud />
             </>
           ) : null
         }

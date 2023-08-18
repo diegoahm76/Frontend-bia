@@ -14,7 +14,7 @@ interface RootState {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioInterno: React.FC = () => {
+export const TablaObligacionesUsuarioSolicitud: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);

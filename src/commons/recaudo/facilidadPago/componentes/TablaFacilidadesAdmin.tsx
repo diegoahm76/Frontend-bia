@@ -28,6 +28,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const [modal_option, set_modal_option] = useState('no');
   const [modal_asignacion, set_modal_asignacion] = useState(false);
   const [asignacion, set_asignacion] = useState(true);
+  const [validacion_pagos, set_validacion_pagos] = useState({});
   const [funcionarios_options, set_funcionarios_options] = useState<Funcionario[]>([]);
   const [funcionario_selected, set_funcionario_selected] = useState(0);
   const [facilidad_selected, set_facilidad_selected] = useState(0);
@@ -49,6 +50,17 @@ export const TablaFacilidadesAdmin: React.FC = () => {
       throw new Error(error);
     }
   }
+
+  const get_validacion_pagos = async (id_facilidad: number): Promise<void> => {
+    try {
+      const res_validacion = await get_validacion_plan_pagos(id_facilidad);
+      set_validacion_pagos(res_validacion);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  console.log('respuesta validacion', validacion_pagos)
 
   useEffect(() => {
     void get_lista_funcionarios();
@@ -106,7 +118,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
               <IconButton
                 onClick={() => {
                   void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                  void get_validacion_plan_pagos(params.row.id_facilidad);
+                  void get_validacion_pagos(params.row.id_facilidad);
                   navigate('../solicitud');
                 }}
               >

@@ -12,7 +12,7 @@ interface RootState {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesSolicitud: React.FC = () => {
+export const TablaObligacionesSeleccionadasSolicitud: React.FC = () => {
   const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
 
   const columns: GridColDef[] = [
