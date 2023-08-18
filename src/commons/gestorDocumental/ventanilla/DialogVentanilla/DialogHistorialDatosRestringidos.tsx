@@ -9,6 +9,7 @@ import {
   Stack,
   Alert,
   Typography,
+  LinearProgress,
 } from '@mui/material';
 
 
@@ -147,6 +148,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
+                  <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>
@@ -162,6 +164,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
             >
               <Button
                 variant="outlined"
+                color="error"
                 // eslint-disable-next-line react/jsx-no-undef
                 startIcon={<CancelIcon />}
                 onClick={() => {

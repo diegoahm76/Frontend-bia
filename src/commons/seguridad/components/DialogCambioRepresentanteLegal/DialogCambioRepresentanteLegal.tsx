@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import type { AxiosError } from 'axios';
@@ -29,6 +28,9 @@ import { get_tipo_documento, search_avanzada } from '../../../../request';
 import { control_error } from '../../../../helpers';
 import { CustomSelect, Title } from '../../../../components';
 import { consultar_datos_persona } from '../../../seguridad/request/Request';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface PropsBuscador {
   onResult: (data_representante_detalle: DataPersonas) => void;
@@ -208,8 +210,8 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
     <>
       <Button
         variant="contained"
-        color="primary"
-        startIcon={<HowToRegIcon />}
+        color="success"
+        startIcon={<EditIcon />}
         onClick={handle_click_open}
       >
         Cambiar
@@ -274,6 +276,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                 >
@@ -305,7 +308,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handle_close}>Salir</Button>
+          <Button color='error' variant="outlined" startIcon={<ClearIcon />} onClick={handle_close}>Cerrar</Button>
         </DialogActions>
       </Dialog>
     </>
