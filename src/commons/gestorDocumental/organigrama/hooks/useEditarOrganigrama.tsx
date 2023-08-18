@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
@@ -90,6 +91,7 @@ const use_editar_organigrama = () => {
   };
   // Estado Inicial de las unidades
   const initial_state_unitys: FormValuesUnitys = {
+    codigoExtra: '',
     activo: true,
     id_unidad_organizacional: '',
     unidad_raiz: {
@@ -192,8 +194,10 @@ const use_editar_organigrama = () => {
 
   const handleCheckboxChange = (
     event: any,
-    id_unidad_organizacional: number
+    id_unidad_organizacional: number,
+    params: any
   ): void => {
+    console.log(params.row, 'params.row');
     const newUnidadesActualizaciónActivo = unity_organigram.map((unidad: any) =>
       unidad.id_unidad_organizacional === id_unidad_organizacional
         ? { ...unidad, activo: event.target.checked }
@@ -272,8 +276,19 @@ const use_editar_organigrama = () => {
     }
   ];
   const columns_unidades: GridColDef[] = [
-    { headerName: 'Código', field: 'codigo', headerAlign: 'center', minWidth: 100, maxWidth: 100 },
-    { headerName: 'Nombre', field: 'nombre',headerAlign: 'center', minWidth: 250 },
+    {
+      headerName: 'Código',
+      field: 'codigo',
+      headerAlign: 'center',
+      minWidth: 100,
+      maxWidth: 100
+    },
+    {
+      headerName: 'Nombre',
+      field: 'nombre',
+      headerAlign: 'center',
+      minWidth: 250
+    },
     {
       headerName: 'Tipo unidad',
       field: 'cod_tipo_unidad',
@@ -330,7 +345,7 @@ const use_editar_organigrama = () => {
       headerAlign: 'center',
       field: 'acciones',
       minWidth: 120,
-      maxWidth: 140,
+      maxWidth: 160,
       // hide: organigram_current.fecha_terminado !== null,
       renderCell: (params: {
         row: {
@@ -347,12 +362,14 @@ const use_editar_organigrama = () => {
         };
       }) => (
         <>
-          {organigram_current.fecha_terminado !== null &&
+          {!organigram_current.fecha_terminado &&
             !organigram_current.actual && (
               <>
                 <IconButton
                   onClick={() => {
                     reset_unidades({
+                      codigoExtra: params.row.codigo,
+                      activo: params.row.activo,
                       id_unidad_organizacional:
                         params.row.id_unidad_organizacional,
                       codigo: params.row.codigo,
@@ -446,6 +463,24 @@ const use_editar_organigrama = () => {
                     />
                   </Avatar>
                 </IconButton>
+
+                <Checkbox
+                  title={
+                    params.row.item_usado
+                      ? 'Item usado no se puede activar o desactivar'
+                      : 'Activar o desactivar unidad'
+                  }
+                  checked={params.row.activo}
+                  disabled={params.row.item_usado}
+                  onChange={(event) =>
+                    handleCheckboxChange(
+                      event,
+                      params.row.id_unidad_organizacional,
+                      params
+                    )
+                  }
+                  inputProps={{ 'aria-label': 'Seleccionar item' }}
+                />
               </>
             )}
 
@@ -490,12 +525,25 @@ const use_editar_organigrama = () => {
               </IconButton>
 
               <Checkbox
-                title="Activar o desactivar unidad"
+                onClick={() => {
+                  params.row.item_usado
+                    ? control_warning(
+                        'Un ítem (unidad) que está siendo usada no se puede activar o desactivar'
+                      )
+                    : null;
+                }}
+                title={
+                  params.row.item_usado
+                    ? 'Item usado no se puede activar o desactivar'
+                    : 'Activar o desactivar unidad'
+                }
                 checked={params.row.activo}
+                disabled={params.row.item_usado}
                 onChange={(event) =>
                   handleCheckboxChange(
                     event,
-                    params.row.id_unidad_organizacional
+                    params.row.id_unidad_organizacional,
+                    params
                   )
                 }
                 inputProps={{ 'aria-label': 'Seleccionar item' }}
@@ -692,17 +740,20 @@ const use_editar_organigrama = () => {
   const edit_unidad = ({
     codigo,
     nombre,
+    activo,
     nivel_padre,
     tipo_unidad,
     agrupacion_documental,
     unidad_raiz,
     nivel_unidad,
-    id_unidad_organizacional
+    id_unidad_organizacional,
+    codigoExtra,
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
       nombre,
       codigo,
+      activo,
       cod_tipo_unidad: tipo_unidad!.value,
       cod_agrupacion_documental: agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
@@ -711,13 +762,32 @@ const use_editar_organigrama = () => {
       id_unidad_organizacional
     };
 
-    const newUnidades = unity_organigram.map((unidad: any) =>
+    console.log(codigoExtra, 'codigoExtra');
+
+   /* const newUnidades = unity_organigram.map((unidad: any) =>
       unidad.id_unidad_organizacional === id_unidad_organizacional
         ? newUnidad
         : unidad
-    );
-    console.log(nivel_unidad, 'nivel_unidad');
-    console.log(newUnidad, 'newUnidad');
+    ); */
+
+    const newUnidades = unity_organigram.map((unidad: any) => {
+      if (unidad.id_unidad_organizacional === id_unidad_organizacional) {
+        return {
+          ...newUnidad,
+          cod_unidad_org_padre:
+            unidad.cod_unidad_org_padre === codigoExtra ? codigo : unidad.cod_unidad_org_padre,
+        };
+      } else if (unidad.cod_unidad_org_padre === codigoExtra) {
+        return {
+          ...unidad,
+          cod_unidad_org_padre: codigo,
+        };
+      } else {
+        return unidad;
+      }
+    });
+
+
 
     set_title_unidades('Agregar');
     dispatch(
@@ -762,7 +832,9 @@ const use_editar_organigrama = () => {
     );
   };
 
-  //* org actual
+  //* ------------------- FUNCIONES PARA ORGANIGRAMA ACTUAL ------------------- *//
+
+  //! CREAR UNIDAD SIN AGRUPACION DOCUMENTAL
   const create_unidad_org_actual = ({
     codigo,
     nombre,
@@ -792,6 +864,20 @@ const use_editar_organigrama = () => {
       update_unitys_service(
         organigram_current.id_organigrama,
         newUnidades,
+        clean_unitys
+      )
+    );
+  };
+
+  //! EDITAR UNIDAD - PROPIEDAD ACTIVO - ORGANIGRAMA ACTUAL (UNIDADES ORGANIZACIONALES SIN AGRUPACION DOCUMENTAL)
+
+  const edit_prop_activo_unidad_org = (newObject: any) => {
+    console.log(newObject, 'newObject');
+
+    dispatch(
+      update_unitys_service(
+        organigram_current.id_organigrama,
+        newObject,
         clean_unitys
       )
     );
@@ -876,6 +962,7 @@ const use_editar_organigrama = () => {
     handle_submit_unidades,
     create_unidad,
     edit_unidad,
+    edit_prop_activo_unidad_org,
     // submit_unidades,
     on_grid_ready,
     clean_unitys,

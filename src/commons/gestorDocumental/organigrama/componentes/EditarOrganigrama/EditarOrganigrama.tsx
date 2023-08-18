@@ -88,7 +88,8 @@ export const EditarOrganigrama = ({
     edit_unidad,
     loadingEdicionOrgan,
     // submit_unidades,
-    title_unidades
+    title_unidades,
+    edit_prop_activo_unidad_org
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -644,6 +645,18 @@ export const EditarOrganigrama = ({
                 >
                   {title_unidades === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
                 </Button>
+                <Button
+                  onClick={() => {
+                    // void dispatch(set_special_edit(false));
+                    console.log('editando unidades propiedad activo');
+                    edit_prop_activo_unidad_org(unity_organigram);
+                  }}
+                  color="primary"
+                  variant="outlined"
+                  startIcon={<ToggleOnIcon />}
+                >
+                  DESACTIVAR / ACTIVAR UNIDADES
+                </Button>
               </Stack>
             </Box>
           )}
@@ -854,6 +867,7 @@ export const EditarOrganigrama = ({
                 onClick={() => {
                   // void dispatch(set_special_edit(false));
                   console.log('editando unidades propiedad activo');
+                  edit_prop_activo_unidad_org(unity_organigram);
                 }}
                 color="primary"
                 variant="outlined"
