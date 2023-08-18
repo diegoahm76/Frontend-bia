@@ -787,8 +787,6 @@ const use_editar_organigrama = () => {
       }
     });
 
-
-
     set_title_unidades('Agregar');
     dispatch(
       update_unitys_service(
