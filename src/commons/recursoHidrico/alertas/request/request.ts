@@ -19,7 +19,7 @@ export const get_alerta_cod = async (
 export const get_alerta = async (): Promise<ConfiguracionAlerta[]> => {
     const response: AxiosResponse<ResponseServer<ConfiguracionAlerta[]>> = await api.get<
         ResponseServer<ConfiguracionAlerta[]>
-    >(`transversal/alertas/configuracion_clase_alerta/get-by-cod/`);
+    >(`transversal/alertas/configuracion_clase_alerta/get-by-subsistema/RECU/`);
     return response.data.data;
 };
 

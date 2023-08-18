@@ -427,6 +427,7 @@ export const post_prueba_bombeo = async (
     'hidrico/bibliotecas/pruebas_bombeo/create/',
     {
       ...form,
+      id_prueba_bombeo: form.id_prueba_bombeo,
       id_instrumento: form.id_instrumento,
       id_pozo: form.id_pozo,
       descripcion: form.descripcion,

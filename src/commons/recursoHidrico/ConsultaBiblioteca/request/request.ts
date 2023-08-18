@@ -126,7 +126,7 @@ export const get_data_resulatado_laboratorio_id = async (
 ): Promise<Laboratorio[]> => {
   const response: AxiosResponse<ResponseServer<Laboratorio[]>> =
     await api.get<ResponseServer<Laboratorio[]>>(
-      `hidrico/bibliotecas/dato_registro_laboratorio/get-by-resultado/${id_dato_registro_laboratorio}/?tipo=${parametro}`
+      `hidrico/bibliotecas/dato_registro_laboratorio/get-by-resultado/${id_dato_registro_laboratorio}/${parametro}/`
     );
   return response.data.data;
 };

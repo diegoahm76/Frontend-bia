@@ -341,8 +341,11 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       'fecha_prueba_bombeo',
       dayjs(info_prueba_bombeo.fecha_prueba_bombeo)?.format('YYYY-MM-DD') ?? ''
     );
-    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
-    setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
+    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio));
+    setValue_bombeo(
+      'hora_inicio',
+      dayjs(info_sesion_bombeo?.fecha_inicio).format('HH:mm:ss') ?? ''
+    );
   }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
@@ -854,7 +857,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   )}
                 />
               </Grid>{' '}
-              <Box sx={{ flexGrow: 1 }}>
+              {/* <Box sx={{ flexGrow: 1 }}>
                 <Stack
                   direction="row"
                   spacing={2}
@@ -870,7 +873,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                     Agregar
                   </Button>
                 </Stack>
-              </Box>
+              </Box> */}
             </>
           ) : null}
           {row_prueba.length > 0 && (

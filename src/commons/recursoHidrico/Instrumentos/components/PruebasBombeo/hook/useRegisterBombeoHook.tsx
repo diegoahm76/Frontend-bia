@@ -76,9 +76,11 @@ export const use_register_bombeo_hook = () => {
     rows_anexos_bombeo,
     id_data_sesion_bombeo,
     fetch_data_general_sesion,
+    fetch_data_general_sesion_creacion,
     set_id_bombeo_general,
     set_id_sesion_bombeo,
     set_id_data_sesion_bombeo,
+    set_rows_sesion_bombeo,
     set_info_sesion_bombeo,
     set_archivos,
     set_nombres_archivos,
@@ -169,7 +171,7 @@ export const use_register_bombeo_hook = () => {
     }
 
     // Reinicia los campos de entrada
-    setValue_bombeo('tiempo_transcurrido', '');
+    setValue_bombeo('tiempo_transcurrido', '0');
     setValue_bombeo('nivel', '');
     setValue_bombeo('resultado', '');
     setValue_bombeo('caudal', '');
@@ -186,7 +188,7 @@ export const use_register_bombeo_hook = () => {
     setValue_bombeo('id_sesion_prueba_bombeo', '');
     setValue_bombeo('hora_inicio', '');
     setValue_bombeo('cod_tipo_sesion', '');
-    setValue_bombeo('tiempo_transcurrido', '');
+    setValue_bombeo('tiempo_transcurrido', '0');
     setValue_bombeo('nivel', '');
     setValue_bombeo('resultado', '');
     setValue_bombeo('caudal', '');
@@ -199,7 +201,11 @@ export const use_register_bombeo_hook = () => {
   const onSubmit = handleSubmit_bombeo(async (data: any) => {
     try {
       set_is_saving(true);
+      if (!id_bombeo_general) {
+        set_id_bombeo_general(null);
+      }
       set_id_sesion_prueba_bombeo(null);
+      data.id_prueba_bombeo = id_bombeo_general;
       data.id_sesion_prueba_bombeo = id_sesion_prueba_bombeo;
       data.id_instrumento = id_instrumento_slice;
       const nombre_archivos_set = new Set(nombres_archivos);
@@ -225,16 +231,17 @@ export const use_register_bombeo_hook = () => {
         row_prueba,
         archivos_bombeo,
         archivos
-      ).then((response) => {
-        set_id_sesion_prueba_bombeo(
-          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
-        );
+      ).then(async (response) => {
+        console.log(response, 'response');
+        // set_id_sesion_prueba_bombeo(
+        //   response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
+        // );
         set_id_bombeo_general(
           response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
         );
-        if (id_bombeo_general) {
-          void fetch_data_general_sesion();
-        }
+        await fetch_data_general_sesion_creacion(
+          response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
+        );
       });
       control_success('Prueba de bombeo guardada correctamente');
       limpiar_formulario();
@@ -387,7 +394,10 @@ export const use_register_bombeo_hook = () => {
           archivos_bombeo.append(`nombre_archivo`, nombres_archivos[index]);
         }
       });
-      archivos_bombeo.append('id_prueba_bombeo', String(info_prueba_bombeo.id_prueba_bombeo));
+      archivos_bombeo.append(
+        'id_prueba_bombeo',
+        String(info_prueba_bombeo.id_prueba_bombeo)
+      );
       archivos_bombeo.append('id_instrumento', String(id_instrumento_slice));
       archivos_bombeo.append('cod_tipo_de_archivo', codigo_archivo);
       if (archivos.length > 0 && archivos[0] !== null) {
@@ -452,6 +462,7 @@ export const use_register_bombeo_hook = () => {
     id_sesion_bombeo,
     rows_anexos_bombeo,
     set_id_sesion_bombeo,
+    set_rows_sesion_bombeo,
     set_id_data_sesion_bombeo,
     set_info_data_sesion_bombeo,
     set_info_sesion_bombeo,
