@@ -5,6 +5,7 @@ import { TrdRoutes } from '../trd/routes/TrdRoutes';
 import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
+import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 
 const routes = [
   {
@@ -42,6 +43,15 @@ const routes = [
       <VentanillaRoutes/>
     ),
   },
+  {
+    path: "alertas_gestor/",
+    name: "alertas_gestor",
+    component: () => (
+      <Alertas_gestor_Routes/>
+    ),
+  },
+
+  
 ]
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
