@@ -38,7 +38,7 @@ export const Sucursal: FC = () => {
       fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 5000);
+    }, 4000);
 
     return () => { clearInterval(interval) };
   }, []);
@@ -98,7 +98,7 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     }).then(  (result) => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
-          // fetchand_update_data()
+        // await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
           })
@@ -123,7 +123,9 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
     { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
     { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
-    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
+    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1,  renderCell: (params: any) => (
+      <>{params.value === true ? "Sí" : "No"}</>
+    ), },
     // { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
 
     {
