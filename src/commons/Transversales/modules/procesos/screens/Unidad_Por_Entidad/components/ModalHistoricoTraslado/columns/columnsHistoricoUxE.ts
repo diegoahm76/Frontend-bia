@@ -19,13 +19,3 @@ export const historicoTrasladosMasivosUxE: any[] = [
     headerAlign: 'center'
   }
 ];
-
-/* {
-  "id_cambio_unidad_masivo": 3,
-  "persona_cambio": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
-  "consecutivo": 3,
-  "fecha_cambio": "2023-05-29T16:59:49.126004", ------------
-  "tipo_cambio": "UnidadesTodas",  --------------
-  "justificacion": "Se realizó un cambio masivo de unidad organizacional a 5 personas",
-  "id_persona_cambio": 1
-} */

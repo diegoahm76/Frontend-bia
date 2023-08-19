@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC } from 'react';
+import { useState, type FC, useEffect, useContext } from 'react';
 import { historicoTrasladosMasivosUxE } from '../columns/columnsHistoricoUxE';
 import {
   Button,
@@ -16,9 +16,32 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../../../../../components';
+import { getHistoricosTraslados } from '../services/modalHistoricos.service';
+import { ContextUnidadxEntidad } from '../../../context/ContextUnidadxEntidad';
+
 // ? types
 
 export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
+  const { modalHistoricos, handleModalHistoricos } = useContext(
+    ContextUnidadxEntidad
+  );
+
+  //* -------- STATES -------------- */
+  const [historicoTrasladosMasivos, sethistoricoTrasladosMasivos] = useState(
+    []
+  );
+
+  //* ----------  USE EFFECT NECESARIOS PARA EL CODIGO -------------- */
+
+  useEffect(() => {
+    const getHistoricoTrasladosMasivos = async (): Promise<any> => {
+      const res = await getHistoricosTraslados();
+      console.log(res);
+      sethistoricoTrasladosMasivos(res);
+    };
+    void getHistoricoTrasladosMasivos();
+  }, []);
+
   //* -------- COLUMNS TO MODAL -------------- */
   const columns: GridColDef[] = [
     ...historicoTrasladosMasivosUxE,
@@ -48,17 +71,15 @@ export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
     }
   ];
 
-  // * -------- FUNCIONES DEL COMPONENTE -------------- */
-
-  const closeModalHistoricoTraslados = (): void => {};
+  //* --------
 
   return (
     <>
       <Dialog
         fullWidth
         maxWidth="md"
-        open={true}
-        onClose={closeModalHistoricoTraslados}
+        open={modalHistoricos}
+        onClose={handleModalHistoricos}
       >
         <DialogTitle>
           <Title title="Histórico de traslados masivos (Unidad por Entidad)" />
@@ -75,7 +96,7 @@ export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
             sx={{ mt: '15px' }}
             density="compact"
             autoHeight
-            rows={[]}
+            rows={historicoTrasladosMasivos || []}
             columns={columns || []}
             pageSize={5}
             rowsPerPageOptions={[7]}
@@ -93,7 +114,7 @@ export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
             <Button
               variant="outlined"
               color="error"
-              onClick={closeModalHistoricoTraslados}
+              onClick={handleModalHistoricos}
               startIcon={<CloseIcon />}
             >
               CERRAR

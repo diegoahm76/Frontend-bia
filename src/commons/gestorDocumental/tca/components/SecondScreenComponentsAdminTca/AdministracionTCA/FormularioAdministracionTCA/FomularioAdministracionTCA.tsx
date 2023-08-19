@@ -50,11 +50,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* define show or no show component
-
-  // eslint-disable-next-line no-empty-pattern
   const {
-    // modalAdministracionTca,
-    // openModalAdministracionTca,
     openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
@@ -68,18 +64,14 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   const {
     control_administrar_tca,
     reset_administrar_tca,
-    // handleSubmit_administrar_tca,
-    // formState_administrar_tca,
     watch_administrar_tca_value
   } = use_tca();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCatalogoTRD = async (id: number) => {
     const res = await get_catalogo_TRD_service(id);
     return dispatch(set_catalog_trd_action(res));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCatalogoTCA = async (id: number) => {
     const res = await get_catalogo_TCA_service(id);
     return dispatch(set_catalog_TCA_action(res));
@@ -144,14 +136,12 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     const dato: any = watch_administrar_tca_value?.cod_clas_expediente?.value;
 
     formData.append('cod_clas_expediente', dato);
-
     if (watch_administrar_tca_value.justificacion_cambio) {
       formData.append(
         'justificacion_cambio',
         watch_administrar_tca_value.justificacion_cambio
       );
     }
-
     if (watch_administrar_tca_value.ruta_archivo_cambio) {
       formData.append(
         'ruta_archivo_cambio',
@@ -217,8 +207,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                       value={value}
                       onChange={(selectedOption) => {
                         onChange(selectedOption);
-                        console.log(selectedOption);
-                        // handleSelectedOption(value, onChange);
                       }}
                       options={choicesTipoClasificacion}
                       placeholder="Seleccionar"
@@ -241,7 +229,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
 
             {/* new spaces */}
 
-            {/* justificación del cambio, solo aparece para trd actual */}
             {/* justificación del cambio, solo aparece para trd actual */}
             {/* ruta archivo soporte de cambio, solo aparece en trd actual */}
             {/* SOLO TRD ACTUAL */}
@@ -394,7 +381,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               color="error"
               startIcon={<CancelIcon />}
               onClick={() => {
-                console.log('cancelando...');
                 reset_administrar_tca({
                   id_cat_serie_und_ccd_trd: '',
                   cod_clas_expediente: {
@@ -416,10 +402,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   variant="contained"
                   color="secondary"
                   startIcon={<VisibilityIcon />}
-                  // disabled={ccd_current?.actual}
                   onClick={() => {
                     console.log('viendo historial de cambios');
-                    // void get_historial_cambios_tca_service()
                     openModalHistorialCambios();
                   }}
                 >
