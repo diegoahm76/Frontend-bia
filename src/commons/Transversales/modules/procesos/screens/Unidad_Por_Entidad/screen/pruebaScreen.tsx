@@ -3,7 +3,7 @@ import { useContext, type FC } from 'react';
 import { ContextUnidadxEntidad } from '../context/ContextUnidadxEntidad';
 import { ModalHistoricoTraslados } from '../components/ModalHistoricoTraslado/screen/ModalHistoricoTraslados';
 
-export const pruebaScreen: FC = (): JSX.Element => {
+export const PruebaScreen: FC = (): JSX.Element => {
   const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
 
   return (
