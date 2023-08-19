@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { AppBar, IconButton, Badge, Stack, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -14,6 +16,8 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import type { AuthSlice } from '../commons/auth/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
+import { useContext } from 'react';
+import { AlertasContext } from '../commons/Transversales/modules/Alertas/context/AlertasContext';
 
 
 interface Props {
@@ -23,7 +27,9 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
 
-
+  const {
+    numeroDeAlertas,
+  } = useContext(AlertasContext)
  
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,7 +129,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             </IconButton>
             <Link to="/app/transversal/bandeja_alertas">
               <Badge
-                badgeContent={2} // Número que se mostrará en el círculo
+                badgeContent={numeroDeAlertas} // Número que se mostrará en el círculo
                 color="error" // El color del círculo (rojo en este caso)
                 invisible={!tiene_alerta} // Si no hay alerta, el círculo no se mostrará
                 overlap="circular" // Superposición circular para acercar el círculo al icono
@@ -131,7 +137,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                sx={{ position: 'relative', top: '-4px', left: '-4px' }} // Ajusta la posición del círculo según tus necesidades
+                sx={{ position: 'relative', left: '-4px' }} // Ajusta la posición del círculo según tus necesidades
               >
                 <IconButton>
                   <ReportProblemIcon

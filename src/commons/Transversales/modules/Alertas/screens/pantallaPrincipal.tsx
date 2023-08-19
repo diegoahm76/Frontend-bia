@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Box, Grid, ButtonGroup, Button, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { Title } from '../../../../../components/Title';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
@@ -15,11 +18,19 @@ import { ModificadorFormatoFecha } from '../utils/ModificaforFecha';
 import { useNavigate } from 'react-router-dom';
 import ReplyIcon from '@mui/icons-material/Reply';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
+import { AlertasContext } from '../context/AlertasContext';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
+
+  const {
+    setNumeroDeAlertas
+  } = useContext(AlertasContext);
+
+
   
+
   const navigate = useNavigate();
   const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
 
@@ -27,8 +38,8 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   const [id_alertas, set_id_alertas] = useState<number | null>(null);
   const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
   const [bandeja_alerta, set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>([]);
-  
-  
+
+
   const fetch_data_get = async (): Promise<void> => {
     try {
       const url = `/transversal/alertas/bandeja_alerta_persona/get-bandeja-by-persona/${id_persona}/`;
@@ -47,10 +58,11 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const buscar_bandeja_alerta = async (): Promise<void> => {
     try {
-      if (!id_alertas) throw new Error('No se encontro el id de la bandeja');
+      if (id_alertas == null) throw new Error('No se encontro el id de la bandeja');
       const url = `/transversal/alertas/alertas_bandeja_Alerta_persona/get-alerta_bandeja-by-bandeja/${id_alertas}/`;
       const { data } = await api.get(url);
-      console.log(data.data.filter((el: any) => !el.leido));
+      const AlertasNoLeidas = data.data.filter((el: any) => el.leido === false);
+      setNumeroDeAlertas(AlertasNoLeidas.length)
       set_bandeja_alerta(data.data);
 
       return data.data;
@@ -156,7 +168,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
             <ModalConfirmacionArchivar
               dat={params.row.id_alerta_bandeja_alerta_persona}
               marcador={params.row.archivado}
-               activate_suspender_alerta={ buscar_bandeja_alerta} />
+              activate_suspender_alerta={buscar_bandeja_alerta} />
 
 
             <ModalInfoAlerta columnnns={params.row} />
@@ -209,9 +221,9 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     // activate_suspender_alerta();
   };
 
-  
 
-// Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
+
+  // Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
   const filtered_rows = mostrar_leidos === true
     ? bandeja_alerta.filter((row) => row.leido)
     : mostrar_leidos === false
@@ -227,7 +239,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     });
 
 
-   
+
 
 
   }, [mostrar_leidos]);

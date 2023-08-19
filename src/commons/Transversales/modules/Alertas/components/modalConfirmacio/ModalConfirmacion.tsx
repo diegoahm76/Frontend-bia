@@ -18,6 +18,9 @@ interface SuspenderAlertaProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ModalConfirmacionArchivar: React.FC<SuspenderAlertaProps> = (dat) => {
 
+
+
+
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleClick = (): void => {
 
@@ -110,22 +113,20 @@ export const ModalConfirmacionArchivar: React.FC<SuspenderAlertaProps> = (dat) =
             if (updatedata_entidad_index !== -1) {
                 try {
                     const first_alert = data_entidad[updatedata_entidad_index];
-                    const leido_value = first_alert.archivado;
-                    const updateddata_entidad: Alerta_update = {
-                        ...first_alert,
-                        archivado: !leido_value,
-                    };
+                    const archivado_value = first_alert.archivado;
+                    console.log(archivado_value);
 
-                    // console.log(updateddata_entidad)
+                    if (archivado_value) {
+                        const updateddata_entidad: Alerta_update = {
+                            ...first_alert,
+                            archivado: !archivado_value,
+                        };
 
-                    const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
+                        const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
 
-            
-                    console.log(response.data.data)
-
-
-                    set_data_entidad(response.data.data);
-                    control_success('Campo "leido" actualizado correctamente');
+                        set_data_entidad(response.data.data);
+                        control_success('Campo "leido" actualizado correctamente');
+                    }
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }
@@ -145,6 +146,9 @@ export const ModalConfirmacionArchivar: React.FC<SuspenderAlertaProps> = (dat) =
 
 
     const [contador_icono, set_contador_icono] = useState<boolean>(dat.marcador);
+
+
+    // const [cerrar_modal, set_cerrar_modal] = useState<any>(null);
 
 
 
@@ -180,7 +184,7 @@ export const ModalConfirmacionArchivar: React.FC<SuspenderAlertaProps> = (dat) =
                     onClick={() => { setVisible(true); }}
                 // onClick={}   
                 >
-                    <ArchiveIcon />
+                    <ArchiveIcon sx={{ color: !contador_icono ? undefined : 'rgba(0, 0, 0, 0.3)' }} />
                 </Button>
             </Tooltip>
             <Dialog
