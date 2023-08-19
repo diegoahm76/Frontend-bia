@@ -10,9 +10,14 @@ import type { AlertaBandejaAlertaPersona, Alerta_update } from '../../interfaces
 interface SuspenderAlertaProps {
     dat: number; // o el tipo adecuado para id_alerta_bandeja_alerta_persona
     marcador: boolean;
+    activate_suspender_alerta: () => void;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = (dat) => {
+export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = ({
+    dat,
+    marcador,
+    activate_suspender_alerta,
+}: SuspenderAlertaProps) => {
 
 
     const alerta_inicial: AlertaBandejaAlertaPersona = {
@@ -38,10 +43,10 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = (dat) => {
     };
 
 
-   // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [alerta_idTo_find, set_alerta_idTo_find] = useState<number>(dat.dat);
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const [alerta_idTo_find, set_alerta_idTo_find] = useState<number>(dat);
 
-    const [contador_icono, set_contador_icono] = useState<boolean>(dat.marcador);
+    const [contador_icono, set_contador_icono] = useState<boolean>(marcador);
 
     const [data_entidad, set_data_entidad] = useState<AlertaBandejaAlertaPersona[]>([alerta_inicial]); // Inicialización con un elemento inicial
 
@@ -50,20 +55,29 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = (dat) => {
         try {
             await handle_change_leido(); // Llamar a la función sin argumentos
             // console.log(`ID de alerta suspendida: ${dat.dat}`);
-            set_alerta_idTo_find(dat.dat);
-            set_contador_icono(dat.marcador);
+            set_alerta_idTo_find(dat);
+            set_contador_icono(marcador);
         } catch (error) {
             // Manejo de errores si es necesario
         }
     };
 
 
-    const doble_funcion = (): void => {
+    const doble_funcion =  ():void => {
 
-        handle_suspender_alerta_click().catch((error) => {
+        void handle_suspender_alerta_click().catch((error) => {
             console.error(error);
-        });;
+        }).then(async () => {
+             activate_suspender_alerta();
+        })
+        // try {
+        //     await handle_suspender_alerta_click();
+        //     await activate_suspender_alerta();
+        // } catch (error) {
+        //     console.error(error);
+        // }
     }
+
 
 
 
@@ -75,7 +89,7 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = (dat) => {
             const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
             const facilidad_pago_data = res.data.data;
             set_data_entidad(facilidad_pago_data);
-          //  control_success('Datos actualizados correctamente');
+            //  control_success('Datos actualizados correctamente');
         } catch (error) {
             console.error(error);
         }
@@ -91,30 +105,20 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = (dat) => {
 
             if (updatedata_entidad_index !== -1) {
                 try {
-                    const first_alert = data_entidad[updatedata_entidad_index];
-                    const leido_value = first_alert.leido;
+                    const elemento_buscado_en_array = data_entidad[updatedata_entidad_index];
+                    const leido_value = elemento_buscado_en_array.leido;
                     const updateddata_entidad: Alerta_update = {
-                        ...first_alert,
+                        ...elemento_buscado_en_array,
                         leido: !leido_value,
                     };
 
-                    const payload = {
-                        ...updateddata_entidad,
-                    };
+                   
 
-                    const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, payload);
+                    const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
 
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    const updatedLeido = response.data.leido;
+                   
 
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    const updateddata_entidadCopy = [...data_entidad];
-                    updateddata_entidadCopy[updatedata_entidad_index] = {
-                        ...updateddata_entidadCopy[updatedata_entidad_index],
-                        leido: updatedLeido,
-                    };
-
-                    set_data_entidad(updateddata_entidadCopy);
+                    set_data_entidad(response.data.data);
                     control_success('Campo "leido" actualizado correctamente');
                 } catch (error: any) {
                     control_error(error.response.data.detail);
@@ -137,17 +141,19 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = (dat) => {
 
     useEffect(() => {
         handle_change_leido().catch((error) => {
-      console.error(error);
-    });
+            console.error(error);
+        });
     }, [contador_icono]);
 
 
 
     return (
         <div>
+
             <Button onClick={doble_funcion}>
                 <DoNotDisturbOnIcon sx={{ color: !contador_icono ? undefined : 'rgba(0, 0, 0, 0.3)' }} />
             </Button>
+
         </div>
     );
 };

@@ -1,34 +1,38 @@
-import { Box, Grid, ButtonGroup, Button } from '@mui/material';
+import { Box, Grid, ButtonGroup, Button, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { Title } from '../../../../../components/Title';
-// import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { ModalConfirmacionArchivar } from '../components/modalConfirmacio/ModalConfirmacion';
 import { ModalInfoAlerta } from '../components/modalInformacionAlenta/InfoAlerta';
 import { SuspenderAlerta } from '../components/SuspenderAlerta/SuspenderAlerta';
 import { useSelector } from 'react-redux';
-import type { AuthSlice } from '../../../../auth/interfaces/authModels'; 
+import type { AuthSlice } from '../../../../auth/interfaces/authModels';
 import { v4 as uuidv4 } from 'uuid';
 import type { AlertaBandejaAlertaPersona } from '../interfaces/interfacesAlertas';
 import { ModificadorFormatoFecha } from '../utils/ModificaforFecha';
+import { useNavigate } from 'react-router-dom';
+import ReplyIcon from '@mui/icons-material/Reply';
+import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
- 
+  
+  const navigate = useNavigate();
+  const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
 
-
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const id_persona_ingresa = userinfo.id_persona;
- console.log(id_persona_ingresa);
- // eslint-disable-next-line @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [id_alertas, set_id_alertas] = useState<number | null>(null);
- 
-
+  const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
+  const [bandeja_alerta, set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>([]);
+  
+  
   const fetch_data_get = async (): Promise<void> => {
     try {
-      const url = `/transversal/alertas/bandeja_alerta_persona/get-bandeja-by-persona/${id_persona_ingresa}/`;
-      const res:any = await api.get(url);
+      const url = `/transversal/alertas/bandeja_alerta_persona/get-bandeja-by-persona/${id_persona}/`;
+      const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
       if (numero_consulta.length > 0) {
         const id = numero_consulta[0].id_bandeja_alerta;
@@ -40,102 +44,133 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     }
   };
 
- 
-
-  const alertaa_inicio: AlertaBandejaAlertaPersona[] = [];
-
-  const [bandeja_alerta,set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>(alertaa_inicio);
-
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const buscar_bandeja_alerta  = async (): Promise<any> => {
+  const buscar_bandeja_alerta = async (): Promise<void> => {
     try {
-      if (id_alertas === null) {
-        return;
-      }
+      if (!id_alertas) throw new Error('No se encontro el id de la bandeja');
       const url = `/transversal/alertas/alertas_bandeja_Alerta_persona/get-alerta_bandeja-by-bandeja/${id_alertas}/`;
-      const res = await api.get(url);
-      const bandeja = res.data.data;
-      set_bandeja_alerta(bandeja);
+      const { data } = await api.get(url);
+      console.log(data.data.filter((el: any) => !el.leido));
+      set_bandeja_alerta(data.data);
+
+      return data.data;
     } catch (error) {
       console.error(error);
     }
   };
 
 
-
-
   const columns = [
+    {
+      field: 'nivel_prioridad',
+      headerName: 'Nivel',
+      width: 55,
+      renderCell: (params: any) => {
+        let icon_color = '';
+        if (params.value === 1) {
+          icon_color = '#4CAF50'; // Color verde
+        } else if (params.value === 2) {
+          icon_color = '#FFC107'; // Color amarillo
+        } else if (params.value === 3) {
+          icon_color = '#F44336'; // Color rojo
+        }
+
+        return (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <PriorityHighRoundedIcon fontSize="small" style={{ color: icon_color, marginRight: 4 }} />
+
+          </div>
+        );
+      },
+    },
+    {
+      field: 'responsable_directo',
+      headerName: 'Responsable directo',
+      headerAlign: 'center',
+      minWidth: 120,
+      maxWidth: 180,
+      valueGetter: (params: any) => (params.row.responsable_directo === true ? "Sí" : "No"),
+    },
+
+    {
+      field: 'archivado',
+      headerName: 'Archivado',
+      width: 120,
+      valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
+    },
+
     {
       field: 'fecha_hora',
       headerName: 'Fecha/Hora',
-      width: 100,
-      valueGetter: (params:any) => ModificadorFormatoFecha(params.row.fecha_hora),
+      width: 120,
+      valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_hora),
     },
     {
       field: 'nombre_clase_alerta',
       headerName: 'Nombre Clase Alerta',
-      width: 200,
-    },
-    {
-      field: 'id_modulo',
-      headerName: 'ID Módulo',
-      width: 50,
+      width: 250,
     },
     {
       field: 'nombre_modulo',
       headerName: 'Nombre Módulo',
-      width: 200,
+      width: 250,
+      valueGetter: (params: any) => {
+        const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
+        return ruta;
+      },
     },
     {
       field: 'ultima_repeticion',
       headerName: 'Última Repetición',
-      width: 60,
+      width: 150,
+      renderCell: (params: any) => (params.row.ultima_repeticion === true ? "Sí" : "No"),
     },
     {
       field: 'leido',
       headerName: 'Leído',
-      width: 60
+      width: 120,
+      renderCell: (params: any) => (params.row.leido === true ? "Sí" : "No"),
     },
     {
       field: 'repeticiones_suspendidas',
       headerName: 'Repeticiones Suspendidas',
-      width: 60,
-    },
-    
-    {
-      field: 'responsable_directo',
-      headerName: 'Responsable Directo',
-      width: 60,
+      width: 160,
+      renderCell: (params: any) => (params.row.repeticiones_suspendidas === true ? "Sí" : "No"),
     },
     {
-      field: 'id_bandeja_alerta_persona',
-      headerName: 'ID Bandeja Alerta Persona',
-      width: 60,
-    },
-    {
-      field: 'id_alerta_generada',
-      headerName: 'ID Alerta Generada',
-      width: 60,
-    },
-    {
-      field: 'opciones',
-      headerName: 'Opciones',
-      width: 200,
-      flex: 1,
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 300,
+      // flex: 1,
       renderCell: (params: any) => (
         <>
           <ButtonGroup variant="text">
-           
-            <SuspenderAlerta 
-            dat={params.row.id_alerta_bandeja_alerta_persona}
-              marcador={params.row.leido}       
-             />
 
-              <ModalConfirmacionArchivar />
-           
-          
+            <SuspenderAlerta
+              dat={params.row.id_alerta_bandeja_alerta_persona}
+              marcador={params.row.leido}
+              activate_suspender_alerta={buscar_bandeja_alerta}
+            />
+
+
+            <ModalConfirmacionArchivar
+              dat={params.row.id_alerta_bandeja_alerta_persona}
+              marcador={params.row.archivado}
+               activate_suspender_alerta={ buscar_bandeja_alerta} />
+
+
             <ModalInfoAlerta columnnns={params.row} />
-            
+
+
+
+
+            <Tooltip title="Redirigir al origen de la alerta" placement="right">
+              <Button onClick={() => {
+                const ruta = params.row.nombre_modulo.replace('/#', ''); // Eliminar "/#/app/"
+                navigate(ruta);
+              }}><ReplyIcon /></Button>
+            </Tooltip>
+
           </ButtonGroup>
         </>
       ),
@@ -156,86 +191,131 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   }, []);
 
 
- 
-  
 
 
 
-  const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
   const f_leidos = (): void => {
     set_mostrar_leidos(true);
+    // activate_suspender_alerta();
   };
 
   const f_no_leidos = (): void => {
     set_mostrar_leidos(false);
+    // activate_suspender_alerta();
   };
 
   const f_todos = (): void => {
     set_mostrar_leidos(null); // Usamos null para indicar que se deben mostrar todos los datos
+    // activate_suspender_alerta();
   };
 
-  // Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
+  
+
+// Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
   const filtered_rows = mostrar_leidos === true
     ? bandeja_alerta.filter((row) => row.leido)
     : mostrar_leidos === false
       ? bandeja_alerta.filter((row) => !row.leido)
-      : bandeja_alerta; 
+      : bandeja_alerta;
+
+
+
 
   useEffect(() => {
     fetch_data_get().catch((error) => {
       console.error(error);
     });
+
+
+   
+
+
   }, [mostrar_leidos]);
 
-  
+
   return (
-    <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
-      <Grid item xs={12}>
-        <Title title="Mis alertas" />
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <ButtonGroup style={{ margin: 7 }}>
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Title title="Mis alertas" />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <ButtonGroup style={{ margin: 7 }}>
 
 
-            <ButtonGroup variant="contained" aria-label="outlined primary button group">
-              <Button onClick={f_leidos} >leidos</Button>
-              <Button onClick={f_no_leidos}>no leidos</Button>
-              <Button onClick={f_todos}>todos</Button>
+              <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                <Button onClick={f_leidos} >leidos</Button>
+                <Button onClick={f_no_leidos}>no leidos</Button>
+                <Button onClick={f_todos}>todos</Button>
+              </ButtonGroup>
+
             </ButtonGroup>
+            <ButtonGroup style={{ margin: 7 }}>
+              {download_xls({ nurseries: filtered_rows, columns })}
+            </ButtonGroup>
+          </div>
+          <Box component="form" sx={{ mt: '20px', width: '100%' }} noValidate autoComplete="off">
+            <DataGrid
+              density="compact"
+              autoHeight
+              columns={columns as any}
+              rows={filtered_rows}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => uuidv4()}
+            />
 
-          </ButtonGroup>
-          <ButtonGroup style={{ margin: 7 }}>
-            {/* {download_xls({ nurseries: alertas, columns })} */}
-          </ButtonGroup>
-        </div>
-        <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-          <DataGrid
-            density="compact"
-            autoHeight
-            columns={columns}
-            rows={filtered_rows}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => uuidv4()}
-          />
+          </Box>
 
-        </Box>
-        <Button
-          variant="contained"
-          onClick={ () => { void  buscar_bandeja_alerta() }}
-        >
-          Actualizar Datos
-        </Button>
+        </Grid>
+
+
+
       </Grid>
-    </Grid>
+
+
+      <Grid
+        container
+        sx={{
+          top: 10,
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          width: '20%',
+        }}
+      >
+
+
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'rigth' }}>
+          <div style={{ color: '#4CAF50', marginBottom: '8px' }}>
+            <PriorityHighRoundedIcon fontSize="small" style={{ color: '#4CAF50', marginRight: 4 }} />
+            Baja
+          </div>
+          <div style={{ color: '#FFC107', marginBottom: '8px' }}>
+            <PriorityHighRoundedIcon fontSize="small" style={{ color: '#FFC107', marginRight: 4 }} />
+            Media
+          </div>
+          <div style={{ color: '#F44336' }}>
+            <PriorityHighRoundedIcon fontSize="small" style={{ color: '#F44336', marginRight: 4 }} />
+            Alta
+          </div>
+        </div>
+      </Grid>
+
+    </>
+
+
   );
 };

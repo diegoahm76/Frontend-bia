@@ -3,10 +3,11 @@ import { Dialog } from 'primereact/dialog';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
     Button,
-    Grid, TextField
+    Grid, TextField, Tooltip
 } from "@mui/material";
 
 import { Title } from "../../../../../../components/Title";
+import { ModificadorFormatoFecha } from "../../utils/ModificaforFecha";
 
 
 interface InterfazMostarAlerta {
@@ -43,7 +44,6 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [alerta_idTo_find, set_alerta_idTo_find] = useState<any>(prop.columnnns);
-    console.log(alerta_idTo_find);
     const {
         nombre_clase_alerta,
         tipo_alerta,
@@ -85,7 +85,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
 
     return (
         <div>
-
+            <Tooltip title="Informacion de alerta" placement="right">
             <Button
                 onClick={handleClick}
                 
@@ -94,6 +94,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
 
               />
             </Button>
+            </Tooltip>
             <Dialog header={title} visible={visible} style={{ width: '60%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
                 <Grid container sx={{
                     background: '#FAFAFA',
@@ -142,7 +143,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
                             size="small"
                             disabled
                             fullWidth
-                            value={fecha_hora}
+                            value={ModificadorFormatoFecha(fecha_hora)}
 
                         />
                     </Grid>
@@ -155,7 +156,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
                             size="small"
                             disabled
                             fullWidth
-                            value={responsable_directo}
+                            value={responsable_directo === true ? "Sí" : "No"}
 
                         />
                     </Grid>
@@ -199,8 +200,6 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
                         />
                     </Grid>
               
-
-              
               
                   
 
@@ -213,11 +212,11 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = (prop) => {
                             size="small"
                             disabled
                             fullWidth
-                            value={repeticiones_suspendidas}
+                            value={repeticiones_suspendidas === true ? "Sí" : "No"}
                            
                         />
                     </Grid>
-                <Grid item xs={12} sm={4} >
+                <Grid item xs={12} sm={2} >
 
                     <TextField
                         style={{ margin: 6 , width: "85%"}}
