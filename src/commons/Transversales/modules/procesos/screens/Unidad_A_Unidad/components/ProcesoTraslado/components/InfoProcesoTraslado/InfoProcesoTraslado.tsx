@@ -12,12 +12,17 @@ import { useAppSelector } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { type AuthSlice } from '../../../../../../../../../auth/interfaces';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { uni_a_uni_slice } from './../../../../toolkit/slice/Uni_A_UniSlice';
 
 export const InfoProcesoTraslado: FC<ProcesoTypes> = ({
-  setmModalHistoricoTraslados
+  setmModalHistoricoTraslados,
+  setModalTotalPersonas
 }: ProcesoTypes): JSX.Element => {
   const { userinfo } = useAppSelector((state: AuthSlice) => state.auth);
-  console.log(userinfo);
+  const { listado_personas_totales_unidades } = useAppSelector(
+    (state: any) => state.uni_a_uni_slice
+  );
 
   // ? use state to set the currentDate
   const [currentDate, setCurrentDate] = useState(dayjs().format('DD-MM-YYYY'));
@@ -45,6 +50,17 @@ export const InfoProcesoTraslado: FC<ProcesoTypes> = ({
             spacing={3}
             sx={{ mt: '40px' }}
           >
+            <Button
+              color="primary"
+              disabled={listado_personas_totales_unidades.length === 0}
+              variant="outlined"
+              startIcon={<PersonSearchIcon />}
+              onClick={() => {
+                setModalTotalPersonas(true);
+              }}
+            >
+              TOTAL PERSONAS UNIDADES
+            </Button>
             <Button
               color="warning"
               variant="contained"

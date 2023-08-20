@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Chip, IconButton } from '@mui/material';
@@ -37,22 +36,18 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
   const dispatch = useAppDispatch();
 
   //* context declaration
-  // eslint-disable-next-line no-empty-pattern
   const {
-    // modalAdministracionTca,
     openModalAdministracionTca,
     closeModalAdministracionTca
   } = useContext(ModalContextTCA);
 
-  //* use_tca
+  //* ------- HOOK USE_TCA DECLARATION -------------- */
   const { reset_administrar_tca } = use_tca();
 
   //* redux states declararion
   const { tca_current } = useAppSelector((state) => state.tca_slice);
 
-  const deleteCatalogoTCA = (id: number) => {
-    return delete_item_catalogo_tca_service(id);
-  };
+  const deleteCatalogoTCA = (id: number) => delete_item_catalogo_tca_service(id);
 
   const updateCatalogoTRD = async (id: number) => {
     const res = await get_catalogo_TRD_service(id);
