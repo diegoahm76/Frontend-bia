@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
@@ -165,7 +167,7 @@ export const Destinatario: React.FC = () => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
-            
+
         }));
     };
 
@@ -182,7 +184,15 @@ export const Destinatario: React.FC = () => {
             console.error('Error al crear la alerta de persona:', error);
         }
     };
-
+ 
+    useEffect(() => {
+        if (persona?.id_persona !== formData.id_persona) {
+            setFormData((prevData) => ({
+                ...prevData,
+                id_persona: persona?.id_persona !== undefined ? persona.id_persona : null,
+            }) as typeof formData); // Utilizamos "as typeof formData" para asegurar la compatibilidad de tipos
+        }
+    }, [persona?.id_persona]);
     
     return (
         <Grid container
@@ -197,6 +207,16 @@ export const Destinatario: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
             }}
         >
+            <TextField
+                label="ID de Persona"
+                variant="outlined"
+                fullWidth
+                type="number"
+                name="id_persona"
+                value={formData.id_persona || ''}
+                onChange={handleInputChange}
+                required
+            />
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="Código de Clase de Alerta"
@@ -208,12 +228,11 @@ export const Destinatario: React.FC = () => {
                     required
                 />
                 <TextField
-                    label="ID de Persona"
+                    label="perfil_sistema"
                     variant="outlined"
                     fullWidth
-                    type="number"
-                    name="id_persona"
-                    value={formData.id_persona}
+                     name="perfil_sistema"
+                    value={formData.perfil_sistema}
                     onChange={handleInputChange}
                     required
                 />
