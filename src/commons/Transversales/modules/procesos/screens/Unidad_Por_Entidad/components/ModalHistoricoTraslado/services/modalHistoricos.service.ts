@@ -21,13 +21,12 @@ export const getHistoricosTraslados = async (): Promise<any> => {
 
     if (data?.data?.length === 0) {
       control_warning(HISTORICO_NO_ENCONTRADO);
-      return;
+      return data.data;
     }
 
     control_success(data?.detail || HISTORICO_ENCONTRADO);
     return data?.data;
   } catch (error) {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const errorMessage = `${ERROR_DEFAULT}`;
     control_error(errorMessage);
     console.log(error);

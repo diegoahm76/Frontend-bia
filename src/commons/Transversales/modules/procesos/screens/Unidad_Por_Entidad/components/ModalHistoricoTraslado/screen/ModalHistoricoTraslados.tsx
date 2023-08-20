@@ -32,15 +32,15 @@ export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
   );
 
   //* ----------  USE EFFECT NECESARIOS PARA EL CODIGO -------------- */
+  const getHistoricoTrasladosMasivos = async (): Promise<any> => {
+    console.log('getHistoricoTrasladosMasivos');
+    const res = await getHistoricosTraslados();
+    sethistoricoTrasladosMasivos(res);
+  };
 
   useEffect(() => {
-    const getHistoricoTrasladosMasivos = async (): Promise<any> => {
-      const res = await getHistoricosTraslados();
-      console.log(res);
-      sethistoricoTrasladosMasivos(res);
-    };
-    void getHistoricoTrasladosMasivos();
-  }, []);
+    if (modalHistoricos) void getHistoricoTrasladosMasivos();
+  }, [modalHistoricos]);
 
   //* -------- COLUMNS TO MODAL -------------- */
   const columns: GridColDef[] = [

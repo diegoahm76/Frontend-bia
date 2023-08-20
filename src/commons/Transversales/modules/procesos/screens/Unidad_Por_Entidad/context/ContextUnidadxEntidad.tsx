@@ -1,25 +1,32 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { createContext, useState } from 'react';
+import { createContext, useState, type FC, type ReactNode } from 'react';
 import { type ModalContextInterface } from './types/context.types';
+
+interface ContextProps {
+  children: ReactNode;
+}
 
 const ContextUnidadxEntidad = createContext<ModalContextInterface>({
   modalHistoricos: false,
   handleModalHistoricos: () => {}
 });
 
-const ContextUnidadxEntidadProvider = ({ children }: any): JSX.Element => {
+const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
+  children
+}): JSX.Element => {
   const [modalHistoricos, setmodalHistoricos] = useState(false);
 
-  const handleModalHistoricos = (): void => setmodalHistoricos(!modalHistoricos);
+  const handleModalHistoricos = (): void =>
+    setmodalHistoricos(!modalHistoricos);
 
-  const values = {
+  const modalContextValues = {
     modalHistoricos,
-    handleModalHistoricos,
+    handleModalHistoricos
   };
 
   return (
-    <ContextUnidadxEntidad.Provider value={values}>
+    <ContextUnidadxEntidad.Provider value={modalContextValues}>
       {children}
     </ContextUnidadxEntidad.Provider>
   );
