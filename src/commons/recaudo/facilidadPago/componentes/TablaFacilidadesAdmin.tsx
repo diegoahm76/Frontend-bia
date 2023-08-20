@@ -8,8 +8,10 @@ import { type event, type FacilidadPago, type Funcionario } from '../interfaces/
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
+import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
+import { get_validacion_resolucion } from '../slices/ResolucionSlice';
 import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
-import { put_asignacion_funcionario, get_funcionarios, get_validacion_plan_pagos } from '../requests/requests';
+import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
 import dayjs from 'dayjs';
 
 interface RootStateFacilidades {
@@ -28,7 +30,6 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const [modal_option, set_modal_option] = useState('no');
   const [modal_asignacion, set_modal_asignacion] = useState(false);
   const [asignacion, set_asignacion] = useState(true);
-  const [validacion_pagos, set_validacion_pagos] = useState({});
   const [funcionarios_options, set_funcionarios_options] = useState<Funcionario[]>([]);
   const [funcionario_selected, set_funcionario_selected] = useState(0);
   const [facilidad_selected, set_facilidad_selected] = useState(0);
@@ -50,17 +51,6 @@ export const TablaFacilidadesAdmin: React.FC = () => {
       throw new Error(error);
     }
   }
-
-  const get_validacion_pagos = async (id_facilidad: number): Promise<void> => {
-    try {
-      const res_validacion = await get_validacion_plan_pagos(id_facilidad);
-      set_validacion_pagos(res_validacion);
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }
-
-  console.log('respuesta validacion', validacion_pagos)
 
   useEffect(() => {
     void get_lista_funcionarios();
@@ -118,7 +108,8 @@ export const TablaFacilidadesAdmin: React.FC = () => {
               <IconButton
                 onClick={() => {
                   void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                  void get_validacion_pagos(params.row.id_facilidad);
+                  void dispatch(get_validacion_plan_pagos(params.row.id_facilidad));
+                  void dispatch(get_validacion_resolucion(params.row.id_facilidad));
                   navigate('../solicitud');
                 }}
               >

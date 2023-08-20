@@ -31,6 +31,8 @@ import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/Obli
 import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
 import { facilidades_slice } from '../commons/recaudo/facilidadPago/slices/FacilidadesSlice';
 import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/SolicitudSlice';
+import { resolucion_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/ResolucionSlice';
+import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPagosSlice';
 import { reportes_recaudo_slice } from '../commons/recaudo/reportes/slices/ReportesSlice';
 import { seriesAndSubseriesSlice } from '../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice';
 import { solicitud_vivero_slice } from '../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud';
@@ -75,6 +77,8 @@ const app_reducers = combineReducers({
   deudores: deudores_slice.reducer,
   facilidades: facilidades_slice.reducer,
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
+  resolucion_facilidad: resolucion_facilidad_slice.reducer,
+  plan_pagos: plan_pagos_slice.reducer,
   solicitud_vivero: solicitud_vivero_slice.reducer,
   reportes_recaudo: reportes_recaudo_slice.reducer,
   slice_series_and_subseries: seriesAndSubseriesSlice.reducer,
