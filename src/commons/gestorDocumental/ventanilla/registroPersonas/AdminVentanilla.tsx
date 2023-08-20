@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState } from 'react';
 
@@ -9,11 +10,11 @@ import { use_register } from '../../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../../../seguridad/request/Request';
 import { control_error } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
-import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
-import { BuscarPersonaNatural } from './BuscarPersonaNatural';
+/* import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
+ import { BuscarPersonaNatural } from './BuscarPersonaNatural';
 import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
 import { BuscarPersonaJuridica } from './BuscarPersonaJuridica';
-import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
+import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica'; */
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -71,11 +72,11 @@ export const AdminVentanilla: React.FC = () => {
           <Title title="Crear personas desde ventanilla" />
         </Grid>
       </Grid>
-      <BuscadorPersona
-        onResult={(data) => {
+    {/*  <BuscadorPersona
+        onResult={(data: any) => {
           void on_result(data);
         }}
-      />
+      /> */}
       <Grid container  spacing={2}>
         <Grid item xs={12}>
           <Divider />
@@ -84,7 +85,7 @@ export const AdminVentanilla: React.FC = () => {
           <>
             {datos_persona && datos_persona?.tipo_persona === 'N' && (
               <>
-                <BuscarPersonaNatural
+              {/*  <BuscarPersonaNatural
                   id_persona={datos_persona.id_persona}
                   numero_documento={datos_persona.numero_documento}
                   data={datos_persona}
@@ -98,12 +99,12 @@ export const AdminVentanilla: React.FC = () => {
                   getValues={get_values}
                   watch={watch}
                   reset={reset}
-                />
+                /> */}
               </>
             )}
             {datos_persona !== undefined && datos_persona?.tipo_persona === 'J' && (
               <>
-                <BuscarPersonaJuridica
+              {/*  <BuscarPersonaJuridica
                   id_persona={datos_persona.id_persona}
                   data={datos_persona}
                   numero_documento={datos_persona?.numero_documento}
@@ -117,7 +118,7 @@ export const AdminVentanilla: React.FC = () => {
                   getValues={get_values}
                   watch={watch}
                   reset={reset}
-                />
+                /> */}
               </>
             )}
           </>
@@ -126,7 +127,7 @@ export const AdminVentanilla: React.FC = () => {
           <>
             {persona?.tipo_persona === 'N' && (
               <>
-                <CrearPersonaNatural
+              {/*  <CrearPersonaNatural
                   numero_documento={persona.numero_documento}
                   tipo_persona={persona.tipo_persona}
                   tipo_documento={persona.tipo_documento}
@@ -138,12 +139,12 @@ export const AdminVentanilla: React.FC = () => {
                   getValues={get_values}
                   watch={watch}
                   reset={reset}
-                />
+                /> */}
               </>
             )}
             {persona?.tipo_persona === 'J' && (
               <>
-                <CrearPersonaJuridica
+              {/*  <CrearPersonaJuridica
                   numero_documento={persona?.numero_documento}
                   tipo_persona={persona.tipo_persona}
                   tipo_documento={persona.tipo_documento}
@@ -155,7 +156,7 @@ export const AdminVentanilla: React.FC = () => {
                   getValues={get_values}
                   watch={watch}
                   reset={reset}
-                />
+                /> */}
               </>
             )}
           </>
