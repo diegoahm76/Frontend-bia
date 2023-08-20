@@ -70,7 +70,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
     <>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
         open={modalHistoricoTraslados}
         onClose={closeModalHistoricoTraslados}
       >
@@ -81,7 +81,8 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
         <DialogContent
           sx={{
             mb: '0px',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            zIndex: 999999,
           }}
         >
           <DataGrid

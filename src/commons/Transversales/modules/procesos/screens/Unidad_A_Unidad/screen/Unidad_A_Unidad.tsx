@@ -17,6 +17,7 @@ import {
 } from '../toolkit/slice/Uni_A_UniSlice';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { ProcesoTrasladoScreen } from '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen';
+import { TotalPersonas } from '../components/TotalPersonas/screen/TotalPersonasScreen';
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
   // ! -------------- dispatch declaration --------------------------------
@@ -32,6 +33,9 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   // ? modal to open the historico de traslados masivos de unidad a unidad
 
   const [modalHistoricoTraslados, setmModalHistoricoTraslados] =
+    useState<boolean>(false);
+
+    const [modalTotalPersonas, setModalTotalPersonas] =
     useState<boolean>(false);
 
   // ? state para renderizas las unidades del org anterior
@@ -52,9 +56,9 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
             label: unidad.nombre
           };
         });
-        //* setear unidades ogrnigrama actual
-        dispatch(setUnidadesOrgActual(unidadesEditedOrganigramaActual));
-      })
+      //* setear unidades ogrnigrama actual
+      dispatch(setUnidadesOrgActual(unidadesEditedOrganigramaActual));
+    });
 
     //* get unidades organigrama anterior
     void getUnidadesOrgAnterior().then((unidades: any) => {
@@ -75,8 +79,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
         dispatch(setOrganigramaAnterior(org));
       });
     });
-  }, [])
-
+  }, []);
 
   if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
     return <Loader />;
@@ -88,6 +91,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
 
       {/* Parte Dos - Proceso de traslado de unidad a unidad  */}
       <ProcesoTrasladoScreen
+        setModalTotalPersonas={setModalTotalPersonas}
         setmModalHistoricoTraslados={setmModalHistoricoTraslados}
       />
 
@@ -95,6 +99,12 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
       <HistoricoTraslados
         modalHistoricoTraslados={modalHistoricoTraslados}
         setModalHistoricoTraslados={setmModalHistoricoTraslados}
+      />
+
+      {/* modal de total de personas de las unidades del organigrama anterior */}
+      <TotalPersonas
+        modalTotalPersonas={modalTotalPersonas}
+        setModalTotalPersonas={setModalTotalPersonas}
       />
     </>
   );

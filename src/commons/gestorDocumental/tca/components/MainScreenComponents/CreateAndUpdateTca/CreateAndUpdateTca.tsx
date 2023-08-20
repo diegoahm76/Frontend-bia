@@ -19,8 +19,6 @@ import { TRDSUsados } from '../view/TRDSUsados/TRDSUsados';
 import { BusquedaTCAModal } from '../view/BusquedaTCA/BusquedaTCAModal';
 import { useAppSelector, useAppDispatch } from '../../../../../../hooks';
 
-// import  LoadingButton  from '@mui/lab';
-// import  SyncIcon  from '@mui/icons-material/Sync';
 import SyncIcon from '@mui/icons-material/Sync';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -29,7 +27,6 @@ import {
   update_tca_services
 } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { set_catalog_trd_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
-// import { control_error } from '../../../../../../helpers';
 import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
@@ -42,16 +39,10 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
   // ? useForm create and update tca
   const {
     control_create_update_tca,
-    // handleSubmit_create_update_tca,
-    // formState_create_update_tca,
-    // reset_create_update_tca,
     watch_create_update_tca_value,
 
     // ? list of non used trds
     list_non_used_trds,
-
-    // ? buytton that manage the name (state (save or update))
-    // title_button_create_edit_tca,
 
     // ? clean button function all tca
     cleaning_function
@@ -83,15 +74,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
       ? // eslint-disable-next-line no-void
         dispatch(update_tca_services(toSendUpdate, setLoadingButton))
       : dispatch(create_tca_services(dataToSend, setLoadingButton));
-
-    /* trd_current !== null
-    ? dispatch(
-        update_trd_service(watch_create_update_tca_value, setLoadingButton)
-      )
-    : dispatch(
-        create_tca_services(watch_create_update_tca_value, setLoadingButton)
-      );
-  */
   };
   return (
     <>
@@ -152,9 +134,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          {/* {trd_current != null
-                      ? `CCD seleccionado`
-                      : `CDD's no usados en otro TRD`} */}
                           TRD seleccionado
                         </small>
                       </label>
@@ -174,13 +153,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
-                      // name="nombre"
                       label="Nombre del TCA"
-                      /* helperText={
-                   trd_current != null
-                    ? 'Actualice el nombre'
-                    : 'Ingrese nombre'
-                } */
                       size="small"
                       variant="outlined"
                       value={value}
@@ -188,17 +161,9 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                       onChange={(e) => {
                         if (e.target.value.length === 50)
                           control_warning('máximo 50 caracteres');
-
                         onChange(e.target.value);
-                        // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
-                      // error={!!error}
-                      /* helperText={
-                  error
-                    ? 'Es obligatorio este campo'
-                    : 'Seleccione un archivo'
-                } */
                     />
                   )}
                 />
@@ -214,15 +179,8 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
-                      // name="version"
                       label="Versión del TCA"
-                      /* helperText={
-                  trd_current != null
-                    ? 'Actualice la versión'
-                    : 'Ingrese versión'
-                } */
                       size="small"
                       variant="outlined"
                       value={value}
@@ -231,7 +189,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                         if (e.target.value.length === 10)
                           control_warning('máximo 10 caracteres');
                         onChange(e.target.value);
-                        // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 10 }}
                     />
@@ -271,25 +228,12 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               >
                 BUSCAR
               </Button>
-              {/* <LoadingButton
-          disabled={trd_current != null}
-          
-          loading={false}
-          type="submit"
-          color="primary"
-          variant="contained"
-          startIcon={ trd_current != null ? <SyncIcon /> : <SaveIcon /> }
-        >
-           {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'} 
-          CREAR TCA
-        </LoadingButton> */}
               <LoadingButton
                 loading={loadingButton}
                 color="primary"
                 variant="contained"
                 type="submit"
                 startIcon={tca_current != null ? <SyncIcon /> : <SaveIcon />}
-                // onClick={openModalModalSearchTRD}
               >
                 {tca_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
               </LoadingButton>
@@ -301,9 +245,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 onClick={() => {
                   console.log('cleaning');
                   cleaning_function();
-                  // reset_all_trd();
-                  // console.log('reset_create_trd_modal');
-                  // setTrdCurrent(null);
                 }}
               >
                 LIMPIAR CAMPOS
