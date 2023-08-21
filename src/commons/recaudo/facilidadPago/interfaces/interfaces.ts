@@ -147,5 +147,6 @@ export interface RegistroFacilidadPago {
   valor: number;
   documento_soporte_bien: File;
   ids_obligaciones: number[];
+  valor_abonado: number;
 }
 

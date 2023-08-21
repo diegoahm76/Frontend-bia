@@ -23,18 +23,37 @@ interface RootState {
   }
 }
 
+interface RootStateValidacionPlanPagos {
+  plan_pagos: {
+    plan_pagos: {
+      detail: string;
+      success: boolean;
+    }
+  }
+}
+
+interface RootStateValidacionResolucion {
+  resolucion_facilidad: {
+    resolucion_facilidad: {
+      detail: string;
+      success: boolean;
+    }
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaFacilidadFuncionario: React.FC = () => {
-  const [plan_pagos, set_plan_pagos] = useState('');
-  const [resolucion, set_resolucion] = useState('');
+  const [plan_pagos_pregunta, set_plan_pagos_pregunta] = useState('');
+  const [resolucion_pregunta, set_resolucion_pregunta] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
-  const [existe] = useState(true); // Mientras nos conectamos con el Backend
   const [modal_anular, set_modal_anular] = useState(false);
   const [modal_plan_pagos, set_modal_plan_pagos] = useState(false);
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
   const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
+  const { plan_pagos } = useSelector((state: RootStateValidacionPlanPagos) => state.plan_pagos);
+  const { resolucion_facilidad } = useSelector((state: RootStateValidacionResolucion) => state.resolucion_facilidad);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
@@ -182,7 +201,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                           label="¿Crear plan de pagos?"
                           onChange={(event: event)=>{
                             const { value } = event.target
-                            set_plan_pagos(value)
+                            set_plan_pagos_pregunta(value)
                           }}
                         >
                           <MenuItem value="si">Si</MenuItem>
@@ -191,11 +210,11 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       </FormControl>
                     </Grid>
                     {
-                      plan_pagos === "si" ? (
+                      plan_pagos_pregunta === "si" ? (
                         <>
                           <Grid item xs={12} sm={3}>
                             {
-                              existe ? (
+                              plan_pagos.success ? (
                                 <Button
                                   fullWidth
                                   color='primary'
@@ -243,7 +262,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                           label="¿Crear Resolución?"
                           onChange={(event: event)=>{
                             const { value } = event.target
-                            set_resolucion(value)
+                            set_resolucion_pregunta(value)
                           }}
                         >
                           <MenuItem value="si">Si</MenuItem>
@@ -252,11 +271,11 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       </FormControl>
                     </Grid>
                     {
-                      resolucion === "si" ? (
+                      resolucion_pregunta === "si" ? (
                         <>
                           <Grid item xs={12} sm={3}>
                             {
-                              existe ? (
+                              resolucion_facilidad.success ? (
                                 <Button
                                   fullWidth
                                   color='primary'
