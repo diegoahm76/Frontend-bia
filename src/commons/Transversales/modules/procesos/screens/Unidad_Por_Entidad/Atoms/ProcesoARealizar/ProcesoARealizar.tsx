@@ -1,27 +1,52 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { type FC } from 'react';
+import { useEffect, type FC, useContext } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 // * react select
 import Select from 'react-select';
 
 import { Title } from '../../../../../../../../components';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { consultarTablaTemporal } from '../../toolkit/UxE_thunks/UxE_thunks';
+import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
+// import CleanIcon from '@mui/icons-material/CleaningServices';
 
-export const ProceoARealizar: FC = (): JSX.Element => {
+export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
   // const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  /*  const { trd_current, catalado_series_subseries_unidad_organizacional } =
-    useAppSelector((state: any) => state.trd_slice); */
 
-  //! use_trd hook
-  const { control_opciones_traslado } = use_u_x_entidad();
+  //! use_u_x_entidad hook
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { control_opciones_traslado, reset_opciones_traslado } =
+    use_u_x_entidad();
 
-  //* neccesary hook useState for the code
+  //* context necesario
+  const { setloadingConsultaT026 } = useContext(ContextUnidadxEntidad);
+
+  useEffect(() => {
+    console.log('use_u_x_entidad');
+    void consultarTablaTemporal(setloadingConsultaT026).then((res: any) => {
+      console.log(res);
+
+      //* en esta operacion consulto la tabla temporal para saber si hay datos en ella y dispongo las opereaciones que se deben hacer para la aplicacion
+
+      // ? 1. si la tabla temporal no trae datos, la interacción no pasa de acá, debe dejarse al usuario elegir la opción que desea realizar
+      // ? 2. si la tabla temporal trae datos, hay dos posibles escenarios:
+      // ! 2.1. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama actual se debe seleccionar la opción de "traslado de unidad organizacional de organigrama actual a nuevo"
+      // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
+
+      /* reset_opciones_traslado({
+        opciones_traslado: {
+          value: 'Traslado',
+          label: 'trasladeichon'
+        }
+      }); */
+    });
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
@@ -103,43 +128,27 @@ export const ProceoARealizar: FC = (): JSX.Element => {
                 />
               </Grid>
             </Grid>
-
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mb: '20px', mt: '20px' }}
-            >
-              {/*  <LoadingButton
-                loading={createTRDLoadingButton}
-                type="submit"
-                color="primary"
-                variant="contained"
-                startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
-              >
-                {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
-              </LoadingButton>
-*/}
-            </Stack>
           </form>
         </Grid>
-      </Grid>
-
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        spacing={2}
-        sx={{ m: '20px 0' }}
-      >
-        {/*  <Button
-          color="warning"
-          variant="contained"
-          startIcon={<AddCircleIcon />}
-          onClick={openModalCreacionFormatoTipo}
+        {/* <Stack
+          direction="row"
+          justifyContent="flex-start"
+          spacing={2}
+          sx={{ m: '20px 0' }}
         >
-          MÓDULO DE CREACION DE FORMATOS
-        </Button> */}
-      </Stack>
+          <Button
+            color="primary"
+            variant="outlined"
+            startIcon={<CleanIcon />}
+            onClick={() => {
+              // eslint-disable-next-line no-console
+              console.log('cleaning fields');
+            }}
+          >
+            LIMPIAR CAMPOS
+          </Button>
+        </Stack> */}
+      </Grid>
     </>
   );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { createContext, useState, type FC } from 'react';
+import { createContext, useState, type FC, useCallback } from 'react';
 import {
   type ContextProps,
   type ModalContextInterface
@@ -20,10 +20,15 @@ const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
   const [modalHistoricos, setmodalHistoricos] = useState(false);
 
   // ! carga inicial consulta de tabla de datos temporales
-  const [loadingConsultaT026, setloadingConsultaT026] = useState(false);
+  const [loadingConsultaT026, setLoadingConsultaT026] = useState(false);
 
-  const handleModalHistoricos = (): void =>
-    setmodalHistoricos(!modalHistoricos);
+  const handleModalHistoricos = useCallback(() => {
+    setmodalHistoricos((prevState) => !prevState);
+  }, []);
+
+  const setloadingConsultaT026 = useCallback((value: boolean) => {
+    setLoadingConsultaT026(value);
+  }, []);
 
   const modalContextValues = {
     //* --- modal historicos ---
