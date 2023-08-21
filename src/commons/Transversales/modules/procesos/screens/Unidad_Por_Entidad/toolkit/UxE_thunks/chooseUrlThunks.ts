@@ -6,5 +6,5 @@ export const navigateToRoute =
     console.log('navigateToRoute');
     const url = `/app/transversal/procesos/traslado_masivo_unidad_organizacional/`;
     // dispatch(setControlModeTrasladoUnidadXEntidad(value));
-    navigate(!value ? `${url}validaciones` : url);
+    navigate(value ? `${url}validaciones` : url);
   };
