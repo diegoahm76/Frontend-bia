@@ -3,7 +3,7 @@
 import { api } from '../../../../../../../../api/axios';
 
 export const consultarTablaTemporal = async (setLoading: any): Promise<any> => {
-  setLoading(true);
+  // setLoading(true);
   try {
     const url = `transversal/organigrama/listado-registro-temporal/`;
     const { data } = await api.get(url);
@@ -16,12 +16,13 @@ export const consultarTablaTemporal = async (setLoading: any): Promise<any> => {
     };
   } catch (error: any) {
     // control_warning('No hay datos para mostrar');
+    // setLoading(false);
     return {
       data: [],
       success: false,
       detail: error?.response?.data?.detail
     };
   } finally {
-   setLoading(false);
+   // setLoading(false);
   }
 };
