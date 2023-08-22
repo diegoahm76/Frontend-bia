@@ -31,7 +31,6 @@ export const HistorialCambiosTCA: FC<any> = (): JSX.Element => {
   // ? manage modal
   const {
     modalHistorialCambios,
-    // openModalHistorialCambios,
     closeModalHistorialCambios
   } = useContext(ModalContextTCA);
 

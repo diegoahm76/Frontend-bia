@@ -8,11 +8,16 @@ import { SucursalDirecciones } from "./SucursalDirecciones";
 import { Title } from "../../../../components";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { ISucursalForm, Props } from "./utils/interfac";
- 
+import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
+import SaveIcon from '@mui/icons-material/Save';
+// import ClearIcon from '@mui/icons-material/Clear';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { LoadingButton } from '@mui/lab';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
+export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucursal, data_entidad, selected_id, setselected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
   const initial_state: ISucursalForm = {
     descripcion_sucursal: "",
@@ -23,7 +28,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     direccion_notificacion: "",
     direccion_notificacion_referencia: "",
     municipio_notificacion: null,
-    email_sucursal: "", 
+    email_sucursal: "",
     confirmar_email: "",
     telefono_sucursal: "",
     es_principal: false,
@@ -32,14 +37,16 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
     id_persona_empresa: 3,
     numero_sucursal: siguiente_numeros_sucursal,
   };
-  const [exiting, set_exiting] = useState(false);
+  const [exiting, 
+    // set_exiting
+  ] = useState(false);
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
- 
+  const [loading, set_loading] = useState(false);
   useEffect(() => {
     if (isediting) {
 
-       void fetch_data();
+      void fetch_data();
     }
   }, [selected_id]);
 
@@ -69,10 +76,12 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
   const handleform_submit = (): void => {
     // Set form_submitted to true when the button is clicked
     setform_submitted(true);
-
+    set_loading(true);
     // Check if the email fields are equal
     if (form_values.email_sucursal !== form_values.confirmar_email) {
       // Display error message or handle the error as per your requirement
+      set_loading(false);
+      control_error("email diferentes  ")
       return;
     }
 
@@ -85,29 +94,35 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
         method: isediting ? "put" : "post",
         url: endpoint,
         data: form_values,
-      })  
-      .then((response) => {
+      })
+      .then(async (response) => {
         console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
-         setform_values(initial_state);
-         
-        
+        setform_values(initial_state);
+        setselected_id(null);
+        set_loading(false);
+        await fetchand_update_data();
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
         control_error(isediting ? "Error al actualizada  " : "Error al  guardar ")
+        set_loading(false);
       });
+     
+
   };
 
 
   const handle_clear_fields = (): void => {
-    // Set all form field values to their initial_state (empty values)
+    // Set all form field values to their i2nitial_state (empty values)
     setform_values(initial_state);
-   };
-
-  const handle_exit = (): void => {
-    set_exiting(true);
+     setselected_id(null);
+    
   };
+
+  // const handle_exit = (): void => {
+  //   set_exiting(true);
+  // };
 
 
   useEffect(() => {
@@ -118,10 +133,11 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
       window.history.back();
     }
   }, [exiting]);
-  
+
   return (
     <Grid container
       spacing={2}
+      marginTop={2}
     >
 
       <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
@@ -143,7 +159,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           onChange={handleinput_change}
         />
       </Grid>
-      <Grid item xs={12} sm={10}>
+      <Grid item xs={12} sm={10.5}>
         <TextField
           variant="outlined"
           size="small"
@@ -155,10 +171,11 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           name="descripcion_sucursal"
           value={form_values.descripcion_sucursal}
           onChange={handleinput_change}
+          disabled={selected_id !== null && data_entidad.find((sucursal: { id_sucursal_empresa: number; }) => sucursal.id_sucursal_empresa === selected_id)?.item_ya_usado}
         />
       </Grid>
 
-      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} />
+
 
       <Grid item xs={12} sm={6}>
         <TextField
@@ -254,21 +271,34 @@ export const SucursalActuaizar: React.FC<Props> = ({ selected_id, siguiente_nume
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={12} sm={2}>
-        <Button variant="contained" color="primary" onClick={handleform_submit}>
-          {isediting  ? "Actualizar" : "Guardar"}
-        </Button>
 
-      </Grid>
-      <Grid item xs={12} sm={2}>
-        <Button variant="contained" color="secondary" onClick={handle_clear_fields}>
-          Borrar
-        </Button>
-      </Grid>
-      <Grid item xs={12} sm={2}>
-        <Button variant="contained" color="error" onClick={handle_exit}>
-          Salir
-        </Button>
+      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} />
+
+      <Grid  container marginTop={2} spacing={2} direction="row" justifyContent="flex-end" >
+        <Grid item xs={12} sm={1.4}>
+          {/* <Button startIcon={<SaveIcon />} variant="contained" fullWidth color="primary" onClick={handleform_submit}>
+            {isediting ? "Actualizar" : "Guardar"}
+          </Button> */}
+          <LoadingButton
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+            variant="contained"
+            fullWidth
+            color="primary"
+            onClick={handleform_submit}
+            loading={loading} // Set the loading prop
+          >
+            {isediting ? "Actualizar" : "Guardar"}
+          </LoadingButton>
+ 
+        </Grid>
+        <Grid item xs={12} sm={1.2}>
+          <Button startIcon={<CleanIcon />} fullWidth variant="contained" color="secondary"  onClick={handle_clear_fields}>
+            limpiar
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={1}>
+          <ButtonSalir/> 
+        </Grid>
       </Grid>
 
     </Grid>

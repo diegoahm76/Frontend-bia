@@ -33,6 +33,8 @@ import type { AxiosError } from 'axios';
 import { Title } from './Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
@@ -397,18 +399,20 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             <LoadingButton
               aria-label="toggle password visibility"
               variant="contained"
+              startIcon={<SearchIcon />}
               type="submit"
               style={{ marginRight: '10px' }}
               loading={is_search}
               disabled={is_search}
             >
               Buscar
-            </LoadingButton>{' '}
+            </LoadingButton>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
+              startIcon={<SearchIcon />}
               onClick={handle_click_open}
             >
               Búsqueda avanzada
@@ -509,6 +513,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                 >
@@ -551,7 +556,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handle_close}>Salir</Button>
+          <Button color='error' variant="outlined" startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
         </DialogActions>
       </Dialog>
     </>
