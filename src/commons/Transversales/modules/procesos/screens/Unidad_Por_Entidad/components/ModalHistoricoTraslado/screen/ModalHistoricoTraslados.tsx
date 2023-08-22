@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState, type FC, useEffect, useContext } from 'react';
-import { historicoTrasladosMasivosUxE } from '../columns/columnsHistoricoUxE';
+
 import {
   Button,
   Chip,
@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../../../../../components';
 import { getHistoricosTraslados } from '../services/modalHistoricos.service';
 import { ContextUnidadxEntidad } from '../../../context/ContextUnidadxEntidad';
+import { historicoTrasladosMasivosUxE } from '../columns/columnsHistoricoUxE';
 
 // ? types
 

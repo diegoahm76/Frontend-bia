@@ -5,14 +5,14 @@ import { OrganigramaScreen } from '../../../../gestorDocumental/organigrama/scre
 import { Unidad_A_Unidad } from '../screens/Unidad_A_Unidad/screen/Unidad_A_Unidad';
 import { ContextUnidadxEntidadProvider } from '../screens/Unidad_Por_Entidad/context/ContextUnidadxEntidad';
 import { type FC } from 'react';
-import { RoutesTrasladosUxE } from '../screens/Unidad_Por_Entidad/routes/UnidadxEntidadRoutes';
+import { U_X_E_Screen } from '../screens/Unidad_Por_Entidad/screen/sinValidaciones/U_X_E_Screen';
 
 const routes = [
   {
-    path: '/traslado_masivo_unidad_organizacional/*',
-    element: <RoutesTrasladosUxE />
+    path: '/traslado_masivo_unidad_organizacional/',
+    element: <U_X_E_Screen />
   },
-  { path: '/traslado_masivo_unidad_a_unidad/*', element: <Unidad_A_Unidad /> },
+  { path: '/traslado_masivo_unidad_a_unidad/', element: <Unidad_A_Unidad /> },
   { path: '/cambio_organigrama_actual', element: <OrganigramaScreen /> }
 ];
 

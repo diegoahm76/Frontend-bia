@@ -40,10 +40,13 @@ import { entrega_slice } from '../commons/almacen/gestionDeInventario/movimiento
 import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice';
 import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
 import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
+import { uni_a_uni_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice';
+import { u_x_e_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_Por_Entidad/toolkit/UxE_slice/UxE_slice';
 import { deposito_slice } from "../commons/gestorDocumental/deposito/store/slice/indexDeposito";
 import { uni_a_uni_slice } from "../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice";
 import { resolucion_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/ResolucionSlice';
 import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPagosSlice';
+
 
 const persist_config = {
   key: "macarenia_app",
@@ -101,6 +104,13 @@ const app_reducers = combineReducers({
   deposito: deposito_slice.reducer,
   // ! entrega de unidad a unidad
   uni_a_uni_slice: uni_a_uni_slice.reducer,
+
+  // ! traslados masivos unidad por entidad
+  u_x_e_slice: u_x_e_slice.reducer,
+  // ! traslados masivos unidad por entidad
+
+  entrega_otros: entrega_slice.reducer
+
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
