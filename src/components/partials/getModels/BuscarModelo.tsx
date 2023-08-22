@@ -259,7 +259,7 @@ const BuscarModelo = ({
     <Grid
       container
       direction="row"
-      spacing={border_show ?? true ? 2 : 0}
+      // spacing={border_show ?? true ? 2 : 0}
       border={border_show ?? true ? 1 : 0}
       borderColor="lightgray"
       padding={border_show ?? true ? 2 : 0}
@@ -322,25 +322,25 @@ const BuscarModelo = ({
             marginTop={2}
           >
             <Box sx={{ width: '80%' }}>
-            <Grid item xs={12} md={12} marginTop={-2}>
+              <Grid item xs={12} md={12} marginTop={-2}>
 
-              <Title title={title_list ?? ''}></Title>
-            </Grid>
-            <Grid item xs={12} md={12} marginTop={2}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={list ?? []}
-                columns={columns_list ?? []}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) =>
-                  row[row_list_id ?? uuid()] === null
-                    ? uuid()
-                    : row[row_list_id ?? uuid()]
-                }
-              /> 
+                <Title title={title_list ?? ''}></Title>
+              </Grid>
+              <Grid item xs={12} md={12} marginTop={2}>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={list ?? []}
+                  columns={columns_list ?? []}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) =>
+                    row[row_list_id ?? uuid()] === null
+                      ? uuid()
+                      : row[row_list_id ?? uuid()]
+                  }
+                />
               </Grid>
             </Box>
           </Grid>
