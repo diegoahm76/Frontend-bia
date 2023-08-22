@@ -196,6 +196,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       className="basic-single"
                       value={value}
                       onChange={(selectedOption) => {
+                        console.log(selectedOption);
                         setshowSecondPart(true);
                         dispatch(
                           setUnidadAnteriorCurrent(selectedOption.value)
