@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState } from 'react';
 
@@ -9,11 +10,11 @@ import { use_register } from '../../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../../../seguridad/request/Request';
 import { control_error } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
-import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
-import { BuscarPersonaNatural } from './BuscarPersonaNatural';
-import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
-import { BuscarPersonaJuridica } from './BuscarPersonaJuridica';
-import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
+// import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
+// import { BuscarPersonaNatural } from './BuscarPersonaNatural';
+// import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
+// import { BuscarPersonaJuridica } from './BuscarPersonaJuridica';
+// import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -70,7 +71,7 @@ export const AdminVentanilla: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Crear personas desde ventanilla" />
         </Grid>
-      </Grid>
+      {/* </Grid>
       <BuscadorPersona
         onResult={(data) => {
           void on_result(data);
@@ -160,6 +161,7 @@ export const AdminVentanilla: React.FC = () => {
             )}
           </>
         )}
+      </Grid> */}
       </Grid>
     </Box>
   );

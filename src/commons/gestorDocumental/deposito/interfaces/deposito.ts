@@ -2,7 +2,14 @@ export interface IDeposito {
   deposito: IObjDeposito[];
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
+  mode_estante: IMode;
 }
+export interface IMode {
+  ver: boolean;
+  editar: boolean;
+  crear: boolean;
+}
+
 
 export interface IObjDeposito {
   id_deposito?: number | null;
