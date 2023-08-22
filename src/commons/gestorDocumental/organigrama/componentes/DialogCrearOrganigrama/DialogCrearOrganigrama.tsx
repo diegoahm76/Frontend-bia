@@ -186,7 +186,16 @@ const DialogCrearOrganigrama = ({
                 label="Descripción"
                 variant="outlined"
                 value={value}
-                onChange={onChange}
+                inputProps={{
+                  maxLength: 255
+                }}
+                onChange={(e:any) => {
+                  if (e.target.value.length === 255)
+                    control_warning('máximo 255 caracteres');
+
+                  onChange(e.target.value);
+                  // console.log(e.target.value);
+                }}
                 error={!(error == null)}
                 helperText={
                   error != null

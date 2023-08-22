@@ -135,3 +135,15 @@ export const get_roles_garantia = async (): Promise<any> => {
   const data = await api.get(`recaudo/garantias/roles-garantias/`)
   return data
 }
+
+// Validar plan de pagos desde Pag. Usuario Interno
+export const get_validacion_plan_pagos = async (id: number): Promise<any> => {
+  const data = await api.get(`recaudo/planes-pagos/validacion/${id}/`)
+  return data
+}
+
+// Validar resolución desde Pag. Usuario Interno
+export const get_validacion_resolucion = async (id: number): Promise<any> => {
+  const data = await api.get(`recaudo/planes-pagos/validacion-resolucion/${id}/`)
+  return data
+}

@@ -515,7 +515,7 @@ export function AdministrarViveroScreen(): JSX.Element {
             style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
           >
             {download_xls({ nurseries, columns })}
-            {download_pdf({ nurseries, columns })}
+            {download_pdf({ nurseries, columns, title: 'Viveros' })}
           </ButtonGroup>
 
           <Grid item sx={{ marginTop: '20px' }}>

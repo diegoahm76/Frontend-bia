@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { control_error } from '../../../helpers';
 import { consultar_historico_restringido } from '../request/Request';
 import CancelIcon from '@mui/icons-material/Cancel';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 interface IProps {
   is_modal_active: boolean;
@@ -145,6 +146,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
+                  <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>
@@ -160,6 +162,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
             >
               <Button
                 variant="outlined"
+                color="error"
                 // eslint-disable-next-line react/jsx-no-undef
                 startIcon={<CancelIcon />}
                 onClick={() => {

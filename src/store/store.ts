@@ -1,22 +1,22 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import storage from 'redux-persist/lib/storage';
-import thunk from 'redux-thunk';
-import { persistReducer } from 'redux-persist';
-import { layout_slice } from './layoutSlice';
-import { auth_slice } from '../commons/auth/store/authSlice';
-import { seguridad_slice } from '../commons/seguridad/store/seguridadSlice';
-import { nursery_slice } from '../commons/conservacion/gestorVivero/store/slice/viveroSlice';
-import { material_vegetal_slice } from '../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice';
-import { configuracion_slice } from '../commons/conservacion/configuracion/store/slice/configuracionSlice';
-import { distribucion_slice } from '../commons/conservacion/distribucion/store/slice/distribucionSlice';
-import { produccion_slice } from '../commons/conservacion/produccion/store/slice/produccionSlice';
-import { bien_slice } from '../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes';
-import { cv_computo_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo';
-import { organigrama_slice } from '../commons/gestorDocumental/organigrama/store/slices/organigramSlice';
-import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice';
-import { series_slice } from '../commons/gestorDocumental/ccd/store/slices/seriesSlice';
-import { subseries_slice } from '../commons/gestorDocumental/ccd/store/slices/subseriesSlice';
-import { assignments_slice } from '../commons/gestorDocumental/ccd/store/slices/assignmentsSlice';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import thunk from "redux-thunk";
+import { persistReducer } from "redux-persist";
+import { layout_slice } from "./layoutSlice";
+import { auth_slice } from "../commons/auth/store/authSlice";
+import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
+import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
+import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
+import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
+import { distribucion_slice } from "../commons/conservacion/distribucion/store/slice/distribucionSlice";
+import { produccion_slice } from "../commons/conservacion/produccion/store/slice/produccionSlice";
+import { bien_slice } from "../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes";
+import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
+import { organigrama_slice } from "../commons/gestorDocumental/organigrama/store/slices/organigramSlice";
+import { ccd_slice } from "../commons/gestorDocumental/ccd/store/slices/ccdSlice";
+import { series_slice } from "../commons/gestorDocumental/ccd/store/slices/seriesSlice";
+import { subseries_slice } from "../commons/gestorDocumental/ccd/store/slices/subseriesSlice";
+import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/assignmentsSlice";
 import {
   marcas_slice,
   porcentajes_slice,
@@ -24,10 +24,10 @@ import {
 } from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
 import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
 import { despacho_slice } from '../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho';
-import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
-import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
-import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
-import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
+import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos";
+import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
+import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
+import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
 import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
 import { facilidades_slice } from '../commons/recaudo/facilidadPago/slices/FacilidadesSlice';
 import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/SolicitudSlice';
@@ -40,11 +40,15 @@ import { entrega_slice } from '../commons/almacen/gestionDeInventario/movimiento
 import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice';
 import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
 import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
+import { deposito_slice } from "../commons/gestorDocumental/deposito/store/slice/indexDeposito";
+import { uni_a_uni_slice } from "../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice";
+import { resolucion_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/ResolucionSlice';
+import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPagosSlice';
 
 const persist_config = {
-  key: 'macarenia_app',
+  key: "macarenia_app",
   storage,
-  whitelist: ['auth', 'layout']
+  whitelist: ["auth", "layout"],
 };
 
 const app_reducers = combineReducers({
@@ -75,6 +79,8 @@ const app_reducers = combineReducers({
   deudores: deudores_slice.reducer,
   facilidades: facilidades_slice.reducer,
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
+  resolucion_facilidad: resolucion_facilidad_slice.reducer,
+  plan_pagos: plan_pagos_slice.reducer,
   solicitud_vivero: solicitud_vivero_slice.reducer,
   reportes_recaudo: reportes_recaudo_slice.reducer,
   slice_series_and_subseries: seriesAndSubseriesSlice.reducer,
@@ -91,14 +97,17 @@ const app_reducers = combineReducers({
   // * recurso hidrico slices open
   instrumentos_slice: instrumentos_slice.reducer,
   // * recurso hidrico slices close
-  entrega_otros: entrega_slice.reducer
+  entrega_otros: entrega_slice.reducer,
+  deposito: deposito_slice.reducer,
+  // ! entrega de unidad a unidad
+  uni_a_uni_slice: uni_a_uni_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
 
 export const store = configureStore({
   middleware: [thunk],
-  reducer: persist_reducer
+  reducer: persist_reducer,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

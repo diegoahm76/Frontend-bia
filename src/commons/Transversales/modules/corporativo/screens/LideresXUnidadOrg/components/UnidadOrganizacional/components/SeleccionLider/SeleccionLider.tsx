@@ -492,9 +492,6 @@ export const SeleccionLider = (): JSX.Element => {
                       <SaveIcon />
                     )
                   }
-                  onClick={() => {
-                    console.log('GUARDANDO LÍDER...');
-                  }}
                 >
                   {asignacion_lideres_current?.observaciones_asignacion
                     ? 'ACTUALIZAR LÍDER'

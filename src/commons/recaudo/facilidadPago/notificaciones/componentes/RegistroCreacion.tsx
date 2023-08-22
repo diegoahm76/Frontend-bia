@@ -342,7 +342,7 @@ export const Fisico: React.FC = () => {
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='documento_asociaoo'
+                      name='doc_asociado'
                       onChange={handle_file_selected}
                     />
                 </Button>

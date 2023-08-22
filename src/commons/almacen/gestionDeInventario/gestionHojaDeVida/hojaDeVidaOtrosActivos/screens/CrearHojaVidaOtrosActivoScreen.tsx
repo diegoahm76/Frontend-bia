@@ -70,8 +70,6 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
 
     useEffect(() => {
         reset_other(current_cv_other);
-        console.log(current_cv_other)
-        void dispatch(get_maintenance_other(current_cv_other.id_articulo ?? 0))
     }, [current_cv_other]);
 
     return (

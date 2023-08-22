@@ -12,6 +12,7 @@ import { ConfiguracionEntidad } from '../../seguridad/components/ConfiguracionEn
 import { CorporativoRoutes } from '../modules/corporativo/routes/CorporativoRoutes';
 import { PantallaPrincipalAlertas } from '../modules/Alertas/screens/pantallaPrincipal';
 import { ModalProviderLideres } from '../modules/corporativo/screens/LideresXUnidadOrg/context/ModalContextLideres';
+import { Sucursal } from '../../seguridad/components/SucursalEntidad/Sucursal';
 
 const routes = [
   {
@@ -21,11 +22,14 @@ const routes = [
   { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
   { path: '/configuracion_entidad', element: <ConfiguracionEntidad /> },
-  { path: '/bandeja_alertas', element: <PantallaPrincipalAlertas /> }
+  { path: '/bandeja_alertas', element: <PantallaPrincipalAlertas /> },
+  { path: '/sucursal_entidad', element: <Sucursal /> },
+
 ];
 export const TransversalRoutes: React.FC = () => {
   return (
     <ModalProviderLideres>
+      
       <Routes>
         {routes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element} />
