@@ -259,7 +259,7 @@ const BuscarModelo = ({
     <Grid
       container
       direction="row"
-      // spacing={border_show ?? true ? 2 : 0}
+      spacing={border_show ?? true ? 2 : 0}
       border={border_show ?? true ? 1 : 0}
       borderColor="lightgray"
       padding={border_show ?? true ? 2 : 0}
