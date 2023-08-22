@@ -12,6 +12,7 @@ import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { consultarTablaTemporal } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
+import { setControlModeTrasladoUnidadXEntidad } from '../../toolkit/UxE_slice/UxE_slice';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ProcesoARealizar: FC = (): JSX.Element => {
@@ -31,6 +32,10 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     console.log('use_u_x_entidad');
     void consultarTablaTemporal(setloadingConsultaT026).then((res: any) => {
       console.log(res);
+
+      dispatch(setControlModeTrasladoUnidadXEntidad('mode_doble'))
+
+
 
       //* en esta operacion consulto la tabla temporal para saber si hay datos en ella y dispongo las opereaciones que se deben hacer para la aplicacion
 
