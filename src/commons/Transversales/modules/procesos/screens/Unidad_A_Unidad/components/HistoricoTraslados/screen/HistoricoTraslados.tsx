@@ -60,6 +60,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
         console.log(res);
       });
     }
+
     return () => {
       setDataHistorico([]);
     };
@@ -69,7 +70,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
     <>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
         open={modalHistoricoTraslados}
         onClose={closeModalHistoricoTraslados}
       >
@@ -80,22 +81,21 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
         <DialogContent
           sx={{
             mb: '0px',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            zIndex: 999999,
           }}
         >
-         
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={dataHistorico || []}
-              columns={columnsTraslados || []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => uuidv4()}
-            />
-        
+          <DataGrid
+            sx={{ mt: '15px' }}
+            density="compact"
+            autoHeight
+            rows={dataHistorico || []}
+            columns={columnsTraslados || []}
+            pageSize={5}
+            rowsPerPageOptions={[7]}
+            experimentalFeatures={{ newEditingApi: true }}
+            getRowId={(row) => uuidv4()}
+          />
         </DialogContent>
         <Divider />
         <DialogActions>

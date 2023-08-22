@@ -10,7 +10,6 @@ import {
   IconButton,
   MenuItem,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -65,52 +64,80 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_info_prueba_bombeo(params.row));
-                dispatch(
-                  set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
-                );
-                dispatch(
-                  set_current_mode_bombeo({
-                    ver: true,
-                    crear: false,
-                    editar: false,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
-                  replace: true,
-                });
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_prueba_bombeo(params.row));
+              dispatch(
+                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
+              );
+              dispatch(
+                set_current_mode_bombeo({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                replace: true,
+              });
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar prueba de bombeo">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
-                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
-                  replace: true,
-                });
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar prueba de bombeo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_prueba_bombeo(params.row));
+              set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
+              dispatch(
+                set_current_mode_bombeo({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+                replace: true,
+              });
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar prueba de bombeo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -134,54 +161,83 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
-                dispatch(
-                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
-                );
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: true,
-                    crear: false,
-                    editar: false,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
-                  replace: true,
-                });
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_cartera(params.row));
+              dispatch(
+                set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+              );
+              dispatch(
+                set_current_mode_cartera({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+                replace: true,
+              });
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar cartera de aforo">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
-                dispatch(
-                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
-                );
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
-                  replace: true,
-                });
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar cartera de aforo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_cartera(params.row));
+              dispatch(
+                set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+              );
+              dispatch(
+                set_current_mode_cartera({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+                replace: true,
+              });
+            }}
+          >
+            {' '}
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar cartera de aforo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -205,64 +261,92 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_info_laboratorio(params.row));
-                dispatch(
-                  set_currente_id_resultado_laboratorio(
-                    params.row.id_resultado_laboratorio
-                  )
-                );
-                dispatch(
-                  set_current_mode({
-                    ver: true,
-                    crear: false,
-                    editar: false,
-                  })
-                );
-                navigate(
-                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
-                  {
-                    replace: true,
-                  }
-                );
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_laboratorio(params.row));
+              dispatch(
+                set_currente_id_resultado_laboratorio(
+                  params.row.id_resultado_laboratorio
+                )
+              );
+              dispatch(
+                set_current_mode({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              navigate(
+                '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                {
+                  replace: true,
+                }
+              );
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar Registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_info_laboratorio(params.row));
-                dispatch(
-                  set_currente_id_resultado_laboratorio(
-                    params.row.id_resultado_laboratorio
-                  )
-                );
-                dispatch(
-                  set_current_mode({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate(
-                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
-                  {
-                    replace: true,
-                  }
-                );
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar resultado de laboratorio"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_laboratorio(params.row));
+              dispatch(
+                set_currente_id_resultado_laboratorio(
+                  params.row.id_resultado_laboratorio
+                )
+              );
+              dispatch(
+                set_current_mode({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              navigate(
+                '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                {
+                  replace: true,
+                }
+              );
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar resultado de laboratorio"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },

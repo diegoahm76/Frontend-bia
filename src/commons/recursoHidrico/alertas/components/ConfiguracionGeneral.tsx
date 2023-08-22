@@ -47,7 +47,7 @@ export const ConfiguracionGeneral: FC<any> = ({ title }: any): JSX.Element => {
       >
         <Grid container sx={containerStyles}>
           <Grid item xs={12}>
-            <Title title={title} />
+            <Title title='Configuración de alerta' />
             {/*  <Box sx={{ mt: '20px', mb: '20px' }}> */}
             {/* select alertas  */}
             <Grid

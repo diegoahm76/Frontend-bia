@@ -126,7 +126,7 @@ export const get_data_resulatado_laboratorio_id = async (
 ): Promise<Laboratorio[]> => {
   const response: AxiosResponse<ResponseServer<Laboratorio[]>> =
     await api.get<ResponseServer<Laboratorio[]>>(
-      `hidrico/bibliotecas/dato_registro_laboratorio/get-by-resultado/${id_dato_registro_laboratorio}/?tipo=${parametro}`
+      `hidrico/bibliotecas/dato_registro_laboratorio/get-by-resultado/${id_dato_registro_laboratorio}/${parametro}/`
     );
   return response.data.data;
 };
@@ -176,11 +176,11 @@ export const get_data_sesion_bombeo_general = async (
   return response.data.data;
 };
 export const get_data_sesion_bombeo = async (
-  id_dato_sesion_prueba_bombeo: number,
+  id_sesion_prueba_bombeo: number,
 ): Promise<DatoSesionBombeo[]> => {
   const response: AxiosResponse<ResponseServer<DatoSesionBombeo[]>> =
     await api.get<ResponseServer<DatoSesionBombeo[]>>(
-      `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/get-by-id/${id_dato_sesion_prueba_bombeo}/`
+      `hidrico/bibliotecas/datos_sesiones_prueba_bombeo/get-by-sesion/${id_sesion_prueba_bombeo}/`
     );
   return response.data.data;
 };

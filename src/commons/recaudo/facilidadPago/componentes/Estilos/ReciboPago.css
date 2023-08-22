@@ -1,0 +1,155 @@
+.recibo {
+  width: 600px;
+  border: solid 1px black;
+}
+
+.recibo__titulo {
+  background-color: #b3b3b3;
+  text-align: center;
+  padding: 5px;
+  border: solid 1px black;
+}
+
+.recibo__encabezado {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  border: solid 1px black;
+}
+
+.recibo__ley {
+  background-color: #b3b3b3;
+  text-align: center;
+  padding: 5px;
+  border: solid 1px black;
+}
+
+.recibo__descripcion {
+  padding: 5px;
+  border: solid 1px black;
+  background-color: white;
+}
+
+.descripcionRecibo, .empresaRecibo {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.empresaRecibo--space {
+  margin-top: 0;
+  margin-bottom: 3em;
+}
+
+.encabezadoRecibo__logo {
+  width: 15%;
+}
+
+.encabezadoRecibo__empresa {
+  width: 50%;
+  text-align: center;
+}
+
+.encabezadoRecibo__pago {
+  width: 35%;
+  background-color: #b3b3b3;
+  padding: 5px;
+}
+
+.pagoRecibo__referencia {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5em;
+}
+
+.referenciaRecibo__titulo {
+  width: 50%;
+}
+
+.referenciaRecibo__info {
+  width: 50%;
+  background-color: white;
+  text-align: center;
+}
+
+.pagoRecibo__fecha--titulo {
+  text-align: center;
+  margin-top: 1.5em;
+}
+
+.pagoRecibo__fecha--info {
+  text-align: center;
+  background-color: white;
+}
+
+.recibo__datos {
+  border: solid 1px black;
+  padding: 0 0 0 5px;
+  background-color: white;
+}
+
+.datosRecibo {
+  display: flex;
+  flex-direction: row;
+}
+
+.datosRecibo__titulo {
+  width: 20%;
+  border-right: solid 1px black;
+}
+
+.datosRecibo__info {
+  width: 80%;
+  border-bottom: solid 1px black;
+  padding-left: 5px;
+}
+
+.datosRecibo__info--ultimo {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+}
+
+.datosRecibo__info--fila {
+  width: 40%;
+  padding-left: 5px;
+}
+
+.datosRecibo__info--fila2 {
+  width: 20%;
+  border-left: solid 1px black;
+  border-right: solid 1px black;
+  padding-left: 5px;
+}
+
+.recibo__codigo {
+  padding: 5px;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  border: solid 1px black;
+}
+
+.fechaRecibo-impresion {
+  color: gray;
+  font-size: small;
+  font-weight: 600;
+}
+
+.codigoRecibo__fecha {
+  width: 40%;
+  padding-top: 4em;
+}
+
+.codigoRecibo__barras {
+  width: 60%;
+}
+
+.codigoRecibo__imagen {
+  width: 30%;
+}
+
+@media (min-width:1440px){
+  .recibo {
+    width: 1000px;
+  }
+}

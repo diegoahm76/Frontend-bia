@@ -6,10 +6,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {
+  Avatar,
   Box,
   Button,
   Divider,
   Grid,
+  IconButton,
   MenuItem,
   Stack,
   TextField,
@@ -42,6 +44,11 @@ import dayjs from 'dayjs';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import Select from 'react-select';
 import { ButtonInstrumentos } from '../ButtonInstrumentos';
+import {
+  delete_dato_sesion_prueba_bombeo,
+  delete_sesion_prueba_bombeo,
+} from '../../request/request';
+import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarPruebaBombeo: React.FC = () => {
@@ -102,18 +109,45 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
-                set_info_sesion_bombeo(params.row);
+          <IconButton
+            size="small"
+            onClick={() => {
+              set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
+              set_info_sesion_bombeo(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar Sección"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <ButtonDelete
+            id={params.row.id_sesion_prueba_bombeo}
+            confirmationMessage="¿Estás seguro de eliminar esta sesión?"
+            successMessage="La sesión se eliminó correctamente"
+            deleteFunction={async () =>
+              await delete_sesion_prueba_bombeo(
+                params.row.id_sesion_prueba_bombeo
+              )
+            }
+            fetchDataFunction={async () => {
+              await fetch_data_general_sesion();
+            }}
+          />
         </>
       ),
     },
@@ -155,17 +189,44 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                set_info_data_sesion_bombeo(params.row);
+          <IconButton
+            size="small"
+            onClick={() => {
+              set_info_data_sesion_bombeo(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar dato sección"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <ButtonDelete
+            id={params.row.id_dato_sesion_prueba_bombeo}
+            confirmationMessage="¿Estás seguro de eliminar este dato?"
+            successMessage="El dato se eliminó correctamente"
+            deleteFunction={async () =>
+              await delete_dato_sesion_prueba_bombeo(
+                params.row.id_dato_sesion_prueba_bombeo
+              )
+            }
+            fetchDataFunction={async () => {
+              await fetch_data_sesion();
+            }}
+          />
         </>
       ),
     },
@@ -209,6 +270,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
     control_bombeo,
     reset_bombeo,
     setValue_bombeo,
+    data_watch_bombeo,
 
     // *onSubmit_archivos
     onSubmit_archivos,
@@ -268,10 +330,10 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       cod_tipo_sesion: info_sesion_bombeo?.cod_tipo_sesion as any,
 
       // * data prueba de bombeo por sesión
-      tiempo_transcurrido: info_data_sesion_bombeo?.tiempo_transcurrido,
-      nivel: info_data_sesion_bombeo?.nivel,
-      resultado: info_data_sesion_bombeo?.resultado,
-      caudal: info_data_sesion_bombeo?.caudal,
+      tiempo_transcurrido_select: info_data_sesion_bombeo?.tiempo_transcurrido,
+      nivel_select: info_data_sesion_bombeo?.nivel,
+      resultado_select: info_data_sesion_bombeo?.resultado,
+      caudal_select: info_data_sesion_bombeo?.caudal,
     });
     set_fecha_prubea_bombeo(
       dayjs(info_prueba_bombeo.fecha_prueba_bombeo) ?? null
@@ -280,8 +342,11 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       'fecha_prueba_bombeo',
       dayjs(info_prueba_bombeo.fecha_prueba_bombeo)?.format('YYYY-MM-DD') ?? ''
     );
-    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
-    setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
+    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio));
+    setValue_bombeo(
+      'hora_inicio',
+      dayjs(info_sesion_bombeo?.fecha_inicio).format('HH:mm:ss') ?? ''
+    );
   }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
@@ -677,23 +742,11 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   />
                 </>
               </Grid>
-            </>
-          )}
-          {info_data_sesion_bombeo ? (
-            <>
-              <Grid item xs={12}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  Registro de medición
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="tiempo_transcurrido"
                   control={control_bombeo}
-                  rules={{ required: true }}
+                  rules={{ required: row_prueba.length === 0 }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
@@ -704,9 +757,13 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                       size="small"
                       margin="dense"
                       type="number"
-                      disabled={true}
+                      disabled={
+                        row_prueba.length === 0 ||
+                        !data_watch_bombeo.hora_inicio ||
+                        !data_watch_bombeo.cod_tipo_sesion
+                      }
                       fullWidth
-                      required={true}
+                      required={row_prueba.length === 0}
                       onChange={onChange}
                       error={!!errors_bombeo.tiempo_transcurrido}
                       helperText={
@@ -723,16 +780,19 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   name="nivel"
                   control={control_bombeo}
                   defaultValue=""
-                  rules={{ required: true }}
+                  rules={{ required: row_prueba.length === 0 }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       label="Nivel (m)"
                       size="small"
                       margin="dense"
-                      disabled={true}
+                      disabled={
+                        !data_watch_bombeo.hora_inicio ||
+                        !data_watch_bombeo.cod_tipo_sesion
+                      }
                       fullWidth
-                      required={true}
+                      required={row_prueba.length === 0}
                       error={!!errors_bombeo.nivel}
                       helperText={
                         errors_bombeo.nivel
@@ -748,16 +808,19 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   name="resultado"
                   control={control_bombeo}
                   defaultValue=""
-                  rules={{ required: true }}
+                  rules={{ required: row_prueba.length === 0 }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       label="Abatimiento / Recuperación (m)"
                       size="small"
                       margin="dense"
-                      disabled={true}
+                      disabled={
+                        !data_watch_bombeo.hora_inicio ||
+                        !data_watch_bombeo.cod_tipo_sesion
+                      }
                       fullWidth
-                      required={true}
+                      required={row_prueba.length === 0}
                       error={!!errors_bombeo.resultado}
                       helperText={
                         errors_bombeo.resultado
@@ -773,16 +836,19 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   name="caudal"
                   control={control_bombeo}
                   defaultValue=""
-                  rules={{ required: true }}
+                  rules={{ required: row_prueba.length === 0 }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       label="Caudal (l/s)"
                       size="small"
                       margin="dense"
-                      disabled={true}
+                      disabled={
+                        !data_watch_bombeo.hora_inicio ||
+                        !data_watch_bombeo.cod_tipo_sesion
+                      }
                       fullWidth
-                      required={true}
+                      required={row_prueba.length === 0}
                       error={!!errors_bombeo.caudal}
                       helperText={
                         errors_bombeo.caudal
@@ -803,13 +869,134 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   <Button
                     variant="outlined"
                     color="primary"
-                    disabled={true}
                     onClick={handle_agregar}
+                    disabled={
+                      !data_watch_bombeo?.tiempo_transcurrido ||
+                      !data_watch_bombeo?.nivel ||
+                      !data_watch_bombeo?.resultado ||
+                      !data_watch_bombeo?.caudal
+                    }
                   >
                     Agregar
                   </Button>
                 </Stack>
               </Box>
+            </>
+          )}
+          {info_data_sesion_bombeo ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Registro de medición
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="tiempo_transcurrido_select"
+                  control={control_bombeo}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      value={value}
+                      label="Tiempo transcurrido (min)"
+                      size="small"
+                      margin="dense"
+                      type="number"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      onChange={onChange}
+                      error={!!errors_bombeo.tiempo_transcurrido_select}
+                      helperText={
+                        errors_bombeo.tiempo_transcurrido_select
+                          ? 'Es obligatorio ingresar el tiempo transcurrido'
+                          : 'Ingrese el tiempo transcurrido'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nivel_select"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Nivel (m)"
+                      size="small"
+                      margin="dense"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.nivel_select}
+                      helperText={
+                        errors_bombeo.nivel_select
+                          ? 'Es obligatorio ingresar el nivel'
+                          : 'Ingrese el nivel'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="resultado_select"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Abatimiento / Recuperación (m)"
+                      size="small"
+                      margin="dense"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.resultado_select}
+                      helperText={
+                        errors_bombeo.resultado_select
+                          ? 'Es obligatorio ingresar el abatimiento / recuperación'
+                          : 'Ingrese el abatimiento / recuperación'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="caudal_select"
+                  control={control_bombeo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Caudal (l/s)"
+                      size="small"
+                      margin="dense"
+                      disabled={true}
+                      fullWidth
+                      required={true}
+                      error={!!errors_bombeo.caudal_select}
+                      helperText={
+                        errors_bombeo.caudal_select
+                          ? 'Es obligatorio ingresar el caudal'
+                          : 'Ingrese el caudal'
+                      }
+                    />
+                  )}
+                />
+              </Grid>{' '}
             </>
           ) : null}
           {row_prueba.length > 0 && (

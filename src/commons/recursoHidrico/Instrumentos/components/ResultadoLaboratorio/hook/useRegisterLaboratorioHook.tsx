@@ -571,6 +571,7 @@ export const use_register_laboratorio_hook = () => {
       );
       await fetch_data_resultado_laboratorio();
       await fetch_data_anexos_laboratorio(id_resultado_laboratorio_slice);
+      set_rows_laboratorio([]);
       set_nombres_archivos([]);
       set_archivos([]);
     } catch (error: any) {

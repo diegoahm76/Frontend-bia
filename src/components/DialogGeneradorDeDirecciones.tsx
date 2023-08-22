@@ -463,11 +463,12 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                 <Button
                   type="submit"
                   variant="contained"
+                  color="success"
                   fullWidth
                   startIcon={<SaveIcon />}
                 >
-                  ACEPTAR
-                </Button>
+                  Guardar
+                </Button>                                
               </Grid>
             </Grid>
           {/* </DialogActions> */}

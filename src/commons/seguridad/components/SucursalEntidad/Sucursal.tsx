@@ -7,25 +7,10 @@ import { api } from '../../../../api/axios';
 import { SucursalActuaizar } from './SucursalActuaizar';
 import Swal from 'sweetalert2';
 import { SucursalEntidad } from './SucursalEntidad';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { ISucursalEmpresa } from './utils/interfac';
 
-export interface ISucursalEmpresa {
-  id_sucursal_empresa: number;
-  numero_sucursal: number;
-  descripcion_sucursal: string;
-  direccion: string;
-  direccion_sucursal_georeferenciada: string | null;
-  municipio: string | null;
-  pais_sucursal_exterior: string | null;
-  direccion_notificacion: string;
-  direccion_notificacion_referencia: string | null;
-  municipio_notificacion: string | null;
-  email_sucursal: string;
-  telefono_sucursal: string;
-  es_principal: boolean;
-  activo: boolean;
-  item_ya_usado: boolean;
-  id_persona_empresa: number;
-}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Sucursal: FC = () => {
   const initial_data: ISucursalEmpresa[] = [];
@@ -53,7 +38,7 @@ export const Sucursal: FC = () => {
       fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 200);
+    }, 4000);
 
     return () => { clearInterval(interval) };
   }, []);
@@ -110,9 +95,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       customClass: {
         container: 'my-swal',
       },
-    }).then((result) => {
+    }).then(  (result) => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
+        // await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
           })
@@ -137,8 +123,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
     { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
     { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
-    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1 },
-    { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
+    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1,  renderCell: (params: any) => (
+      <>{params.value === true ? "Sí" : "No"}</>
+    ), },
+    // { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
 
     {
       field: "accion",
@@ -172,7 +160,8 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
 
  // eslint-disable-next-line @typescript-eslint/naming-convention
   const esPrincipalExists = data_entidad.some((sucursal) => sucursal.es_principal);
-
+  
+   
   return (
     <>
       <Grid
@@ -191,7 +180,6 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       >
         {/* sucursal entidad */}
         <SucursalEntidad />
-         <SucursalActuaizar selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
         <Grid item xs={12}>
           <DataGrid  
             density="compact"
@@ -202,7 +190,8 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_sucursal_empresa}
           />
-        </Grid>
+        </Grid> 
+         <SucursalActuaizar fetchand_update_data={fetchand_update_data} sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
       </Grid>
     </>
   );
