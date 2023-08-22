@@ -48,55 +48,59 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 export const AgregarBombeo: React.FC = () => {
   const columns_prueba: GridColDef[] = [
     ...colums_bombeo,
-    // {
-    //   field: 'ACCIONES',
-    //   headerName: 'ACCIONES',
-    //   width: 120,
-    //   renderCell: (params) => (
-    //     <>
-    //       <IconButton onClick={() => {}}>
-    //         <Avatar
-    //           sx={{
-    //             width: 24,
-    //             height: 24,
-    //             background: '#fff',
-    //             border: '2px solid',
-    //           }}
-    //           variant="rounded"
-    //         >
-    //           <EditIcon
-    //             titleAccess="Editar"
-    //             sx={{
-    //               color: 'primary.main',
-    //               width: '18px',
-    //               height: '18px',
-    //             }}
-    //           />
-    //         </Avatar>
-    //       </IconButton>
-    //       <IconButton onClick={() => {}}>
-    //         <Avatar
-    //           sx={{
-    //             width: 24,
-    //             height: 24,
-    //             background: '#fff',
-    //             border: '2px solid',
-    //           }}
-    //           variant="rounded"
-    //         >
-    //           <DeleteIcon
-    //             titleAccess="Eliiminar"
-    //             sx={{
-    //               color: 'red',
-    //               width: '18px',
-    //               height: '18px',
-    //             }}
-    //           />
-    //         </Avatar>
-    //       </IconButton>
-    //     </>
-    //   ),
-    // },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            onClick={() => {
+              handleEdit(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton onClick={() => {handle_eliminar(params.row.id)}}>
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <DeleteIcon
+                titleAccess="Eliminar"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
   ];
   const columns_sesion: GridColDef[] = [
     {
@@ -167,6 +171,8 @@ export const AgregarBombeo: React.FC = () => {
     handle_agregar,
     handle_date_change,
     handle_time_change,
+    handleEdit,
+    handle_eliminar,
 
     // * use form
     register_bombeo,
