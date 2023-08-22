@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -32,6 +33,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import use_ccd from '../../hooks/useCCD';
 import { LoadingButton } from '@mui/lab';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import DoNotTouchIcon from '@mui/icons-material/DoNotTouch';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -110,39 +112,77 @@ const SearchCcdModal = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          <IconButton
-            onClick={() => {
-              // console.log('params para ver ccd en el icono del ojito', params);
-              void dispatch(
-                get_classification_ccds_service(
-                  activateLoadingButtonBusquedaCCD,
-                  desactivateLoadingButtonBusquedaCCD,
-                  params.row.nombre,
-                  params.row.version,
-                  params.row.id_ccd
-                )
-              );
-              openModalBusquedaCreacionCCD();
-              // dispatch(get_assignments_service(params.row.id_ccd));
-              // console.log('params para ver ccd en el icono del ojito', params);
-              // dispatch(get_ccd_current(params.row.id_ccd));
-              set_is_modal_active(false);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
+          {!params?.row?.usado || params?.row?.actual  ? (
+            <IconButton
+              onClick={() => {
+                // console.log('params para ver ccd en el icono del ojito', params);
+                void dispatch(
+                  get_classification_ccds_service(
+                    activateLoadingButtonBusquedaCCD,
+                    desactivateLoadingButtonBusquedaCCD,
+                    params.row.nombre,
+                    params.row.version,
+                    params.row.id_ccd
+                  )
+                );
+                openModalBusquedaCreacionCCD();
+                // dispatch(get_assignments_service(params.row.id_ccd));
+                // console.log('params para ver ccd en el icono del ojito', params);
+                // dispatch(get_ccd_current(params.row.id_ccd));
+                set_is_modal_active(false);
               }}
-              variant="rounded"
             >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid'
+                }}
+                variant="rounded"
+              >
+                <VisibilityIcon
+                  titleAccess="Ver CCD"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={() => {
+                // console.log('params para ver ccd en el icono del ojito', params);
+                void dispatch(
+                  get_classification_ccds_service(
+                    activateLoadingButtonBusquedaCCD,
+                    desactivateLoadingButtonBusquedaCCD,
+                    params.row.nombre,
+                    params.row.version,
+                    params.row.id_ccd
+                  )
+                );
+                openModalBusquedaCreacionCCD();
+                // dispatch(get_assignments_service(params.row.id_ccd));
+                // console.log('params para ver ccd en el icono del ojito', params);
+                // dispatch(get_ccd_current(params.row.id_ccd));
+                set_is_modal_active(false);
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid'
+                }}
+                variant="rounded"
+              >
+                <DoNotTouchIcon
+                  titleAccess="Solo se puede observar este CCD porque ya está siendo usado"
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          )}
         </>
       )
     }
