@@ -6,6 +6,10 @@ import { Title } from '../../../../../../../../components';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { ModalHistoricoTraslados } from '../ModalHistoricoTraslado/screen/ModalHistoricoTraslados';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloseIcon from '@mui/icons-material/Close';
+import ForwardIcon from '@mui/icons-material/Forward';
+import { Link } from 'react-router-dom';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* elements from context
@@ -23,43 +27,40 @@ export const CleanData: FC<any> = (): JSX.Element => {
               console.log('hello from submit');
             }}
             style={{
+              textAlign: 'center',
+              justifyContent: 'center',
               marginTop: '20px'
             }}
           >
-            <Grid container spacing={2}>
+            <Grid
+              container
+              sx={{
+                justifyContent: 'center'
+              }}
+              spacing={2}
+            >
               <Grid
                 item
                 xs={12}
-                sm={8}
+                sm={12}
                 sx={{
-                  zIndex: 2
+                  zIndex: 2,
+                  justifyContent: 'center'
                 }}
               >
                 <Stack
                   direction="row"
-                  justifyContent="flex-start"
+                  justifyContent="center"
                   spacing={2}
                   sx={{ m: '20px 0' }}
                 >
                   <Button
-                    color="primary"
-                    variant="outlined"
-                    startIcon={<CleanIcon />}
-                    onClick={() => {
-                      // eslint-disable-next-line no-console
-                      console.log('cleaning fields');
-                    }}
-                  >
-                    REINICIAR CAMPOS
-                  </Button>
-
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    startIcon={<CleanIcon />}
+                    color="warning"
+                    variant="contained"
+                    startIcon={<VisibilityIcon />}
                     onClick={handleModalHistoricos}
                   >
-                    VER HISTÓRICO DE TRASLADOS MASIVOS
+                    HISTÓRICO TRASLADOS MASIVOS
                   </Button>
 
                   <Button
@@ -67,12 +68,39 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     variant="outlined"
                     startIcon={<CleanIcon />}
                     onClick={() => {
-                      // eslint-disable-next-line no-console
                       console.log('cleaning fields');
                     }}
                   >
                     REINICIAR CAMPOS
                   </Button>
+
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    // DEBE HABILITARSE LA CONDICIONAL DE GUARDAR O PROCEDER DEPENDIENDO EL ESCENARIO (MODE)
+                    startIcon={<ForwardIcon />}
+                    onClick={() => {
+                      console.log('cleaning fields');
+                    }}
+                  >
+                    {/* guardar en la primera opción, proceder en la segunda opción */}
+                    GUARDAR / PROCEDER
+                  </Button>
+
+                  <Link
+                    to="/app/home"
+                    onClick={() => {
+                      console.log('closing module');
+                    }}
+                  >
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      startIcon={<CloseIcon />}
+                    >
+                      SALIR DEL MÓDULO
+                    </Button>
+                  </Link>
                 </Stack>
               </Grid>
             </Grid>
