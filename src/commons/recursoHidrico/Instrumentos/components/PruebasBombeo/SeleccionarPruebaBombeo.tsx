@@ -6,10 +6,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {
+  Avatar,
   Box,
   Button,
   Divider,
   Grid,
+  IconButton,
   MenuItem,
   Stack,
   TextField,
@@ -42,6 +44,11 @@ import dayjs from 'dayjs';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import Select from 'react-select';
 import { ButtonInstrumentos } from '../ButtonInstrumentos';
+import {
+  delete_dato_sesion_prueba_bombeo,
+  delete_sesion_prueba_bombeo,
+} from '../../request/request';
+import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarPruebaBombeo: React.FC = () => {
@@ -102,18 +109,45 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
-                set_info_sesion_bombeo(params.row);
+          <IconButton
+            size="small"
+            onClick={() => {
+              set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
+              set_info_sesion_bombeo(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar Sección"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <ButtonDelete
+            id={params.row.id_sesion_prueba_bombeo}
+            confirmationMessage="¿Estás seguro de eliminar esta sesión?"
+            successMessage="La sesión se eliminó correctamente"
+            deleteFunction={async () =>
+              await delete_sesion_prueba_bombeo(
+                params.row.id_sesion_prueba_bombeo
+              )
+            }
+            fetchDataFunction={async () => {
+              await fetch_data_general_sesion();
+            }}
+          />
         </>
       ),
     },
@@ -155,17 +189,44 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       width: 80,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                set_info_data_sesion_bombeo(params.row);
+          <IconButton
+            size="small"
+            onClick={() => {
+              set_info_data_sesion_bombeo(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar dato sección"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <ButtonDelete
+            id={params.row.id_dato_sesion_prueba_bombeo}
+            confirmationMessage="¿Estás seguro de eliminar este dato?"
+            successMessage="El dato se eliminó correctamente"
+            deleteFunction={async () =>
+              await delete_dato_sesion_prueba_bombeo(
+                params.row.id_dato_sesion_prueba_bombeo
+              )
+            }
+            fetchDataFunction={async () => {
+              await fetch_data_sesion();
+            }}
+          />
         </>
       ),
     },
@@ -280,8 +341,11 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
       'fecha_prueba_bombeo',
       dayjs(info_prueba_bombeo.fecha_prueba_bombeo)?.format('YYYY-MM-DD') ?? ''
     );
-    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio, 'HH:mm:ss'));
-    setValue_bombeo('hora_inicio', info_sesion_bombeo?.fecha_inicio ?? '');
+    setHoraPruebaBombeo(dayjs(info_sesion_bombeo?.fecha_inicio));
+    setValue_bombeo(
+      'hora_inicio',
+      dayjs(info_sesion_bombeo?.fecha_inicio).format('HH:mm:ss') ?? ''
+    );
   }, [info_prueba_bombeo, info_sesion_bombeo, info_data_sesion_bombeo]);
 
   useEffect(() => {
@@ -793,7 +857,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                   )}
                 />
               </Grid>{' '}
-              <Box sx={{ flexGrow: 1 }}>
+              {/* <Box sx={{ flexGrow: 1 }}>
                 <Stack
                   direction="row"
                   spacing={2}
@@ -809,7 +873,7 @@ export const SeleccionarPruebaBombeo: React.FC = () => {
                     Agregar
                   </Button>
                 </Stack>
-              </Box>
+              </Box> */}
             </>
           ) : null}
           {row_prueba.length > 0 && (

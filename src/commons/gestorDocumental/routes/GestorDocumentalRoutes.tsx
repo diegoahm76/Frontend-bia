@@ -5,41 +5,49 @@ import { TrdRoutes } from '../trd/routes/TrdRoutes';
 import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
+import DepositoScreen from '../deposito/screens/depositoScreen';
 
 const routes = [
   {
     path: "organigrama/",
     name: "organigrama",
     component: () => (
-      <OrganigramaRoutes/>
+      <OrganigramaRoutes />
     ),
   },
   {
     path: "ccd/",
     name: "ccd",
     component: () => (
-      <CcdRoutes/>
+      <CcdRoutes />
     ),
   },
   {
     path: "trd/",
     name: "trd",
     component: () => (
-      <TrdRoutes/>
+      <TrdRoutes />
     ),
   },
   {
     path: "tca/",
     name: "tca",
     component: () => (
-      <TcaRoutes/>
+      <TcaRoutes />
+    ),
+  },
+  {
+    path: "deposito/",
+    name: "deposito",
+    component: () => (
+      <DepositoScreen />
     ),
   },
   {
     path: "ventanilla_unica/",
     name: "ventanilla_unica",
     component: () => (
-      <VentanillaRoutes/>
+      <VentanillaRoutes />
     ),
   },
 ]

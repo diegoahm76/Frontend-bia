@@ -65,24 +65,22 @@ export const TcaScreen: FC = (): JSX.Element => {
       {catalog_trd?.length > 0 ? (
         <>
           <CatalogoTRDSeleccionado
-            rows={catalog_trd || []}
+            rows={catalog_trd ?? []}
             columns={columsCatalogoTRD}
             title="Catálogo TRD seleccionado"
           />
 
+          {/* parte 3. catalogo TCA */}
           <CatalogoTCASeleccionado
-            rows={catalog_TCA || []}
-            columns={columsCatalogoTCA}
+            rows={catalog_TCA}
+            columns={columsCatalogoTCA ?? []}
             title="Catálogo TCA ( Tabla control de acceso )"
           />
+          {/* fin parte 3 */}
         </>
       ) : null}
 
       {/* fin parte 2 */}
-
-      {/* parte 3. catalogo TCA */}
-
-      {/* fin parte 3 */}
 
       {/* parte 4 - finalizar TCA  */}
 
