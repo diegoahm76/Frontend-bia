@@ -331,7 +331,7 @@ export function TiposMezclaScreen(): JSX.Element {
               <ButtonGroup style={{ margin: 7 }}  >
                 
                 {download_xls({ nurseries: filterednurseries, columns })}
-                {download_pdf({ nurseries: filterednurseries, columns })}
+                {download_pdf({ nurseries: filterednurseries, columns,title: 'Tipos de mezcla' })}
 
               </ButtonGroup>
             </Grid>

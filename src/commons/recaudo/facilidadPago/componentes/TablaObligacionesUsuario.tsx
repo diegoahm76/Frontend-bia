@@ -97,7 +97,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i< lista_obligaciones.length; i++){
+    for(let i=0; i<lista_obligaciones.length; i++){
       for(let j=0; j< selected.length; j++){
         if(lista_obligaciones[i].nombre === selected[j]){
           sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)

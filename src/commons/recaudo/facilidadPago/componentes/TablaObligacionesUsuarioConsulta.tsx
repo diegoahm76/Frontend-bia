@@ -288,12 +288,12 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
             sx={{ marginTop: '30px' }}
             onClick={() => {
               if(obligaciones.tiene_facilidad){
-                handle_open(1);
+                navigate('../registro');
+                void handle_submit();
               } else if(selected.length === 0){
                 handle_open(2);
               } else {
-                navigate('../registro');
-                void handle_submit();
+                handle_open(1);
               }
             }}
           >
