@@ -235,7 +235,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 type="submit"
                 startIcon={tca_current != null ? <SyncIcon /> : <SaveIcon />}
               >
-                {tca_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
+                {tca_current != null ? 'ACTUALIZAR TCA' : 'CREAR TCA'}
               </LoadingButton>
 
               <Button
