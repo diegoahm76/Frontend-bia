@@ -4,23 +4,16 @@ import { Button } from "@mui/material";
 import { control_success } from '../../../../../../helpers/controlSuccess';
 import { control_error } from '../../../../../../helpers/controlError';
 import { api } from '../../../../../../api/axios';
-import type { AlertaBandejaAlertaPersona, Alerta_update } from '../../interfaces/interfacesAlertas';
+import type { AlertaBandejaAlertaPersona, Alerta_update, InterfazMostarAlerta2 } from '../../interfaces/interfacesAlertas';
 
 
-interface SuspenderAlertaProps {
-    dat: number; // o el tipo adecuado para id_alerta_bandeja_alerta_persona
-    marcador: boolean;
-    activate_suspender_alerta: () => void;
-}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = ({
-    dat,
-    marcador,
-    activate_suspender_alerta,
-}: SuspenderAlertaProps) => {
+export const SuspenderAlerta: React.FC<InterfazMostarAlerta2> = ({  dat,  marcador,  activate_suspender_alerta}: InterfazMostarAlerta2) => {
 
 
     const alerta_inicial: AlertaBandejaAlertaPersona = {
+
         id_alerta_bandeja_alerta_persona: 0,
         nivel_prioridad: 0,
         tipo_alerta: "",
@@ -40,6 +33,7 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = ({
         responsable_directo: false,
         id_bandeja_alerta_persona: 0,
         id_alerta_generada: 0,
+        mensaje: "",
     };
 
 
@@ -70,12 +64,7 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = ({
         }).then(async () => {
              activate_suspender_alerta();
         })
-        // try {
-        //     await handle_suspender_alerta_click();
-        //     await activate_suspender_alerta();
-        // } catch (error) {
-        //     console.error(error);
-        // }
+       
     }
 
 
@@ -96,30 +85,29 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = ({
     };
 
     const handle_change_leido = async (): Promise<void> => {
-
-
         if (data_entidad.length > 0) {
             // Buscar el índice del objeto en el array data_entidad con el mismo id_alerta_bandeja_alerta_persona
             const updatedata_entidad_index = data_entidad.findIndex(alerta => alerta.id_alerta_bandeja_alerta_persona === alerta_idTo_find);
 
-
             if (updatedata_entidad_index !== -1) {
                 try {
                     const elemento_buscado_en_array = data_entidad[updatedata_entidad_index];
-                    const leido_value = elemento_buscado_en_array.leido;
-                    const updateddata_entidad: Alerta_update = {
-                        ...elemento_buscado_en_array,
-                        leido: !leido_value,
-                    };
+                    const repe = elemento_buscado_en_array.repeticiones_suspendidas;
 
-                   
+                    if (repe) {
+                       
+                    
+                        const updateddata_entidad: Alerta_update = {
+                            ...elemento_buscado_en_array,
+                            repeticiones_suspendidas: false,
+                        };
 
-                    const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
+                        const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
 
-                   
-
-                    set_data_entidad(response.data.data);
-                    control_success('Campo "leido" actualizado correctamente');
+                        set_data_entidad(response.data.data);
+                        control_success('Campo "repeticiones_suspendidas" modificado correctamente');
+                    }
+                    control_error(`el campo ya esta suspendido`);
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }
@@ -128,6 +116,7 @@ export const SuspenderAlerta: React.FC<SuspenderAlertaProps> = ({
             }
         }
     };
+
 
 
 
