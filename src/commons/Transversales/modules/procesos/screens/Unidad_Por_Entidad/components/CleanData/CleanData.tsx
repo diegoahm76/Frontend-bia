@@ -79,6 +79,9 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     variant="contained"
                     // DEBE HABILITARSE LA CONDICIONAL DE GUARDAR O PROCEDER DEPENDIENDO EL ESCENARIO (MODE)
                     startIcon={<ForwardIcon />}
+                    sx= {{
+                      boxShadow: '5px 5px 30px 0px rgba(0,0,0,0.75)',
+                    }}
                     onClick={() => {
                       console.log('cleaning fields');
                     }}
