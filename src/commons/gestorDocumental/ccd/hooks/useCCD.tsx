@@ -280,12 +280,11 @@ const use_ccd = () => {
       (item: any) => item.cod_agrupacion_documental !== null && item.activo
     );
 
-    const filter = filteredUnityOrganigram
-      .map((item: any) => ({
-        item,
-        label: item?.nombre,
-        value: item.id_unidad_organizacional!
-      }));
+    const filter = filteredUnityOrganigram.map((item: any) => ({
+      item,
+      label: item?.nombre,
+      value: item.id_unidad_organizacional!
+    }));
 
     console.log(filter, 'filter');
 
@@ -300,8 +299,15 @@ const use_ccd = () => {
   }, [unity_organigram]);
 
   useEffect(() => {
+    const orgActual = organigram.find((el: any) => el.actual);
+    const filteredOrganigramas = organigram.filter(
+      (el: any) =>
+        el.fecha_terminado &&
+        !el.fecha_retiro_produccion &&
+        el.fecha_terminado >= orgActual.fecha_terminado
+    );
     set_list_organigrams(
-      organigram.map((item: any) => ({
+      filteredOrganigramas.map((item: any) => ({
         label: item?.nombre,
         value: item.id_organigrama!
       }))
