@@ -13,7 +13,7 @@ import SpaOutlinedIcon from '@mui/icons-material/SpaOutlined';
 import GrainOutlinedIcon from '@mui/icons-material/GrainOutlined';
 import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
-import { obtener_etapa_meterial_vegetal, obtener_tipos_bien, obtener_viveros, obtiene_analitica } from "../thunks/DashBoardViveros";
+import { obtener_etapa_meterial_vegetal, obtener_tipos_bien, obtener_viveros, obtiene_analitica, obtiene_resumen, obtiene_ultimos_movimientos } from "../thunks/DashBoardViveros";
 import BuscarBienViveros from "./BuscarBienViveros";
 import { ResultadosBusqueda } from "./ResultadosBusqueda";
 import { EtapasMaterialVegetal } from "./Analitica/EtapasMaterialVegetal";
@@ -54,6 +54,7 @@ export const DashBoardViverosScreen: React.FC = () => {
   // Variables globales
   const [analitica, set_analitica] = useState<any[]>([]);
   const [resumen, set_resumen] = useState<any>();
+  const [ultimos_movimientos, set_ultimos_movimientos] = useState<any[]>([]);
   const [seleccion_vivero, set_seleccion_vivero] = useState<string>("");
   const [lista_viveros, set_lista_viveros] = useState<any[]>([]);
   const [seleccion_tipo_bien, set_seleccion_tipo_bien] = useState<string>("");
@@ -62,15 +63,20 @@ export const DashBoardViverosScreen: React.FC = () => {
   const [lista_material_vegetal, set_lista_material_vegetal] = useState<any[]>([]);
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [seleccion_bien_id, set_seleccion_bien_id] = useState<string>("");
-  const [subtitle_resumen, set_subtitle_resumen] = useState<string>("Resumen de inventario de todos los viveros");
+  const [subtitle_resumen, set_subtitle_resumen] = useState<string>("todos los viveros");
   const [viveros_cuarentena, set_viveros_cuarentena] = useState<boolean>(false);
   const [viveros_cerrados, set_viveros_cerrados] = useState<boolean>(false);
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
 
   const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    console.log(e.target);
+    const name_selected = (e.target.value !== 'Todos' &&  e.target.value !== '' ) ?  lista_viveros.find((vn: any) => vn.id_vivero === e.target.value).nombre : "todos los viveros";
+    set_subtitle_resumen(name_selected);
     set_seleccion_vivero(e.target.value);
   }
   const cambio_tipo_bien: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    if(e.target.value === 'PL')
+      set_seleccion_material_vegetal("");
     set_seleccion_tipo_bien(e.target.value);
   }
   const cambio_material_vegetal: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -87,7 +93,21 @@ export const DashBoardViverosScreen: React.FC = () => {
 
   const realizar_analistica: () => void = () => {
     dispatch(obtiene_analitica({ seleccion_vivero, seleccion_tipo_bien, seleccion_material_vegetal, seleccion_bien_id, viveros_cuarentena, viveros_cerrados })).then((response: any) => {
+      response.data.forEach((data: any) => {
+        if (data.tipo_bien !== 'Planta'){
+          data.cantidad_cuarentena = 'N/A';
+          data.etapa_lote = 'N/A';
+          data.nro_lote = 'N/A';
+          data.agno_lote = 'N/A';
+          data.cantidad_cuarentena = 'N/A';
+        }
+      });
       set_analitica(response.data);
+      dispatch(obtiene_ultimos_movimientos({seleccion_vivero}, '','','','','')).then((response: any) => {
+        set_ultimos_movimientos(response.data);
+      })
+    })
+    dispatch(obtiene_resumen({ seleccion_vivero })).then((response: any) => {
       set_resumen(response.resumen);
     })
   }
@@ -110,7 +130,7 @@ export const DashBoardViverosScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <FormControl required size='small' fullWidth>
+                <FormControl size='small' fullWidth>
                   <InputLabel>Vivero</InputLabel>
                   <Select
                     value={seleccion_vivero}
@@ -127,7 +147,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <FormControl required size='small' fullWidth>
+                <FormControl size='small' fullWidth>
                   <InputLabel>Tipo de bien</InputLabel>
                   <Select
                     value={seleccion_tipo_bien}
@@ -148,12 +168,13 @@ export const DashBoardViverosScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <FormControl required size='small' fullWidth>
+                <FormControl size='small' fullWidth>
                   <InputLabel>Etapa material vegetal</InputLabel>
                   <Select
                     value={seleccion_material_vegetal}
                     label="Etapa material vegetal"
                     onChange={cambio_material_vegetal}
+                    disabled={seleccion_tipo_bien === 'PL'}
                   >
                     <MenuItem value={"Todos"}>Todos</MenuItem>
                     {lista_material_vegetal.map((mv: any) => (
@@ -189,14 +210,14 @@ export const DashBoardViverosScreen: React.FC = () => {
                     startIcon={<SearchIcon />}
                     onClick={() => { set_abrir_modal_bien(true); }}
                   >
-                    Buscar
+                    Buscar bien
                   </Button>
                   {abrir_modal_bien && (
                     <BuscarBienViveros
                       is_modal_active={abrir_modal_bien}
                       set_is_modal_active={set_abrir_modal_bien}
                       title={"Busqueda de bien"}
-                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_vivero, seleccion_tipo_bien, seleccion_material_vegetal }} />
+                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
                   )}
                 </Stack>
               </Grid>
@@ -232,7 +253,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                   <Button
                     color='primary'
                     variant='contained'
-                    // startIcon={<SearchIcon />}
+                    startIcon={<SearchIcon />}
                     onClick={() => { realizar_analistica(); }}
                   >
                     Buscar
@@ -276,7 +297,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       justifyContent="center"
                     >
 
-          <Typography variant="h5">{subtitle_resumen}</Typography>
+          <Typography variant="h5">{"Resumen de inventario de " + subtitle_resumen}</Typography>
                     </Stack>
           <Box component="form" noValidate autoComplete="off">
             <Grid item container spacing={2}>
@@ -305,7 +326,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       justifyContent="center"
                     >
                       <Typography variant="h5">
-                        <GrassOutlinedIcon /> {resumen.plantas_produccion + ' '} Plantas de producción
+                        <GrassOutlinedIcon /> {resumen.plantas_produccion + ' '} Plantas en producción
                       </Typography>
                     </Stack>
                   </CardContent>
@@ -319,7 +340,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                       justifyContent="center"
                     >
                       <Typography variant="h5">
-                        <SpaOutlinedIcon /> {resumen.plantas_distribucion + ' '} Plantas de distribución
+                        <SpaOutlinedIcon /> {resumen.plantas_distribucion + ' '} Plantas en distribución
                       </Typography>
                     </Stack>
                   </CardContent>
@@ -379,6 +400,8 @@ export const DashBoardViverosScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
+              <Card variant="outlined">
+                <CardContent>
               <Stack
                       direction="row"
                       justifyContent="center"
@@ -388,8 +411,12 @@ export const DashBoardViverosScreen: React.FC = () => {
                       </Typography>
                 </Stack>
                 <DistribucionBienes resumen={resumen}></DistribucionBienes>
+                </CardContent>
+                </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
+              <Card variant="outlined">
+                <CardContent>
               <Stack
                       direction="row"
                       justifyContent="center"
@@ -399,16 +426,30 @@ export const DashBoardViverosScreen: React.FC = () => {
                       </Typography>
                 </Stack>
                 <EtapasMaterialVegetal resumen={resumen}></EtapasMaterialVegetal>
+                </CardContent>
+                </Card>
               </Grid>
             </Grid>
           </Box>
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
+              <Card variant="outlined">
+                <CardContent>
+              <Stack
+                      direction="row"
+                      justifyContent="center"
+                    >
+                      <Typography variant="h5">
+                          Origen de bienes
+                      </Typography>
+                </Stack>
                 <OrigenBienes resumen={resumen}></OrigenBienes>
+                </CardContent>
+                </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <UltimosMovimientos resumen={resumen}></UltimosMovimientos>
+                <UltimosMovimientos movimientos={ultimos_movimientos}></UltimosMovimientos>
               </Grid>
             </Grid>
           </Box>

@@ -153,7 +153,7 @@ export const use_register_laboratorio_hook = () => {
     (state) => state.instrumentos_slice
   );
   const [cuenca_select, set_cuenca_select] = useState<ValueProps[]>([]);
-  const [pozos_selected, set_pozos_selected] = useState<ValueProps[]>([]);
+  const [pozos_selected, set_pozos_selected] = useState<any[]>([]);
   const [parametros_select, set_parametros_select] = useState<ValueProps[]>([]);
   const [undidad_medida_select, set_undidad_medida_select] = useState('');
   const [cuenca_laboratorio, set_cuenca_id_laboratorio] = useState<
@@ -571,6 +571,7 @@ export const use_register_laboratorio_hook = () => {
       );
       await fetch_data_resultado_laboratorio();
       await fetch_data_anexos_laboratorio(id_resultado_laboratorio_slice);
+      set_rows_laboratorio([]);
       set_nombres_archivos([]);
       set_archivos([]);
     } catch (error: any) {
@@ -689,6 +690,7 @@ export const use_register_laboratorio_hook = () => {
     onSubmit_select,
     onSubmit_editar,
     is_saving,
+    reset_formulario,
 
     // * ver resultados de laboratorio
     parametro_select,

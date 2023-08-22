@@ -40,20 +40,17 @@ import {
   update_item_catalogo_tca_service
 } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { LoadingButton } from '@mui/lab';
-import  CloudUploadIcon  from '@mui/icons-material/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
+import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* define show or no show component
-
-  // eslint-disable-next-line no-empty-pattern
   const {
-    // modalAdministracionTca,
-    // openModalAdministracionTca,
     openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
@@ -67,18 +64,14 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   const {
     control_administrar_tca,
     reset_administrar_tca,
-    // handleSubmit_administrar_tca,
-    // formState_administrar_tca,
     watch_administrar_tca_value
   } = use_tca();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCatalogoTRD = async (id: number) => {
     const res = await get_catalogo_TRD_service(id);
     return dispatch(set_catalog_trd_action(res));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCatalogoTCA = async (id: number) => {
     const res = await get_catalogo_TCA_service(id);
     return dispatch(set_catalog_TCA_action(res));
@@ -114,7 +107,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       },
       id_cat_serie_und_ccd_trd:
         selected_item_from_catalogo?.id_cat_serie_und_ccd_trd,
-      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio,
+      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio
     });
   }, [selected_item_from_catalogo]);
 
@@ -143,14 +136,12 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     const dato: any = watch_administrar_tca_value?.cod_clas_expediente?.value;
 
     formData.append('cod_clas_expediente', dato);
-
     if (watch_administrar_tca_value.justificacion_cambio) {
       formData.append(
         'justificacion_cambio',
         watch_administrar_tca_value.justificacion_cambio
       );
     }
-
     if (watch_administrar_tca_value.ruta_archivo_cambio) {
       formData.append(
         'ruta_archivo_cambio',
@@ -216,8 +207,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                       value={value}
                       onChange={(selectedOption) => {
                         onChange(selectedOption);
-                        console.log(selectedOption);
-                        // handleSelectedOption(value, onChange);
                       }}
                       options={choicesTipoClasificacion}
                       placeholder="Seleccionar"
@@ -230,9 +219,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           fontSize: '0.75rem'
                         }}
                       >
-
                         Disposición final
-
                       </small>
                     </label>
                   </div>
@@ -242,7 +229,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
 
             {/* new spaces */}
 
-            {/* justificación del cambio, solo aparece para trd actual */}
             {/* justificación del cambio, solo aparece para trd actual */}
             {/* ruta archivo soporte de cambio, solo aparece en trd actual */}
             {/* SOLO TRD ACTUAL */}
@@ -267,14 +253,21 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                         disabled={false}
                         variant="outlined"
                         value={value}
-                        onChange={onChange}
+                        onChange={(e: any) => {
+                          if (e.target.value.length === 1000) {
+                            control_warning(
+                              'Precaución: El campo justificación del cambio solo permite 1000 caracteres'
+                            );
+                          }
+                          onChange(e.target.value);
+                        }}
                         error={!(error == null)}
                         helperText={
                           error != null
                             ? 'Es obligatorio ingresar una justificación del cambio'
                             : 'Cambio'
                         }
-                        inputProps={{ maxLength: 250 }}
+                        inputProps={{ maxLength: 1000 }}
                       />
                     )}
                   />
@@ -309,15 +302,24 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
-                            accept='application/pdf'
+                            accept="application/pdf"
                             onChange={(e) => {
                               const files = (e.target as HTMLInputElement)
                                 .files;
                               if (files && files.length > 0) {
                                 const file = files[0];
                                 if (file.type !== 'application/pdf') {
-                                  control_warning('Solo formato pdf');
-                                  // dejar vacio el input file
+                                  control_warning(
+                                    'Precaución: Solo es admitido archivos en formato pdf'
+                                  );
+                                } else if (file.size > FILEWEIGHT.PDF) {
+                                  const MAX_FILE_SIZE_MB = (
+                                    FILEWEIGHT.PDF /
+                                    (1024 * 1024)
+                                  ).toFixed(1);
+                                  control_warning(
+                                    `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                                  );
                                 } else {
                                   onChange(file);
                                 }
@@ -379,7 +381,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               color="error"
               startIcon={<CancelIcon />}
               onClick={() => {
-                console.log('cancelando...');
                 reset_administrar_tca({
                   id_cat_serie_und_ccd_trd: '',
                   cod_clas_expediente: {
@@ -401,10 +402,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   variant="contained"
                   color="secondary"
                   startIcon={<VisibilityIcon />}
-                  // disabled={ccd_current?.actual}
                   onClick={() => {
                     console.log('viendo historial de cambios');
-                    // void get_historial_cambios_tca_service()
                     openModalHistorialCambios();
                   }}
                 >
@@ -417,7 +416,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       </Grid>
 
       {/* Modal historial de cambios TRD ACTUAL */}
-       <HistorialCambiosTCA /> 
+      <HistorialCambiosTCA />
       {/* Modal historial de cambios TRD ACTUAL */}
     </>
   );

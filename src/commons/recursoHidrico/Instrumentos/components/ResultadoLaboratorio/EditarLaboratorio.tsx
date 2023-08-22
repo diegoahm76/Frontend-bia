@@ -36,6 +36,7 @@ import dayjs from 'dayjs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarLaboratorio: React.FC = () => {
@@ -94,7 +95,16 @@ export const EditarLaboratorio: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={
+                <DeleteIcon
+                  titleAccess="Eliminar registro de laboratorio"
+                  sx={{
+                    color: 'red',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              }
               onClick={() => {
                 console.log(params.row.id, 'id para eliminar');
                 handleDelete_select(params.row.id);
@@ -862,6 +872,9 @@ export const EditarLaboratorio: React.FC = () => {
           )}
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

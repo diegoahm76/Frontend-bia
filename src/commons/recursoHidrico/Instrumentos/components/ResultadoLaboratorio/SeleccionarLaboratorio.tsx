@@ -36,6 +36,9 @@ import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButt
 import { Laboratorio } from '../../../ConsultaBiblioteca/interfaces/interfaces';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
+import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
+import { delete_dato_registro_laboratorio } from '../../request/request';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
@@ -63,7 +66,14 @@ export const SeleccionarLaboratorio: React.FC = () => {
     //           variant="outlined"
     //           color="primary"
     //           size="small"
-    //           startIcon={<DeleteIcon />}
+    //           startIcon={<DeleteIcon
+    // titleAccess="Eliminar elemento"
+    //       sx={{
+    //         color: 'red',
+    //         width: '18px',
+    //         height: '18px',
+    //       }}
+    //       />}
     //           onClick={() => {
     //             handleDelete(params.row.id);
     //           }}
@@ -108,32 +118,21 @@ export const SeleccionarLaboratorio: React.FC = () => {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
       width: 200,
-      // renderCell: (params) => (
-      //   <>
-      //     <Tooltip title="Editar Registro de laboratorio">
-      //       <Button
-      //         variant="outlined"
-      //         color="primary"
-      //         size="small"
-      //         startIcon={<EditIcon />}
-      //         onClick={() => {
-      //           handleEdit(params.row);
-      //         }}
-      //       />
-      //     </Tooltip>
-      //     <Tooltip title="Eliminar registro de laboratorio">
-      //       <Button
-      //         variant="outlined"
-      //         color="primary"
-      //         size="small"
-      //         startIcon={<DeleteIcon />}
-      //         onClick={() => {
-      //           handleDelete(params.row.id);
-      //         }}
-      //       />
-      //     </Tooltip>
-      //   </>
-      // ),
+      renderCell: (params) => (
+          <ButtonDelete
+          id={params.row.id_dato_registro_laboratorio}
+          confirmationMessage="¿Estás seguro de eliminar este resultado de laboratorio?"
+          successMessage="El resultado de laboratorio se eliminó correctamente"
+          deleteFunction={async () =>
+            await delete_dato_registro_laboratorio(
+              params.row.id_dato_registro_laboratorio
+            )
+          }
+          fetchDataFunction={async () => {
+            await fetch_data_resultado_laboratorio();
+          }}
+        />
+      ),
     },
   ];
   const columns_anexos: GridColDef[] = [
@@ -863,6 +862,9 @@ export const SeleccionarLaboratorio: React.FC = () => {
           </Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>

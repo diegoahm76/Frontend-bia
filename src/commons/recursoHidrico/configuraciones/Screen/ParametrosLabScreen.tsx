@@ -114,7 +114,7 @@ export const ParametrosLabScreen: React.FC = () => {
                 >
                   <DeleteIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'red',
                       width: '18px',
                       height: '18px',
                     }}

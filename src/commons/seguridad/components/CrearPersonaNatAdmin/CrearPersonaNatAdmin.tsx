@@ -32,6 +32,8 @@ import {
 } from '../../../seguridad/request/Request';
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
+import SearchIcon from '@mui/icons-material/Search';
+import SaveIcon from '@mui/icons-material/Save';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
@@ -122,6 +124,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
 
   useEffect(() => {
     void get_datos_clase_tercero();
+    reset();
   }, []);
 
   const on_submit_create_natural = handle_submit(async (data: any) => {
@@ -458,6 +461,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
           <Grid item xs={12} sm={6} md={4}>
             <Button
               variant="contained"
+              startIcon={<SearchIcon />}
               onClick={() => {
                 open_modal(true);
                 set_type_direction('notificacion');
@@ -634,6 +638,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
           <Grid item xs={12} sm={6} md={4}>
             <Button
               variant="contained"
+              startIcon={<SearchIcon />}
               onClick={() => {
                 open_modal(true);
                 set_type_direction('laboral');
@@ -749,6 +754,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
                 variant="contained"
                 fullWidth
                 color="success"
+                startIcon={<SaveIcon />}
                 loading={is_saving}
                 disabled={is_saving}
               >

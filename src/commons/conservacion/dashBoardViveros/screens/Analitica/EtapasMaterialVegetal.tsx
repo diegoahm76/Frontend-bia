@@ -24,13 +24,12 @@ export const EtapasMaterialVegetal: React.FC<IProps> = (props: IProps) => {
           enabled: true,
           offsetX: -6,
           style: {
-            fontSize: '12px',
+            fontSize: '14px',
             colors: ['#fff']
           }
         },
         stroke: {
           show: true,
-          width: 1,
           colors: ['#fff']
         },
         tooltip: {
@@ -42,15 +41,12 @@ export const EtapasMaterialVegetal: React.FC<IProps> = (props: IProps) => {
         },
     }
     const state = {  
-        series: [{
-            data:  (props.resumen === null || props.resumen === undefined) ? [] : [props.resumen.plantas_cuarentena_produccion,props.resumen.plantas_cuarentena_distribucion]
-        }, {
-            data:  (props.resumen === null || props.resumen === undefined) ? [] : [props.resumen.plantas_produccion,props.resumen.plantas_distribucion]
-        }]
+        series: [{ name: 'En distribución',data:  (props.resumen === null || props.resumen === undefined) ? [] : [props.resumen.plantas_cuarentena_produccion,props.resumen.plantas_cuarentena_distribucion] }, 
+                 { name: 'En producción',data:  (props.resumen === null || props.resumen === undefined) ? [] : [props.resumen.plantas_produccion,props.resumen.plantas_distribucion] }]
     }
     return (
         <>
-                <ReactApexChart options={chart_data} series={state.series} type="bar" height={215}/>
+                <ReactApexChart options={chart_data} series={state.series} type="bar" height={203}/>
         </>
     );
 }

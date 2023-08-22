@@ -30,6 +30,8 @@ import {
 import { control_error, control_success } from '../../../../helpers';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 import { type AxiosError } from 'axios';
+import SearchIcon from '@mui/icons-material/Search';
+import SaveIcon from '@mui/icons-material/Save';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
@@ -116,6 +118,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
 
   useEffect(() => {
     void get_datos_clase_tercero();
+    reset();
   }, []);
 
   const on_submit_create_juridica = handle_submit(async (data) => {
@@ -134,7 +137,6 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
   return (
     <>
       <Typography variant="h6" textAlign="center" pb={2}>
-        Formulario registro
       </Typography>
       <form
         onSubmit={(e) => {
@@ -282,6 +284,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
           <Grid item xs={12} sm={6} md={4}>
             <Button
               variant="contained"
+              startIcon={<SearchIcon />}
               onClick={() => {
                 open_modal(true);
                 set_type_direction('notificacion');
@@ -416,6 +419,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
           <Grid item xs={12} sm={6} md={4}>
             <LoadingButton
               variant="contained"
+              startIcon={<SearchIcon />}
               fullWidth
               color="primary"
               type="submit"
@@ -468,7 +472,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
             </LocalizationProvider>
           </Grid>
           {/* BOTONES */}
-          <Grid item spacing={2} justifyContent="end" container>
+          {/* <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <Button
                 variant="contained"
@@ -482,7 +486,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
                 <Typography sx={{ color: 'black' }}>Buscar</Typography>
               </Button>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
         {/* Datos adicionales (opcionales) */}
         <Grid container spacing={2} mt={0.1}>
@@ -583,6 +587,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
               <LoadingButton
                 type="submit"
                 variant="contained"
+                startIcon={<SaveIcon />}
                 fullWidth
                 color="success"
                 loading={is_saving}

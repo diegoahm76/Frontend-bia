@@ -138,7 +138,7 @@ export const PorhMainScreen: React.FC = () => {
                     <DeleteIcon
                       titleAccess="Eliminar Programa"
                       sx={{
-                        color: 'primary.main',
+                        color: 'red',
                         width: '18px',
                         height: '18px',
                       }}

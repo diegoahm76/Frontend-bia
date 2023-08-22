@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
   type IObjLevels,
   type IObjOrganigram,
-  type IObjUnitys,
+  // type IObjUnitys,
   type IOrganigram,
 } from '../../interfaces/organigrama';
 
@@ -59,7 +59,7 @@ export const organigrama_slice = createSlice({
     get_levels: (state: IOrganigram, action: PayloadAction<IObjLevels[]>) => {
       state.levels_organigram = action.payload;
     },
-    get_unitys: (state: IOrganigram, action: PayloadAction<IObjUnitys[]>) => {
+    get_unitys: (state: IOrganigram, action: PayloadAction<any>) => {
       state.unity_organigram = action.payload;
     },
     set_special_edit: (state: any, action: PayloadAction<boolean>) => {

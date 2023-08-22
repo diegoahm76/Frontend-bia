@@ -28,7 +28,6 @@ import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionH
 import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
 import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
 import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
-import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
 import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
 import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
@@ -37,10 +36,12 @@ import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMateria
 import { finished_ccd_slice } from "../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice";
 import { trd_slice } from "./../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice";
 import { entrega_slice } from "../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega";
-import { instrumentos_slice } from "../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice";
 import { TCASlice } from "../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice";
-import { lideres_slice } from "../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice";
 import { deposito_slice } from "../commons/gestorDocumental/deposito/store/slice/indexDeposito";
+import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
+import { uni_a_uni_slice } from "../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice";
+import { instrumentos_slice } from "../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice";
+import { lideres_slice } from "../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice";
 
 const persist_config = {
   key: "macarenia_app",
@@ -94,6 +95,8 @@ const app_reducers = combineReducers({
   // * recurso hidrico slices close
   entrega_otros: entrega_slice.reducer,
   deposito: deposito_slice.reducer,
+  // ! entrega de unidad a unidad
+  uni_a_uni_slice: uni_a_uni_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

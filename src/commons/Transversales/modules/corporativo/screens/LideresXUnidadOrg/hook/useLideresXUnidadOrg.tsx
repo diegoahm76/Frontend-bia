@@ -60,7 +60,29 @@ export const useLideresXUnidadOrganizacional = ():
   });
 
   const watch_seleccionar_lideres_value = watch_seleccionar_lideres();
-  console.log(watch_seleccionar_lideres_value);
+  // console.log(watch_seleccionar_lideres_value);
+
+  // ? use Form to search leader asignations by organizational unit
+
+  const {
+    control: control_buscar_asignaciones_lideres_por_unidad,
+    // handleSubmit: handleSubmit_buscar_asignaciones_lideres_por_unidad,
+    reset: reset_buscar_asignaciones_lideres_por_unidad,
+    watch: watch_buscar_asignaciones_lideres_por_unidad
+  } = useForm({
+    defaultValues: {
+      tipo_documento: '',
+      numero_documento: '',
+      primer_nombre: '',
+      segundo_nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
+      id_unidad_organizacional_actual: ''
+    }
+  });
+  const watch_asignaciones_lider_by_unidad_value =
+    watch_buscar_asignaciones_lideres_por_unidad();
+ // console.log(watch_asignaciones_lider_by_unidad_value);
 
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 
@@ -78,6 +100,11 @@ export const useLideresXUnidadOrganizacional = ():
     //* 2 . seleccionar lideres
     control_seleccionar_lideres,
     watch_seleccionar_lideres_value,
-    reset_seleccionar_lideres
+    reset_seleccionar_lideres,
+
+    //* 3 . buscar asignaciones lideres por unidad
+    control_buscar_asignaciones_lideres_por_unidad,
+    reset_buscar_asignaciones_lideres_por_unidad,
+    watch_asignaciones_lider_by_unidad_value
   };
 };

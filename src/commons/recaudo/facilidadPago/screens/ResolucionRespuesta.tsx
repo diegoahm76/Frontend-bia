@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent, Divider, DialogActions } from "@mui/material";
-import { Close } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Grid, Box, Button, Stack, TextField } from "@mui/material";
+import { Save, CloudUpload } from '@mui/icons-material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { EditorTexto } from '../componentes/EditorTexto/EditorTexto';
-import dayjs from 'dayjs';
+import { DialogoRegistro } from '../componentes/DialogoRegistro';
 
 interface RootState {
   deudores: {
@@ -118,7 +116,7 @@ export const ResolucionRespuesta: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Cargar Resolución'}
                     <input
@@ -142,7 +140,7 @@ export const ResolucionRespuesta: React.FC = () => {
               <Button
                 color='primary'
                 variant='contained'
-                startIcon={<SaveIcon />}
+                startIcon={<Save />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
                   handle_open()
@@ -154,34 +152,13 @@ export const ResolucionRespuesta: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form"
-          onSubmit={()=>{}}>
-          <DialogTitle align='center'>Se ha registrado la resolución Nro. {'DSAS23141'} con éxito</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid container spacing={1}>
-              <p><strong>Fecha y Hora:</strong> {dayjs(Date()).format('DD/MM/YYYY')} - {dayjs(Date()).hour()}:{dayjs(Date()).minute()} horas</p>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={() => {
-                handle_close()
-            }}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoRegistro
+        titulo_notificacion='La Resolución fue Registrada con Éxito'
+        tipo='Resolución'
+        numero_registro={`${'DSAS23141'}`}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   )
 }

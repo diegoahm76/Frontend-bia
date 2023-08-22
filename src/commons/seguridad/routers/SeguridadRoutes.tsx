@@ -8,10 +8,10 @@ import { Page404 } from '../../../screens/404';
 import { AuditoriaScreen } from '../screens/AuditoriaScreen/AuditoriaScreen';
 import { DelegacionSuperuserScreen } from '../screens/DelegacionSuperuserScreen';
 import { ConfiguracionesBasicasRoutes } from '../screens/ConfiguracionesBasicas/Routes/ConfiguracionesBasicas';
- // import  from '../components/SucursalEntidad/SucursalEntidad';
+//  import  from '../components/SucursalEntidad/SucursalEntidad';
 
 import { Sucursal } from '../components/SucursalEntidad/Sucursal';
-const routes = [
+const routes = [ 
   { path: '/auditoria', element: <AuditoriaScreen /> },
   { path: '/roles', element: <RolesScreen /> },
   { path: '/administracion_usuarios', element: <AdministracionPersonasScreen /> },

@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions } from "@mui/material";
-import { Add, Close } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import { Add, Close, Save, CloudUpload, CloudDownload, Help } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { EditorTexto } from "./EditorTexto/EditorTexto";
+import { DialogoInformativo } from './DialogoInformativo';
 import { use_form } from '../../../../hooks/useForm';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -123,7 +121,7 @@ export const RegistroIncumplimiento: React.FC = () => {
                   fullWidth
                   color='primary'
                   variant='outlined'
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                   sx={{ marginTop: '30px' }}
                   onClick={() => {
                   }}
@@ -136,7 +134,7 @@ export const RegistroIncumplimiento: React.FC = () => {
                   fullWidth
                   color='primary'
                   variant='outlined'
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                   sx={{ marginTop: '30px' }}
                   onClick={() => {
                   }}
@@ -153,7 +151,7 @@ export const RegistroIncumplimiento: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {file_name !== '' ? file_name : 'Cargar Resolución de Cancelación de Facilidad de Pagos'}
                     <input
@@ -218,7 +216,7 @@ export const RegistroIncumplimiento: React.FC = () => {
                   fullWidth
                   color='primary'
                   variant='contained'
-                  startIcon={<SaveIcon />}
+                  startIcon={<Save />}
                   sx={{ marginTop: '30px' }}
                   onClick={handle_open}
                 >
@@ -229,55 +227,52 @@ export const RegistroIncumplimiento: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
       <Dialog
         open={modal}
         onClose={handle_close}
-        maxWidth="xs"
       >
-        <Box component="form">
-          <DialogTitle>{`¿Está seguro de que desea cancelar la Facilidad de Pago con Resolución Número ${'FP1234942'}?`}</DialogTitle>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<SaveIcon />}
-              onClick={()=>{
-                handle_open_sub()
-                handle_close()
+        <DialogContent>
+          <DialogContentText>
+            <Grid container>
+              <Grid item textAlign="center" xs={12}>
+                <Help style={{ color: "#009BFF", fontSize: "60px" }} />
+              </Grid>
+              <Grid item textAlign="center" xs={12}>
+                <strong>{`¿Está seguro de que desea cancelar la Facilidad de Pago con Resolución Número ${'FP1234942'}?`}</strong>
+              </Grid>
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant='outlined'
+            color="primary"
+            autoFocus
+            startIcon={<Close />}
+            onClick={handle_close}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Save />}
+            onClick={()=>{
+              handle_open_sub()
+              handle_close()
             }}
-            >
-              Guardar
-            </Button>
-          </DialogActions>
-        </Box>
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
       </Dialog>
-      <Dialog
-        open={sub_modal}
-        onClose={handle_close_sub}
-        maxWidth="xs"
-      >
-        <Box component="form">
-          <DialogTitle>{`La Facilidad de Pago con Resolución Número ${'FP1234942'} ha sido cancelada.`}</DialogTitle>
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close_sub}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoInformativo
+        tipo_notificacion='info'
+        mensaje_notificacion={`La Facilidad de Pago con Resolución Número ${'FP1234942'} ha sido cancelada`}
+        abrir_modal={sub_modal}
+        abrir_dialog={handle_close_sub}
+      />
     </>
   )
 }

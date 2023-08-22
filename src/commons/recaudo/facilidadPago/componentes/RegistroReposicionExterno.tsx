@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions, DialogContent, Divider } from "@mui/material";
-import { Close } from '@mui/icons-material';
-import SaveIcon from '@mui/icons-material/Save';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Close, Save, CloudUpload } from '@mui/icons-material';
 import { useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormFile, useFormMultipleFiles } from '../hooks/useFormFile';
@@ -86,7 +84,7 @@ export const RegistroReposicionExterno: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {name_file.recurso_reposicion !== undefined ? name_file.recurso_reposicion : 'Cargar Recurso de Reposición'}
                     <input
@@ -106,7 +104,7 @@ export const RegistroReposicionExterno: React.FC = () => {
                   fullWidth
                   size='medium'
                   component="label"
-                  startIcon={<CloudUploadIcon />}
+                  startIcon={<CloudUpload />}
                 >
                   {name_multiple_files.length !== 0 ?
                     name_multiple_files.map((name: string, index: number) => (`${index + 1}. ${name} `))
@@ -159,7 +157,7 @@ export const RegistroReposicionExterno: React.FC = () => {
                   fullWidth
                   color='primary'
                   variant='contained'
-                  startIcon={<SaveIcon />}
+                  startIcon={<Save />}
                   sx={{ marginTop: '30px' }}
                   onClick={handle_open}
                 >

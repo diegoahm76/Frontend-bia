@@ -76,7 +76,10 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                       label="Nombre del Organigrama"
                       size="small"
                       variant="outlined"
-                      value={organigrama_lideres_current?.nombre}
+                      value={
+                        organigrama_lideres_current?.nombre ||
+                        organigrama_lideres_current?.nombre_organigrama
+                      }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
@@ -98,7 +101,10 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                       rows={1}
                       maxRows={2}
                       variant="outlined"
-                      value={organigrama_lideres_current?.descripcion}
+                      value={
+                        organigrama_lideres_current?.descripcion ||
+                        organigrama_lideres_current?.descripcion_organigrama
+                      }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
@@ -121,7 +127,11 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                           ? new Date(
                               organigrama_lideres_current?.fecha_puesta_produccion
                             ).toLocaleString()
-                          : ''
+                          : '' ||
+                            (organigrama_lideres_current?.fecha_puesta_produccion_organigrama &&
+                              new Date(
+                                organigrama_lideres_current?.fecha_puesta_produccion_organigrama
+                              ).toLocaleString())
                       }
                       disabled={true}
                       InputLabelProps={{ shrink: true }}
@@ -141,7 +151,10 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                       label="Versión"
                       size="small"
                       variant="outlined"
-                      value={organigrama_lideres_current?.version}
+                      value={
+                        organigrama_lideres_current?.version ||
+                        organigrama_lideres_current?.version_organigra
+                      }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
