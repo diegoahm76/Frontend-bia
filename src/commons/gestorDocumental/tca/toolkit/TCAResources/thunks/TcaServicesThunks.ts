@@ -168,7 +168,7 @@ export const get_catalogo_TCA_service = async (
     control_warning(
       'No se encontró catálogo para la TCA' || error.response?.data?.detail
     );
-    return error;
+    return [];
   }
 };
 

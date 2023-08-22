@@ -296,20 +296,15 @@ export function ListOrganigramas({
                   sx={{
                     width: 24,
                     height: 24,
-                    background:
-                      params.row.id_persona_cargo !== userinfo.id_persona
-                        ? ''
-                        : '#fff',
-                    border: '2px solid'
+                    background: '#fff',
+                    border: '2px solid',
+                    boxShadow: '0px 0px 5px 0px rgba(105, 105, 105, 0.2)'
                   }}
                   variant="rounded"
                 >
                   <AutoFixHighIcon
                     sx={{
-                      color:
-                        params.row.id_persona_cargo !== userinfo.id_persona
-                          ? ''
-                          : 'primary.main',
+                      color: 'primary.main',
                       width: '18px',
                       height: '18px'
                     }}
@@ -326,20 +321,6 @@ export function ListOrganigramas({
   useEffect(() => {
     void dispatch(get_organigrams_service());
   }, []);
-
-  if (organigram.length === 0)
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}
-      >
-        <CircularProgress size={80} />
-      </Box>
-    );
 
   return (
     <>
@@ -373,17 +354,30 @@ export function ListOrganigramas({
         </Button>
       </Stack>
       <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={organigram}
-            columns={columns}
-            pageSize={15}
-            rowsPerPageOptions={[15]}
-            getRowId={(row) => row.id_organigrama}
-          />
-        </Box>
+        {organigram.length === 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100vh'
+            }}
+          >
+            <CircularProgress size={80} />
+          </Box>
+        ) : (
+          <Box sx={{ width: '100%' }}>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={organigram}
+              columns={columns}
+              pageSize={15}
+              rowsPerPageOptions={[15]}
+              getRowId={(row) => row.id_organigrama}
+            />
+          </Box>
+        )}
       </Grid>
       <DialogCrearOrganigrama
         is_modal_active={crear_organigrama_is_active}

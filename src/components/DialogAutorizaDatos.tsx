@@ -19,6 +19,7 @@ import { control_error, control_success } from '../helpers';
 import { editar_autorizacion_notificaciones } from '../commons/seguridad/request/Request';
 import { Title } from './Title';
 import { useForm } from 'react-hook-form';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
     is_modal_active: boolean;
@@ -166,6 +167,7 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                             >
                                 <Button
                                     variant="outlined"
+                                    color="error"
                                     size="medium"
                                     startIcon={<CancelIcon />}
                                     onClick={() => {
@@ -177,13 +179,15 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                                 <Button
                                     id="actualiza-natural"
                                     variant="contained"
-                                    color="primary"
+                                    color="success"
                                     type="submit"
                                     startIcon={
-                                        is_loading
-                                            ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                            : ""
-                                    }
+                                        is_loading ? (
+                                        <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                    ) : (
+                                        <SaveIcon />
+                                    )                                            
+                                }
                                     aria-label="Actualizar"
                                     disabled={is_loading}
                                     size="medium"
