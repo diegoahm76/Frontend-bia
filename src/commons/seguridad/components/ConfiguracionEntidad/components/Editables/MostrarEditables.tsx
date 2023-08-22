@@ -150,7 +150,7 @@ const [variable,setvariable] = useState<boolean>(false);
             }}
         >
             <Grid item md={12} xs={12}>
-                <Title title="Editar Cargos" />
+                <Title title="Agregar perfiles" />
             </Grid>
             <Box component="form" sx={{ mt: "5px", padding: 3 }} noValidate autoComplete="off">
                 <Grid item container spacing={7}>
