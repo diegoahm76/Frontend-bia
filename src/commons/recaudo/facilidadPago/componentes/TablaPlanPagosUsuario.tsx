@@ -4,10 +4,11 @@ import { Preview } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EstilosPlanPagos.css';
+import pse from '../assets/pse.png';
+import './Estilos/PlanPagos.css';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaPlanPagosUsuarioExterno: React.FC = () => {
+export const TablaPlanPagosUsuario: React.FC = () => {
   const [total, set_total] = useState(0);
   const navigate = useNavigate();
 
@@ -110,7 +111,7 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <Tooltip title="Pagar en Linea">
+          <Tooltip title="Pagar en Línea">
             <IconButton
               onClick={() => {
                 navigate('../recibo');
@@ -125,8 +126,7 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
                 }}
                 variant="rounded"
               >
-                <figure className='pse_icon'>
-                </figure>
+                <img className='pse_icon' alt='logo_pse' src={pse} />
               </Avatar>
             </IconButton>
           </Tooltip>

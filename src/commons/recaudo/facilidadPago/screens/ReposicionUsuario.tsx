@@ -1,13 +1,13 @@
 import { Title } from '../../../../components/Title';
-import { RegistroReposicionExterno } from '../componentes/RegistroReposicionExterno';
+import { RegistroReposicionUsuario } from '../componentes/RegistroReposicionUsuario';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ReposicionUsuarioExterno: React.FC = () => {
+export const ReposicionUsuario: React.FC = () => {
 
   return (
     <>
       <Title title='Recurso de Reposición - Usuario Externo'/>
-      <RegistroReposicionExterno />
+      <RegistroReposicionUsuario />
     </>
   )
 }

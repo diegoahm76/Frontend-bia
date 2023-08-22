@@ -3,10 +3,10 @@ import { Title } from '../../../../components/Title';
 import { Add, CloudDownload } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TablaPlanPagosUsuarioExterno } from '../componentes/TablaPlanPagosUsuarioExterno';
+import { TablaPlanPagosUsuario } from '../componentes/TablaPlanPagosUsuario';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetalleFacilidadPago: React.FC = () => {
+export const ConsultaFacilidadUsuario: React.FC = () => {
   const [estado] = useState('');
   const [plan_pagos, set_plan_pagos] = useState(false);
   const navigate = useNavigate();
@@ -267,7 +267,7 @@ export const DetalleFacilidadPago: React.FC = () => {
       </Grid>
       {
         plan_pagos ? (
-          <TablaPlanPagosUsuarioExterno />
+          <TablaPlanPagosUsuario />
         ) : null
       }
     </>

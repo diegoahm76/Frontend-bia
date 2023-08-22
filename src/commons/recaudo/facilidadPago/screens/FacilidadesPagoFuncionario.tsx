@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { TablaObligacionesAdminAsignadas } from '../componentes/TablaObligacionesAdminAsignadas';
+import { TablaFacilidadesFuncionario } from '../componentes/TablaFacilidadesFuncionario';
 import { DialogoInformativo } from '../componentes/DialogoInformativo';
 import { get_facilidades_asignadas } from '../slices/FacilidadesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -16,7 +16,7 @@ interface RootState {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ObligacionesAdminAsignadas: React.FC = () => {
+export const FacilidadesPagoFuncionario: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { facilidades } = useSelector((state: RootState) => state.facilidades);
   const [modal, set_modal] = useState(facilidades.length === 0);
@@ -55,7 +55,7 @@ export const ObligacionesAdminAsignadas: React.FC = () => {
                 autoComplete="off"
               >
                 <p>Buzón de facilidades de pago asignadas:</p>
-                <TablaObligacionesAdminAsignadas />
+                <TablaFacilidadesFuncionario />
               </Box>
             </Grid>
           </Grid>

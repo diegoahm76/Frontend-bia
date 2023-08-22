@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
@@ -13,7 +12,7 @@ interface RootState {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesSolicitud: React.FC = () => {
+export const TablaObligacionesRegistro: React.FC = () => {
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
 
   const columns: GridColDef[] = [
