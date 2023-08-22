@@ -215,7 +215,7 @@ const use_editar_organigrama = () => {
       headerName: 'Acciones',
       field: 'editar',
       minWidth: 140,
-      hide: organigram_current.fecha_terminado !== null,
+      hide: organigram_current.fecha_terminado,
       renderCell: (params: {
         row: {
           orden_nivel: number;
@@ -798,6 +798,7 @@ const use_editar_organigrama = () => {
   };
 
   const create_unidad = ({
+    activo,
     codigo,
     nombre,
     nivel_padre,
@@ -814,7 +815,8 @@ const use_editar_organigrama = () => {
       cod_agrupacion_documental: agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current.id_organigrama,
-      cod_unidad_org_padre: nivel_padre?.value ?? null
+      cod_unidad_org_padre: nivel_padre?.value ?? null,
+      activo: true,
     };
     console.log(newUnidad, 'newUnidad');
 

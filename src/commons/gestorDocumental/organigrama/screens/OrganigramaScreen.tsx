@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -41,11 +42,11 @@ export const OrganigramaScreen: React.FC = () => {
               <Tab label="Organigramas" value="1" />
               <Tab
                 label={
-                  organigram_current.fecha_terminado !== null
-                    ? 'Ver organigrama'
-                    : 'Editar organigrama'
+                  !organigram_current.fecha_terminado
+                    ? 'Editar organigrama'
+                    : 'Ver organigrama '
                 }
-                disabled={position_tab === '1' && true}
+                disabled={position_tab === '2' && true}
                 value="2"
               />
             </TabList>
