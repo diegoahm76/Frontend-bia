@@ -23,7 +23,7 @@ interface RootStateObligaciones {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaConsultaAdmin: React.FC = () => {
+export const TablaDeudores: React.FC = () => {
   const [visible_rows, set_visible_rows] = useState(Array<Contribuyente>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');

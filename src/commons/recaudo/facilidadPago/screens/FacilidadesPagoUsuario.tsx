@@ -1,9 +1,9 @@
 import { Box, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { TablaFacilidadesAutorizadas } from '../componentes/TablaFacilidadesAutorizadas';
+import { TablaFacilidadesUsuario } from '../componentes/TablaFacilidadesUsuario';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FacilidadPagoAutorizadas: React.FC = () => {
+export const FacilidadesPagoUsuario: React.FC = () => {
 
   return (
     <>
@@ -79,7 +79,7 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
             autoComplete="off"
           >
             <p>Sus facilidades de pago actuales son:</p>
-            <TablaFacilidadesAutorizadas />
+            <TablaFacilidadesUsuario />
           </Box>
         </Grid>
       </Grid>

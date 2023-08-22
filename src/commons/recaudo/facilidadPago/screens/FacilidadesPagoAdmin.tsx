@@ -1,13 +1,13 @@
 import { Box, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { TablaObligacionesAdmin } from '../componentes/TablaObligacionesAdmin';
+import { TablaFacilidadesAdmin } from '../componentes/TablaFacilidadesAdmin';
 import { get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ObligacionesAdmin: React.FC = () => {
+export const FacilidadesPagoAdmin: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export const ObligacionesAdmin: React.FC = () => {
             autoComplete="off"
           >
             <p>Buzón de facilidades de pago ingresadas:</p>
-            <TablaObligacionesAdmin />
+            <TablaFacilidadesAdmin />
           </Box>
         </Grid>
       </Grid>

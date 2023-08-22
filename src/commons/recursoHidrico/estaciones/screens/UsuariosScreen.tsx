@@ -324,7 +324,7 @@ export const UsuariosScreen: React.FC = () => {
               <ButtonGroup style={{ margin: 7, display: "flex", justifyContent: "flex-end" }}  >
 
                 {download_xls({ nurseries: estaciones_meteologicas, columns })}
-                {download_pdf({ nurseries: estaciones_meteologicas, columns })}
+                {download_pdf({ nurseries: estaciones_meteologicas, columns, title: "Información general" })}
 
               </ButtonGroup>
 

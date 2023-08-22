@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
-import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
+import { TablaObligacionesRegistro } from '../componentes/TablaObligacionesRegistro';
 import { DialogoRegistro } from '../componentes/DialogoRegistro';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
@@ -12,13 +12,19 @@ import { use_form } from '../../../../hooks/useForm';
 import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
-import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
+import { type event, type check, type Deudor, type Obligacion, type Bien } from '../interfaces/interfaces';
 import { post_registro_fac_pago, get_tipo_bienes, get_roles_garantia } from '../requests/requests';
 import dayjs from 'dayjs';
 
-interface RootState {
+interface RootStateDeudor {
   deudores: {
     deudores: Deudor;
+  }
+}
+
+interface RootStateObligaciones {
+  obligaciones: {
+    obligaciones: Obligacion[];
   }
 }
 
@@ -34,30 +40,19 @@ interface GarantiaInput {
 }
 
 interface RespuestaRegistroFacilidad {
-  consignacion_soporte: string;
-  cuotas: number;
-  documento_no_enajenacion: string;
-  documento_soporte: string;
-  fecha_generacion: string;
-  id: number;
-  id_deudor: number;
-  id_funcionario: number;
-  id_tipo_actuacion: number;
-  notificaciones: boolean;
   numero_radicacion: string;
-  observaciones: string;
-  periodicidad: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SolicitudFacilidadPago: React.FC = () => {
+export const RegistroFacilidadPago: React.FC = () => {
   const [persona, set_persona] = useState(0);
   const [num_periodicidad, set_num_periodicidad] = useState(0);
   const [periodicidad, set_periodicidad] = useState('');
   const [limite, set_limite] = useState(0);
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
   const [plazo, set_plazo] = useState(0);
-  const [notificacion, set_notificacion] = useState(false);
+  const [autorizacion_notificacion, set_autorizacion_notificacion] = useState(false);
+  const [obligaciones_ids, set_obligaciones_ids] = useState(Array<number>);
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<Bien>);
@@ -66,13 +61,22 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const { form_text, handle_change_text } = useFormText({});
   const { form_files, name_files, handle_change_file } = useFormFiles({});
   const [modal, set_modal] = useState(false);
-  const { deudores } = useSelector((state: RootState) => state.deudores);
+  const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
+  const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
 
   useEffect(() => {
     if(respuesta_registro !== undefined){
       set_modal(true)
     }
   }, [respuesta_registro])
+
+  useEffect(() => {
+    const arr_ids = [];
+    for(let i=0; i<obligaciones.length; i++){
+      arr_ids.push(obligaciones[i].id);
+    }
+    set_obligaciones_ids(arr_ids);
+  }, [obligaciones])
 
   const handle_close = () => { set_modal(false) }
 
@@ -183,7 +187,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
       <EncabezadoRegistro />
-      <TablaObligacionesSolicitud />
+      <TablaObligacionesRegistro />
       <Grid
         container
         sx={{
@@ -1022,7 +1026,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     name='notificaciones'
                     onChange={(event: check) => {
                       const { checked } = event.target
-                      set_notificacion(checked)
+                      set_autorizacion_notificacion(checked)
                     }}
                   />}
                   label="Autorizar notificación por correo electrónico" />
@@ -1051,8 +1055,9 @@ export const SolicitudFacilidadPago: React.FC = () => {
                             consignacion_soporte: form_files.consignacion_soporte,
                             documento_soporte: form_files.documento_soporte,
                             id_funcionario: 1,
-                            notificaciones: notificacion,
+                            notificaciones: autorizacion_notificacion,
                             documento_garantia: form_files.documento_garantia,
+                            ids_obligaciones: obligaciones_ids,
                             documento_deudor: form_files.documento_identidad,
                             ...form_text,
                             id_ubicacion: 1,
