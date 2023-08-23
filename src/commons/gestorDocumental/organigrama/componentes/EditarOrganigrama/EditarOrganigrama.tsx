@@ -917,7 +917,7 @@ export const EditarOrganigrama = ({
               set_view_organigram(true);
             }}
           >
-            VISUALIZAR
+            VISUALIZAR ORGANIGRAMA
           </Button>
           {!organigram_current?.fecha_terminado && (
             <Button
