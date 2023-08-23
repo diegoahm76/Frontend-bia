@@ -314,9 +314,6 @@ const DialogDelegarOrganigrama = ({
                           ? 'Este campo es obligatorio'
                           : ''
                       }
-                      /* {...register_search_for_delegation('numero_documento', {
-                        required: true,
-                      })} */
                       onChange={handle_change}
                     />
                   )}
