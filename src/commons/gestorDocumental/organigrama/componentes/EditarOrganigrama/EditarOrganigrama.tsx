@@ -401,9 +401,9 @@ export const EditarOrganigrama = ({
                   <Stack direction="row" justifyContent="flex-end" spacing={2}>
                     <Button
                       type="submit"
-                      color="primary"
+                      color="success"
                       disabled={organigram_current?.fecha_terminado}
-                      variant="outlined"
+                      variant="contained"
                       startIcon={
                         title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
                       }
@@ -910,7 +910,9 @@ export const EditarOrganigrama = ({
             variant="outlined"
             startIcon={<ArrowBackIcon />}
             onClick={handle_to_go_back}
-          ></Button>
+          >
+            VOLVER
+          </Button>
           <Button
             disabled={mold_organigram.length === 0}
             color="warning"
@@ -921,7 +923,7 @@ export const EditarOrganigrama = ({
               set_view_organigram(true);
             }}
           >
-            VER
+            VISUALIZAR
           </Button>
           {!organigram_current?.fecha_terminado && (
             <Button

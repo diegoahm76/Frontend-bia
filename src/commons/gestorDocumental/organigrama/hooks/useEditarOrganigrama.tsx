@@ -239,6 +239,7 @@ const use_editar_organigrama = () => {
               variant="rounded"
             >
               <EditIcon
+                titleAccess="Editar nivel"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -267,6 +268,7 @@ const use_editar_organigrama = () => {
               variant="rounded"
             >
               <DeleteIcon
+                titleAccess="Eliminar nivel"
                 sx={{ color: 'red', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -436,6 +438,7 @@ const use_editar_organigrama = () => {
                     variant="rounded"
                   >
                     <EditIcon
+                      titleAccess="Editar unidad"
                       sx={{
                         color: 'primary.main',
                         width: '18px',
@@ -459,6 +462,7 @@ const use_editar_organigrama = () => {
                     variant="rounded"
                   >
                     <DeleteIcon
+                      titleAccess="Eliminar unidad"
                       sx={{ color: 'red', width: '18px', height: '18px' }}
                     />
                   </Avatar>
@@ -778,7 +782,7 @@ const use_editar_organigrama = () => {
     unidad_raiz,
     nivel_unidad,
     id_unidad_organizacional,
-    codigoExtra,
+    codigoExtra
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
@@ -795,7 +799,7 @@ const use_editar_organigrama = () => {
 
     console.log(codigoExtra, 'codigoExtra');
 
-   /* const newUnidades = unity_organigram.map((unidad: any) =>
+    /* const newUnidades = unity_organigram.map((unidad: any) =>
       unidad.id_unidad_organizacional === id_unidad_organizacional
         ? newUnidad
         : unidad
@@ -806,12 +810,14 @@ const use_editar_organigrama = () => {
         return {
           ...newUnidad,
           cod_unidad_org_padre:
-            unidad.cod_unidad_org_padre === codigoExtra ? codigo : unidad.cod_unidad_org_padre,
+            unidad.cod_unidad_org_padre === codigoExtra
+              ? codigo
+              : unidad.cod_unidad_org_padre
         };
       } else if (unidad.cod_unidad_org_padre === codigoExtra) {
         return {
           ...unidad,
-          cod_unidad_org_padre: codigo,
+          cod_unidad_org_padre: codigo
         };
       } else {
         return unidad;
@@ -847,7 +853,7 @@ const use_editar_organigrama = () => {
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      activo: true,
+      activo: true
     };
     console.log(newUnidad, 'newUnidad');
 
@@ -874,7 +880,7 @@ const use_editar_organigrama = () => {
     agrupacion_documental,
     unidad_raiz,
     nivel_unidad,
-    activo,
+    activo
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_unidad_organizacional: null,
@@ -886,7 +892,7 @@ const use_editar_organigrama = () => {
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      activo: true,
+      activo: true
     };
     console.log(newUnidad, 'newUnidad');
 
