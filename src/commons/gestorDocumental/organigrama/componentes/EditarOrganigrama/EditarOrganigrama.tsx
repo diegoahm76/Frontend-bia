@@ -363,7 +363,7 @@ export const EditarOrganigrama = ({
         <Title title="Niveles organizacionales" />
         <Box sx={{ mt: '20px' }}>
           <Grid container spacing={2}>
-            {!organigram_current.fecha_terminado  && (
+            {!organigram_current.fecha_terminado && (
               <Grid item xs={12} sm={4}>
                 <Box
                   component="form"
@@ -414,11 +414,7 @@ export const EditarOrganigrama = ({
                 </Box>
               </Grid>
             )}
-            <Grid
-              item
-              xs={12}
-              sm={organigram_current.fecha_terminado ? 12 : 8}
-            >
+            <Grid item xs={12} sm={organigram_current.fecha_terminado ? 12 : 8}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
                   <DataGrid
@@ -467,6 +463,7 @@ export const EditarOrganigrama = ({
                     }) => (
                       <TextField
                         // margin="dense"
+                        type="number"
                         fullWidth
                         size="small"
                         label="Código"

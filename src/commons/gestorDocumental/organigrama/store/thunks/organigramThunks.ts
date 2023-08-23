@@ -110,7 +110,7 @@ export const add_organigrams_service: any = (
       // console.log(data);
       dispatch(get_organigrams_service());
       dispatch(current_organigram(data.detail));
-      control_success('El organigrama se agrego correctamente');
+      control_success('El organigrama se agregó correctamente');
       set_position_tab_organigrama('2');
       handle_close_crear_organigrama();
       return data;

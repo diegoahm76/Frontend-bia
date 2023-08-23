@@ -7,7 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
+  // IconButton,
   Stack,
   Button,
   Box,
@@ -25,6 +25,7 @@ import { FILEWEIGHT } from '../../../../../fileWeight/fileWeight';
 import use_editar_organigrama from '../../hooks/useEditarOrganigrama';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
+import { Title } from '../../../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
@@ -91,8 +92,8 @@ const DialogCrearOrganigrama = ({
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          Crear organigrama
-          <IconButton
+          <Title title=" Crear organigrama" />
+         {/* <IconButton
             aria-label="close"
             onClick={() => {
               set_is_modal_active(false);
@@ -105,7 +106,7 @@ const DialogCrearOrganigrama = ({
             }}
           >
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -189,7 +190,7 @@ const DialogCrearOrganigrama = ({
                 inputProps={{
                   maxLength: 255
                 }}
-                onChange={(e:any) => {
+                onChange={(e: any) => {
                   if (e.target.value.length === 255)
                     control_warning('máximo 255 caracteres');
 

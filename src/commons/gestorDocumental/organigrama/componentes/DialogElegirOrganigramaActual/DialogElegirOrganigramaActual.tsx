@@ -7,7 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
+ // IconButton,
   Stack,
   Button,
   Box,
@@ -186,8 +186,9 @@ const DialogElegirOrganigramaActual = ({
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          Activación de organigrama
-          <IconButton
+        <Title title=" Activación de organigrama" />
+         
+         {/* <IconButton
             aria-label="close"
             onClick={() => {
               set_is_modal_active(false);
@@ -200,7 +201,7 @@ const DialogElegirOrganigramaActual = ({
             }}
           >
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -411,13 +412,16 @@ const DialogElegirOrganigramaActual = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
+            color = "error"
               variant="outlined"
               onClick={handle_close_crear_organigrama}
               startIcon={<CloseIcon />}
             >
               CERRAR
             </Button>
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+            <Button type="submit" variant="contained"
+              color= "success"
+            startIcon={<SaveIcon />}>
               GUARDAR
             </Button>
           </Stack>

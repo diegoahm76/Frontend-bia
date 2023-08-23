@@ -164,7 +164,12 @@ export function ListOrganigramas({
     {
       field: 'justificacion_nueva_version',
       headerName: 'Justificacion nueva versión',
-      width: 150
+      width: 200,
+     /* renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ) */
     },
 
     {
@@ -351,7 +356,7 @@ export function ListOrganigramas({
             set_elegir_ccd_actual_is_active(true);
           }}
         >
-          ELEGIR CCD ACTUAL
+          ACTIVACIÓN DE INSTRUMENTOS ARCHIVISTICOS
         </Button>
       </Stack>
       <Grid item>

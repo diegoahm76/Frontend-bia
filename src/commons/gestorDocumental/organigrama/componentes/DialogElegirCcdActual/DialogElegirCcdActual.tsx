@@ -14,18 +14,17 @@ import {
   DialogTitle,
   Divider,
   Grid,
-  IconButton,
   type SelectChangeEvent,
   Skeleton,
   Stack,
-  TextField,
+  TextField
 } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { CustomSelect } from '../../../../../components';
 import { useAppDispatch } from '../../../../../hooks';
 import {
   cambio_ccd_actual,
-  get_ccds_posibles,
+  get_ccds_posibles
 } from '../../../ccd/store/thunks/ccdThunks';
 import { type IList } from '../../../../../interfaces/globalModels';
 import { ccds_choise_adapter } from '../../adapters/organigrama_adapters';
@@ -46,8 +45,8 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   const [list_ccds, set_list_ccds] = useState<IList[]>([
     {
       label: '',
-      value: 0,
-    },
+      value: 0
+    }
   ]);
   const [data_asociada_ccd, set_data_asociada_ccd] = useState<CCD | undefined>(
     initial_state
@@ -60,7 +59,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     getValues: get_values_elegir_organigrama_actual,
     setValue: set_value_elegir_organigrama_actual,
     reset: reset_elegir_organigrama_actual,
-    formState: { errors: errors_elegir_organigrama_actual },
+    formState: { errors: errors_elegir_organigrama_actual }
   } = useForm<FormValues>();
 
   const handle_close_dialog = (): void => {
@@ -73,7 +72,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   const on_submit = async (data: FormValues): Promise<void> => {
     const data_cambio = {
       justificacion: get_values_elegir_organigrama_actual('justificacion'),
-      id_ccd: get_values_elegir_organigrama_actual('ccd'),
+      id_ccd: get_values_elegir_organigrama_actual('ccd')
     };
     await dispatch(cambio_ccd_actual(data_cambio));
     handle_close_dialog();
@@ -86,25 +85,30 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     }
   }, [is_modal_active]);
 
- 
- // 1.1 Traer data
-const get_list_ccds = async (): Promise<void> => {
+  // 1.1 Traer data
+  const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
       const { data } = await dispatch(get_organigrama_actual());
       // console.log(typeof data.id_organigrama, 'organigramaActualData');
-  
-      const response_ccds = await dispatch(get_ccds_posibles(data.id_organigrama /* 54   */));
+
+      const response_ccds = await dispatch(
+        get_ccds_posibles(data.id_organigrama /* 54   */)
+      );
       //* se realiza prueba con el organigrama 54 ya que el organigrama con id 58 no tiene CCD's disponibles
       // console.log('response_ccds', response_ccds);
-  
+
       if (Array.isArray(response_ccds.data) && response_ccds.data.length > 0) {
         set_data_ccds_posibles(response_ccds.data);
-        const res_ccds_adapter: IList[] = await ccds_choise_adapter(response_ccds.data);
+        const res_ccds_adapter: IList[] = await ccds_choise_adapter(
+          response_ccds.data
+        );
         // console.log('res_ccds_adapter', res_ccds_adapter);
         set_list_ccds(res_ccds_adapter);
       } else {
-        control_error("Sin CCD's disponibles para activación en el organigrama actual");
+        control_error(
+          "Sin CCD's disponibles para activación en el organigrama actual"
+        );
       }
     } catch (err) {
       control_error(err);
@@ -143,22 +147,10 @@ const get_list_ccds = async (): Promise<void> => {
     >
       <Box component="form" onSubmit={handle_submit(on_submit)}>
         <DialogTitle>
-          Activación de Cuadro clasificación documental e instrumentos
-          archivisticos
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Title
+            title="Activación de Cuadro clasificación documental e instrumentos
+          archivisticos"
+          />
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -289,7 +281,7 @@ const get_list_ccds = async (): Promise<void> => {
                     errors_elegir_organigrama_actual.justificacion?.message
                   }
                   {...register_elegir_organigrama_actual('justificacion', {
-                    required: 'Este campo es obligatorio',
+                    required: 'Este campo es obligatorio'
                   })}
                 />
               )}
@@ -304,13 +296,19 @@ const get_list_ccds = async (): Promise<void> => {
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
+              color="error"
               variant="outlined"
               onClick={handle_close_dialog}
               startIcon={<CloseIcon />}
             >
               CERRAR
             </Button>
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+            <Button
+              type="submit"
+              color="success"
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
               GUARDAR
             </Button>
           </Stack>
