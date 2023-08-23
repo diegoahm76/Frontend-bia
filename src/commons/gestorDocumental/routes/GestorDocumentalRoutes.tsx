@@ -50,19 +50,17 @@ const routes = [
     path: 'configuracion-datos-basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
-  }
-];
+  },
 
   {
     path: "alertas_gestor/",
     name: "alertas_gestor",
-    component: () => (
-      <Alertas_gestor_Routes/>
-    ),
+    component: () => <Alertas_gestor_Routes/>
+    
   },
 
   
-]
+];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
