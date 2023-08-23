@@ -170,6 +170,7 @@ interface UserContext {
   ) => void;
   fetch_data_general_bombeo: () => Promise<any>;
   fetch_data_general_sesion: () => Promise<any>;
+  fetch_data_general_sesion_creacion: (id_prueba_bombeo: number) => Promise<any>;
   fetch_data_sesion: () => Promise<any>;
 }
 
@@ -341,6 +342,7 @@ export const DataContext = createContext<UserContext>({
   set_info_data_sesion_bombeo: () => {},
   fetch_data_general_bombeo: async () => {},
   fetch_data_general_sesion: async () => {},
+  fetch_data_general_sesion_creacion: async () => {},
   fetch_data_sesion: async () => {},
 });
 
@@ -714,6 +716,24 @@ export const UserProvider = ({
       control_error(err.response.data.detail);
     }
   };
+  const fetch_data_general_sesion_creacion = async (
+    id_prueba_bombeo: number
+  ): Promise<void> => {
+    try {
+      set_rows_sesion_bombeo([]);
+      const response = await get_data_sesion_bombeo_general(id_prueba_bombeo);
+      const elementosAssingnedLaboratorio = response.map((row: any) => {
+        return {
+          ...row,
+          id: uuidv4(),
+        };
+      });
+
+      set_rows_sesion_bombeo(elementosAssingnedLaboratorio);
+    } catch (err: any) {
+      control_error(err.response.data.detail);
+    }
+  };
   const fetch_data_sesion = async (): Promise<void> => {
     try {
       set_rows_data_sesion_bombeo([]);
@@ -844,6 +864,7 @@ export const UserProvider = ({
     set_info_data_sesion_bombeo,
     fetch_data_general_bombeo,
     fetch_data_general_sesion,
+    fetch_data_general_sesion_creacion,
     fetch_data_sesion,
   };
 

@@ -41,6 +41,10 @@ import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolk
 import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
 import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
 import { uni_a_uni_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice';
+import { u_x_e_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_Por_Entidad/toolkit/UxE_slice/UxE_slice';
+import { deposito_slice } from '../commons/gestorDocumental/deposito/store/slice/indexDeposito';
+import { resolucion_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/ResolucionSlice';
+import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPagosSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -76,6 +80,8 @@ const app_reducers = combineReducers({
   deudores: deudores_slice.reducer,
   facilidades: facilidades_slice.reducer,
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
+  resolucion_facilidad: resolucion_facilidad_slice.reducer,
+  plan_pagos: plan_pagos_slice.reducer,
   solicitud_vivero: solicitud_vivero_slice.reducer,
   reportes_recaudo: reportes_recaudo_slice.reducer,
   slice_series_and_subseries: seriesAndSubseriesSlice.reducer,
@@ -92,10 +98,14 @@ const app_reducers = combineReducers({
   // * recurso hidrico slices open
   instrumentos_slice: instrumentos_slice.reducer,
   // * recurso hidrico slices close
+  entrega_otros: entrega_slice.reducer,
+  deposito: deposito_slice.reducer,
   // ! entrega de unidad a unidad
   uni_a_uni_slice: uni_a_uni_slice.reducer,
 
-  entrega_otros: entrega_slice.reducer
+  // ! traslados masivos unidad por entidad
+  u_x_e_slice: u_x_e_slice.reducer
+  // ! traslados masivos unidad por entidad
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

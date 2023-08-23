@@ -30,8 +30,7 @@ export const MostrarEmail: React.FC = () => {
 
   // Estado para almacenar los datos de la sucursal de la empresa
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [dataEntidad, setDataEntidad] =
-    useState<IconfiguracionEntidad>(initialState);
+  const [dataEntidad, setDataEntidad] = useState<IconfiguracionEntidad>(initialState);
 
   // Estado para almacenar el valor del campo de email
   // eslint-disable-next-line @typescript-eslint/naming-convention

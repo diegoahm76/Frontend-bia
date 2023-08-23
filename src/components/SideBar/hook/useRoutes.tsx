@@ -21,11 +21,12 @@ export const useRoutes = (): any => {
   const handle_indices_electronicos = () =>
     navigate('/app/usuario/indices_electronicos');
 
+
   return {
     handle_click_delegar_super,
     handle_datos_acceso,
     handle_datos_personales,
     handle_autorizacion_notificacion,
-    handle_indices_electronicos
+    handle_indices_electronicos,
   };
 };
