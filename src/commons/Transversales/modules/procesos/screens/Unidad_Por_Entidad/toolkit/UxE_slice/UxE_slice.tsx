@@ -4,7 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
   //* --- control mode traslado unidad x entidad --- *//
-  control_mode_traslado_unidad_x_entidad: false,
+  controlModoTrasladoUnidadXEntidad: 'modo_entrada_sin_validaciones',
 
   //* --- eleccion opcion traslado unidad x entidad --- *//
   eleccion_opcion_traslado_unidad_x_entidad: false,
@@ -15,11 +15,11 @@ export const u_x_e_slice = createSlice({
   initialState,
   reducers: {
       // ! --- set control mode traslado unidad x entidad ---
-      setControlModeTrasladoUnidadXEntidad: (
+      setControlModoTrasladoUnidadXEntidad: (
         state: any,
-        payloadAction: PayloadAction<boolean>
+        payloadAction: PayloadAction<string>
       ) => {
-        state.controlModeTrasladoUnidadXEntidad = payloadAction.payload;
+        state.controlModoTrasladoUnidadXEntidad = payloadAction.payload;
       },
 
       //* eleccion opcion traslado unidad x entidad
@@ -34,4 +34,4 @@ export const u_x_e_slice = createSlice({
     },
 });
 
-export const { setControlModeTrasladoUnidadXEntidad, setEleccionOpcionTrasladoUnidadXEntidad } = u_x_e_slice.actions;
+export const { setControlModoTrasladoUnidadXEntidad, setEleccionOpcionTrasladoUnidadXEntidad } = u_x_e_slice.actions;
