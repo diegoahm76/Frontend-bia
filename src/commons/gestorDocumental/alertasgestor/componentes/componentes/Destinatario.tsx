@@ -139,9 +139,12 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
     const [selected_button, setselected_button] = useState<string | null>(null);
     const handle_selectlider = (): void => {
         setselected_button('lider');
+        set_persona(undefined); 
     };
     const handle_selectperfil = (): void => {
         setselected_button('perfil');
+        set_persona(undefined);
+
     };
     const handle_selectbuscar = (): void => {
         setselected_button('buscador');
@@ -170,13 +173,14 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             const response = await api.post('/transversal/alertas/personas_alertar/create/', formData);
             console.log('Alerta de persona creada exitosamente:', response.data);
             control_success("Alerta creada exitosamente");
-
+            set_persona(undefined);
             // Reset form data after successful submission
             setFormData(initialFormData);
             fetch_dataget();
         } catch (error) {
             console.error('Error al crear la alerta de persona:', error);
             control_error("Error no guardado ");
+            set_persona(undefined);
         }
         set_loading(false);
     };
@@ -209,16 +213,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
         }
     }, [formData.id_unidad_org_lider]);
 
-    useEffect(() => {
-        if (persona?.id_persona !== null) {
-            setFormData((prevData) => ({
-                ...prevData,
-                perfil_sistema: null,
-                id_unidad_org_lider: null,
-            }));
-        }
-    }, [persona?.id_persona]);
-
+   
     return (
         <Grid container
             spacing={2}
@@ -282,6 +277,20 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                     />
                 </Grid>
             )}
+           
+            {/* <>{persona?.primer_nombre}</>
+            <>{persona?.id_persona}</> */}
+            <Grid item xs={12}  >
+                <DataGrid
+                    density="compact"
+                    autoHeight
+                    columns={columns}
+                    rows={data_entidad}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    getRowId={(row) => row.id_persona_alertar}
+                />
+            </Grid>
             <Grid container item justifyContent="flex-end" >
                 <Grid item>
                     <form onSubmit={handleSubmit}>
@@ -299,20 +308,6 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                     </form>
                 </Grid>
             </Grid>
-            <>{persona?.primer_nombre}</>
-            <>{persona?.id_persona}</>
-            <Grid item xs={12}  >
-                <DataGrid
-                    density="compact"
-                    autoHeight
-                    columns={columns}
-                    rows={data_entidad}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    getRowId={(row) => row.id_persona_alertar}
-                />
-            </Grid>
-
         </Grid>
     );
 };

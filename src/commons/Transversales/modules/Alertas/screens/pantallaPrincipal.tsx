@@ -69,9 +69,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-
+  }; 
   const columns = [
     {
       field: 'nivel_prioridad',
