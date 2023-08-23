@@ -417,7 +417,7 @@ export const EditarOrganigrama = ({
             <Grid
               item
               xs={12}
-              sm={organigram_current.fecha_terminado ? 8 : 8}
+              sm={organigram_current.fecha_terminado ? 12 : 8}
             >
               <Grid item>
                 <Box sx={{ width: '100%' }}>

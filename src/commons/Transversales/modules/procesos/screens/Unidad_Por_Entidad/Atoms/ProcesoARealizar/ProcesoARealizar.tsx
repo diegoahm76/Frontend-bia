@@ -12,14 +12,21 @@ import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { consultarTablaTemporal } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
+import {
+  setControlFaseEntrada,
+  setControlModoTrasladoUnidadXEntidad
+} from '../../toolkit/UxE_slice/UxE_slice';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   // ? redux toolkit - values
+  const { /* controlModoTrasladoUnidadXEntidad, */ controlFaseEntrada } =
+    useAppSelector((state) => state.u_x_e_slice);
 
-  //! use_u_x_entidad hook
+  //! use_u_x_entidad hooks
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { control_opciones_traslado, reset_opciones_traslado } =
     use_u_x_entidad();
@@ -32,19 +39,41 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     void consultarTablaTemporal(setloadingConsultaT026).then((res: any) => {
       console.log(res);
 
+      //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
+
+      if (res.data.length === 0) {
+        dispatch(
+          setControlModoTrasladoUnidadXEntidad('modo_entrada_sin_validaciones')
+        );
+        dispatch(setControlFaseEntrada(1));
+      } else {
+      /*  dispatch(setControlFaseEntrada(2));
+
+        dispatch(
+          setControlModoTrasladoUnidadXEntidad(
+            'modo_entrada_con_validacion_organigrama_anterior_a_actual'
+          )
+        );
+
+        reset_opciones_traslado({
+          opciones_traslado: {
+            value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+            label:
+              'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+          }
+        });
+*/
+        console.log(
+          'hay campos en la tabla T026, se debe manejar otro comportamiento'
+        );
+      }
+
       //* en esta operacion consulto la tabla temporal para saber si hay datos en ella y dispongo las opereaciones que se deben hacer para la aplicacion
 
       // ? 1. si la tabla temporal no trae datos, la interacción no pasa de acá, debe dejarse al usuario elegir la opción que desea realizar
       // ? 2. si la tabla temporal trae datos, hay dos posibles escenarios:
       // ! 2.1. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama actual se debe seleccionar la opción de "traslado de unidad organizacional de organigrama actual a nuevo"
       // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
-
-      /* reset_opciones_traslado({
-        opciones_traslado: {
-          value: 'Traslado',
-          label: 'trasladeichon'
-        }
-      }); */
     });
   }, []);
 
@@ -52,6 +81,81 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   const onSubmit = () => {
     console.log('hello from submit');
   };
+
+  function resetOpcionesTraslado(): Array<{
+    value: string;
+    label: string;
+  }> {
+
+    return [
+      {
+        //* el value también va a representar el modo de entrada
+        value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
+        label:
+          'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+      },
+      {
+        //* el value también va a representar el modo de entrada
+        value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+        label:
+          'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+      }
+    ];
+   /* if (
+      controlModoTrasladoUnidadXEntidad === 'modo_entrada_sin_validaciones' ||
+      controlFaseEntrada === 1
+    ) {
+      return [
+        {
+          //* el value también va a representar el modo de entrada
+          value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
+          label:
+            'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+        },
+        {
+          //* el value también va a representar el modo de entrada
+          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+          label:
+            'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+        }
+      ];
+    } else if (
+      controlModoTrasladoUnidadXEntidad ===
+        'modo_entrada_con_validacion_organigrma_actual_a_nuevo' &&
+      controlFaseEntrada !== 1
+    ) {
+      return [
+        {
+          //* el value también va a representar el modo de entrada
+          value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
+          label:
+            'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+        }
+      ];
+    } else if (
+      controlModoTrasladoUnidadXEntidad ===
+        'modo_entrada_con_validacion_organigrama_anterior_a_actual' &&
+      controlFaseEntrada !== 1
+    ) {
+      return [
+        {
+          //* el value también va a representar el modo de entrada
+          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+          label:
+            'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+        }
+      ];
+    } else {
+      return [
+        {
+          //* el value también va a representar el modo de entrada
+          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+          label:
+            'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+        }
+      ];
+    } */
+  }
 
   return (
     <>
@@ -88,26 +192,17 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                       <Select
                         value={value}
                         onChange={(selectedOption) => {
-                          /*  dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
+                          //* dentro de esta seleccion, tambien debe existir una selección de modo
+                          dispatch(
+                            setControlModoTrasladoUnidadXEntidad(
+                              selectedOption.value
                             )
-                          ); */
+                          );
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
-                        options={[
-                          {
-                            value: 'Organigrama_actual_a_nuevo',
-                            label:
-                              'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
-                          },
-                          {
-                            value: 'Organigrama_anterior_a_actual',
-                            label:
-                              'Traslado de unidad organizanizacionales de organigrama anterior a actual'
-                          }
-                        ]}
+                        isDisabled={controlFaseEntrada !== 1}
+                        // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
+                        options={resetOpcionesTraslado()}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -130,24 +225,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
             </Grid>
           </form>
         </Grid>
-        {/* <Stack
-          direction="row"
-          justifyContent="flex-start"
-          spacing={2}
-          sx={{ m: '20px 0' }}
-        >
-          <Button
-            color="primary"
-            variant="outlined"
-            startIcon={<CleanIcon />}
-            onClick={() => {
-              // eslint-disable-next-line no-console
-              console.log('cleaning fields');
-            }}
-          >
-            LIMPIAR CAMPOS
-          </Button>
-        </Stack> */}
       </Grid>
     </>
   );
