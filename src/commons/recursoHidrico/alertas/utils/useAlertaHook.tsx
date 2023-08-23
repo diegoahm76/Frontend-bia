@@ -301,6 +301,30 @@ export const useAlertaHook = () => {
       }
     });
 
+    const [options_recaudo, set_options_recaudo]  = useState<string>('')
+
+    const onSubmit_configuracion_general_alertas_recaudo =
+    handleSubmitConfiguracionGeneralAlertas(async (data: any) => {
+      try {
+        set_is_loading_configuracion_general_alertas(true);
+        const data_configuracion_general_alertas = {
+          envios_email: data.notificacionEmail,
+          nivel_prioridad: data.prioridadAlerta.value,
+          activa: data.estadoAlerta,
+        };
+        await put_configuracion_alerta(
+          data_configuracion_general_alertas as any,
+          options_recaudo
+        );
+        control_success('Configuración general de alertas creada con éxito');
+        // limpiar_configuracion_general_alertas();
+      } catch (error: any) {
+        control_error(error.response.data.detail);
+      } finally {
+        set_is_loading_configuracion_general_alertas(false);
+      }
+    });
+
   // * <------------------------------- Delete -------------------------->
   const confirmar_eliminar_fecha_alerta = (id_fecha: number): void => {
     void Swal.fire({
@@ -409,6 +433,7 @@ export const useAlertaHook = () => {
     onSubmit_alertas,
     onSubmit_destinatario,
     onSubmit_configuracion_general_alertas,
+    onSubmit_configuracion_general_alertas_recaudo,
 
     // * delete
     confirmar_eliminar_fecha_alerta,
@@ -418,5 +443,7 @@ export const useAlertaHook = () => {
     is_loading_alerta,
     is_loading_persona,
     is_loading_configuracion_general_alertas,
+    // recaudo
+    set_options_recaudo,
   };
 };
