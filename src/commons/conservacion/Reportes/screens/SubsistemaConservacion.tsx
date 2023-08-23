@@ -42,14 +42,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [doc_height, set_doc_height] = useState<number>(0);
 
     useEffect(() => {
-        set_reporte([]);
-        set_seleccion_vivero("");
-        set_seleccion_reporte("");
-        set_seleccion_planta(0);
-        set_fecha_desde(null);
-        set_fecha_hasta(null);
-        set_reporte_consolidado(false);
-        set_abrir_modal_bien(false);
+        // set_reporte([]);
+        // set_seleccion_vivero("");
+        // set_seleccion_reporte("");
+        // set_seleccion_planta(0);
+        // set_fecha_desde(null);
+        // set_fecha_hasta(null);
+        // set_reporte_consolidado(false);
+        // set_abrir_modal_bien(false);
         obtener_viveros_fc();
     }, []);
 
@@ -375,15 +375,25 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         const reporte_titulo: {reporte_seleccionado: any, title: string} = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
-        let coordenada_y = 80;
-        let coordenada_y_dinamica = 25;
+        let coordenada_y = 40;
         reporte.forEach((report: any) => {
+            console.log('coordendasY: ',coordenada_y)
+            console.log('coordendas: ',coordendas)
+            const page = doc.internal.pageSize.getHeight();
+            coordenada_y = report.bienes_consumidos.length === 1 ? (60 + coordendas + 20) : report.bienes_consumidos.length === 2 ? (60 + coordendas + 30) : (60 + coordendas + (report.bienes_consumidos.length * 10));
+            if (coordenada_y >= (page - 50) || coordendas >= (page - 50)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                coordendas = 0;
+                coordenada_y = 40;
+            }
+            doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
             doc.text(dayjs(report.fecha_incidencia).format('DD/MM/YYYY'), 14, 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             const fecha_registro = 'Registrado en el sistema: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY');
-            doc.text(fecha_registro, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_registro)) - 5), 41);
+            doc.text(fecha_registro, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_registro)) - 5), 41+coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
@@ -406,17 +416,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 startY: 60 + coordendas,
                 margin: 32
             });
-            doc.line(5, coordenada_y + coordendas, (doc.internal.pageSize.width - 5), coordenada_y + coordendas);// 30 Linea inferior
-            if (report.bienes_consumidos.length > 1) {
-                coordenada_y = coordenada_y + (3 * report.bienes_consumidos.length);
-                coordenada_y_dinamica = coordenada_y_dinamica + (10 * report.bienes_consumidos.length);
-            }
-            coordendas = coordendas + coordenada_y_dinamica;
-            if ((43 + coordendas) > doc_height) {
-                page_position = page_position + 1;
-                nueva_pagina(doc, reporte_titulo.title, page_position);
-                coordendas = 0;
-            }
+            // if(coordendas !== 0 && coordenada_y !== 40)
+            coordendas = coordenada_y - 30;
         });
         console.log('objeto jsPDF: ', doc);
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -680,7 +681,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                             noValidate
                             autoComplete="off"
                         >
-                            <object data="archivo.pdf"></object>
+                            <object data=""></object>
                         </Box>
                     </Grid>
                 </Grid>
