@@ -686,17 +686,11 @@ export const EditarOrganigrama = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
-
                       fullWidth
+                      type="number"
                       size="small"
                       label="Código"
                       variant="outlined"
-                      // eslint-disable-next-line eqeqeq
-                      /*  disabled={
-                          organigram_current.fecha_terminado !== null ||
-                          title_unidades !== 'Agregar'
-                        } */
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -849,8 +843,8 @@ export const EditarOrganigrama = ({
               sx={{ mb: '20px', mt: '20px' }}
             >
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 onClick={clean_unitys}
                 startIcon={<CleanIcon />}
               >
@@ -858,8 +852,8 @@ export const EditarOrganigrama = ({
               </Button>
               <Button
                 type="submit"
-                color="primary"
-                variant="outlined"
+                color="success"
+                variant="contained"
                 startIcon={<AddIcon />}
               >
                 AGREGAR UNIDAD (GRUPO)
@@ -870,7 +864,7 @@ export const EditarOrganigrama = ({
                   console.log('editando unidades propiedad activo');
                   edit_prop_activo_unidad_org(unity_organigram);
                 }}
-                color="primary"
+                color="success"
                 variant="outlined"
                 startIcon={<ToggleOnIcon />}
               >
