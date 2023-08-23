@@ -97,8 +97,9 @@ export interface FacilidadPagoDetalle {
   observaciones: string;
   periodicidad: number;
   tipo_actuacion: string;
+  valor_abonado: string;
+  fecha_abono: string;
 }
-
 
 export interface FacilidadPagoSolicitud {
   bienes: Bien[];
@@ -148,5 +149,13 @@ export interface RegistroFacilidadPago {
   documento_soporte_bien: File;
   ids_obligaciones: number[];
   valor_abonado: number;
+  fecha_abono: string;
+}
+
+export interface FacilidadPagoUsuario {
+  id: number;
+  estado: string;
+  numero_radicacion: string;
+  valor_total: number;
 }
 

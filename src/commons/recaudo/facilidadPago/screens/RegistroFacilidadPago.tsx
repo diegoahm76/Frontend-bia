@@ -14,6 +14,10 @@ import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check, type Deudor, type Obligacion, type Bien } from '../interfaces/interfaces';
 import { post_registro_fac_pago, get_tipo_bienes, get_roles_garantia } from '../requests/requests';
+import esLocale from 'dayjs/locale/es';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 interface RootStateDeudor {
@@ -57,12 +61,17 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<Bien>);
   const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
+  const [date_abono, set_date_abono] = useState<Date | null>(new Date());
+  const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
   const { form_text, handle_change_text } = useFormText({});
   const { form_files, name_files, handle_change_file } = useFormFiles({});
-  const [modal, set_modal] = useState(false);
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
+
+  const handle_change_date_abono = (date: Date | null) => {
+    set_date_abono(date);
+  };
 
   useEffect(() => {
     if(respuesta_registro !== undefined){
@@ -277,6 +286,28 @@ export const RegistroFacilidadPago: React.FC = () => {
                     type='number'
                   />
                 </Grid>
+                <Grid item xs={11} sm={5}>
+                <FormControl size='small' fullWidth>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
+                    <DatePicker
+                      label="Fecha del Abono"
+                      inputFormat="DD/MM/YYYY"
+                      openTo="day"
+                      views={['day', 'month', 'year']}
+                      value={date_abono}
+                      onChange={handle_change_date_abono}
+                      renderInput={(params) => (
+                        <TextField
+                          name='fecha_abono'
+                          size='small'
+                          required
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </FormControl>
+              </Grid>
             </Grid>
           </Box>
         </Grid>
@@ -1051,6 +1082,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                             fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
                             periodicidad: num_periodicidad,
                             cuotas: plazo,
+                            fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
                             documento_no_enajenacion: form_files.documento_no_enajenacion,
                             consignacion_soporte: form_files.consignacion_soporte,
                             documento_soporte: form_files.documento_soporte,

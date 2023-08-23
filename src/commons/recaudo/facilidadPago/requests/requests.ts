@@ -147,3 +147,9 @@ export const get_validacion_resolucion = async (id: number): Promise<any> => {
   const data = await api.get(`recaudo/planes-pagos/validacion-resolucion/${id}/`)
   return data
 }
+
+// Listar facilidades de pago desde Pag. Usuario Externo
+export const get_fac_pago_autorizadas = async (): Promise<any> => {
+  const data = await api.get(`recaudo/facilidades-pagos/seguimiento/`)
+  return data
+}
