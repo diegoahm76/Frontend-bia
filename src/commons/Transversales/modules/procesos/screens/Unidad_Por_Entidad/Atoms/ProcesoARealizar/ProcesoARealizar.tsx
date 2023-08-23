@@ -12,7 +12,10 @@ import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { consultarTablaTemporal } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
-import { setControlModoTrasladoUnidadXEntidad } from '../../toolkit/UxE_slice/UxE_slice';
+import {
+  setControlFaseEntrada,
+  setControlModoTrasladoUnidadXEntidad
+} from '../../toolkit/UxE_slice/UxE_slice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
@@ -20,9 +23,8 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { controlModoTrasladoUnidadXEntidad } = useAppSelector(
-    (state) => state.u_x_e_slice
-  );
+  const { /* controlModoTrasladoUnidadXEntidad, */ controlFaseEntrada } =
+    useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,21 +41,28 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
 
       //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
 
-      if (res.data.length !== 0) {
+      if (res.data.length === 0) {
+        dispatch(
+          setControlModoTrasladoUnidadXEntidad('modo_entrada_sin_validaciones')
+        );
+        dispatch(setControlFaseEntrada(1));
+      } else {
+      /*  dispatch(setControlFaseEntrada(2));
+
         dispatch(
           setControlModoTrasladoUnidadXEntidad(
             'modo_entrada_con_validacion_organigrama_anterior_a_actual'
           )
         );
-      } else {
+
         reset_opciones_traslado({
           opciones_traslado: {
-            value: 'modo_entrada_con_validacion_organigrma_actual_a_nuevo',
+            value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
             label:
-              'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+              'Traslado de unidad organizanizacionales de organigrama anterior a actual'
           }
         });
-
+*/
         console.log(
           'hay campos en la tabla T026, se debe manejar otro comportamiento'
         );
@@ -77,36 +86,56 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     value: string;
     label: string;
   }> {
-    if (controlModoTrasladoUnidadXEntidad === 'modo_entrada_sin_validaciones') {
+
+    return [
+      {
+        //* el value también va a representar el modo de entrada
+        value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
+        label:
+          'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+      },
+      {
+        //* el value también va a representar el modo de entrada
+        value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+        label:
+          'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+      }
+    ];
+   /* if (
+      controlModoTrasladoUnidadXEntidad === 'modo_entrada_sin_validaciones' ||
+      controlFaseEntrada === 1
+    ) {
       return [
         {
           //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_sin_validaciones',
+          value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
           label:
             'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
         },
         {
           //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_sin_validaciones',
+          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
           label:
             'Traslado de unidad organizanizacionales de organigrama anterior a actual'
         }
       ];
     } else if (
       controlModoTrasladoUnidadXEntidad ===
-      'modo_entrada_con_validacion_organigrma_actual_a_nuevo'
+        'modo_entrada_con_validacion_organigrma_actual_a_nuevo' &&
+      controlFaseEntrada !== 1
     ) {
       return [
         {
           //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_con_validacion_organigrma_actual_a_nuevo',
+          value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
           label:
             'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
         }
       ];
     } else if (
       controlModoTrasladoUnidadXEntidad ===
-      'modo_entrada_con_validacion_organigrama_anterior_a_actual'
+        'modo_entrada_con_validacion_organigrama_anterior_a_actual' &&
+      controlFaseEntrada !== 1
     ) {
       return [
         {
@@ -125,7 +154,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
             'Traslado de unidad organizanizacionales de organigrama anterior a actual'
         }
       ];
-    }
+    } */
   }
 
   return (
@@ -164,19 +193,14 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                         value={value}
                         onChange={(selectedOption) => {
                           //* dentro de esta seleccion, tambien debe existir una selección de modo
-                          /*  dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
+                          dispatch(
+                            setControlModoTrasladoUnidadXEntidad(
+                              selectedOption.value
                             )
-                          ); */
+                          );
                           onChange(selectedOption);
                         }}
-                        isDisabled={
-                          controlModoTrasladoUnidadXEntidad ===
-                            'modo_entrada_con_validacion_organigrama_anterior_a_actual' ||
-                          controlModoTrasladoUnidadXEntidad ===
-                            'modo_entrada_con_validacion_organigrma_actual_a_nuevo'
-                        }
+                        isDisabled={controlFaseEntrada !== 1}
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
                         options={resetOpcionesTraslado()}
                         placeholder="Seleccionar"
