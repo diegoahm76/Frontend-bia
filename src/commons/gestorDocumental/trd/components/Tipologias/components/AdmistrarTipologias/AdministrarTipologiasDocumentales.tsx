@@ -11,11 +11,11 @@ import {
   Box,
   Button,
   Checkbox,
-  Dialog,
+  // Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  Divider,
+  // DialogTitle,
+  // Divider,
   FormControl,
   FormControlLabel,
   Grid,
@@ -31,7 +31,7 @@ import { ModalContextTRD } from '../../../../context/ModalsContextTrd';
 //* controller react-hook-form
 import { Controller } from 'react-hook-form';
 //* Icons
-import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
@@ -82,7 +82,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* context elements that are used in this component
   const {
     closeModalAdministracionTipologiasDocumentales,
-    modalAdministracionTipologiasDocumentales,
+    // modalAdministracionTipologiasDocumentales,
     openModalBusquedaTipologiasDocumentales,
     createTRDLoadingButton,
     setCreateTRDLoadingButton
@@ -252,333 +252,301 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
   return (
     <>
-      <Dialog
+      {/* <Dialog
         fullWidth
         maxWidth="md"
-        open={modalAdministracionTipologiasDocumentales}
+        open={true}
         onClose={resetOnCloseModal}
+      > */}
+      <Box
+        component="form"
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          title_button_administrar_tipologias === 'Guardar'
+            ? create_tipologia()
+            : edit_tipologia();
+        }}
       >
-        <Box
-          component="form"
-          onSubmit={(e: any) => {
-            e.preventDefault();
-            title_button_administrar_tipologias === 'Guardar'
-              ? create_tipologia()
-              : edit_tipologia();
+        <Title title="Administración de Tipologias Documentales" />
+
+        <DialogContent
+          sx={{
+            mb: '0px',
+            justifyContent: 'center'
           }}
         >
-          <DialogTitle>
-            <Title title="Administración de Tipologias Documentales" />
-          </DialogTitle>
-          <Divider />
-          <DialogContent
-            sx={{
-              mb: '0px',
-              justifyContent: 'center'
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="nombre"
+                control={controlBusquedaTipologiasDocumentales}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Nombre de la Tipología Documental"
+                    size="small"
+                    disabled={
+                      tipologias_documental_current?.item_ya_usado ?? false
+                    }
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!!error}
+                  />
+                )}
+              />
+            </Grid>
+            {title_button_administrar_tipologias === 'Actualizar' && (
+              <Grid item xs={4} sm={3}>
                 <Controller
-                  name="nombre"
+                  name="activo"
                   control={controlBusquedaTipologiasDocumentales}
                   defaultValue=""
-                  rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
-                    <TextField
-                      // margin="dense"
-                      fullWidth
-                      label="Nombre de la Tipología Documental"
-                      size="small"
-                      disabled={
-                        tipologias_documental_current?.item_ya_usado ?? false
-                      }
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                        // console.log(e.target.value);
-                      }}
-                      error={!!error}
-                      /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
-                    />
-                  )}
-                />
-              </Grid>
-
-              {/* pending to define active checkbox (especially it's interaction */}
-              {title_button_administrar_tipologias === 'Actualizar' && (
-                <Grid item xs={4} sm={3}>
-                  <Controller
-                    name="activo"
-                    control={controlBusquedaTipologiasDocumentales}
-                    defaultValue=""
-                    // rules={{ required: false }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error }
-                    }) => (
-                      <FormControl fullWidth>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={value}
-                              onChange={(e) => {
-                                onChange(e.target.checked);
-                              }}
-                              // name="checkedB"
-                              color="primary"
-                            />
-                          }
-                          label={
-                            value ? (
-                              <Typography variant="body2">
-                                Activa
-                                <Tooltip
-                                  title="Tipología documental activa"
-                                  placement="right"
-                                >
-                                  <InfoIcon
-                                    sx={{
-                                      width: '1.2rem',
-                                      height: '1.2rem',
-                                      ml: '0.5rem',
-                                      color: 'green'
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Typography>
-                            ) : (
-                              <Typography variant="body2">
-                                Inactiva
-                                <Tooltip
-                                  title="Tipología documental inactiva"
-                                  placement="right"
-                                >
-                                  <InfoIcon
-                                    sx={{
-                                      width: '1.2rem',
-                                      height: '1.2rem',
-                                      ml: '0.5rem',
-                                      color: 'orange'
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Typography>
-                            )
-                          }
-                        />
-                      </FormControl>
-                    )}
-                  />
-                </Grid>
-              )}
-
-              {/* closed space checkbox */}
-            </Grid>
-          </DialogContent>
-          <Divider />
-          <DialogTitle>Medios documentales y formatos asociados</DialogTitle>
-          <DialogContent
-            sx={{
-              height: '235px',
-              mb: '0px',
-              justifyContent: 'center'
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={5}>
-                <Controller
-                  name="cod_tipo_medio_doc"
-                  control={controlBusquedaTipologiasDocumentales}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <div>
-                      <Select
-                        styles={{
-                          control: (base) => ({
-                            ...base,
-                            height: '56px',
-                            minHeight: '56px'
-                          })
-                        }}
-                        value={value}
-                        onChange={(value) => {
-                          handleSelectedOption(value, onChange);
-                        }}
-                        // isDisabled={!control_format_documental_type._formValues.item.value}
-                        options={options}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem'
-                          }}
-                        >
-                          Tipo de medio documental
-                          {/* {trd_current != null
-                            ? `CCD seleccionado`
-                            : `CDD's no usados en otro TRD`} */}
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={7}>
-                <Controller
-                  name="formatos"
-                  control={controlBusquedaTipologiasDocumentales}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <>
-                      <Autocomplete
-                        multiple
-                        fullWidth
-                        id="autocomplete"
-                        value={value}
-                        size="medium"
-                        options={list_format_documental_type ?? []}
-                        getOptionLabel={(option: any) => option.label}
-                        isOptionEqualToValue={(option: any, value) =>
-                          option?.value === value?.value
-                        }
-                        onChange={(event: any, value: any) => onChange(value)}
-                        renderInput={(params) => (
-                          <TextField
-                            className="autocomplete_formatos"
-                            key={params.id}
-                            {...params}
-                            // label="Formatos para el medio documental seleccionado"
-                            placeholder="Formatos para el medio documental seleccionado"
+                    <FormControl fullWidth>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={value}
+                            onChange={(e) => {
+                              onChange(e.target.checked);
+                            }}
+                            // name="checkedB"
+                            color="primary"
                           />
-                        )}
+                        }
+                        label={
+                          value ? (
+                            <Typography variant="body2">
+                              Activa
+                              <Tooltip
+                                title="Tipología documental activa"
+                                placement="right"
+                              >
+                                <InfoIcon
+                                  sx={{
+                                    width: '1.2rem',
+                                    height: '1.2rem',
+                                    ml: '0.5rem',
+                                    color: 'green'
+                                  }}
+                                />
+                              </Tooltip>
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2">
+                              Inactiva
+                              <Tooltip
+                                title="Tipología documental inactiva"
+                                placement="right"
+                              >
+                                <InfoIcon
+                                  sx={{
+                                    width: '1.2rem',
+                                    height: '1.2rem',
+                                    ml: '0.5rem',
+                                    color: 'orange'
+                                  }}
+                                />
+                              </Tooltip>
+                            </Typography>
+                          )
+                        }
                       />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem'
-                          }}
-                        >
-                          Formatos para el medio documental seleccionado
-                          {/* {trd_current != null
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+            )}
+
+            {/* closed space checkbox */}
+          </Grid>
+        </DialogContent>
+
+        <Title title="Medios documentales y formatos asociados" />
+
+        <DialogContent
+          sx={{
+            height: '235px',
+            mb: '0px',
+            justifyContent: 'center'
+          }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={5}>
+              <Controller
+                name="cod_tipo_medio_doc"
+                control={controlBusquedaTipologiasDocumentales}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <div>
+                    <Select
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          height: '56px',
+                          minHeight: '56px'
+                        })
+                      }}
+                      value={value}
+                      onChange={(value) => {
+                        handleSelectedOption(value, onChange);
+                      }}
+                      options={options}
+                      placeholder="Seleccionar"
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem',
+                          marginTop: '0.25rem',
+                          marginLeft: '0.25rem'
+                        }}
+                      >
+                        Tipo de medio documental
+                      </small>
+                    </label>
+                  </div>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <Controller
+                name="formatos"
+                control={controlBusquedaTipologiasDocumentales}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <>
+                    <Autocomplete
+                      multiple
+                      fullWidth
+                      id="autocomplete"
+                      value={value}
+                      size="medium"
+                      options={list_format_documental_type ?? []}
+                      getOptionLabel={(option: any) => option.label}
+                      isOptionEqualToValue={(option: any, value) =>
+                        option?.value === value?.value
+                      }
+                      onChange={(event: any, value: any) => onChange(value)}
+                      renderInput={(params) => (
+                        <TextField
+                          className="autocomplete_formatos"
+                          key={params.id}
+                          {...params}
+                          // label="Formatos para el medio documental seleccionado"
+                          placeholder="Formatos para el medio documental seleccionado"
+                        />
+                      )}
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem',
+                          marginTop: '0.25rem',
+                          marginLeft: '0.25rem'
+                        }}
+                      >
+                        Formatos para el medio documental seleccionado
+                        {/* {trd_current != null
                         ? `CCD seleccionado`
                         : `CDD's no usados en otro TRD`} */}
-                        </small>
-                      </label>
-                    </>
-                  )}
-                />
-              </Grid>
+                      </small>
+                    </label>
+                  </>
+                )}
+              />
             </Grid>
-          </DialogContent>
+          </Grid>
+        </DialogContent>
 
-          <DialogActions>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+        <DialogActions>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          >
+            <LoadingButton
+              loading={createTRDLoadingButton}
+              variant="contained"
+              type="submit"
+              startIcon={
+                title_button_administrar_tipologias === 'Guardar' ? (
+                  <SaveIcon />
+                ) : (
+                  <SyncIcon />
+                )
+              }
+              color="success"
+              // sx={{ ml: '10px' }}
             >
-              <LoadingButton
-                loading={createTRDLoadingButton}
-                variant="contained"
-                type="submit"
-                startIcon={
-                  title_button_administrar_tipologias === 'Guardar' ? (
-                    <SaveIcon />
-                  ) : (
-                    <SyncIcon />
-                  )
-                }
-                color="primary"
-                // sx={{ ml: '10px' }}
-              >
-                {title_button_administrar_tipologias === 'Guardar'
-                  ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
-                  : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
-              </LoadingButton>
-
-              {/*  <Button
-                variant="contained"
-                type="submit"
-                startIcon={
-                  title_button_administrar_tipologias === 'Guardar' ? (
-                    <SaveIcon />
-                  ) : (
-                    <SyncIcon />
-                  )
-                }
-                color="primary"
-                // sx={{ ml: '10px' }}
-              >
-                {title_button_administrar_tipologias === 'Guardar'
-                  ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
-                  : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
-              </Button> */}
-              <Button
-                variant="outlined"
-                startIcon={<SearchIcon />}
-                color="primary"
-                // sx={{ ml: '10px' }}
-                onClick={() => {
-                  resetOnCloseModal();
-                  openModalBusquedaTipologiasDocumentales();
-                }}
-              >
-                BUSCAR TIPLOGÍAS
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<CleanIcon />}
-                color="success"
-                // sx={{ ml: '10px' }}
-                onClick={() => {
-                  resetBusquedaTipologiasDocumentales({
-                    nombre: '',
-                    cod_tipo_medio_doc: '',
-                    formatos: []
-                  });
-                  clearAutocomplete();
-                  dispatch(get_current_tipologia_documental_action(null));
-                  set_title_button_administrar_tipologias('Guardar');
-                }}
-              >
-                LIMPIAR CAMPOS
-              </Button>
-              <Button
+              {title_button_administrar_tipologias === 'Guardar'
+                ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
+                : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
+            </LoadingButton>
+            <Button
+              variant="contained"
+              startIcon={<SearchIcon />}
+              color="primary"
+              // sx={{ ml: '10px' }}
+              onClick={() => {
+                resetOnCloseModal();
+                openModalBusquedaTipologiasDocumentales();
+              }}
+            >
+              BUSCAR TIPLOGÍAS
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<CleanIcon />}
+              color="primary"
+              onClick={() => {
+                resetBusquedaTipologiasDocumentales({
+                  nombre: '',
+                  cod_tipo_medio_doc: '',
+                  formatos: []
+                });
+                clearAutocomplete();
+                dispatch(get_current_tipologia_documental_action(null));
+                set_title_button_administrar_tipologias('Guardar');
+              }}
+            >
+              LIMPIAR CAMPOS
+            </Button>
+            {/* <Button
+                color="error"
                 variant="outlined"
                 onClick={resetOnCloseModal}
                 startIcon={<CloseIcon />}
               >
                 CERRAR
-              </Button>
-            </Stack>
-          </DialogActions>
-        </Box>
-      </Dialog>
+              </Button> */}
+          </Stack>
+        </DialogActions>
+      </Box>
+      {/* </Dialog> */}
     </>
   );
 };

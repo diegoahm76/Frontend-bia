@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 //* Components
 import { Page404 } from '../../../screens/404';
 import { AdmnistrarFormatos } from '../trd/components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
+import { AdministrarTipologiasDocumentales } from '../trd/components/Tipologias/components/AdmistrarTipologias/AdministrarTipologiasDocumentales';
 
 interface RouteType {
   path: string;
@@ -17,7 +18,7 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
   const routes: RouteType[] = [
     {
       path: '/admin-tipologias-documentales',
-      element: () => <>modulo de administracion de TIPOLOGIAS documentales</>
+      element: () => <AdministrarTipologiasDocumentales/>
     },
     {
       path: '/admin-formatos-documentales',

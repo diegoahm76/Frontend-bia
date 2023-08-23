@@ -46,7 +46,6 @@ import { LoadingButton } from '@mui/lab';
 
 import { Title } from '../../../../../../../components';
 
-
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
@@ -64,7 +63,6 @@ export const BusquedaTipologias = (): JSX.Element => {
     controlBusquedaTipologiasDocumentales,
     form_data_searched_tipologia_documental,
     resetBusquedaTipologiasDocumentales
-
   } = use_trd();
 
   const resetOnCloseModal = (): any => {
@@ -237,7 +235,7 @@ export const BusquedaTipologias = (): JSX.Element => {
               <Grid item xs={12} sm={5.5}>
                 <LoadingButton
                   loading={createTRDLoadingButton}
-                  variant="outlined"
+                  variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
                   // sx={{ mt: '15px' }}
@@ -246,9 +244,9 @@ export const BusquedaTipologias = (): JSX.Element => {
                   BUSCAR
                 </LoadingButton>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   startIcon={<CleanIcon />}
-                  color="success"
+                  color="primary"
                   sx={{ ml: '10px' }}
                   onClick={() => {
                     resetBusquedaTipologiasDocumentales({
@@ -270,9 +268,7 @@ export const BusquedaTipologias = (): JSX.Element => {
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
-
               getRowId={(row) => row.id_tipologia_documental}
-
             />
           </DialogContent>
           <Divider />
@@ -283,6 +279,7 @@ export const BusquedaTipologias = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
+                color="error"
                 variant="outlined"
                 onClick={resetOnCloseModal}
                 startIcon={<CloseIcon />}
