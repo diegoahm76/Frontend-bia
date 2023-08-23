@@ -17,6 +17,7 @@ import { image_data2_1, image_data_1 } from "../../../recursoHidrico/estaciones/
 import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import { reporte_estado_actividad, reporte_evolucion_lote, reporte_mortalidad, reporte_plantas_sd } from "../thunks/SubsistemaConservacion";
+import BuscarPlantas from "./BuscarPlantas";
 
 const lista_reporte = [{ name: 'Mortalidad de Planta', value: 'MP' }, { name: 'Plantas Solicitadas vs Plantas Despachadas', value: 'PSPD' }, { name: 'Estado y Actividad de Planta', value: 'EAP' }, { name: 'Evolución por Lote', value: 'EL' }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -29,6 +30,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [seleccion_vivero, set_seleccion_vivero] = useState<string>("");
     const [lista_viveros, set_lista_viveros] = useState<any[]>([]);
     const [seleccion_reporte, set_seleccion_reporte] = useState<string>("");
+    const [numero_lote, set_numero_lote] = useState<string | number>("");
+    const [año_lote, set_año_lote] = useState<string | number>("");
     const [seleccion_planta, set_seleccion_planta] = useState<any>(0);
     const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
@@ -39,6 +42,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [doc_height, set_doc_height] = useState<number>(0);
 
     useEffect(() => {
+        set_reporte([]);
+        set_seleccion_vivero("");
+        set_seleccion_reporte("");
+        set_seleccion_planta(0);
+        set_fecha_desde(null);
+        set_fecha_hasta(null);
+        set_reporte_consolidado(false);
+        set_abrir_modal_bien(false);
         obtener_viveros_fc();
     }, []);
 
@@ -86,92 +97,17 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         set_fecha_hasta(date);
     };
 
+    const cambio_numero_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_numero_lote(e.target.value);
+      };
+
+      const cambio_año_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_año_lote(e.target.value);
+      };
+
     const handle_export_pdf = () => {
         // eslint-disable-next-line new-cap
         set_doc(new jsPDF());
-        // const reporte = [
-        //     {
-        //         "id_vivero": 96,
-        //         "nombre_vivero": "Vivero Guejar",
-        //         "entradas": {
-        //             "unidad_medida_abreviatura": "und",
-        //             "cantidad_donacion": 400,
-        //             "cantidad_resarcimiento": null,
-        //             "cantidad_compensacion": null,
-        //             "cantidad_compras_no_especificado": null,
-        //             "cantidad_donacion_produccion": 200,
-        //             "cantidad_resarcimiento_produccion": null,
-        //             "cantidad_compensacion_produccion": null,
-        //             "cantidad_compras_no_especificado_produccion": null,
-        //             "cantidad_donacion_distribucion": 200,
-        //             "cantidad_resarcimiento_distribucion": null,
-        //             "cantidad_compensacion_distribucion": null,
-        //             "cantidad_compras_no_especificado_distribucion": null
-        //         },
-        //         "salidas": {
-        //             "unidades_despachadas": 34,
-        //             "unidades_mortalidad": 51
-        //         },
-        //         "actualidad": {
-        //             "cantidad_produccion": 155,
-        //             "cantidad_distribucion": 318
-        //         }
-        //     },
-        //     {
-        //         "id_vivero": 96,
-        //         "nombre_vivero": "Vivero Guejar",
-        //         "entradas": {
-        //             "unidad_medida_abreviatura": "und",
-        //             "cantidad_donacion": 400,
-        //             "cantidad_resarcimiento": null,
-        //             "cantidad_compensacion": null,
-        //             "cantidad_compras_no_especificado": null,
-        //             "cantidad_donacion_produccion": 200,
-        //             "cantidad_resarcimiento_produccion": null,
-        //             "cantidad_compensacion_produccion": null,
-        //             "cantidad_compras_no_especificado_produccion": null,
-        //             "cantidad_donacion_distribucion": 200,
-        //             "cantidad_resarcimiento_distribucion": null,
-        //             "cantidad_compensacion_distribucion": null,
-        //             "cantidad_compras_no_especificado_distribucion": null
-        //         },
-        //         "salidas": {
-        //             "unidades_despachadas": 34,
-        //             "unidades_mortalidad": 51
-        //         },
-        //         "actualidad": {
-        //             "cantidad_produccion": 155,
-        //             "cantidad_distribucion": 318
-        //         }
-        //     },
-        //     {
-        //         "id_vivero": 96,
-        //         "nombre_vivero": "Vivero Guejar",
-        //         "entradas": {
-        //             "unidad_medida_abreviatura": "und",
-        //             "cantidad_donacion": 400,
-        //             "cantidad_resarcimiento": null,
-        //             "cantidad_compensacion": null,
-        //             "cantidad_compras_no_especificado": null,
-        //             "cantidad_donacion_produccion": 200,
-        //             "cantidad_resarcimiento_produccion": null,
-        //             "cantidad_compensacion_produccion": null,
-        //             "cantidad_compras_no_especificado_produccion": null,
-        //             "cantidad_donacion_distribucion": 200,
-        //             "cantidad_resarcimiento_distribucion": null,
-        //             "cantidad_compensacion_distribucion": null,
-        //             "cantidad_compras_no_especificado_distribucion": null
-        //         },
-        //         "salidas": {
-        //             "unidades_despachadas": 34,
-        //             "unidades_mortalidad": 51
-        //         },
-        //         "actualidad": {
-        //             "cantidad_produccion": 155,
-        //             "cantidad_distribucion": 318
-        //         }
-        //     }
-        // ]
         set_doc_height(doc.internal.pageSize.getHeight());
         if (seleccion_reporte === 'MP') {
             reporte_mortalidad_fc();
@@ -208,7 +144,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         // doc.addImage(image_data2_1, img_x, img_y, img_width, img_height,);;
         doc.setFont("Arial", "bold"); // establece la fuente en Arial
         doc.text(title, x_pos, 15);
-        doc.text('planta 1', ((doc.internal.pageSize.width - doc.getTextWidth('planta 1')) / 2), 20);
+        doc.text(seleccion_planta.nombre ?? "", ((doc.internal.pageSize.width - doc.getTextWidth('planta 1')) / 2), 20);
         const fechas = `${dayjs(fecha_desde).format('DD/MM/YYYY')} - ${dayjs(fecha_hasta).format('DD/MM/YYYY')}`;
         doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
         doc.setFont("Arial", "normal"); // establece la fuente en Arial
@@ -531,7 +467,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         label="Vivero"
                                         onChange={cambio_seleccion_vivero}
                                     >
-                                        <MenuItem value={"Todos"}>Todos</MenuItem>
                                         {lista_viveros.map((vive: any) => (
                                             <MenuItem key={vive.id_vivero} value={vive.id_vivero}>
                                                 {vive.nombre}
@@ -544,8 +479,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     </Box>
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
+                        <Grid item xs={12} sm={7}>
+                        <Stack
+                                    direction="row"
+                                    justifyContent="flex-end"
+                                    spacing={2}
+                                >
+                        <Grid item xs={12} sm={6}>
+                          <TextField
                                     label="Planta"
                                     type={'text'}
                                     size="small"
@@ -556,11 +497,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                     }}
                                     disabled
                                 />
+      
+                                </Grid>
+                                </Stack>
                             </Grid>
-                            <Grid item xs={12} sm={2}>
+                            <Grid item xs={12} sm={5}>
                                 <Stack
                                     direction="row"
-                                    justifyContent="center"
+                                    justifyContent="flex-start"
                                     spacing={2}
                                 >
                                     <Button
@@ -568,19 +512,80 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         variant='contained'
                                         startIcon={<SearchIcon />}
                                         onClick={() => { set_abrir_modal_bien(true); }}
+                                        disabled={seleccion_vivero === "" && seleccion_reporte === "EL"}
                                     >
                                         Buscar planta
                                     </Button>
-                                    {/* {abrir_modal_bien && (
-                    <BuscarBienViveros
+                                    {abrir_modal_bien && (
+                    <BuscarPlantas
                       is_modal_active={abrir_modal_bien}
                       set_is_modal_active={set_abrir_modal_bien}
-                      title={"Busqueda de bien"}
-                      seleccion_planta={set_seleccion_planta} filtros={{ seleccion_reporte }} />
-                  )} */}
+                      title={"Busqueda de plantas"}
+                      seleccion_planta={set_seleccion_planta} 
+                      vivero={ seleccion_vivero }
+                      reporte={seleccion_reporte} />
+                  )}
                                 </Stack>
                             </Grid>
-                            <Grid item xs={12} sm={3}>
+                        </Grid>
+                    </Box>
+                    {(seleccion_reporte === 'EL') && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+                        <Grid item container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                            <Stack
+                                    direction="row"
+                                    justifyContent="flex-end"
+                                    spacing={2}
+                                >
+                            <Grid item xs={12} sm={6}>
+
+                                <TextField
+                                    label="Lote número"
+                                    type={'text'}
+                                    size="small"
+                                    fullWidth
+                                    value={numero_lote}
+                                    InputProps={{
+                                        type: "number"
+                                    }}
+                                    onChange={cambio_numero_lote}
+                                />
+                                </Grid>
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                            <Stack
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    spacing={2}
+                                >
+                            <Grid item xs={12} sm={6}>
+
+                                <TextField
+                                    label="Año del lote"
+                                    type={'text'}
+                                    size="small"
+                                    fullWidth
+                                    value={año_lote}
+                                    InputProps={{
+                                        type: "number"
+                                    }}
+                                    onChange={cambio_año_lote}
+                                />
+                                </Grid>
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </Box>}
+                    <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+                        <Grid item container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                            <Stack
+                                    direction="row"
+                                    justifyContent="flex-end"
+                                    spacing={2}
+                                >
+                        <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Fecha desde"
@@ -595,7 +600,15 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={12} sm={3}>
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                            <Stack
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    spacing={2}
+                                >
+                        <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Fecha hasta"
@@ -610,10 +623,12 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         disabled={fecha_desde == null}
                                     />
                                 </LocalizationProvider>
+                                </Grid>
+                                </Stack>
                             </Grid>
                         </Grid>
                     </Box>
-                    <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+                    {(seleccion_reporte !== 'EL') && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
                                 <Stack
@@ -624,7 +639,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                 </Stack>
                             </Grid>
                         </Grid>
-                    </Box>
+                    </Box>}
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
