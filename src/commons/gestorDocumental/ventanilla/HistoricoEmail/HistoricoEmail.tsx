@@ -9,6 +9,7 @@ import {
   Stack,
   Alert,
   Typography,
+  LinearProgress,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import type {
@@ -166,6 +167,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
+                  <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>
@@ -181,6 +183,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
             >
               <Button
                 variant="outlined"
+                color="error"
                 // eslint-disable-next-line react/jsx-no-undef
                 startIcon={<CancelIcon />}
                 onClick={() => {

@@ -50,7 +50,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
   const data_electronic_index_watch = watch_electronic_index();
 
   // ? this is the form to search the expedient
-  const onSubmit_electronic_index = async (): Promise<void> => {
+  const onSubmit_electronic_index: any = async (): Promise<void> => {
     try {
       const url = `gestor/ccd/get-terminados/`;
       const response = await api.get(url);

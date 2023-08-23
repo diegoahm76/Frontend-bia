@@ -243,6 +243,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                         >
                             <Button
                                 variant="outlined"
+                                color="error"
                                 // eslint-disable-next-line react/jsx-no-undef
                                 startIcon={<CancelIcon />}
                                 onClick={() => {
