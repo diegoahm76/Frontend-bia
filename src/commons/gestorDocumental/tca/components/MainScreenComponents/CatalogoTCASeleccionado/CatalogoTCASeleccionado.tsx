@@ -15,7 +15,6 @@ export const CatalogoTCASeleccionado: FC<dataGridTypes> = ({
   columns,
   title
 }: dataGridTypes): JSX.Element => {
-
   const { tca_current } = useAppSelector((state: any) => state.tca_slice);
 
   const newColums = [
@@ -23,12 +22,16 @@ export const CatalogoTCASeleccionado: FC<dataGridTypes> = ({
     {
       headerName: 'Fecha registro',
       field: 'fecha_registro',
-      width: 180,
+      width: 240,
       renderCell: (params: any) => {
         return (
           <Chip
             size="small"
-            label={params.row.fecha_registro}
+            label={
+              params.row.fecha_registro
+                ? new Date(params.row.fecha_registro).toLocaleString()
+                : ''
+            }
             color="success"
             variant="outlined"
           />

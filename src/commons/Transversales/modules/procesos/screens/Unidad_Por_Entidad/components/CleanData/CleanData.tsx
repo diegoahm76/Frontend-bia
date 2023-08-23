@@ -10,8 +10,14 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import ForwardIcon from '@mui/icons-material/Forward';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../../../../../../../../hooks';
+import  SaveIcon  from '@mui/icons-material/Save';
 
 export const CleanData: FC<any> = (): JSX.Element => {
+  //* states from redux
+  const { controlModoTrasladoUnidadXEntidad, controlFaseEntrada } =
+    useAppSelector((state) => state.u_x_e_slice);
+
   //* elements from context
 
   const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
@@ -54,14 +60,22 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   spacing={2}
                   sx={{ m: '20px 0' }}
                 >
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    startIcon={<VisibilityIcon />}
-                    onClick={handleModalHistoricos}
-                  >
-                    HISTÓRICO TRASLADOS MASIVOS
-                  </Button>
+                  {/* la verdadera validación se da con este state
+                  
+                  controlFaseEntrada !== 1
+
+                  */}
+                  {controlModoTrasladoUnidadXEntidad ===
+                    'modo_entrada_con_validacion_organigrama_anterior_a_actual' && (
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      startIcon={<VisibilityIcon />}
+                      onClick={handleModalHistoricos}
+                    >
+                      HISTÓRICO TRASLADOS MASIVOS
+                    </Button>
+                  )}
 
                   <Button
                     color="primary"
@@ -78,16 +92,19 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     color="primary"
                     variant="contained"
                     // DEBE HABILITARSE LA CONDICIONAL DE GUARDAR O PROCEDER DEPENDIENDO EL ESCENARIO (MODE)
-                    startIcon={<ForwardIcon />}
-                    sx= {{
-                      boxShadow: '5px 5px 30px 0px rgba(0,0,0,0.75)',
+                    startIcon={
+                      controlFaseEntrada === 1 ? <SaveIcon /> : <ForwardIcon />
+                    }
+                    sx={{
+                      boxShadow: '5px 5px 30px 0px rgba(0,0,0,0.75)'
                     }}
                     onClick={() => {
                       console.log('cleaning fields');
                     }}
                   >
                     {/* guardar en la primera opción, proceder en la segunda opción */}
-                    GUARDAR / PROCEDER
+
+                    {controlFaseEntrada === 1 ? 'GUARDAR' : 'PROCEDER'}
                   </Button>
 
                   <Link

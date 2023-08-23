@@ -180,6 +180,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
+                      type="number"
                       label="Versión del TCA"
                       size="small"
                       variant="outlined"
@@ -222,7 +223,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               </Button>
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalBusquedaTca}
               >
@@ -230,7 +231,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               </Button>
               <LoadingButton
                 loading={loadingButton}
-                color="primary"
+                color="success"
                 variant="contained"
                 type="submit"
                 startIcon={tca_current != null ? <SyncIcon /> : <SaveIcon />}
@@ -239,8 +240,8 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               </LoadingButton>
 
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   console.log('cleaning');
