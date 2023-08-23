@@ -348,12 +348,12 @@ export const EditarOrganigrama = ({
             <LoadingButton
               loading={loadingEdicionOrgan}
               type="submit"
-              color="primary"
-              variant="outlined"
+              color="success"
+              variant="contained"
               disabled={organigram_current?.fecha_terminado}
               startIcon={<SyncIcon />}
             >
-              EDITAR
+              ACTUALIZAR
             </LoadingButton>
           </Stack>
         </Box>
@@ -628,8 +628,8 @@ export const EditarOrganigrama = ({
               >
                 <Button
                   // type="submit"
-                  color="success"
-                  variant="contained"
+                  color="primary"
+                  variant="outlined"
                   // disabled={organigram_current.fecha_terminado !== null}
                   onClick={clean_unitys}
                   startIcon={<CleanIcon />}
@@ -638,8 +638,8 @@ export const EditarOrganigrama = ({
                 </Button>
                 <Button
                   type="submit"
-                  color="primary"
-                  variant="outlined"
+                  color="success"
+                  variant="contained"
                   startIcon={
                     title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
                   }
@@ -652,7 +652,7 @@ export const EditarOrganigrama = ({
                     console.log('editando unidades propiedad activo');
                     edit_prop_activo_unidad_org(unity_organigram);
                   }}
-                  color="primary"
+                  color="success"
                   variant="outlined"
                   startIcon={<ToggleOnIcon />}
                 >
@@ -913,7 +913,7 @@ export const EditarOrganigrama = ({
           ></Button>
           <Button
             disabled={mold_organigram.length === 0}
-            color="primary"
+            color="warning"
             variant="contained"
             startIcon={<VisibilityIcon />}
             onClick={() => {
