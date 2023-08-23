@@ -10,8 +10,7 @@ import { Title } from "../../../../components";
 import { ISucursalForm, Props } from "./utils/interfac";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import SaveIcon from '@mui/icons-material/Save';
-// import ClearIcon from '@mui/icons-material/Clear';
-import CleanIcon from '@mui/icons-material/CleaningServices';
+ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { LoadingButton } from '@mui/lab';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -43,6 +42,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
   const [loading, set_loading] = useState(false);
+  
   useEffect(() => {
     if (isediting) {
 
@@ -101,6 +101,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
         setform_values(initial_state);
         setselected_id(null);
         set_loading(false);
+        
         await fetchand_update_data();
       })
       .catch((error) => {
@@ -110,26 +111,15 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
       });
      
 
-  };
-
-
+  }; 
   const handle_clear_fields = (): void => {
     // Set all form field values to their i2nitial_state (empty values)
     setform_values(initial_state);
      setselected_id(null);
     
-  };
-
-  // const handle_exit = (): void => {
-  //   set_exiting(true);
-  // };
-
-
+  }; 
   useEffect(() => {
-    if (exiting) {
-      // Here, you can perform any necessary actions before leaving the page
-      // For example, show a confirmation dialog or directly redirect to another page.
-      // For the purpose of this example, we'll just go back to the previous page.
+    if (exiting) { 
       window.history.back();
     }
   }, [exiting]);
@@ -138,9 +128,8 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
     <Grid container
       spacing={2}
       marginTop={2}
-    >
-
-      <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
+    > 
+      <Grid item xs={12} sx={{ marginTop: "-20px" }}     > 
         <Title title="Sucursal" />
       </Grid>
       <Grid item xs={12} sm={1.5}>
@@ -226,9 +215,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
           value={form_values.telefono_sucursal}
           onChange={handleinput_change}
         />
-      </Grid>
-
-
+      </Grid> 
       <Grid item xs={12} sm={3}>
         <FormControl fullWidth size="small">
           <InputLabel id="demo-simple-select-label">es principal </InputLabel>
@@ -270,10 +257,8 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
             <MenuItem value="false">No</MenuItem>
           </Select>
         </FormControl>
-      </Grid>
-
-      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} />
-
+      </Grid> 
+      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} /> 
       <Grid  container marginTop={2} spacing={2} direction="row" justifyContent="flex-end" >
         <Grid item xs={12} sm={1.4}>
           {/* <Button startIcon={<SaveIcon />} variant="contained" fullWidth color="primary" onClick={handleform_submit}>
@@ -288,8 +273,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
             loading={loading} // Set the loading prop
           >
             {isediting ? "Actualizar" : "Guardar"}
-          </LoadingButton>
- 
+          </LoadingButton> 
         </Grid>
         <Grid item xs={12} sm={1.2}>
           <Button startIcon={<CleanIcon />} fullWidth variant="contained" color="secondary"  onClick={handle_clear_fields}>
@@ -299,8 +283,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
         <Grid item xs={12} sm={1}>
           <ButtonSalir/> 
         </Grid>
-      </Grid>
-
+      </Grid> 
     </Grid>
   );
 };
