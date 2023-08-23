@@ -82,29 +82,6 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
 
         {/* poner la condicional de la longitud del array para que tenga un mejor manejo visual */}
 
-
-        {/*  <CatalogoTRDAdministracionScreen
-
-          rows={
-            (catalog_TCA.length > 0 &&
-              catalog_trd?.filter((item: any) => {
-                if (catalog_TCA.length === 0) {
-                  console.log('catalog_TCA.length === 0');
-                  return true;
-                }
-                return !catalog_TCA.some(
-                  (otherItem: any) =>
-                    otherItem.id_cat_serie_und_ccd_trd ===
-                    item.id_catserie_unidadorg
-                );
-              })) ||
-            catalog_trd
-          }
-          columns={columsCatalogoTRD}
-          title="Catálogo TRD - ( Administración TCA )"
-        />
-*/}
-
         {/* fin parte 3 */}
 
         {tca_current?.actual ? null : (
@@ -117,7 +94,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
                     return true;
 
                   }
-                  return !catalog_TCA.some(
+                  return !catalog_TCA?.some(
                     (otherItem: any) =>
                       otherItem.id_cat_serie_und_ccd_trd ===
                       item.id_catserie_unidadorg
@@ -133,7 +110,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
         {tca_current?.actual &&
         catalog_trd.filter(
           (item: any) =>
-            !catalog_TCA.some(
+            !catalog_TCA?.some(
               (otherItem: any) =>
                 otherItem.id_cat_serie_und_ccd_trd ===
                 item.id_catserie_unidadorg
@@ -167,7 +144,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
               tca_current?.actual &&
               catalog_trd.filter(
                 (item: any) =>
-                  !catalog_TCA.some(
+                  !catalog_TCA?.some(
                     (otherItem: any) =>
                       otherItem.id_cat_serie_und_ccd_trd ===
                       item.id_catserie_unidadorg
@@ -176,13 +153,13 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
 
                 <CatalogoTRDAdministracionScreen
                 rows={
-                  (catalog_TCA.length > 0 &&
+                  (catalog_TCA?.length > 0 &&
                     catalog_trd?.filter((item: any) => {
                       if (catalog_TCA.length === 0) {
                         console.log('catalog_TCA.length === 0');
                         return true;
                       }
-                      return !catalog_TCA.some(
+                      return !catalog_TCA?.some(
                         (otherItem: any) =>
                           otherItem.id_cat_serie_und_ccd_trd ===
                           item.id_catserie_unidadorg

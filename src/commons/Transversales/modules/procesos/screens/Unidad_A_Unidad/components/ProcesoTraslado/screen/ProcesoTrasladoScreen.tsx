@@ -15,7 +15,8 @@ import { Traslado } from '../components/Traslado/Traslado';
 import { InfoProcesoTraslado } from '../components/InfoProcesoTraslado/InfoProcesoTraslado';
 
 export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
-  setmModalHistoricoTraslados
+  setmModalHistoricoTraslados,
+  setModalTotalPersonas
 }: ProcesoTypes): JSX.Element => {
   const { userinfo } = useAppSelector((state: AuthSlice) => state.auth);
   console.log(userinfo);
@@ -39,6 +40,7 @@ export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
     <>
       <Traslado />
       <InfoProcesoTraslado
+        setModalTotalPersonas={setModalTotalPersonas}
         setmModalHistoricoTraslados={setmModalHistoricoTraslados}
       />
     </>

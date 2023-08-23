@@ -1,7 +1,7 @@
 // Components Material UI
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { AdminVentanilla } from '../registroPersonas/AdminVentanilla';
+// import { AdminVentanilla } from '../registroPersonas/AdminVentanilla';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -22,7 +22,7 @@ export const CrearPersonaScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Crear Personas - Formulario de registro" />
           <br />
-          <AdminVentanilla />
+          {/* <AdminVentanilla /> */}
         </Grid>
       </Grid>
     </>

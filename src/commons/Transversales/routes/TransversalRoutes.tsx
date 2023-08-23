@@ -29,6 +29,7 @@ const routes = [
 export const TransversalRoutes: React.FC = () => {
   return (
     <ModalProviderLideres>
+      
       <Routes>
         {routes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element} />
