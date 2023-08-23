@@ -358,8 +358,8 @@ const DialogDelegarOrganigrama = ({
           >
             <Button
               type="button"
-              color="success"
-              variant="contained"
+              color="primary"
+              variant="outlined"
               onClick={() => {
                 // void handle_submit_delegacion_organigrama();
                 console.log('limpiando formulario de datos de asignación de usuario')
@@ -370,6 +370,7 @@ const DialogDelegarOrganigrama = ({
               LIMPIAR FORMULARIO
             </Button>
             <Button
+            color="error"
               variant="outlined"
               onClick={handle_close_delegar_organigrama}
               startIcon={<CloseIcon />}
@@ -378,7 +379,8 @@ const DialogDelegarOrganigrama = ({
             </Button>
             <Button
               type="button"
-              variant="outlined"
+              color="primary"
+              variant="contained"
               onClick={() => {
                 set_modal_busqueda_avanzada_user_organigram(true);
               }}
@@ -389,6 +391,7 @@ const DialogDelegarOrganigrama = ({
             <Button
               type="button"
               variant="contained"
+              color = "success"
               onClick={() => {
                 void handle_submit_delegacion_organigrama();
               }}
