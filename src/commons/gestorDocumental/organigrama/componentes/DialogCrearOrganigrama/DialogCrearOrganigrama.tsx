@@ -284,8 +284,8 @@ const DialogCrearOrganigrama = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="contained"
-              color="success"
+              variant="outlined"
+              color="primary"
               onClick={() => {
                 reset_creacion_organigrama({
                   nombre: '',
@@ -300,6 +300,7 @@ const DialogCrearOrganigrama = ({
             </Button>
             <Button
               variant="outlined"
+              color="error"
               onClick={handle_close_crear_organigrama}
               startIcon={<CloseIcon />}
             >
@@ -309,6 +310,7 @@ const DialogCrearOrganigrama = ({
               loading={loadingButton}
               type="submit"
               variant="contained"
+              color="success"
               startIcon={<SaveIcon />}
             >
               CREAR

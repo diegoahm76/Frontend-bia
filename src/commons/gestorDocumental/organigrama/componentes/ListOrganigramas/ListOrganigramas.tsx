@@ -326,7 +326,8 @@ export function ListOrganigramas({
     <>
       <Stack direction="row" spacing={2} sx={{ mb: '20px' }}>
         <Button
-          variant="outlined"
+          variant="contained"
+          color="success"
           startIcon={<AddIcon />}
           onClick={() => {
             set_crear_organigrama_is_active(true);
@@ -372,7 +373,7 @@ export function ListOrganigramas({
               autoHeight
               rows={organigram}
               columns={columns}
-              pageSize={15}
+              pageSize={17}
               rowsPerPageOptions={[15]}
               getRowId={(row) => row.id_organigrama}
             />
