@@ -9,7 +9,7 @@ import { Title } from '../../../../../../components';
 import GradingIcon from '@mui/icons-material/Grading';
 import SearchIcon from '@mui/icons-material/Search';
 import { ModalContextTRD } from '../../../context/ModalsContextTrd';
-import { BusquedaTipologias } from '../components/BusquedaTipologias/BusquedaTipologias';
+// import { BusquedaTipologias } from '../components/BusquedaTipologias/BusquedaTipologias';
 import { AdministrarTipologiasDocumentales } from '../components/AdmistrarTipologias/AdministrarTipologiasDocumentales';
 
 export const TipologiasScreen = (): JSX.Element => {
@@ -68,7 +68,7 @@ export const TipologiasScreen = (): JSX.Element => {
 
       {/*  modules that will appear */}
 
-      <BusquedaTipologias />
+      {/* <BusquedaTipologias /> */}
       <AdministrarTipologiasDocumentales />
       {/*  modules that will appear */}
     </>
