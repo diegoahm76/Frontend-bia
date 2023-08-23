@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 //! libraries or frameworks
-import { type FC, useContext} from 'react';
+import { type FC, useContext } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -226,7 +226,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
+                      type="number"
                       fullWidth
                       label="Versión del TRD"
                       size="small"

@@ -6,38 +6,46 @@ import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
+import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
 
 const routes = [
   {
     path: 'organigrama/',
     name: 'organigrama',
-    component: () => <OrganigramaRoutes />,
+    component: () => <OrganigramaRoutes />
   },
   {
     path: 'ccd/',
     name: 'ccd',
-    component: () => <CcdRoutes />,
+    component: () => <CcdRoutes />
   },
   {
     path: 'trd/',
     name: 'trd',
-    component: () => <TrdRoutes />,
+    component: () => <TrdRoutes />
   },
   {
     path: 'tca/',
     name: 'tca',
-    component: () => <TcaRoutes />,
+    component: () => <TcaRoutes />
   },
+  // ? trasladar a configuracion y datos basicos
   {
     path: 'archivo/',
     name: 'archivo',
-    component: () => <DepositosRoutes />,
+    component: () => <DepositosRoutes />
   },
   {
     path: 'ventanilla_unica/',
     name: 'ventanilla_unica',
-    component: () => <VentanillaRoutes />,
+    component: () => <VentanillaRoutes />
   },
+  //! rutas de configuracion y datos básicos
+  {
+    path: 'configuracion-datos-basicos/',
+    name: 'configuracion',
+    component: () => <ConfigYDatosBasicosRoutes />
+  }
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

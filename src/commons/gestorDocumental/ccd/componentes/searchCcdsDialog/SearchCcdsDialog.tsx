@@ -112,7 +112,7 @@ const SearchCcdModal = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          {!params?.row?.usado || params?.row?.actual  ? (
+          {!params?.row?.usado || params?.row?.actual ? (
             <IconButton
               onClick={() => {
                 // console.log('params para ver ccd en el icono del ojito', params);
@@ -275,7 +275,7 @@ const SearchCcdModal = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
+                      type="number"
                       fullWidth
                       size="small"
                       label="Versión CCD"

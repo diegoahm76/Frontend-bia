@@ -90,58 +90,6 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
   };
 
   const columns = [
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      width: 70,
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            onClick={() => {
-              console.log('params.row', params.row);
-              dispatch(set_current_tca_action(params.row));
-              closeModal();
-              void get_catalogo_TRD_service(params.row.id_trd)
-                .then((res) => {
-                  console.log(res);
-                  dispatch(set_catalog_trd_action(res));
-                })
-                .then(() => {
-                  void get_catalogo_TCA_service(params.row.id_tca).then(
-                    (res) => {
-                      console.log(res);
-                      dispatch(set_catalog_TCA_action(res));
-                    }
-                  );
-
-                })
-                .catch((err) => {
-
-                  console.log(err);
-                  dispatch(set_catalog_TCA_action([]));
-                });
-              // reset_searched_trd_modal();
-              // console.log(params.row);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
-              <VisibilityIcon
-                titleAccess="Ver TCA"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      )
-    },
     ...columnsBusquedaTca,
     {
       field: 'fecha_terminado',
@@ -206,6 +154,56 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
             variant="outlined"
           />
         )
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 70,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            onClick={() => {
+              console.log('params.row', params.row);
+              dispatch(set_current_tca_action(params.row));
+              closeModal();
+              void get_catalogo_TRD_service(params.row.id_trd)
+                .then((res) => {
+                  console.log(res);
+                  dispatch(set_catalog_trd_action(res));
+                })
+                .then(() => {
+                  void get_catalogo_TCA_service(params.row.id_tca).then(
+                    (res) => {
+                      console.log(res);
+                      dispatch(set_catalog_TCA_action(res));
+                    }
+                  );
+                })
+                .catch((err) => {
+                  console.log(err);
+                  dispatch(set_catalog_TCA_action([]));
+                });
+              // reset_searched_trd_modal();
+              // console.log(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid'
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                titleAccess="Ver TCA"
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
     }
   ];
 
@@ -278,7 +276,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
+                      type="number"
                       fullWidth
                       label="Versión del TCA"
                       size="small"
