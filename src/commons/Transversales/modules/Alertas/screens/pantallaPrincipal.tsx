@@ -235,13 +235,17 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
 
   // Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
+  // const filtered_rows = mostrar_leidos === true
+  //   ? bandeja_alerta.filter((row) => row.leido)
+  //   : mostrar_leidos === false
+  //     ? bandeja_alerta.filter((row) => !row.leido)
+  //     : bandeja_alerta;
+
   const filtered_rows = mostrar_leidos === true
-    ? bandeja_alerta.filter((row) => row.leido)
+    ? bandeja_alerta.filter((row) => row.leido && row.archivado)
     : mostrar_leidos === false
-      ? bandeja_alerta.filter((row) => !row.leido)
-      : bandeja_alerta;
-
-
+      ? bandeja_alerta.filter((row) => !row.leido && row.archivado)
+      : bandeja_alerta.filter((row) => row.archivado);
 
 
   useEffect(() => {

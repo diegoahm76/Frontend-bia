@@ -185,7 +185,7 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
                     p: '20px',
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}>
-                    <h4 style={{ marginBottom: '20px' }}>¿Estas seguro de suspender las repeticiones de esta alerta?</h4>
+                    <h4 style={{ marginBottom: '20px' }}>¿Estas seguro de archivar esta alerta?</h4>
                 </Grid>
             </Dialog>
         </div>
