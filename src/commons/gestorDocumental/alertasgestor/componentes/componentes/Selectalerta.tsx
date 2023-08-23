@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
@@ -6,35 +8,12 @@ import { useEffect, useState } from 'react';
 import { Destinatario } from './Destinatario';
 import { PrioridadAlerta } from './PrioridadAlerta';
 import { api } from '../../../../../api/axios';
-
-export interface SelectAlerta {
-  cod_clase_alerta: string;
-  nombre_subsistema: string;
-  nombre_clase_alerta: string;
-  descripcion_clase_alerta: string;
-  cod_tipo_clase_alerta: string;
-  cod_categoria_clase_alerta: string;
-  cant_dias_previas: number | null;
-  frecuencia_previas: string | null;
-  cant_dias_post: number | null;
-  frecuencia_post: string | null;
-  envios_email: boolean;
-  mensaje_base_dia: string;
-  mensaje_base_previo: string | null;
-  mensaje_base_vencido: string | null;
-  nivel_prioridad: string;
-  activa: boolean;
-  asignar_responsable: boolean;
-  nombre_funcion_comple_mensaje: string;
-  id_modulo_destino: number;
-  id_modulo_generador: number;
-}
+import { Select_Alerta } from '../../interfaces/types';
  
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const Selectalerta: React.FC = () => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [selectedOption, setSelectedOption] = useState('');
+ 
+ export const Selectalerta: React.FC = () => {
+   const [selectedOption, setSelectedOption] = useState('');
   const [
     // textvalue
     , settextvalue] = useState('');
@@ -45,7 +24,7 @@ export const Selectalerta: React.FC = () => {
     settextvalue(event.target.value);
   };
 
-  const [alertas, set_alertas] = useState<SelectAlerta[]>([]);
+  const [alertas, set_alertas] = useState<Select_Alerta[]>([]);
   useEffect(() => {
     const fetch_alertas = async (): Promise<void> => {
       try {
@@ -60,7 +39,7 @@ export const Selectalerta: React.FC = () => {
     void fetch_alertas();
   }, []);
 
-  const [alertas_get, set_alertas_get] = useState<SelectAlerta[]>([]);
+  const [alertas_get, set_alertas_get] = useState<Select_Alerta[]>([]);
 
   useEffect(() => {
     const fetch_alertas_get = async (): Promise<void> => {
@@ -80,6 +59,20 @@ export const Selectalerta: React.FC = () => {
  
   return (
     <>
+       <Grid container
+        spacing={2} m={2} p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px', m: '10px 0 20px 0',  mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      > 
+        <Grid item marginTop={-2} xs={12}>
+          <Title title="Configuracion de alerta - gestor" />
+        </Grid>
+      </Grid>
       <Grid container
         spacing={2} m={2} p={2}
         sx={{
@@ -113,6 +106,7 @@ export const Selectalerta: React.FC = () => {
         {/* {alertas.find(alerta => alerta.cod_clase_alerta === selectedOption)?.descripcion_clase_alerta} */}
         {selectedOption && (
           <>
+
 
             <Grid item xs={12} sm={6}>
               <TextField
@@ -166,9 +160,9 @@ export const Selectalerta: React.FC = () => {
           </>
         )}
       </Grid>
-      {selectedOption && <Destinatario />}
+      {selectedOption && <Destinatario  selectedOption={selectedOption} />}
 
-      {selectedOption && <PrioridadAlerta />}
+      {selectedOption && <PrioridadAlerta selectedOption={selectedOption}/>}
     </>
   );
 };

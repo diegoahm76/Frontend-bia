@@ -1,44 +1,33 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/consistent-type-imports */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { FormControl, Grid, InputLabel, MenuItem, Select, IconButton, Button, TextField, } from '@mui/material';
-import type { SelectChangeEvent } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { DataGrid } from '@mui/x-data-grid';
+import { api } from '../../../../../api/axios';
+import { FC, useEffect, useState } from 'react';
+import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../../components';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import CircularProgress from '@mui/material/CircularProgress';
 import { BuscadorPersona } from '../../../../../components/BuscadorPersona';
-import { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports  
-import { Alertas, Persona } from '../../interfaces/types';
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports  
-import { api } from '../../../../../api/axios';
-import SaveIcon from '@mui/icons-material/Save';
+import { control_error, control_success } from '../../utils/control_error_or_success';
+import { Alertas, Persona, Props, SelectItem, UnidadOrganizacional } from '../../interfaces/types';
+import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, } from '@mui/material';
 
-export interface AlertaPersona {
-    id_persona_alertar: number | null;
-    perfil_sistema: string | null;
-    cod_clase_alerta: string;
-    id_persona: number | null;
-    id_unidad_org_lider: number | null;
-}
-export interface SelectItem {
-    value: string;
-    label: string;
-}
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const Destinatario: React.FC = () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [persona, set_persona] = useState<Persona | undefined>();
+
+export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
     const initial_data: Alertas[] = [];
+    const [loading, set_loading] = useState(false);
+    const [persona, set_persona] = useState<Persona | undefined>();
+    // const [selected_row, setselected_row] = useState<Alertas | null>(null);
     const [data_entidad, setdata_entidad] = useState<Alertas[]>(initial_data);
-    const on_result = async (info_persona: Persona): Promise<void> => {
-        set_persona(info_persona);
-    }
-    const [selected_row, setselected_row] = useState<Alertas | null>(null);
-
+    const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
     const fetch_dataget = async (): Promise<void> => {
         try {
             const url = "/transversal/alertas/personas_alertar/get-by-configuracion/Gst_SlALid/";
@@ -82,21 +71,15 @@ export const Destinatario: React.FC = () => {
             field: "accion",
             headerName: "Acción",
             width: 150,
-            flex: 1,
+            // flex: 1,
             renderCell: (params: any) => (
                 <>
                     <IconButton
                         color="primary"
-                        aria-label="Editar"
-                    >
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton
-                        color="primary"
                         aria-label="Eliminar"
                         onClick={() => {
-                            setselected_row(params.row);
-                            void handleeliminafila();
+                            // setselected_row(params.row);
+                            void handleeliminafila(params);
                         }}
                     >
                         <DeleteIcon />
@@ -106,22 +89,22 @@ export const Destinatario: React.FC = () => {
             ),
         },
     ];
-    const [perfil, set_perfil] = useState<SelectItem[]>([]);
-    const handleeliminafila = async (): Promise<void> => {
-        if (selected_row) {
-            try {
-                const url = `/transversal/alertas/personas_alertar/delete/${selected_row.id_persona_alertar}/`;
-                await api.delete(url);
-                // Actualiza el estado de los datos después de eliminar
-                const updated_data = data_entidad.filter(row => row.id_persona_alertar !== selected_row.id_persona_alertar);
-                setdata_entidad(updated_data);
-                setselected_row(null); // Limpia la fila seleccionada
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
+    const handleeliminafila = async (params: any): Promise<void> => {
 
+        try {
+            const url = `/transversal/alertas/personas_alertar/delete/${params.row.id_persona_alertar}/`;
+            await api.delete(url);
+            // Actualiza el estado de los datos después de eliminar
+            const updated_data = data_entidad.filter(row => row.id_persona_alertar !== params.row.id_persona_alertar);
+            setdata_entidad(updated_data);
+            control_success("Alerta eliminada correctamente");
+            // setselected_row(null); // Limpia la fila seleccionada
+        } catch (error) {
+            console.error(error);
+        }
+
+    };
+    const [perfil, set_perfil] = useState<SelectItem[]>([]);
     useEffect(() => {
         const fetch_perfil = async (): Promise<void> => {
             try {
@@ -135,10 +118,24 @@ export const Destinatario: React.FC = () => {
         };
         void fetch_perfil();
     }, []);
-    const [selec_perfil, setselec_perfil] = useState('');
-    const handleperfil = (event: SelectChangeEvent<string>): void => {
-        setselec_perfil(event.target.value);
-    };
+    const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
+    useEffect(() => {
+        const fetch_perfil = async (): Promise<void> => {
+            try {
+                const url = `/transversal/organigrama/unidades/get-list/organigrama-actual/`;
+                const res_lider = await api.get(url);
+                const alertas_lider = res_lider.data.data;
+                set_lider(alertas_lider);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        void fetch_perfil();
+    }, []);
+    // const [selec_perfil, setselec_perfil] = useState('');
+    // const handleperfil = (event: SelectChangeEvent<string>): void => {
+    //     setselec_perfil(event.target.value);
+    // };
     const [selected_button, setselected_button] = useState<string | null>(null);
     const handle_selectlider = (): void => {
         setselected_button('lider');
@@ -149,19 +146,15 @@ export const Destinatario: React.FC = () => {
     const handle_selectbuscar = (): void => {
         setselected_button('buscador');
     };
-
     // crear 
     const initialFormData = {
         id_persona_alertar: null,
         perfil_sistema: null,
-        cod_clase_alerta: '',
+        cod_clase_alerta: String(selectedOption),
         id_persona: null,
         id_unidad_org_lider: null,
     };
-
     const [formData, setFormData] = useState(initialFormData);
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({
@@ -170,21 +163,23 @@ export const Destinatario: React.FC = () => {
 
         }));
     };
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-
+        set_loading(true);
         try {
             const response = await api.post('/transversal/alertas/personas_alertar/create/', formData);
             console.log('Alerta de persona creada exitosamente:', response.data);
+            control_success("Alerta creada exitosamente");
+
             // Reset form data after successful submission
             setFormData(initialFormData);
+            fetch_dataget();
         } catch (error) {
             console.error('Error al crear la alerta de persona:', error);
+            control_error("Error no guardado ");
         }
+        set_loading(false);
     };
- 
     useEffect(() => {
         if (persona?.id_persona !== formData.id_persona) {
             setFormData((prevData) => ({
@@ -193,7 +188,37 @@ export const Destinatario: React.FC = () => {
             }) as typeof formData); // Utilizamos "as typeof formData" para asegurar la compatibilidad de tipos
         }
     }, [persona?.id_persona]);
-    
+
+    useEffect(() => {
+        if (formData.perfil_sistema !== null) {
+            set_persona(undefined);
+            setFormData((prevData) => ({
+                ...prevData,
+                id_unidad_org_lider: null,
+            }));
+        }
+    }, [formData.perfil_sistema]);
+
+    useEffect(() => {
+        if (formData.id_unidad_org_lider !== null) {
+            set_persona(undefined);
+            setFormData((prevData) => ({
+                ...prevData,
+                perfil_sistema: null,
+            }));
+        }
+    }, [formData.id_unidad_org_lider]);
+
+    useEffect(() => {
+        if (persona?.id_persona !== null) {
+            setFormData((prevData) => ({
+                ...prevData,
+                perfil_sistema: null,
+                id_unidad_org_lider: null,
+            }));
+        }
+    }, [persona?.id_persona]);
+
     return (
         <Grid container
             spacing={2}
@@ -207,74 +232,36 @@ export const Destinatario: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
             }}
         >
-            <TextField
-                label="ID de Persona"
-                variant="outlined"
-                fullWidth
-                type="number"
-                name="id_persona"
-                value={formData.id_persona || ''}
-                onChange={handleInputChange}
-                required
-            />
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    label="Código de Clase de Alerta"
-                    variant="outlined"
-                    fullWidth
-                    name="cod_clase_alerta"
-                    value={formData.cod_clase_alerta}
-                    onChange={handleInputChange}
-                    required
-                />
-                <TextField
-                    label="perfil_sistema"
-                    variant="outlined"
-                    fullWidth
-                     name="perfil_sistema"
-                    value={formData.perfil_sistema}
-                    onChange={handleInputChange}
-                    required
-                />
-                {/* You can add more TextField components for other fields */}
-
-                <Button type="submit" variant="contained" color="primary">
-                    Crear Alerta de Persona
-                </Button>
-            </form>
             <Grid item marginTop={-2} xs={12}>
                 <Title title="Destinatario" />
             </Grid>
-
             <Grid item xs={12}>
                 <Button onClick={handle_selectlider}>  Lider de unidad</Button>
                 <Button onClick={handle_selectperfil}>  Perfil</Button>
                 <Button onClick={handle_selectbuscar}>  BuscadorPersona</Button>
             </Grid>
-
             {selected_button === 'lider' && (
                 <Grid item xs={12}>
-
                     <Grid item xs={12} sm={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Lider de unidad</InputLabel>
-                            <Select label="Lider de unidad">
-                                <MenuItem value="Ten">Ten</MenuItem>
-                                <MenuItem value="Twenty">Twenty</MenuItem>
+                            <Select value={formData.id_unidad_org_lider} label="Lider de unidad" name="id_unidad_org_lider" onChange={handleInputChange}>
+                                {lider.map((unidad) => (
+                                    <MenuItem key={unidad.id_unidad_organizacional} value={unidad.id_unidad_organizacional}>
+                                        {unidad.nombre}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
                 </Grid>
             )}
-
             {selected_button === 'perfil' && (
-                <Grid item xs={12}>
-
-
+                <><Grid item xs={12}>
                     <Grid item xs={12} sm={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Perfil</InputLabel>
-                            <Select value={selec_perfil} label="Perfil" onChange={handleperfil}>
+                            <Select value={formData.perfil_sistema} label="Perfil" name="perfil_sistema" onChange={handleInputChange}>
                                 {perfil.map(item => (
                                     <MenuItem key={item.value} value={item.value}>
                                         {item.label}
@@ -284,9 +271,8 @@ export const Destinatario: React.FC = () => {
                         </FormControl>
                     </Grid>
                 </Grid>
-
+                </>
             )}
-
             {selected_button === 'buscador' && (
                 <Grid item xs={12}>
                     <BuscadorPersona
@@ -296,17 +282,22 @@ export const Destinatario: React.FC = () => {
                     />
                 </Grid>
             )}
+            <Grid container item justifyContent="flex-end" >
+                <Grid item>
+                    <form onSubmit={handleSubmit}>
+                        < LoadingButton
+                            variant="contained"
+                            color="success"
+                            fullWidth
 
-            <Grid item>
-                < Button
-                    variant="contained"
-                    color="success"
-                    fullWidth
-                    startIcon={<SaveIcon />}
-                    type="submit"
-                >
-                    Guardar
-                </Button>
+                            type="submit"
+                            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+                            loading={loading}
+                        >
+                            Guardar
+                        </LoadingButton>
+                    </form>
+                </Grid>
             </Grid>
             <>{persona?.primer_nombre}</>
             <>{persona?.id_persona}</>

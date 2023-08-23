@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/naming-convention */
-
-// ? libraries
-import { type FC } from 'react';
+/* eslint-disable @typescript-eslint/naming-convention */ 
+import { type FC, useEffect } from 'react';
 import {
-  /* Box , */ Checkbox,
+  Checkbox,
   FormControl,
   FormControlLabel,
   Grid,
@@ -13,47 +12,48 @@ import {
 } from '@mui/material';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
-
-//* icons
 import InfoIcon from '@mui/icons-material/Info';
-// import { containerStyles } from '../../../gestorDocumental/tca/screens/utils/constants/constants';
-// import { useAlertaHook } from '../utils/useAlertaHook';
-// import { Title } from '../../../../components/Title';
 import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../components';
 import { useAlertaHook } from '../../../../recursoHidrico/alertas/utils/useAlertaHook';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
+import { Props } from '../../interfaces/types';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const PrioridadAlerta: FC<any> = ({ title }: any): JSX.Element => {
+ export const PrioridadAlerta: FC<Props> = ({ selectedOption }): JSX.Element => {
   const {
     controlConfiguracionGeneralAlertas,
     is_loading_configuracion_general_alertas,
     options,
-    onSubmit_configuracion_general_alertas,
+    // selectedOption,
+
+    set_options_recaudo,
+    onSubmit_configuracion_general_alertas_recaudo,
+
   } = useAlertaHook();
+ 
+  useEffect(() => {
+    set_options_recaudo(selectedOption);
+  }, [selectedOption]);
 
   return (
     <>
       <form
-        onSubmit={(data) => {
-          void onSubmit_configuracion_general_alertas(data);
+        onSubmit={(data) => { 
+          void onSubmit_configuracion_general_alertas_recaudo(data);
         }}
         style={{
-          width: '100%',
+          width: '101%',
           height: 'auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'column',
         }}
-      >
+      > 
         <Grid container sx={containerStyles}>
           <Grid item xs={12}>
-            <Title title="prioridadAlerta" />
-            {/*  <Box sx={{ mt: '20px', mb: '20px' }}> */}
-            {/* select alertas  */}
+            <Title title="Prioridad de alerta " /> 
             <Grid
               item
               xs={12}
@@ -63,6 +63,7 @@ export const PrioridadAlerta: FC<any> = ({ title }: any): JSX.Element => {
                 marginBottom: '10px',
               }}
             >
+
               <Controller
                 name="prioridadAlerta"
                 control={controlConfiguracionGeneralAlertas}

@@ -43,6 +43,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
   const [form_values, setform_values] = useState<ISucursalForm>(initial_state);
   const [form_submitted, setform_submitted] = useState(false);
   const [loading, set_loading] = useState(false);
+  
   useEffect(() => {
     if (isediting) {
 
