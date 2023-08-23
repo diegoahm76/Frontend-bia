@@ -485,7 +485,7 @@ export const CcdScreen: React.FC = () => {
             >
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={() => {
                   set_consulta_ccd_is_active(true);
@@ -497,7 +497,7 @@ export const CcdScreen: React.FC = () => {
               <LoadingButton
                 loading={loadingButton}
                 type="submit"
-                color="primary"
+                color="success"
                 variant="contained"
                 disabled={ccd_current?.actual}
                 startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
@@ -505,8 +505,8 @@ export const CcdScreen: React.FC = () => {
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </LoadingButton>
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   clean_ccd();
@@ -835,7 +835,7 @@ export const CcdScreen: React.FC = () => {
                         );
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
-                      color="primary"
+                      color="success"
                       variant="contained"
                       startIcon={<SaveIcon />}
                     >
@@ -858,8 +858,8 @@ export const CcdScreen: React.FC = () => {
                         });
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
-                      color="success"
-                      variant="contained"
+                      color="primary"
+                      variant="outlined"
                       startIcon={<CleanIcon />}
                     >
                       LIMPIAR CAMPOS
@@ -878,7 +878,7 @@ export const CcdScreen: React.FC = () => {
                       zIndex: 2
                     }}
                     columns={columns_asignacion}
-                    pageSize={5}
+                    pageSize={8}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.id_cat_serie_und}

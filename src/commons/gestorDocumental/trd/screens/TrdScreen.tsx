@@ -286,7 +286,7 @@ export const TrdScreen: FC = (): JSX.Element => {
               </Button>
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalModalSearchTRD}
               >
@@ -295,7 +295,7 @@ export const TrdScreen: FC = (): JSX.Element => {
               <LoadingButton
                 loading={createTRDLoadingButton}
                 type="submit"
-                color="primary"
+                color="success"
                 variant="contained"
                 startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
@@ -303,8 +303,8 @@ export const TrdScreen: FC = (): JSX.Element => {
               </LoadingButton>
 
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
