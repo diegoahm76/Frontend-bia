@@ -125,7 +125,7 @@ export const BusquedaTipologias = (): JSX.Element => {
           >
             <Avatar sx={AvatarStyles} variant="rounded">
               <EditIcon
-                titleAccess="Editar formato tipo de medio"
+                titleAccess="Editar tipología documental"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -138,7 +138,6 @@ export const BusquedaTipologias = (): JSX.Element => {
           {params.row.item_ya_usado ? null : (
             <IconButton
               onClick={() => {
-                // console.log('params delete tipologia', params.row);
                 dispatch(
                   delete_tipologia_documental_service(
                     params.row.id_tipologia_documental
@@ -155,9 +154,9 @@ export const BusquedaTipologias = (): JSX.Element => {
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DeleteIcon
-                  titleAccess="Eliminar formato tipo de medio"
+                  titleAccess="Eliminar tipología documental"
                   sx={{
-                    color: 'primary.main',
+                    color: 'red',
                     width: '18px',
                     height: '18px'
                   }}

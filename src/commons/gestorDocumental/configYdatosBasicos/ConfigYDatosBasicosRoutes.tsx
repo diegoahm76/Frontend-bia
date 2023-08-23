@@ -8,6 +8,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../screens/404';
 import { AdmnistrarFormatos } from '../trd/components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { AdministrarTipologiasDocumentales } from '../trd/components/Tipologias/components/AdmistrarTipologias/AdministrarTipologiasDocumentales';
+import { ModalProviderTRD } from '../trd/context/ModalsContextTrd';
 
 interface RouteType {
   path: string;
@@ -18,11 +19,11 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
   const routes: RouteType[] = [
     {
       path: '/admin-tipologias-documentales',
-      element: () => <AdministrarTipologiasDocumentales/>
+      element: () => <AdministrarTipologiasDocumentales />
     },
     {
       path: '/admin-formatos-documentales',
-      element: () => <AdmnistrarFormatos/>
+      element: () => <AdmnistrarFormatos />
     },
     {
       path: '/*',
@@ -31,10 +32,12 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
   ];
 
   return (
-    <Routes>
-      {routes.map((route, index) => (
-        <Route key={index} path={route.path} element={route.element()} />
-      ))}
-    </Routes>
+    <ModalProviderTRD>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element()} />
+        ))}
+      </Routes>
+    </ModalProviderTRD>
   );
 };
