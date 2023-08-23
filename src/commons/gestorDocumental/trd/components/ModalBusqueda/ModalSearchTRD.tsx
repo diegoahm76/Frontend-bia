@@ -74,14 +74,19 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     {
       headerName: 'Estado',
       field: 'estado',
-      minWidth: 180,
-      maxWidth: 220,
+      width: 300,
       renderCell: (params: { row: { fecha_terminado: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.fecha_terminado !== null ? (
+        return params.row.fecha_terminado ? (
           <Chip
             size="small"
-            label={`Terminado ${params.row.fecha_terminado}`}
+            label={
+              params.row.fecha_terminado
+                ? `Terminado ${new Date(
+                    params.row.fecha_terminado
+                  ).toLocaleString()} `
+                : ''
+            }
             color="success"
             variant="outlined"
           />
@@ -140,6 +145,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               variant="rounded"
             >
               <VisibilityIcon
+                titleAccess="Ver TRD"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -162,7 +168,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     <>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
         open={modalSearchTRD}
         onClose={closeModal}
       >
@@ -245,10 +251,10 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <LoadingButton
                   loading={createTRDLoadingButton}
-                  variant="outlined"
+                  color="primary"
+                  variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
-                  color="primary"
                 >
                   BUSCAR
                 </LoadingButton>
@@ -260,7 +266,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               autoHeight
               rows={trds}
               columns={columns_trd_busqueda}
-              pageSize={5}
+              pageSize={7}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={(row) => row.id_trd}
@@ -274,8 +280,8 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
-                variant="contained"
-                color="success"
+                variant="outlined"
+                color="primary"
                 onClick={() => {
                   // console.log('cerrando');
                   reset_searched_trd_modal();
@@ -285,6 +291,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 LIMPIAR BÚSQUEDA
               </Button>
               <Button
+                color="error"
                 variant="outlined"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}
