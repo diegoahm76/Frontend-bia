@@ -153,7 +153,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
 
                     const elemento_buscado_en_array = data_entidad[updatedata_entidad_index];
                     const leido_value = elemento_buscado_en_array.leido;
-                    // if (leido_value){
+                      if (!leido_value){
                     const updateddata_entidad: Alerta_update = {
                         ...elemento_buscado_en_array,
                         leido: !leido_value,
@@ -166,8 +166,8 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
 
                     set_data_entidad(response.data.data);
                     control_success('La notificación actual ha sido revisada');
-                // }
-                //     control_error(`la alerta ya fue revisada`);
+                  }
+                   
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }

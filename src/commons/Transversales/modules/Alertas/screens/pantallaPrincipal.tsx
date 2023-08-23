@@ -168,7 +168,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
             <SuspenderAlerta
               dat={params.row.id_alerta_bandeja_alerta_persona}
-              marcador={params.row.leido}
+              marcador={params.row.repeticiones_suspendidas}
               activate_suspender_alerta={buscar_bandeja_alerta}
             />
 
