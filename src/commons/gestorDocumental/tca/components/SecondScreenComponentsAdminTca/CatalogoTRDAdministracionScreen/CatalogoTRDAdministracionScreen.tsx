@@ -13,6 +13,7 @@ import type { dataGridTypes } from '../../../types/tca.types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
 import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
+import { type GridColDef } from '@mui/x-data-grid';
 
 export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
@@ -23,16 +24,12 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
-
   //* context declaration
-  // eslint-disable-next-line no-empty-pattern
   const {
-    // modalAdministracionTca,
     openModalAdministracionTca
-    // closeModalAdministracionTca,
   } = useContext(ModalContextTCA);
 
-  const newColums: any = [
+  const newColums: GridColDef[] = [
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -96,19 +93,12 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
   return (
     <>
-
       <RenderDataGrid
         rows={rows || []}
         columns={newColums || []}
         title={title}
         aditionalElement={aditionalElement}
       />
-
-      {/*
-        mirar si se debe añadir componente adicional
-
-        button - añadir nueva relacion del TRD o cancelar relacion del TRD en la propiedad aditionalElement
-      */}
     </>
   );
 };
