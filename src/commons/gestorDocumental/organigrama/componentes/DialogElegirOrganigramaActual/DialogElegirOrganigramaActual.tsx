@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
- // IconButton,
   Stack,
   Button,
   Box,
@@ -187,21 +186,6 @@ const DialogElegirOrganigramaActual = ({
       >
         <DialogTitle>
         <Title title=" Activación de organigrama" />
-         
-         {/* <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton> */}
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>

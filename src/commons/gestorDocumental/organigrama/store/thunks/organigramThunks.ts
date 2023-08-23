@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SetStateAction, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
@@ -185,14 +186,26 @@ export const to_finalize_organigram_service: any = (
 };
 
 // Reanudar organigrama
-export const to_resume_organigram_service: any = (id: string) => {
+export const to_resume_organigram_service: any = (
+  id: string,
+  set_position_tab_organigrama: Dispatch<SetStateAction<string>>,
+  clean_unitys: () => void
+) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
         `transversal/organigrama/reanudar-organigrama/${id}/`
       );
-      // console.log(data);
-      dispatch(get_organigrams_service());
+
+      const res = await api.get('transversal/organigrama/get/');
+      const org_data = await res?.data?.Organigramas.find(
+        (organigrama: any) => organigrama.id_organigrama === Number(id)
+      );
+      console.log(org_data);
+      // dispatch(get_organigrams_service());
+      dispatch(current_organigram(org_data));
+      set_position_tab_organigrama('2');
+      clean_unitys();
       void Swal.fire({
         position: 'center',
         icon: 'info',
@@ -288,6 +301,8 @@ export const update_unitys_service: any = (
       // console.log('update_unitys_service fail');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      clean_unitys();
     }
   };
 };

@@ -90,7 +90,7 @@ const DialogDelegarOrganigrama = ({
       await dispatch(
         delegar_organigrama_persona(
           data_user_por_asignar?.id_persona,
-          organigram_current.id_organigrama
+          organigram_current?.id_organigrama
         )
       );
       handle_close_delegar_organigrama();
@@ -199,7 +199,7 @@ const DialogDelegarOrganigrama = ({
                       fullWidth
                       label="Organigrama"
                       size="small"
-                      value={organigram_current.nombre}
+                      value={organigram_current?.nombre}
                       disabled={true}
                     />
                   )}
@@ -209,7 +209,7 @@ const DialogDelegarOrganigrama = ({
                     fullWidth
                     label="Versión"
                     size="small"
-                    value={organigram_current.version}
+                    value={organigram_current?.version}
                     disabled={true}
                   />
                 </Grid>
@@ -228,7 +228,7 @@ const DialogDelegarOrganigrama = ({
                     onChange={on_change}
                     label="Tipo de documento *"
                     name="tipo_documento"
-                    value={organigram_current.tipo_documento?.toString() ?? ''}
+                    value={organigram_current?.tipo_documento?.toString() ?? ''}
                     options={tipo_documento_opt}
                     disabled={true}
                     required={false}
@@ -244,7 +244,7 @@ const DialogDelegarOrganigrama = ({
                       fullWidth
                       autoFocus
                       label="Número de documento"
-                      value={organigram_current.numero_documento}
+                      value={organigram_current?.numero_documento}
                       size="small"
                       disabled={true}
                     />

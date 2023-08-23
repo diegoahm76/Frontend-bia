@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  // IconButton,
   Stack,
   Button,
   Box,
@@ -92,21 +91,7 @@ const DialogCrearOrganigrama = ({
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          <Title title=" Crear organigrama" />
-         {/* <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <CloseIcon />
-          </IconButton> */}
+          <Title title="Crear organigrama" />
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -263,10 +248,10 @@ const DialogCrearOrganigrama = ({
                       fontSize: '0.75rem'
                     }}
                   >
-                    {control_organigrama_creacion._formValues.ruta_resolucion
-                      ? control_organigrama_creacion._formValues.ruta_resolucion
+                    {control_organigrama_creacion?._formValues?.ruta_resolucion
+                      ? control_organigrama_creacion?._formValues?.ruta_resolucion
                           .name ??
-                        control_organigrama_creacion._formValues.ruta_resolucion.replace(
+                        control_organigrama_creacion?._formValues?.ruta_resolucion.replace(
                           /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
                           ''
                         )
