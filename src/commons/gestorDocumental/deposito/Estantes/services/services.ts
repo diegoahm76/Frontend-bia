@@ -1,10 +1,10 @@
 import type { AxiosResponse } from "axios";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
-import type { InfoDepositos, InfoEstantes, ListarDepositos, ListarSucursales } from "../types/types";
+import type { GetBandejas, GetEstantes, InfoDepositos, InfoEstantes, ListarDepositos, ListarSucursales, PostEstantes } from "../types/types";
 import { api } from "../../../../../api/axios";
 
 
-
+// ? ----------------------------------------------- [ GET ] -----------------------------------------------
 export const search_deposito = async ({
     nombre_deposito,
     identificacion_por_entidad,
@@ -44,3 +44,32 @@ export const get_depositos = async (): Promise<ListarDepositos[]> => {
     const data = response.data.data;
     return data ?? [];
 };
+// * estantes por d
+export const get_estantes_deposito = async (id_deposito: number): Promise<GetEstantes[]> => {
+    const response: AxiosResponse<ResponseServer<GetEstantes[]>> = await api.get<
+        ResponseServer<GetEstantes[]>
+    >(`gestor/depositos-archivos/estanteDeposito/listar-estante-por-deposito/${id_deposito}/`);
+    return response.data.data;
+};
+// * orden estantes
+export const get_orden_estantes = async (): Promise<ListarSucursales[]> => {
+    const response = await api.get(`gestor/depositos-archivos/estanteDeposito/siguiente-orden/`);
+    const data = response.data.data;
+    return data ?? [];
+};
+// * bandejas por estantes
+export const get_depositos_estante = async (id_estante: number): Promise<GetBandejas[]> => {
+    const response: AxiosResponse<ResponseServer<GetBandejas[]>> = await api.get<
+        ResponseServer<GetBandejas[]>
+    >(`gestor/depositos-archivos/bandejaEstante/listar-bandejas-por-estante/${id_estante}/`);
+    return response.data.data;
+};
+
+// ? ----------------------------------------------- [ POST ] -----------------------------------------------
+export const post_deposito = async (data: PostEstantes): Promise<PostEstantes> => {
+    const response = await api.post(`gestor/depositos-archivos/estanteDeposito/crear/`, data);
+    return response.data;
+}
+
+
+

@@ -50,6 +50,24 @@ export interface ListarDepositos {
   municipio:                   string;
   activo:                      boolean;
 }
+export interface GetEstantes {
+  id_estante_deposito:          number;
+  orden_ubicacion_por_deposito: number;
+  identificacion_por_deposito:  string;
+}
+export interface GetBandejas {
+  id_bandeja_estante:          number;
+  orden_ubicacion_por_estante: number;
+  identificacion_por_estante:  string;
+}
+export interface OrdenSiguiente {
+  orden_siguiente: number;
+}
+
+export interface PostEstantes {
+  id_deposito:                 number;
+  identificacion_por_deposito: string;
+}
 
 
 

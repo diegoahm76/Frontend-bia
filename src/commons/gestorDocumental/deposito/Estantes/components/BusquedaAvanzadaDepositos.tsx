@@ -329,7 +329,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
             }}
           >
             <Title title="Búsqueda avanzada" />
-            <form
+            {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);
               }}
@@ -340,108 +340,111 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-            >
-              <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Controller
-                    name="nombre_deposito"
-                    control={control}
-                    render={(
-                      { field: { onChange, value } } // formState: { errors }
-                    ) => (
-                      <TextField
-                        fullWidth
-                        label="Nombre depósito"
-                        value={value}
-                        onChange={onChange}
-                        size="small"
-                        margin="dense"
-                        disabled={false}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Controller
-                    name="identificacion_por_entidad"
-                    control={control}
-                    render={(
-                      { field: { onChange, value } } // formState: { errors }
-                    ) => (
-                      <TextField
-                        label="Identificación por entidad"
-                        fullWidth
-                        value={value}
-                        onChange={onChange}
-                        size="small"
-                        margin="dense"
-                        disabled={false}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Controller
-                    name="nombre_sucursal"
-                    control={control}
-                    rules={{ required: false }}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        label="Seleccione sucursal"
-                        placeholder="Seleccione sucursal"
-                        select
-                        size="small"
-                        margin="dense"
-                        disabled={false}
-                        fullWidth
-                        required={false}
-                        value={value}
-                        onChange={onChange}
-                      >
-                        {sucusal_selected.map((option) => (
-                          <MenuItem key={option.label} value={option.label}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />{' '}
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3} container justifyContent="end">
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    loading={is_search}
-                    disabled={is_search}
-                  >
-                    Buscar
-                  </LoadingButton>
-                </Grid>
-                {rows.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <Title title="Resultados de la búsqueda" />
-                      {/* <Typography>Resultados de la búsqueda</Typography> */}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box sx={{ height: 400, width: '100%' }}>
-                        <>
-                          <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => uuidv4()}
-                          />
-                        </>
-                      </Box>
-                    </Grid>
-                  </>
-                )}
+            > */}
+            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_deposito"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre depósito"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
               </Grid>
-            </form>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="identificacion_por_entidad"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      label="Identificación por entidad"
+                      fullWidth
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_sucursal"
+                  control={control}
+                  rules={{ required: false }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label="Seleccione sucursal"
+                      placeholder="Seleccione sucursal"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required={false}
+                      value={value}
+                      onChange={onChange}
+                    >
+                      {sucusal_selected.map((option) => (
+                        <MenuItem key={option.label} value={option.label}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />{' '}
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  loading={is_search}
+                  disabled={is_search}
+                  onClick={(e) => {
+                    void on_submit_advance(e);
+                  }}
+                >
+                  Buscar
+                </LoadingButton>
+              </Grid>
+              {rows.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Title title="Resultados de la búsqueda" />
+                    {/* <Typography>Resultados de la búsqueda</Typography> */}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                      <>
+                        <DataGrid
+                          rows={rows}
+                          columns={columns}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                          getRowId={(row) => uuidv4()}
+                        />
+                      </>
+                    </Box>
+                  </Grid>
+                </>
+              )}
+            </Grid>
+            {/* </form> */}
           </Grid>
         </DialogContent>
       </Dialog>
