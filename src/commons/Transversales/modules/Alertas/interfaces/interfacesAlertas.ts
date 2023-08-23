@@ -34,6 +34,7 @@ export interface AlertaBandejaAlertaPersona {
     responsable_directo: boolean;
     id_bandeja_alerta_persona: number;
     id_alerta_generada: number;
+    mensaje: string;
 }
 
 export interface Alerta_update {
@@ -49,4 +50,16 @@ export interface Alerta_update {
     responsable_directo: boolean;
     id_bandeja_alerta_persona: number;
     id_alerta_generada: number;
+}
+export interface InterfazMostarAlerta {
+    columnnns: any; // o el tipo adecuado para id_alerta_bandeja_alerta_persona
+    dat: number; // o el tipo adecuado para id_alerta_bandeja_alerta_persona
+    marcador: boolean;
+    activate_suspender_alerta: () => void;
+}
+
+export interface InterfazMostarAlerta2 {
+    dat: number; // o el tipo adecuado para id_alerta_bandeja_alerta_persona
+    marcador: boolean;
+    activate_suspender_alerta: () => void;
 }
