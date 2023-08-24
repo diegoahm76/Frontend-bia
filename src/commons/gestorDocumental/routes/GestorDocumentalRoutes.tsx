@@ -7,6 +7,7 @@ import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
+import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 const routes = [
   {
@@ -45,6 +46,11 @@ const routes = [
     path: 'configuracion-datos-basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
+  },
+  {
+    path: 'activacion-instrumentos-archivisticos',
+    name: 'activacion-instrumentos-archivisticos',
+    component: () => <DialogCcdActual/>
   }
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention

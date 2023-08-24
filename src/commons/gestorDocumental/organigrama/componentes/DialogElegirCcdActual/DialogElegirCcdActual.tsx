@@ -3,12 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   Box,
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -29,12 +27,14 @@ import {
 import { type IList } from '../../../../../interfaces/globalModels';
 import { ccds_choise_adapter } from '../../adapters/organigrama_adapters';
 import { initial_state } from './utils/constants';
-import type { CCD, FormValues, IProps, keys_object } from './types/types';
+import type { CCD, FormValues, keys_object } from './types/types';
 import { control_error } from '../../../../../helpers';
 import { get_organigrama_actual } from '../../store/thunks/organigramThunks';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Link } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
+const DialogCcdActual = () => {
   const fecha_actual = dayjs().format('YYYY-MM-DD');
 
   const dispatch = useAppDispatch();
@@ -66,7 +66,6 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     reset_elegir_organigrama_actual();
     set_ccd_selected('');
     set_data_asociada_ccd(initial_state);
-    set_is_modal_active(false);
   };
 
   const on_submit = async (data: FormValues): Promise<void> => {
@@ -80,10 +79,8 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
 
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
-    if (is_modal_active) {
-      void get_list_ccds();
-    }
-  }, [is_modal_active]);
+    void get_list_ccds();
+  }, []);
 
   // 1.1 Traer data
   const get_list_ccds = async (): Promise<void> => {
@@ -139,13 +136,25 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   };
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="md"
-      open={is_modal_active}
-      onClose={handle_close_dialog}
+    <Grid
+      container
+      sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        p: '20px',
+        mb: '20px',
+        boxShadow: '0px 3px 6px #042F4A26'
+      }}
     >
-      <Box component="form" onSubmit={handle_submit(on_submit)}>
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%'
+        }}
+        component="form"
+        onSubmit={handle_submit(on_submit)}
+      >
         <DialogTitle>
           <Title
             title="Activación de Cuadro clasificación documental e instrumentos
@@ -295,14 +304,16 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={handle_close_dialog}
-              startIcon={<CloseIcon />}
-            >
-              CERRAR
-            </Button>
+            <Link to="/app/gestor_documental/organigrama/crear">
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<ArrowBackIcon />}
+                // onClick={handle_to_go_back}
+              >
+                VOLVER A ORGANIGRAMA
+              </Button>
+            </Link>
             <Button
               type="submit"
               color="success"
@@ -314,7 +325,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
           </Stack>
         </DialogActions>
       </Box>
-    </Dialog>
+    </Grid>
   );
 };
 
