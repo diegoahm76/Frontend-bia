@@ -113,10 +113,11 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
                     const first_alert = data_entidad[updatedata_entidad_index];
 
                     const valor_archivado = first_alert.archivado;
-                    if (valor_archivado) {
+                    if (!valor_archivado) {
                         const updateddata_entidad: Alerta_update = {
                             ...first_alert,
-                            archivado: false,
+                            archivado: true,
+                            leido:true,
                         };
 
                         const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
@@ -124,7 +125,7 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
                         set_data_entidad(response.data.data);
                         control_success('Campo  archivado  correctamente');
                     }
-                    control_error(`el campo ya esta archivado`);
+                   
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }

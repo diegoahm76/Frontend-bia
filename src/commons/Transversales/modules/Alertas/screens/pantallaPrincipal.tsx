@@ -19,12 +19,16 @@ import { useNavigate } from 'react-router-dom';
 import ReplyIcon from '@mui/icons-material/Reply';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { AlertasContext } from '../context/AlertasContext';
-
-
+import { MostrrModalArchivado } from '../components/modalArchivados/ModalArchivado';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
+import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
+import { BotonConAlerta } from '../utils/MarcadorDeAlertasBoton';
+import { obtenerHoraDeFecha } from '../utils/ModificadorHora';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
 
-  const { setNumeroDeAlertas} = useContext(AlertasContext);
+  const { setNumeroDeAlertas } = useContext(AlertasContext);
 
   const navigate = useNavigate();
 
@@ -34,8 +38,8 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   const [id_alertas, set_id_alertas] = useState<number | null>(null);
   const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
   const [bandeja_alerta, set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>([]);
-
-
+  const [alertas_leidas_icono, set_alertas_leidas_icono] = useState<number>(0);
+  const [alertas_no_leidas_icono, set_alertas_no_leidas_icono] = useState<number>(0);
   const fetch_data_get = async (): Promise<void> => {
     try {
       const url = `/transversal/alertas/bandeja_alerta_persona/get-bandeja-by-persona/${id_persona}/`;
@@ -58,6 +62,9 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       const url = `/transversal/alertas/alertas_bandeja_Alerta_persona/get-alerta_bandeja-by-bandeja/${id_alertas}/`;
       const { data } = await api.get(url);
       const AlertasNoLeidas = data.data.filter((el: any) => el.leido === false);
+      const AlertasLeidas = data.data.filter((el: any) => el.leido === true);
+      set_alertas_no_leidas_icono(AlertasNoLeidas.length);
+      set_alertas_leidas_icono(AlertasLeidas.length);
       setNumeroDeAlertas(AlertasNoLeidas.length)
       set_bandeja_alerta(data.data);
 
@@ -67,7 +74,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     }
   };
 
-
+  
   const columns = [
     {
       field: 'nivel_prioridad',
@@ -98,10 +105,16 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     },
     {
       field: 'fecha_hora',
-      headerName: 'Fecha/Hora',
-      width: 120,
+      headerName: 'Fecha',
+      width: 80,
       valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_hora),
-    }, 
+    },
+    {
+      field: 'fecha_horaa',
+      headerName: 'Hora',
+      width: 80,
+      valueGetter: (params: any) => obtenerHoraDeFecha(params.row.fecha_hora),
+    },
     {
       field: 'nombre_clase_alerta',
       headerName: 'Nombre Clase Alerta',
@@ -118,28 +131,20 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     {
       field: 'fecha_envio_email',
       headerName: 'Fecha envio email',
-      width: 200,
+      width: 150,
       valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_envio_email),
     },
+
     {
       field: 'nombre_modulo',
       headerName: 'Nombre Módulo',
       width: 200,
       valueGetter: (params: any) => {
-        const ruta = params.value.split('/#/app/')[1]; // Obtener parte después de "/#/app/"
-        const modulo = ruta.split('/')[0]; // Obtener la palabra después de "recurso_hidrico/"
-        return modulo;
+        const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
+        const firstPart = ruta.split('/')[0]; // Obtener la primera palabra después de eliminar '/#/app/'
+        return firstPart;
       },
     },
-
-
-
-
-
-
-
-
-
     {
       field: 'archivado',
       headerName: 'Archivado',
@@ -179,8 +184,8 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               activate_suspender_alerta={buscar_bandeja_alerta} />
 
 
-            <ModalInfoAlerta columnnns={params.row} 
-            dat={params.row.id_alerta_bandeja_alerta_persona}
+            <ModalInfoAlerta columnnns={params.row}
+              dat={params.row.id_alerta_bandeja_alerta_persona}
               marcador={params.row.leido}
               activate_suspender_alerta={buscar_bandeja_alerta} />
 
@@ -214,9 +219,6 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   }, []);
 
 
-
-
-
   const f_leidos = (): void => {
     set_mostrar_leidos(true);
     // activate_suspender_alerta();
@@ -233,20 +235,15 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   };
 
 
-
-  // Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
-  // const filtered_rows = mostrar_leidos === true
-  //   ? bandeja_alerta.filter((row) => row.leido)
-  //   : mostrar_leidos === false
-  //     ? bandeja_alerta.filter((row) => !row.leido)
-  //     : bandeja_alerta;
-
   const filtered_rows = mostrar_leidos === true
-    ? bandeja_alerta.filter((row) => row.leido && row.archivado)
+    ? bandeja_alerta.filter((row) => row.leido && !row.archivado)
     : mostrar_leidos === false
-      ? bandeja_alerta.filter((row) => !row.leido && row.archivado)
-      : bandeja_alerta.filter((row) => row.archivado);
+      ? bandeja_alerta.filter((row) => !row.leido && !row.archivado)
+      : bandeja_alerta.filter((row) => !row.archivado);
 
+
+
+  const Variablex = bandeja_alerta.filter(row => row.archivado);
 
   useEffect(() => {
     fetch_data_get().catch((error) => {
@@ -256,6 +253,11 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   }, [mostrar_leidos]);
 
 
+
+  
+  const numeroDeAlertasLeidos = alertas_leidas_icono;
+  const numeroDeAlertasNoLeidos = alertas_no_leidas_icono;
+  const numeroDeAlertasTodos = numeroDeAlertasLeidos + numeroDeAlertasNoLeidos;
   return (
     <>
       <Grid
@@ -273,15 +275,33 @@ export const PantallaPrincipalAlertas: React.FC = () => {
           <Title title="Mis alertas" />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <ButtonGroup style={{ margin: 7 }}>
+             
 
+              <BotonConAlerta
+                label="Leídos"
+                icono={<MarkEmailReadIcon />}
+                onClick={f_leidos}
+                numeroDeAlertas={numeroDeAlertasLeidos}
+              />
+              <BotonConAlerta
+                label="No Leídos"
+                icono={<MarkEmailUnreadIcon />}
+                onClick={f_no_leidos}
+                numeroDeAlertas={numeroDeAlertasNoLeidos}
+              />
+              <BotonConAlerta
+                label="Todos"
+                icono={<MarkunreadMailboxIcon />}
+                onClick={f_todos}
+                numeroDeAlertas={numeroDeAlertasTodos}
+              />
 
-              <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                <Button onClick={f_leidos} >leidos</Button>
-                <Button onClick={f_no_leidos}>no leidos</Button>
-                <Button onClick={f_todos}>todos</Button>
-              </ButtonGroup>
+               <MostrrModalArchivado data={Variablex} />
 
             </ButtonGroup>
+
+          
+
             <ButtonGroup style={{ margin: 7 }}>
               {download_xls({ nurseries: filtered_rows, columns })}
             </ButtonGroup>
@@ -298,11 +318,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
             />
 
           </Box>
-
         </Grid>
-
-
-
       </Grid>
 
 
@@ -317,11 +333,13 @@ export const PantallaPrincipalAlertas: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
           width: '20%',
-        }}
-      >
+        }}>
 
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'rigth' }}>
+          <div style={{ color: '#	#000000', marginBottom: '8px' }}>
+            Tipos de alertas:
+          </div>
           <div style={{ color: '#4CAF50', marginBottom: '8px' }}>
             <PriorityHighRoundedIcon fontSize="small" style={{ color: '#4CAF50', marginRight: 4 }} />
             Baja
@@ -335,6 +353,9 @@ export const PantallaPrincipalAlertas: React.FC = () => {
             Alta
           </div>
         </div>
+
+
+
       </Grid>
 
     </>

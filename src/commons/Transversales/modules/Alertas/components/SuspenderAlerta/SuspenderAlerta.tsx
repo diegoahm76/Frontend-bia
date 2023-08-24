@@ -92,14 +92,14 @@ export const SuspenderAlerta: React.FC<InterfazMostarAlerta2> = ({  dat,  marcad
             if (updatedata_entidad_index !== -1) {
                 try {
                     const elemento_buscado_en_array = data_entidad[updatedata_entidad_index];
-                    const repe = elemento_buscado_en_array.repeticiones_suspendidas;
+                   const repe = elemento_buscado_en_array.repeticiones_suspendidas;
 
-                    if (repe) {
-                       
+                    if (!repe){
+                      
                     
                         const updateddata_entidad: Alerta_update = {
                             ...elemento_buscado_en_array,
-                            repeticiones_suspendidas: false,
+                            repeticiones_suspendidas: true,
                         };
 
                         const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_find}/`, updateddata_entidad);
@@ -107,7 +107,6 @@ export const SuspenderAlerta: React.FC<InterfazMostarAlerta2> = ({  dat,  marcad
                         set_data_entidad(response.data.data);
                         control_success('Campo "repeticiones_suspendidas" modificado correctamente');
                     }
-                    control_error(`el campo ya esta suspendido`);
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }
