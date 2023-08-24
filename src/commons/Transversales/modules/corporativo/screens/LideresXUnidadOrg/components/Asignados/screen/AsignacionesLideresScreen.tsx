@@ -84,7 +84,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
         aditionalElement={
           <Button
             color="primary"
-            variant="outlined"
+            variant="contained"
             startIcon={<SearchIcon />}
             onClick={openModalBusquedaAvanzadaLideres}
           >
