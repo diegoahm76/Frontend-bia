@@ -22,6 +22,7 @@ import {
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 import { type AnyAction } from '@reduxjs/toolkit';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // ? Obtener TRD's ------------------------------>
 export const get_searched_trd = (
@@ -190,18 +191,15 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
       // console.log(url, 'url')
 
       const { data } = await api.get(url);
-      /* console.log(
-        '🚀 ~ file: TRDResourcesThunks.ts ~ line 159 ~ return ~ data',
-        data
-      ); */
+
       control_success(
         data.detail || 'proceso exitoso, se encontró la siguiente data'
       );
       dispatch(get_data_format_documental_type(data.data));
       return data.data;
     } catch (error: any) {
-      control_error(
-        `${error.response.data.detail} que coincida` ||
+      control_warning(
+        `${error.response.data.detail}` ||
           'Ha ocurrido un error, no se han encontrado data'
       );
       return error as AxiosError;

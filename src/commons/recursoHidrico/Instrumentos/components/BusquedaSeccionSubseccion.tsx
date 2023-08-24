@@ -140,7 +140,21 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <Grid container spacing={1} m={2} p={2}>
+      <Grid
+        container
+        spacing={2}
+        // m={2}
+        // p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
         <Grid item xs={12} sm={6} md={4}>
           <Typography variant="subtitle1" fontWeight="bold">
             Nombre Sección

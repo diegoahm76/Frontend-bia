@@ -5,52 +5,65 @@ import { TrdRoutes } from '../trd/routes/TrdRoutes';
 import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
-import DepositoScreen from '../deposito/screens/depositoScreen';
+import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
+
+import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
+
+import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
+
 
 const routes = [
   {
-    path: "organigrama/",
-    name: "organigrama",
-    component: () => (
-      <OrganigramaRoutes />
-    ),
+    path: 'organigrama/',
+    name: 'organigrama',
+    component: () => <OrganigramaRoutes />
   },
   {
-    path: "ccd/",
-    name: "ccd",
-    component: () => (
-      <CcdRoutes />
-    ),
+    path: 'ccd/',
+    name: 'ccd',
+    component: () => <CcdRoutes />
   },
   {
-    path: "trd/",
-    name: "trd",
-    component: () => (
-      <TrdRoutes />
-    ),
+    path: 'trd/',
+    name: 'trd',
+    component: () => <TrdRoutes />
   },
   {
-    path: "tca/",
-    name: "tca",
-    component: () => (
-      <TcaRoutes />
-    ),
+    path: 'tca/',
+    name: 'tca',
+    component: () => <TcaRoutes />
+  },
+  // ? trasladar a configuracion y datos basicos
+  {
+    path: 'archivo/',
+    name: 'archivo',
+    component: () => <DepositosRoutes />
   },
   {
-    path: "deposito/",
-    name: "deposito",
-    component: () => (
-      <DepositoScreen />
-    ),
+    path: 'ventanilla_unica/',
+    name: 'ventanilla_unica',
+    component: () => <VentanillaRoutes />
   },
+
+  //! rutas de configuracion y datos básicos
   {
-    path: "ventanilla_unica/",
-    name: "ventanilla_unica",
+    path: 'configuracion-datos-basicos/',
+    name: 'configuracion',
+    component: () => <ConfigYDatosBasicosRoutes />
+  }
+];
+
+  {
+    path: "alertas_gestor/",
+    name: "alertas_gestor",
     component: () => (
-      <VentanillaRoutes />
+      <Alertas_gestor_Routes/>
     ),
   },
+
+  
 ]
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
@@ -58,7 +71,7 @@ export const GestorDocumentalRoutes: React.FC = () => {
       {routes.map((route) => (
         <Route
           key={route.path}
-          path={`${route.path}/${route.path === "/" ? "" : "*"}`}
+          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
           element={route.component()}
         />
       ))}

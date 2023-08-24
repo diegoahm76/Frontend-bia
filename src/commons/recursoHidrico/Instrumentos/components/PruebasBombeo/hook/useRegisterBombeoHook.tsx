@@ -18,6 +18,8 @@ import {
 import { control_error, control_success } from '../../../../../../helpers';
 import { useAppSelector } from '../../../../../../hooks';
 import { DataContext } from '../../../context/contextData';
+import { v4 as uuidv4 } from 'uuid';
+
 // import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 export const use_register_bombeo_hook = () => {
@@ -58,6 +60,12 @@ export const use_register_bombeo_hook = () => {
       resultado: '',
       caudal: '',
 
+      // *datos prueba de bombeo select
+      tiempo_transcurrido_select: '0',
+      nivel_select: '',
+      resultado_select: '',
+      caudal_select: '',
+
       // * Anexos
       nombre_actualizar: '',
     },
@@ -75,6 +83,7 @@ export const use_register_bombeo_hook = () => {
     id_sesion_bombeo,
     rows_anexos_bombeo,
     id_data_sesion_bombeo,
+    set_rows_data_sesion_bombeo,
     fetch_data_general_sesion,
     fetch_data_general_sesion_creacion,
     set_id_bombeo_general,
@@ -129,6 +138,28 @@ export const use_register_bombeo_hook = () => {
 
   const [row_prueba, set_row_prueba] = useState<any[]>([]);
   const [row_data_prueba, set_row_data_prueba] = useState<any[]>([]);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
+
+  const handleEdit = (rowData: any) => {
+    setSelectedRow(rowData);
+    setValue_bombeo('tiempo_transcurrido', rowData.tiempo_transcurrido);
+    setValue_bombeo('nivel', rowData.nivel);
+    setValue_bombeo('resultado', rowData.resultado);
+    setValue_bombeo('caudal', rowData.caudal);
+  };
+
+  const handle_eliminar = (id: number) => {
+    // Filtra la fila que se va a eliminar
+    const updatedRows = row_prueba.filter((row) => row.id !== id);
+
+    // Actualiza row_prueba con las filas actualizadas
+    set_row_prueba(updatedRows);
+
+    // Si no quedan filas en row_prueba, también elimina la sesión de row_data_prueba
+    if (updatedRows.length === 0) {
+      set_row_data_prueba([]);
+    }
+  };
 
   const handle_agregar = () => {
     // obtener los valores actuales del formulario
@@ -144,11 +175,50 @@ export const use_register_bombeo_hook = () => {
       .add(tiempoTranscurridoMs, 'millisecond')
       .format('HH:mm:ss'); // Suma el tiempo transcurrido a la hora de inicio y cambia el formato de fecha a HH:mm:ss
 
+    if (selectedRow) {
+      // obtener los valores actuales del formulario
+      const values = getValues_bombeo();
+
+      // convertir el tiempo transcurrido a milisegundos
+      const tiempoTranscurridoMs =
+        parseInt(values.tiempo_transcurrido, 10) * 60000;
+
+      // calcular la nueva hora de inicio basada en el tiempo transcurrido y la hora de inicio original
+      const originalHoraInicio = dayjs(selectedRow.hora_inicio, 'HH:mm:ss');
+      const newHoraInicio = originalHoraInicio
+        .add(tiempoTranscurridoMs, 'millisecond')
+        .format('HH:mm:ss');
+
+      // Actualiza el row_prueba con los nuevos valores
+      const updatedRows = row_prueba.map((row) =>
+        row.id === selectedRow.id
+          ? {
+              ...row,
+              tiempo_transcurrido: values.tiempo_transcurrido,
+              hora_inicio: newHoraInicio,
+              nivel: values.nivel,
+              resultado: values.resultado,
+              caudal: values.caudal,
+            }
+          : row
+      );
+      set_row_prueba(updatedRows);
+
+      // Luego, resetea el selectedRow y los campos de entrada
+      setSelectedRow(null);
+      setValue_bombeo('tiempo_transcurrido', '0');
+      setValue_bombeo('nivel', '');
+      setValue_bombeo('resultado', '');
+      setValue_bombeo('caudal', '');
+      return;
+    }
+
     // agregar los datos a row_prueba
     set_row_prueba((prevState) =>
       [
         ...prevState,
         {
+          id: uuidv4(),
           tiempo_transcurrido:
             row_prueba.length === 0 ? 0 : values.tiempo_transcurrido,
           hora_inicio: newHoraInicio,
@@ -461,6 +531,8 @@ export const use_register_bombeo_hook = () => {
     rows_data_sesion_bombeo,
     id_sesion_bombeo,
     rows_anexos_bombeo,
+    handleEdit,
+    handle_eliminar,
     set_id_sesion_bombeo,
     set_rows_sesion_bombeo,
     set_id_data_sesion_bombeo,

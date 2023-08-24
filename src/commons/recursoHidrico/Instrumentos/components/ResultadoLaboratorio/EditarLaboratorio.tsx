@@ -84,7 +84,6 @@ export const EditarLaboratorio: React.FC = () => {
               size="small"
               startIcon={<EditIcon />}
               onClick={() => {
-                console.log(params.row);
                 handleEdit_select(params.row);
                 setSelectedRow_edit(params.row);
               }}
@@ -655,7 +654,6 @@ export const EditarLaboratorio: React.FC = () => {
               regristros existentes
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           {rows_resultado_laboratorio.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -883,7 +881,7 @@ export const EditarLaboratorio: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving}
+                disabled={is_saving || !!data_watch.resultado}
                 loading={is_saving}
               >
                 Actualizar

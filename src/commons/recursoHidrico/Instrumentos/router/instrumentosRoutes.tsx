@@ -12,7 +12,7 @@ export const InstrumentosRoutes = (): ReactElement => {
   return (
     <UserProvider>
       <Routes>
-        <Route path="instrumentos/*" element={<InstrumentosScreen />} />
+        <Route path="administracion/*" element={<InstrumentosScreen />} />
         <Route path="cartera_aforo/*" element={<CarteraAforosScreen />} />
         <Route path="prueba_bombeo/*" element={<PruebasBombeoScreen />} />
         <Route

@@ -722,7 +722,14 @@ export const UserProvider = ({
     try {
       set_rows_sesion_bombeo([]);
       const response = await get_data_sesion_bombeo_general(id_prueba_bombeo);
-      set_rows_sesion_bombeo(response);
+      const elementosAssingnedLaboratorio = response.map((row: any) => {
+        return {
+          ...row,
+          id: uuidv4(),
+        };
+      });
+
+      set_rows_sesion_bombeo(elementosAssingnedLaboratorio);
     } catch (err: any) {
       control_error(err.response.data.detail);
     }
