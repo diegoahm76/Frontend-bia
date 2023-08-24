@@ -46,13 +46,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
-import {
-  columnsResTipologias,
-  rowsPrueba
-} from './columns/columnsResTipologias';
+
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 // import { control_success } from '../../../../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { columnsResTipologias, rowsPrueba } from './columns/columnsResTipologias';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
