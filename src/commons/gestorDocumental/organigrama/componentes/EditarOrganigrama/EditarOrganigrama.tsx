@@ -45,6 +45,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
 import SyncIcon from '@mui/icons-material/Sync';
 import { v4 as uuidv4 } from 'uuid';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -342,6 +343,18 @@ export const EditarOrganigrama = ({
                 )}
               />
             </Grid>
+            <Grid item xs={12} sm={2}>
+                <DownloadButton
+                  fileName="ruta_soporte"
+                  condition={
+                    true
+                   /* ccd_current === null ||
+                    ccd_current?.ruta_soporte === null ||
+                    ccd_current?.ruta_soporte === '' */
+                  }
+                  fileUrl={'https://back-end-bia-beta.up.railway.app/media/'}
+                />
+              </Grid>
           </Grid>
 
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
@@ -408,7 +421,7 @@ export const EditarOrganigrama = ({
                         title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
                       }
                     >
-                      {title_nivel === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
+                      {title_nivel === 'Agregar' ? 'AGREGAR NIVEL' : 'EDITAR NIVEL'}
                     </Button>
                   </Stack>
                 </Box>
@@ -644,7 +657,7 @@ export const EditarOrganigrama = ({
                     title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
                   }
                 >
-                  {title_unidades === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
+                  {title_unidades === 'Agregar' ? 'AGREGAR UNIDAD' : 'EDITAR UNIDAD'}
                 </Button>
                 <Button
                   onClick={() => {
