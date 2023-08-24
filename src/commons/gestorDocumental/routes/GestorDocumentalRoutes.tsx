@@ -7,6 +7,7 @@ import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
+import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 
@@ -42,10 +43,14 @@ const routes = [
 
   //! rutas de configuracion y datos básicos
   {
-    path: 'configuracion-datos-basicos/',
+    path: 'configuracion_datos_basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
-
+  },
+  {
+    path: 'activacion_instrumentos_archivisticos',
+    name: 'activacion_instrumentos_archivisticos',
+    component: () => <DialogCcdActual/>
   },
   {
     path: "alertas_gestor/",
@@ -54,8 +59,10 @@ const routes = [
       <Alertas_gestor_Routes />
     ),
   },
-
 ];
+
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

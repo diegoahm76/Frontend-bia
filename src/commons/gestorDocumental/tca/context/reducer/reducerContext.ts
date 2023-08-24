@@ -75,6 +75,17 @@ export const reducer = (state: any, { payload, type }: any): any => {
         modalTrdRelacionTcaActual: payload || false
       };
 
+    //* MODAL RESERVA DE TIPOLOGIA
+    case Modal.OPEN_MODAL_RESERVA_TIPOLOGIA:
+      return {
+        ...state,
+        modalReservaTipologia: payload || true
+      };
+    case Modal.CLOSE_MODAL_RESERVA_TIPOLOGIA:
+      return {
+        ...state,
+        modalReservaTipologia: payload || false
+      };
 
     // ? ----------------- |LOAD BUTTONS| -----------------
     //* LOAD BUTTONS

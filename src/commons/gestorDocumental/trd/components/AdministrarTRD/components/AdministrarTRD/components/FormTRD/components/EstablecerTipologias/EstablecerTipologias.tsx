@@ -178,7 +178,7 @@ export const EstablecerTipologias = (): JSX.Element => {
             <Avatar sx={AvatarStyles} variant="rounded">
               <DeleteIcon
                 sx={{
-                  color: 'primary.main',
+                  color: 'red',
                   width: '18px',
                   height: '18px'
                 }}

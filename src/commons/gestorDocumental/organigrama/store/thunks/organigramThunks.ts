@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SetStateAction, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
@@ -110,7 +111,7 @@ export const add_organigrams_service: any = (
       // console.log(data);
       dispatch(get_organigrams_service());
       dispatch(current_organigram(data.detail));
-      control_success('El organigrama se agrego correctamente');
+      control_success('El organigrama se agregó correctamente');
       set_position_tab_organigrama('2');
       handle_close_crear_organigrama();
       return data;
@@ -140,7 +141,16 @@ export const edit_organigrams_service: any = (
         `transversal/organigrama/update/${id}/`,
         organigrama
       );
+      
+
+      const res = await api.get('transversal/organigrama/get/');
+      const org_data = await res?.data?.Organigramas.find(
+        (organigrama: any) => organigrama.id_organigrama === Number(id)
+      );
+      console.log(org_data);
       dispatch(get_organigrams_service());
+      dispatch(current_organigram(org_data));
+
 
       //! el campo debe limpiarse luego de la actualización
       control_success('El organigrama se editó correctamente');
@@ -185,14 +195,26 @@ export const to_finalize_organigram_service: any = (
 };
 
 // Reanudar organigrama
-export const to_resume_organigram_service: any = (id: string) => {
+export const to_resume_organigram_service: any = (
+  id: string,
+  set_position_tab_organigrama: Dispatch<SetStateAction<string>>,
+  clean_unitys: () => void
+) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
         `transversal/organigrama/reanudar-organigrama/${id}/`
       );
-      // console.log(data);
-      dispatch(get_organigrams_service());
+
+      const res = await api.get('transversal/organigrama/get/');
+      const org_data = await res?.data?.Organigramas.find(
+        (organigrama: any) => organigrama.id_organigrama === Number(id)
+      );
+      console.log(org_data);
+      // dispatch(get_organigrams_service());
+      dispatch(current_organigram(org_data));
+      set_position_tab_organigrama('2');
+      clean_unitys();
       void Swal.fire({
         position: 'center',
         icon: 'info',
@@ -288,6 +310,8 @@ export const update_unitys_service: any = (
       // console.log('update_unitys_service fail');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      clean_unitys();
     }
   };
 };
@@ -299,12 +323,22 @@ export const get_nuevo_user_organigrama: any = (
 ) => {
   return async () => {
     try {
+
+      
+
       const { data } = await api.get(
         `transversal/organigrama/get-nuevo-user-organigrama/${tipo_documento}/${numero_documento}/`
       );
+      
+      if(tipo_documento === '' || numero_documento === 0){
+        control_warning('Debe ingresar un tipo y número de documento');
+        return data;
+      }
+
+      control_success('Usuario encontrado');
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      // control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };

@@ -44,6 +44,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
 import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
+import SecurityIcon from '@mui/icons-material/Security';
+import { ModalReservarTipologias } from './../../components/ReservarTipologias/ModalReservarTipologias';
+
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -54,7 +57,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
-    setLoadingButton
+    setLoadingButton,
+    openModalReservaTipologia
   } = useContext(ModalContextTCA);
   // * state from tca_slice
   const { tca_current, selected_item_from_catalogo } = useAppSelector(
@@ -226,6 +230,28 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                 )}
               />
             </Grid>
+
+            {/* módulo nuevo, reserva de tipologías  */}
+
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              sx={{
+                zIndex: 2
+              }}
+            >
+              <Button
+                color="warning"
+                variant="outlined"
+                startIcon={<SecurityIcon />}
+                onClick={openModalReservaTipologia}
+              >
+                RESERVAR TIPOLOGÍAS
+              </Button>
+            </Grid>
+
+            {/* módulo nuevo, reserva de tipologías --> */}
 
             {/* new spaces */}
 
@@ -418,6 +444,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       {/* Modal historial de cambios TRD ACTUAL */}
       <HistorialCambiosTCA />
       {/* Modal historial de cambios TRD ACTUAL */}
+
+      {/* Modal reserva de tipologías documentales */}
+      <ModalReservarTipologias />
+      {/* Modal reserva de tipologías documentales */}
     </>
   );
 };
