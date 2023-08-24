@@ -6,7 +6,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 export const VentanillaRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* <Route path="/creacion_persona" element={<AdminVentanilla />} /> */}
+
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

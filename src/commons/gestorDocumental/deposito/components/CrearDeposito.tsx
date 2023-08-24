@@ -1,5 +1,7 @@
-import { Grid } from '@mui/material';
-import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
+import { Grid, TextField } from '@mui/material';
+import { Controller } from 'react-hook-form';
+import { Title } from '../../../../components/Title';
+
 
 
 
@@ -17,52 +19,97 @@ const DepositoInfo = ({ control_deposito, get_values, open_modal, set_open_modal
 
     return (
         <>
-            <Grid container direction="row" padding={2} borderRadius={2}>
-                <BuscarModelo
+            <Grid container spacing={2}>
+                <Title title="DEPOSITO" />
 
-                    row_id={''}
-                    get_filters_models={null}
-                    set_models={null}
-                    show_search_button={false}
-                    open_search_modal={open_modal}
-                    set_open_search_modal={set_open_modal}
-                    button_submit_label=""
-                    form_inputs={[
-                        {
-                            datum_type: 'title',
-                            title_label: 'DEPOSITOS',
-                        },
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 6,
-                            control_form: control_deposito,
-                            control_name: 'nombre_deposito',
-                            default_value: '',
-                            rules: {},
-                            label: 'Nombre del depósito',
-                            type: 'number',
-                            disabled: false,
-                            helper_text: '',
-                        },
-                        {
-                            datum_type: 'input_controller',
-                            xs: 12,
-                            md: 6,
-                            control_form: control_deposito,
-                            control_name: 'identificacion_por_entidad',
-                            default_value: '',
-                            rules: {},
-                            label: 'Identificación',
-                            type: 'text',
-                            disabled: false,
-                            helper_text: '',
-                        },
+                <Grid item xs={12} sm={6}>
+                    <Controller
+                        name="nombre_deposito"
+                        control={control_deposito}
+                        defaultValue=""
+                        // rules={{ required: false }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error }
+                        }) => (
+                            <TextField
+                                // margin="dense"
+                                fullWidth
+                                label="Nombre"
+                                size="small"
+                                variant="outlined"
+                                value={value}
+                                InputLabelProps={{ shrink: true }}
+                                onChange={(e) => {
+                                    onChange(e.target.value);
+                                    // console.log(e.target.value);
+                                }}
+                                error={!(error == null)}
+
+                            />
+                        )}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <Controller
+                        name="identificacion_por_entidad"
+                        control={control_deposito}
+                        defaultValue=""
+                        // rules={{ required: false }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error }
+                        }) => (
+                            <TextField
+                                // margin="dense"
+                                fullWidth
+                                label="Identificación"
+                                size="small"
+                                variant="outlined"
+                                value={value}
+                                InputLabelProps={{ shrink: true }}
+                                onChange={(e) => {
+                                    onChange(e.target.value);
+                                    // console.log(e.target.value);
+                                }}
+                                error={!(error == null)}
+
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="orden_ubicacion_por_entidad"
+                        control={control_deposito}
+                        defaultValue=""
+                        // rules={{ required: false }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error }
+                        }) => (
+                            <TextField
+                                // margin="dense"
+                                fullWidth
+                                label="Órden"
+                                size="small"
+                                variant="outlined"
+                                value={value}
+                                InputLabelProps={{ shrink: true }}
+                                onChange={(e) => {
+                                    onChange(e.target.value);
+
+                                }}
+                                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                                error={!!error}
+
+                            />
+                        )}
+                    />
+                </Grid>
 
 
-                    ]}
-                    title_table_modal=""
-                    modal_form_filters={[]} modal_select_model_title={''} models={[]} columns_model={[]} />
 
 
             </Grid>

@@ -58,10 +58,13 @@ export const get_sucursales = (): any => {
     };
 };
 
-export const get_depositos = (): any => {
+export const get_depositos_filtro = (
+    nombre_deposito: string | null,
+    identificacion_por_entidad: string | null,
+): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`gestor/depositos-archivos/deposito/listar/`);
+            const { data } = await api.get(`gestor/depositos-archivos/deposito/buscar-deposito/?nombre_deposito=${nombre_deposito ?? ''}&identificacion_por_entidad=${identificacion_por_entidad ?? ''}`);
 
             if (data.success === true) {
                 dispatch(set_depositos(data.data));
@@ -71,6 +74,108 @@ export const get_depositos = (): any => {
         } catch (error: any) {
             control_error(error.response.data.detail);
 
+            return error as AxiosError;
+        }
+    };
+};
+// lista de depositos
+
+export const get_depositos = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('gestor/depositos-archivos/deposito/listar/');
+
+            if (data.success === true) {
+                dispatch(set_depositos(data.data));
+
+            }
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+export const crear_deposito: any = (
+    deposito: any,
+
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(deposito)
+            const { data } = await api.post('gestor/depositos-archivos/deposito/crear/', deposito);
+
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+
+// actualizar
+
+export const editar_deposito: any = (
+    id: number,
+    deposito: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            // console.log(despacho);
+            const { data } = await api.patch(`gestor/depositos-archivos/deposito/actualizar/${id}/`, deposito);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// eliminar
+export const eliminar_deposito = (
+    id: number,
+
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.delete(`gestor/depositos-archivos/deposito/eliminar/${id}/`
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+            console.log('annul_despacho_service');
+            control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };

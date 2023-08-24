@@ -219,7 +219,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           fontSize: '0.75rem'
                         }}
                       >
-                        Disposición final
+                        Tipo de clasificación
                       </small>
                     </label>
                   </div>
@@ -362,7 +362,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
             <LoadingButton
               loading={loadingButton}
               variant="contained"
-              color="primary"
+              color="success"
               type="submit"
               startIcon={
                 selected_item_from_catalogo?.cod_clas_expediente ? (

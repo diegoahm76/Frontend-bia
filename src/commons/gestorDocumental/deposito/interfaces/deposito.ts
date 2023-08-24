@@ -2,6 +2,12 @@ export interface IDeposito {
   deposito: IObjDeposito[];
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
+  mode_estante: IMode;
+}
+export interface IMode {
+  ver: boolean;
+  editar: boolean;
+  crear: boolean;
 }
 
 export interface IObjDeposito {
@@ -11,15 +17,16 @@ export interface IObjDeposito {
   direccion_deposito?: string | null;
   orden_ubicacion_por_entidad: number | null;
   cod_municipio_nal?: number | null;
-  cod_pais_exterior?: number | null;
+  cod_pais_exterior?: string | null;
   id_sucursal_entidad?: number | null;
   nombre_sucursal: string | null;
   municipio: number | null;
-  activo?: boolean | null | string;
+  activo: boolean;
+  id_sucursal_empresa?: number | null;
 }
 
 export interface IObjSucursales {
-  id_sucursal_empresa?: number | null;
+  id_sucursal_empresa?: number;
   numero_sucursal?: number | null;
   descripcion_sucursal: string | null;
   direccion: string | null;

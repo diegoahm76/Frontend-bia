@@ -9,7 +9,7 @@ export const ConsultaBibliotecaRoutes = (): ReactElement => {
   return (
     <UserProvider>
       <Routes>
-        <Route path="biblioteca/*" element={<ConsultaBibliotecaSreen />} />
+        <Route path="visualizacion/*" element={<ConsultaBibliotecaSreen />} />
         <Route path="/*" element={<Page404 />} />
       </Routes>
     </UserProvider>
