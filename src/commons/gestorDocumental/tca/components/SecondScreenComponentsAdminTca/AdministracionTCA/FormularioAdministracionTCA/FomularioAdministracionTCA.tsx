@@ -44,6 +44,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
 import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
+import SecurityIcon from '@mui/icons-material/Security';
+import { ReservaTipologias } from '../../components/ReservarTipologias/ModalReservarTipologias';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -54,7 +56,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
-    setLoadingButton
+    setLoadingButton,
+    openModalReservaTipologia
   } = useContext(ModalContextTCA);
   // * state from tca_slice
   const { tca_current, selected_item_from_catalogo } = useAppSelector(
@@ -237,40 +240,17 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                 zIndex: 2
               }}
             >
-              <Controller
-                name="cod_clas_expediente"
-                control={control_administrar_tca}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error }
-                }) => (
-                  <div>
-                    <Select
-                      value={value}
-                      onChange={(selectedOption) => {
-                        onChange(selectedOption);
-                      }}
-                      options={choicesTipoClasificacion}
-                      placeholder="Seleccionar"
-                    />
-                    <label>
-                      <small
-                        style={{
-                          color: 'rgba(0, 0, 0, 0.6)',
-                          fontWeight: 'thin',
-                          fontSize: '0.75rem'
-                        }}
-                      >
-                        Tipo de clasificación
-                      </small>
-                    </label>
-                  </div>
-                )}
-              />
+              <Button
+                color="warning"
+                variant="outlined"
+                startIcon={<SecurityIcon />}
+                onClick={openModalReservaTipologia}
+              >
+                RESERVAR TIPOLOGÍAS
+              </Button>
             </Grid>
 
-             {/* módulo nuevo, reserva de tipologías  */}
+            {/* módulo nuevo, reserva de tipologías --> */}
 
             {/* new spaces */}
 
@@ -463,6 +443,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       {/* Modal historial de cambios TRD ACTUAL */}
       <HistorialCambiosTCA />
       {/* Modal historial de cambios TRD ACTUAL */}
+
+      {/* Modal reserva de tipologías documentales */}
+      <ReservaTipologias />
+      {/* Modal reserva de tipologías documentales */}
     </>
   );
 };
