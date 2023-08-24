@@ -10,6 +10,7 @@ import { VisorProcesosScreen } from '../screens/VisorProcesosScreen';
 import { HistorialProceso } from '../screens/HistorialProcesoScreen';
 import { FacilidadPagoRoutes } from '../facilidadPago/routes/FacilidadPagoRoutes';
 import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
+import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -17,6 +18,7 @@ export const RecaudoRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="datos/*" element={<RecaudoScreen />} />
+      <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
       <Route path="proceso_liquidacion/*" element={<ProcesoLiquidacionScreen />} />
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />
