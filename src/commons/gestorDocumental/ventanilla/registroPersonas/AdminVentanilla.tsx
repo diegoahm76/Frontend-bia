@@ -6,7 +6,7 @@ import { Divider, Grid, Box } from '@mui/material';
 import type { AxiosError } from 'axios';
 import type { DataPersonas, InfoPersona } from '../../../../interfaces/globalModels';
 import { use_register } from '../../../auth/hooks/registerHook';
-import { consultar_datos_persona } from '../../../seguridad/request/Request';
+import { consultar_datos_persona } from '../request/Request';
 import { control_error } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';

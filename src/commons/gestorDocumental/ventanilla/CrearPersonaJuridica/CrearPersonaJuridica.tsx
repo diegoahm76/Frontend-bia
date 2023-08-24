@@ -6,9 +6,9 @@ import {
   Checkbox,
   Typography,
   Button,
-  Autocomplete,
-  type AutocompleteChangeReason,
-  type AutocompleteChangeDetails,
+  // Autocomplete,
+  // type AutocompleteChangeReason,
+  // type AutocompleteChangeDetails,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -26,7 +26,7 @@ import { Title } from '../../../../components/Title';
 import {
   consultar_clase_tercero,
   crear_persona_juridica,
-} from '../../../seguridad/request/Request';
+} from '../request/Request';
 import { control_error, control_success } from '../../../../helpers';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 import { type AxiosError } from 'axios';
@@ -82,17 +82,17 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
   const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
 
-  const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: ClaseTercero[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<ClaseTercero>
-  ): void => {
-    set_value(
-      'datos_clasificacion_persona',
-      value.map((e) => e.value)
-    );
-  };
+  // const handle_change_autocomplete = (
+  //   event: React.SyntheticEvent<Element, Event>,
+  //   value: ClaseTercero[],
+  //   reason: AutocompleteChangeReason,
+  //   details?: AutocompleteChangeDetails<ClaseTercero>
+  // ): void => {
+  //   set_value(
+  //     'datos_clasificacion_persona',
+  //     value.map((e) => e.value)
+  //   );
+  // };
 
   // trae todas las clase tercero
   const get_datos_clase_tercero = async (): Promise<void> => {
@@ -552,14 +552,14 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
         </Grid>
         {/* Datos de clasificación Cormacarena */}
         <Grid container spacing={2} mt={0.1}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Title title="Datos de clasificación" />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             {clase_tercero.length > 0 && (
               <>
                 <Grid item xs={12}>
-                  <Autocomplete
+                  {/* <Autocomplete
                     multiple
                     fullWidth
                     size="medium"
@@ -578,7 +578,7 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
                     )}
                     {...register('datos_clasificacion_persona')}
                     onChange={handle_change_autocomplete}
-                  />
+                  /> */}
                 </Grid>
               </>
             )}
