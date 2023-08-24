@@ -173,8 +173,9 @@ const EntregaScreen = () => {
                 },
                 ruta_archivo_doc_con_recibido: data.ruta_archivo_doc_con_recibido,
                 data_items_entrega: aux_items,
+
             };
-            console.log(aux);
+            console.log(aux)
             form_data.append('data_entrega', JSON.stringify({ ...data_edit }));
             form_data.append('data_items_entrega', JSON.stringify(aux_items));
             form_data.append('ruta_archivo_doc_con_recibido', data.ruta_archivo_doc_con_recibido);

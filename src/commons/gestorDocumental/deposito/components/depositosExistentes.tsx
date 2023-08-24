@@ -1,0 +1,120 @@
+
+import { Box, Button, Grid } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { Title } from '../../../../components/Title';
+import { useAppSelector } from '../../../../hooks';
+
+
+
+interface IProps {
+    depositos: any;
+    get_values: any;
+    handle_edit_click: any;
+}
+
+
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+const ListadoDeposito = ({ get_values, depositos, handle_edit_click }: IProps) => {
+    const { deposito, } = useAppSelector((state) => state.deposito);
+    //    const dispatch = useAppDispatch();
+
+    const columns: GridColDef[] = [
+
+        {
+            field: 'orden_ubicacion_por_entidad',
+            headerName: 'ORDÉN',
+            width: 100,
+            cellClassName: 'truncate-cell'
+
+        },
+        {
+            field: 'nombre_deposito',
+            headerName: 'NOMBRE DEL DEPÓSITO',
+            width: 250,
+            cellClassName: 'truncate-cell'
+
+        },
+        {
+            field: 'identificacion_por_entidad',
+            headerName: 'IDENTIFICACIÓN',
+            width: 250,
+            cellClassName: 'truncate-cell'
+
+        },
+        {
+            field: 'direccion_deposito',
+            headerName: 'DIRECCIÓN',
+            width: 250,
+            cellClassName: 'truncate-cell'
+
+        },
+
+
+        {
+            field: 'ACCIÓN',
+            headerName: 'ACCIÓN',
+            width: 100,
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handle_edit_click(params.row)}
+                    startIcon={<EditIcon />}
+                >
+
+                </Button>
+            ),
+        },
+
+
+    ];
+
+    // const get_depositos: any = async () => {
+    //     console.log("buscar...");
+    //     const nombre_deposito = get_values('nombre_deposito') ?? '';
+    //     const identificacion_por_entidad = get_values('identificacion_por_entidad') ?? '';
+    //     // eslint-disable-next-line @typescript-eslint/await-thenable
+    //     void dispatch(get_depositos(nombre_deposito, identificacion_por_entidad));
+
+    // };
+
+
+
+    return (
+        <>
+            <Grid container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26'
+                }}>
+
+                <Box sx={{ width: '100%' }}>
+                    <Title title="Listado de depósitos de la entidad" />
+
+
+
+                    <DataGrid
+                        density="compact"
+                        autoHeight
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        getRowId={(row) => row.id_deposito}
+                        rows={deposito}
+                    />
+
+                </Box>
+            </Grid>
+
+        </>
+    );
+};
+
+// eslint-disable-next-line no-restricted-syntax
+export default ListadoDeposito;
+
+

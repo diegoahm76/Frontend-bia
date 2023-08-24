@@ -470,7 +470,20 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
           </>
         ) : null}
       </Grid>
-      <Grid container justifyContent="flex-end" spacing={2}>
+      <Grid
+        container
+        justifyContent="flex-end"
+        spacing={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
         <BusquedaInstrumentos />
         <Grid item>
           <ButtonSalir />

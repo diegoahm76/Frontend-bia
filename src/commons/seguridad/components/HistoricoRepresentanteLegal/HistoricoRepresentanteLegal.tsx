@@ -9,6 +9,7 @@ import {
     Stack,
     Alert,
     Typography,
+    LinearProgress,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { control_error } from '../../../../helpers';
@@ -149,6 +150,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
                             <Grid item xs={12}>
                                 <Grid container justifyContent="center" textAlign="center">
                                     <Alert icon={false} severity="info">
+                                    <LinearProgress />
                                         <Typography>No se encontraron resultados...</Typography>
                                     </Alert>
                                 </Grid>
@@ -165,6 +167,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
                         >
                             <Button
                                 variant="outlined"
+                                color="error"
                                 startIcon={<CancelIcon />}
                                 onClick={() => {
                                     handle_close();

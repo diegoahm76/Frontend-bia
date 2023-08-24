@@ -20,7 +20,7 @@ import {
   // Icon,
   Grid,
   CircularProgress,
-  Typography,
+  Typography
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -30,14 +30,14 @@ import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import {
   open_drawer_desktop,
-  open_drawer_mobile,
+  open_drawer_mobile
 } from '../../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ListIcon from '@mui/icons-material/List';
 import type {
   AuthSlice,
   Menu,
-  MenuElement,
+  MenuElement
 } from '../../commons/auth/interfaces';
 import { logout /* set_permissions */ } from '../../commons/auth/store';
 import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
@@ -51,7 +51,7 @@ import { useRoutes } from './hook/useRoutes';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SideBar: FC<SideBarProps> = ({
   window,
-  drawer_width,
+  drawer_width
 }: SideBarProps) => {
   //! useRoutes to navigate, use the hook to declare another routes
   const {
@@ -59,7 +59,7 @@ export const SideBar: FC<SideBarProps> = ({
     handle_datos_acceso,
     handle_datos_personales,
     handle_autorizacion_notificacion,
-    handle_indices_electronicos,
+    handle_indices_electronicos
   } = useRoutes();
 
   const dispatch = useDispatch();
@@ -116,7 +116,7 @@ export const SideBar: FC<SideBarProps> = ({
                 return menuIndex === key
                   ? { ...menu, expanded: !menu.expanded }
                   : menu;
-              }),
+              })
             }
           : modulo;
       })
@@ -158,10 +158,10 @@ export const SideBar: FC<SideBarProps> = ({
                             ? { ...submenu, expanded: !submenu.expanded }
                             : submenu;
                         }
-                      ),
+                      )
                     }
                   : menu;
-              }),
+              })
             }
           : modulo;
       })
@@ -216,18 +216,18 @@ export const SideBar: FC<SideBarProps> = ({
                                     return submenu2Index === key
                                       ? {
                                           ...submenu2,
-                                          expanded: !submenu2.expanded,
+                                          expanded: !submenu2.expanded
                                         }
                                       : submenu2;
                                   }
-                                ),
+                                )
                               }
                             : submenu;
                         }
-                      ),
+                      )
                     }
                   : menu;
-              }),
+              })
             }
           : modulo;
       })
@@ -256,7 +256,7 @@ export const SideBar: FC<SideBarProps> = ({
         borderRadius: '15px 0 0 15px',
         height: 'calc(98vh - 10px)',
         overflowY: 'scroll',
-        boxShadow: '0px 2px 10px #041926',
+        boxShadow: '0px 2px 10px #041926'
       }}
     >
       {/* -------------- Header of the drawer ------------------- */}
@@ -265,7 +265,7 @@ export const SideBar: FC<SideBarProps> = ({
           display: 'grid',
           height: '100px',
           // background: '#041926 !important',
-          background: mod_dark ? '#FAFAFA' : '#042F4A',
+          background: mod_dark ? '#FAFAFA' : '#042F4A'
         }}
       >
         <img
@@ -300,7 +300,7 @@ export const SideBar: FC<SideBarProps> = ({
           sx={{
             bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
             mt: '5px',
-            borderRadius: '10px',
+            borderRadius: '10px'
           }}
         >
           <List component="div" disablePadding>
@@ -310,7 +310,7 @@ export const SideBar: FC<SideBarProps> = ({
                 <PersonIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '20px',
+                    height: '20px'
                   }}
                 />
               </ListItemIcon>
@@ -326,7 +326,7 @@ export const SideBar: FC<SideBarProps> = ({
                 <ContactEmergencyIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '20px',
+                    height: '20px'
                   }}
                 />
               </ListItemIcon>
@@ -342,7 +342,7 @@ export const SideBar: FC<SideBarProps> = ({
                 <CircleNotificationsIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '20px',
+                    height: '20px'
                   }}
                 />
               </ListItemIcon>
@@ -358,7 +358,7 @@ export const SideBar: FC<SideBarProps> = ({
                 <ListIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '20px',
+                    height: '20px'
                   }}
                 />
               </ListItemIcon>
@@ -378,7 +378,7 @@ export const SideBar: FC<SideBarProps> = ({
                   <SupervisedUserCircleIcon
                     sx={{
                       color: mod_dark ? '#fafafa' : '#141415',
-                      height: '20px',
+                      height: '20px'
                     }}
                   />
                 </ListItemIcon>
@@ -401,8 +401,8 @@ export const SideBar: FC<SideBarProps> = ({
                   cancelButtonColor: '#DE1616',
                   icon: 'question',
                   customClass: {
-                    container: 'my-swal',
-                  },
+                    container: 'my-swal'
+                  }
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
@@ -414,8 +414,8 @@ export const SideBar: FC<SideBarProps> = ({
                       confirmButtonText: 'Ok',
                       confirmButtonColor: '#042F4A',
                       customClass: {
-                        container: 'my-swal',
-                      },
+                        container: 'my-swal'
+                      }
                     });
                   }
                 });
@@ -438,7 +438,7 @@ export const SideBar: FC<SideBarProps> = ({
             <List
               sx={{
                 margin: '0 20px',
-                color: mod_dark ? '#fafafa' : '#141415',
+                color: mod_dark ? '#fafafa' : '#141415'
               }}
               key={indexStore}
             >
@@ -458,7 +458,7 @@ export const SideBar: FC<SideBarProps> = ({
                 in={elementStore.expanded}
                 sx={{
                   bgcolor: mod_dark ? '#2B3C46' : '#F0F0F0',
-                  borderRadius: '10px',
+                  borderRadius: '10px'
                 }}
               >
                 {elementStore.menus.map((elementMenu: any, indexMenu: any) => {
@@ -469,7 +469,7 @@ export const SideBar: FC<SideBarProps> = ({
                       disablePadding
                       key={indexMenu}
                       sx={{
-                        pl: '10px',
+                        pl: '10px'
                       }}
                     >
                       <ListItemButton
@@ -494,7 +494,7 @@ export const SideBar: FC<SideBarProps> = ({
                                 disablePadding
                                 key={indexSubmenuMenu}
                                 sx={{
-                                  pl: '20px',
+                                  pl: '20px'
                                 }}
                               >
                                 <ListItemButton
@@ -533,7 +533,7 @@ export const SideBar: FC<SideBarProps> = ({
                                               disablePadding
                                               key={indexElement}
                                               sx={{
-                                                pl: '30px',
+                                                pl: '30px'
                                               }}
                                             >
                                               <ListItemButton
@@ -585,7 +585,7 @@ export const SideBar: FC<SideBarProps> = ({
                                                                 '10px',
                                                               color: mod_dark
                                                                 ? '#fafafa'
-                                                                : '#141415',
+                                                                : '#141415'
                                                             }}
                                                             key={km2}
                                                             href={
@@ -658,7 +658,7 @@ export const SideBar: FC<SideBarProps> = ({
             sx={{
               height: 'calc(100% - 170px)',
               // color: mod_dark ? '#fafafa' : '#141415'
-              color: mod_dark ? '#fafafa' : '#141415',
+              color: mod_dark ? '#fafafa' : '#141415'
             }}
           >
             <Grid item xs={12} container justifyContent="center" padding={5}>
@@ -691,15 +691,15 @@ export const SideBar: FC<SideBarProps> = ({
           open={mobile_open}
           onClose={handle_drawer_toggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true // Better open performance on mobile.
           }}
           sx={{
             display: { xs: 'block' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawer_width,
-              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
-            },
+              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA'
+            }
           }}
         >
           {conten_drawer}
@@ -714,8 +714,8 @@ export const SideBar: FC<SideBarProps> = ({
               boxSizing: 'border-box',
               width: drawer_width,
               bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
-              borderRight: 'none',
-            },
+              borderRight: 'none'
+            }
           }}
         >
           {conten_drawer}
@@ -728,7 +728,7 @@ export const SideBar: FC<SideBarProps> = ({
           width: '100vw',
           height: '100%',
           ml: { sm: desktop_open ? `${drawer_width}px` : '0px' },
-          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
+          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA'
         }}
       >
         {userinfo.tipo_usuario === 'E' && <HeaderGov />}
@@ -737,7 +737,7 @@ export const SideBar: FC<SideBarProps> = ({
             padding: '0px 20px 20px 20px',
             mt: '64px',
             minHeight: '100vh',
-            height: '-webkit-fill-available',
+            height: '-webkit-fill-available'
           }}
         >
           <Outlet />

@@ -17,6 +17,7 @@ export interface Filtro {
 }
 
 export interface Obligacion {
+  id: number;
   nombre: string;
   inicio: string;
   nro_expediente: number;
@@ -106,6 +107,7 @@ export interface FacilidadPagoSolicitud {
   documento_garantia: string;
   documentos_deudor_actuacion: DocumentosDeudor[];
   facilidad_pago: FacilidadPagoDetalle;
+  obligaciones_seleccionadas: ObligacionesUsuario;
 }
 
 export interface RespuestaFacilidadPago {
@@ -144,5 +146,7 @@ export interface RegistroFacilidadPago {
   id_ubicacion: number;
   valor: number;
   documento_soporte_bien: File;
+  ids_obligaciones: number[];
+  valor_abonado: number;
 }
 

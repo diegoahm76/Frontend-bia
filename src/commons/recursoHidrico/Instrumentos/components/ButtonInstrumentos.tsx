@@ -24,7 +24,7 @@ export const ButtonInstrumentos: React.FC = () => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+        navigate('/app/recurso_hidrico/biblioteca/instrumentos/administracion', {
           replace: true,
         });
       }

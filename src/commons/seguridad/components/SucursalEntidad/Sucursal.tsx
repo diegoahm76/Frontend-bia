@@ -50,10 +50,10 @@ export const Sucursal: FC = () => {
       const sucursales_data = res.data.data;
       setdata_entidad(sucursales_data);
 
-const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => sucursal.numero_sucursal));
+      const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => sucursal.numero_sucursal));
 
       setnew_number(max_numero_sucursal + 1);
-     // const siguiente_numeros_sucursal = max_numero_sucursal + 1;
+      // const siguiente_numeros_sucursal = max_numero_sucursal + 1;
 
 
     } catch (error) {
@@ -95,10 +95,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
       customClass: {
         container: 'my-swal',
       },
-    }).then(  (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
         void api.delete(`/transversal/sucursales/sucursales-empresas-borrar/${id}/`)
-        // await fetchand_update_data()
+          // await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
           })
@@ -123,9 +123,11 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     { field: "numero_sucursal", headerName: "Número de Sucursal", width: 200, flex: 1 },
     { field: "descripcion_sucursal", headerName: "Descripción", width: 200, flex: 1 },
     { field: "direccion", headerName: "Dirección", width: 200, flex: 1 },
-    { field: "es_principal", headerName: "Es Principal", width: 150, flex: 1,  renderCell: (params: any) => (
-      <>{params.value === true ? "Sí" : "No"}</>
-    ), },
+    {
+      field: "es_principal", headerName: "Es Principal", width: 150, flex: 1, renderCell: (params: any) => (
+        <>{params.value === true ? "Sí" : "No"}</>
+      ),
+    },
     // { field: "item_ya_usado", headerName: "item_ya_usado", width: 150, flex: 1 },
 
     {
@@ -158,10 +160,10 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
     },
   ];
 
- // eslint-disable-next-line @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const esPrincipalExists = data_entidad.some((sucursal) => sucursal.es_principal);
-  
-   
+
+
   return (
     <>
       <Grid
@@ -181,7 +183,7 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
         {/* sucursal entidad */}
         <SucursalEntidad />
         <Grid item xs={12}>
-          <DataGrid  
+          <DataGrid
             density="compact"
             autoHeight
             columns={columns}
@@ -190,8 +192,8 @@ const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => s
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_sucursal_empresa}
           />
-        </Grid> 
-         <SucursalActuaizar fetchand_update_data={fetchand_update_data} sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
+        </Grid>
+        <SucursalActuaizar fetchand_update_data={fetchand_update_data} sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} siguiente_numeros_sucursal={new_number} esPrincipalExists={esPrincipalExists} />
       </Grid>
     </>
   );
