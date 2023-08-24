@@ -5,50 +5,58 @@ import { TrdRoutes } from '../trd/routes/TrdRoutes';
 import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
-import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
+
+import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
+
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
+
 
 const routes = [
   {
     path: 'organigrama/',
     name: 'organigrama',
-    component: () => <OrganigramaRoutes />,
+    component: () => <OrganigramaRoutes />
   },
   {
     path: 'ccd/',
     name: 'ccd',
-    component: () => <CcdRoutes />,
+    component: () => <CcdRoutes />
   },
   {
     path: 'trd/',
     name: 'trd',
-    component: () => <TrdRoutes />,
+    component: () => <TrdRoutes />
   },
   {
     path: 'tca/',
     name: 'tca',
-    component: () => <TcaRoutes />,
+    component: () => <TcaRoutes />
   },
-  {
-    path: 'archivo/',
-    name: 'archivo',
-    component: () => <DepositosRoutes />,
-  },
+  // ? trasladar a configuracion y datos basicos
+
   {
     path: 'ventanilla_unica/',
     name: 'ventanilla_unica',
-    component: () => <VentanillaRoutes />,
+    component: () => <VentanillaRoutes />
+  },
+
+  //! rutas de configuracion y datos básicos
+  {
+    path: 'configuracion-datos-basicos/',
+    name: 'configuracion',
+    component: () => <ConfigYDatosBasicosRoutes />
+
   },
   {
     path: "alertas_gestor/",
     name: "alertas_gestor",
     component: () => (
-      <Alertas_gestor_Routes/>
+      <Alertas_gestor_Routes />
     ),
   },
 
-  
-]
+];
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (

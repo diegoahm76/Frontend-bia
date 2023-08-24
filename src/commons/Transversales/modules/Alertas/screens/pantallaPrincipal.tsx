@@ -24,14 +24,10 @@ import { AlertasContext } from '../context/AlertasContext';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
 
-  const {
-    setNumeroDeAlertas
-  } = useContext(AlertasContext);
-
-
-  
+  const { setNumeroDeAlertas} = useContext(AlertasContext);
 
   const navigate = useNavigate();
+
   const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -67,7 +63,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
       return data.data;
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   }; 
   const columns = [
@@ -94,6 +90,22 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       },
     },
     {
+      field: 'tipo_alerta',
+      headerName: 'Tipo alerta',
+      width: 150,
+    },
+    {
+      field: 'fecha_hora',
+      headerName: 'Fecha/Hora',
+      width: 120,
+      valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_hora),
+    }, 
+    {
+      field: 'nombre_clase_alerta',
+      headerName: 'Nombre Clase Alerta',
+      width: 250,
+    },
+    {
       field: 'responsable_directo',
       headerName: 'Responsable directo',
       headerAlign: 'center',
@@ -101,64 +113,60 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       maxWidth: 180,
       valueGetter: (params: any) => (params.row.responsable_directo === true ? "Sí" : "No"),
     },
-
     {
-      field: 'archivado',
-      headerName: 'Archivado',
-      width: 120,
-      valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
-    },
-
-    {
-      field: 'fecha_hora',
-      headerName: 'Fecha/Hora',
-      width: 120,
-      valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_hora),
-    },
-    {
-      field: 'nombre_clase_alerta',
-      headerName: 'Nombre Clase Alerta',
-      width: 250,
+      field: 'fecha_envio_email',
+      headerName: 'Fecha envio email',
+      width: 200,
+      valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_envio_email),
     },
     {
       field: 'nombre_modulo',
       headerName: 'Nombre Módulo',
-      width: 250,
+      width: 200,
       valueGetter: (params: any) => {
-        const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
-        return ruta;
+        const ruta = params.value.split('/#/app/')[1]; // Obtener parte después de "/#/app/"
+        const modulo = ruta.split('/')[0]; // Obtener la palabra después de "recurso_hidrico/"
+        return modulo;
       },
     },
+
+
+
+
+
+
+
+
+
     {
-      field: 'ultima_repeticion',
-      headerName: 'Última Repetición',
-      width: 150,
-      renderCell: (params: any) => (params.row.ultima_repeticion === true ? "Sí" : "No"),
+      field: 'archivado',
+      headerName: 'Archivado',
+      width: 50,
+      valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
     },
     {
       field: 'leido',
       headerName: 'Leído',
-      width: 120,
+      width: 50,
       renderCell: (params: any) => (params.row.leido === true ? "Sí" : "No"),
     },
     {
       field: 'repeticiones_suspendidas',
       headerName: 'Repeticiones Suspendidas',
-      width: 160,
+      width: 50,
       renderCell: (params: any) => (params.row.repeticiones_suspendidas === true ? "Sí" : "No"),
     },
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 300,
-      // flex: 1,
+      width: 200,
       renderCell: (params: any) => (
         <>
           <ButtonGroup variant="text">
 
             <SuspenderAlerta
               dat={params.row.id_alerta_bandeja_alerta_persona}
-              marcador={params.row.leido}
+              marcador={params.row.repeticiones_suspendidas}
               activate_suspender_alerta={buscar_bandeja_alerta}
             />
 
@@ -169,7 +177,10 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               activate_suspender_alerta={buscar_bandeja_alerta} />
 
 
-            <ModalInfoAlerta columnnns={params.row} />
+            <ModalInfoAlerta columnnns={params.row} 
+            dat={params.row.id_alerta_bandeja_alerta_persona}
+              marcador={params.row.leido}
+              activate_suspender_alerta={buscar_bandeja_alerta} />
 
 
 
@@ -222,23 +233,23 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
 
   // Filtra las filas basadas en el valor de 'leido' y 'mostrar_leidos_alertas'
+  // const filtered_rows = mostrar_leidos === true
+  //   ? bandeja_alerta.filter((row) => row.leido)
+  //   : mostrar_leidos === false
+  //     ? bandeja_alerta.filter((row) => !row.leido)
+  //     : bandeja_alerta;
+
   const filtered_rows = mostrar_leidos === true
-    ? bandeja_alerta.filter((row) => row.leido)
+    ? bandeja_alerta.filter((row) => row.leido && row.archivado)
     : mostrar_leidos === false
-      ? bandeja_alerta.filter((row) => !row.leido)
-      : bandeja_alerta;
-
-
+      ? bandeja_alerta.filter((row) => !row.leido && row.archivado)
+      : bandeja_alerta.filter((row) => row.archivado);
 
 
   useEffect(() => {
     fetch_data_get().catch((error) => {
       console.error(error);
     });
-
-
-
-
 
   }, [mostrar_leidos]);
 

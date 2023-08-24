@@ -72,14 +72,19 @@ const SearchCcdModal = ({
     {
       headerName: 'Estado',
       field: 'estado',
-      minWidth: 170,
-      maxWidth: 250,
+      width: 300,
       renderCell: (params: { row: { fecha_terminado: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.fecha_terminado !== null ? (
           <Chip
             size="small"
-            label={`Terminado ${params.row.fecha_terminado}`}
+            label={
+              params.row.fecha_terminado
+                ? `Terminado ${new Date(
+                    params.row.fecha_terminado
+                  ).toLocaleString()} `
+                : ''
+            }
             color="success"
             variant="outlined"
           />
@@ -96,8 +101,7 @@ const SearchCcdModal = ({
     {
       headerName: 'Actual',
       field: 'is_actual',
-      minWidth: 50,
-      maxWidth: 60,
+      width: 80,
       renderCell: (params: { row: { actual: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.actual !== false ? (
@@ -112,7 +116,7 @@ const SearchCcdModal = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          {!params?.row?.usado || params?.row?.actual  ? (
+          {!params?.row?.usado || params?.row?.actual ? (
             <IconButton
               onClick={() => {
                 // console.log('params para ver ccd en el icono del ojito', params);
@@ -191,7 +195,7 @@ const SearchCcdModal = ({
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       open={is_modal_active}
       onClose={() => {
         set_is_modal_active(false);
@@ -207,7 +211,8 @@ const SearchCcdModal = ({
         <Grid item xs={12}>
           <form
             style={{
-              marginTop: '20px'
+              marginTop: '20px',
+              marginBottom: '20px'
             }}
             onSubmit={(e: any) => {
               // console.log('onSubmit');
@@ -275,7 +280,7 @@ const SearchCcdModal = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
+                      type="number"
                       fullWidth
                       size="small"
                       label="Versión CCD"
@@ -301,7 +306,7 @@ const SearchCcdModal = ({
                   <LoadingButton
                     loading={loadingButtonBusquedaCCD}
                     color="primary"
-                    variant="outlined"
+                    variant="contained"
                     type="submit"
                     startIcon={<SearchIcon />}
                   >
@@ -318,7 +323,7 @@ const SearchCcdModal = ({
           autoHeight
           rows={ccds}
           columns={columns_ccds}
-          pageSize={5}
+          pageSize={7}
           rowsPerPageOptions={[10]}
           experimentalFeatures={{ newEditingApi: true }}
           getRowId={(row) => row.id_ccd}
@@ -332,8 +337,8 @@ const SearchCcdModal = ({
           sx={{ mr: '15px', mb: '10px', mt: '10px' }}
         >
           <Button
-            variant="contained"
-            color="success"
+            variant="outlined"
+            color="primary"
             onClick={() => {
               reset_search_ccd({ nombre_ccd: '', version: '' });
             }}
@@ -343,6 +348,7 @@ const SearchCcdModal = ({
           </Button>
           <Button
             variant="outlined"
+            color="error"
             onClick={() => {
               set_is_modal_active(false);
               dispatch(get_ccds([]));
