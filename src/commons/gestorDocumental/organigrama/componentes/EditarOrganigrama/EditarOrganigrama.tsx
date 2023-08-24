@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
@@ -343,18 +344,14 @@ export const EditarOrganigrama = ({
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
-                <DownloadButton
-                  fileName="ruta_soporte"
-                  condition={
-                    true
-                   /* ccd_current === null ||
-                    ccd_current?.ruta_soporte === null ||
-                    ccd_current?.ruta_soporte === '' */
-                  }
-                  fileUrl={'https://back-end-bia-beta.up.railway.app/media/'}
-                />
-              </Grid>
+            <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
+              <DownloadButton
+                fileName="ruta_soporte"
+                condition={!control_organigrama._formValues?.ruta_resolucion}
+                fileUrl={organigram_current?.ruta_resolucion}
+                /* fileUrl={`${`/${control_organigrama._formValues?.ruta_resolucion?.name}` ||  organigram_current?.ruta_resolucion}`} */
+              />
+            </Grid>
           </Grid>
 
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
@@ -421,7 +418,9 @@ export const EditarOrganigrama = ({
                         title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
                       }
                     >
-                      {title_nivel === 'Agregar' ? 'AGREGAR NIVEL' : 'EDITAR NIVEL'}
+                      {title_nivel === 'Agregar'
+                        ? 'AGREGAR NIVEL'
+                        : 'EDITAR NIVEL'}
                     </Button>
                   </Stack>
                 </Box>
@@ -657,7 +656,9 @@ export const EditarOrganigrama = ({
                     title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
                   }
                 >
-                  {title_unidades === 'Agregar' ? 'AGREGAR UNIDAD' : 'EDITAR UNIDAD'}
+                  {title_unidades === 'Agregar'
+                    ? 'AGREGAR UNIDAD'
+                    : 'EDITAR UNIDAD'}
                 </Button>
                 <Button
                   onClick={() => {
