@@ -52,7 +52,7 @@ import {
 } from './columns/columnsResTipologias';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 // import { control_success } from '../../../../../../../helpers';
-import  DeleteIcon  from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -137,7 +137,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
     }
   ];
 
-  const colums_tipologias_restringidas = [...baseColumns,
+  const colums_tipologias_restringidas = [
+    ...baseColumns,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -149,7 +150,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
             size="large"
             title="Eliminar de tipologías restringidas"
             onClick={() => {
-             /* dispatch(
+              /* dispatch(
                 add_tipologia_documental_to_trd(
                   nuevasTipologias.length > 0
                     ? nuevasTipologias.filter(
@@ -172,8 +173,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 )
               ); */
               // control_success('Tipología eliminada de la relación TRD');
-              console.log(params.row)
-              console.log('Eliminando de tipologias restringidas')
+              console.log(params.row);
+              console.log('Eliminando de tipologias restringidas');
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -189,62 +190,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
         </>
       )
     }
-  }];
-
-  /*
-  const colums_tipologias_asociadas = [
-    {
-      headerName: 'Acciones',
-      field: 'acciones',
-      width: 180,
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            aria-label="edit"
-            size="large"
-            title="Eliminar"
-            onClick={() => {
-              dispatch(
-                add_tipologia_documental_to_trd(
-                  nuevasTipologias.length > 0
-                    ? nuevasTipologias.filter(
-                        (item: any) => {
-                          console.log(item);
-                          console.log(params.row);
-                          return (
-                            item.id_tipologia_documental !==
-                            params.row.id_tipologia_documental
-                          );
-                        }
-                      ---   item.id_tipologia_documental !==
-                      params.row.id_tipologia_documental -----
-                      )
-                    : tipologias_asociadas_a_trd.filter(
-                        (item: any) =>
-                          item.id_tipologia_documental !==
-                          params.row.id_tipologia_documental
-                      )
-                )
-              );
-              control_success('Tipología eliminada de la relación TRD');
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <DeleteIcon
-                sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px'
-                }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      )
-    }
   ];
-
-  */
 
   const closeModalReservaTipologiaDocumentalesAll = (): void => {
     closeModalReservaTipologia();
