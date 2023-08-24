@@ -165,7 +165,7 @@ const DialogCcdActual = () => {
         <DialogContent sx={{ mb: '0px' }}>
           <Title title="Cuadros de clasificación documental asociado" />
           <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={7}>
               <CustomSelect
                 onChange={on_change}
                 label="Cuadros de clasificación documental*"
@@ -194,7 +194,7 @@ const DialogCcdActual = () => {
                         value={data_asociada_ccd.trd.nombre}
                         type="textarea"
                         rows="3"
-                        label="Nombre"
+                        label="Nombre de la TRD"
                         size="small"
                       />
                     )
@@ -211,7 +211,7 @@ const DialogCcdActual = () => {
                         type="textarea"
                         value={data_asociada_ccd.trd.version}
                         rows="3"
-                        label="Versión"
+                        label="Versión de la TRD"
                         size="small"
                       />
                     )
@@ -231,7 +231,7 @@ const DialogCcdActual = () => {
                         value={data_asociada_ccd.tca.nombre}
                         type="textarea"
                         rows="3"
-                        label="Nombre"
+                        label="Nombre de la TCA"
                         size="small"
                       />
                     )
@@ -248,7 +248,7 @@ const DialogCcdActual = () => {
                         value={data_asociada_ccd.tca.version}
                         type="textarea"
                         rows="3"
-                        label="Versión"
+                        label="Versión de la TCA"
                         size="small"
                       />
                     )
@@ -279,6 +279,10 @@ const DialogCcdActual = () => {
                 <TextField
                   fullWidth
                   required
+                  multiline
+                  inputProps={{
+                    maxLength: 255
+                  }}
                   type="textarea"
                   rows="3"
                   label="Justicación"

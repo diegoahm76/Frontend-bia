@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-
 import { useContext } from 'react';
 import {
   Avatar,
@@ -18,63 +17,41 @@ import {
   IconButton,
   Stack,
   Tooltip
-  //  TextField
-  // TextField,
-  // Tooltip,
-  // Typography
 } from '@mui/material';
-// import { Controller } from 'react-hook-form';
 
 //* icons
 import CloseIcon from '@mui/icons-material/Close';
-// import CleanIcon from '@mui/icons-material/CleaningServices';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import SearchIcon from '@mui/icons-material/Search';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 
 import { DataGrid } from '@mui/x-data-grid';
 
 import { v4 as uuidv4 } from 'uuid';
 import AddIcon from '@mui/icons-material/Add';
-// import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
-// import Swal from 'sweetalert2';
 
-//* css file
-// import './css/Swal.css';
-// import { add_tipologia_documental_to_trd } from '../../../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
 
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
-// import { control_success } from '../../../../../../../helpers';
+import { control_success } from '../../../../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { columnsResTipologias } from './columns/columnsResTipologias';
 
 import { set_tipologias_reservadas } from '../../../../toolkit/TCAResources/slice/TcaSlice';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useAppDispatch();
   //* context values
-  const {
-    modalReservaTipologia,
-    // openModalReservaTipologia,
-    closeModalReservaTipologia
-  } = useContext(ModalContextTCA);
+  const { modalReservaTipologia, closeModalReservaTipologia } =
+    useContext(ModalContextTCA);
 
   //* get element from store
   const { tipologias_NO_resevadas, tipologias_resevadas } = useAppSelector(
     (state: any) => state.tca_slice
   );
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty-pattern
-  /*  const {
-
-  } = use_trd(); */
 
   //* interacción inicial de columnas creadas
   const baseColumns = [
@@ -112,7 +89,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
               )}
               size="large"
               onClick={() => {
-                // ? añdir y actualizar tipologias asociadas a trd
+                // ? añdir tipologias con reservadass
                 dispatch(
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
@@ -120,10 +97,9 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       : [...tipologias_NO_resevadas, params.row]
                   )
                 );
-                //  control_success('Tipología añadida a la relación TRD');
+                control_success('Ítem añadido como tipología restringida');
                 console.log(params.row);
-                console.log(tipologias_NO_resevadas);
-                console.log('añadiendo tipología restringida');
+                // console.log('añadiendo tipología restringida');
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -179,9 +155,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                         )
                   )
                 );
-                // control_success('Tipología eliminada de la relación TRD');
+                control_success('Ítem eliminado de tipologías restringidas');
                 console.log(params.row);
-                console.log('Eliminando de tipologias restringidas');
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -216,15 +191,6 @@ export const ModalReservarTipologias = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            /* void Swal.fire({
-              title: 'Recuerde guardar para que los cambios se vean reflejados',
-              icon: 'info',
-              confirmButtonText: 'Ok',
-              confirmButtonColor: '#042F4A',
-              customClass: {
-                container: 'my-swal'
-              }
-            }); */
             closeModalReservaTipologiaDocumentalesAll();
           }}
         >
@@ -240,9 +206,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
           >
             <Grid container spacing={2}>
               {/* tipologias existentes */}
-
               <Grid item xs={12} sm={12}>
-                <Box /* sx={{ width: '100%' }} */>
+                <Box>
                   <Title title="Tipologías no restringidas" />
                   <DataGrid
                     sx={{ marginTop: '1.5rem' }}
@@ -250,7 +215,6 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     autoHeight
                     rows={
                       // tipologias_NO_resevadas
-
                       tipologias_NO_resevadas.filter(
                         (item: any) =>
                           !tipologias_resevadas.some(
@@ -259,35 +223,12 @@ export const ModalReservarTipologias = (): JSX.Element => {
                               item.id_tipologia_documental
                           )
                       ) || []
-
-                      /* nuevasTipologias.length > 0
-                        ? tipologias
-                            .filter((item: any) => item.activo)
-                            .filter(
-                              (item: any) =>
-                                !nuevasTipologias.find(
-                                  (item2: any) =>
-                                    item2?.id_tipologia_documental ===
-                                    item.id_tipologia_documental
-                                )
-                            ) || []
-                        : tipologias
-                            .filter((item: any) => item.activo)
-                            .filter(
-                              (item: any) =>
-                                !Array.isArray(tipologias_asociadas_a_trd) ||
-                                !tipologias_asociadas_a_trd.find(
-                                  (item2) =>
-                                    item2?.id_tipologia_documental ===
-                                    item.id_tipologia_documental
-                                )
-                            ) || [] */
                     }
                     columns={columns_tipologias_NO_restringidas}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => uuidv4()}
+                    getRowId={() => uuidv4()}
                   />
                 </Box>
               </Grid>
@@ -301,23 +242,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     autoHeight
                     rows={
                       tipologias_resevadas || []
-
                       //  tipologias_resevadas
-
-                      /* nuevasTipologias.length > 0
-                        ? nuevasTipologias.reduce((acc: any, current: any) => {
-                            const x = acc.find(
-                              (item: any) =>
-                                item.id_tipologia_documental ===
-                                current.id_tipologia_documental
-                            );
-                            if (!x) {
-                              return acc.concat([current]);
-                            } else {
-                              return acc;
-                            }
-                          }, [])
-                        : tipologias_asociadas_a_trd */
                     }
                     columns={colums_tipologias_restringidas}
                     pageSize={5}
@@ -328,26 +253,24 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 </Box>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={5.5} sx={{ marginTop: '1rem' }}>
+            <Grid item xs={12} sm={12} sx={{ marginTop: '1rem' }}>
               <Button
                 variant="contained"
                 type="submit"
-                startIcon={<DoneAllIcon />}
-                color="primary"
-              >
-                ACEPTAR
-              </Button>
-              {/* <Button
-                variant="contained"
-                startIcon={<CleanIcon />}
+                startIcon={<AddTaskIcon />}
                 color="success"
-                sx={{ ml: '10px' }}
-                onClick={() => {
-
-                }}
               >
-                LIMPIAR
-              </Button> */}
+                ESTABLECER TIPOLOGIAS RESTRINGIDAS
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                color="primary"
+                sx={{ ml: '10px' }}
+                onClick={() => dispatch(set_tipologias_reservadas([]))}
+              >
+                REINICIAR TIPOLOGÍAS
+              </Button>
             </Grid>
           </DialogContent>
 

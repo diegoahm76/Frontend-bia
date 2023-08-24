@@ -202,7 +202,7 @@ const DialogElegirOrganigramaActual = () => {
                   fullWidth
                   disabled
                   value={organigrama_actual?.nombre}
-                  label="Nombre"
+                  label="Nombre del organigrama"
                   size="small"
                 />
               )}
@@ -215,7 +215,7 @@ const DialogElegirOrganigramaActual = () => {
                   fullWidth
                   disabled
                   value={organigrama_actual?.version}
-                  label="Versión"
+                  label="Versión del organigrama"
                   size="small"
                 />
               )}
@@ -373,6 +373,10 @@ const DialogElegirOrganigramaActual = () => {
                 <TextField
                   fullWidth
                   required
+                  multiline
+                  inputProps={{
+                    maxLength: 255
+                  }}
                   type="textarea"
                   rows="3"
                   label="Justicación"

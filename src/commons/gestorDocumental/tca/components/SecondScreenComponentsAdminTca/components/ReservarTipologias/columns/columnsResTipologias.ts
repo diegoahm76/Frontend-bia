@@ -24,7 +24,7 @@ export const rowsPrueba_NO_Registrindas = [
     id_tipologia_documental: 2,
     nombre: 'nombre2',
     cod_tipo_medio_doc: 'H',
-    activo: false,
+    activo: true,
     reservado: true
   },
   {
