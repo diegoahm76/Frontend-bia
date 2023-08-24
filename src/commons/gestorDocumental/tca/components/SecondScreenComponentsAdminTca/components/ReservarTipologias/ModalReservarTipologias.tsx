@@ -16,7 +16,8 @@ import {
   Divider,
   Grid,
   IconButton,
-  Stack
+  Stack,
+  Tooltip
   //  TextField
   // TextField,
   // Tooltip,
@@ -50,7 +51,9 @@ import { ModalContextTCA } from '../../../../context/ModalContextTca';
 import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 // import { control_success } from '../../../../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { columnsResTipologias, rowsPrueba } from './columns/columnsResTipologias';
+import { columnsResTipologias } from './columns/columnsResTipologias';
+
+import { set_tipologias_reservadas } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -64,12 +67,9 @@ export const ModalReservarTipologias = (): JSX.Element => {
   } = useContext(ModalContextTCA);
 
   //* get element from store
-  /*  const {
-    tipologias_asociadas_a_trd,
-    trd_current,
-    tipologias,
-    nuevasTipologias
-  } = useAppSelector((state: any) => state.trd_slice); */
+  const { tipologias_NO_resevadas, tipologias_resevadas } = useAppSelector(
+    (state: any) => state.tca_slice
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty-pattern
   /*  const {
@@ -102,34 +102,35 @@ export const ModalReservarTipologias = (): JSX.Element => {
       width: 180,
       renderCell: (params: any) => (
         <>
-          <IconButton
-            aria-label="edit"
-            size="large"
-            title="Añadir tipología como restringida"
-            onClick={() => {
-              // ? añdir y actualizar tipologias asociadas a trd
-              /* dispatch(
+          <Tooltip title="Añadir tipología como restringida">
+            <IconButton
+              aria-label="edit"
+              size="large"
+              onClick={() => {
+                // ? añdir y actualizar tipologias asociadas a trd
+                /* dispatch(
                 add_tipologia_documental_to_trd(
                   nuevasTipologias.length > 0
                     ? [...nuevasTipologias, params.row]
                     : [...tipologias_asociadas_a_trd, params.row]
                 )
               ); */
-              //  control_success('Tipología añadida a la relación TRD');
-              console.log(params.row);
-              console.log('añadiendo tipología restringida');
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <AddIcon
-                sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px'
-                }}
-              />
-            </Avatar>
-          </IconButton>
+                //  control_success('Tipología añadida a la relación TRD');
+                console.log(params.row);
+                console.log('añadiendo tipología restringida');
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <AddIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px'
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       )
     }
@@ -143,48 +144,49 @@ export const ModalReservarTipologias = (): JSX.Element => {
       width: 180,
       renderCell: (params: any) => (
         <>
-          <IconButton
-            aria-label="edit"
-            size="large"
-            title="Eliminar de tipologías restringidas"
-            onClick={() => {
-              /* dispatch(
-                add_tipologia_documental_to_trd(
-                  nuevasTipologias.length > 0
-                    ? nuevasTipologias.filter(
-                        (item: any) => {
-                          console.log(item);
-                          console.log(params.row);
-                          return (
+          <Tooltip title="Eliminar de tipologías restringidas">
+            <IconButton
+              aria-label="edit"
+              size="large"
+              onClick={() => {
+                dispatch(
+                  set_tipologias_reservadas(
+                    tipologias_NO_resevadas.length > 0
+                      ? tipologias_NO_resevadas.filter(
+                          (item: any) => {
+                            console.log(item);
+                            console.log(params.row);
+                            return (
+                              item.id_tipologia_documental !==
+                              params.row.id_tipologia_documental
+                            );
+                          }
+                          /* ---   item.id_tipologia_documental !==
+                      params.row.id_tipologia_documental ----- */
+                        )
+                      : tipologias_resevadas.filter(
+                          (item: any) =>
                             item.id_tipologia_documental !==
                             params.row.id_tipologia_documental
-                          );
-                        }
-                      ---   item.id_tipologia_documental !==
-                      params.row.id_tipologia_documental -----
-                      )
-                    : tipologias_asociadas_a_trd.filter(
-                        (item: any) =>
-                          item.id_tipologia_documental !==
-                          params.row.id_tipologia_documental
-                      )
-                )
-              ); */
-              // control_success('Tipología eliminada de la relación TRD');
-              console.log(params.row);
-              console.log('Eliminando de tipologias restringidas');
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <DeleteIcon
-                sx={{
-                  color: 'red',
-                  width: '18px',
-                  height: '18px'
-                }}
-              />
-            </Avatar>
-          </IconButton>
+                        )
+                  )
+                );
+                // control_success('Tipología eliminada de la relación TRD');
+                console.log(params.row);
+                console.log('Eliminando de tipologias restringidas');
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <DeleteIcon
+                  sx={{
+                    color: 'red',
+                    width: '18px',
+                    height: '18px'
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       )
     }
@@ -220,18 +222,6 @@ export const ModalReservarTipologias = (): JSX.Element => {
         >
           <DialogTitle>
             <Title title="Establecer restricción de tipologías" />
-            <IconButton
-              aria-label="close"
-              onClick={closeModalReservaTipologiaDocumentalesAll}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500]
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -251,8 +241,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      rowsPrueba
-
+                      tipologias_NO_resevadas
                       /* nuevasTipologias.length > 0
                         ? tipologias
                             .filter((item: any) => item.activo)
@@ -293,7 +282,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      rowsPrueba
+                      tipologias_resevadas
 
                       /* nuevasTipologias.length > 0
                         ? nuevasTipologias.reduce((acc: any, current: any) => {

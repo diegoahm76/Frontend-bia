@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { rowsPrueba_NO_Registrindas, rowsPrueba_SI_Restringidas } from '../../../components/SecondScreenComponentsAdminTca/components/ReservarTipologias/columns/columnsResTipologias';
 
 export interface TCASliceInterface {
   //! TCA necesarios para el funcionamiento de la aplicación
@@ -13,6 +14,10 @@ export interface TCASliceInterface {
   // ! ------- CATALOG TCA ----------------->
   catalog_TCA: any[];
   catalog_TCA_current: any;
+
+  // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
+  tipologias_resevadas: any[];
+  tipologias_NO_resevadas: any[];
 
   //! selected icon from catalogo create or edit admini TCA
   selected_item_from_catalogo: any;
@@ -31,12 +36,13 @@ const initialState: TCASliceInterface = {
   catalog_TCA: [],
   catalog_TCA_current: null,
 
+  // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
+  tipologias_resevadas: rowsPrueba_SI_Restringidas,
+  tipologias_NO_resevadas: rowsPrueba_NO_Registrindas,
+
   //! selected icon from catalogo create or edit admini TCA
-  selected_item_from_catalogo: null,
-
-
+  selected_item_from_catalogo: null
 };
-
 
 export const TCASlice = createSlice({
   name: 'tca_slice',
@@ -69,14 +75,20 @@ export const TCASlice = createSlice({
       state.catalog_TCA_current = action.payload;
     },
 
+    //* establecer tipologias reservadas y no reservadas
+
+    set_tipologias_reservadas(state, action: PayloadAction<any>) {
+      state.tipologias_resevadas = action.payload;
+    },
+
+    set_tipologias_NO_reservadas(state, action: PayloadAction<any>) {
+      state.tipologias_NO_resevadas = action.payload;
+    },
+
     // ! ------- SELECTED ITEM FROM CATALOG ----------------->
-    set_selected_item_from_catalogo_action(
-      state,
-      action: PayloadAction<any>
-    ) {
+    set_selected_item_from_catalogo_action(state, action: PayloadAction<any>) {
       state.selected_item_from_catalogo = action.payload;
     }
-
   }
 });
 
@@ -93,6 +105,10 @@ export const {
   set_catalog_TCA_action,
   set_current_catalog_TCA_action,
 
+  //* establecer tipologias reservadas y no reservadas
+  set_tipologias_reservadas,
+  set_tipologias_NO_reservadas,
+
   // ! ------- SELECTED ITEM FROM CATALOG ----------------->
-  set_selected_item_from_catalogo_action,
+  set_selected_item_from_catalogo_action
 } = TCASlice.actions;
