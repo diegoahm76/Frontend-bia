@@ -124,7 +124,13 @@ const DialogDelegarOrganigrama = ({
   };
 
   const cleaningForm = () => {
-    reset_search_for_delegation();
+    reset_search_for_delegation({
+      tipo_documento: '',
+      numero_documento: '',
+      nombre: '',
+    });
+    set_value_form('numero_documento', '');
+    set_value_form('nombre', '');
     set_data_user_por_asignar(undefined);
     set_tipo_documento('');
   }
@@ -287,6 +293,9 @@ const DialogDelegarOrganigrama = ({
                     errors={errors_search_for_delegation}
                     register={register_search_for_delegation}
                   />
+
+               
+
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   {loading ? (
@@ -320,9 +329,10 @@ const DialogDelegarOrganigrama = ({
                 </Grid>
                 <Grid item xs={12} sm={6} md={2}>
                   <LoadingButton
+                    loading={loading}
                     type="submit"
                     fullWidth
-                    loading={false}
+                    // loading={false}
                     color="primary"
                     variant="contained"
                     startIcon={<SearchIcon />}
@@ -337,7 +347,7 @@ const DialogDelegarOrganigrama = ({
                     <TextField
                       fullWidth
                       value={data_user_por_asignar?.nombre_completo}
-                      label="Nombre de usuario"
+                     // label="Nombre de usuario"
                       size="small"
                       disabled={true}
                     />

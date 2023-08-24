@@ -314,12 +314,22 @@ export const get_nuevo_user_organigrama: any = (
 ) => {
   return async () => {
     try {
+
+      
+
       const { data } = await api.get(
         `transversal/organigrama/get-nuevo-user-organigrama/${tipo_documento}/${numero_documento}/`
       );
+      
+      if(tipo_documento === '' || numero_documento === 0){
+        control_warning('Debe ingresar un tipo y número de documento');
+        return data;
+      }
+
+      control_success('Usuario encontrado');
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      // control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
