@@ -17,6 +17,7 @@ import { BuscarPersonaNatural } from './BuscarPersonaNatural';
 import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
 import { BuscarPersonaJuridica } from './BuscarPersonaJuridica';
 import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
+import { useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminVentanilla: React.FC = () => {
