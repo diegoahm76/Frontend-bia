@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -22,9 +23,12 @@ export const ButtonAdminBandeja: React.FC = () => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/app/gestor_documental/configuracion-datos-basicos/archivo/administrar_bandeja', {
-          replace: true,
-        });
+        navigate(
+          '/app/gestor_documental/configuracion-datos-basicos/archivo/administrar_bandeja',
+          {
+            replace: true,
+          }
+        );
       }
     });
   };

@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { useContext, useEffect } from 'react';
 
 import { LoadingButton } from '@mui/lab';
@@ -17,21 +18,31 @@ import { AgregarEstantes } from '../components/AgregarEstantes';
 import { ListarEstantes } from '../components/ListarEstantes';
 import { ListarBandejas } from '../components/ListarBandejas';
 import { DataContext } from '../context/context';
+import { useEstantesHook } from '../hooks/useEstantesHook';
+import { SeleccionarEstante } from '../components/SeleccionarEstante';
+import { EditarEstante } from '../components/EditarEstante';
+import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
+import { delete_estante } from '../services/services';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstantesScreen: React.FC = () => {
-  const { mode_estante } = useAppSelector((state) => state.deposito);
+  const { mode_estante, data_estantes, data_depositos } = useAppSelector(
+    (state) => state.deposito
+  );
 
-  const { id_deposito, identificacion_deposito } = useContext(DataContext);
+  const {
+    id_deposito,
+    identificacion_deposito,
+    fetch_data_estantes_depositos,
+  } = useContext(DataContext);
 
-  console.log(identificacion_deposito, 'identificacion_deposito');
+  const { onsubmit_estantes } = useEstantesHook();
 
   return (
     <>
       <form
         onSubmit={(e) => {
-          // void on_submit_advance(e);
-          console.log('submit');
+          void onsubmit_estantes(e);
         }}
       >
         <Grid
@@ -54,9 +65,11 @@ export const EstantesScreen: React.FC = () => {
           </Grid>
         </Grid>
         <BusquedaAvanzadaDepositos />
-        {mode_estante.crear && <AgregarEstantes />}
-        <ListarBandejas />
-        <ListarEstantes />
+        {mode_estante.crear ? <AgregarEstantes /> : null}
+        {mode_estante.ver ? <SeleccionarEstante /> : null}
+        {mode_estante.editar ? <EditarEstante /> : null}
+        {data_depositos?.id_deposito ? <ListarEstantes /> : null}
+        {data_estantes?.id_estante_deposito ? <ListarBandejas /> : null}
         <Grid
           container
           spacing={2}
@@ -86,15 +99,18 @@ export const EstantesScreen: React.FC = () => {
               </LoadingButton>
             </Grid>
             <Grid item>
-              <LoadingButton
-                variant="outlined"
-                color="error"
-                loading={false}
-                disabled={false}
-                startIcon={<DeleteIcon />}
-              >
-                Borrar
-              </LoadingButton>
+              <ButtonEliminar
+                id={data_estantes.id_estante_deposito}
+                confirmationMessage="¿Estás seguro de eliminar este estante?"
+                successMessage="El estante se eliminó correctamente"
+                Disabled={!data_estantes.id_estante_deposito}
+                deleteFunction={async () =>
+                  await delete_estante(data_estantes.id_estante_deposito)
+                }
+                fetchDataFunction={async () => {
+                  await fetch_data_estantes_depositos();
+                }}
+              />
             </Grid>
 
             <Grid item>

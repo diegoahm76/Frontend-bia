@@ -5,6 +5,7 @@ import type {
   IObjDeposito,
   IObjSucursales,
 } from '../../interfaces/deposito';
+import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
 
 export const initial_state_deposito: IObjDeposito = {
   nombre_deposito: null,
@@ -16,8 +17,8 @@ export const initial_state_deposito: IObjDeposito = {
   activo: false,
   orden_ubicacion_por_entidad: null,
   nombre_sucursal: null,
-  municipio: null
-}
+  municipio: null,
+};
 
 export const mode_estantes: IMode = {
   ver: false,
@@ -25,11 +26,26 @@ export const mode_estantes: IMode = {
   editar: false,
 };
 
+export const estantes_slice: GetEstantes = {
+  id_estante_deposito: 0,
+  orden_ubicacion_por_deposito: 0,
+  identificacion_por_deposito: '',
+};
+export const info_deposito_slice: InfoDepositos = {
+  id_deposito: 0,
+  orden_ubicacion_por_entidad: 0,
+  nombre_deposito: '',
+  identificacion_por_entidad: '',
+  nombre_sucursal: '',
+};
+
 export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
   sucursales: [],
-  mode_estante: mode_estantes
+  mode_estante: mode_estantes,
+  data_estantes: estantes_slice,
+  data_depositos: info_deposito_slice,
 };
 
 export const deposito_slice = createSlice({
@@ -63,6 +79,18 @@ export const deposito_slice = createSlice({
     ) => {
       state.mode_estante = action.payload;
     },
+    set_current_estantes: (
+      state: IDeposito,
+      action: PayloadAction<GetEstantes>
+    ) => {
+      state.data_estantes = action.payload;
+    },
+    set_current_info_deposito: (
+      state: IDeposito,
+      action: PayloadAction<InfoDepositos>
+    ) => {
+      state.data_depositos = action.payload;
+    },
   },
 });
 
@@ -71,4 +99,6 @@ export const {
   set_current_deposito,
   set_sucursales,
   set_current_mode_estantes,
+  set_current_estantes,
+  set_current_info_deposito,
 } = deposito_slice.actions;

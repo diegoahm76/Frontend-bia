@@ -1,8 +1,12 @@
+import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
+
 export interface IDeposito {
   deposito: IObjDeposito[];
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
   mode_estante: IMode;
+  data_estantes: GetEstantes,
+  data_depositos: InfoDepositos,
 }
 export interface IMode {
   ver: boolean;
