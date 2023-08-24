@@ -5,7 +5,6 @@ import { TrdRoutes } from '../trd/routes/TrdRoutes';
 import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
-import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
 
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
 
@@ -34,11 +33,7 @@ const routes = [
     component: () => <TcaRoutes />
   },
   // ? trasladar a configuracion y datos basicos
-  {
-    path: 'archivo/',
-    name: 'archivo',
-    component: () => <DepositosRoutes />
-  },
+
   {
     path: 'ventanilla_unica/',
     name: 'ventanilla_unica',
@@ -50,16 +45,16 @@ const routes = [
     path: 'configuracion-datos-basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
-  },
 
+  },
   {
     path: "alertas_gestor/",
     name: "alertas_gestor",
-    component: () => <Alertas_gestor_Routes/>
-    
+    component: () => (
+      <Alertas_gestor_Routes />
+    ),
   },
 
-  
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
