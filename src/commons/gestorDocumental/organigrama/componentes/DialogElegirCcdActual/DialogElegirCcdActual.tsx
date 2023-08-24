@@ -157,7 +157,7 @@ const DialogCcdActual = () => {
       >
         <DialogTitle>
           <Title
-            title="Activación de Cuadro clasificación documental e instrumentos
+            title="Activación de instrumentos
           archivisticos"
           />
         </DialogTitle>
