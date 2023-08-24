@@ -56,9 +56,7 @@ const routes = [
     path: 'activacion_instrumentos_archivisticos',
     name: 'activacion_instrumentos_archivisticos',
     component: () => <DialogCcdActual/>
-  }
-];
-
+  },
   {
     path: "alertas_gestor/",
     name: "alertas_gestor",
@@ -66,9 +64,11 @@ const routes = [
       <Alertas_gestor_Routes/>
     ),
   },
+];
+
 
   
-]
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
