@@ -6,8 +6,12 @@ import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
+
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
+
+import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
+
 
 const routes = [
   {
@@ -41,6 +45,7 @@ const routes = [
     name: 'ventanilla_unica',
     component: () => <VentanillaRoutes />
   },
+
   //! rutas de configuracion y datos básicos
   {
     path: 'configuracion_datos_basicos/',
@@ -53,6 +58,18 @@ const routes = [
     component: () => <DialogCcdActual/>
   }
 ];
+
+  {
+    path: "alertas_gestor/",
+    name: "alertas_gestor",
+    component: () => (
+      <Alertas_gestor_Routes/>
+    ),
+  },
+
+  
+]
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
