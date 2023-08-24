@@ -39,16 +39,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 // import AddIcon from '@mui/icons-material/Add';
 // import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 
 //* css file
-import './css/Swal.css';
+// import './css/Swal.css';
 // import { add_tipologia_documental_to_trd } from '../../../../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
+import { columnsResTipologias } from './columns/columnsResTipologias';
 // import { control_success } from '../../../../../../../helpers';
 
 export const ModalReservarTipologias = (): JSX.Element => {
@@ -74,6 +75,17 @@ export const ModalReservarTipologias = (): JSX.Element => {
   /*  const {
 
   } = use_trd(); */
+  
+    const columns_tipologias_NO_restringidas = [
+      ...columnsResTipologias,
+    ]
+
+  const colums_tipologias_restringidas = [
+    ...columnsResTipologias,
+  ];
+
+
+
 
   /*  const colums_tipologias = [
     {
@@ -206,7 +218,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-            void Swal.fire({
+           /* void Swal.fire({
               title: 'Recuerde guardar para que los cambios se vean reflejados',
               icon: 'info',
               confirmButtonText: 'Ok',
@@ -214,12 +226,12 @@ export const ModalReservarTipologias = (): JSX.Element => {
               customClass: {
                 container: 'my-swal'
               }
-            });
+            }); */
             closeModalReservaTipologiaDocumentalesAll();
           }}
         >
           <DialogTitle>
-            Establecer Tipologías Documentales a TRD
+          <Title title="Establecer restricción de tipologías" />
             <IconButton
               aria-label="close"
               onClick={closeModalReservaTipologiaDocumentalesAll}
@@ -275,7 +287,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                                 )
                             ) || [] */
                     }
-                    columns={[]}
+                    columns={columns_tipologias_NO_restringidas}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}
@@ -308,7 +320,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                           }, [])
                         : tipologias_asociadas_a_trd */
                     }
-                    columns={[]}
+                    columns={colums_tipologias_restringidas}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}
