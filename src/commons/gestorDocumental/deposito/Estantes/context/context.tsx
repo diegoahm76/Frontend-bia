@@ -36,6 +36,10 @@ interface UserContext {
   rows_bandejas: GetBandejas[];
   set_rows_bandejas: (value: GetBandejas[]) => void;
 
+  // * info
+  identificacion_deposito: string;
+  set_identificacion_deposito: (value: string) => void;
+
   // * fetch
   fetch_data_sucursal: () => Promise<void>;
   fetch_data_depositos: () => Promise<void>;
@@ -61,6 +65,10 @@ export const DataContext = createContext<UserContext>({
   set_rows_estantes: () => {},
   rows_bandejas: [],
   set_rows_bandejas: () => {},
+
+  // * info
+  identificacion_deposito: '',
+  set_identificacion_deposito: () => {},
 
   // * fetch
   fetch_data_sucursal: async () => {},
@@ -90,6 +98,9 @@ export const UserProvider = ({
 
   const [rows_estantes, set_rows_estantes] = React.useState<GetEstantes[]>([]);
   const [rows_bandejas, set_rows_bandejas] = React.useState<GetBandejas[]>([]);
+
+  // * info
+  const [identificacion_deposito, set_identificacion_deposito] = React.useState<string>('');
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -176,6 +187,9 @@ export const UserProvider = ({
     set_rows_estantes,
     rows_bandejas,
     set_rows_bandejas,
+    // * info
+    identificacion_deposito,
+    set_identificacion_deposito,
     // * fetch
     fetch_data_sucursal,
     fetch_data_depositos,

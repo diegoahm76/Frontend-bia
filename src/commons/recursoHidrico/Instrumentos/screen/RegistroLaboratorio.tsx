@@ -18,7 +18,7 @@ export const RegistroLaboratorio: React.FC = () => {
 
   useEffect(() => {
     if (id_instrumento === 0) {
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+      navigate('/app/recurso_hidrico/biblioteca/instrumentos/administracion', {
         replace: true,
       });
     }

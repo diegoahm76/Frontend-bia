@@ -72,7 +72,21 @@ export const InstrumentosScreen: React.FC = () => {
           <SeleccionarInstrumento />{' '}
         </>
       )}
-      <Grid item spacing={2} justifyContent="end" container>
+      <Grid
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        item
+        spacing={2}
+        justifyContent="flex-end"
+        container
+      >
         {!register_instrumento ? (
           <Grid item>
             <Button

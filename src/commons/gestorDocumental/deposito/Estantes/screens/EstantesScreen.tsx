@@ -16,18 +16,15 @@ import { useAppSelector } from '../../../../../hooks';
 import { AgregarEstantes } from '../components/AgregarEstantes';
 import { ListarEstantes } from '../components/ListarEstantes';
 import { ListarBandejas } from '../components/ListarBandejas';
-import { useEstantesHook } from '../hooks/useEstantesHook';
 import { DataContext } from '../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstantesScreen: React.FC = () => {
   const { mode_estante } = useAppSelector((state) => state.deposito);
 
-  const {
-    data_watch_estantes
-  } = useEstantesHook();
+  const { id_deposito, identificacion_deposito } = useContext(DataContext);
 
-  const { id_deposito } = useContext(DataContext);
+  console.log(identificacion_deposito, 'identificacion_deposito');
 
   return (
     <>
@@ -36,13 +33,6 @@ export const EstantesScreen: React.FC = () => {
           // void on_submit_advance(e);
           console.log('submit');
         }}
-        // style={{
-        //   width: '100%',
-        //   height: 'auto',
-        //   display: 'flex',
-        //   alignItems: 'center',
-        //   justifyContent: 'center',
-        // }}
       >
         <Grid
           container
@@ -113,7 +103,7 @@ export const EstantesScreen: React.FC = () => {
                 color="success"
                 type="submit"
                 loading={false}
-                disabled={!data_watch_estantes.identificacion_por_deposito}
+                disabled={identificacion_deposito === '' || !id_deposito}
                 startIcon={<SaveIcon />}
               >
                 Guardar
