@@ -45,7 +45,8 @@ import { control_warning } from '../../../../../../almacen/configuracion/store/t
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
 import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
 import SecurityIcon from '@mui/icons-material/Security';
-import { ReservaTipologias } from '../../components/ReservarTipologias/ModalReservarTipologias';
+import { ModalReservarTipologias } from './../../components/ReservarTipologias/ModalReservarTipologias';
+
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -445,7 +446,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       {/* Modal historial de cambios TRD ACTUAL */}
 
       {/* Modal reserva de tipologías documentales */}
-      <ReservaTipologias />
+      <ModalReservarTipologias />
       {/* Modal reserva de tipologías documentales */}
     </>
   );

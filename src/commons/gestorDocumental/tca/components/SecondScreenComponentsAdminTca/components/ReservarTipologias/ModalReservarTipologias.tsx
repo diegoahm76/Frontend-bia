@@ -51,7 +51,7 @@ import { Title } from '../../../../../../../components';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
 // import { control_success } from '../../../../../../../helpers';
 
-export const ReservaTipologias = (): JSX.Element => {
+export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useAppDispatch();
