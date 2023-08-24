@@ -22,7 +22,7 @@ export const ButtonAdminBandeja: React.FC = () => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/app/gestor_documental/archivo/bandejas', {
+        navigate('/app/gestor_documental/configuracion-datos-basicos/archivo/administrar_bandeja', {
           replace: true,
         });
       }

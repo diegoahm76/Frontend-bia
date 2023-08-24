@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 //* Components
 import { Page404 } from '../../../screens/404';
 import { AdmnistrarFormatos } from '../trd/components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
+import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
 
 interface RouteType {
   path: string;
@@ -21,12 +22,16 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
     },
     {
       path: '/admin-formatos-documentales',
-      element: () => <AdmnistrarFormatos/>
+      element: () => <AdmnistrarFormatos />
     },
     {
       path: '/*',
       element: () => <Page404 />
-    }
+    },
+    {
+      path: '/archivo/*',
+      element: () => <DepositosRoutes />
+    },
   ];
 
   return (

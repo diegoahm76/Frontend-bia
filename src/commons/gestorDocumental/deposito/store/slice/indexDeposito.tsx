@@ -19,11 +19,17 @@ export const initial_state_deposito: IObjDeposito = {
   municipio: null
 }
 
+export const mode_estantes: IMode = {
+  ver: false,
+  crear: false,
+  editar: false,
+};
+
 export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
   sucursales: [],
-  mode_estante: []
+  mode_estante: mode_estantes
 };
 
 export const deposito_slice = createSlice({
