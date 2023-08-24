@@ -5,18 +5,15 @@
 
 import { useContext } from 'react';
 import {
-  // Avatar,
-  // Autocomplete,
+  Avatar,
   Box,
   Button,
-  // Checkbox,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
-  // FormControl,
-  // FormControlLabel,
   Grid,
   IconButton,
   Stack
@@ -37,7 +34,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { v4 as uuidv4 } from 'uuid';
-// import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add';
 // import { AvatarStyles } from '../../../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 // import Swal from 'sweetalert2';
 
@@ -49,8 +46,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { ModalContextTCA } from '../../../../context/ModalContextTca';
-import { columnsResTipologias } from './columns/columnsResTipologias';
+import {
+  columnsResTipologias,
+  rowsPrueba
+} from './columns/columnsResTipologias';
+import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 // import { control_success } from '../../../../../../../helpers';
+import  DeleteIcon  from '@mui/icons-material/Delete';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -64,7 +66,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
   } = useContext(ModalContextTCA);
 
   //* get element from store
-/*  const {
+  /*  const {
     tipologias_asociadas_a_trd,
     trd_current,
     tipologias,
@@ -75,29 +77,27 @@ export const ModalReservarTipologias = (): JSX.Element => {
   /*  const {
 
   } = use_trd(); */
-  
-    const columns_tipologias_NO_restringidas = [
-      ...columnsResTipologias,
-    ]
 
-  const colums_tipologias_restringidas = [
+  //* interacción inicial de columnas creadas
+  const baseColumns = [
     ...columnsResTipologias,
+    {
+      headerName: 'Tipología activa',
+      field: 'activo',
+      width: 220,
+      renderCell: (params: any) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.activo ? (
+          <Chip size="small" label="Si" color="info" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="warning" variant="outlined" />
+        );
+      }
+    }
   ];
 
-
-
-
-  /*  const colums_tipologias = [
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 200
-    },
-    {
-      field: 'cod_tipo_medio_doc',
-      headerName: 'Cód. tipo medio doc',
-      width: 200
-    },
+  const columns_tipologias_NO_restringidas = [
+    ...baseColumns,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -107,18 +107,19 @@ export const ModalReservarTipologias = (): JSX.Element => {
           <IconButton
             aria-label="edit"
             size="large"
-            title="Añadir tipología a TRD"
+            title="Añadir tipología como restringida"
             onClick={() => {
               // ? añdir y actualizar tipologias asociadas a trd
-              dispatch(
+              /* dispatch(
                 add_tipologia_documental_to_trd(
                   nuevasTipologias.length > 0
                     ? [...nuevasTipologias, params.row]
                     : [...tipologias_asociadas_a_trd, params.row]
                 )
-              );
-              control_success('Tipología añadida a la relación TRD');
+              ); */
+              //  control_success('Tipología añadida a la relación TRD');
               console.log(params.row);
+              console.log('añadiendo tipología restringida');
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -135,20 +136,63 @@ export const ModalReservarTipologias = (): JSX.Element => {
       )
     }
   ];
-*/
+
+  const colums_tipologias_restringidas = [...baseColumns,
+    {
+      headerName: 'Acciones',
+      field: 'acciones',
+      width: 180,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            aria-label="edit"
+            size="large"
+            title="Eliminar de tipologías restringidas"
+            onClick={() => {
+             /* dispatch(
+                add_tipologia_documental_to_trd(
+                  nuevasTipologias.length > 0
+                    ? nuevasTipologias.filter(
+                        (item: any) => {
+                          console.log(item);
+                          console.log(params.row);
+                          return (
+                            item.id_tipologia_documental !==
+                            params.row.id_tipologia_documental
+                          );
+                        }
+                      ---   item.id_tipologia_documental !==
+                      params.row.id_tipologia_documental -----
+                      )
+                    : tipologias_asociadas_a_trd.filter(
+                        (item: any) =>
+                          item.id_tipologia_documental !==
+                          params.row.id_tipologia_documental
+                      )
+                )
+              ); */
+              // control_success('Tipología eliminada de la relación TRD');
+              console.log(params.row)
+              console.log('Eliminando de tipologias restringidas')
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <DeleteIcon
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px'
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
+    }
+  }];
 
   /*
   const colums_tipologias_asociadas = [
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 200
-    },
-    {
-      field: 'cod_tipo_medio_doc',
-      headerName: 'Cód. tipo medio doc',
-      width: 200
-    },
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -218,7 +262,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
           component="form"
           onSubmit={(e: any) => {
             e.preventDefault();
-           /* void Swal.fire({
+            /* void Swal.fire({
               title: 'Recuerde guardar para que los cambios se vean reflejados',
               icon: 'info',
               confirmButtonText: 'Ok',
@@ -231,7 +275,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
           }}
         >
           <DialogTitle>
-          <Title title="Establecer restricción de tipologías" />
+            <Title title="Establecer restricción de tipologías" />
             <IconButton
               aria-label="close"
               onClick={closeModalReservaTipologiaDocumentalesAll}
@@ -263,8 +307,9 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      []
-                     /* nuevasTipologias.length > 0
+                      rowsPrueba
+
+                      /* nuevasTipologias.length > 0
                         ? tipologias
                             .filter((item: any) => item.activo)
                             .filter(
@@ -304,7 +349,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      []
+                      rowsPrueba
+
                       /* nuevasTipologias.length > 0
                         ? nuevasTipologias.reduce((acc: any, current: any) => {
                             const x = acc.find(
