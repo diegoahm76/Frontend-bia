@@ -38,17 +38,17 @@ export const rowsPrueba_NO_Registrindas = [
 
 export const rowsPrueba_SI_Restringidas = [
   {
-    id_tipologia_documental: 4,
-    nombre: 'nombre1',
+    id_tipologia_documental: 2,
+    nombre: 'nombre2',
     cod_tipo_medio_doc: 'H',
-    activo: true,
+    activo: false,
     reservado: true
   },
   {
-    id_tipologia_documental: 5,
-    nombre: 'nombre2',
-    cod_tipo_medio_doc: 'F',
-    activo: false,
-    reservado: true
+    id_tipologia_documental: 3,
+    nombre: 'nombre3',
+    cod_tipo_medio_doc: 'E',
+    activo: true,
+    reservado: false
   }
 ];

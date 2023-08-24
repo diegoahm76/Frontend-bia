@@ -105,25 +105,37 @@ export const ModalReservarTipologias = (): JSX.Element => {
           <Tooltip title="Añadir tipología como restringida">
             <IconButton
               aria-label="edit"
+              disabled={tipologias_resevadas.find(
+                (item: any) =>
+                  item.id_tipologia_documental ===
+                  params.row.id_tipologia_documental
+              )}
               size="large"
               onClick={() => {
                 // ? añdir y actualizar tipologias asociadas a trd
-                /* dispatch(
-                add_tipologia_documental_to_trd(
-                  nuevasTipologias.length > 0
-                    ? [...nuevasTipologias, params.row]
-                    : [...tipologias_asociadas_a_trd, params.row]
-                )
-              ); */
+                dispatch(
+                  set_tipologias_reservadas(
+                    tipologias_NO_resevadas.length > 0
+                      ? [...tipologias_resevadas, params.row]
+                      : [...tipologias_NO_resevadas, params.row]
+                  )
+                );
                 //  control_success('Tipología añadida a la relación TRD');
                 console.log(params.row);
+                console.log(tipologias_NO_resevadas);
                 console.log('añadiendo tipología restringida');
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <AddIcon
                   sx={{
-                    color: 'primary.main',
+                    color: tipologias_resevadas.find(
+                      (item: any) =>
+                        item.id_tipologia_documental ===
+                        params.row.id_tipologia_documental
+                    )
+                      ? 'gray'
+                      : 'primary.main',
                     width: '18px',
                     height: '18px'
                   }}
@@ -152,19 +164,15 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 dispatch(
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
-                      ? tipologias_NO_resevadas.filter(
-                          (item: any) => {
-                            console.log(item);
-                            console.log(params.row);
-                            return (
-                              item.id_tipologia_documental !==
-                              params.row.id_tipologia_documental
-                            );
-                          }
-                          /* ---   item.id_tipologia_documental !==
-                      params.row.id_tipologia_documental ----- */
-                        )
-                      : tipologias_resevadas.filter(
+                      ? tipologias_resevadas.filter((item: any) => {
+                          console.log(item);
+                          console.log(params.row);
+                          return (
+                            item.id_tipologia_documental !==
+                            params.row.id_tipologia_documental
+                          );
+                        })
+                      : tipologias_NO_resevadas.filter(
                           (item: any) =>
                             item.id_tipologia_documental !==
                             params.row.id_tipologia_documental
@@ -241,7 +249,17 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      tipologias_NO_resevadas
+                      // tipologias_NO_resevadas
+
+                      tipologias_NO_resevadas?.filter(
+                        (item: any) =>
+                          !tipologias_resevadas?.some(
+                            (element: any) =>
+                              element?.id_tipologia_documental ===
+                              item?.id_tipologia_documental
+                          )
+                      ) || []
+
                       /* nuevasTipologias.length > 0
                         ? tipologias
                             .filter((item: any) => item.activo)
@@ -282,7 +300,16 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      tipologias_resevadas
+                      // tipologias_resevadas
+
+                      tipologias_resevadas?.filter(
+                        (item: any) =>
+                          !tipologias_NO_resevadas?.some(
+                            (element: any) =>
+                              element?.id_tipologia_documental ===
+                              item?.id_tipologia_documental
+                          )
+                      ) || []
 
                       /* nuevasTipologias.length > 0
                         ? nuevasTipologias.reduce((acc: any, current: any) => {
