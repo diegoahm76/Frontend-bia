@@ -9,9 +9,6 @@ import {
     Typography,
     Button,
     Divider,
-    Autocomplete,
-    type AutocompleteChangeReason,
-    type AutocompleteChangeDetails,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,13 +19,11 @@ import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import dayjs, { type Dayjs } from 'dayjs';
 import type {
-    ClaseTercero,
     CrearPersonNaturalAdmin,
     PropsRegisterAdministrador,
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
 import {
-    consultar_clase_tercero,
     crear_persona_natural,
 } from '../request/Request';
 import { Title } from '../../../../components';
@@ -86,7 +81,6 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
 
     const [type_direction, set_type_direction] = useState('');
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
-    const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
 
     // watchers
     const misma_direccion = watch('misma_direccion') ?? false;
@@ -94,17 +88,6 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
     const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
     const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
-    const handle_change_autocomplete = (
-        event: React.SyntheticEvent<Element, Event>,
-        value: ClaseTercero[],
-        reason: AutocompleteChangeReason,
-        details?: AutocompleteChangeDetails<ClaseTercero>
-    ): void => {
-        set_value(
-            'datos_clasificacion_persona',
-            value.map((e) => e.value)
-        );
-    };
 
     // establece la fecha de nacimiento
     const on_change_birt_day = (value: Dayjs | null): void => {
@@ -112,18 +95,8 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
         set_value('fecha_nacimiento', date);
         set_fecha_nacimiento(value);
     };
-    // trae todas las clase tercero
-    const get_datos_clase_tercero = async (): Promise<void> => {
-        try {
-            const response = await consultar_clase_tercero();
-            set_clase_tercero(response);
-        } catch (err) {
-            control_error(err);
-        }
-    };
 
     useEffect(() => {
-        void get_datos_clase_tercero();
         reset();
     }, []);
 
@@ -721,38 +694,7 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
                     </Grid>
                 </Grid>
                 {/* Datos de clasificación Cormacarena */}
-                <Grid container spacing={2} mt={0.1}>
-                    <Grid item xs={12}>
-                        <Title title="Datos de clasificación Cormacarena" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        {clase_tercero.length > 0 && (
-                            <>
-                                <Grid item xs={12}>
-                                    <Autocomplete
-                                        multiple
-                                        fullWidth
-                                        size="medium"
-                                        options={clase_tercero}
-                                        getOptionLabel={(option: any) => option.label}
-                                        isOptionEqualToValue={(option: any, value) =>
-                                            option?.value === value?.value
-                                        }
-                                        renderInput={(params) => (
-                                            <TextField
-                                                key={params.id}
-                                                {...params}
-                                                label="Datos clasificación Cormacarena"
-                                                placeholder="Clasificacion Cormacarena"
-                                            />
-                                        )}
-                                        {...register('datos_clasificacion_persona')}
-                                        onChange={handle_change_autocomplete}
-                                    />
-                                </Grid>
-                            </>
-                        )}
-                    </Grid>
+                <Grid container spacing={2} mt={0.1}>                   
                     {/* BOTONES */}
                     <Grid item spacing={2} justifyContent="end" container>
                         <Grid item>

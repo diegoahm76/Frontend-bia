@@ -1,21 +1,19 @@
 import { LoadingButton } from '@mui/lab';
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { DataContext } from '../context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ButtonInstrumentos: React.FC = () => {
+export const ButtonAdminBandeja: React.FC = () => {
   const navigate = useNavigate();
-  const { set_mode } = useContext(DataContext);
-  const confirmar_ir_instruemntos = (): void => {
+
+  const confirmar_admin_bandeja = (): void => {
     void Swal.fire({
       customClass: {
         confirmButton: 'square-btn',
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¡Desea ir a la ventana de gestión de instrumentos de Biblioteca?',
+      text: '¿Estás seguro?, al salir de la página puede perder información.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',
@@ -24,7 +22,7 @@ export const ButtonInstrumentos: React.FC = () => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/app/recurso_hidrico/biblioteca/instrumentos/administracion', {
+        navigate('/app/gestor_documental/configuracion-datos-basicos/archivo/administrar_bandeja', {
           replace: true,
         });
       }
@@ -33,14 +31,11 @@ export const ButtonInstrumentos: React.FC = () => {
 
   return (
     <LoadingButton
-      variant="contained"
-      color="primary"
-      onClick={() => {
-        set_mode('register_instrumento');
-        confirmar_ir_instruemntos();
-      }}
+      variant="outlined"
+      color="warning"
+      onClick={confirmar_admin_bandeja}
     >
-      Volver a instrumentos
+      Administrar bandejas
     </LoadingButton>
   );
 };

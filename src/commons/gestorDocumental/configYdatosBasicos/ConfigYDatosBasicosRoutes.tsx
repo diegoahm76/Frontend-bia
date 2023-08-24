@@ -9,6 +9,8 @@ import { Page404 } from '../../../screens/404';
 import { AdmnistrarFormatos } from '../trd/components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { AdministrarTipologiasDocumentales } from '../trd/components/Tipologias/components/AdmistrarTipologias/AdministrarTipologiasDocumentales';
 import { ModalProviderTRD } from '../trd/context/ModalsContextTrd';
+import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
+
 
 interface RouteType {
   path: string;
@@ -22,13 +24,18 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
       element: () => <AdministrarTipologiasDocumentales />
     },
     {
+
       path: '/admin_formatos_documentales',
       element: () => <AdmnistrarFormatos />
     },
     {
       path: '/*',
       element: () => <Page404 />
-    }
+    },
+    {
+      path: '/archivo/*',
+      element: () => <DepositosRoutes />
+    },
   ];
 
   return (

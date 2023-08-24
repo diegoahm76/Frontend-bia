@@ -206,10 +206,6 @@ export const use_register_laboratorio_hook = () => {
   ): Promise<void> => {
     try {
       if (id_pozo) {
-        console.log(
-          'id_pozo entrooooooooooooooooooooooooooooooooooooo',
-          id_pozo
-        );
         const response = await get_data_pozo_id(id_pozo);
         if (response?.length > 0) {
           const data_pozo = response.map((item: IpropsPozos) => ({
@@ -407,13 +403,27 @@ export const use_register_laboratorio_hook = () => {
   const fetch_data_resultado_laboratorio = async (): Promise<any> => {
     try {
       set_rows_resultado_laboratorio([]);
-      if (
-        (info_laboratorio.id_resultado_laboratorio && parametro_select) ||
+      if (info_laboratorio.id_resultado_laboratorio && parametro_select) {
+        const response = await get_data_resulatado_laboratorio_id(
+          info_laboratorio.id_resultado_laboratorio,
+          parametro_select
+        );
+        const elementosAssingnedLaboratorio = response.map((row: any) => {
+          return {
+            ...row,
+            id: uuidv4(),
+          };
+        });
+
+        set_rows_resultado_laboratorio(elementosAssingnedLaboratorio);
+        return elementosAssingnedLaboratorio;
+      } else if (
+        info_laboratorio.id_resultado_laboratorio &&
         tipo_parametro_value
       ) {
         const response = await get_data_resulatado_laboratorio_id(
           info_laboratorio.id_resultado_laboratorio,
-          parametro_select
+          tipo_parametro_value
         );
         const elementosAssingnedLaboratorio = response.map((row: any) => {
           return {
@@ -538,6 +548,11 @@ export const use_register_laboratorio_hook = () => {
       data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
       data.fecha_envio_lab = dayjs(fecha_envio).format('YYYY-MM-DD');
       data.id_registro_laboratorio = id_resultado_laboratorio_slice;
+
+      if (data.id_dato_registro_laboratorio) {
+        control_error('Por favor pulsa el boton de agregar');
+        return;
+      }
 
       const nombre_archivos_set = new Set(nombres_archivos);
       if (nombre_archivos_set.size !== nombres_archivos.length) {
