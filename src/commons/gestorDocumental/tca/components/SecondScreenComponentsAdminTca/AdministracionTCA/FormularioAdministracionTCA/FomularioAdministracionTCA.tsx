@@ -227,6 +227,51 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               />
             </Grid>
 
+            {/* módulo nuevo, reserva de tipologías  */}
+
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              sx={{
+                zIndex: 2
+              }}
+            >
+              <Controller
+                name="cod_clas_expediente"
+                control={control_administrar_tca}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <div>
+                    <Select
+                      value={value}
+                      onChange={(selectedOption) => {
+                        onChange(selectedOption);
+                      }}
+                      options={choicesTipoClasificacion}
+                      placeholder="Seleccionar"
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem'
+                        }}
+                      >
+                        Tipo de clasificación
+                      </small>
+                    </label>
+                  </div>
+                )}
+              />
+            </Grid>
+
+             {/* módulo nuevo, reserva de tipologías  */}
+
             {/* new spaces */}
 
             {/* justificación del cambio, solo aparece para trd actual */}
