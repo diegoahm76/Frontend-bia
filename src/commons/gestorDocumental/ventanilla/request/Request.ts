@@ -198,7 +198,7 @@ export const crear_persona_juridica = async (
   datos: CrearPersonJuridicaAdmin
 ): Promise<any> => {
   const {data} = await api.post(
-    `personas/register-persona-juridica-admin-personas/`,
+    `gestor/ventanilla/personas/register-persona-juridica/`,
     datos
   );
   return data;
