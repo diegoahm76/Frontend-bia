@@ -8,7 +8,7 @@ export const initial_state_deposito: IObjDeposito = {
     identificacion_por_entidad: null,
     direccion_deposito: null,
     cod_municipio_nal: null,
-    cod_pais_exterior: null,
+    cod_pais_exterior: '',
     id_sucursal_entidad: null,
     activo: false,
     orden_ubicacion_por_entidad: null,
