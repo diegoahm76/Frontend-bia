@@ -282,6 +282,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
+                color="error"
                 variant="outlined"
                 onClick={closeModalReservaTipologiaDocumentalesAll}
                 startIcon={<CloseIcon />}

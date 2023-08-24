@@ -23,7 +23,8 @@ import {
 import {
   delete_item_catalogo_tca_service,
   get_catalogo_TCA_service,
-  get_catalogo_TRD_service
+  get_catalogo_TRD_service,
+  get_tipologias_relacion
 } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { use_tca } from '../../../hooks/use_tca';
 
@@ -93,6 +94,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
               title="Editar relación catalogo TCA"
               onClick={() => {
                 console.log(params.row);
+                void get_tipologias_relacion(params.row.id_catserie_unidadorg)
                 openModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(params.row));
               }}

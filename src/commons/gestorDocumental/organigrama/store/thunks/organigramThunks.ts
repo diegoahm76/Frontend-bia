@@ -141,8 +141,6 @@ export const edit_organigrams_service: any = (
         `transversal/organigrama/update/${id}/`,
         organigrama
       );
-      
-
       const res = await api.get('transversal/organigrama/get/');
       const org_data = await res?.data?.Organigramas.find(
         (organigrama: any) => organigrama.id_organigrama === Number(id)
