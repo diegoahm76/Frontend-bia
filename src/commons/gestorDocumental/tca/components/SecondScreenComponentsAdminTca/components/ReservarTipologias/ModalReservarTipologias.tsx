@@ -251,12 +251,12 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     rows={
                       // tipologias_NO_resevadas
 
-                      tipologias_NO_resevadas?.filter(
+                      tipologias_NO_resevadas.filter(
                         (item: any) =>
-                          !tipologias_resevadas?.some(
+                          !tipologias_resevadas.some(
                             (element: any) =>
-                              element?.id_tipologia_documental ===
-                              item?.id_tipologia_documental
+                              element.id_tipologia_documental ===
+                              item.id_tipologia_documental
                           )
                       ) || []
 
@@ -300,16 +300,9 @@ export const ModalReservarTipologias = (): JSX.Element => {
                     density="compact"
                     autoHeight
                     rows={
-                      // tipologias_resevadas
+                      tipologias_resevadas || []
 
-                      tipologias_resevadas?.filter(
-                        (item: any) =>
-                          !tipologias_NO_resevadas?.some(
-                            (element: any) =>
-                              element?.id_tipologia_documental ===
-                              item?.id_tipologia_documental
-                          )
-                      ) || []
+                      //  tipologias_resevadas
 
                       /* nuevasTipologias.length > 0
                         ? nuevasTipologias.reduce((acc: any, current: any) => {
