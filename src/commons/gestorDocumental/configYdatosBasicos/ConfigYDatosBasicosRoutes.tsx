@@ -18,11 +18,11 @@ interface RouteType {
 export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
   const routes: RouteType[] = [
     {
-      path: '/admin-tipologias-documentales',
+      path: '/admin_tipologias_documentales',
       element: () => <AdministrarTipologiasDocumentales />
     },
     {
-      path: '/admin-formatos-documentales',
+      path: '/admin_formatos_documentales',
       element: () => <AdmnistrarFormatos />
     },
     {

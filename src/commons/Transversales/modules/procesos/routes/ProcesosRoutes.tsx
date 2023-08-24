@@ -16,7 +16,7 @@ const routes = [
   { path: '/traslado_masivo_unidad_a_unidad/', element: <Unidad_A_Unidad /> },
   // { path: '/cambio_organigrama_actual', element: <OrganigramaScreen /> },
   {
-    path: '/cambio-organigrama-actual',
+    path: '/cambio_organigrama_actual',
     element: <DialogElegirOrganigramaActual />
   }
 ];

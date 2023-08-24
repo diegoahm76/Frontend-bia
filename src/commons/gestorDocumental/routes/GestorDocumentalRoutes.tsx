@@ -43,13 +43,13 @@ const routes = [
   },
   //! rutas de configuracion y datos básicos
   {
-    path: 'configuracion-datos-basicos/',
+    path: 'configuracion_datos_basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
   },
   {
-    path: 'activacion-instrumentos-archivisticos',
-    name: 'activacion-instrumentos-archivisticos',
+    path: 'activacion_instrumentos_archivisticos',
+    name: 'activacion_instrumentos_archivisticos',
     component: () => <DialogCcdActual/>
   }
 ];
