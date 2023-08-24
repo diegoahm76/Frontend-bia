@@ -11,6 +11,7 @@ import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { estado_facilidad } from '../slices/FacilidadesSlice';
 import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
 import { get_validacion_resolucion } from '../slices/ResolucionSlice';
+// import { get_seguimiento_fac } from '../requests/requests';
 import { faker } from '@faker-js/faker';
 
 interface RootState {
@@ -80,6 +81,7 @@ export const TablaFacilidadesUsuario: React.FC = () => {
                 void dispatch(get_facilidad_solicitud(params.row.id));
                 void dispatch(get_validacion_plan_pagos(params.row.id));
                 void dispatch(get_validacion_resolucion(params.row.id));
+                // void get_seguimiento_fac(params.row.id);
                 navigate('../seguimiento');
               } catch (error: any) {
                 throw new Error(error);

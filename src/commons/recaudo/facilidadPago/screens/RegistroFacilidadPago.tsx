@@ -9,10 +9,9 @@ import { Save, CloudUpload } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { use_form } from '../../../../hooks/useForm';
-import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
-import { type event, type check, type Deudor, type Obligacion, type Bien } from '../interfaces/interfaces';
+import { type event, type check, type Deudor, type Obligacion } from '../interfaces/interfaces';
 import { post_registro_fac_pago, get_tipo_bienes, get_roles_garantia } from '../requests/requests';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -43,6 +42,14 @@ interface GarantiaInput {
   descripcion: string;
 }
 
+interface RelacionBien {
+  id: string;
+  id_tipo_bien: number;
+  valor: number;
+  direccion: string;
+  descripcion: string;
+}
+
 interface RespuestaRegistroFacilidad {
   numero_radicacion: string;
 }
@@ -55,22 +62,42 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [limite, set_limite] = useState(0);
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
   const [plazo, set_plazo] = useState(0);
+  const [date_abono, set_date_abono] = useState<Date | null>(new Date());
   const [autorizacion_notificacion, set_autorizacion_notificacion] = useState(false);
   const [obligaciones_ids, set_obligaciones_ids] = useState(Array<number>);
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
-  const [rows_bienes, set_rows_bienes] = useState(Array<Bien>);
+  const [rows_bienes, set_rows_bienes] = useState(Array<RelacionBien>);
+  const [tipo_bien, set_tipo_bien] = useState(0);
+  const [tipos_bienes, set_tipos_bienes] = useState(Array<number>);
+  const [identificacion_bien, set_identificacion_bien] = useState('');
+  const [identificaciones_bienes, set_identificaciones_bienes] = useState(Array<string>);
+  const [direccion_bien, set_direccion_bien] = useState('');
+  const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
+  const [valor_bien, set_valor_bien] = useState(0);
+  const [valores_bienes, set_valores_bienes] = useState(Array<number>);
+  const [archivo_bien, set_archivo_bien] = useState({});
+  const [archivos_bienes, set_archivos_bienes] = useState(Array<File>);
+  const [nombre_archivo_bien, set_nombre_archivo_bien] = useState('');
+  const [ubicaciones_bienes, set_ubicaciones_bienes] = useState(Array<number>);
   const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
-  const [date_abono, set_date_abono] = useState<Date | null>(new Date());
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
-  const { form_text, handle_change_text } = useFormText({});
   const { form_files, name_files, handle_change_file } = useFormFiles({});
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
 
   const handle_change_date_abono = (date: Date | null) => {
     set_date_abono(date);
+  };
+
+  const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected_file =
+      event.target.files != null ? event.target.files[0] : null;
+    if (selected_file != null) {
+      set_archivo_bien(selected_file);
+      set_nombre_archivo_bien(selected_file.name);
+    }
   };
 
   useEffect(() => {
@@ -124,7 +151,7 @@ export const RegistroFacilidadPago: React.FC = () => {
       arr.push(count)
     }
     set_arr_periodicidad(arr)
-  },[limite])
+  }, [limite])
 
   const columns_bienes: GridColDef[] = [
     {
@@ -423,14 +450,14 @@ export const RegistroFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUpload />}
                       >
-                        {name_files.documento_apoderado !== undefined ? name_files.documento_apoderado : 'Carga Documento de Identidad Apoderado'}
+                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad Apoderado'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            name='documento_apoderado'
+                            name='documento_identidad'
                             onChange={handle_change_file}
                           />
                       </Button>
@@ -443,14 +470,14 @@ export const RegistroFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUpload />}
                       >
-                        {name_files.documento_poder !== undefined ? name_files.documento_poder :'Carga Documento Poder'}
+                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo :'Carga Documento Poder'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            name='documento_poder'
+                            name='documento_respaldo'
                             onChange={handle_change_file}
                           />
                       </Button>
@@ -543,14 +570,14 @@ export const RegistroFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUpload />}
                       >
-                        {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
+                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            name='documento_deudor'
+                            name='documento_identidad'
                             onChange={handle_change_file}
                           />
                       </Button>
@@ -643,14 +670,14 @@ export const RegistroFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUpload />}
                       >
-                        {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
+                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            name='documento_deudor'
+                            name='documento_identidad'
                             onChange={handle_change_file}
                           />
                       </Button>
@@ -907,7 +934,10 @@ export const RegistroFacilidadPago: React.FC = () => {
                     label="Tipo Bien"
                     name='id_tipo_bien'
                     defaultValue={""}
-                    onChange={handle_change_text}
+                    onChange={(event: event) => {
+                      const { value } = event.target
+                      set_tipo_bien(parseInt(value))
+                    }}
                   >
                     {
                       bienes_options.map((bien) => (
@@ -925,8 +955,11 @@ export const RegistroFacilidadPago: React.FC = () => {
                   label='Identificación'
                   helperText='Escribe el Documento de Identificación'
                   variant="outlined"
-                  onChange={handle_change_text}
                   name='descripcion'
+                  onChange={(event: event) => {
+                    const { value } = event.target
+                    set_identificacion_bien(value)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -937,8 +970,11 @@ export const RegistroFacilidadPago: React.FC = () => {
                   size="small"
                   fullWidth
                   type='number'
-                  onChange={handle_change_text}
                   name='valor'
+                  onChange={(event: event) => {
+                    const { value } = event.target
+                    set_valor_bien(parseFloat(value))
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -948,8 +984,11 @@ export const RegistroFacilidadPago: React.FC = () => {
                   helperText='Escribe la Dirección'
                   size="small"
                   fullWidth
-                  onChange={handle_change_text}
                   name='direccion'
+                  onChange={(event: event) => {
+                    const { value } = event.target
+                    set_direccion_bien(value)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -960,7 +999,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUpload />}
                 >
-                  {name_files.documento_soporte_bien !== undefined ? name_files.documento_soporte_bien : 'Carga el Documento Impuesto'}
+                  {nombre_archivo_bien !== '' ? nombre_archivo_bien : 'Carga el Documento Impuesto'}
                     <input
                       hidden
                       type="file"
@@ -968,7 +1007,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                       autoFocus
                       style={{ opacity: 0 }}
                       name='documento_soporte_bien'
-                      onChange={handle_change_file}
+                      onChange={handle_file_bienes}
                     />
                 </Button>
               </Grid>
@@ -977,7 +1016,19 @@ export const RegistroFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   onClick={() => {
-                    set_rows_bienes(rows_bienes.concat({...form_text, id: faker.database.mongodbObjectId()}))
+                    set_rows_bienes(rows_bienes.concat({
+                      id: faker.database.mongodbObjectId(),
+                      id_tipo_bien: tipo_bien,
+                      descripcion: identificacion_bien,
+                      direccion: direccion_bien,
+                      valor: valor_bien,
+                    }))
+                    set_tipos_bienes(tipos_bienes.concat(tipo_bien))
+                    set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien))
+                    set_direcciones_bienes(direcciones_bienes.concat(direccion_bien))
+                    set_valores_bienes(valores_bienes.concat(valor_bien))
+                    set_archivos_bienes(archivos_bienes.concat(archivo_bien as any))
+                    set_ubicaciones_bienes(ubicaciones_bienes.concat(1))
                   }}
                 >
                   Agregar
@@ -1090,10 +1141,15 @@ export const RegistroFacilidadPago: React.FC = () => {
                             notificaciones: autorizacion_notificacion,
                             documento_garantia: form_files.documento_garantia,
                             ids_obligaciones: obligaciones_ids,
-                            documento_deudor: form_files.documento_identidad,
-                            ...form_text,
-                            id_ubicacion: 1,
-                            documento_soporte_bien: form_files.documento_soporte_bien,
+                            documento_deudor1: form_files.documento_identidad,
+                            documento_deudor2: form_files.documento_respaldo,
+                            documento_deudor3: form_files.certificado_legal,
+                            id_tipo_bienes: tipos_bienes,
+                            identificaciones: identificaciones_bienes,
+                            direcciones: direcciones_bienes,
+                            valores: valores_bienes,
+                            documentos_soporte_bien: archivos_bienes,
+                            id_ubicaciones: ubicaciones_bienes,
                           })
                           set_respuesta_registro(res_registro ?? {});
                         } catch (error: any) {

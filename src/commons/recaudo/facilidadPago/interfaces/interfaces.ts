@@ -127,29 +127,31 @@ export interface Contribuyente {
 }
 
 export interface RegistroFacilidadPago {
-  id_deudor: number;
-  id_tipo_actuacion: number;
+  id_deudor: string;
+  id_tipo_actuacion: string;
   fecha_generacion: string;
   observaciones: string;
-  periodicidad: number;
-  cuotas: number;
+  periodicidad: string;
+  cuotas: string;
   documento_no_enajenacion: File;
   consignacion_soporte: File;
   documento_soporte: File;
-  id_funcionario: number;
-  notificaciones: boolean;
-  documento_garantia: File;
-  id_rol: number;
-  documento_deudor: File;
-  descripcion: string;
-  direccion: string;
-  id_tipo_bien: number;
-  id_ubicacion: number;
-  valor: number;
-  documento_soporte_bien: File;
-  ids_obligaciones: number[];
-  valor_abonado: number;
+  id_funcionario: string;
+  notificaciones: string;
+  ids_obligaciones: string;
+  valor_abonado: string;
   fecha_abono: string;
+  documento_garantia: File;
+  id_rol: string;
+  documento_deudor1: File;
+  documento_deudor2: File;
+  documento_deudor3: File;
+  identificaciones: string[];
+  direcciones: string[];
+  id_tipo_bienes: string[];
+  id_ubicaciones: string[];
+  valores: string[];
+  documentos_soporte_bien: File[];
 }
 
 export interface FacilidadPagoUsuario {
