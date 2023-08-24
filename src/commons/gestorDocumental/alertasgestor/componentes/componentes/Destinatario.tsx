@@ -139,7 +139,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
     const [selected_button, setselected_button] = useState<string | null>(null);
     const handle_selectlider = (): void => {
         setselected_button('lider');
-        set_persona(undefined); 
+        set_persona(undefined);
     };
     const handle_selectperfil = (): void => {
         setselected_button('perfil');
@@ -213,7 +213,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
         }
     }, [formData.id_unidad_org_lider]);
 
-   
+
     return (
         <Grid container
             spacing={2}
@@ -230,10 +230,31 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             <Grid item marginTop={-2} xs={12}>
                 <Title title="Destinatario" />
             </Grid>
-            <Grid item xs={12}>
-                <Button onClick={handle_selectlider}>  Lider de unidad</Button>
-                <Button onClick={handle_selectperfil}>  Perfil</Button>
-                <Button onClick={handle_selectbuscar}>  BuscadorPersona</Button>
+            <Grid   container
+          item
+          // justifyContent="center"
+          spacing={2}>
+
+                {/* <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={() => {
+                set_mode('lider');
+                limpiar_destinatario();
+              }}
+            >
+              A lider de unidad
+            </Button> */}
+                <Grid item> 
+                    <Button variant="contained" color="primary" onClick={handle_selectlider}>  Lider de unidad</Button>
+                </Grid>
+                <Grid item> 
+                    <Button variant="contained" color="primary" onClick={handle_selectperfil}>  Perfil</Button>
+                </Grid>
+                <Grid item> 
+                    <Button variant="contained" color="primary" onClick={handle_selectbuscar}>  BuscadorPersona</Button>
+                </Grid>
             </Grid>
             {selected_button === 'lider' && (
                 <Grid item xs={12}>
@@ -277,7 +298,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                     />
                 </Grid>
             )}
-           
+
             {/* <>{persona?.primer_nombre}</>
             <>{persona?.id_persona}</> */}
             <Grid item xs={12}  >
