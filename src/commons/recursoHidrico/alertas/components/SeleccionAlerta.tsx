@@ -16,7 +16,7 @@ export const SeleccionAlerta: React.FC = () => {
   const {
     control_alertas,
     // errors_alertas
-
+    
     // * selected
     alertas_selected,
 
@@ -53,6 +53,7 @@ export const SeleccionAlerta: React.FC = () => {
           rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <div>
+              
               <Select
                 value={value}
                 options={alertas_selected as any}

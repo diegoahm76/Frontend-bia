@@ -166,7 +166,7 @@ export const EditarOrganigrama = ({
                     size="small"
                     label="Nombre"
                     variant="outlined"
-                    disabled={organigram_current.fecha_terminado !== null}
+                    disabled={organigram_current.fecha_terminado}
                     value={value}
                     inputProps={{
                       maxLength: 50
@@ -204,7 +204,7 @@ export const EditarOrganigrama = ({
                     size="small"
                     label="Versión"
                     variant="outlined"
-                    disabled={organigram_current.fecha_terminado !== null}
+                    disabled={organigram_current.fecha_terminado}
                     value={value}
                     inputProps={{
                       maxLength: 10
@@ -243,7 +243,7 @@ export const EditarOrganigrama = ({
                     label="Descripcion"
                     variant="outlined"
                     value={value}
-                    disabled={organigram_current.fecha_terminado !== null}
+                    disabled={organigram_current.fecha_terminado}
                     inputProps={{
                       maxLength: 255
                     }}
@@ -277,7 +277,7 @@ export const EditarOrganigrama = ({
                 }) => (
                   <>
                     <Button
-                      disabled={organigram_current.fecha_terminado !== null}
+                      disabled={organigram_current.fecha_terminado}
                       variant={
                         value === '' || value === null
                           ? 'outlined'
@@ -350,7 +350,7 @@ export const EditarOrganigrama = ({
               type="submit"
               color="primary"
               variant="outlined"
-              disabled={organigram_current.fecha_terminado !== null}
+              disabled={organigram_current.fecha_terminado}
               startIcon={<SyncIcon />}
             >
               EDITAR
@@ -363,7 +363,7 @@ export const EditarOrganigrama = ({
         <Title title="Niveles organizacionales" />
         <Box sx={{ mt: '20px' }}>
           <Grid container spacing={2}>
-            {organigram_current.fecha_terminado === null && (
+            {!organigram_current.fecha_terminado  && (
               <Grid item xs={12} sm={4}>
                 <Box
                   component="form"
@@ -386,7 +386,7 @@ export const EditarOrganigrama = ({
                         size="small"
                         label="Nombre de nivel"
                         variant="outlined"
-                        disabled={organigram_current.fecha_terminado !== null}
+                        disabled={organigram_current.fecha_terminado}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -402,7 +402,7 @@ export const EditarOrganigrama = ({
                     <Button
                       type="submit"
                       color="primary"
-                      disabled={organigram_current.fecha_terminado !== null}
+                      disabled={organigram_current.fecha_terminado}
                       variant="outlined"
                       startIcon={
                         title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
@@ -417,7 +417,7 @@ export const EditarOrganigrama = ({
             <Grid
               item
               xs={12}
-              sm={organigram_current.fecha_terminado !== null ? 12 : 8}
+              sm={organigram_current.fecha_terminado ? 12 : 8}
             >
               <Grid item>
                 <Box sx={{ width: '100%' }}>
@@ -441,7 +441,7 @@ export const EditarOrganigrama = ({
       <Grid item xs={12}>
         <Title title="Unidades organizacionales" />
         <Box sx={{ mt: '20px' }}>
-          {organigram_current.fecha_terminado === null && (
+          {!organigram_current.fecha_terminado && (
             <Box
               component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -472,7 +472,7 @@ export const EditarOrganigrama = ({
                         label="Código"
                         variant="outlined"
                         // eslint-disable-next-line eqeqeq
-                        disabled={organigram_current.fecha_terminado !== null}
+                        disabled={organigram_current.fecha_terminado}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -501,7 +501,7 @@ export const EditarOrganigrama = ({
                         size="small"
                         label="Nombre"
                         variant="outlined"
-                        disabled={organigram_current.fecha_terminado !== null}
+                        disabled={organigram_current.fecha_terminado}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -922,7 +922,7 @@ export const EditarOrganigrama = ({
           >
             VER
           </Button>
-          {organigram_current.fecha_terminado === null && (
+          {!organigram_current.fecha_terminado && (
             <Button
               color="success"
               variant="contained"

@@ -1,0 +1,6 @@
+van a existir 3 modos para manejas la aplicación
+
+1. modo_entrada_sin_validaciones : que es el modo inicial de la pantalla que nos permite seleccionar entre cualquiera de las dos opciones
+
+2. modo_entrada_con_validacion_organigrama_actual_a_nuevo :
+3 .modo_entrada_con_validacion_organigrama_anterior_a_actual

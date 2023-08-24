@@ -130,6 +130,8 @@ export const Traslado: FC<any> = (): JSX.Element => {
             setviweGridDataPersons
           ).then((res) => {
             setSelectedItems([]);
+            setshowSecondPart(false);
+            cleanFormAndGrid();
             console.log(res);
             dispatch(setListadoPersonasUnidades(res));
             // * from this event I have to manage the modal show and hide of the grid
@@ -194,6 +196,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       className="basic-single"
                       value={value}
                       onChange={(selectedOption) => {
+                        console.log(selectedOption);
                         setshowSecondPart(true);
                         dispatch(
                           setUnidadAnteriorCurrent(selectedOption.value)
