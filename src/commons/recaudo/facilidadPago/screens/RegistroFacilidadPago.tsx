@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
-import { type event, type check, type Deudor, type Obligacion } from '../interfaces/interfaces';
+import { type event, type check, type Deudor, type Obligacion, type Contacto } from '../interfaces/interfaces';
 import { post_registro_fac_pago, get_tipo_bienes, get_roles_garantia } from '../requests/requests';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -30,6 +30,14 @@ interface RootStateObligaciones {
     obligaciones: Obligacion[];
   }
 }
+
+interface RootStateSolicitud {
+  solicitud_facilidad: {
+    solicitud_facilidad: Contacto;
+  }
+}
+
+
 
 interface BienInput {
   id: number;
@@ -86,6 +94,7 @@ export const RegistroFacilidadPago: React.FC = () => {
   const { form_files, name_files, handle_change_file } = useFormFiles({});
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
+  const { solicitud_facilidad } = useSelector((state: RootStateSolicitud) => state.solicitud_facilidad);
 
   const handle_change_date_abono = (date: Date | null) => {
     set_date_abono(date);
@@ -384,34 +393,28 @@ export const RegistroFacilidadPago: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Dirección Notificación"
-                        helperText='Escribe la Dirección de Notificación'
+                        value={''.concat(solicitud_facilidad.direccion_notificaciones)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='direccion'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Ciudad"
-                        helperText='Escribe la Ciudad'
+                        value={''.concat(solicitud_facilidad.ciudad)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='ciudad'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Teléfono Contacto"
-                        helperText='Escribe el Teléfono de Contacto'
+                        value={''.concat(solicitud_facilidad.telefono_celular)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='telefono'
                       />
                     </Grid>
@@ -504,34 +507,28 @@ export const RegistroFacilidadPago: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Dirección Notificación"
-                        helperText='Escribe la Dirección de Notificación'
+                        value={''.concat(solicitud_facilidad.direccion_notificaciones)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='direccion'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Ciudad"
-                        helperText='Escribe la Ciudad'
+                        value={''.concat(solicitud_facilidad.ciudad)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='ciudad'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Teléfono Contacto"
-                        helperText='Escribe el Teléfono de Contacto'
+                        value={''.concat(solicitud_facilidad.telefono_celular)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='telefono'
                       />
                     </Grid>
@@ -604,34 +601,28 @@ export const RegistroFacilidadPago: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Dirección Notificación"
-                        helperText='Escribe la Dirección de Notificación'
+                        value={''.concat(solicitud_facilidad.direccion_notificaciones)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='direccion'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Ciudad"
-                        helperText='Escribe la Ciudad'
+                        value={''.concat(solicitud_facilidad.ciudad)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='ciudad'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Teléfono Contacto"
-                        helperText='Escribe el Teléfono de Contacto'
+                        value={''.concat(solicitud_facilidad.telefono_celular)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='telefono'
                       />
                     </Grid>
@@ -724,34 +715,28 @@ export const RegistroFacilidadPago: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Dirección Notificación"
-                        helperText='Escribe la Dirección de Notificación'
+                        value={''.concat(solicitud_facilidad.direccion_notificaciones)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='direccion'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Ciudad"
-                        helperText='Escribe la Ciudad'
+                        value={''.concat(solicitud_facilidad.ciudad)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='ciudad'
                       />
                     </Grid>
                     <Grid item xs={12} sm={5}>
                       <TextField
-                        required
                         label="Teléfono Contacto"
-                        helperText='Escribe el Teléfono de Contacto'
+                        value={''.concat(solicitud_facilidad.telefono_celular)}
                         size="small"
                         fullWidth
-                        onChange={on_input_change}
                         name='telefono'
                       />
                     </Grid>
