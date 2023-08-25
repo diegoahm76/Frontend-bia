@@ -96,7 +96,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
               onClick={() => {
                 console.log(params.row);
                 void get_tipologias_relacion(
-                  params.row.id_catserie_unidadorg
+                  params.row.id_cat_serie_und_ccd_trd
                 ).then((res: any) => {
                   const tipologias_reservadas = res.filter(
                     (item: any) => item.reservada

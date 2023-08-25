@@ -9,13 +9,12 @@ import {
   Button,
   Chip,
   Dialog,
-  DialogActions,
+ // DialogActions,
   DialogContent,
-  DialogTitle,
-  Divider,
+ // Divider,
   Grid,
   IconButton,
-  Stack,
+ // Stack,
   Tooltip
 } from '@mui/material';
 
@@ -234,10 +233,6 @@ export const ModalReservarTipologias = (): JSX.Element => {
             closeModalReservaTipologiaDocumentalesAll();
           }}
         >
-          <DialogTitle>
-            <Title title="Establecer restricción de tipologías" />
-          </DialogTitle>
-          <Divider />
           <DialogContent
             sx={{
               mb: '0px',
@@ -339,6 +334,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 ESTABLECER TIPOLOGIAS RESTRINGIDAS
               </Button>
               <Button
+              sx={{ ml: '1rem' }}
                 color="error"
                 variant="outlined"
                 onClick={closeModalReservaTipologiaDocumentalesAll}
@@ -349,7 +345,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
             </Grid>
           </DialogContent>
 
-          <Divider />
+         {/* <Divider />
           <DialogActions>
             <Stack
               direction="row"
@@ -365,7 +361,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 CERRAR
               </Button>
             </Stack>
-          </DialogActions>
+          </DialogActions> */}
         </Box>
       </Dialog>
     </>
