@@ -81,6 +81,8 @@ const use_editar_organigrama = () => {
   >([]);
 
   const [loadingLevels, setloadingLevels] = useState<boolean>(false);
+  const [dataloading, setDataloading] = useState<boolean>(false);
+  // const [dataloadingUnidades, setDataloadingUnidades] = useState<boolean>(false);
 
   const option_raiz = [
     { label: 'Si', value: true },
@@ -661,7 +663,9 @@ const use_editar_organigrama = () => {
     if (organigram_current?.id_organigrama != null)
       void dispatch(get_levels_service(organigram_current?.id_organigrama));
     if (organigram_current?.id_organigrama != null)
-      void dispatch(get_unitys_service(organigram_current?.id_organigrama));
+      void dispatch(
+        get_unitys_service(organigram_current?.id_organigrama, setDataloading)
+      );
   }, [organigram_current]);
 
   // useEffect para consultar  options
@@ -836,7 +840,9 @@ const use_editar_organigrama = () => {
       update_unitys_service(
         organigram_current?.id_organigrama,
         newUnidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -871,7 +877,9 @@ const use_editar_organigrama = () => {
       update_unitys_service(
         organigram_current?.id_organigrama,
         newUnidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -910,7 +918,9 @@ const use_editar_organigrama = () => {
       update_unitys_service(
         organigram_current?.id_organigrama,
         newUnidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -924,7 +934,9 @@ const use_editar_organigrama = () => {
       update_unitys_service(
         organigram_current?.id_organigrama,
         newObject,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -939,7 +951,11 @@ const use_editar_organigrama = () => {
       (nivel: any) => nivel.orden_nivel !== level_row
     );
     void dispatch(
-      update_levels_service(organigram_current?.id_organigrama, new_niveles)
+      update_levels_service(
+        organigram_current?.id_organigrama,
+        new_niveles,
+        setloadingLevels
+      )
     );
   };
 
@@ -952,7 +968,9 @@ const use_editar_organigrama = () => {
       update_unitys_service(
         organigram_current?.id_organigrama,
         new_unidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -1025,6 +1043,7 @@ const use_editar_organigrama = () => {
     reset_edit_value_activo,
     edit_value_activo,
     loadingLevels,
+    dataloading
   };
 };
 
