@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -18,6 +19,7 @@ import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import { reporte_estado_actividad, reporte_evolucion_lote, reporte_mortalidad, reporte_plantas_sd } from "../thunks/SubsistemaConservacion";
 import BuscarPlantas from "./BuscarPlantas";
+import { DialogNoticacionesComponent } from "../../../../components/DialogNotificaciones";
 
 const lista_reporte = [{ name: 'Mortalidad de Planta', value: 'MP' }, { name: 'Plantas Solicitadas vs Plantas Despachadas', value: 'PSPD' }, { name: 'Estado y Actividad de Planta', value: 'EAP' }, { name: 'Evolución por Lote', value: 'EL' }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -26,6 +28,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const navigate = useNavigate();
 
     // Variables globales
+    const [visor, set_visor] = useState<any>();
+    const [titulo_reporte, set_titulo_reporte] = useState<any>();
     const [reporte, set_reporte] = useState<any[]>([]);
     const [seleccion_vivero, set_seleccion_vivero] = useState<string>("");
     const [lista_viveros, set_lista_viveros] = useState<any[]>([]);
@@ -37,9 +41,15 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
     const [reporte_consolidado, set_reporte_consolidado] = useState<boolean>(false);
     const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
+    // Notificaciones
+    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
+    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
+    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
+    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
     // eslint-disable-next-line new-cap
     const [doc, set_doc] = useState<jsPDF>(new jsPDF());
-    const [doc_height, set_doc_height] = useState<number>(0);
+    const [doc_height, set_doc_height] = useState<number>(doc.internal.pageSize.getHeight());
 
     useEffect(() => {
         // set_reporte([]);
@@ -61,24 +71,34 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     }
 
     const reporte_mortalidad_fc: () => void = () => {
-        dispatch(reporte_mortalidad({ seleccion_vivero, seleccion_planta:309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_mortalidad({ seleccion_vivero, seleccion_planta: 309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const reporte_plantas_sd_fc: () => void = () => {
-        dispatch(reporte_plantas_sd({ seleccion_vivero, seleccion_planta:316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_plantas_sd({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
 
         })
     }
     const reporte_estado_actividad_fc: () => void = () => {
-        dispatch(reporte_estado_actividad({ seleccion_vivero, seleccion_planta:316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_estado_actividad({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+
         })
     }
     const reporte_evolucion_lote_fc: () => void = () => {
-        dispatch(reporte_evolucion_lote({ seleccion_vivero: 96, seleccion_planta:316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_evolucion_lote({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado, numero_lote, año_lote })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+
         })
     }
 
@@ -99,15 +119,16 @@ export const SubsistemaConservacionScreen: React.FC = () => {
 
     const cambio_numero_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_numero_lote(e.target.value);
-      };
+    };
 
-      const cambio_año_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cambio_año_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_año_lote(e.target.value);
-      };
+    };
 
     const handle_export_pdf = () => {
         // eslint-disable-next-line new-cap
         set_doc(new jsPDF());
+        set_visor(null);
         set_doc_height(doc.internal.pageSize.getHeight());
         if (seleccion_reporte === 'MP') {
             reporte_mortalidad_fc();
@@ -123,15 +144,28 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         }
     }
 
+    const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
+        set_titulo_notificacion(titulo);
+        set_tipo_notificacion(tipo);
+        set_mensaje_notificacion(mensaje)
+        set_dialog_notificaciones_is_active(active);
+        set_abrir_modal(active);
+    }
+
+    const descargar_pdf = () => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        doc.save(`${(titulo_reporte.reporte_seleccionado !== null && titulo_reporte.reporte_seleccionado !== undefined) ? titulo_reporte.reporte_seleccionado.name : ''}.pdf`);
+    }
+
     const nueva_pagina: (doc: jsPDF, title: string, page_position: number) => void = (doc: jsPDF, title: string, page_position: number) => {
         doc.addPage();
         doc.setPage(page_position);
         crear_encabezado();
     }
 
-    const crear_encabezado: () => {reporte_seleccionado:any,title:string} = () => {
+    const crear_encabezado: () => { reporte_seleccionado: any, title: string } = () => {
         const reporte_seleccionado = lista_reporte.find((r: any) => r.value === seleccion_reporte);
-        const title  = (`Reporte - ${(reporte_seleccionado !== null && reporte_seleccionado !== undefined) ? reporte_seleccionado.name : ''}`);
+        const title = (`Reporte - ${(reporte_seleccionado !== null && reporte_seleccionado !== undefined) ? reporte_seleccionado.name : ''}`);
         doc.setFont('Arial', 'normal');
         doc.setFontSize(12);
         const img_width = 140;
@@ -152,7 +186,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         doc.text(fecha_generacion, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion)) - 5), 5);
         doc.line(5, 30, (doc.internal.pageSize.width - 5), 30);
         doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
-        return {reporte_seleccionado,title};
+        set_titulo_reporte({ reporte_seleccionado, title });
+        return { reporte_seleccionado, title };
     }
 
     const set_json_model: (data: any) => any = (data: any) => {
@@ -193,7 +228,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     }
 
     useEffect(() => {
-        if(reporte.length > 0){
+        if (reporte.length > 0) {
             if (seleccion_reporte === 'MP') {
                 generar_reporte_mortalidad();
             }
@@ -210,7 +245,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     }, [reporte]);
 
     const generar_reporte_mortalidad: () => void = () => {
-        const reporte_titulo: {reporte_seleccionado: any, title: string} = crear_encabezado();
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
         reporte.forEach((report: any) => {
@@ -242,11 +277,10 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             }
         });
         console.log('objeto jsPDF: ', doc);
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
+        set_visor(doc.output('datauristring'));
     }
     const generar_reporte_pspd: () => void = () => {
-        const reporte_titulo: {reporte_seleccionado: any, title: string} = crear_encabezado();
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
         reporte.forEach((report: any) => {
@@ -278,10 +312,11 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         });
         console.log('objeto jsPDF: ', doc);
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
+        // doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
+        set_visor(doc.output('datauristring'));
     }
     const generar_reporte_eap: () => void = () => {
-        const reporte_titulo: {reporte_seleccionado: any, title: string} = crear_encabezado();
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
         const report_data = set_json_model(reporte);
@@ -369,16 +404,17 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         });
         console.log('objeto jsPDF: ', doc);
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
+        // doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
+        set_visor(doc.output('datauristring'));
     }
     const generar_reporte_el: () => void = () => {
-        const reporte_titulo: {reporte_seleccionado: any, title: string} = crear_encabezado();
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
         let coordenada_y = 40;
         reporte.forEach((report: any) => {
-            console.log('coordendasY: ',coordenada_y)
-            console.log('coordendas: ',coordendas)
+            console.log('coordendasY: ', coordenada_y)
+            console.log('coordendas: ', coordendas)
             const page = doc.internal.pageSize.getHeight();
             coordenada_y = report.bienes_consumidos.length === 1 ? (60 + coordendas + 20) : report.bienes_consumidos.length === 2 ? (60 + coordendas + 30) : (60 + coordendas + (report.bienes_consumidos.length * 10));
             if (coordenada_y >= (page - 50) || coordendas >= (page - 50)) {
@@ -393,7 +429,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             doc.text(dayjs(report.fecha_incidencia).format('DD/MM/YYYY'), 14, 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             const fecha_registro = 'Registrado en el sistema: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY');
-            doc.text(fecha_registro, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_registro)) - 5), 41+coordendas);
+            doc.text(fecha_registro, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_registro)) - 5), 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
@@ -421,10 +457,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         });
         console.log('objeto jsPDF: ', doc);
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
-    }
-    const realizar_analistica: () => void = () => {
-
+        // doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
+        set_visor(doc.output('datauristring'));
     }
 
     return (
@@ -468,6 +502,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         label="Vivero"
                                         onChange={cambio_seleccion_vivero}
                                     >
+                                        <MenuItem value={"Todos"}>Todos</MenuItem>
+
                                         {lista_viveros.map((vive: any) => (
                                             <MenuItem key={vive.id_vivero} value={vive.id_vivero}>
                                                 {vive.nombre}
@@ -480,26 +516,26 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     </Box>
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={7}>
-                        <Stack
+                            <Grid item xs={12} sm={7}>
+                                <Stack
                                     direction="row"
                                     justifyContent="flex-end"
                                     spacing={2}
                                 >
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                                    label="Planta"
-                                    type={'text'}
-                                    size="small"
-                                    fullWidth
-                                    value={seleccion_planta.nombre ?? ""}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    disabled
-                                />
-      
-                                </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Planta"
+                                            type={'text'}
+                                            size="small"
+                                            fullWidth
+                                            value={seleccion_planta.nombre ?? ""}
+                                            InputProps={{
+                                                readOnly: true,
+                                            }}
+                                            disabled
+                                        />
+
+                                    </Grid>
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} sm={5}>
@@ -518,14 +554,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         Buscar planta
                                     </Button>
                                     {abrir_modal_bien && (
-                    <BuscarPlantas
-                      is_modal_active={abrir_modal_bien}
-                      set_is_modal_active={set_abrir_modal_bien}
-                      title={"Busqueda de plantas"}
-                      seleccion_planta={set_seleccion_planta} 
-                      vivero={ seleccion_vivero }
-                      reporte={seleccion_reporte} />
-                  )}
+                                        <BuscarPlantas
+                                            is_modal_active={abrir_modal_bien}
+                                            set_is_modal_active={set_abrir_modal_bien}
+                                            title={"Busqueda de plantas"}
+                                            seleccion_planta={set_seleccion_planta}
+                                            vivero={seleccion_vivero}
+                                            reporte={seleccion_reporte} />
+                                    )}
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -533,47 +569,47 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     {(seleccion_reporte === 'EL') && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                            <Stack
+                                <Stack
                                     direction="row"
                                     justifyContent="flex-end"
                                     spacing={2}
                                 >
-                            <Grid item xs={12} sm={6}>
+                                    <Grid item xs={12} sm={6}>
 
-                                <TextField
-                                    label="Lote número"
-                                    type={'text'}
-                                    size="small"
-                                    fullWidth
-                                    value={numero_lote}
-                                    InputProps={{
-                                        type: "number"
-                                    }}
-                                    onChange={cambio_numero_lote}
-                                />
-                                </Grid>
+                                        <TextField
+                                            label="Lote número"
+                                            type={'text'}
+                                            size="small"
+                                            fullWidth
+                                            value={numero_lote}
+                                            InputProps={{
+                                                type: "number"
+                                            }}
+                                            onChange={cambio_numero_lote}
+                                        />
+                                    </Grid>
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                            <Stack
+                                <Stack
                                     direction="row"
                                     justifyContent="flex-start"
                                     spacing={2}
                                 >
-                            <Grid item xs={12} sm={6}>
+                                    <Grid item xs={12} sm={6}>
 
-                                <TextField
-                                    label="Año del lote"
-                                    type={'text'}
-                                    size="small"
-                                    fullWidth
-                                    value={año_lote}
-                                    InputProps={{
-                                        type: "number"
-                                    }}
-                                    onChange={cambio_año_lote}
-                                />
-                                </Grid>
+                                        <TextField
+                                            label="Año del lote"
+                                            type={'text'}
+                                            size="small"
+                                            fullWidth
+                                            value={año_lote}
+                                            InputProps={{
+                                                type: "number"
+                                            }}
+                                            onChange={cambio_año_lote}
+                                        />
+                                    </Grid>
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -581,50 +617,50 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                            <Stack
+                                <Stack
                                     direction="row"
                                     justifyContent="flex-end"
                                     spacing={2}
                                 >
-                        <Grid item xs={12} sm={6}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="Fecha desde"
-                                        value={fecha_desde}
-                                        onChange={(newValue) => {
-                                            handle_change_fecha_desde(newValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField required fullWidth size="small" {...params} />
-                                        )}
-                                        maxDate={fecha_hasta}
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DatePicker
+                                                label="Fecha desde"
+                                                value={fecha_desde}
+                                                onChange={(newValue) => {
+                                                    handle_change_fecha_desde(newValue);
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField required fullWidth size="small" {...params} />
+                                                )}
+                                                maxDate={fecha_hasta}
+                                            />
+                                        </LocalizationProvider>
+                                    </Grid>
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                            <Stack
+                                <Stack
                                     direction="row"
                                     justifyContent="flex-start"
                                     spacing={2}
                                 >
-                        <Grid item xs={12} sm={6}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="Fecha hasta"
-                                        value={fecha_hasta}
-                                        onChange={(newValue) => {
-                                            handle_change_fecha_hasta(newValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField required fullWidth size="small" {...params} />
-                                        )}
-                                        minDate={fecha_desde}
-                                        disabled={fecha_desde == null}
-                                    />
-                                </LocalizationProvider>
-                                </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DatePicker
+                                                label="Fecha hasta"
+                                                value={fecha_hasta}
+                                                onChange={(newValue) => {
+                                                    handle_change_fecha_hasta(newValue);
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField required fullWidth size="small" {...params} />
+                                                )}
+                                                minDate={fecha_desde}
+                                                disabled={fecha_desde == null}
+                                            />
+                                        </LocalizationProvider>
+                                    </Grid>
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -662,7 +698,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <Grid
+            {reporte.length > 0 && <Grid
                 container
                 sx={{
                     position: 'relative',
@@ -677,53 +713,69 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     <Grid item xs={12}>
                         <Box
                             component="form"
-                            sx={{ mt: '20px', mb: '20px' }}
+                            sx={{ mb: '20px' }}
                             noValidate
                             autoComplete="off"
                         >
-                            <object data=""></object>
+                            <Grid item xs={12} sm={12}>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="flex-end"
+                                    spacing={2}>
+                                    <Button
+                                        color='success'
+                                        variant='outlined'
+                                        onClick={descargar_pdf}
+                                    >
+                                        Exportar PDF
+                                    </Button>
+                                    <Button
+                                        color='error'
+                                        variant='outlined'
+                                        onClick={descargar_pdf}
+                                    >
+                                        Exportar XLS
+                                    </Button>
+                                </Stack>
+                            </Grid>
                         </Box>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid
-                container
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                }}
-            >
-                <Grid container justifyContent="flex-end">
-                    <Grid item xs={7}>
                         <Box
                             component="form"
-                            sx={{ mt: '20px', mb: '20px' }}
                             noValidate
                             autoComplete="off"
                         >
-                            <Stack
-                                direction="row"
-                                justifyContent="flex-end"
-                                spacing={2}
-                                sx={{ mt: '20px' }}
-                            >
-                                <Button
-                                    color='error'
-                                    variant='contained'
-                                    startIcon={<ClearIcon />}
-                                    onClick={salir_entrada}
-                                >
-                                    Salir
-                                </Button>
-                            </Stack>
+                            <embed src={visor} type="application/pdf" width="100%" height='1080px' />
                         </Box>
                     </Grid>
                 </Grid>
+            </Grid>}
+            <Grid container justifyContent="flex-end">
+                <Grid item xs={7}>
+                    <Stack
+                        direction="row"
+                        justifyContent="flex-end"
+                        spacing={2}
+                        sx={{ mt: '20px', mr: '60px' }}
+                    >
+                        <Button
+                            color='error'
+                            variant='contained'
+                            startIcon={<ClearIcon />}
+                            onClick={salir_entrada}
+                        >
+                            Salir
+                        </Button>
+                    </Stack>
+                </Grid>
             </Grid>
+            {dialog_notificaciones_is_active && (
+                <DialogNoticacionesComponent
+                    titulo_notificacion={titulo_notificacion}
+                    abrir_modal={abrir_modal}
+                    tipo_notificacion={tipo_notificacion}
+                    mensaje_notificacion={mensaje_notificacion}
+                    abrir_dialog={set_abrir_modal} />
+            )}
         </>
     );
 }

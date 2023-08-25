@@ -24,7 +24,7 @@ export const reporte_mortalidad: any = (filtros: {seleccion_vivero: number|strin
   return async () => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`conservacion/analitica/reporte-mortalidad/get/?id_vivero=${filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
+      const { data } = await api.get(`conservacion/analitica/reporte-mortalidad/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -36,7 +36,7 @@ export const reporte_plantas_sd: any = (filtros: {seleccion_vivero: number|strin
   return async () => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`conservacion/analitica/reporte-solicitudes-despachos/get/?id_vivero=${filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
+      const { data } = await api.get(`conservacion/analitica/reporte-solicitudes-despachos/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -48,7 +48,7 @@ export const reporte_estado_actividad: any = (filtros: {seleccion_vivero: number
   return async () => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`conservacion/analitica/reporte-estado-actividad/get/?id_vivero=${filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
+      const { data } = await api.get(`conservacion/analitica/reporte-estado-actividad/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -56,11 +56,11 @@ export const reporte_estado_actividad: any = (filtros: {seleccion_vivero: number
     }
   };
 };
-export const reporte_evolucion_lote: any = (filtros: {seleccion_vivero: number,seleccion_planta: number,fecha_desde: string,fecha_hasta: string, reporte_consolidado: boolean}) => {
+export const reporte_evolucion_lote: any = (filtros: {seleccion_vivero: number,seleccion_planta: number,fecha_desde: string,fecha_hasta: string, numero_lote: string, año_lote: string}) => {
   return async () => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`conservacion/analitica/reporte-actividad-lote/get/?id_vivero=${filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
+      const { data } = await api.get(`conservacion/analitica/reporte-actividad-lote/get/?id_vivero=${filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&nro_lote=${filtros.numero_lote}&agno_lote=${filtros.año_lote}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
