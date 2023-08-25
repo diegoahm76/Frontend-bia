@@ -3,20 +3,17 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   Stack,
   Button,
   Box,
   Divider,
   Skeleton,
   type SelectChangeEvent,
-  TextField,
+  TextField
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../../components/Title';
 import { useAppDispatch } from '../../../../../hooks';
@@ -27,23 +24,22 @@ import { control_error } from '../../../../../helpers';
 import {
   cambio_organigrama_actual,
   get_organigramas_posibles,
-  get_organigrama_actual,
+  get_organigrama_actual
 } from '../../store/thunks/organigramThunks';
 import {
   organigramas_choise_adapter,
-  ccds_choise_adapter,
+  ccds_choise_adapter
 } from '../../adapters/organigrama_adapters';
 import dayjs from 'dayjs';
-import type { CCD, FormValues, IProps, OrgActual, keys_object } from './types/types';
+import type { CCD, FormValues, OrgActual, keys_object } from './types/types';
 import { initial_state } from './utils/constanst';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Link } from 'react-router-dom';
 
 const fecha_actual = dayjs().format('YYYY-MM-DD');
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const DialogElegirOrganigramaActual = ({
-  is_modal_active,
-  set_is_modal_active,
-}: IProps) => {
+const DialogElegirOrganigramaActual = () => {
   const dispatch = useAppDispatch();
   const [loading, set_loading] = useState<boolean>(false);
   const [organigrama_actual, set_organigrama_actual] = useState<OrgActual>();
@@ -51,16 +47,16 @@ const DialogElegirOrganigramaActual = ({
   const [list_organigrams, set_list_organigrams] = useState<IList[]>([
     {
       label: '',
-      value: 0,
-    },
+      value: 0
+    }
   ]);
   const [data_ccds_posibles, set_data_ccds_posibles] = useState<CCD[]>([]);
   const [ccd_selected, set_ccd_selected] = useState<string>('');
   const [list_ccds, set_list_ccds] = useState<IList[]>([
     {
       label: '',
-      value: 0,
-    },
+      value: 0
+    }
   ]);
   const [data_asociada_ccd, set_data_asociada_ccd] = useState<CCD | undefined>(
     initial_state
@@ -73,7 +69,7 @@ const DialogElegirOrganigramaActual = ({
     getValues: get_values_elegir_organigrama_actual,
     setValue: set_value_elegir_organigrama_actual,
     reset: reset_elegir_organigrama_actual,
-    formState: { errors: errors_elegir_organigrama_actual },
+    formState: { errors: errors_elegir_organigrama_actual }
   } = useForm<FormValues>();
 
   const handle_close_crear_organigrama = (): void => {
@@ -81,14 +77,13 @@ const DialogElegirOrganigramaActual = ({
     set_organigram_selected('');
     set_ccd_selected('');
     set_data_asociada_ccd(initial_state);
-    set_is_modal_active(false);
   };
 
   const on_submit = async (data: FormValues): Promise<void> => {
     const data_cambio = {
       justificacion: get_values_elegir_organigrama_actual('justificacion'),
       organigrama: get_values_elegir_organigrama_actual('organigrama'),
-      id_ccd: get_values_elegir_organigrama_actual('ccd'),
+      id_ccd: get_values_elegir_organigrama_actual('ccd')
     };
     await dispatch(cambio_organigrama_actual(data_cambio));
     handle_close_crear_organigrama();
@@ -96,22 +91,18 @@ const DialogElegirOrganigramaActual = ({
 
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
-    if (is_modal_active) {
-      void get_data_selects();
-    }
-  }, [is_modal_active]);
+    void get_data_selects();
+  }, []);
 
   // 1.1 Traer data
-  const get_data_selects = async (): Promise<void> => {
+/*  const get_data_selects = async (): Promise<void> => {
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
-      // console.log(response_org_actual.data)
+      console.log(response_org_actual)
       if (response_org_actual.data) {
-        // console.log(response_org_actual.data)
         set_organigrama_actual(response_org_actual.data);
         const response_orgs = await dispatch(get_organigramas_posibles());
-        // console.log(response_orgs);
         const res_organigramas_adapter: IList[] =
           await organigramas_choise_adapter(response_orgs.data);
         set_list_organigrams(res_organigramas_adapter);
@@ -123,7 +114,32 @@ const DialogElegirOrganigramaActual = ({
     } finally {
       set_loading(false);
     }
-  };
+  }; */
+
+  const get_data_selects = async (): Promise<void> => {
+  set_loading(true);
+  try {
+    const response_org_actual = await dispatch(get_organigrama_actual());
+    console.log(response_org_actual);
+
+    if (response_org_actual.data) {
+      set_organigrama_actual(response_org_actual.data);
+      const response_orgs = await dispatch(get_organigramas_posibles());
+      const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
+      set_list_organigrams(res_organigramas_adapter);
+    } else {
+      const response_orgs = await dispatch(get_organigramas_posibles());
+      const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
+      set_list_organigrams(res_organigramas_adapter);
+      control_error('Sin organigramas disponibles para activación');
+    }
+  } catch (err) {
+    control_error(err);
+  } finally {
+    set_loading(false);
+  }
+};
+
 
   // 2. Seleccionar organigrama
   useEffect(() => {
@@ -174,33 +190,28 @@ const DialogElegirOrganigramaActual = ({
   };
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="md"
-      open={is_modal_active}
-      onClose={handle_close_crear_organigrama}
+    <Grid
+      container
+      sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        p: '20px',
+        mb: '20px',
+        boxShadow: '0px 3px 6px #042F4A26'
+      }}
     >
       <Box
+        sx={{
+          width: '100%',
+          height: '100%'
+        }}
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          Activación de organigrama
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Title title="Seleccionar nuevo organigrama como actual " />
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -214,7 +225,7 @@ const DialogElegirOrganigramaActual = ({
                   fullWidth
                   disabled
                   value={organigrama_actual?.nombre}
-                  label="Nombre"
+                  label="Nombre del organigrama"
                   size="small"
                 />
               )}
@@ -227,7 +238,7 @@ const DialogElegirOrganigramaActual = ({
                   fullWidth
                   disabled
                   value={organigrama_actual?.version}
-                  label="Versión"
+                  label="Versión del organigrama"
                   size="small"
                 />
               )}
@@ -385,6 +396,10 @@ const DialogElegirOrganigramaActual = ({
                 <TextField
                   fullWidth
                   required
+                  multiline
+                  inputProps={{
+                    maxLength: 255
+                  }}
                   type="textarea"
                   rows="3"
                   label="Justicación"
@@ -396,7 +411,7 @@ const DialogElegirOrganigramaActual = ({
                     errors_elegir_organigrama_actual.justificacion?.message
                   }
                   {...register_elegir_organigrama_actual('justificacion', {
-                    required: 'Este campo es obligatorio',
+                    required: 'Este campo es obligatorio'
                   })}
                 />
               )}
@@ -410,20 +425,28 @@ const DialogElegirOrganigramaActual = ({
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
+            <Link to="/app/gestor_documental/organigrama/crear">
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<ArrowBackIcon />}
+                // onClick={handle_to_go_back}
+              >
+                VOLVER A ORGANIGRAMA
+              </Button>
+            </Link>
             <Button
-              variant="outlined"
-              onClick={handle_close_crear_organigrama}
-              startIcon={<CloseIcon />}
+              type="submit"
+              variant="contained"
+              color="success"
+              startIcon={<SaveIcon />}
             >
-              CERRAR
-            </Button>
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
               GUARDAR
             </Button>
           </Stack>
         </DialogActions>
       </Box>
-    </Dialog>
+    </Grid>
   );
 };
 

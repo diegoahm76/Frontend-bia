@@ -32,6 +32,10 @@ export interface ModalContextState {
   openModalTrdRelacionTcaActual: () => void;
   closeModalTrdRelacionTcaActual: () => void;
 
+  //* MODAL RESERVA TIPOLOGIA
+  modalReservaTipologia: boolean;
+  openModalReservaTipologia: () => void;
+  closeModalReservaTipologia: () => void;
 
   //* LOAD BUTTONS
   loadingButton: boolean;

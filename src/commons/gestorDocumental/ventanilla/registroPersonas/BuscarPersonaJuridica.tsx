@@ -34,7 +34,7 @@ import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos'
 
 import { type AxiosError } from 'axios';
 import { DatosRepresentanteLegal } from '../../../seguridad/components/DatosRepresentanteLegal/DataRepresentanteLegal';
-import { consultar_clase_tercero, consultar_clase_tercero_persona, editar_persona_juridica } from '../../../seguridad/request/Request';
+import { consultar_clase_tercero, consultar_clase_tercero_persona, editar_persona_juridica } from '../request/Request';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
@@ -214,7 +214,7 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
       control_success('Se actualizo el usuario correctamente');
       reset(); // limpiar campos
     } catch (error) {
-      control_error('Ha ocuriido un error, intente nuevamente');
+      control_error('Ha ocurrido un error, intente nuevamente');
     }
   });
   return (

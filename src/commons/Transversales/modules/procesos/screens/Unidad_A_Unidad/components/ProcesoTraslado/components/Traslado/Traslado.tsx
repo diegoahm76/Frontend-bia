@@ -304,7 +304,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                           selectedItems.length === 0 || !unidad_actual_current
                         }
                         variant="contained"
-                        color="primary"
+                        color="success"
                         sx={{ height: '100% !important' }}
                         startIcon={<ChecklistIcon />}
                       >

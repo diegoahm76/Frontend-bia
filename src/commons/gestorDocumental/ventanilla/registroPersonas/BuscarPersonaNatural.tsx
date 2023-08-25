@@ -7,9 +7,9 @@ import {
   Typography,
   Button,
   Divider,
-  Autocomplete,
-  type AutocompleteChangeReason,
-  type AutocompleteChangeDetails,
+  // Autocomplete,
+  // type AutocompleteChangeReason,
+  // type AutocompleteChangeDetails,
   Stack,
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -20,7 +20,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import dayjs, { type Dayjs } from 'dayjs';
 import type {
-  ClaseTercero,
+  // ClaseTercero,
   ClaseTerceroPersona,
   DataNaturaUpdate,
   PropsRegisterAdmin,
@@ -28,10 +28,10 @@ import type {
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
 import {
-  consultar_clase_tercero,
+  // consultar_clase_tercero,
   consultar_clase_tercero_persona,
   editar_persona_natural,
-} from '../../../seguridad/request/Request';
+} from '../request/Request';
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 import { DialogHistorialDatosRestringidos } from '../DialogVentanilla/DialogHistorialDatosRestringidos';
@@ -92,10 +92,10 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
-  const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
-  const [clase_tercero_persona, set_clase_tercero_persona] = useState<
-    ClaseTercero[]
-  >([]);
+  // const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
+  // const [clase_tercero_persona, set_clase_tercero_persona] = useState<
+  //   ClaseTercero[]
+  // >([]);
 
   // modales
   const [
@@ -120,18 +120,20 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
     false;
   const acepta_notificacion_sms =
     watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
-  const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: ClaseTercero[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<ClaseTercero>
-  ): void => {
-    set_value(
-      'datos_clasificacion_persona',
-      value.map((e) => e.value)
-    );
-    set_clase_tercero_persona(value);
-  };
+
+  // const handle_change_autocomplete = (
+  //   event: React.SyntheticEvent<Element, Event>,
+  //   value: ClaseTercero[],
+  //   reason: AutocompleteChangeReason,
+  //   details?: AutocompleteChangeDetails<ClaseTercero>
+  // ): void => {
+  //   set_value(
+  //     'datos_clasificacion_persona',
+  //     value.map((e) => e.value)
+  //   );
+  //   set_clase_tercero_persona(value);
+  // };
+
   // abre modal historial de autorizacion
   const handle_open_dialog_autorizacion = (): void => {
     set_is_modal_historico_autorizacion(true);
@@ -166,8 +168,8 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
   // trae todas las clase tercero
   const get_datos_clase_tercero = async (): Promise<void> => {
     try {
-      const response = await consultar_clase_tercero();
-      set_clase_tercero(response);
+      // const response = await consultar_clase_tercero();
+      // set_clase_tercero(response);
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {
@@ -189,7 +191,7 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
           'datos_clasificacion_persona',
           data_persona_clase_tercero.map((e) => e.value)
         );
-        set_clase_tercero_persona(data_persona_clase_tercero);
+        // set_clase_tercero_persona(data_persona_clase_tercero);
       }
     } catch (err) {
       const temp = err as AxiosError;
@@ -885,7 +887,7 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
               </Grid>
             </Grid>
             {/* Datos de clasificación Cormacarena */}
-            <Grid container spacing={2} mt={0.1}>
+            {/* <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
                 <Title title="Datos de clasificación" />
               </Grid>
@@ -921,8 +923,9 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                   </>
                 )}
               </Grid>
-              {/* BOTONES */}
-            </Grid>
+              
+            </Grid> */}
+            {/* BOTONES */}
             {/* Datos de vinculación */}
             <Grid container spacing={2} mt={0.1}>
               <DatosVinculacion id_persona={data?.id_persona} />
