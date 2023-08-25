@@ -5,10 +5,23 @@ import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useEstantesHook } from '../hooks/useEstantesHook';
 import { MoverEstantes } from './MoverEstantes';
+import { useAppSelector } from '../../../../../hooks';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarEstante: React.FC = () => {
-  const { control_estantes, errors_estantes } = useEstantesHook();
+  const { control_estantes, errors_estantes, reset_estantes } =
+    useEstantesHook();
+
+  const { data_estantes } = useAppSelector((state) => state.deposito);
+
+  useEffect(() => {
+    reset_estantes({
+      identificacion_por_deposito: data_estantes?.identificacion_por_deposito,
+      orden: data_estantes?.orden_ubicacion_por_deposito,
+      nuevo_orden: '',
+    });
+  }, [data_estantes]);
 
   return (
     <>
@@ -102,8 +115,7 @@ export const EditarEstante: React.FC = () => {
         </Grid>
         <Grid container spacing={2} justifyContent="flex-end">
           <MoverEstantes />
-          <Grid item>
-          </Grid>
+          <Grid item></Grid>
         </Grid>
       </Grid>
     </>

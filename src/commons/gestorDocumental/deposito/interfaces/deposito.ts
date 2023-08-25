@@ -7,11 +7,20 @@ export interface IDeposito {
   mode_estante: IMode;
   data_estantes: GetEstantes,
   data_depositos: InfoDepositos,
+  deposito_estante: IdEstanteDeposito;
+
 }
 export interface IMode {
   ver: boolean;
   editar: boolean;
   crear: boolean;
+}
+
+export interface IdEstanteDeposito {
+  id_deposito: number;
+  id_estante_deposito: number | null;
+  nombre_deposito?: string;
+  identificacion_por_deposito? : string;
 }
 
 export interface IObjDeposito {

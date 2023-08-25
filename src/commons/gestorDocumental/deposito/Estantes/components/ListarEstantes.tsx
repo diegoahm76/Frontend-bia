@@ -11,6 +11,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch } from '../../../../../hooks';
 import {
   set_current_estantes,
+  set_current_id_depo_est,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
 
@@ -46,6 +47,16 @@ export const ListarEstantes: React.FC = () => {
                   editar: false,
                 })
               );
+
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: id_deposito as number,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+
               dispatch(set_current_estantes(params.row));
             }}
           >
@@ -71,6 +82,13 @@ export const ListarEstantes: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: id_deposito as number,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                })
+              );
+
               dispatch(
                 set_current_mode_estantes({
                   ver: false,

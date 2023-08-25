@@ -26,13 +26,13 @@ import { DataContext } from '../context/context';
 import { useAppDispatch } from '../../../../../hooks';
 import {
   set_current_estantes,
+  set_current_id_depo_est,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
-  const { depositos_selected, fetch_data_depositos } =
-    useContext(DataContext);
+  const { depositos_selected, fetch_data_depositos } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
@@ -70,6 +70,16 @@ export const BusquedaEstante: React.FC = () => {
                   editar: false,
                 })
               );
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: params.row.id_deposito,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  nombre_deposito: params.row.identificacion_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+
               dispatch(set_current_estantes(params.row));
               handle_close();
             }}
@@ -104,7 +114,23 @@ export const BusquedaEstante: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_estantes(params.row));
+
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: params.row.id_deposito,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                })
+              );
+              dispatch(
+                set_current_estantes({
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  orden_ubicacion_por_deposito:
+                    params.row.orden_ubicacion_por_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_deposito,
+                })
+              );
+
               handle_close();
             }}
           >

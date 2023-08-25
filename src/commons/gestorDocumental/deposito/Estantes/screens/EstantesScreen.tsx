@@ -26,7 +26,7 @@ import { delete_estante } from '../services/services';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstantesScreen: React.FC = () => {
-  const { mode_estante, data_estantes, data_depositos } = useAppSelector(
+  const { mode_estante, data_estantes, deposito_estante } = useAppSelector(
     (state) => state.deposito
   );
 
@@ -36,7 +36,7 @@ export const EstantesScreen: React.FC = () => {
     fetch_data_estantes_depositos,
   } = useContext(DataContext);
 
-  const { onsubmit_estantes } = useEstantesHook();
+  const { onsubmit_estantes, is_saving_estante } = useEstantesHook();
 
   return (
     <>
@@ -68,8 +68,8 @@ export const EstantesScreen: React.FC = () => {
         {mode_estante.crear ? <AgregarEstantes /> : null}
         {mode_estante.ver ? <SeleccionarEstante /> : null}
         {mode_estante.editar ? <EditarEstante /> : null}
-        {data_depositos?.id_deposito ? <ListarEstantes /> : null}
-        {data_estantes?.id_estante_deposito ? <ListarBandejas /> : null}
+        {deposito_estante?.id_deposito ? <ListarEstantes /> : null}
+        {deposito_estante?.id_estante_deposito ? <ListarBandejas /> : null}
         <Grid
           container
           spacing={2}
@@ -118,8 +118,12 @@ export const EstantesScreen: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                loading={false}
-                disabled={identificacion_deposito === '' || !id_deposito}
+                loading={is_saving_estante}
+                disabled={
+                  identificacion_deposito === '' ||
+                  !id_deposito ||
+                  is_saving_estante
+                }
                 startIcon={<SaveIcon />}
               >
                 Guardar
@@ -127,15 +131,6 @@ export const EstantesScreen: React.FC = () => {
             </Grid>
             <Grid item>
               <ButtonSalir />
-              {/* <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                // set_id_deposito(null);
-              }}
-            >
-              Agregar estante
-            </Button> */}
             </Grid>
           </Grid>
         </Grid>

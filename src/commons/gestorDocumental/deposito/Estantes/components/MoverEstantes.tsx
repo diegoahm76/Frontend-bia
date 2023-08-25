@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import {
@@ -11,36 +12,37 @@ import {
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useEstantesHook } from '../hooks/useEstantesHook';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { DataContext } from '../context/context';
 import { LoadingButton } from '@mui/lab';
 import { useAppSelector } from '../../../../../hooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MoverEstantes: React.FC = () => {
-  const [open_dialog, set_open_dialog] = useState(false);
-
   const {
     control_mover_estantes,
     errors_mover_estantes,
-    reset_mover_estantes,
+    // reset_mover_estantes,
+    set_value_mover_estantes,
     onsubmit_mover_estantes,
+
+    selectedItem,
+    handleSelectChange,
+
+    open_dialog,
+    handle_click_open,
+    handle_close,
+
+    //  * saving
+    is_saving_mover_estante,
   } = useEstantesHook();
 
-  const { depositos_selected, fetch_data_depositos } = useContext(DataContext);
+  const { depositos_selected_mover_estante, fetch_data_depositos } =
+    useContext(DataContext);
 
   const { data_estantes, data_depositos } = useAppSelector(
     (state) => state.deposito
   );
-
-  const handle_click_open = (): void => {
-    set_open_dialog(true);
-  };
-
-  const handle_close = (): void => {
-    // reset();
-    set_open_dialog(false);
-  };
 
   useEffect(() => {
     // reset();
@@ -48,12 +50,22 @@ export const MoverEstantes: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    reset_mover_estantes({
-      identificacion_estante: data_estantes?.identificacion_por_deposito,
-      deposito_actual: data_depositos?.nombre_deposito,
-      identificacion_por_entidad_destino: '',
-      nombre_deposito_destino: '',
-    });
+    set_value_mover_estantes(
+      'identificacion_estante',
+      data_estantes?.identificacion_por_deposito
+    );
+    set_value_mover_estantes(
+      'deposito_actual',
+      data_depositos?.nombre_deposito
+    );
+    // reset_mover_estantes({
+    //   identificacion_estante: data_estantes?.identificacion_por_deposito,
+    //   deposito_actual: data_depositos?.nombre_deposito,
+    //   identificacion_por_entidad_destino: {
+    //     value: '',
+    //     label: '',
+    //   },
+    // });
   }, [data_estantes, data_depositos]);
 
   return (
@@ -82,7 +94,6 @@ export const MoverEstantes: React.FC = () => {
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('submit');
               void onsubmit_mover_estantes(e);
             }}
           >
@@ -172,7 +183,10 @@ export const MoverEstantes: React.FC = () => {
                       fullWidth
                       required={true}
                       value={value}
-                      onChange={onChange}
+                      onChange={(event) => {
+                        onChange(event);
+                        handleSelectChange(event);
+                      }}
                       error={
                         !!errors_mover_estantes.identificacion_por_entidad_destino
                       }
@@ -182,15 +196,15 @@ export const MoverEstantes: React.FC = () => {
                           : 'Ingrese el deposito de destino'
                       }
                     >
-                      {depositos_selected.map((option) => (
-                        <MenuItem key={option.label} value={option.label}>
+                      {depositos_selected_mover_estante.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
                     </TextField>
                   )}
-                />{' '}
-              </Grid>
+                />
+              </Grid>{' '}
               <Grid container spacing={2} justifyContent="flex-end">
                 <Grid item>
                   <LoadingButton
@@ -206,7 +220,8 @@ export const MoverEstantes: React.FC = () => {
                   <LoadingButton
                     variant="outlined"
                     color="success"
-                    disabled={false}
+                    disabled={!selectedItem || is_saving_mover_estante}
+                    loading={is_saving_mover_estante}
                     type="submit"
                   >
                     Aceptar

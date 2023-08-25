@@ -16,8 +16,6 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
-import type { AxiosError } from 'axios';
-import type { ResponseServer } from '../../../../../interfaces/globalModels';
 import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
@@ -27,6 +25,7 @@ import { search_deposito } from '../services/services';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/context';
 import {
+  set_current_id_depo_est,
   set_current_info_deposito,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
@@ -82,6 +81,14 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                   params.row.identificacion_por_entidad,
                 nombre_sucursal: params.row.nombre_sucursal,
               });
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: params.row.id_deposito,
+                  id_estante_deposito: null,
+                  nombre_deposito: params.row.nombre_deposito,
+                })
+              );
+
               set_id_deposito(params.row.id_deposito);
               handle_close();
             }}
@@ -410,15 +417,15 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ width: '100%' }}>
-                        <DataGrid
-                          density='compact'
-                          autoHeight
-                          rows={rows}
-                          columns={columns}
-                          pageSize={10}
-                          rowsPerPageOptions={[10]}
-                          getRowId={(row) => uuidv4()}
-                        />
+                      <DataGrid
+                        density="compact"
+                        autoHeight
+                        rows={rows}
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        getRowId={(row) => uuidv4()}
+                      />
                     </Box>
                   </Grid>
                 </>

@@ -12,11 +12,12 @@ export interface InfoDepositos {
   nombre_sucursal: string;
 }
 export interface InfoEstantes {
-  id_deposito?: number;
   orden_ubicacion_por_deposito: number;
   identificacion_por_deposito: string;
   nombre_deposito: string;
   identificacion_deposito: string;
+  id_estante_deposito: number;
+  id_deposito: number;
 }
 export interface ListarSucursales {
   id_sucursal_empresa: number;
