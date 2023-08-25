@@ -13,6 +13,7 @@ import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridi
 import { ActualizarPersonaNatural } from './ActualizarPersonaNatural';
 import { ActualizarPersonaJuridica } from './ActualizarPersonaJuridica';
 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminVentanilla: React.FC = () => {
     const [persona, set_persona] = useState<InfoPersona>();
