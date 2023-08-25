@@ -2,10 +2,7 @@
 import { useState } from 'react';
 import { Divider, Grid, Box } from '@mui/material';
 import type { AxiosError } from 'axios';
-import type {
-  DataPersonas,
-  InfoPersona,
-} from '../../../../interfaces/globalModels';
+import type { DataPersonas, InfoPersona } from '../../../../interfaces/globalModels';
 import { use_register } from '../../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../request/Request';
 import { control_error } from '../../../../helpers';
@@ -13,24 +10,26 @@ import { Title } from '../../../../components/Title';
 import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
 import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
 import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
-import { useState } from 'react';
+import { ActualizarPersonaNatural } from './ActualizarPersonaNatural';
+import { ActualizarPersonaJuridica } from './ActualizarPersonaJuridica';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminVentanilla: React.FC = () => {
-  const [persona, set_persona] = useState<InfoPersona>();
-  const [datos_persona, set_datos_persona] = useState<DataPersonas>();
-  const [is_register, set_is_register] = useState(false);
-  const [is_update, set_is_update] = useState(false);
-  const {
-    errors,
-    is_valid,
-    get_values,
-    handle_submit,
-    register,
-    set_value,
-    watch,
-    reset,
-  } = use_register();
+    const [persona, set_persona] = useState<InfoPersona>();
+    const [datos_persona, set_datos_persona] = useState<DataPersonas>();
+    const [is_register, set_is_register] = useState(false);
+    const [is_update, set_is_update] = useState(false);
+    const {
+        errors,
+        is_valid,
+        get_values,
+        handle_submit,
+        register,
+        set_value,
+        watch,
+        reset,
+    } = use_register();
 
     const on_result = async (info_persona: InfoPersona): Promise<void> => {
         try {
