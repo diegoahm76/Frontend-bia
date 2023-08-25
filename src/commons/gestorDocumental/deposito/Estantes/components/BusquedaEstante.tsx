@@ -75,7 +75,7 @@ export const BusquedaEstante: React.FC = () => {
                 set_current_id_depo_est({
                   id_deposito: params.row.id_deposito,
                   id_estante_deposito: params.row.id_estante_deposito,
-                  nombre_deposito: params.row.identificacion_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
                     params.row.identificacion_por_deposito,
                 })
@@ -84,8 +84,7 @@ export const BusquedaEstante: React.FC = () => {
               dispatch(
                 set_current_estantes({
                   id_estante_deposito: params.row.id_estante_deposito,
-                  orden_ubicacion_por_deposito:
-                    params.row.orden_ubicacion_por_deposito,
+                  orden_ubicacion_por_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
                     params.row.identificacion_deposito,
                 })

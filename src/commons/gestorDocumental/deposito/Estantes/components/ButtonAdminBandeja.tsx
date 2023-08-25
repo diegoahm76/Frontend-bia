@@ -24,7 +24,7 @@ export const ButtonAdminBandeja: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         navigate(
-          '/app/gestor_documental/configuracion-datos-basicos/archivo/administrar_bandeja',
+          '/app/gestor_documental/configuracion_datos_basicos/archivo/administrar_bandeja',
           {
             replace: true,
           }

@@ -34,21 +34,21 @@ export const mode_estantes: IMode = {
 };
 
 export const estantes_slice: GetEstantes = {
-  id_estante_deposito: 0,
-  orden_ubicacion_por_deposito: 0,
+  id_estante_deposito: null,
+  orden_ubicacion_por_deposito: null,
   identificacion_por_deposito: '',
 };
 export const info_deposito_slice: InfoDepositos = {
-  id_deposito: 0,
-  orden_ubicacion_por_entidad: 0,
+  id_deposito: null,
+  orden_ubicacion_por_entidad: null,
   nombre_deposito: '',
   identificacion_por_entidad: '',
   nombre_sucursal: '',
 };
 
 export const id_depo_est: IdEstanteDeposito = {
-  id_deposito: 0,
-  id_estante_deposito: 0,
+  id_deposito: null,
+  id_estante_deposito: null,
   nombre_deposito: '',
   identificacion_por_deposito: '',
 };
@@ -122,7 +122,7 @@ export const deposito_slice = createSlice({
     },
     set_current_id_depo_est: (
       state: IDeposito,
-      action: PayloadAction<IdEstanteDeposito>
+      action: PayloadAction<any>
     ) => {
       state.deposito_estante = action.payload;
     },
