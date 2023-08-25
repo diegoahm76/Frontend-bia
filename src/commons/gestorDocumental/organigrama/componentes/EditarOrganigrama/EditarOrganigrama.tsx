@@ -91,7 +91,8 @@ export const EditarOrganigrama = ({
     loadingEdicionOrgan,
     // submit_unidades,
     title_unidades,
-    edit_prop_activo_unidad_org
+    edit_prop_activo_unidad_org,
+    loadingLevels,
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -391,7 +392,6 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre de nivel"
@@ -409,7 +409,8 @@ export const EditarOrganigrama = ({
                     )}
                   />
                   <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button
+                    <LoadingButton
+                      loading = {loadingLevels}
                       type="submit"
                       color="success"
                       disabled={organigram_current?.fecha_terminado}
@@ -421,7 +422,7 @@ export const EditarOrganigrama = ({
                       {title_nivel === 'Agregar'
                         ? 'AGREGAR NIVEL'
                         : 'EDITAR NIVEL'}
-                    </Button>
+                    </LoadingButton>
                   </Stack>
                 </Box>
               </Grid>

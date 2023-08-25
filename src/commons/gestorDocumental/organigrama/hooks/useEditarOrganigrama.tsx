@@ -79,6 +79,9 @@ const use_editar_organigrama = () => {
   const [options_agrupacion_d, set_option_agrupacion_d] = useState<
     IDocumentaryGroup[]
   >([]);
+
+  const [loadingLevels, setloadingLevels] = useState<boolean>(false);
+
   const option_raiz = [
     { label: 'Si', value: true },
     { label: 'No', value: false }
@@ -726,7 +729,11 @@ const use_editar_organigrama = () => {
       nombre: ''
     });
     void dispatch(
-      update_levels_service(organigram_current?.id_organigrama, new_niveles)
+      update_levels_service(
+        organigram_current?.id_organigrama,
+        new_niveles,
+        setloadingLevels
+      )
     );
   };
 
@@ -1016,7 +1023,8 @@ const use_editar_organigrama = () => {
 
     control_edit__value_activo,
     reset_edit_value_activo,
-    edit_value_activo
+    edit_value_activo,
+    loadingLevels,
   };
 };
 

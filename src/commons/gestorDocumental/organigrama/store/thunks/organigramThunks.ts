@@ -248,10 +248,12 @@ export const get_levels_service: any = (id: string | number) => {
 // Actualizar Niveles
 export const update_levels_service: any = (
   id: string | number,
-  newLevels: any
+  newLevels: any,
+  setloadingLevels: Dispatch<SetStateAction<boolean>>
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setloadingLevels(true);
       const { data } = await api.put(
         `transversal/organigrama/niveles/update/${id}/`,
         newLevels
@@ -263,6 +265,8 @@ export const update_levels_service: any = (
       // console.log('update_levels_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    }finally{
+      setloadingLevels(false);
     }
   };
 };
