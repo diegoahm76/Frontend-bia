@@ -17,6 +17,7 @@ export interface TCASliceInterface {
   // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
   tipologias_resevadas: any[];
   tipologias_NO_resevadas: any[];
+  mixed_tipologias: any[];
 
   //! selected icon from catalogo create or edit admini TCA
   selected_item_from_catalogo: any;
@@ -38,6 +39,7 @@ const initialState: TCASliceInterface = {
   // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
   tipologias_resevadas: [],
   tipologias_NO_resevadas: [],
+  mixed_tipologias: [],
 
   //! selected icon from catalogo create or edit admini TCA
   selected_item_from_catalogo: null
@@ -84,6 +86,10 @@ export const TCASlice = createSlice({
       state.tipologias_NO_resevadas = action.payload;
     },
 
+    set_mixed_tipologias(state, action: PayloadAction<any>) {
+      state.mixed_tipologias = action.payload;
+    },
+
     // ! ------- SELECTED ITEM FROM CATALOG ----------------->
     set_selected_item_from_catalogo_action(state, action: PayloadAction<any>) {
       state.selected_item_from_catalogo = action.payload;
@@ -107,43 +113,8 @@ export const {
   //* establecer tipologias reservadas y no reservadas
   set_tipologias_reservadas,
   set_tipologias_NO_reservadas,
+  set_mixed_tipologias,
 
   // ! ------- SELECTED ITEM FROM CATALOG ----------------->
   set_selected_item_from_catalogo_action
 } = TCASlice.actions;
-
-/*
-
-dispatch(
-  set_tipologias_reservadas(
-    tipologias_NO_resevadas.length > 0
-      ? tipologias_resevadas.filter((item: any) => {
-          if (
-            item.id_tipologia_documental !==
-            params.row.id_tipologia_documental
-          ) {
-            return {
-              ...item,
-              reservada: !item.reservada
-            };
-          } else {
-            return item;
-          }
-        })
-      : tipologias_NO_resevadas.filter((item: any) => {
-          if (
-            item.id_tipologia_documental !==
-            params.row.id_tipologia_documental
-          ) {
-            return {
-              ...item,
-              reservada: !item.reservada
-            };
-          } else {
-            return item;
-          }
-        })
-  )
-);
-
-*/
