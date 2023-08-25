@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { Avatar, Box, Grid, IconButton } from '@mui/material';
@@ -8,12 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../context/context';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import {
   set_current_estantes,
   set_current_id_depo_est,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
+// import { IdEstanteDeposito } from '../../interfaces/deposito';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarEstantes: React.FC = () => {
@@ -48,9 +50,20 @@ export const ListarEstantes: React.FC = () => {
                 })
               );
 
+              /*  dispatch(
+                set_current_id_depo_est((prev: IdEstanteDeposito) => ({
+                  ...prev,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })) || {}
+
+                deposito_estante
+              ); */
+
               dispatch(
                 set_current_id_depo_est({
-                  id_deposito: id_deposito as number,
+                  ...deposito_estante,
                   id_estante_deposito: params.row.id_estante_deposito,
                   identificacion_por_deposito:
                     params.row.identificacion_por_deposito,
@@ -122,6 +135,8 @@ export const ListarEstantes: React.FC = () => {
       ),
     },
   ];
+
+  const { deposito_estante } = useAppSelector((state) => state.deposito);
 
   const { rows_estantes, id_deposito, fetch_data_estantes_depositos } =
     useContext(DataContext);

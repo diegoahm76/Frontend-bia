@@ -32,7 +32,8 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
-  const { depositos_selected, fetch_data_depositos } = useContext(DataContext);
+  const { depositos_selected, set_id_deposito, fetch_data_depositos } =
+    useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
@@ -74,13 +75,22 @@ export const BusquedaEstante: React.FC = () => {
                 set_current_id_depo_est({
                   id_deposito: params.row.id_deposito,
                   id_estante_deposito: params.row.id_estante_deposito,
-                  nombre_deposito: params.row.identificacion_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
                     params.row.identificacion_por_deposito,
                 })
               );
 
-              dispatch(set_current_estantes(params.row));
+              dispatch(
+                set_current_estantes({
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  orden_ubicacion_por_deposito: params.row.nombre_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_deposito,
+                })
+              );
+              set_id_deposito(params.row.id_deposito);
+
               handle_close();
             }}
           >
@@ -119,6 +129,9 @@ export const BusquedaEstante: React.FC = () => {
                 set_current_id_depo_est({
                   id_deposito: params.row.id_deposito,
                   id_estante_deposito: params.row.id_estante_deposito,
+                  nombre_deposito: params.row.identificacion_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
                 })
               );
               dispatch(
@@ -130,6 +143,7 @@ export const BusquedaEstante: React.FC = () => {
                     params.row.identificacion_deposito,
                 })
               );
+              set_id_deposito(params.row.id_deposito);
 
               handle_close();
             }}

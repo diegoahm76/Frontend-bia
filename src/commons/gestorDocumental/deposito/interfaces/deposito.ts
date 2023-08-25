@@ -18,8 +18,8 @@ export interface IMode {
 }
 
 export interface IdEstanteDeposito {
-  id_deposito?: string | number | null;
-  id_estante_deposito?: string | number | null;
+  id_deposito?: number | null;
+  id_estante_deposito?: number | null;
   nombre_deposito?: string;
   identificacion_por_deposito?: string;
 }

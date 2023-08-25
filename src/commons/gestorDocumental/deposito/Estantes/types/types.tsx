@@ -6,10 +6,10 @@ export interface BusquedaDepositos {
 
 export interface InfoDepositos {
   id_deposito?: number | null;
-  orden_ubicacion_por_entidad: number | null;
-  nombre_deposito: string;
-  identificacion_por_entidad: string;
-  nombre_sucursal: string;
+  orden_ubicacion_por_entidad?: number | null;
+  nombre_deposito?: string;
+  identificacion_por_entidad?: string;
+  nombre_sucursal?: string;
 }
 export interface InfoEstantes {
   orden_ubicacion_por_deposito: number | null;
@@ -52,13 +52,13 @@ export interface ListarDepositos {
   activo: boolean;
 }
 export interface GetEstantes {
-  id_estante_deposito: null | number;
-  orden_ubicacion_por_deposito: null | number;
-  identificacion_por_deposito: string;
+  id_estante_deposito?: number | null;
+  orden_ubicacion_por_deposito?: number | null;
+  identificacion_por_deposito?: string;
 }
 export interface GetBandejas {
-  id_bandeja_estante: number;
-  orden_ubicacion_por_estante: number;
+  id_bandeja_estante: number | null;
+  orden_ubicacion_por_estante: number | null;
   identificacion_por_estante: string;
 }
 export interface OrdenSiguiente {

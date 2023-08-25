@@ -122,7 +122,7 @@ export const deposito_slice = createSlice({
     },
     set_current_id_depo_est: (
       state: IDeposito,
-      action: PayloadAction<IdEstanteDeposito>
+      action: PayloadAction<any>
     ) => {
       state.deposito_estante = action.payload;
     },

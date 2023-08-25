@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/return-await */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -6,6 +7,8 @@ import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { BusquedaAvanzadaDepositos } from '../components/BusquedaAvanzadaDepositos';
@@ -35,7 +38,6 @@ export const EstantesScreen: React.FC = () => {
   } = useContext(DataContext);
 
   const { onsubmit_estantes, is_saving_estante } = useEstantesHook();
-
 
   return (
     <>
@@ -97,20 +99,26 @@ export const EstantesScreen: React.FC = () => {
                 Limpiar
               </LoadingButton>
             </Grid>
-            {/* <Grid item>
-              <ButtonEliminar
-                id={data_estantes.id_estante_deposito}
-                confirmationMessage="¿Estás seguro de eliminar este estante?"
-                successMessage="El estante se eliminó correctamente"
-                Disabled={!data_estantes.id_estante_deposito}
-                deleteFunction={async () =>
-                  await delete_estante(data_estantes.id_estante_deposito)
-                }
-                fetchDataFunction={async () => {
-                  await fetch_data_estantes_depositos();
-                }}
-              />
-            </Grid> */}
+            {data_estantes.id_estante_deposito ? (
+              <>
+                <Grid item>
+                  <ButtonEliminar
+                    id={data_estantes.id_estante_deposito}
+                    confirmationMessage="¿Estás seguro de eliminar este estante?"
+                    successMessage="El estante se eliminó correctamente"
+                    Disabled={!data_estantes.id_estante_deposito}
+                    deleteFunction={async () =>
+                      await delete_estante(
+                        data_estantes?.id_estante_deposito ?? 0
+                      )
+                    }
+                    fetchDataFunction={async () => {
+                      await fetch_data_estantes_depositos();
+                    }}
+                  />
+                </Grid>
+              </>
+            ) : null}
 
             <Grid item>
               <LoadingButton

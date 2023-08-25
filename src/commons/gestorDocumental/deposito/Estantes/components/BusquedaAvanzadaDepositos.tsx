@@ -84,7 +84,6 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
               dispatch(
                 set_current_id_depo_est({
                   id_deposito: params.row.id_deposito,
-                  id_estante_deposito: null,
                   nombre_deposito: params.row.nombre_deposito,
                 })
               );
