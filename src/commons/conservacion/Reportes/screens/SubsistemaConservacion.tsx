@@ -31,8 +31,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [visor, set_visor] = useState<any>();
     const [titulo_reporte, set_titulo_reporte] = useState<any>();
     const [reporte, set_reporte] = useState<any[]>([]);
-    const [seleccion_vivero, set_seleccion_vivero] = useState<string>("");
     const [lista_viveros, set_lista_viveros] = useState<any[]>([]);
+    const [seleccion_vivero, set_seleccion_vivero] = useState<string>("");
     const [seleccion_reporte, set_seleccion_reporte] = useState<string>("");
     const [numero_lote, set_numero_lote] = useState<string | number>("");
     const [año_lote, set_año_lote] = useState<string | number>("");
@@ -41,6 +41,15 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
     const [reporte_consolidado, set_reporte_consolidado] = useState<boolean>(false);
     const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
+    // Errors
+    const mensaje_error = "El campo es obligatorio.";
+    const [error_reporte, set_error_reporte] = useState<boolean>(false);
+    const [error_vivero, set_error_vivero] = useState<boolean>(false);
+    const [error_planta, set_error_planta] = useState<boolean>(false);
+    const [error_fecha_desde, set_error_fecha_desde] = useState<boolean>(false);
+    const [error_fecha_hasta, set_error_fecha_hasta] = useState<boolean>(false);
+    const [error_año_lote, set_error_año_lote] = useState<boolean>(false);
+    const [error_numero_lote, set_error_numero_lote] = useState<boolean>(false);
     // Notificaciones
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
     const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
@@ -104,25 +113,37 @@ export const SubsistemaConservacionScreen: React.FC = () => {
 
     const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_vivero(e.target.value);
+        set_error_vivero(e.target.value === "");
     }
     const cambio_reporte: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_reporte(e.target.value);
+        set_error_reporte(e.target.value === "");
+        if (e.target.value !== 'EL') {
+            set_error_año_lote(false);
+            set_error_numero_lote(false);
+            set_error_planta(false);
+            set_error_vivero(false);
+        }
     }
 
     const handle_change_fecha_desde = (date: Date | null): void => {
         set_fecha_desde(date);
+        set_error_fecha_desde(date === null);
     };
 
     const handle_change_fecha_hasta = (date: Date | null): void => {
         set_fecha_hasta(date);
+        set_error_fecha_hasta(date === null);
     };
 
     const cambio_numero_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_numero_lote(e.target.value);
+        set_error_numero_lote(e.target.value === "");
     };
 
     const cambio_año_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_año_lote(e.target.value);
+        set_error_año_lote(e.target.value === "");
     };
 
     const handle_export_pdf = () => {
@@ -223,9 +244,31 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         return json_return;
     }
 
+    const validar_formulario: () => void = () => {
+        set_error_reporte(seleccion_reporte === "");
+        set_error_fecha_desde(fecha_desde === null);
+        set_error_fecha_hasta(fecha_hasta === null);
+        if (seleccion_reporte === "EL") {
+            set_error_vivero(seleccion_vivero === "");
+            set_error_numero_lote(numero_lote === "")
+            set_error_año_lote(año_lote === "")
+            set_error_planta(seleccion_planta === 0);
+        }
+        if(seleccion_reporte !== ""){
+            if(fecha_desde !== null && fecha_hasta !== null)
+                handle_export_pdf();
+            if(seleccion_reporte === "EL" && fecha_desde !== null && fecha_hasta !== null && seleccion_vivero !== "" && numero_lote !== "" && año_lote !== "" && seleccion_planta !== 0)
+                handle_export_pdf();
+        } 
+    }
+
     const salir_entrada: () => void = () => {
         navigate('/home');
     }
+
+    useEffect(() => {
+        set_error_planta(seleccion_planta === "");
+    }, [seleccion_planta]);
 
     useEffect(() => {
         if (reporte.length > 0) {
@@ -276,7 +319,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 coordendas = 0;
             }
         });
-        console.log('objeto jsPDF: ', doc);
         set_visor(doc.output('datauristring'));
     }
     const generar_reporte_pspd: () => void = () => {
@@ -310,9 +352,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 coordendas = 0;
             }
         });
-        console.log('objeto jsPDF: ', doc);
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        // doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
         set_visor(doc.output('datauristring'));
     }
     const generar_reporte_eap: () => void = () => {
@@ -402,9 +441,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 coordendas = 0;
             }
         });
-        console.log('objeto jsPDF: ', doc);
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        // doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
         set_visor(doc.output('datauristring'));
     }
     const generar_reporte_el: () => void = () => {
@@ -452,12 +488,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 startY: 60 + coordendas,
                 margin: 32
             });
-            // if(coordendas !== 0 && coordenada_y !== 40)
             coordendas = coordenada_y - 30;
         });
-        console.log('objeto jsPDF: ', doc);
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        // doc.save(`${(reporte_titulo.reporte_seleccionado !== null && reporte_titulo.reporte_seleccionado !== undefined) ? reporte_titulo.reporte_seleccionado.name : ''}.pdf`);
         set_visor(doc.output('datauristring'));
     }
 
@@ -479,12 +511,13 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                <FormControl size='small' fullWidth>
+                                <FormControl required size='small' fullWidth>
                                     <InputLabel>Reporte</InputLabel>
                                     <Select
                                         value={seleccion_reporte}
-                                        label="Tipo de bien"
+                                        label="Reporte"
                                         onChange={cambio_reporte}
+                                        error={error_reporte}
                                     >
                                         {lista_reporte.map((lr: any) => (
                                             <MenuItem key={lr.value} value={lr.value}>
@@ -493,14 +526,16 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
+                                {error_reporte && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl size='small' fullWidth>
+                                <FormControl required={seleccion_reporte === 'EL'} size='small' fullWidth>
                                     <InputLabel>Vivero</InputLabel>
                                     <Select
                                         value={seleccion_vivero}
                                         label="Vivero"
                                         onChange={cambio_seleccion_vivero}
+                                        error={error_vivero}
                                     >
                                         <MenuItem value={"Todos"}>Todos</MenuItem>
 
@@ -511,6 +546,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
+                                {error_vivero && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                             </Grid>
                         </Grid>
                     </Box>
@@ -532,9 +568,10 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                             InputProps={{
                                                 readOnly: true,
                                             }}
-                                            disabled
+                                            required={seleccion_reporte === 'EL'}
+                                            error={error_planta}
                                         />
-
+                                        {error_planta && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                                     </Grid>
                                 </Stack>
                             </Grid>
@@ -575,7 +612,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                     spacing={2}
                                 >
                                     <Grid item xs={12} sm={6}>
-
                                         <TextField
                                             label="Lote número"
                                             type={'text'}
@@ -586,7 +622,11 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                                 type: "number"
                                             }}
                                             onChange={cambio_numero_lote}
+                                            required={seleccion_reporte === 'EL'}
+                                            error={error_numero_lote}
                                         />
+                                        {error_numero_lote && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
+
                                     </Grid>
                                 </Stack>
                             </Grid>
@@ -597,7 +637,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                     spacing={2}
                                 >
                                     <Grid item xs={12} sm={6}>
-
                                         <TextField
                                             label="Año del lote"
                                             type={'text'}
@@ -608,7 +647,11 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                                 type: "number"
                                             }}
                                             onChange={cambio_año_lote}
+                                            required={seleccion_reporte === 'EL'}
+                                            error={error_año_lote}
                                         />
+                                        {error_año_lote && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
+
                                     </Grid>
                                 </Stack>
                             </Grid>
@@ -631,10 +674,11 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                                     handle_change_fecha_desde(newValue);
                                                 }}
                                                 renderInput={(params) => (
-                                                    <TextField required fullWidth size="small" {...params} />
+                                                    <TextField required fullWidth size="small" {...params} error={error_fecha_desde} />
                                                 )}
                                                 maxDate={fecha_hasta}
                                             />
+                                            {error_fecha_desde && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                                         </LocalizationProvider>
                                     </Grid>
                                 </Stack>
@@ -654,11 +698,12 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                                     handle_change_fecha_hasta(newValue);
                                                 }}
                                                 renderInput={(params) => (
-                                                    <TextField required fullWidth size="small" {...params} />
+                                                    <TextField required fullWidth size="small" {...params} error={error_fecha_hasta} />
                                                 )}
                                                 minDate={fecha_desde}
                                                 disabled={fecha_desde == null}
                                             />
+                                            {error_fecha_hasta && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                                         </LocalizationProvider>
                                     </Grid>
                                 </Stack>
@@ -688,7 +733,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         color='primary'
                                         variant='contained'
                                         // startIcon={<SearchIcon />}
-                                        onClick={handle_export_pdf}
+                                        onClick={validar_formulario}
                                     >
                                         Generar reporte
                                     </Button>
