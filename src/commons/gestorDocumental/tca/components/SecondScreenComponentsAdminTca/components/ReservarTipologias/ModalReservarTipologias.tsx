@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -50,9 +51,26 @@ export const ModalReservarTipologias = (): JSX.Element => {
   const { tipologias_NO_resevadas, tipologias_resevadas, loadTipologias } =
     useAppSelector((state: any) => state.tca_slice);
 
+  const baseTipologias = [
+    ...columnsResTipologias,
+    {
+      headerName: 'Cod. tipo medio documental',
+      field: 'cod_tipo_medio_doc',
+      width: 200,
+      renderCell: (params: any) => {
+        if (params.row.cod_tipo_medio_doc === 'H') {
+          return 'Híbrido';
+        } else if (params.row.cod_tipo_medio_doc === 'F') {
+          return 'Físico';
+        } else if (params.row.cod_tipo_medio_doc === 'E') {
+          return 'Electrónico';
+        }
+      }
+    }
+  ];
 
   const columns_tipologias_NO_restringidas = [
-    ...columnsResTipologias,
+    ...baseTipologias,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -116,7 +134,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
   ];
 
   const colums_tipologias_restringidas = [
-    ...columnsResTipologias,
+    ...baseTipologias,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -243,8 +261,16 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       density="compact"
                       autoHeight
                       rows={
-                        tipologias_resevadas || []
+                        // tipologias_resevadas || []
                         //  tipologias_resevadas
+                        tipologias_resevadas.filter(
+                          (item: any) =>
+                            !tipologias_NO_resevadas.some(
+                              (element: any) =>
+                                element.id_tipologia_documental ===
+                                item.id_tipologia_documental
+                            )
+                        ) || tipologias_resevadas
                       }
                       columns={colums_tipologias_restringidas}
                       pageSize={5}

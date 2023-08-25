@@ -176,7 +176,7 @@ export const get_catalogo_TCA_service = async (
 
 export const create_item_catalogo_tca_service: any = async (
   bodyPost: any,
-  setLoadingButton: any
+  setLoadingButton: any,
 ): Promise<any> => {
   const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
   setLoadingButton(true);
