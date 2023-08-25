@@ -107,6 +107,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                         ]
                   )
                 );
+
                 control_success('Ítem añadido como tipología restringida');
                 console.log(params.row);
               }}
@@ -233,8 +234,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
                       autoHeight
-                      rows={
-                        // tipologias_NO_resevadas
+                      /*  rows={
+                        tipologias_NO_resevadas
                         tipologias_NO_resevadas.filter(
                           (item: any) =>
                             !tipologias_resevadas.some(
@@ -243,6 +244,21 @@ export const ModalReservarTipologias = (): JSX.Element => {
                                 item.id_tipologia_documental
                             )
                         ) || tipologias_NO_resevadas
+                      } */
+
+                      rows={
+                        tipologias_NO_resevadas?.length > 0
+                          ? tipologias_NO_resevadas?.filter((item: any) => {
+                              return tipologias_resevadas?.every(
+                                (element: any) => {
+                                  return (
+                                    element?.id_tipologia_documental !==
+                                    item?.id_tipologia_documental
+                                  );
+                                }
+                              );
+                            })
+                          : tipologias_resevadas
                       }
                       columns={columns_tipologias_NO_restringidas}
                       pageSize={5}
@@ -260,17 +276,31 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
                       autoHeight
+                      /* rows={tipologias_resevadas?.filter((item: any) => {
+                        return !tipologias_NO_resevadas?.some(
+                          (element: any) => {
+                            return (
+                              element?.id_tipologia_documental ===
+                              item?.id_tipologia_documental
+                            );
+                          }
+                        );
+                      })} */
+                      // rows={tipologias_resevadas}
+
                       rows={
-                        // tipologias_resevadas || []
-                        //  tipologias_resevadas
-                        tipologias_resevadas.filter(
-                          (item: any) =>
-                            !tipologias_NO_resevadas.some(
-                              (element: any) =>
-                                element.id_tipologia_documental ===
-                                item.id_tipologia_documental
-                            )
-                        ) || tipologias_resevadas
+                        tipologias_NO_resevadas?.length > 0
+                          ? tipologias_NO_resevadas?.filter((item: any) => {
+                              return tipologias_resevadas?.some(
+                                (element: any) => {
+                                  return (
+                                    element?.id_tipologia_documental ===
+                                    item?.id_tipologia_documental
+                                  );
+                                }
+                              );
+                            })
+                          : tipologias_resevadas
                       }
                       columns={colums_tipologias_restringidas}
                       pageSize={5}
