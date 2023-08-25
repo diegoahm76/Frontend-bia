@@ -61,8 +61,8 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       if (id_alertas == null) throw new Error('No se encontro el id de la bandeja');
       const url = `/transversal/alertas/alertas_bandeja_Alerta_persona/get-alerta_bandeja-by-bandeja/${id_alertas}/`;
       const { data } = await api.get(url);
-      const AlertasNoLeidas = data.data.filter((el: any) => el.leido === false);
-      const AlertasLeidas = data.data.filter((el: any) => el.leido === true);
+      const AlertasNoLeidas = data.data.filter((el: any) => el.leido === false && el.archivado === false);
+      const AlertasLeidas = data.data.filter((el: any) => el.leido === true && el.archivado === false);
       set_alertas_no_leidas_icono(AlertasNoLeidas.length);
       set_alertas_leidas_icono(AlertasLeidas.length);
       setNumeroDeAlertas(AlertasNoLeidas.length)

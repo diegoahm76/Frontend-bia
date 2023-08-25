@@ -11,6 +11,7 @@ import {
   Stack,
   IconButton,
   Avatar,
+  ButtonGroup,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ChecklistIcon from '@mui/icons-material/Checklist';
@@ -25,6 +26,8 @@ import { delete_seccion_id, delete_subseccion_id } from '../request/request';
 import Swal from 'sweetalert2';
 import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarSeccion: React.FC = () => {
@@ -349,6 +352,12 @@ export const SeleccionarSeccion: React.FC = () => {
               Listado de Subsecciones existentes
             </Typography>
             <Divider />
+            <ButtonGroup
+              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+            >
+              {download_xls({ nurseries: rows_subseccion, columns })}
+              {download_pdf({ nurseries: rows_subseccion, columns, title: ' Listado de Subsecciones' })}
+            </ButtonGroup> 
           </Grid>
           <Grid item xs={12}>
             <DataGrid
@@ -356,8 +365,8 @@ export const SeleccionarSeccion: React.FC = () => {
               rows={rows_subseccion}
               columns={columns}
               getRowId={(row) => row.id_subseccion}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               rowHeight={100}
             />
           </Grid>
