@@ -3,7 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid, TextField, } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
-import type { IObjBandeja, IObjDeposito, } from '../../interfaces/deposito'
+import type { IObjBandeja, IdEstanteDeposito, } from '../../interfaces/deposito'
 import FormButton from '../../../../../components/partials/form/FormButton';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -11,24 +11,26 @@ import { Title } from '../../../../../components/Title';
 import { useEffect, useState } from "react";
 import ListadoBandejas from "../components/bandejasExistentes";
 import { initial_state_bandeja } from "../../store/slice/indexDeposito";
-import { useAppDispatch } from "../../../../../hooks";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks";
 import { crear_bandeja, editar_bandeja } from "../../store/thunks/deposito";
+
 ;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarBandejaScreen = () => {
     const { control: control_bandeja, getValues: get_values, reset, handleSubmit: handle_submit } = useForm<IObjBandeja>();
-    const { control: control_deposito } = useForm<IObjDeposito>();
+    const { control: control_estante } = useForm<IdEstanteDeposito>();
     const [bandeja, set_bandeja] = useState(false);
     const [action, set_action] = useState<string>("Guardar");
     const [selected_bandeja, set_selected_bandeja] = useState<IObjBandeja>(initial_state_bandeja);
     const dispatch = useAppDispatch();
+    const { deposito_estante } = useAppSelector((state) => state.deposito);
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_bandeja = () => {
         set_bandeja(true);
     };
 
-
+    console.log(deposito_estante, 'sssss')
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_edit_click = (bandeja: IObjBandeja) => {
         set_selected_bandeja(bandeja);
@@ -99,40 +101,12 @@ const AdministrarBandejaScreen = () => {
                 }}
             >
                 <Title title="ADMINISTRAR BANDEJAS DE ESTANTES" />
-                <Grid item xs={12} sm={6}>
-                    <Controller
-                        name="nombre_deposito"
-                        control={control_deposito}
-                        defaultValue=""
-                        // rules={{ required: false }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error }
-                        }) => (
-                            <TextField
-                                // margin="dense"
-                                fullWidth
-                                label="Depósito"
-                                size="small"
-                                variant="outlined"
-                                value={value}
-                                InputLabelProps={{ shrink: true }}
-                                onChange={(e) => {
-                                    onChange(e.target.value);
-                                    // console.log(e.target.value);
-                                }}
-                                error={!(error == null)}
-
-                            />
-                        )}
-                    />
-                </Grid>
 
 
                 <Grid item xs={12} sm={6}>
                     <Controller
                         name="nombre_deposito"
-                        control={control_deposito}
+                        control={control_estante}
                         defaultValue=""
                         // rules={{ required: false }}
                         render={({

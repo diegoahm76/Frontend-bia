@@ -98,7 +98,7 @@ export const EstantesScreen: React.FC = () => {
                 Limpiar
               </LoadingButton>
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <ButtonEliminar
                 id={data_estantes.id_estante_deposito}
                 confirmationMessage="¿Estás seguro de eliminar este estante?"
@@ -111,7 +111,7 @@ export const EstantesScreen: React.FC = () => {
                   await fetch_data_estantes_depositos();
                 }}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item>
               <LoadingButton
