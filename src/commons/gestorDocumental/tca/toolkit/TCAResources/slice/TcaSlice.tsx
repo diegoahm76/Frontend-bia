@@ -111,3 +111,39 @@ export const {
   // ! ------- SELECTED ITEM FROM CATALOG ----------------->
   set_selected_item_from_catalogo_action
 } = TCASlice.actions;
+
+/*
+
+dispatch(
+  set_tipologias_reservadas(
+    tipologias_NO_resevadas.length > 0
+      ? tipologias_resevadas.filter((item: any) => {
+          if (
+            item.id_tipologia_documental !==
+            params.row.id_tipologia_documental
+          ) {
+            return {
+              ...item,
+              reservada: !item.reservada
+            };
+          } else {
+            return item;
+          }
+        })
+      : tipologias_NO_resevadas.filter((item: any) => {
+          if (
+            item.id_tipologia_documental !==
+            params.row.id_tipologia_documental
+          ) {
+            return {
+              ...item,
+              reservada: !item.reservada
+            };
+          } else {
+            return item;
+          }
+        })
+  )
+);
+
+*/

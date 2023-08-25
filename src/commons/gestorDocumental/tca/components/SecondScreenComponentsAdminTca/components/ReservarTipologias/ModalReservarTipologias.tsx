@@ -38,7 +38,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { columnsResTipologias } from './columns/columnsResTipologias';
 
 import { set_tipologias_reservadas } from '../../../../toolkit/TCAResources/slice/TcaSlice';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -152,32 +151,30 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 dispatch(
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
-                      ? tipologias_resevadas.filter((item: any) => {
-                          if (
-                            item.id_tipologia_documental !==
-                            params.row.id_tipologia_documental
-                          ) {
+                      ? tipologias_resevadas
+                          .filter(
+                            (item: any) =>
+                              item.id_tipologia_documental !==
+                              params.row.id_tipologia_documental
+                          )
+                          .map((item: any) => {
                             return {
                               ...item,
                               reservada: !item.reservada
                             };
-                          } else {
-                            return item;
-                          }
-                        })
-                      : tipologias_NO_resevadas.filter((item: any) => {
-                          if (
-                            item.id_tipologia_documental !==
-                            params.row.id_tipologia_documental
-                          ) {
+                          })
+                      : tipologias_NO_resevadas
+                          .filter(
+                            (item: any) =>
+                              item.id_tipologia_documental !==
+                              params.row.id_tipologia_documental
+                          )
+                          .map((item: any) => {
                             return {
                               ...item,
                               reservada: !item.reservada
                             };
-                          } else {
-                            return item;
-                          }
-                        })
+                          })
                   )
                 );
                 /* dispatch(
@@ -303,12 +300,25 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 startIcon={<AddTaskIcon />}
                 color="success"
                 onClick={() => {
-
-                  const combinedArray = [...tipologias_resevadas, ...tipologias_NO_resevadas].reduce((acc: any[], item: any) => {
-                    const existingItem = acc.find((i: any) => i.id_tipologia_documental === item.id_tipologia_documental);
+                  const combinedArray = [
+                    ...tipologias_resevadas,
+                    ...tipologias_NO_resevadas
+                  ].reduce((acc: any[], item: any) => {
+                    const existingItem = acc.find(
+                      (i: any) =>
+                        i.id_tipologia_documental ===
+                        item.id_tipologia_documental
+                    );
                     if (existingItem) {
                       if (!existingItem.reservada && item.reservada) {
-                        return [...acc.filter((i: any) => i.id_tipologia_documental !== item.id_tipologia_documental), item];
+                        return [
+                          ...acc.filter(
+                            (i: any) =>
+                              i.id_tipologia_documental !==
+                              item.id_tipologia_documental
+                          ),
+                          item
+                        ];
                       } else {
                         return acc;
                       }
@@ -316,9 +326,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       return [...acc, item];
                     }
                   }, []);
-                  
-                  console.log(combinedArray);
 
+                  console.log(combinedArray);
 
                   console.log('tipologias reservadas', tipologias_resevadas);
                   console.log(
@@ -330,13 +339,12 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 ESTABLECER TIPOLOGIAS RESTRINGIDAS
               </Button>
               <Button
+                color="error"
                 variant="outlined"
-                startIcon={<CleanIcon />}
-                color="primary"
-                sx={{ ml: '10px' }}
-                onClick={() => dispatch(set_tipologias_reservadas([]))}
+                onClick={closeModalReservaTipologiaDocumentalesAll}
+                startIcon={<CloseIcon />}
               >
-                REINICIAR TIPOLOGÍAS
+                CERRAR
               </Button>
             </Grid>
           </DialogContent>
