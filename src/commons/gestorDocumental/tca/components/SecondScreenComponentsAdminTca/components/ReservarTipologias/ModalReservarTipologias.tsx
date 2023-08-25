@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -7,15 +8,10 @@ import {
   Avatar,
   Box,
   Button,
-  Chip,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
-  Divider,
   Grid,
   IconButton,
-  Stack,
   Tooltip
 } from '@mui/material';
 
@@ -37,8 +33,11 @@ import { control_success } from '../../../../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { columnsResTipologias } from './columns/columnsResTipologias';
 
-import { set_tipologias_reservadas } from '../../../../toolkit/TCAResources/slice/TcaSlice';
-import CleanIcon from '@mui/icons-material/CleaningServices';
+import {
+  set_mixed_tipologias,
+  set_tipologias_reservadas
+} from '../../../../toolkit/TCAResources/slice/TcaSlice';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -49,30 +48,29 @@ export const ModalReservarTipologias = (): JSX.Element => {
     useContext(ModalContextTCA);
 
   //* get element from store
-  const { tipologias_NO_resevadas, tipologias_resevadas } = useAppSelector(
-    (state: any) => state.tca_slice
-  );
+  const { tipologias_NO_resevadas, tipologias_resevadas, loadTipologias } =
+    useAppSelector((state: any) => state.tca_slice);
 
-  //* interacción inicial de columnas creadas
-  const baseColumns = [
+  const baseTipologias = [
     ...columnsResTipologias,
     {
-      headerName: 'Tipología activa',
-      field: 'activo',
-      width: 220,
+      headerName: 'Cod. tipo medio documental',
+      field: 'cod_tipo_medio_doc',
+      width: 200,
       renderCell: (params: any) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.activo ? (
-          <Chip size="small" label="Si" color="info" variant="outlined" />
-        ) : (
-          <Chip size="small" label="No" color="warning" variant="outlined" />
-        );
+        if (params.row.cod_tipo_medio_doc === 'H') {
+          return 'Híbrido';
+        } else if (params.row.cod_tipo_medio_doc === 'F') {
+          return 'Físico';
+        } else if (params.row.cod_tipo_medio_doc === 'E') {
+          return 'Electrónico';
+        }
       }
     }
   ];
 
   const columns_tipologias_NO_restringidas = [
-    ...baseColumns,
+    ...baseTipologias,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -93,13 +91,24 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 dispatch(
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
-                      ? [...tipologias_resevadas, params.row]
-                      : [...tipologias_NO_resevadas, params.row]
+                      ? [
+                          ...tipologias_resevadas,
+                          {
+                            ...params.row,
+                            reservada: true
+                          }
+                        ]
+                      : [
+                          ...tipologias_NO_resevadas,
+                          {
+                            ...params.row,
+                            reservada: true
+                          }
+                        ]
                   )
                 );
                 control_success('Ítem añadido como tipología restringida');
                 console.log(params.row);
-                // console.log('añadiendo tipología restringida');
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -125,7 +134,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
   ];
 
   const colums_tipologias_restringidas = [
-    ...baseColumns,
+    ...baseTipologias,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -140,19 +149,30 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 dispatch(
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
-                      ? tipologias_resevadas.filter((item: any) => {
-                          console.log(item);
-                          console.log(params.row);
-                          return (
-                            item.id_tipologia_documental !==
-                            params.row.id_tipologia_documental
-                          );
-                        })
-                      : tipologias_NO_resevadas.filter(
-                          (item: any) =>
-                            item.id_tipologia_documental !==
-                            params.row.id_tipologia_documental
-                        )
+                      ? tipologias_resevadas
+                          .filter(
+                            (item: any) =>
+                              item.id_tipologia_documental !==
+                              params.row.id_tipologia_documental
+                          )
+                          .map((item: any) => {
+                            return {
+                              ...item,
+                              reservada: !item.reservada
+                            };
+                          })
+                      : tipologias_NO_resevadas
+                          .filter(
+                            (item: any) =>
+                              item.id_tipologia_documental !==
+                              params.row.id_tipologia_documental
+                          )
+                          .map((item: any) => {
+                            return {
+                              ...item,
+                              reservada: !item.reservada
+                            };
+                          })
                   )
                 );
                 control_success('Ítem eliminado de tipologías restringidas');
@@ -194,102 +214,133 @@ export const ModalReservarTipologias = (): JSX.Element => {
             closeModalReservaTipologiaDocumentalesAll();
           }}
         >
-          <DialogTitle>
-            <Title title="Establecer restricción de tipologías" />
-          </DialogTitle>
-          <Divider />
-          <DialogContent
-            sx={{
-              mb: '0px',
-              justifyContent: 'center'
-            }}
-          >
-            <Grid container spacing={2}>
-              {/* tipologias existentes */}
-              <Grid item xs={12} sm={12}>
-                <Box>
-                  <Title title="Tipologías no restringidas" />
-                  <DataGrid
-                    sx={{ marginTop: '1.5rem' }}
-                    density="compact"
-                    autoHeight
-                    rows={
-                      // tipologias_NO_resevadas
-                      tipologias_NO_resevadas.filter(
-                        (item: any) =>
-                          !tipologias_resevadas.some(
-                            (element: any) =>
-                              element.id_tipologia_documental ===
-                              item.id_tipologia_documental
-                          )
-                      ) || []
-                    }
-                    columns={columns_tipologias_NO_restringidas}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={() => uuidv4()}
-                  />
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} sm={12}>
-                <Box /* sx={{ width: '100%' }} */>
-                  <Title title="Tipologías restringidas" />
-                  <DataGrid
-                    sx={{ marginTop: '1.5rem' }}
-                    density="compact"
-                    autoHeight
-                    rows={
-                      tipologias_resevadas || []
-                      //  tipologias_resevadas
-                    }
-                    columns={colums_tipologias_restringidas}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => uuidv4()}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12} sx={{ marginTop: '1rem' }}>
-              <Button
-                variant="contained"
-                type="submit"
-                startIcon={<AddTaskIcon />}
-                color="success"
-              >
-                ESTABLECER TIPOLOGIAS RESTRINGIDAS
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<CleanIcon />}
-                color="primary"
-                sx={{ ml: '10px' }}
-                onClick={() => dispatch(set_tipologias_reservadas([]))}
-              >
-                REINICIAR TIPOLOGÍAS
-              </Button>
-            </Grid>
-          </DialogContent>
-
-          <Divider />
-          <DialogActions>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          {loadTipologias ? (
+            <Loader altura={400} />
+          ) : (
+            <DialogContent
+              sx={{
+                mb: '0px',
+                justifyContent: 'center'
+              }}
             >
-              <Button
-                variant="outlined"
-                onClick={closeModalReservaTipologiaDocumentalesAll}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
-            </Stack>
-          </DialogActions>
+              <Grid container spacing={2}>
+                {/* tipologias existentes */}
+                <Grid item xs={12} sm={12}>
+                  <Box>
+                    <Title title="Tipologías no restringidas" />
+
+                    <DataGrid
+                      sx={{ marginTop: '1.5rem' }}
+                      density="compact"
+                      autoHeight
+                      rows={
+                        // tipologias_NO_resevadas
+                        tipologias_NO_resevadas.filter(
+                          (item: any) =>
+                            !tipologias_resevadas.some(
+                              (element: any) =>
+                                element.id_tipologia_documental ===
+                                item.id_tipologia_documental
+                            )
+                        ) || tipologias_NO_resevadas
+                      }
+                      columns={columns_tipologias_NO_restringidas}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={() => uuidv4()}
+                    />
+                  </Box>
+                </Grid>
+
+                <Grid item xs={12} sm={12}>
+                  <Box /* sx={{ width: '100%' }} */>
+                    <Title title="Tipologías restringidas" />
+                    <DataGrid
+                      sx={{ marginTop: '1.5rem' }}
+                      density="compact"
+                      autoHeight
+                      rows={
+                        // tipologias_resevadas || []
+                        //  tipologias_resevadas
+                        tipologias_resevadas.filter(
+                          (item: any) =>
+                            !tipologias_NO_resevadas.some(
+                              (element: any) =>
+                                element.id_tipologia_documental ===
+                                item.id_tipologia_documental
+                            )
+                        ) || tipologias_resevadas
+                      }
+                      columns={colums_tipologias_restringidas}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => uuidv4()}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sm={12} sx={{ marginTop: '1rem' }}>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  startIcon={<AddTaskIcon />}
+                  color="success"
+                  onClick={() => {
+                    const combinedArray = [
+                      ...tipologias_resevadas,
+                      ...tipologias_NO_resevadas
+                    ].reduce((acc: any[], item: any) => {
+                      const existingItem = acc.find(
+                        (i: any) =>
+                          i.id_tipologia_documental ===
+                          item.id_tipologia_documental
+                      );
+                      if (existingItem) {
+                        if (!existingItem.reservada && item.reservada) {
+                          return [
+                            ...acc.filter(
+                              (i: any) =>
+                                i.id_tipologia_documental !==
+                                item.id_tipologia_documental
+                            ),
+                            item
+                          ];
+                        } else {
+                          return acc;
+                        }
+                      } else {
+                        return [...acc, item];
+                      }
+                    }, []);
+
+                    const tipologiasToSend = combinedArray.map((el: any) => {
+                      return {
+                        id_tipologia_documental: el.id_tipologia_documental,
+                        reservada: el.reservada
+                      };
+                    });
+
+                    dispatch(set_mixed_tipologias(tipologiasToSend));
+
+                    console.log(tipologiasToSend);
+                  }}
+                >
+                  ESTABLECER TIPOLOGIAS RESTRINGIDAS
+                </Button>
+                <Button
+                  sx={{ ml: '1rem' }}
+                  color="error"
+                  variant="outlined"
+                  onClick={closeModalReservaTipologiaDocumentalesAll}
+                  startIcon={<CloseIcon />}
+                >
+                  CERRAR
+                </Button>
+              </Grid>
+            </DialogContent>
+          )}
         </Box>
       </Dialog>
     </>

@@ -141,8 +141,6 @@ export const edit_organigrams_service: any = (
         `transversal/organigrama/update/${id}/`,
         organigrama
       );
-      
-
       const res = await api.get('transversal/organigrama/get/');
       const org_data = await res?.data?.Organigramas.find(
         (organigrama: any) => organigrama.id_organigrama === Number(id)
@@ -150,7 +148,6 @@ export const edit_organigrams_service: any = (
       console.log(org_data);
       dispatch(get_organigrams_service());
       dispatch(current_organigram(org_data));
-
 
       //! el campo debe limpiarse luego de la actualización
       control_success('El organigrama se editó correctamente');
@@ -250,10 +247,12 @@ export const get_levels_service: any = (id: string | number) => {
 // Actualizar Niveles
 export const update_levels_service: any = (
   id: string | number,
-  newLevels: any
+  newLevels: any,
+  setloadingLevels: Dispatch<SetStateAction<boolean>>
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setloadingLevels(true);
       const { data } = await api.put(
         `transversal/organigrama/niveles/update/${id}/`,
         newLevels
@@ -265,15 +264,18 @@ export const update_levels_service: any = (
       // console.log('update_levels_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      setloadingLevels(false);
     }
   };
 };
 
 // Unidades
 // Obtener Unidades
-export const get_unitys_service: any = (id: string | number) => {
+export const get_unitys_service: any = (id: string | number,setDataloading: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setDataloading(true);
       const { data } = await api.get(
         `transversal/organigrama/unidades/get-by-organigrama/${id}/`
       );
@@ -283,9 +285,10 @@ export const get_unitys_service: any = (id: string | number) => {
       dispatch(get_unitys(data.data));
       return data;
     } catch (error: any) {
-      // console.log('get_unitys_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    }finally{
+      setDataloading(false);
     }
   };
 };
@@ -294,15 +297,18 @@ export const get_unitys_service: any = (id: string | number) => {
 export const update_unitys_service: any = (
   id: string | number,
   new_unitys: any,
-  clean_unitys: any
+  clean_unitys: any,
+  setloadingLevels: Dispatch<SetStateAction<boolean>>,
+  setDataloading: Dispatch<SetStateAction<boolean>>
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      setloadingLevels(true);
       const { data } = await api.put(
         `transversal/organigrama/unidades/update/${id}/`,
         new_unitys
       );
-      dispatch(get_unitys_service(id));
+      dispatch(get_unitys_service(id, setDataloading));
       control_success('Proceso Exitoso');
       clean_unitys();
       return data;
@@ -312,6 +318,7 @@ export const update_unitys_service: any = (
       return error as AxiosError;
     } finally {
       clean_unitys();
+      setloadingLevels(false);
     }
   };
 };
@@ -323,14 +330,11 @@ export const get_nuevo_user_organigrama: any = (
 ) => {
   return async () => {
     try {
-
-      
-
       const { data } = await api.get(
         `transversal/organigrama/get-nuevo-user-organigrama/${tipo_documento}/${numero_documento}/`
       );
-      
-      if(tipo_documento === '' || numero_documento === 0){
+
+      if (tipo_documento === '' || numero_documento === 0) {
         control_warning('Debe ingresar un tipo y número de documento');
         return data;
       }

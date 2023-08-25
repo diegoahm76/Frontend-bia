@@ -95,16 +95,14 @@ const DialogElegirOrganigramaActual = () => {
   }, []);
 
   // 1.1 Traer data
-  const get_data_selects = async (): Promise<void> => {
+/*  const get_data_selects = async (): Promise<void> => {
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
-      // console.log(response_org_actual.data)
+      console.log(response_org_actual)
       if (response_org_actual.data) {
-        // console.log(response_org_actual.data)
         set_organigrama_actual(response_org_actual.data);
         const response_orgs = await dispatch(get_organigramas_posibles());
-        // console.log(response_orgs);
         const res_organigramas_adapter: IList[] =
           await organigramas_choise_adapter(response_orgs.data);
         set_list_organigrams(res_organigramas_adapter);
@@ -116,7 +114,32 @@ const DialogElegirOrganigramaActual = () => {
     } finally {
       set_loading(false);
     }
-  };
+  }; */
+
+  const get_data_selects = async (): Promise<void> => {
+  set_loading(true);
+  try {
+    const response_org_actual = await dispatch(get_organigrama_actual());
+    console.log(response_org_actual);
+
+    if (response_org_actual.data) {
+      set_organigrama_actual(response_org_actual.data);
+      const response_orgs = await dispatch(get_organigramas_posibles());
+      const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
+      set_list_organigrams(res_organigramas_adapter);
+    } else {
+      const response_orgs = await dispatch(get_organigramas_posibles());
+      const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
+      set_list_organigrams(res_organigramas_adapter);
+      control_error('Sin organigramas disponibles para activación');
+    }
+  } catch (err) {
+    control_error(err);
+  } finally {
+    set_loading(false);
+  }
+};
+
 
   // 2. Seleccionar organigrama
   useEffect(() => {
