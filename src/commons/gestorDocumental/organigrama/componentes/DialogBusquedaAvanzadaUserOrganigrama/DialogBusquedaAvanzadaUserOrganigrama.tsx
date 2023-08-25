@@ -190,7 +190,9 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
                   color="primary"
                   sx={{ height: '100% !important' }}
                   startIcon={<SearchIcon />}
-                ></Button>
+                >
+                  BUSCAR
+                </Button>
               </Stack>
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
@@ -198,7 +200,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
                 <Button
                   // type="submit"
                   fullWidth
-                  variant="contained"
+                  variant="outlined"
                   onClick={() => {
                     reset_search_user();
                     set_data_search_result([]);

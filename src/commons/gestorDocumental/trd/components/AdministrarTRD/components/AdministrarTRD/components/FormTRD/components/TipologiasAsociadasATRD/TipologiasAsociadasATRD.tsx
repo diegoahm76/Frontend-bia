@@ -113,7 +113,7 @@ export const TipologiasAsociadasATRD = (): JSX.Element => {
             startIcon={<SaveAsIcon />}
             // disabled={ccd_current?.actual}
           >
-            ESTABLECER TIPOLOGIAS
+            ESTABLECER / VER TIPOLOGIAS
           </Button>
         </Stack>
       </Grid>

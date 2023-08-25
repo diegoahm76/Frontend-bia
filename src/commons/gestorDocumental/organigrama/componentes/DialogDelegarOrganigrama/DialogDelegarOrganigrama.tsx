@@ -90,7 +90,7 @@ const DialogDelegarOrganigrama = ({
       await dispatch(
         delegar_organigrama_persona(
           data_user_por_asignar?.id_persona,
-          organigram_current.id_organigrama
+          organigram_current?.id_organigrama
         )
       );
       handle_close_delegar_organigrama();
@@ -124,7 +124,13 @@ const DialogDelegarOrganigrama = ({
   };
 
   const cleaningForm = () => {
-    reset_search_for_delegation();
+    reset_search_for_delegation({
+      tipo_documento: '',
+      numero_documento: '',
+      nombre: '',
+    });
+    set_value_form('numero_documento', '');
+    set_value_form('nombre', '');
     set_data_user_por_asignar(undefined);
     set_tipo_documento('');
   }
@@ -199,7 +205,7 @@ const DialogDelegarOrganigrama = ({
                       fullWidth
                       label="Organigrama"
                       size="small"
-                      value={organigram_current.nombre}
+                      value={organigram_current?.nombre}
                       disabled={true}
                     />
                   )}
@@ -209,7 +215,7 @@ const DialogDelegarOrganigrama = ({
                     fullWidth
                     label="Versión"
                     size="small"
-                    value={organigram_current.version}
+                    value={organigram_current?.version}
                     disabled={true}
                   />
                 </Grid>
@@ -228,7 +234,7 @@ const DialogDelegarOrganigrama = ({
                     onChange={on_change}
                     label="Tipo de documento *"
                     name="tipo_documento"
-                    value={organigram_current.tipo_documento?.toString() ?? ''}
+                    value={organigram_current?.tipo_documento?.toString() ?? ''}
                     options={tipo_documento_opt}
                     disabled={true}
                     required={false}
@@ -244,7 +250,7 @@ const DialogDelegarOrganigrama = ({
                       fullWidth
                       autoFocus
                       label="Número de documento"
-                      value={organigram_current.numero_documento}
+                      value={organigram_current?.numero_documento}
                       size="small"
                       disabled={true}
                     />
@@ -287,6 +293,9 @@ const DialogDelegarOrganigrama = ({
                     errors={errors_search_for_delegation}
                     register={register_search_for_delegation}
                   />
+
+               
+
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   {loading ? (
@@ -314,18 +323,16 @@ const DialogDelegarOrganigrama = ({
                           ? 'Este campo es obligatorio'
                           : ''
                       }
-                      /* {...register_search_for_delegation('numero_documento', {
-                        required: true,
-                      })} */
                       onChange={handle_change}
                     />
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={2}>
                   <LoadingButton
+                    loading={loading}
                     type="submit"
                     fullWidth
-                    loading={false}
+                    // loading={false}
                     color="primary"
                     variant="contained"
                     startIcon={<SearchIcon />}
@@ -340,7 +347,7 @@ const DialogDelegarOrganigrama = ({
                     <TextField
                       fullWidth
                       value={data_user_por_asignar?.nombre_completo}
-                      label="Nombre de usuario"
+                     // label="Nombre de usuario"
                       size="small"
                       disabled={true}
                     />
@@ -358,8 +365,8 @@ const DialogDelegarOrganigrama = ({
           >
             <Button
               type="button"
-              color="success"
-              variant="contained"
+              color="primary"
+              variant="outlined"
               onClick={() => {
                 // void handle_submit_delegacion_organigrama();
                 console.log('limpiando formulario de datos de asignación de usuario')
@@ -370,6 +377,7 @@ const DialogDelegarOrganigrama = ({
               LIMPIAR FORMULARIO
             </Button>
             <Button
+            color="error"
               variant="outlined"
               onClick={handle_close_delegar_organigrama}
               startIcon={<CloseIcon />}
@@ -378,7 +386,8 @@ const DialogDelegarOrganigrama = ({
             </Button>
             <Button
               type="button"
-              variant="outlined"
+              color="primary"
+              variant="contained"
               onClick={() => {
                 set_modal_busqueda_avanzada_user_organigram(true);
               }}
@@ -389,6 +398,7 @@ const DialogDelegarOrganigrama = ({
             <Button
               type="button"
               variant="contained"
+              color = "success"
               onClick={() => {
                 void handle_submit_delegacion_organigrama();
               }}
