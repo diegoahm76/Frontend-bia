@@ -39,7 +39,7 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
       const resOrganigramaActual =
         await get_organigrama_actual_lideres_screen_service();
 
-      if (!resOrganigramaActual.id_organigrama) {
+      if (resOrganigramaActual.id_organigrama) {
         const resAsignacionesLideresOrganigramaActual =
           await get_asignaciones_lideres_organigrama_actual_service();
 
@@ -65,7 +65,6 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
           if (result.isConfirmed) {
             console.log('ir a crear organigrama');
             navigate('/app/gestor_documental/organigrama/crear');
-            // window.location.href = '/app/home';
           }
         });
       }
@@ -77,23 +76,6 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
   useEffect(() => {
     void fetchCurrentOrganigrama();
   }, []);
-
-  /*  if (
-    !organigrama_lideres_current ||
-    Object.keys(organigrama_lideres_current).length === 0
-  )
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}
-      >
-        <CircularProgress size={80} />
-      </Box>
-    ); */
 
   return (
     <>
