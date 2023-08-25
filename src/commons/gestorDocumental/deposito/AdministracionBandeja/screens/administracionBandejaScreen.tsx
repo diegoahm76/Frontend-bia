@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid, TextField, } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { useNavigate } from 'react-router-dom';
 import type { IObjBandeja, IdEstanteDeposito, } from '../../interfaces/deposito'
 import FormButton from '../../../../../components/partials/form/FormButton';
 
@@ -43,7 +45,18 @@ const AdministrarBandejaScreen = () => {
 
     }, [selected_bandeja])
 
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        if (!deposito_estante?.id_estante_deposito) {
+            navigate(
+                '/app/gestor_documental/configuracion_datos_basicos/archivo/estantes',
+                {
+                    replace: true,
+                }
+            );
+        }
+    }, []);
 
     const on_submit = (data: IObjBandeja): void => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

@@ -6,7 +6,6 @@ import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import { useNavigate } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { BusquedaAvanzadaDepositos } from '../components/BusquedaAvanzadaDepositos';
@@ -37,18 +36,6 @@ export const EstantesScreen: React.FC = () => {
 
   const { onsubmit_estantes, is_saving_estante } = useEstantesHook();
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!deposito_estante?.id_estante_deposito) {
-      navigate(
-        '/app/gestor_documental/configuracion_datos_basicos/archivo/estantes',
-        {
-          replace: true,
-        }
-      );
-    }
-  }, []);
 
   return (
     <>
