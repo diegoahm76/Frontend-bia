@@ -4,7 +4,8 @@ import { Page404 } from '../../../../screens/404';
 import DepositoScreen from '../screens/depositoScreen';
 import { EstantesScreen } from '../Estantes/screens/EstantesScreen';
 import { UserProvider } from '../Estantes/context/context';
-import AdministrarBandejaScreen from '../AdministracionBandeja/screens/administracionBandeja';
+import AdministrarBandejaScreen from '../AdministracionBandeja/screens/administracionBandejaScreen';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DepositosRoutes = (): ReactElement => {

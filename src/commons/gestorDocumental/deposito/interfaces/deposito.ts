@@ -3,6 +3,8 @@ export interface IDeposito {
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
   mode_estante: IMode;
+  bandeja: IObjBandeja[];
+  current_bandeja: IObjBandeja;
 }
 export interface IMode {
   ver: boolean;
@@ -42,4 +44,11 @@ export interface IObjSucursales {
   activo: boolean | null;
   item_ya_usado: boolean | null;
   id_persona_empresa?: number | null;
+}
+
+export interface IObjBandeja {
+  id_estante_deposito?: number | null;
+  id_bandeja_estante?: number | null;
+  orden_ubicacion_por_estante?: number | null;
+  identificacion_por_estante?: string | number | null;
 }

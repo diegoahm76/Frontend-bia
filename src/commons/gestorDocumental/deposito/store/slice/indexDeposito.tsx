@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type {
   IDeposito,
   IMode,
+  IObjBandeja,
   IObjDeposito,
   IObjSucursales,
 } from '../../interfaces/deposito';
@@ -19,6 +20,11 @@ export const initial_state_deposito: IObjDeposito = {
   municipio: null
 }
 
+export const initial_state_bandeja: IObjBandeja = {
+  id_estante_deposito: null,
+  identificacion_por_estante: null,
+
+}
 export const mode_estantes: IMode = {
   ver: false,
   crear: false,
@@ -29,7 +35,10 @@ export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
   sucursales: [],
-  mode_estante: mode_estantes
+  mode_estante: mode_estantes,
+  bandeja: [],
+  current_bandeja: initial_state_bandeja
+
 };
 
 export const deposito_slice = createSlice({
@@ -63,6 +72,18 @@ export const deposito_slice = createSlice({
     ) => {
       state.mode_estante = action.payload;
     },
+    set_bandejas: (
+      state: IDeposito,
+      action: PayloadAction<IObjBandeja[]>
+    ) => {
+      state.bandeja = action.payload;
+    },
+    set_current_bandeja: (
+      state: IDeposito,
+      action: PayloadAction<IObjBandeja>
+    ) => {
+      state.current_bandeja = action.payload;
+    },
   },
 });
 
@@ -71,4 +92,6 @@ export const {
   set_current_deposito,
   set_sucursales,
   set_current_mode_estantes,
+  set_current_bandeja,
+  set_bandejas
 } = deposito_slice.actions;

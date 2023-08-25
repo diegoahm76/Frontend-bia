@@ -42,7 +42,7 @@ const routes = [
 
   //! rutas de configuracion y datos básicos
   {
-    path: 'configuracion-datos-basicos/',
+    path: 'configuracion_datos_basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
 
@@ -54,10 +54,7 @@ const routes = [
       <Alertas_gestor_Routes />
     ),
   },
-
-];
-
-
+]
 
 
 
