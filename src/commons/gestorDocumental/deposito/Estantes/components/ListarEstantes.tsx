@@ -97,8 +97,10 @@ export const ListarEstantes: React.FC = () => {
             onClick={() => {
               dispatch(
                 set_current_id_depo_est({
-                  id_deposito: id_deposito as number,
+                  ...deposito_estante,
                   id_estante_deposito: params.row.id_estante_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
                 })
               );
 
