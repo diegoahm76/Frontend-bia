@@ -27,7 +27,7 @@ const AdministrarBandejaScreen = () => {
     const [action, set_action] = useState<string>("Guardar");
     const [selected_bandeja, set_selected_bandeja] = useState<IObjBandeja>(initial_state_bandeja);
     const dispatch = useAppDispatch();
-    const { deposito_estante } = useAppSelector((state) => state.deposito);
+    const { deposito_estante } = useAppSelector((state: { deposito: any; }) => state.deposito);
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_bandeja = () => {
         set_bandeja(true);
@@ -123,8 +123,25 @@ const AdministrarBandejaScreen = () => {
                         md={12}
                         margin={2}
                         control_form={control_estante}
-                        control_name="persona"
+                        control_name=""
                         default_value={deposito_estante.id_estante_deposito ?? ''}
+                        rules={{}}
+                        type="text"
+                        disabled={true}
+                        helper_text=""
+                        hidden_text={null} label={""} />
+
+
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <FormInputController
+                        xs={11}
+                        md={12}
+                        margin={2}
+                        control_form={control_estante}
+                        control_name="persona"
+                        default_value={deposito_estante.id_deposito ?? ''}
                         rules={{}}
                         type="text"
                         disabled={true}
