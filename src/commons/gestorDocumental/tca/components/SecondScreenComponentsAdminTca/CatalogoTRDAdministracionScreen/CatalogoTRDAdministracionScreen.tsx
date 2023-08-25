@@ -19,6 +19,7 @@ import {
 } from '../../../toolkit/TCAResources/slice/TcaSlice';
 import { type GridColDef } from '@mui/x-data-grid';
 import { get_tipologias_relacion } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import { use_tca } from '../../../hooks/use_tca';
 
 export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
@@ -31,6 +32,11 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
   //* context declaration
   const { openModalAdministracionTca } = useContext(ModalContextTCA);
+
+  const {
+    setLoadTipologias
+    // ? establishe the formState
+  } = use_tca();
 
   const newColums: GridColDef[] = [
     {
@@ -49,7 +55,8 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
                 openModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(params.row));
                 void get_tipologias_relacion(
-                  params.row.id_catserie_unidadorg
+                  params.row.id_catserie_unidadorg,
+                  setLoadTipologias
                 ).then((res: any) => {
                   const tipologias_reservadas = res.filter(
                     (item: any) => item.reservada

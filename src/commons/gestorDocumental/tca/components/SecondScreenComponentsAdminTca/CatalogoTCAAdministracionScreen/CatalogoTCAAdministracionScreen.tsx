@@ -43,7 +43,8 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
     useContext(ModalContextTCA);
 
   //* ------- HOOK USE_TCA DECLARATION -------------- */
-  const { reset_administrar_tca } = use_tca();
+  const { reset_administrar_tca, setLoadTipologias } =
+    use_tca();
 
   //* redux states declararion
   const { tca_current } = useAppSelector((state) => state.tca_slice);
@@ -96,7 +97,8 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
               onClick={() => {
                 console.log(params.row);
                 void get_tipologias_relacion(
-                  params.row.id_cat_serie_und_ccd_trd
+                  params.row.id_cat_serie_und_ccd_trd,
+                  setLoadTipologias
                 ).then((res: any) => {
                   const tipologias_reservadas = res.filter(
                     (item: any) => item.reservada

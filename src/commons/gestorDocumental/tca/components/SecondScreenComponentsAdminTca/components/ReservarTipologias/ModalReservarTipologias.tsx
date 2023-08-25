@@ -9,12 +9,12 @@ import {
   Button,
   Chip,
   Dialog,
- // DialogActions,
+  // DialogActions,
   DialogContent,
- // Divider,
+  // Divider,
   Grid,
   IconButton,
- // Stack,
+  // Stack,
   Tooltip
 } from '@mui/material';
 
@@ -37,6 +37,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { columnsResTipologias } from './columns/columnsResTipologias';
 
 import { set_tipologias_reservadas } from '../../../../toolkit/TCAResources/slice/TcaSlice';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -47,9 +48,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
     useContext(ModalContextTCA);
 
   //* get element from store
-  const { tipologias_NO_resevadas, tipologias_resevadas } = useAppSelector(
-    (state: any) => state.tca_slice
-  );
+  const { tipologias_NO_resevadas, tipologias_resevadas, loadTipologias } =
+    useAppSelector((state: any) => state.tca_slice);
 
   //* interacción inicial de columnas creadas
   const baseColumns = [
@@ -233,119 +233,123 @@ export const ModalReservarTipologias = (): JSX.Element => {
             closeModalReservaTipologiaDocumentalesAll();
           }}
         >
-          <DialogContent
-            sx={{
-              mb: '0px',
-              justifyContent: 'center'
-            }}
-          >
-            <Grid container spacing={2}>
-              {/* tipologias existentes */}
-              <Grid item xs={12} sm={12}>
-                <Box>
-                  <Title title="Tipologías no restringidas" />
-                  <DataGrid
-                    sx={{ marginTop: '1.5rem' }}
-                    density="compact"
-                    autoHeight
-                    rows={
-                      // tipologias_NO_resevadas
-                      tipologias_NO_resevadas.filter(
-                        (item: any) =>
-                          !tipologias_resevadas.some(
-                            (element: any) =>
-                              element.id_tipologia_documental ===
-                              item.id_tipologia_documental
-                          )
-                      ) || tipologias_NO_resevadas
-                    }
-                    columns={columns_tipologias_NO_restringidas}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={() => uuidv4()}
-                  />
-                </Box>
-              </Grid>
+          {loadTipologias ? (
+            <Loader altura="700px" />
+          ) : (
+            <DialogContent
+              sx={{
+                mb: '0px',
+                justifyContent: 'center'
+              }}
+            >
+              <Grid container spacing={2}>
+                {/* tipologias existentes */}
+                <Grid item xs={12} sm={12}>
+                  <Box>
+                    <Title title="Tipologías no restringidas" />
 
-              <Grid item xs={12} sm={12}>
-                <Box /* sx={{ width: '100%' }} */>
-                  <Title title="Tipologías restringidas" />
-                  <DataGrid
-                    sx={{ marginTop: '1.5rem' }}
-                    density="compact"
-                    autoHeight
-                    rows={
-                      tipologias_resevadas || []
-                      //  tipologias_resevadas
-                    }
-                    columns={colums_tipologias_restringidas}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => uuidv4()}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12} sx={{ marginTop: '1rem' }}>
-              <Button
-                variant="contained"
-                type="submit"
-                startIcon={<AddTaskIcon />}
-                color="success"
-                onClick={() => {
-                  const combinedArray = [
-                    ...tipologias_resevadas,
-                    ...tipologias_NO_resevadas
-                  ].reduce((acc: any[], item: any) => {
-                    const existingItem = acc.find(
-                      (i: any) =>
-                        i.id_tipologia_documental ===
-                        item.id_tipologia_documental
-                    );
-                    if (existingItem) {
-                      if (!existingItem.reservada && item.reservada) {
-                        return [
-                          ...acc.filter(
-                            (i: any) =>
-                              i.id_tipologia_documental !==
-                              item.id_tipologia_documental
-                          ),
-                          item
-                        ];
-                      } else {
-                        return acc;
+                    <DataGrid
+                      sx={{ marginTop: '1.5rem' }}
+                      density="compact"
+                      autoHeight
+                      rows={
+                        // tipologias_NO_resevadas
+                        tipologias_NO_resevadas.filter(
+                          (item: any) =>
+                            !tipologias_resevadas.some(
+                              (element: any) =>
+                                element.id_tipologia_documental ===
+                                item.id_tipologia_documental
+                            )
+                        ) || tipologias_NO_resevadas
                       }
-                    } else {
-                      return [...acc, item];
-                    }
-                  }, []);
+                      columns={columns_tipologias_NO_restringidas}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={() => uuidv4()}
+                    />
+                  </Box>
+                </Grid>
 
-                  console.log(combinedArray);
+                <Grid item xs={12} sm={12}>
+                  <Box /* sx={{ width: '100%' }} */>
+                    <Title title="Tipologías restringidas" />
+                    <DataGrid
+                      sx={{ marginTop: '1.5rem' }}
+                      density="compact"
+                      autoHeight
+                      rows={
+                        tipologias_resevadas || []
+                        //  tipologias_resevadas
+                      }
+                      columns={colums_tipologias_restringidas}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => uuidv4()}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sm={12} sx={{ marginTop: '1rem' }}>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  startIcon={<AddTaskIcon />}
+                  color="success"
+                  onClick={() => {
+                    const combinedArray = [
+                      ...tipologias_resevadas,
+                      ...tipologias_NO_resevadas
+                    ].reduce((acc: any[], item: any) => {
+                      const existingItem = acc.find(
+                        (i: any) =>
+                          i.id_tipologia_documental ===
+                          item.id_tipologia_documental
+                      );
+                      if (existingItem) {
+                        if (!existingItem.reservada && item.reservada) {
+                          return [
+                            ...acc.filter(
+                              (i: any) =>
+                                i.id_tipologia_documental !==
+                                item.id_tipologia_documental
+                            ),
+                            item
+                          ];
+                        } else {
+                          return acc;
+                        }
+                      } else {
+                        return [...acc, item];
+                      }
+                    }, []);
 
-                  console.log('tipologias reservadas', tipologias_resevadas);
-                  console.log(
-                    'tipologias NO reservadas',
-                    tipologias_NO_resevadas
-                  );
-                }}
-              >
-                ESTABLECER TIPOLOGIAS RESTRINGIDAS
-              </Button>
-              <Button
-              sx={{ ml: '1rem' }}
-                color="error"
-                variant="outlined"
-                onClick={closeModalReservaTipologiaDocumentalesAll}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
-            </Grid>
-          </DialogContent>
+                    console.log(combinedArray);
 
-         {/* <Divider />
+                    console.log('tipologias reservadas', tipologias_resevadas);
+                    console.log(
+                      'tipologias NO reservadas',
+                      tipologias_NO_resevadas
+                    );
+                  }}
+                >
+                  ESTABLECER TIPOLOGIAS RESTRINGIDAS
+                </Button>
+                <Button
+                  sx={{ ml: '1rem' }}
+                  color="error"
+                  variant="outlined"
+                  onClick={closeModalReservaTipologiaDocumentalesAll}
+                  startIcon={<CloseIcon />}
+                >
+                  CERRAR
+                </Button>
+              </Grid>
+            </DialogContent>
+          )}
+          {/* <Divider />
           <DialogActions>
             <Stack
               direction="row"

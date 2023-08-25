@@ -227,7 +227,6 @@ export const update_item_catalogo_tca_service = async (
     return data;
   } catch (error: AxiosError | any) {
     control_error(
-
       error.response?.data?.detail || 'Error al actualizar el expediente'
     );
     return error;
@@ -305,13 +304,14 @@ export const resume_tca_service = async (
   }
 };
 
-
 // ! interacción de servicios relacionados a la entrega 52
 
 export const get_tipologias_relacion = async (
-  id_catserie_unidadorg: number = 1
+  id_catserie_unidadorg: number = 1,
+  setLoadTipologias: any
 ): Promise<any> => {
   try {
+    setLoadTipologias(true);
     if (!id_catserie_unidadorg) {
       control_error('No se ha podido realizar la acción');
       return;
@@ -322,5 +322,7 @@ export const get_tipologias_relacion = async (
   } catch (error: AxiosError | any) {
     control_error(error.response?.data?.detail);
     return error;
+  } finally {
+    setLoadTipologias(false);
   }
-}
+};
