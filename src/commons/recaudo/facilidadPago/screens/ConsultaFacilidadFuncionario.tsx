@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
 import { type event, type check, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
-import { post_respuesta_fac_pago } from '../requests/requests';
+import { post_respuesta_fac_pago, get_datos_amortizacion } from '../requests/requests';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
@@ -240,6 +240,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                         numero_cuotas: solicitud_facilidad.facilidad_pago.cuotas,
                                         numero_periodicidad: solicitud_facilidad.facilidad_pago.periodicidad
                                       }))
+                                      void get_datos_amortizacion(solicitud_facilidad.facilidad_pago.id)
                                       navigate('../amortizacion')
                                     } catch (error: any) {
                                       throw new Error(error)

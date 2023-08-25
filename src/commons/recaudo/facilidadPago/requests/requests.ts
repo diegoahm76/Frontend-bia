@@ -98,6 +98,12 @@ export const get_bienes_deudor = async (id: number): Promise<any> => {
   return data.data
 }
 
+// Listar Documentos Requeridos por Calidad de Persona desde Pag. Usuario Externo
+export const get_documentos_calidad_persona = async (id_tipo_actuacion: number): Promise<any> => {
+  const data = await api.get(`recaudo/facilidades-pagos/requisitos-actuacion/${id_tipo_actuacion}`)
+  return data.data
+}
+
 // Crear Facilidad de Pago desde Pag. Usuario Externo
 export const post_registro_fac_pago = async (registro: RegistroFacilidadPago): Promise<any> => {
   const form_data = new FormData();
@@ -197,5 +203,11 @@ export const get_fac_pago_autorizadas = async (): Promise<any> => {
 // Consultar facilidades pago desde Pag. Usuario Externo
 export const get_seguimiento_fac = async (id: number): Promise<any> => {
   const data = await api.get(`recaudo/facilidades-pagos/respuesta-solicitud-funcionario/get/${id}/`)
+  return data
+}
+
+// Datos para la amortización desde Pag. Usuario Interno
+export const get_datos_amortizacion = async (id: number): Promise<any> => {
+  const data = await api.get(`recaudo/planes-pagos/datos-facilidad-pago/${id}/`)
   return data
 }
