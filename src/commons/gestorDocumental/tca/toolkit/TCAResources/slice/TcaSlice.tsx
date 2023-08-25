@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { rowsPrueba_NO_Registrindas /* rowsPrueba_SI_Restringidas */ } from '../../../components/SecondScreenComponentsAdminTca/components/ReservarTipologias/columns/columnsResTipologias';
 
 export interface TCASliceInterface {
   //! TCA necesarios para el funcionamiento de la aplicación
@@ -38,7 +37,7 @@ const initialState: TCASliceInterface = {
 
   // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
   tipologias_resevadas: [],
-  tipologias_NO_resevadas: rowsPrueba_NO_Registrindas,
+  tipologias_NO_resevadas: [],
 
   //! selected icon from catalogo create or edit admini TCA
   selected_item_from_catalogo: null

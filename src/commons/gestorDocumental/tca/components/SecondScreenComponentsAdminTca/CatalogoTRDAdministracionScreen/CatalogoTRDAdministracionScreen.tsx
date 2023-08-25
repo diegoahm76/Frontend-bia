@@ -12,8 +12,13 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import type { dataGridTypes } from '../../../types/tca.types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
-import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
+import {
+  set_selected_item_from_catalogo_action,
+  set_tipologias_NO_reservadas,
+  set_tipologias_reservadas
+} from '../../../toolkit/TCAResources/slice/TcaSlice';
 import { type GridColDef } from '@mui/x-data-grid';
+import { get_tipologias_relacion } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 
 export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
@@ -25,16 +30,14 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   const dispatch = useAppDispatch();
 
   //* context declaration
-  const {
-    openModalAdministracionTca
-  } = useContext(ModalContextTCA);
+  const { openModalAdministracionTca } = useContext(ModalContextTCA);
 
   const newColums: GridColDef[] = [
     {
       headerName: 'Acciones',
       field: 'acciones',
       width: 80,
-      renderCell: (params: { row: { id_cat_serie_und: string } }) => {
+      renderCell: (params: any) => {
         return (
           <>
             <IconButton
@@ -45,6 +48,22 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
                 console.log(params.row);
                 openModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(params.row));
+                void get_tipologias_relacion(
+                  params.row.id_catserie_unidadorg
+                ).then((res: any) => {
+                  const tipologias_reservadas = res.filter(
+                    (item: any) => item.reservada
+                  );
+
+                  const tipologias_NO_reservadas = res.filter(
+                    (item: any) => !item.reservada
+                  );
+
+                  dispatch(set_tipologias_reservadas(tipologias_reservadas));
+                  dispatch(
+                    set_tipologias_NO_reservadas(tipologias_NO_reservadas)
+                  );
+                });
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

@@ -318,10 +318,6 @@ export const get_tipologias_relacion = async (
     }
     const url = `gestor/trd/catalogo-trd/get-tipologias/${id_catserie_unidadorg}/`;
     const { data } = await api.get(url);
-    console.log('data TRD catalogo', data);
-    // control_success(data.detail);
-    // console.log('data TRD catalogo', data);
-
     return data.data;
   } catch (error: AxiosError | any) {
     control_error(error.response?.data?.detail);

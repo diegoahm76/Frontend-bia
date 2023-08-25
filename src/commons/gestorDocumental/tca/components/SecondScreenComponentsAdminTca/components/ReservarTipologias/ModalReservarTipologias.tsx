@@ -222,7 +222,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                               element.id_tipologia_documental ===
                               item.id_tipologia_documental
                           )
-                      ) || []
+                      ) || tipologias_NO_resevadas
                     }
                     columns={columns_tipologias_NO_restringidas}
                     pageSize={5}
