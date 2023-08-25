@@ -1,11 +1,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type {
   IDeposito,
+  IdEstanteDeposito,
   IMode,
   IObjBandeja,
   IObjDeposito,
   IObjSucursales,
 } from '../../interfaces/deposito';
+import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
 
 export const initial_state_deposito: IObjDeposito = {
   nombre_deposito: null,
@@ -17,8 +19,8 @@ export const initial_state_deposito: IObjDeposito = {
   activo: false,
   orden_ubicacion_por_entidad: null,
   nombre_sucursal: null,
-  municipio: null
-}
+  municipio: null,
+};
 
 export const initial_state_bandeja: IObjBandeja = {
   id_estante_deposito: null,
@@ -31,14 +33,36 @@ export const mode_estantes: IMode = {
   editar: false,
 };
 
+export const estantes_slice: GetEstantes = {
+  id_estante_deposito: 0,
+  orden_ubicacion_por_deposito: 0,
+  identificacion_por_deposito: '',
+};
+export const info_deposito_slice: InfoDepositos = {
+  id_deposito: 0,
+  orden_ubicacion_por_entidad: 0,
+  nombre_deposito: '',
+  identificacion_por_entidad: '',
+  nombre_sucursal: '',
+};
+
+export const id_depo_est: IdEstanteDeposito = {
+  id_deposito: 0,
+  id_estante_deposito: 0,
+  nombre_deposito: '',
+  identificacion_por_deposito: '',
+};
+
 export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
   sucursales: [],
   mode_estante: mode_estantes,
   bandeja: [],
-  current_bandeja: initial_state_bandeja
-
+  current_bandeja: initial_state_bandeja,
+  data_estantes: estantes_slice,
+  data_depositos: info_deposito_slice,
+  deposito_estante: id_depo_est,
 };
 
 export const deposito_slice = createSlice({
@@ -84,8 +108,27 @@ export const deposito_slice = createSlice({
     ) => {
       state.current_bandeja = action.payload;
     },
-  },
+    set_current_estantes: (
+      state: IDeposito,
+      action: PayloadAction<GetEstantes>
+    ) => {
+      state.data_estantes = action.payload;
+    },
+    set_current_info_deposito: (
+      state: IDeposito,
+      action: PayloadAction<InfoDepositos>
+    ) => {
+      state.data_depositos = action.payload;
+    },
+    set_current_id_depo_est: (
+      state: IDeposito,
+      action: PayloadAction<IdEstanteDeposito>
+    ) => {
+      state.deposito_estante = action.payload;
+    },
+  }
 });
+
 
 export const {
   set_depositos,
@@ -93,5 +136,8 @@ export const {
   set_sucursales,
   set_current_mode_estantes,
   set_current_bandeja,
-  set_bandejas
+  set_bandejas,
+  set_current_estantes,
+  set_current_info_deposito,
+  set_current_id_depo_est,
 } = deposito_slice.actions;
