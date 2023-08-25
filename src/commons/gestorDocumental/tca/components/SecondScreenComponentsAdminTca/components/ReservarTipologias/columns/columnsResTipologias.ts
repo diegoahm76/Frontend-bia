@@ -5,11 +5,6 @@ export const columnsResTipologias = [
     field: 'nombre',
     width: 200
   },
-  {
-    headerName: 'Cod. tipo medio documental',
-    field: 'cod_tipo_medio_doc',
-    width: 200
-  }
 ];
 
 export const rowsPrueba_NO_Registrindas = [

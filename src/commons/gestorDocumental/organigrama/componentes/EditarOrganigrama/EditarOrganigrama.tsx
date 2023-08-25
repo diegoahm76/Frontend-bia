@@ -47,6 +47,7 @@ import { LoadingButton } from '@mui/lab';
 import SyncIcon from '@mui/icons-material/Sync';
 import { v4 as uuidv4 } from 'uuid';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import { Loader } from '../../../../../utils/Loader/Loader';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -91,7 +92,9 @@ export const EditarOrganigrama = ({
     loadingEdicionOrgan,
     // submit_unidades,
     title_unidades,
-    edit_prop_activo_unidad_org
+    edit_prop_activo_unidad_org,
+    loadingLevels,
+    dataloading
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -391,7 +394,6 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre de nivel"
@@ -409,7 +411,8 @@ export const EditarOrganigrama = ({
                     )}
                   />
                   <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button
+                    <LoadingButton
+                      loading={loadingLevels}
                       type="submit"
                       color="success"
                       disabled={organigram_current?.fecha_terminado}
@@ -421,7 +424,7 @@ export const EditarOrganigrama = ({
                       {title_nivel === 'Agregar'
                         ? 'AGREGAR NIVEL'
                         : 'EDITAR NIVEL'}
-                    </Button>
+                    </LoadingButton>
                   </Stack>
                 </Box>
               </Grid>
@@ -433,16 +436,20 @@ export const EditarOrganigrama = ({
             >
               <Grid item>
                 <Box sx={{ width: '100%' }}>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={levels_organigram}
-                    columns={columns_nivel}
-                    pageSize={10}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row?.id_nivel_organigrama}
-                  />
+                  {dataloading ? (
+                    <Loader altura={200} />
+                  ) : (
+                    <DataGrid
+                      density="compact"
+                      autoHeight
+                      rows={levels_organigram}
+                      columns={columns_nivel}
+                      pageSize={10}
+                      rowsPerPageOptions={[5]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => row?.id_nivel_organigrama}
+                    />
+                  )}
                 </Box>
               </Grid>
             </Grid>
@@ -648,7 +655,8 @@ export const EditarOrganigrama = ({
                 >
                   LIMPIAR CAMPOS
                 </Button>
-                <Button
+                <LoadingButton
+                  loading={loadingLevels}
                   type="submit"
                   color="success"
                   variant="contained"
@@ -659,7 +667,7 @@ export const EditarOrganigrama = ({
                   {title_unidades === 'Agregar'
                     ? 'AGREGAR UNIDAD'
                     : 'EDITAR UNIDAD'}
-                </Button>
+                </LoadingButton>
                 <Button
                   onClick={() => {
                     // void dispatch(set_special_edit(false));
@@ -890,16 +898,22 @@ export const EditarOrganigrama = ({
 
         <Grid item>
           <Box sx={{ width: '100%' }}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={unity_organigram}
-              columns={columns_unidades}
-              pageSize={10}
-              rowsPerPageOptions={[5]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => uuidv4()}
-            />
+            {dataloading ? (
+              <Loader
+              altura={150}
+               />
+            ) : (
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={unity_organigram}
+                columns={columns_unidades}
+                pageSize={10}
+                rowsPerPageOptions={[5]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => uuidv4()}
+              />
+            )}
           </Box>
         </Grid>
 

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { rowsPrueba_NO_Registrindas /* rowsPrueba_SI_Restringidas */ } from '../../../components/SecondScreenComponentsAdminTca/components/ReservarTipologias/columns/columnsResTipologias';
 
 export interface TCASliceInterface {
   //! TCA necesarios para el funcionamiento de la aplicación
@@ -18,6 +17,7 @@ export interface TCASliceInterface {
   // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
   tipologias_resevadas: any[];
   tipologias_NO_resevadas: any[];
+  mixed_tipologias: any[];
 
   //! selected icon from catalogo create or edit admini TCA
   selected_item_from_catalogo: any;
@@ -38,7 +38,8 @@ const initialState: TCASliceInterface = {
 
   // ! ------- AÑADIR TIPOLOGIA COMO RESERVADA ----------------->
   tipologias_resevadas: [],
-  tipologias_NO_resevadas: rowsPrueba_NO_Registrindas,
+  tipologias_NO_resevadas: [],
+  mixed_tipologias: [],
 
   //! selected icon from catalogo create or edit admini TCA
   selected_item_from_catalogo: null
@@ -85,6 +86,10 @@ export const TCASlice = createSlice({
       state.tipologias_NO_resevadas = action.payload;
     },
 
+    set_mixed_tipologias(state, action: PayloadAction<any>) {
+      state.mixed_tipologias = action.payload;
+    },
+
     // ! ------- SELECTED ITEM FROM CATALOG ----------------->
     set_selected_item_from_catalogo_action(state, action: PayloadAction<any>) {
       state.selected_item_from_catalogo = action.payload;
@@ -108,6 +113,7 @@ export const {
   //* establecer tipologias reservadas y no reservadas
   set_tipologias_reservadas,
   set_tipologias_NO_reservadas,
+  set_mixed_tipologias,
 
   // ! ------- SELECTED ITEM FROM CATALOG ----------------->
   set_selected_item_from_catalogo_action
