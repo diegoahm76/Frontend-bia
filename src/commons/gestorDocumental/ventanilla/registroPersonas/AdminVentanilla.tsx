@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState } from 'react';
-
 import { Divider, Grid, Box } from '@mui/material';
-
 import type { AxiosError } from 'axios';
 import type { DataPersonas, InfoPersona } from '../../../../interfaces/globalModels';
 import { use_register } from '../../../auth/hooks/registerHook';
@@ -10,11 +8,10 @@ import { consultar_datos_persona } from '../request/Request';
 import { control_error } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { BuscadorPersona } from '../registroPersonas/BuscadorPersonaV';
-import { BuscarPersonaNatural } from './BuscarPersonaNatural';
 import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural';
-import { BuscarPersonaJuridica } from './BuscarPersonaJuridica';
 import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
-
+import { ActualizarPersonaNatural } from './ActualizarPersonaNatural';
+import { ActualizarPersonaJuridica } from './ActualizarPersonaJuridica';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminVentanilla: React.FC = () => {
@@ -32,7 +29,6 @@ export const AdminVentanilla: React.FC = () => {
         watch,
         reset,
     } = use_register();
-
 
     const on_result = async (info_persona: InfoPersona): Promise<void> => {
         try {
@@ -84,7 +80,7 @@ export const AdminVentanilla: React.FC = () => {
                     <>
                         {datos_persona && datos_persona?.tipo_persona === 'N' && (
                             <>
-                                <BuscarPersonaNatural
+                                <ActualizarPersonaNatural
                                     id_persona={datos_persona.id_persona}
                                     numero_documento={datos_persona.numero_documento}
                                     data={datos_persona}
@@ -103,7 +99,7 @@ export const AdminVentanilla: React.FC = () => {
                         )}
                         {datos_persona !== undefined && datos_persona?.tipo_persona === 'J' && (
                             <>
-                                <BuscarPersonaJuridica
+                                <ActualizarPersonaJuridica
                                     id_persona={datos_persona.id_persona}
                                     data={datos_persona}
                                     numero_documento={datos_persona?.numero_documento}
