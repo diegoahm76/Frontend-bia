@@ -23,9 +23,7 @@ import type {
     PropsRegisterAdministrador,
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
-import {
-    crear_persona_natural,
-} from '../request/Request';
+import { crear_persona_natural } from '../request/Request';
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 import SearchIcon from '@mui/icons-material/Search';
@@ -88,7 +86,6 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
     const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
     const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
-
     // establece la fecha de nacimiento
     const on_change_birt_day = (value: Dayjs | null): void => {
         const date = dayjs(value).format('YYYY-MM-DD');
@@ -102,17 +99,27 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
 
     const on_submit_create_natural = handle_submit(async (data: any) => {
         try {
+            const numero_documento_as_number = parseInt(numero_documento);
+    
+            if (numero_documento_as_number === 1) {
+                control_error('El número de documento no puede ser 1');
+                return;
+            }
+    
             data.ubicacion_georeferenciada = '';
             data.numero_documento = numero_documento;
             data.tipo_documento = tipo_documento;
             data.tipo_persona = tipo_persona;
-            await crear_persona_natural(data as CrearPersonNaturalAdmin);
-            control_success('la persona se creó correctamente');
-            reset(); // resetea el formulario
+    
+            if (data.numero_documento !== '1') {
+                await crear_persona_natural(data as CrearPersonNaturalAdmin);
+                control_success('La persona se creó correctamente');
+                reset(); // resetea el formulario
+            }
         } catch (error) {
-            control_error('hubo un error al crear, intentelo de nuevo');
+            control_error('Hubo un error al crear, inténtelo de nuevo');
         }
-    });
+    });    
 
     return (
         <>
@@ -336,6 +343,7 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
                             <Grid item xs={12} sm={6} md={4}>
                                 <Button
                                     variant="contained"
+                                    startIcon={<SearchIcon />}
                                     onClick={() => {
                                         open_modal(true);
                                         set_type_direction('residencia');
@@ -694,7 +702,7 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
                     </Grid>
                 </Grid>
                 {/* Datos de clasificación Cormacarena */}
-                <Grid container spacing={2} mt={0.1}>                   
+                <Grid container spacing={2} mt={0.1}>
                     {/* BOTONES */}
                     <Grid item spacing={2} justifyContent="end" container>
                         <Grid item>

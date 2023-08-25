@@ -124,17 +124,28 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
 
   const on_submit_create_juridica = handle_submit(async (data) => {
     try {
+      const numero_documento_as_number = parseInt(numero_documento);
+
+      if (numero_documento_as_number === 1) {
+        control_error('El número de documento no puede ser 1');
+        return;
+      }
+
       data.ubicacion_georeferenciada = '';
       data.numero_documento = numero_documento;
       data.tipo_documento = tipo_documento;
       data.tipo_persona = tipo_persona;
-      await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
-      control_success('la persona se creó correctamente');
-      reset(); // resetea el formulario
+
+      if (data.numero_documento !== '1') {
+        await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
+        control_success('la persona se creó correctamente');
+        reset(); // resetea el formulario
+      }
     } catch (error) {
       control_error('hubo un error al crear, intentelo de nuevo');
     }
   });
+
   return (
     <>
       <Typography variant="h6" textAlign="center" pb={2}>
