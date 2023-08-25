@@ -93,8 +93,20 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 dispatch(
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
-                      ? [...tipologias_resevadas, params.row]
-                      : [...tipologias_NO_resevadas, params.row]
+                      ? [
+                          ...tipologias_resevadas,
+                          {
+                            ...params.row,
+                            reservada: true
+                          }
+                        ]
+                      : [
+                          ...tipologias_NO_resevadas,
+                          {
+                            ...params.row,
+                            reservada: true
+                          }
+                        ]
                   )
                 );
                 control_success('Ítem añadido como tipología restringida');
@@ -141,6 +153,37 @@ export const ModalReservarTipologias = (): JSX.Element => {
                   set_tipologias_reservadas(
                     tipologias_NO_resevadas.length > 0
                       ? tipologias_resevadas.filter((item: any) => {
+                          if (
+                            item.id_tipologia_documental !==
+                            params.row.id_tipologia_documental
+                          ) {
+                            return {
+                              ...item,
+                              reservada: !item.reservada
+                            };
+                          } else {
+                            return item;
+                          }
+                        })
+                      : tipologias_NO_resevadas.filter((item: any) => {
+                          if (
+                            item.id_tipologia_documental !==
+                            params.row.id_tipologia_documental
+                          ) {
+                            return {
+                              ...item,
+                              reservada: !item.reservada
+                            };
+                          } else {
+                            return item;
+                          }
+                        })
+                  )
+                );
+                /* dispatch(
+                  set_tipologias_reservadas(
+                    tipologias_NO_resevadas.length > 0
+                      ? tipologias_resevadas.filter((item: any) => {
                           console.log(item);
                           console.log(params.row);
                           return (
@@ -154,7 +197,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                             params.row.id_tipologia_documental
                         )
                   )
-                );
+                ); */
                 control_success('Ítem eliminado de tipologías restringidas');
                 console.log(params.row);
               }}
@@ -259,6 +302,30 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 type="submit"
                 startIcon={<AddTaskIcon />}
                 color="success"
+                onClick={() => {
+
+                  const combinedArray = [...tipologias_resevadas, ...tipologias_NO_resevadas].reduce((acc: any[], item: any) => {
+                    const existingItem = acc.find((i: any) => i.id_tipologia_documental === item.id_tipologia_documental);
+                    if (existingItem) {
+                      if (!existingItem.reservada && item.reservada) {
+                        return [...acc.filter((i: any) => i.id_tipologia_documental !== item.id_tipologia_documental), item];
+                      } else {
+                        return acc;
+                      }
+                    } else {
+                      return [...acc, item];
+                    }
+                  }, []);
+                  
+                  console.log(combinedArray);
+
+
+                  console.log('tipologias reservadas', tipologias_resevadas);
+                  console.log(
+                    'tipologias NO reservadas',
+                    tipologias_NO_resevadas
+                  );
+                }}
               >
                 ESTABLECER TIPOLOGIAS RESTRINGIDAS
               </Button>
