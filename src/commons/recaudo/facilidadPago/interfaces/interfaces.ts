@@ -113,7 +113,7 @@ export interface FacilidadPagoSolicitud {
 
 export interface RespuestaFacilidadPago {
   id_funcionario: number;
-  id_facilidades_pago : number;
+  id_facilidad_pago : number;
   estado : string;
   aprobacion : boolean;
   observacion : string;

@@ -403,7 +403,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       onClick={() => {
                         void post_respuesta_fac_pago({
                           ...form_state,
-                          id_facilidades_pago: solicitud_facilidad.facilidad_pago.id,
+                          id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
                           id_funcionario: solicitud_facilidad.facilidad_pago.id_funcionario,
                           reportado_dbme: check_dbme,
                           informe_dbme: file
