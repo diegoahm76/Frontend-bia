@@ -1,13 +1,27 @@
+import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
+
 export interface IDeposito {
   deposito: IObjDeposito[];
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
   mode_estante: IMode;
+  bandeja: IObjBandeja[];
+  current_bandeja: IObjBandeja;
+  data_estantes: GetEstantes;
+  data_depositos: InfoDepositos;
+  deposito_estante: IdEstanteDeposito;
 }
 export interface IMode {
   ver: boolean;
   editar: boolean;
   crear: boolean;
+}
+
+export interface IdEstanteDeposito {
+  id_deposito?: number | null;
+  id_estante_deposito?: number | null;
+  nombre_deposito?: string;
+  identificacion_por_deposito?: string;
 }
 
 export interface IObjDeposito {
@@ -42,4 +56,11 @@ export interface IObjSucursales {
   activo: boolean | null;
   item_ya_usado: boolean | null;
   id_persona_empresa?: number | null;
+}
+
+export interface IObjBandeja {
+  id_estante_deposito?: number | null;
+  id_bandeja_estante?: number | null;
+  orden_ubicacion_por_estante?: number | null;
+  identificacion_por_estante?: string | number | null;
 }

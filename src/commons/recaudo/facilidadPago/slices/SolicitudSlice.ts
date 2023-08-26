@@ -11,6 +11,12 @@ export const get_facilidad_solicitud = createAsyncThunk('facilidades_pago/solici
   return data.data
 })
 
+// Ver la información de contacto deudor desde Pag. Usuario Externo
+export const get_datos_contacto_solicitud = createAsyncThunk('facilidades_pago/contacto', async (id: number) => {
+  const { data } = await api.get(`recaudo/facilidades-pagos/datos-contacto-deudor/${id}/`)
+  return data.data
+})
+
 export const solicitud_facilidad_slice = createSlice({
   name: 'solicitud_facilidad',
   initialState: initial_state,
@@ -21,6 +27,9 @@ export const solicitud_facilidad_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(get_facilidad_solicitud.fulfilled, (state, action) => {
+      state.solicitud_facilidad = action.payload;
+    });
+    builder.addCase(get_datos_contacto_solicitud.fulfilled, (state, action) => {
       state.solicitud_facilidad = action.payload;
     });
   },

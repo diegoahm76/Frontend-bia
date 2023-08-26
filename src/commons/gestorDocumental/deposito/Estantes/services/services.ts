@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
-import type { GetBandejas, GetEstantes, InfoDepositos, InfoEstantes, ListarDepositos, ListarSucursales, PostEstantes } from "../types/types";
+import type { GetBandejas, GetEstantes, InfoDepositos, InfoEstantes, ListarDepositos, ListarSucursales, PostEstantes, PutMoverEstantes } from "../types/types";
 import { api } from "../../../../../api/axios";
 
 
@@ -66,10 +66,23 @@ export const get_depositos_estante = async (id_estante: number): Promise<GetBand
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
-export const post_deposito = async (data: PostEstantes): Promise<PostEstantes> => {
+export const post_estante = async (data: PostEstantes): Promise<PostEstantes> => {
     const response = await api.post(`gestor/depositos-archivos/estanteDeposito/crear/`, data);
     return response.data;
 }
+// ? ----------------------------------------------- [ PUT ] -----------------------------------------------
+export const put_mover_estante = async (identificacion: string, data: PutMoverEstantes): Promise<PutMoverEstantes> => {
+    const response = await api.put(`gestor/depositos-archivos/estanteDeposito/mover-estante/${identificacion}/`, data);
+    return response.data;
+}
+
+
+// ! ----------------------------------------------- [ DELETE ] -----------------------------------------------
+export const delete_estante = async (id: number): Promise<any> => {
+    const response = await api.delete(`gestor/depositos-archivos/estanteDeposito/eliminar/${id}/`);
+    return response.data;
+}
+
 
 
 

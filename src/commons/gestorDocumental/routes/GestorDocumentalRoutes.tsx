@@ -55,17 +55,16 @@ const routes = [
   {
     path: 'activacion_instrumentos_archivisticos',
     name: 'activacion_instrumentos_archivisticos',
-    component: () => <DialogCcdActual/>
+    component: () => <DialogCcdActual />
   },
   {
     path: "alertas_gestor/",
     name: "alertas_gestor",
     component: () => (
-      <Alertas_gestor_Routes/>
+      <Alertas_gestor_Routes />
     ),
   },
 ];
-
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

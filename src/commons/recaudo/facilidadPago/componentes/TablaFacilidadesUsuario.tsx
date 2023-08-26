@@ -2,42 +2,38 @@
 import { Grid, Box, IconButton, Avatar, Tooltip } from '@mui/material';
 import { Article } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { type FacilidadPagoUsuario } from '../interfaces/interfaces';
+import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
+import { estado_facilidad } from '../slices/FacilidadesSlice';
+import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
+import { get_validacion_resolucion } from '../slices/ResolucionSlice';
+// import { get_seguimiento_fac } from '../requests/requests';
+import { faker } from '@faker-js/faker';
+
+interface RootState {
+  facilidades: {
+    facilidades: FacilidadPagoUsuario[];
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaFacilidadesUsuario: React.FC = () => {
+  const [visible_rows, set_visible_rows] = useState(Array<FacilidadPagoUsuario>);
+  const { facilidades } = useSelector((state: RootState) => state.facilidades);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const fac_pago = [
-    {
-      id: 1,
-      nombreObligacion: 'Permiso 1',
-      nroResolucion: '378765-143',
-      valorTotal: 120000000,
-      estado: 'Aprobado'
-    },
-    {
-      id: 2,
-      nombreObligacion: 'Concesion Aguas',
-      nroResolucion: '3342765-4546',
-      valorTotal: 35000000,
-      estado: 'En Curso'
-    },
-  ];
+  useEffect(() => {
+    set_visible_rows(facilidades)
+  }, [facilidades])
 
   const columns: GridColDef[] = [
     {
-      field: 'nombreObligacion',
-      headerName: 'Facilidad de Pago',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'nroResolucion',
+      field: 'numero_radicacion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
@@ -47,14 +43,20 @@ export const TablaFacilidadesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorTotal',
+      field: 'valor_total',
       headerName: 'Valor Total',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'estado',
@@ -70,33 +72,38 @@ export const TablaFacilidadesUsuario: React.FC = () => {
       field: 'acciones',
       headerName: 'Acción',
       width: 150,
-      renderCell: (params) => {
-        return params.row.id !== 'total' ? (
-          <>
-            <Tooltip title="Ver">
-              <IconButton
-                onClick={() => {
-                  navigate('../seguimiento')
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <Article
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-          </>
-        ) : null
-      },
+      renderCell: (params) => (
+        <Tooltip title="Ver">
+          <IconButton
+            onClick={() => {
+              try {
+                void dispatch(estado_facilidad(params.row.estado));
+                void dispatch(get_facilidad_solicitud(params.row.id));
+                void dispatch(get_validacion_plan_pagos(params.row.id));
+                void dispatch(get_validacion_resolucion(params.row.id));
+                // void get_seguimiento_fac(params.row.id);
+                navigate('../seguimiento');
+              } catch (error: any) {
+                throw new Error(error);
+              }
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <Article
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+      ),
     },
   ];
 
@@ -119,12 +126,12 @@ export const TablaFacilidadesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={fac_pago}
+                rows={visible_rows}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>
