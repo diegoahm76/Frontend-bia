@@ -88,12 +88,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         })
     }
     const historico_levantamiento_cuarentena_fc: () => void = () => {
-        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_traslados_fc: () => void = () => {
-        dispatch(historico_traslados({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_traslados({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
@@ -111,14 +111,6 @@ export const HistoricoMovimientosScreen: React.FC = () => {
 
     const handle_change_fecha_hasta = (date: Date | null): void => {
         set_fecha_hasta(date);
-    };
-
-    const cambio_numero_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_numero_lote(e.target.value);
-    };
-
-    const cambio_año_lote: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_año_lote(e.target.value);
     };
 
     const descargar_pdf = () => {
@@ -149,7 +141,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             historico_levantamiento_cuarentena_fc();
         }
         if (seleccion_reporte === 'TEV') {
-            // generar_reporte_el();
+            historico_traslados_fc();
         }
     }
 
@@ -208,7 +200,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 generar_historico_levantamiento_cuarentena();
             }
             if (seleccion_reporte === 'TEV') {
-                // generar_reporte_el();
+                generar_historico_traslados();
             }
         }
     }, [reporte]);
@@ -252,7 +244,56 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         });
         set_visor(doc.output('datauristring'));
     }
-
+    const generar_historico_traslados: () => void = () => {
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        let coordendas = 0;
+        let page_position = 1;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.setFont("Arial", "bold"); // establece la fuente en Arial
+        doc.setFontSize(11);
+        doc.text('Fecha', 14, 34);
+        doc.text('Material vegetal', 35, 34);
+        doc.text('Cant. trasladada', 70, 34);
+        doc.text('Vivero origen', 100, 34);
+        doc.text('Lote origen', 130, 34);
+        doc.text('Vivero destino', 150, 34);
+        doc.text('Lote creado', 180, 34);
+        reporte.forEach((report: any) => {
+            if ((43 + coordendas) > (doc_height-20)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                doc.setFont("Arial", "bold"); // establece la fuente en Arial
+                doc.setFontSize(11);
+                doc.text('Fecha', 14, 34);
+                doc.text('Material vegetal', 35, 34);
+                doc.text('Cant. trasladada', 70, 34);
+                doc.text('Vivero origen', 100, 34);
+                doc.text('Lote origen', 130, 34);
+                doc.text('Vivero destino', 150, 34);
+                doc.text('Lote creado', 180, 34);
+                coordendas = 0;
+            }
+            // Cliclo
+            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.text(dayjs(report.fecha_traslado).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.text(report.nombre_bien, 35, 41 + coordendas);
+            doc.text(report.cantidad_a_trasladar.toString(), 85, 41 + coordendas,{align:'center'});
+            doc.text(report.nombre_vivero_origen, 100, 41 + coordendas);
+            doc.text(report.nro_lote_origen === null ? '' : report.nro_lote_origen.toString() + ' de ' + report.agno_lote_origen.toString(), 130, 41 + coordendas);
+            doc.text(report.nombre_vivero_destino, 150, 41 + coordendas);
+            doc.text(report.nro_lote_destino_MV === null ? '' : report.nro_lote_destino_MV.toString() + ' de ' + report.agno_lote_destino_MV.toString(), 180, 41 + coordendas);
+            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
+            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
+            coordendas = coordendas + 20;
+        });
+        set_visor(doc.output('datauristring'));
+    }
     const generar_historico_levantamiento_cuarentena: () => void = () => {
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
