@@ -83,7 +83,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         })
     }
     const historico_ingreso_cuarentena_fc: () => void = () => {
-        dispatch(historico_ingreso_cuarentena({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
@@ -143,10 +143,10 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             historico_cambios_etapa_fc();
         }
         if (seleccion_reporte === 'ICMV') {
-            historico_cambios_etapa_fc();
+            historico_ingreso_cuarentena_fc();
         }
         if (seleccion_reporte === 'LCMV') {
-            // generar_reporte_el();
+            historico_levantamiento_cuarentena_fc();
         }
         if (seleccion_reporte === 'TEV') {
             // generar_reporte_el();
@@ -202,10 +202,10 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 generar_historico_cambios_etapa();
             }
             if (seleccion_reporte === 'ICMV') {
-                // generar_reporte_el();
+                generar_historico_ingreso_cuarentena();
             }
             if (seleccion_reporte === 'LCMV') {
-                // generar_reporte_el();
+                generar_historico_levantamiento_cuarentena();
             }
             if (seleccion_reporte === 'TEV') {
                 // generar_reporte_el();
@@ -253,6 +253,94 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         set_visor(doc.output('datauristring'));
     }
 
+    const generar_historico_levantamiento_cuarentena: () => void = () => {
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        let coordendas = 0;
+        let page_position = 1;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.setFont("Arial", "bold"); // establece la fuente en Arial
+        doc.text('Fecha', 14, 34);
+        doc.text('Vivero', 40, 34);
+        doc.text('Material vegetal', 70, 34);
+        doc.text('Cant. Levantada', 110, 34);
+        doc.text('Lote', 170, 34);
+        reporte.forEach((report: any) => {
+            if ((43 + coordendas) > (doc_height-20)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                doc.setFont("Arial", "bold"); // establece la fuente en Arial
+                doc.text('Fecha', 14, 34);
+                doc.text('Vivero', 50, 34);
+                doc.text('Material vegetal', 100, 34);
+                doc.text('Cantidad Levantada', 110, 34);
+                doc.text('Lote', 180, 34);
+                coordendas = 0;
+            }
+            // Cliclo
+            const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
+            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.setFontSize(11);
+            doc.text(dayjs(report.fecha_levantamiento).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.text(nombre_vivero, 40, 41 + coordendas);
+            doc.text(report.nombre_bien, 70, 41 + coordendas);
+            doc.text(report.cantidad_a_levantar.toString(), 125, 41 + coordendas,{align:'center'});
+            doc.text(report.nro_lote.toString() + ' de ' + report.agno_lote.toString() + ' - Etapa ' + report.etapa_lote, (doc.internal.pageSize.width - 60), 41 + coordendas);
+            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
+            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
+            coordendas = coordendas + 20;
+        });
+        set_visor(doc.output('datauristring'));
+    }
+    const generar_historico_ingreso_cuarentena: () => void = () => {
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        let coordendas = 0;
+        let page_position = 1;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.setFont("Arial", "bold"); // establece la fuente en Arial
+        doc.text('Fecha', 14, 34);
+        doc.text('Vivero', 50, 34);
+        doc.text('Material vegetal', 80, 34);
+        doc.text('Cantidad a cuarentena', 120, 34);
+        doc.text('Lote', 180, 34);
+        reporte.forEach((report: any) => {
+            if ((43 + coordendas) > (doc_height-20)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                doc.setFont("Arial", "bold"); // establece la fuente en Arial
+                doc.text('Fecha', 14, 34);
+                doc.text('Vivero', 50, 34);
+                doc.text('Material vegetal', 100, 34);
+                doc.text('Cantidad a cuarentena', 150, 34);
+                doc.text('Lote', 180, 34);
+                coordendas = 0;
+            }
+            // Cliclo
+            const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
+            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.setFontSize(11);
+            doc.text(dayjs(report.fecha_cuarentena).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.text(nombre_vivero, 50, 41 + coordendas);
+            doc.text(report.nombre_bien, 80, 41 + coordendas);
+            doc.text(report.cantidad_cuarentena.toString(), 140, 41 + coordendas,{align:'center'});
+            doc.text(report.nro_lote.toString(), 183, 41 + coordendas);
+            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
+            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
+            coordendas = coordendas + 20;
+        });
+        set_visor(doc.output('datauristring'));
+    }
     const generar_historico_cambios_etapa: () => void = () => {
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
@@ -269,6 +357,13 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             if ((43 + coordendas) > (doc_height-20)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
+                doc.setFont("Arial", "bold"); // establece la fuente en Arial
+                doc.text('Fecha', 14, 34);
+                doc.text('Vivero', 40, 34);
+                doc.text('Material vegetal', 80, 34);
+                doc.text('Etapa origen', 120, 34);
+                doc.text('Etapa destino', 162, 34);
+                doc.text('Lote', 193, 34);
                 coordendas = 0;
             }
             // Cliclo
@@ -293,7 +388,6 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         });
         set_visor(doc.output('datauristring'));
     }
-
     const generar_historico_distribuciones: () => void = () => {
         const page = doc.internal.pageSize.getHeight();
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
