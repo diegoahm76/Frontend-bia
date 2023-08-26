@@ -21,6 +21,7 @@ import { control_error } from '../../../../../helpers';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface PropsBuscador {
   onResult: (data_porh: InfoPorh) => void;
@@ -236,6 +237,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
             onClick={handle_click_open}
           >
             Búscar
@@ -303,6 +305,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                 >

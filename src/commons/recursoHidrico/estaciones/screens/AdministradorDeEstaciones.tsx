@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -34,13 +35,22 @@ export const AdministradorDeEstaciones: React.FC = () => {
 
     const columns: GridColDef[] = [
         { field: 'id_estacion', headerName: 'NÚMERO', width: 140 },
-        { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170 },
+        { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170,
+        valueFormatter: (params) => {
+         const date = new Date(params.value);
+         const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+         return formattedDate;
+       }, },
         { field: 'nombre_estacion', headerName: 'NOMBRE', width: 170 },
         { field: 'cod_tipo_estacion', headerName: 'COD. ESTACIÓN', width: 170 },
         { field: 'latitud', headerName: 'LATITUD', width: 170 },
         { field: 'longitud', headerName: 'LONGITUD', width: 170 },
         { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
-        { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
+        { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170, valueFormatter: (params) => {
+            const date = new Date(params.value);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            return formattedDate;
+          }, },
         { field: 'nombre_persona_modifica', headerName: 'PERSONA MODIFICA', width: 200 },
         {
             field: 'ACCIONES',

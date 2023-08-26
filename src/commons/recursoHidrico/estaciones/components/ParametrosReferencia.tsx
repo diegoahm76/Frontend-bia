@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import EditIcon from '@mui/icons-material/Edit';
 import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -28,7 +29,12 @@ export const ParametrosReferencia: React.FC = () => {
     {
       field: 'fecha_modificacion',
       headerName: 'FECHA MODIFICACIÓN',
-      width: 140,
+      width: 140, 
+      valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'frecuencia_solicitud_datos',
