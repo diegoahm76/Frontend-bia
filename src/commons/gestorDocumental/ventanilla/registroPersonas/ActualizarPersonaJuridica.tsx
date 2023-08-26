@@ -23,7 +23,6 @@ import type {
   UpdateAutorizaNotificacion,
 } from '../../../../interfaces/globalModels';
 import { Title } from '../../../../components/Title';
-
 import { control_error, control_success } from '../../../../helpers';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 import { DialogHistorialDatosRestringidos } from '../DialogVentanilla/DialogHistorialDatosRestringidos';
@@ -31,16 +30,19 @@ import { DialogHistorialEmail } from '../HistoricoEmail/HistoricoEmail';
 import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDirecciones';
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
-
 import { type AxiosError } from 'axios';
 import { DatosRepresentanteLegal } from '../../../seguridad/components/DatosRepresentanteLegal/DataRepresentanteLegal';
-import { consultar_clase_tercero, consultar_clase_tercero_persona, editar_persona_juridica } from '../../../seguridad/request/Request';
+import {
+  consultar_clase_tercero,
+  consultar_clase_tercero_persona,
+  editar_persona_juridica,
+} from '../request/Request';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
+export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
   data,
   tipo_persona,
   register,
@@ -143,7 +145,9 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
     }
   };
   // trae clase tercero por persona
-  const get_datos_clase_tercero_persona = async (id_persona: number): Promise<void> => {
+  const get_datos_clase_tercero_persona = async (
+    id_persona: number
+  ): Promise<void> => {
     try {
       const response = await consultar_clase_tercero_persona(id_persona);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -175,16 +179,28 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
   useEffect(() => {
     if (data !== undefined) {
       set_value('tipo_persona', data.tipo_persona);
-      set_value('cod_pais_nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
+      set_value(
+        'cod_pais_nacionalidad_empresa',
+        data.cod_pais_nacionalidad_empresa
+      );
       set_value('cod_naturaleza_empresa', data.cod_naturaleza_empresa);
       // set_dpto_notifiacion(data.cod_departamento_notificacion);
       set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-      set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
-      set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
+      set_value(
+        'cod_departamento_notificacion',
+        data.cod_departamento_notificacion
+      );
+      set_value(
+        'cod_municipio_notificacion_nal',
+        data.cod_municipio_notificacion_nal
+      );
       set_value('direccion_notificaciones', data.direccion_notificaciones);
-      set_value('direccion_notificacion_referencia', data.direccion_notificacion_referencia);
+      set_value(
+        'direccion_notificacion_referencia',
+        data.direccion_notificacion_referencia
+      );
       set_value('acepta_notificacion_email', data.acepta_notificacion_email);
-      set_value('acepta_notificacion_sms', data.acepta_notificacion_sms)
+      set_value('acepta_notificacion_sms', data.acepta_notificacion_sms);
 
       // datos adicionales
 
@@ -194,27 +210,36 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
       set_value('telefono_empresa', data.telefono_empresa);
       set_value('telefono_empresa_2', data.telefono_empresa_2);
       set_value('email_empresarial', data.email_empresarial);
-      set_value('complemento_direccion', data.direccion_notificacion_referencia)
-      set_value('direccion_notificacion_referencia', data.direccion_notificacion_referencia)
-
+      set_value(
+        'complemento_direccion',
+        data.direccion_notificacion_referencia
+      );
+      set_value(
+        'direccion_notificacion_referencia',
+        data.direccion_notificacion_referencia
+      );
     }
     if (data?.id_persona !== undefined) {
       void get_datos_clase_tercero_persona(data?.id_persona);
     }
-
   }, [data]);
 
   const on_submit_update_juridica = handle_submit(async (datos: any) => {
     try {
       datos.ubicacion_georeferenciada = '';
       delete datos.dpto_notifiacion;
-      delete datos.cod_departamento_notificacion
+      delete datos.cod_departamento_notificacion;
       datos.representante_legal = id_reoresentante_legal;
-      await editar_persona_juridica(data?.id_persona, datos as DataJuridicaUpdate);
+      data.acepta_notificacion_email = acepta_notificacion_email;
+      data.acepta_notificacion_sms = acepta_notificacion_sms;
+      await editar_persona_juridica(
+        data?.id_persona,
+        datos as DataJuridicaUpdate
+      );
       control_success('Se actualizo el usuario correctamente');
       reset(); // limpiar campos
     } catch (error) {
-      control_error('Ha ocuriido un error, intente nuevamente');
+      control_error('Ha ocurrido un error, intente nuevamente');
     }
   });
   return (
@@ -223,6 +248,7 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
         <>
           <form
             onSubmit={(e) => {
+              console.log("este es el error: ",errors);
               void on_submit_update_juridica(e);
             }}
           >
@@ -400,7 +426,8 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                   type="email"
                   helperText={
                     errors.email?.type === 'required'
-                      ? 'Este campo es obligatorio' : ''
+                      ? 'Este campo es obligatorio'
+                      : ''
                   }
                   {...register('email', {
                     required: true,
@@ -417,7 +444,8 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                   error={errors.telefono_celular_empresa?.type === 'required'}
                   helperText={
                     errors.telefono_celular_empresa?.type === 'required'
-                      ? 'Este campo es obligatorio' : ''
+                      ? 'Este campo es obligatorio'
+                      : ''
                   }
                   {...register('telefono_celular_empresa')}
                 />
@@ -437,7 +465,7 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                       handle_open_historico_direcciones();
                     }}
                   >
-                    Historico E-mail
+                    Historico Direcciones
                   </Button>
                   <Button
                     variant="outlined"
@@ -447,7 +475,7 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                       handle_open_historico_email();
                     }}
                   >
-                    Historico Direcciones
+                    Historico E-mail
                   </Button>
                 </Stack>
               </Grid>
@@ -520,7 +548,9 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                       size="small"
                       disabled={true}
                       checked={acepta_notificacion_email}
-                      {...register('acepta_notificacion_email')}
+                      {...register('acepta_notificacion_email', {
+                        required: false,
+                      })}
                     />
                   }
                 />
@@ -533,7 +563,9 @@ export const BuscarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                       size="small"
                       disabled={true}
                       checked={acepta_notificacion_sms}
-                      {...register('acepta_notificacion_sms')}
+                      {...register('acepta_notificacion_sms', {
+                        required: false,
+                      })}
                     />
                   }
                 />

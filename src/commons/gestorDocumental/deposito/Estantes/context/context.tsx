@@ -27,8 +27,10 @@ interface UserContext {
   // * select
   sucusal_selected: ValueProps[];
   depositos_selected: ValueProps[];
+  depositos_selected_mover_estante: ValueProps[];
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
+  set_depositos_selected_mover_estante: (value: ValueProps[]) => void;
 
   // * rows
   rows_estantes: GetEstantes[];
@@ -57,8 +59,10 @@ export const DataContext = createContext<UserContext>({
   // * select
   sucusal_selected: [],
   depositos_selected: [],
+  depositos_selected_mover_estante: [],
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
+  set_depositos_selected_mover_estante: () => {},
 
   // * rows
   rows_estantes: [],
@@ -94,13 +98,19 @@ export const UserProvider = ({
     ValueProps[]
   >([]);
 
+  const [
+    depositos_selected_mover_estante,
+    set_depositos_selected_mover_estante,
+  ] = React.useState<ValueProps[]>([]);
+
   // * rows
 
   const [rows_estantes, set_rows_estantes] = React.useState<GetEstantes[]>([]);
   const [rows_bandejas, set_rows_bandejas] = React.useState<GetBandejas[]>([]);
 
   // * info
-  const [identificacion_deposito, set_identificacion_deposito] = React.useState<string>('');
+  const [identificacion_deposito, set_identificacion_deposito] =
+    React.useState<string>('');
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -131,6 +141,15 @@ export const UserProvider = ({
           })
         );
         set_depositos_selected(data_sucursal);
+
+        const data_mover: ValueProps[] = response.map(
+          (item: ListarDepositos) => ({
+            value: item.identificacion_por_entidad,
+            label: item.nombre_deposito,
+            // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+          })
+        );
+        set_depositos_selected_mover_estante(data_mover);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -180,8 +199,10 @@ export const UserProvider = ({
     // * select
     sucusal_selected,
     depositos_selected,
+    depositos_selected_mover_estante,
     set_depositos_selected,
     set_sucusal_selected,
+    set_depositos_selected_mover_estante,
     // * rows
     rows_estantes,
     set_rows_estantes,

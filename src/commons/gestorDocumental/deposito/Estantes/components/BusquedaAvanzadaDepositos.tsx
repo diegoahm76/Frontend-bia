@@ -16,8 +16,6 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
-import type { AxiosError } from 'axios';
-import type { ResponseServer } from '../../../../../interfaces/globalModels';
 import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
@@ -26,7 +24,11 @@ import type { InfoDepositos } from '../types/types';
 import { search_deposito } from '../services/services';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/context';
-import { set_current_mode_estantes } from '../../store/slice/indexDeposito';
+import {
+  set_current_id_depo_est,
+  set_current_info_deposito,
+  set_current_mode_estantes,
+} from '../../store/slice/indexDeposito';
 import { useAppDispatch } from '../../../../../hooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -72,12 +74,20 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              dispatch(set_current_info_deposito(params.row));
               reset({
                 nombre_deposito: params.row.nombre_deposito,
                 identificacion_por_entidad:
                   params.row.identificacion_por_entidad,
                 nombre_sucursal: params.row.nombre_sucursal,
               });
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: params.row.id_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                })
+              );
+
               set_id_deposito(params.row.id_deposito);
               handle_close();
             }}
@@ -101,30 +111,6 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
               />
             </Avatar>
           </IconButton>
-          {/* <IconButton
-            size="small"
-            onClick={() => {
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <EditIcon
-                titleAccess="Editar instrumento"
-                sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px',
-                }}
-              />
-            </Avatar>
-          </IconButton> */}
         </>
       ),
     },
@@ -429,16 +415,16 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                     {/* <Typography>Resultados de la búsqueda</Typography> */}
                   </Grid>
                   <Grid item xs={12}>
-                    <Box sx={{ height: 400, width: '100%' }}>
-                      <>
-                        <DataGrid
-                          rows={rows}
-                          columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
-                          getRowId={(row) => uuidv4()}
-                        />
-                      </>
+                    <Box sx={{ width: '100%' }}>
+                      <DataGrid
+                        density="compact"
+                        autoHeight
+                        rows={rows}
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        getRowId={(row) => uuidv4()}
+                      />
                     </Box>
                   </Grid>
                 </>

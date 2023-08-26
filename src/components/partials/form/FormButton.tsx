@@ -33,7 +33,7 @@ const FormButton = ({
 }: IProps) => {
   return (
     <Button
-      color={color_button ?? 'primary'}
+      color={color_button ?? 'success'}
       fullWidth
       variant={variant_button}
       // eslint-disable-next-line @typescript-eslint/no-misused-promises

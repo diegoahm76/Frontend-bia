@@ -9,9 +9,6 @@ import {
     Typography,
     Button,
     Divider,
-    Autocomplete,
-    type AutocompleteChangeReason,
-    type AutocompleteChangeDetails,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,15 +19,11 @@ import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import dayjs, { type Dayjs } from 'dayjs';
 import type {
-    ClaseTercero,
     CrearPersonNaturalAdmin,
     PropsRegisterAdministrador,
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
-import {
-    consultar_clase_tercero,
-    crear_persona_natural,
-} from '../request/Request';
+import { crear_persona_natural } from '../request/Request';
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 import SearchIcon from '@mui/icons-material/Search';
@@ -86,7 +79,6 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
 
     const [type_direction, set_type_direction] = useState('');
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
-    const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
 
     // watchers
     const misma_direccion = watch('misma_direccion') ?? false;
@@ -94,52 +86,40 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
     const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
     const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
-    const handle_change_autocomplete = (
-        event: React.SyntheticEvent<Element, Event>,
-        value: ClaseTercero[],
-        reason: AutocompleteChangeReason,
-        details?: AutocompleteChangeDetails<ClaseTercero>
-    ): void => {
-        set_value(
-            'datos_clasificacion_persona',
-            value.map((e) => e.value)
-        );
-    };
-
     // establece la fecha de nacimiento
     const on_change_birt_day = (value: Dayjs | null): void => {
         const date = dayjs(value).format('YYYY-MM-DD');
         set_value('fecha_nacimiento', date);
         set_fecha_nacimiento(value);
     };
-    // trae todas las clase tercero
-    const get_datos_clase_tercero = async (): Promise<void> => {
-        try {
-            const response = await consultar_clase_tercero();
-            set_clase_tercero(response);
-        } catch (err) {
-            control_error(err);
-        }
-    };
 
     useEffect(() => {
-        void get_datos_clase_tercero();
         reset();
     }, []);
 
     const on_submit_create_natural = handle_submit(async (data: any) => {
         try {
+            const numero_documento_as_number = parseInt(numero_documento);
+    
+            if (numero_documento_as_number === 1) {
+                control_error('El número de documento no puede ser 1');
+                return;
+            }
+    
             data.ubicacion_georeferenciada = '';
             data.numero_documento = numero_documento;
             data.tipo_documento = tipo_documento;
             data.tipo_persona = tipo_persona;
-            await crear_persona_natural(data as CrearPersonNaturalAdmin);
-            control_success('la persona se creó correctamente');
-            reset(); // resetea el formulario
+    
+            if (data.numero_documento !== '1') {
+                await crear_persona_natural(data as CrearPersonNaturalAdmin);
+                control_success('La persona se creó correctamente');
+                reset(); // resetea el formulario
+            }
         } catch (error) {
-            control_error('hubo un error al crear, intentelo de nuevo');
+            control_error('Hubo un error al crear, inténtelo de nuevo');
         }
-    });
+    });    
 
     return (
         <>
@@ -363,6 +343,7 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
                             <Grid item xs={12} sm={6} md={4}>
                                 <Button
                                     variant="contained"
+                                    startIcon={<SearchIcon />}
                                     onClick={() => {
                                         open_modal(true);
                                         set_type_direction('residencia');
@@ -722,37 +703,6 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
                 </Grid>
                 {/* Datos de clasificación Cormacarena */}
                 <Grid container spacing={2} mt={0.1}>
-                    <Grid item xs={12}>
-                        <Title title="Datos de clasificación Cormacarena" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        {clase_tercero.length > 0 && (
-                            <>
-                                <Grid item xs={12}>
-                                    <Autocomplete
-                                        multiple
-                                        fullWidth
-                                        size="medium"
-                                        options={clase_tercero}
-                                        getOptionLabel={(option: any) => option.label}
-                                        isOptionEqualToValue={(option: any, value) =>
-                                            option?.value === value?.value
-                                        }
-                                        renderInput={(params) => (
-                                            <TextField
-                                                key={params.id}
-                                                {...params}
-                                                label="Datos clasificación Cormacarena"
-                                                placeholder="Clasificacion Cormacarena"
-                                            />
-                                        )}
-                                        {...register('datos_clasificacion_persona')}
-                                        onChange={handle_change_autocomplete}
-                                    />
-                                </Grid>
-                            </>
-                        )}
-                    </Grid>
                     {/* BOTONES */}
                     <Grid item spacing={2} justifyContent="end" container>
                         <Grid item>

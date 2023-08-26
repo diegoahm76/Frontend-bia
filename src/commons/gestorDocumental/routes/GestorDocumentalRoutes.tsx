@@ -5,8 +5,10 @@ import { TrdRoutes } from '../trd/routes/TrdRoutes';
 import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
+import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
 
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
+import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 
@@ -33,7 +35,11 @@ const routes = [
     component: () => <TcaRoutes />
   },
   // ? trasladar a configuracion y datos basicos
-
+  {
+    path: 'archivo/',
+    name: 'archivo',
+    component: () => <DepositosRoutes />
+  },
   {
     path: 'ventanilla_unica/',
     name: 'ventanilla_unica',
@@ -42,20 +48,24 @@ const routes = [
 
   //! rutas de configuracion y datos básicos
   {
-    path: 'configuracion-datos-basicos/',
+    path: 'configuracion_datos_basicos/',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />
-
+  },
+  {
+    path: 'activacion_instrumentos_archivisticos',
+    name: 'activacion_instrumentos_archivisticos',
+    component: () => <DialogCcdActual/>
   },
   {
     path: "alertas_gestor/",
     name: "alertas_gestor",
     component: () => (
-      <Alertas_gestor_Routes />
+      <Alertas_gestor_Routes/>
     ),
   },
-
 ];
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

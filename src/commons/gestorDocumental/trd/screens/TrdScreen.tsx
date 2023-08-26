@@ -35,7 +35,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 import { control_error } from '../../../../helpers';
 import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
-import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 // import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
@@ -364,44 +363,12 @@ export const TrdScreen: FC = (): JSX.Element => {
       </Grid>
       {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
 
-      {/* TRD module number 3 - starts with the title Tipologias */}
-
-      {/* data table with the "tipologias" */}
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
-        }}
-      >
-        <Grid item xs={12}>
-          <TipologiasScreen />
-        </Grid>
-      </Grid>
-      {/* finish data table with the "tipologias" */}
-
       <Stack
         direction="row"
         justifyContent="flex-end"
         spacing={2}
         sx={{ m: '20px 0' }}
       >
-        {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
-
-        {/* <Button
-          color="warning"
-          variant="contained"
-          startIcon={<AddCircleIcon />}
-          onClick={openModalCreacionFormatoTipo}
-        >
-          MÓDULO DE CREACION DE FORMATOS
-        </Button> */}
-
-        {/* buttons end */}
 
         {!trd_current ? null : (
           <Button
@@ -442,9 +409,6 @@ export const TrdScreen: FC = (): JSX.Element => {
       <ModalCCDUsados />
       {/* -- this modal allow us to see the ccds used in other TRD -- */}
 
-      {/* -- this modal allow us to (create, edit, delete or deactivate) a new format type -- */}
-      {/* <AdmnistrarFormatos /> */}
-      {/* -- this modal allow us to (create, edit, delete or deactivate) a new format type -- */}
     </>
   );
 };
