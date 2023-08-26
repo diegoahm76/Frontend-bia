@@ -101,6 +101,8 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             // setselected_row(null); // Limpia la fila seleccionada
         } catch (error) {
             console.error(error);
+            control_error("Alerta no eliminada");
+
         }
 
     };
