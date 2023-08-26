@@ -408,8 +408,8 @@ export const SeleccionLider = (): JSX.Element => {
               </Button>
 
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={cleanElementComponent}
               >
@@ -418,7 +418,7 @@ export const SeleccionLider = (): JSX.Element => {
 
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalBusquedaPersona}
               >
@@ -479,7 +479,7 @@ export const SeleccionLider = (): JSX.Element => {
               >
                 <LoadingButton
                   loading={loadingButton}
-                  color="primary"
+                  color="success"
                   type="submit"
                   variant="contained"
                   disabled={

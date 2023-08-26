@@ -31,6 +31,7 @@ import { choicesTipoClasificacion } from '../../../../screens/utils/choices/tipo
 import {
   set_catalog_TCA_action,
   set_catalog_trd_action,
+  set_mixed_tipologias,
   set_selected_item_from_catalogo_action
 } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 import {
@@ -44,6 +45,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
 import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
+import SecurityIcon from '@mui/icons-material/Security';
+import { ModalReservarTipologias } from './../../components/ReservarTipologias/ModalReservarTipologias';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -54,12 +57,12 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
-    setLoadingButton
+    setLoadingButton,
+    openModalReservaTipologia
   } = useContext(ModalContextTCA);
   // * state from tca_slice
-  const { tca_current, selected_item_from_catalogo } = useAppSelector(
-    (state: any) => state.tca_slice
-  );
+  const { tca_current, selected_item_from_catalogo, mixed_tipologias } =
+    useAppSelector((state: any) => state.tca_slice);
 
   const {
     control_administrar_tca,
@@ -116,17 +119,25 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     data1: string | number,
     data2: string | number
   ) => {
-    const bodyToSend = {
+    const bodyToSend: any = {
       id_tca: tca_current?.id_tca,
       id_cat_serie_und_ccd_trd: data1,
       cod_clas_expediente: data2
     };
+
+    console.log(mixed_tipologias)
+
+    if (mixed_tipologias.length > 0) {
+      bodyToSend.tipologias_reservadas = mixed_tipologias;
+    }
+
     void create_item_catalogo_tca_service(bodyToSend, setLoadingButton)
       .then(async () => await updateCatalogoTRD(tca_current?.id_trd))
       .then(async () => await updateCatalogoTCA(tca_current?.id_tca))
       .then(() => {
         closeModalAdministracionTca();
         resetAdministrarTCA();
+        dispatch(set_mixed_tipologias([]));
       });
   };
 
@@ -148,6 +159,11 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
         watch_administrar_tca_value.ruta_archivo_cambio
       );
     }
+
+    if(mixed_tipologias.length > 0){
+      formData.append('tipologias_reservadas', JSON.stringify(mixed_tipologias));
+    }
+
     void update_item_catalogo_tca_service(
       formData,
       selected_item_from_catalogo?.id_cat_serie_unidad_org_ccd_trd_tca,
@@ -226,6 +242,28 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                 )}
               />
             </Grid>
+
+            {/* módulo nuevo, reserva de tipologías  */}
+
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              sx={{
+                zIndex: 2
+              }}
+            >
+              <Button
+                color="warning"
+                variant="outlined"
+                startIcon={<SecurityIcon />}
+                onClick={openModalReservaTipologia}
+              >
+                RESERVAR TIPOLOGÍAS
+              </Button>
+            </Grid>
+
+            {/* módulo nuevo, reserva de tipologías --> */}
 
             {/* new spaces */}
 
@@ -418,6 +456,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       {/* Modal historial de cambios TRD ACTUAL */}
       <HistorialCambiosTCA />
       {/* Modal historial de cambios TRD ACTUAL */}
+
+      {/* Modal reserva de tipologías documentales */}
+      <ModalReservarTipologias />
+      {/* Modal reserva de tipologías documentales */}
     </>
   );
 };
