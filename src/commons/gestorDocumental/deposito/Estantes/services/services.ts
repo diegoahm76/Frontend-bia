@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import type { AxiosResponse } from "axios";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
 import type { GetBandejas, GetEstantes, InfoDepositos, InfoEstantes, ListarDepositos, ListarSucursales, PostEstantes, PutMoverEstantes } from "../types/types";
@@ -23,12 +24,12 @@ export const search_estante = async ({
     orden_estante,
     nombre_deposito,
 }: any): Promise<AxiosResponse<ResponseServer<InfoEstantes[]>>> => {
+
     const url = `gestor/depositos-archivos/bandejaEstante/buscar-estante/?identificacion_estante=${String(
         identificacion_estante ?? ''
     )}&orden_estante=${String(
         orden_estante ?? ''
-    )}&nombre_deposito=${String(
-        nombre_deposito ?? '')}`;
+    )}&nombre_deposito=${typeof nombre_deposito === 'string' ? nombre_deposito : nombre_deposito?.value ?? ''}`;
     return await api.get<ResponseServer<InfoEstantes[]>>(url);
 };
 
