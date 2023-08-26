@@ -19,6 +19,7 @@ import FormInputController from '../../../../../components/partials/form/FormInp
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarBandejaScreen = () => {
+
     const { control: control_bandeja, reset, handleSubmit: handle_submit } = useForm<IObjBandeja>();
     const { control: control_estante } = useForm<IdEstanteDeposito>();
     const [bandeja, set_bandeja] = useState(false);
@@ -288,12 +289,14 @@ const AdministrarBandejaScreen = () => {
             )}
 
             {/* <Grid item xs={12} marginY={1}>
+
                 <ListadoBandejas
                     bandejas={selected_bandeja}
                     get_values={get_values}
                     handle_edit_click={handle_edit_click}
                 />
             </Grid> */}
+
             <Grid item xs={12} md={2}>
                 <FormButton
                     variant_button="contained"
@@ -309,6 +312,7 @@ const AdministrarBandejaScreen = () => {
             </Grid>
         </Grid>
     );
+
 };
 
 // eslint-disable-next-line no-restricted-syntax

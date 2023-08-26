@@ -119,7 +119,7 @@ import { Select_Alerta } from '../../interfaces/types';
                   shrink: true,
                 }}
                 name="cod_tipo_clase_alerta"
-                value={alertas_get.find(alerta_get => alerta_get.cod_clase_alerta === selectedOption)?.cod_categoria_clase_alerta ?? null}
+                value={alertas_get.find(alerta_get => alerta_get.cod_clase_alerta === selectedOption)?.cod_categoria_clase_alerta_display ?? null}
                 onChange={handletextchange}
               />
             </Grid>

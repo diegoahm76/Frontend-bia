@@ -17,6 +17,7 @@ import { ModalContextTCA } from '../../../context/ModalContextTca';
 import {
   set_catalog_TCA_action,
   set_catalog_trd_action,
+  set_mixed_tipologias,
   set_selected_item_from_catalogo_action,
   set_tipologias_NO_reservadas,
   set_tipologias_reservadas
@@ -43,8 +44,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
     useContext(ModalContextTCA);
 
   //* ------- HOOK USE_TCA DECLARATION -------------- */
-  const { reset_administrar_tca, setLoadTipologias } =
-    use_tca();
+  const { reset_administrar_tca, setLoadTipologias } = use_tca();
 
   //* redux states declararion
   const { tca_current } = useAppSelector((state) => state.tca_slice);
@@ -108,6 +108,13 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                     (item: any) => !item.reservada
                   );
 
+                  console.log('tipologias_reservadas,', tipologias_reservadas);
+                  console.log(
+                    'tipologias_NO_reservadas,',
+                    tipologias_NO_reservadas
+                  );
+
+                  dispatch(set_mixed_tipologias(res))
                   dispatch(set_tipologias_reservadas(tipologias_reservadas));
                   dispatch(
                     set_tipologias_NO_reservadas(tipologias_NO_reservadas)
