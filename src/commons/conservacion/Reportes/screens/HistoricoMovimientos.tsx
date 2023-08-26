@@ -16,8 +16,8 @@ import autoTable from 'jspdf-autotable';
 import { image_data2_1, image_data_1 } from "../../../recursoHidrico/estaciones/imagenes/imagenes";
 import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
-import { reporte_estado_actividad, reporte_evolucion_lote, reporte_mortalidad, reporte_plantas_sd } from "../thunks/SubsistemaConservacion";
 import BuscarPlantas from "./BuscarPlantas";
+import { historico_bajas, historico_cambios_etapa, historico_distribuciones, historico_ingreso_cuarentena, historico_levantamiento_cuarentena, historico_siembras, historico_traslados } from "../thunks/HistoricoMovimientos";
 
 const lista_reporte = [{ name: 'Movimientos de Bajas de Herramientas, Insumos y Semillas', value: 'MHIS' }, { name: 'Distribución de Despachos Entrantes a Viveros', value: 'DDEV' }, { name: 'Registros de Siembras', value: 'RES' }, { name: 'Cambio de Etapa de Material Vegetal', value: 'CEMV' }, { name: 'Ingreso a Cuarentena de Material Vegeta', value: 'ICMV' }, { name: 'Levantamiento de Cuarentena de Material Vegetal', value: 'LCMV' }, { name: 'Traslados Entre Viveros', value: 'TEV' }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -61,25 +61,39 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             set_lista_viveros(viveros_activos);
         })
     }
+    const historico_bajas_fc: () => void = () => {
+        dispatch(historico_bajas({ seleccion_vivero: 1, seleccion_planta: 309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+            set_reporte(response.data);
+        })
+    }
+    const historico_distribuciones_fc: () => void = () => {
+        dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta:'', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+            set_reporte(response.data);
 
-    const reporte_mortalidad_fc: () => void = () => {
-        dispatch(reporte_mortalidad({ seleccion_vivero, seleccion_planta: 309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        })
+    }
+    const historico_siembras_fc: () => void = () => {
+        dispatch(historico_siembras({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
-    const reporte_plantas_sd_fc: () => void = () => {
-        dispatch(reporte_plantas_sd({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
-            set_reporte(response.data);
-
-        })
-    }
-    const reporte_estado_actividad_fc: () => void = () => {
-        dispatch(reporte_estado_actividad({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+    const historico_cambios_etapa_fc: () => void = () => {
+        dispatch(historico_cambios_etapa({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
-    const reporte_evolucion_lote_fc: () => void = () => {
-        dispatch(reporte_evolucion_lote({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+    const historico_ingreso_cuarentena_fc: () => void = () => {
+        dispatch(historico_ingreso_cuarentena({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+            set_reporte(response.data);
+        })
+    }
+    const historico_levantamiento_cuarentena_fc: () => void = () => {
+        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+            set_reporte(response.data);
+        })
+    }
+    const historico_traslados_fc: () => void = () => {
+        dispatch(historico_traslados({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
@@ -116,17 +130,23 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         // eslint-disable-next-line new-cap
         set_doc(new jsPDF());
         set_doc_height(doc.internal.pageSize.getHeight());
-        if (seleccion_reporte === 'MP') {
-            reporte_mortalidad_fc();
+        if (seleccion_reporte === 'MHIS') {
+            historico_bajas_fc();
         }
-        if (seleccion_reporte === 'PSPD') {
-            reporte_plantas_sd_fc();
+        if (seleccion_reporte === 'DDEV') {
+            historico_distribuciones_fc();
         }
-        if (seleccion_reporte === 'EAP') {
-            reporte_estado_actividad_fc();
+        if (seleccion_reporte === 'CEMV') {
+            historico_siembras_fc();
         }
-        if (seleccion_reporte === 'EL') {
-            reporte_evolucion_lote_fc();
+        if (seleccion_reporte === 'ICMV') {
+            historico_cambios_etapa_fc();
+        }
+        if (seleccion_reporte === 'LCMV') {
+            // generar_reporte_el();
+        }
+        if (seleccion_reporte === 'TEV') {
+            // generar_reporte_el();
         }
     }
 
@@ -163,262 +183,144 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         return { reporte_seleccionado, title };
     }
 
-    const set_json_model: (data: any) => any = (data: any) => {
-        const json_return: any = [];
-        data.forEach((json: any) => {
-            json_return.push([{
-                "tipo_origen": "Donación",
-                "cantidad": json.entradas.cantidad_donacion !== null && json.entradas.cantidad_donacion !== undefined ? json.entradas.cantidad_donacion + ' Und' : '0 Und',
-                "cantidad_produccion": json.entradas.cantidad_donacion_produccion !== null && json.entradas.cantidad_donacion !== undefined ? json.entradas.cantidad_donacion + ' Und' : '0 Und',
-                "cantidad_distribucion": json.entradas.cantidad_donacion_distribucion !== null && json.entradas.cantidad_donacion !== undefined ? json.entradas.cantidad_donacion + ' Und' : '0 Und'
-            },
-            {
-                "tipo_origen": "Resarcimiento",
-                "cantidad": json.entradas.cantidad_resarcimiento !== null && json.entradas.cantidad_resarcimiento_distribucion !== undefined ? json.entradas.cantidad_resarcimiento_distribucion + ' Und' : '0 Und',
-                "cantidad_produccion": json.entradas.cantidad_resarcimiento_produccion !== null && json.entradas.cantidad_resarcimiento_distribucion !== undefined ? json.entradas.cantidad_resarcimiento_distribucion + ' Und' : '0 Und',
-                "cantidad_distribucion": json.entradas.cantidad_resarcimiento_distribucion !== null && json.entradas.cantidad_resarcimiento_distribucion !== undefined ? json.entradas.cantidad_resarcimiento_distribucion + ' Und' : '0 Und'
-            },
-            {
-                "tipo_origen": "Compensación",
-                "cantidad": json.entradas.cantidad_compensacion !== null && json.entradas.cantidad_compensacion_distribucion !== undefined ? json.entradas.cantidad_compensacion_distribucion + ' Und' : '0 Und',
-                "cantidad_produccion": json.entradas.cantidad_compensacion_produccion !== null && json.entradas.cantidad_compensacion_distribucion !== undefined ? json.entradas.cantidad_compensacion_distribucion + ' Und' : '0 Und',
-                "cantidad_distribucion": json.entradas.cantidad_compensacion_distribucion !== null && json.entradas.cantidad_compensacion_distribucion !== undefined ? json.entradas.cantidad_compensacion_distribucion + ' Und' : '0 Und',
-            },
-            {
-                "tipo_origen": "Compras / No Especificado",
-                "cantidad": json.entradas.cantidad_compras_no_especificado !== null && json.entradas.cantidad_compras_no_especificado_distribucion !== undefined ? json.entradas.cantidad_compras_no_especificado_distribucion + ' Und' : '0 Und',
-                "cantidad_produccion": json.entradas.cantidad_compras_no_especificado_produccion !== null && json.entradas.cantidad_compras_no_especificado_distribucion !== undefined ? json.entradas.cantidad_compras_no_especificado_distribucion + ' Und' : '0 Und',
-                "cantidad_distribucion": json.entradas.cantidad_compras_no_especificado_distribucion !== null && json.entradas.cantidad_compras_no_especificado_distribucion !== undefined ? json.entradas.cantidad_compras_no_especificado_distribucion + ' Und' : '0 Und'
-            }]
-
-            );
-        });
-        return json_return;
-    }
-
     const salir_entrada: () => void = () => {
         navigate('/home');
     }
 
     useEffect(() => {
         if (reporte.length > 0) {
-            if (seleccion_reporte === 'MP') {
-                generar_reporte_mortalidad();
+            if (seleccion_reporte === 'MHIS') {
+                generar_historico_bajas();
             }
-            if (seleccion_reporte === 'PSPD') {
-                generar_reporte_pspd();
+            if (seleccion_reporte === 'DDEV') {
+                generar_historico_distribuciones();
             }
-            if (seleccion_reporte === 'EAP') {
-                generar_reporte_eap();
+            if (seleccion_reporte === 'CEMV') {
+                // generar_reporte_eap();
             }
-            if (seleccion_reporte === 'EL') {
-                generar_reporte_el();
+            if (seleccion_reporte === 'ICMV') {
+                // generar_reporte_el();
+            }
+            if (seleccion_reporte === 'LCMV') {
+                // generar_reporte_el();
+            }
+            if (seleccion_reporte === 'TEV') {
+                // generar_reporte_el();
             }
         }
     }, [reporte]);
 
-    const generar_reporte_mortalidad: () => void = () => {
+    const generar_historico_bajas: () => void = () => {
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.text('Fecha', 16, 34);
+        doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+        doc.text('Número de baja', (doc.internal.pageSize.width - 60), 34);
         reporte.forEach((report: any) => {
-            // Cliclo
-            const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
-            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
-            doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text(nombre_vivero, 14, 41 + coordendas);
-            doc.setFont("Arial", "normal"); // establece la fuente en Arial
-            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
-            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
-            doc.line(30, 50 + coordendas, (doc.internal.pageSize.width - 30), 50 + coordendas);// Linea central de tabla
-            // Tabla
-            autoTable(doc, {
-                theme: 'plain',
-                head: [['Número de registros', 'Cantidad mortalidad', 'Mortalidad durante cuarentena']],
-                columns: [{ header: 'Número de registros', dataKey: 'numero_registros' }, { header: 'Cantidad mortalidad', dataKey: 'cantidad_mortalidad' }, { header: 'Mortalidad durante cuarentena', dataKey: 'mortalidad_cuarentena' }],
-                body: [{ 'numero_registros': report.numero_registros, 'cantidad_mortalidad': report.cantidad_mortalidad + ' Und', 'mortalidad_cuarentena': (report.mortalidad_cuarentena !== null && report.mortalidad_cuarentena !== undefined) ? report.mortalidad_cuarentena + ' Und' : '0 Und' }],
-                styles: { halign: 'center' },
-                startY: 43 + coordendas,
-                margin: 32
-            })
-            doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
-            coordendas = coordendas + 25;
             if ((43 + coordendas) > doc_height) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 coordendas = 0;
             }
-        });
-    }
-    const generar_reporte_pspd: () => void = () => {
-        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
-        let coordendas = 0;
-        let page_position = 1;
-        reporte.forEach((report: any) => {
             // Cliclo
             const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text(nombre_vivero, 14, 41 + coordendas);
+            doc.text(dayjs(report.fecha_baja).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.text(nombre_vivero, ((doc.internal.pageSize.width/2)-21), 41 + coordendas);
+            doc.text(report.nro_baja_por_tipo.toString(), (doc.internal.pageSize.width - 50), 41 + coordendas, { align: 'right' });
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
-            doc.line(30, 50 + coordendas, (doc.internal.pageSize.width - 30), 50 + coordendas);// Linea central de tabla
+            doc.line(60, 50 + coordendas, (doc.internal.pageSize.width - 60), 50 + coordendas);// Linea central de tabla
             // Tabla
             autoTable(doc, {
                 theme: 'plain',
-                head: [['Número de solicitudes', 'Cantidad total solicitada', 'Cantidad total despachada']],
-                columns: [{ header: 'Número de solicitudes', dataKey: 'numero_solicitudes' }, { header: 'Cantidad total solicitada', dataKey: 'cantidad_total_solicitada' }, { header: 'Cantidad total despachada', dataKey: 'cantidad_total_despachada' }],
-                body: [{ 'numero_solicitudes': report.numero_solicitudes, 'cantidad_total_solicitada': report.cantidad_total_solicitada + ' Und', 'cantidad_total_despachada': (report.cantidad_total_despachada !== null && report.cantidad_total_despachada !== undefined) ? report.cantidad_total_despachada + ' Und' : '0 Und' }], styles: { halign: 'center' },
+                columns: [{ header: 'Bien implicado', dataKey: 'numero_registros' }, { header: 'Cantidad dada de baja', dataKey: 'cantidad_mortalidad' }],
+                body: [{ 'numero_registros': 'Semilla de girasol', 'cantidad_mortalidad': '30 Kg' + ' Und'}],
+                styles: { halign: 'center' },
                 startY: 43 + coordendas,
-                margin: 32
+                margin: 60
             })
             doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
             coordendas = coordendas + 25;
-            if ((43 + coordendas) > doc_height) {
-                page_position = page_position + 1;
-                nueva_pagina(doc, reporte_titulo.title, page_position);
-                coordendas = 0;
-            }
         });
+        set_visor(doc.output('datauristring'));
     }
-    const generar_reporte_eap: () => void = () => {
+
+    const generar_historico_distribuciones: () => void = () => {
+        const page = doc.internal.pageSize.getHeight();
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
         let coordendas = 0;
         let page_position = 1;
-        const report_data = set_json_model(reporte);
-        reporte.forEach((report: any, index: number) => {
-            const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
-            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
-            doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text(nombre_vivero, 14, 41 + coordendas);
-            doc.setFont("Arial", "normal"); // establece la fuente en Arial
-            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea vertical
-            doc.line(10, 50 + coordendas, 15, 50 + coordendas);// Linea horizontal
-            doc.text('Entradas', 21, 51 + coordendas);
-            doc.line(37, 50 + coordendas, (doc.internal.pageSize.width - 20), 50 + coordendas);// Linea superior central
-            doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.setFontSize(11);
-            doc.text('Etapa inicial', (doc.internal.pageSize.width - 75), 54 + coordendas);
-            doc.setFontSize(12);
-            // -----------------------------------------------------------------------------
-            doc.line(17, 50 + coordendas, 17, 135 + coordendas);// Linea vertical
-            doc.line(20, 60 + coordendas, (doc.internal.pageSize.width - 30), 60 + coordendas);// Linea central de tabla
-            doc.line((doc.internal.pageSize.width - 20), 50 + coordendas, (doc.internal.pageSize.width - 20), 135 + coordendas);// Linea horizontal
-            doc.line(17, 50 + coordendas, 20, 50 + coordendas);// Linea horizontal pequeña
-            autoTable(doc, {
-                theme: 'plain',
-                columns: [
-                    { header: 'Tipo de origen', dataKey: 'tipo_origen' },
-                    { header: 'Cantidad', dataKey: 'cantidad' },
-                    { header: 'Producción', dataKey: 'cantidad_produccion' },
-                    { header: 'Distribución', dataKey: 'cantidad_distribucion' }
-                ],
-                body: report_data[index],
-                styles: { halign: 'center' },
-                startY: 53 + coordendas,
-                margin: 32
-            });
-            doc.line(34, 98.5 + coordendas, (doc.internal.pageSize.width - 20), 98.5 + coordendas);// Linea superior central
-            doc.line(34, 99.5 + coordendas, (doc.internal.pageSize.width - 20), 99.5 + coordendas);// Linea superior central
-            doc.line(17, 98.5 + coordendas, 21, 98.5 + coordendas);// Linea superior central
-            doc.line(17, 99.5 + coordendas, 21, 99.5 + coordendas);// Linea superior central
-            doc.text('Salidas', 21, 100 + coordendas);
-            doc.line(50, 107 + coordendas, (doc.internal.pageSize.width - 48), 107 + coordendas);// Linea central de tabla
-            autoTable(doc, {
-                theme: 'plain',
-                columns: [
-                    { header: 'Unidades despachadas', dataKey: 'unidades_despachadas' },
-                    { header: 'Unidades Mortalidad', dataKey: 'unidades_mortalidad' }
-                ],
-                body: [{
-                    'unidades_despachadas': (report.salidas.unidades_despachadas !== null && report.salidas.unidades_despachadas !== undefined) ? report.salidas.unidades_despachadas + ' Und' : '0 Und',
-                    'unidades_mortalidad': (report.salidas.unidades_mortalidad !== null && report.salidas.unidades_mortalidad !== undefined) ? report.salidas.unidades_mortalidad + ' Und' : '0 Und'
-                }
-                ],
-                styles: { halign: 'center' },
-                startY: 100 + coordendas,
-                margin: 32
-            });
-            doc.line(41, 116.5 + coordendas, (doc.internal.pageSize.width - 20), 116.5 + coordendas);// Linea superior central
-            doc.line(41, 117.5 + coordendas, (doc.internal.pageSize.width - 20), 117.5 + coordendas);// Linea superior central
-            doc.line(17, 116.5 + coordendas, 21, 116.5 + coordendas);// Linea superior central
-            doc.line(17, 117.5 + coordendas, 21, 117.5 + coordendas);// Linea superior central
-            doc.text('Actualidad', 21, 118 + coordendas);
-            doc.line(55, 127 + coordendas, (doc.internal.pageSize.width - 56), 127 + coordendas);// Linea central de tabla
-            autoTable(doc, {
-                theme: 'plain',
-                columns: [
-                    { header: 'Producción', dataKey: 'cantidad_produccion' },
-                    { header: 'Distribución', dataKey: 'cantidad_distribucion' }
-                ],
-                body: [{
-                    'cantidad_produccion': (report.actualidad.cantidad_produccion !== null && report.actualidad.cantidad_produccion !== undefined) ? report.actualidad.cantidad_produccion + ' Und' : '0 Und',
-                    'cantidad_distribucion': (report.actualidad.cantidad_distribucion !== null && report.actualidad.cantidad_distribucion !== undefined) ? report.actualidad.cantidad_distribucion + ' Und' : '0 Und'
-                }
-                ],
-                styles: { halign: 'center' },
-                startY: 120 + coordendas,
-                margin: 32
-            });
-            doc.line(17, 135 + coordendas, (doc.internal.pageSize.width - 20), 135 + coordendas);// 30 Linea inferior
-            coordendas = coordendas + 100;
-            if ((120 + coordendas) > doc_height) {
-                page_position = page_position + 1;
-                nueva_pagina(doc, reporte_titulo.title, page_position);
-                coordendas = 0;
-            }
-        });
-    }
-    const generar_reporte_el: () => void = () => {
-        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
-        let coordendas = 0;
-        let page_position = 1;
-        let coordenada_y = 40;
+        let coordenada_y = 30;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.text('Fecha', 16, 34);
+        doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+        doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
         reporte.forEach((report: any) => {
-            console.log('coordendasY: ', coordenada_y)
-            console.log('coordendas: ', coordendas)
-            const page = doc.internal.pageSize.getHeight();
-            coordenada_y = report.bienes_consumidos.length === 1 ? (60 + coordendas + 20) : report.bienes_consumidos.length === 2 ? (60 + coordendas + 30) : (60 + coordendas + (report.bienes_consumidos.length * 10));
-            if (coordenada_y >= (page - 50) || coordendas >= (page - 50)) {
+            const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
+            const reporte_dos = jso_object_detalle(report.bienes_distribuidos, nombre_vivero);
+            // Cliclo
+            coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
+            if (coordenada_y >= (page - 35) || coordendas >= (page - 35)) {
+                doc.text('Fecha', 16, 34);
+                doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+                doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 coordendas = 0;
-                coordenada_y = 40;
+                coordenada_y = 30;
             }
-            doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text(dayjs(report.fecha_incidencia).format('DD/MM/YYYY'), 14, 41 + coordendas);
-            doc.setFont("Arial", "normal"); // establece la fuente en Arial
-            const fecha_registro = 'Registrado en el sistema: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY');
-            doc.text(fecha_registro, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_registro)) - 5), 41 + coordendas);
+            doc.text(dayjs(report.fecha_baja).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.text(nombre_vivero, ((doc.internal.pageSize.width/2)-21), 41 + coordendas);
+            doc.text(report.numero_despacho.toString(), (doc.internal.pageSize.width - 50), 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
-            doc.line(50, 50 + coordendas, (doc.internal.pageSize.width - 48), 50 + coordendas);// Linea central de tabla
-            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.line(30, 50 + coordendas, (doc.internal.pageSize.width - 40), 50 + coordendas);// Linea central de tabla
             // Tabla
             autoTable(doc, {
                 theme: 'plain',
-                columns: [{ header: 'Consecutivo', dataKey: 'consecutivo' }, { header: 'Nombre', dataKey: 'nombre_incidencia' }, { header: 'Tipo', dataKey: 'tipo_incidencia' }],
-                body: [{ 'consecutivo': report.consecutivo, 'nombre_incidencia': report.nombre_incidencia, 'tipo_incidencia': report.tipo_incidencia }], styles: { halign: 'center' },
-                startY: 43 + coordendas,
-                margin: 32
-            });
-            doc.line(60, 67 + coordendas, (doc.internal.pageSize.width - 47), 67 + coordendas);// Linea central de tabla
-            autoTable(doc, {
-                theme: 'plain',
-                columns: [{ header: 'Bienes consumidos', dataKey: 'nombre' }, { header: 'Cantidad', dataKey: 'cantidad_consumida', title: 'lt' }],
-                body: report.bienes_consumidos,
+                columns: [{ header: 'Bien implicado', dataKey: 'nombre_bien' }, 
+                          { header: 'Cantidad', dataKey: 'cantidad_asignada' }, 
+                          { header: 'Vivero destino', dataKey: 'vivero_destino' }, 
+                          { header: 'Etapa a la que ingresa', dataKey: 'etapa_ingresa' }],
+                          body: reporte_dos,
                 styles: { halign: 'center' },
-                startY: 60 + coordendas,
-                margin: 32
+                startY: 43 + coordendas,
+                margin: 30
             });
-            // if(coordendas !== 0 && coordenada_y !== 40)
-            coordendas = coordenada_y - 30;
+            if(coordenada_y !== 30){
+                doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                coordendas = coordenada_y - 30;
+            }
+            else{
+                if(page !== 1){
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+                    coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
+                    doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                }
+            }
         });
+        set_visor(doc.output('datauristring'));
     }
+    const jso_object_detalle: (array: any, nombre_vivero: string) => any = (array: any, nombre_vivero: string) => {
+        let resultado_json: any = [];
+        array.forEach((data: any) => {
+            resultado_json = [...resultado_json,{'nombre_bien': data.nombre_bien, 
+            'cantidad_asignada': data.cantidad_asignada + ' ' + data.unidad_medida,
+            'vivero_destino': nombre_vivero,
+            'etapa_ingresa':data.etapa_ingresa,
+            }]
+        });
+        return resultado_json;
+    }
+
     const realizar_analistica: () => void = () => {
 
     }
