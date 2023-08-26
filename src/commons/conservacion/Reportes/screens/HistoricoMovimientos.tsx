@@ -78,7 +78,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         })
     }
     const historico_cambios_etapa_fc: () => void = () => {
-        dispatch(historico_cambios_etapa({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
@@ -136,8 +136,11 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         if (seleccion_reporte === 'DDEV') {
             historico_distribuciones_fc();
         }
-        if (seleccion_reporte === 'CEMV') {
+        if (seleccion_reporte === 'RES') {
             historico_siembras_fc();
+        }
+        if (seleccion_reporte === 'CEMV') {
+            historico_cambios_etapa_fc();
         }
         if (seleccion_reporte === 'ICMV') {
             historico_cambios_etapa_fc();
@@ -196,7 +199,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 generar_historico_distribuciones();
             }
             if (seleccion_reporte === 'CEMV') {
-                // generar_reporte_eap();
+                generar_historico_cambios_etapa();
             }
             if (seleccion_reporte === 'ICMV') {
                 // generar_reporte_el();
@@ -246,6 +249,47 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             })
             doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
             coordendas = coordendas + 25;
+        });
+        set_visor(doc.output('datauristring'));
+    }
+
+    const generar_historico_cambios_etapa: () => void = () => {
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        let coordendas = 0;
+        let page_position = 1;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.setFont("Arial", "bold"); // establece la fuente en Arial
+        doc.text('Fecha', 14, 34);
+        doc.text('Vivero', 40, 34);
+        doc.text('Material vegetal', 80, 34);
+        doc.text('Etapa origen', 120, 34);
+        doc.text('Etapa destino', 162, 34);
+        doc.text('Lote', 193, 34);
+        reporte.forEach((report: any) => {
+            if ((43 + coordendas) > (doc_height-20)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                coordendas = 0;
+            }
+            // Cliclo
+            const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
+            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.setFontSize(11);
+            doc.text(dayjs(report.fecha_cambio).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.text(nombre_vivero, 40, 41 + coordendas);
+            doc.text(report.nombre_bien, 80, 41 + coordendas);
+            doc.text(report.etapa_origen, 120, 41 + coordendas);
+            doc.text(report.etapa_destino, 162, 41 + coordendas,{isSymmetricSwapping: true, maxWidth: 50});
+            doc.text(report.nro_lote.toString(), 196, 41 + coordendas);
+            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
+            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
+            doc.setFont("Arial", "bold"); // establece la fuente en Arial
+            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
+            coordendas = coordendas + 20;
         });
         set_visor(doc.output('datauristring'));
     }
