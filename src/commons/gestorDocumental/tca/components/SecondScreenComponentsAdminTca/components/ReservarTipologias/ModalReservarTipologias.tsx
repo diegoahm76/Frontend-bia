@@ -234,8 +234,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
                       autoHeight
-                      /*  rows={
-                        tipologias_NO_resevadas
+                      rows={
+                        // tipologias_NO_resevadas
                         tipologias_NO_resevadas.filter(
                           (item: any) =>
                             !tipologias_resevadas.some(
@@ -244,9 +244,9 @@ export const ModalReservarTipologias = (): JSX.Element => {
                                 item.id_tipologia_documental
                             )
                         ) || tipologias_NO_resevadas
-                      } */
+                      }
 
-                      rows={
+                     /* rows={
                         tipologias_NO_resevadas?.length > 0
                           ? tipologias_NO_resevadas?.filter((item: any) => {
                               return tipologias_resevadas?.every(
@@ -259,7 +259,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                               );
                             })
                           : tipologias_resevadas
-                      }
+                      } */
                       columns={columns_tipologias_NO_restringidas}
                       pageSize={5}
                       rowsPerPageOptions={[5]}
@@ -276,22 +276,22 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
                       autoHeight
-                      /* rows={tipologias_resevadas?.filter((item: any) => {
-                        return !tipologias_NO_resevadas?.some(
+                      rows={tipologias_resevadas?.filter((item: any) => {
+                        return tipologias_NO_resevadas?.some(
                           (element: any) => {
                             return (
-                              element?.id_tipologia_documental ===
+                              element?.id_tipologia_documental !==
                               item?.id_tipologia_documental
                             );
                           }
                         );
-                      })} */
+                      })}
                       // rows={tipologias_resevadas}
 
-                      rows={
+                    /*  rows={
                         tipologias_NO_resevadas?.length > 0
-                          ? tipologias_NO_resevadas?.filter((item: any) => {
-                              return tipologias_resevadas?.some(
+                          ? tipologias_resevadas?.filter((item: any) => {
+                              return tipologias_NO_resevadas?.some(
                                 (element: any) => {
                                   return (
                                     element?.id_tipologia_documental ===
@@ -301,7 +301,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                               );
                             })
                           : tipologias_resevadas
-                      }
+                      } */
                       columns={colums_tipologias_restringidas}
                       pageSize={5}
                       rowsPerPageOptions={[5]}
