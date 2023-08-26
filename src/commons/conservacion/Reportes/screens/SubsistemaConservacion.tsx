@@ -449,8 +449,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         let page_position = 1;
         let coordenada_y = 40;
         reporte.forEach((report: any) => {
-            console.log('coordendasY: ', coordenada_y)
-            console.log('coordendas: ', coordendas)
             const page = doc.internal.pageSize.getHeight();
             coordenada_y = report.bienes_consumidos.length === 1 ? (60 + coordendas + 20) : report.bienes_consumidos.length === 2 ? (60 + coordendas + 30) : (60 + coordendas + (report.bienes_consumidos.length * 10));
             if (coordenada_y >= (page - 50) || coordendas >= (page - 50)) {

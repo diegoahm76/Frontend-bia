@@ -31,7 +31,7 @@ export const historico_bajas: any = (filtros: {seleccion_vivero: number|string,s
   };
 };
 
-export const historico_distribuciones: any = (filtros: {seleccion_vivero: number|string,seleccion_planta: number,fecha_desde: string,fecha_hasta: string}) => {
+export const historico_distribuciones: any = (filtros: {seleccion_vivero: number|string,seleccion_planta: number|string,fecha_desde: string,fecha_hasta: string}) => {
   return async () => {
     try {
       const { data } = await api.get(`conservacion/analitica/historico-distribuciones/get/?id_vivero=${filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}`);
