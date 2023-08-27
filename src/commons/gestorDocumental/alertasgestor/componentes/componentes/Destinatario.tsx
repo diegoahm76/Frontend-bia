@@ -18,7 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { BuscadorPersona } from '../../../../../components/BuscadorPersona';
 import { control_error, control_success } from '../../utils/control_error_or_success';
 import { Alertas, Persona, Props, SelectItem, UnidadOrganizacional } from '../../interfaces/types';
-import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, } from '@mui/material';
+import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
 
 
 export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
@@ -184,6 +184,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             control_error("Error no guardado ");
             set_persona(undefined);
         }
+        set_persona(undefined);
         set_loading(false);
     };
     useEffect(() => {
@@ -232,10 +233,10 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             <Grid item marginTop={-2} xs={12}>
                 <Title title="Destinatario" />
             </Grid>
-            <Grid   container
-          item
-          // justifyContent="center"
-          spacing={2}>
+            <Grid container
+                item
+                // justifyContent="center"
+                spacing={2}>
 
                 {/* <Button
               variant="contained"
@@ -248,13 +249,13 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             >
               A lider de unidad
             </Button> */}
-                <Grid item> 
+                <Grid item>
                     <Button variant="contained" color="primary" onClick={handle_selectlider}>  Lider de unidad</Button>
                 </Grid>
-                <Grid item> 
+                <Grid item>
                     <Button variant="contained" color="primary" onClick={handle_selectperfil}>  Perfil</Button>
                 </Grid>
-                <Grid item> 
+                <Grid item>
                     <Button variant="contained" color="primary" onClick={handle_selectbuscar}>  BuscadorPersona</Button>
                 </Grid>
             </Grid>
@@ -291,7 +292,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                 </Grid>
                 </>
             )}
-            {selected_button === 'buscador' && (
+            {/* {selected_button === 'buscador' && (
                 <Grid item xs={12}>
                     <BuscadorPersona
                         onResult={(data) => {
@@ -299,10 +300,48 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                         }}
                     />
                 </Grid>
-            )}
+                
+            )} */}
 
-            {/* <>{persona?.primer_nombre}</>
-            <>{persona?.id_persona}</> */}
+{selected_button === 'buscador' && (
+    <>
+        <Grid item xs={12}>
+            <BuscadorPersona
+                onResult={(data) => {
+                    void on_result(data);
+                }}
+            />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+            <TextField
+                label="Primer Nombre"
+                variant="outlined"
+                fullWidth
+                size="small"
+                disabled
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                value={persona?.primer_nombre}
+            />
+        </Grid>
+    </>
+)}
+            {/* <Grid item xs={12}  sm={3}> 
+            <TextField
+                label="Primer Nombre"
+                variant="outlined"
+                fullWidth
+                size="small" disabled
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                //   onChange={onChange}
+                value={persona?.primer_nombre}
+            /> </Grid> */}
+
+                {/* <>{persona?.primer_nombre}</> */}
+            {/* <>{persona?.id_persona}</> */}
             <Grid item xs={12}  >
                 <DataGrid
                     density="compact"
