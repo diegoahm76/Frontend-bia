@@ -24,13 +24,21 @@ interface UserContext {
   id_estante: number | null;
   set_id_estante: (value: number | null) => void;
 
+  // * orden estantes
+  orden: number | null;
+  set_orden: (value: number | null) => void;
+  nuevo_orden: number | null;
+  set_nuevo_orden: (value: number | null) => void;
+
   // * select
   sucusal_selected: ValueProps[];
   depositos_selected: ValueProps[];
   depositos_selected_mover_estante: ValueProps[];
+  nuevo_orden_estantes_selected: ValueProps[];
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
   set_depositos_selected_mover_estante: (value: ValueProps[]) => void;
+  set_nuevo_orden_estantes_selected: (value: ValueProps[]) => void;
 
   // * rows
   rows_estantes: GetEstantes[];
@@ -56,13 +64,21 @@ export const DataContext = createContext<UserContext>({
   id_estante: null,
   set_id_estante: () => {},
 
+  // *orden estantes
+  orden: null,
+  set_orden: () => {},
+  nuevo_orden: null,
+  set_nuevo_orden: () => {},
+
   // * select
   sucusal_selected: [],
   depositos_selected: [],
   depositos_selected_mover_estante: [],
+  nuevo_orden_estantes_selected: [],
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
   set_depositos_selected_mover_estante: () => {},
+  set_nuevo_orden_estantes_selected: () => {},
 
   // * rows
   rows_estantes: [],
@@ -90,6 +106,11 @@ export const UserProvider = ({
   const [id_deposito, set_id_deposito] = React.useState<number | null>(null);
   const [id_estante, set_id_estante] = React.useState<number | null>(null);
 
+  // * orden estantes
+  const [orden, set_orden] = React.useState<number | null>(null);
+  const [nuevo_orden, set_nuevo_orden] = React.useState<number | null>(null);
+
+
   // * select
   const [sucusal_selected, set_sucusal_selected] = React.useState<ValueProps[]>(
     []
@@ -97,6 +118,8 @@ export const UserProvider = ({
   const [depositos_selected, set_depositos_selected] = React.useState<
     ValueProps[]
   >([]);
+  const [nuevo_orden_estantes_selected, set_nuevo_orden_estantes_selected] =
+    React.useState<ValueProps[]>([]);
 
   const [
     depositos_selected_mover_estante,
@@ -167,6 +190,13 @@ export const UserProvider = ({
           })
         );
         set_rows_estantes(data_estantes);
+
+        const data_selected: any[] = response.map((item: GetEstantes) => ({
+          value: item.orden_ubicacion_por_deposito ?? '',
+          label: item.orden_ubicacion_por_deposito ?? '',
+          // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+        }));
+        set_nuevo_orden_estantes_selected(data_selected);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -184,6 +214,12 @@ export const UserProvider = ({
           })
         );
         set_rows_bandejas(data_bandejas);
+        const data_selected: any[] = response.map((item: GetBandejas) => ({
+          value: item.orden_ubicacion_por_estante ?? '',
+          label: item.orden_ubicacion_por_estante ?? '',
+          // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+        }));
+        set_nuevo_orden_estantes_selected(data_selected);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -196,13 +232,20 @@ export const UserProvider = ({
     set_id_deposito,
     id_estante,
     set_id_estante,
+    // * orden estantes
+    orden,
+    set_orden,
+    nuevo_orden,
+    set_nuevo_orden,
     // * select
     sucusal_selected,
     depositos_selected,
     depositos_selected_mover_estante,
+    nuevo_orden_estantes_selected,
     set_depositos_selected,
     set_sucusal_selected,
     set_depositos_selected_mover_estante,
+    set_nuevo_orden_estantes_selected,
     // * rows
     rows_estantes,
     set_rows_estantes,

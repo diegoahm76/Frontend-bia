@@ -4,10 +4,31 @@ import { Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useEstantesHook } from '../hooks/useEstantesHook';
+import { MoverEstantes } from './MoverEstantes';
+import { useAppSelector } from '../../../../../hooks';
+import { useContext, useEffect } from 'react';
+import { DataContext } from '../context/context';
+import Select from 'react-select';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarEstante: React.FC = () => {
-  const { control_estantes, errors_estantes } = useEstantesHook();
+  const {
+    control_estantes,
+    errors_estantes,
+    reset_estantes, // * habilitar campos orden
+  } = useEstantesHook();
+
+  const { data_estantes } = useAppSelector((state) => state.deposito);
+
+  const { nuevo_orden_estantes_selected } = useContext(DataContext);
+
+  useEffect(() => {
+    reset_estantes({
+      identificacion_por_deposito: data_estantes?.identificacion_por_deposito,
+      orden: data_estantes?.orden_ubicacion_por_deposito,
+      nuevo_orden: '',
+    });
+  }, [data_estantes]);
 
   return (
     <>
@@ -27,7 +48,7 @@ export const SeleccionarEstante: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Administración de estantes" />
+          <Title title="Edición de estantes" />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller
@@ -41,7 +62,7 @@ export const SeleccionarEstante: React.FC = () => {
                 label="Identificación"
                 variant="outlined"
                 value={value}
-                disabled={false}
+                disabled={true}
                 required={true}
                 onChange={onChange}
                 error={!!errors_estantes.identificacion_por_deposito}
@@ -78,33 +99,62 @@ export const SeleccionarEstante: React.FC = () => {
             Cambiar orden
           </Button>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={3}
+          // sx={{
+          //   marginTop: '25px',
+          //   marginBottom: '10px',
+          // }}
+        >
           <Controller
             name="nuevo_orden"
             control={control_estantes}
             rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                fullWidth
-                size="small"
-                // select
-                placeholder="Nuevo Orden"
-                label="Nuevo Orden"
-                variant="outlined"
-                value={value}
-                disabled={true}
-                required={false}
-                onChange={onChange}
-              />
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <div>
+                <Select
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      height: '100%',
+                      minHeight: '100%',
+                    }),
+                  }}
+                  value={value}
+                  onChange={(value) => {
+                    console.log(value);
+                    onChange(value);
+                  }}
+                  options={nuevo_orden_estantes_selected}
+                  placeholder="Seleccionar"
+                  isDisabled={true}
+                />
+                <label>
+                  <small
+                    style={{
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      fontWeight: 'thin',
+                      fontSize: '0.75rem',
+                      marginTop: '0.25rem',
+                      // marginLeft: '0.25rem'
+                    }}
+                  >
+                    Nuevo orden
+                    {/* {trd_current != null
+                            ? `CCD seleccionado`
+                            : `CDD's no usados en otro TRD`} */}
+                  </small>
+                </label>
+              </div>
             )}
           />
         </Grid>
         <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <Button variant="outlined" color="primary" disabled={true}>
-              Mover estante
-            </Button>
-          </Grid>
+          <MoverEstantes />
+          <Grid item></Grid>
         </Grid>
       </Grid>
     </>

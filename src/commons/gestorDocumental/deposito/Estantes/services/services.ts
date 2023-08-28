@@ -77,6 +77,11 @@ export const put_mover_estante = async (identificacion: string, data: PutMoverEs
     return response.data;
 }
 
+export const put_editar_estante = async (id: number, data: any): Promise<any> => {
+    const response = await api.put(`gestor/depositos-archivos/estanteDeposito/actualizar-estante/${id}/`, data);
+    return response.data;
+}
+
 
 // ! ----------------------------------------------- [ DELETE ] -----------------------------------------------
 export const delete_estante = async (id: number): Promise<any> => {
