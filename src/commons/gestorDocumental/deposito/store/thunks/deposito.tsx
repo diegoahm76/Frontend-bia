@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
@@ -182,10 +183,12 @@ export const eliminar_deposito = (
 };
 
 // listar bandejas
-export const get_bandejas = (): any => {
+export const get_bandejas_id = (
+    id: number | null,
+): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('gestor/depositos-archivos/bandejaEstante/listar-bandejas-por-estante/1/');
+            const { data } = await api.get(`gestor/depositos-archivos/bandejaEstante/listar-bandejas-por-estante/${id ?? ''}/`);
 
             if (data.success === true) {
                 dispatch(set_bandejas(data.data));

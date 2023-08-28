@@ -1,21 +1,23 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
 import { useNavigate } from "react-router-dom";
 import type { IObjBandeja, IdEstanteDeposito } from "../../interfaces/deposito";
 import FormButton from "../../../../../components/partials/form/FormButton";
-
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
-// import ListadoBandejas from "../components/bandejasExistentes";
-import { initial_state_bandeja } from "../../store/slice/indexDeposito";
+import { initial_state_bandeja, } from "../../store/slice/indexDeposito";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks";
-import { crear_bandeja, editar_bandeja } from "../../store/thunks/deposito";
+import { crear_bandeja, editar_bandeja, get_bandejas_id } from "../../store/thunks/deposito";
 import FormInputController from "../../../../../components/partials/form/FormInputController";
+import FormSelectController from "../../../../../components/partials/form/FormSelectController";
+import ListadoBandejas from "../components/bandejasExistentes";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarBandejaScreen = () => {
@@ -30,23 +32,31 @@ const AdministrarBandejaScreen = () => {
     const [selected_bandeja, set_selected_bandeja] = useState<IObjBandeja>(
         initial_state_bandeja
     );
+    const [select_orden, set_select_orden] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handle_orden = () => {
+        set_select_orden(true);
+    };
     const dispatch = useAppDispatch();
-    const { deposito_estante } = useAppSelector(
+    const { deposito_estante, bandejas } = useAppSelector(
         (state: { deposito: any }) => state.deposito
     );
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
     const handle_bandeja = () => {
+        set_selected_bandeja(initial_state_bandeja)
         set_bandeja(true);
     };
 
-    console.log(deposito_estante, "sssss");
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    // const handle_edit_click = (bandeja: IObjBandeja) => {
-    //     set_selected_bandeja(bandeja);
-    //     set_action("Editar");
-    // };
+
+
+    const handle_edit_click = (bandeja: IObjBandeja) => {
+        set_selected_bandeja(bandeja);
+        set_bandeja(true);
+        set_action("Editar");
+    };
 
     useEffect(() => {
+        console.log(selected_bandeja)
         reset(selected_bandeja);
     }, [selected_bandeja]);
 
@@ -63,26 +73,32 @@ const AdministrarBandejaScreen = () => {
         }
     }, []);
 
-    console.log(deposito_estante?.nombre_deposito);
+
     const on_submit = (data: IObjBandeja): void => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (action === "Editar" && selected_bandeja) {
             const data_edit = {
                 ...selected_bandeja,
                 ...data,
+
             };
+            console.log(data_edit)
             void dispatch(
-                editar_bandeja(selected_bandeja.id_estante_deposito, data_edit)
+                editar_bandeja(selected_bandeja.id_bandeja_estante, data_edit)
             );
         } else {
             const data_aux = {
                 ...data,
+                id_estante_deposito: deposito_estante.id_estante_deposito
+
             };
             void dispatch(crear_bandeja(data_aux));
         }
 
         set_selected_bandeja(initial_state_bandeja);
         set_action("Guardar");
+        console.log(deposito_estante)
+        void dispatch(get_bandejas_id(deposito_estante.id_estante_deposito))
     };
 
     return (
@@ -154,44 +170,84 @@ const AdministrarBandejaScreen = () => {
                         boxShadow: "0px 3px 6px #042F4A26",
                     }}
                 >
-                    <Title title="BANDEJAS" />
-                    <Grid item xs={12} sm={6}>
-                        <Controller
-                            name="identificacion_por_estante"
-                            control={control_bandeja}
-                            defaultValue=""
-                            // rules={{ required: false }}
-                            render={({
-                                field: { onChange, value },
-                                fieldState: { error },
-                            }) => (
-                                <TextField
-                                    // margin="dense"
-                                    fullWidth
-                                    label="Identificación"
-                                    size="small"
-                                    variant="outlined"
-                                    value={value}
-                                    InputLabelProps={{ shrink: true }}
-                                    onChange={(e) => {
-                                        onChange(e.target.value);
-                                        // console.log(e.target.value);
-                                    }}
-                                    error={!(error == null)}
+                    <Title title="BANDEJA" />
+
+
+                    <FormInputController
+                        xs={12}
+                        md={3}
+                        margin={0}
+                        control_form={control_bandeja}
+                        control_name="identificacion_por_estante"
+                        default_value=''
+                        rules={{}}
+                        type="text"
+                        disabled={false}
+                        helper_text=""
+                        hidden_text={null}
+                        label={"Identificación"}
+                    />
+                    <FormInputController
+                        xs={12}
+                        md={2}
+                        margin={0}
+                        control_form={control_bandeja}
+                        control_name="orden_ubicacion_por_estante"
+                        default_value=''
+                        rules={{}}
+                        type="text"
+                        disabled={false}
+                        helper_text=""
+                        hidden_text={null}
+                        label={"Órden"}
+                    />
+
+                    {selected_bandeja.id_bandeja_estante !== null &&
+                        <>
+
+                            <Grid item xs={12} sm={4}>
+                                <Button
+                                    variant="contained"
+                                    onClick={handle_orden}
+                                    disabled={false}
+                                >
+                                    Cambiar órden
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                                <FormSelectController
+                                    xs={12}
+                                    md={4}
+                                    control_form={control_bandeja}
+                                    control_name={'orden_ubicacion_por_estante'}
+                                    default_value=''
+                                    rules={{}}
+                                    label='Nuevo órden'
+                                    disabled={!select_orden}
+                                    helper_text=''
+                                    select_options={bandejas}
+                                    option_label='orden_ubicacion_por_estante'
+                                    option_key='orden_ubicacion_por_estante'
+                                    multiple={false}
+                                    hidden_text={false}
+                                    auto_focus={false}
                                 />
-                            )}
-                        />
-                    </Grid>
+                            </Grid>
+
+                        </>
+                    }
+
+
+
                 </Grid>
             )}
 
-            {/* <Grid item xs={12} marginY={1}>
+            <Grid item xs={12} marginY={1}>
                 <ListadoBandejas
-                    bandejas={selected_bandeja}
-                    get_values={get_values}
+
                     handle_edit_click={handle_edit_click}
                 />
-            </Grid> */}
+            </Grid>
             <Grid item xs={12} md={2}>
                 <FormButton
                     variant_button="contained"
