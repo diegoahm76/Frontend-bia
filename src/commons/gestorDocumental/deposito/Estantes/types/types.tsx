@@ -53,7 +53,7 @@ export interface ListarDepositos {
 }
 export interface GetEstantes {
   id_estante_deposito?: number | null;
-  orden_ubicacion_por_deposito?: number | null;
+  orden_ubicacion_por_deposito?: number | null | string;
   identificacion_por_deposito?: string;
 }
 export interface GetBandejas {
