@@ -175,7 +175,7 @@ export const OrganigramaViewInicio = (): JSX.Element => {
 
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalBusquedaAvanzadaOrganigrama}
               >

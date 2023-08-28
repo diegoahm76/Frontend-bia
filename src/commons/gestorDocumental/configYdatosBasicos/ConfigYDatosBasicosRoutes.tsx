@@ -7,7 +7,10 @@ import { Route, Routes } from 'react-router-dom';
 //* Components
 import { Page404 } from '../../../screens/404';
 import { AdmnistrarFormatos } from '../trd/components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
+import { AdministrarTipologiasDocumentales } from '../trd/components/Tipologias/components/AdmistrarTipologias/AdministrarTipologiasDocumentales';
+import { ModalProviderTRD } from '../trd/context/ModalsContextTrd';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
+
 
 interface RouteType {
   path: string;
@@ -17,11 +20,12 @@ interface RouteType {
 export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
   const routes: RouteType[] = [
     {
-      path: '/admin-tipologias-documentales',
-      element: () => <>modulo de administracion de TIPOLOGIAS documentales</>
+      path: '/admin_tipologias_documentales',
+      element: () => <AdministrarTipologiasDocumentales />
     },
     {
-      path: '/admin-formatos-documentales',
+
+      path: '/admin_formatos_documentales',
       element: () => <AdmnistrarFormatos />
     },
     {
@@ -35,10 +39,12 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
   ];
 
   return (
-    <Routes>
-      {routes.map((route, index) => (
-        <Route key={index} path={route.path} element={route.element()} />
-      ))}
-    </Routes>
+    <ModalProviderTRD>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element()} />
+        ))}
+      </Routes>
+    </ModalProviderTRD>
   );
 };

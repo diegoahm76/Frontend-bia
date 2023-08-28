@@ -12,6 +12,7 @@ import { api } from '../../../../../../../../api/axios';
 // ? --------- get organigrama actual --------- //
 export const get_organigrama_actual_lideres_screen_service: any = async () => {
   try {
+
     const url = 'transversal/organigrama/get-organigrama-actual/';
     const { data } = await api.get(url);
     return data.data;
@@ -28,7 +29,7 @@ export const get_asignaciones_lideres_organigrama_actual_service: any =
     try {
       const url = 'transversal/lideres/get-list-actual/';
       const { data } = await api.get(url);
-      console.log(data.data, 'data asignaciones lideres organigrama actual');
+     console.log(data.data, 'data asignaciones lideres organigrama actual');
       return data.data;
     } catch (error: any) {
       console.log(error.response.data, 'error');

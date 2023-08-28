@@ -56,13 +56,15 @@ export const ListarBandejas: React.FC = () => {
         </Grid>
         <>
           <Grid item xs={12}>
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ width: '100%' }}>
               <>
                 <DataGrid
+                  density="compact"
+                  autoHeight
                   rows={rows_bandejas}
                   columns={columns_estantes}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
               </>

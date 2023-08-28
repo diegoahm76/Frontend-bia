@@ -24,6 +24,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface PropsBuscador {
   onResult: (data_porh: InfoPorh) => void;
@@ -239,6 +240,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
             onClick={handle_click_open}
           >
             Búscar
@@ -306,6 +308,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                 >

@@ -371,10 +371,10 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <LoadingButton
                   loading={loadingButton}
-                  variant="outlined"
+                  color="primary"
+                  variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
-                  color="primary"
                 >
                   BUSCAR
                 </LoadingButton>
@@ -400,8 +400,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
-                variant="contained"
-                color="success"
+                variant="outlined"
+                color="primary"
                 onClick={() => {
                   resetFunction();
                   console.log('cerrando');
@@ -412,6 +412,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 LIMPIAR BÚSQUEDA
               </Button>
               <Button
+                color="error"
                 variant="outlined"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}

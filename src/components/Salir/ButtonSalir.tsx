@@ -1,7 +1,7 @@
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
+import ClearIcon from '@mui/icons-material/Clear';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ButtonSalir: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ export const ButtonSalir: React.FC = () => {
       variant="contained"
       color="error"
       onClick={confirmar_salir}
+      startIcon={<ClearIcon />}
     >
       Salir
     </LoadingButton>

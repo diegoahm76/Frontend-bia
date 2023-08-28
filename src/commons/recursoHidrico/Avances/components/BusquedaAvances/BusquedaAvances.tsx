@@ -24,6 +24,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface PropsBuscador {
   onResult: (data_porh: InfoAvance) => void;
@@ -146,6 +147,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
         <Button
           variant="contained"
           color="primary"
+          startIcon={<SearchIcon />}
           onClick={() => {
             handle_click_open();
           }}

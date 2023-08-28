@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
@@ -45,6 +46,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
 import SyncIcon from '@mui/icons-material/Sync';
 import { v4 as uuidv4 } from 'uuid';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import { Loader } from '../../../../../utils/Loader/Loader';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -89,7 +92,9 @@ export const EditarOrganigrama = ({
     loadingEdicionOrgan,
     // submit_unidades,
     title_unidades,
-    edit_prop_activo_unidad_org
+    edit_prop_activo_unidad_org,
+    loadingLevels,
+    dataloading
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -116,7 +121,7 @@ export const EditarOrganigrama = ({
 
   useEffect(() => {
     // console.log(organigram_current.fecha_terminado);
-    if (organigram_current.id_organigrama === null) {
+    if (organigram_current?.id_organigrama === null) {
       set_position_tab_organigrama('1');
     }
   }, []);
@@ -127,7 +132,7 @@ export const EditarOrganigrama = ({
         <Box sx={{ m: '0 0 20px 0' }}>
           <Typography>
             Estado del organigrama:{' '}
-            {organigram_current.fecha_terminado ? (
+            {organigram_current?.fecha_terminado ? (
               <Chip
                 size="small"
                 label="Terminado"
@@ -166,7 +171,7 @@ export const EditarOrganigrama = ({
                     size="small"
                     label="Nombre"
                     variant="outlined"
-                    disabled={organigram_current.fecha_terminado}
+                    disabled={organigram_current?.fecha_terminado}
                     value={value}
                     inputProps={{
                       maxLength: 50
@@ -204,7 +209,7 @@ export const EditarOrganigrama = ({
                     size="small"
                     label="Versión"
                     variant="outlined"
-                    disabled={organigram_current.fecha_terminado}
+                    disabled={organigram_current?.fecha_terminado}
                     value={value}
                     inputProps={{
                       maxLength: 10
@@ -243,7 +248,7 @@ export const EditarOrganigrama = ({
                     label="Descripcion"
                     variant="outlined"
                     value={value}
-                    disabled={organigram_current.fecha_terminado}
+                    disabled={organigram_current?.fecha_terminado}
                     inputProps={{
                       maxLength: 255
                     }}
@@ -277,7 +282,7 @@ export const EditarOrganigrama = ({
                 }) => (
                   <>
                     <Button
-                      disabled={organigram_current.fecha_terminado}
+                      disabled={organigram_current?.fecha_terminado}
                       variant={
                         value === '' || value === null
                           ? 'outlined'
@@ -328,10 +333,10 @@ export const EditarOrganigrama = ({
                           fontSize: '0.75rem'
                         }}
                       >
-                        {control_organigrama._formValues.ruta_resolucion
-                          ? control_organigrama._formValues.ruta_resolucion
+                        {control_organigrama._formValues?.ruta_resolucion
+                          ? control_organigrama._formValues?.ruta_resolucion
                               .name ??
-                            control_organigrama._formValues.ruta_resolucion.replace(
+                            control_organigrama?._formValues?.ruta_resolucion.replace(
                               /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
                               ''
                             )
@@ -342,18 +347,26 @@ export const EditarOrganigrama = ({
                 )}
               />
             </Grid>
+            <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
+              <DownloadButton
+                fileName="ruta_soporte"
+                condition={!control_organigrama._formValues?.ruta_resolucion}
+                fileUrl={organigram_current?.ruta_resolucion}
+                /* fileUrl={`${`/${control_organigrama._formValues?.ruta_resolucion?.name}` ||  organigram_current?.ruta_resolucion}`} */
+              />
+            </Grid>
           </Grid>
 
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
             <LoadingButton
               loading={loadingEdicionOrgan}
               type="submit"
-              color="primary"
-              variant="outlined"
-              disabled={organigram_current.fecha_terminado}
+              color="success"
+              variant="contained"
+              disabled={organigram_current?.fecha_terminado}
               startIcon={<SyncIcon />}
             >
-              EDITAR
+              ACTUALIZAR
             </LoadingButton>
           </Stack>
         </Box>
@@ -363,7 +376,7 @@ export const EditarOrganigrama = ({
         <Title title="Niveles organizacionales" />
         <Box sx={{ mt: '20px' }}>
           <Grid container spacing={2}>
-            {!organigram_current.fecha_terminado  && (
+            {!organigram_current?.fecha_terminado && (
               <Grid item xs={12} sm={4}>
                 <Box
                   component="form"
@@ -381,12 +394,11 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre de nivel"
                         variant="outlined"
-                        disabled={organigram_current.fecha_terminado}
+                        disabled={organigram_current?.fecha_terminado}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -399,17 +411,20 @@ export const EditarOrganigrama = ({
                     )}
                   />
                   <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button
+                    <LoadingButton
+                      loading={loadingLevels}
                       type="submit"
-                      color="primary"
-                      disabled={organigram_current.fecha_terminado}
-                      variant="outlined"
+                      color="success"
+                      disabled={organigram_current?.fecha_terminado}
+                      variant="contained"
                       startIcon={
                         title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
                       }
                     >
-                      {title_nivel === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
-                    </Button>
+                      {title_nivel === 'Agregar'
+                        ? 'AGREGAR NIVEL'
+                        : 'EDITAR NIVEL'}
+                    </LoadingButton>
                   </Stack>
                 </Box>
               </Grid>
@@ -417,20 +432,24 @@ export const EditarOrganigrama = ({
             <Grid
               item
               xs={12}
-              sm={organigram_current.fecha_terminado ? 12 : 8}
+              sm={organigram_current?.fecha_terminado ? 12 : 8}
             >
               <Grid item>
                 <Box sx={{ width: '100%' }}>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={levels_organigram}
-                    columns={columns_nivel}
-                    pageSize={10}
-                    rowsPerPageOptions={[5]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id_nivel_organigrama}
-                  />
+                  {dataloading ? (
+                    <Loader altura={200} />
+                  ) : (
+                    <DataGrid
+                      density="compact"
+                      autoHeight
+                      rows={levels_organigram}
+                      columns={columns_nivel}
+                      pageSize={10}
+                      rowsPerPageOptions={[5]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => row?.id_nivel_organigrama}
+                    />
+                  )}
                 </Box>
               </Grid>
             </Grid>
@@ -441,7 +460,7 @@ export const EditarOrganigrama = ({
       <Grid item xs={12}>
         <Title title="Unidades organizacionales" />
         <Box sx={{ mt: '20px' }}>
-          {!organigram_current.fecha_terminado && (
+          {!organigram_current?.fecha_terminado && (
             <Box
               component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -467,12 +486,13 @@ export const EditarOrganigrama = ({
                     }) => (
                       <TextField
                         // margin="dense"
+                        type="number"
                         fullWidth
                         size="small"
                         label="Código"
                         variant="outlined"
                         // eslint-disable-next-line eqeqeq
-                        disabled={organigram_current.fecha_terminado}
+                        disabled={organigram_current?.fecha_terminado}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -501,7 +521,7 @@ export const EditarOrganigrama = ({
                         size="small"
                         label="Nombre"
                         variant="outlined"
-                        disabled={organigram_current.fecha_terminado}
+                        disabled={organigram_current?.fecha_terminado}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -627,31 +647,34 @@ export const EditarOrganigrama = ({
               >
                 <Button
                   // type="submit"
-                  color="success"
-                  variant="contained"
+                  color="primary"
+                  variant="outlined"
                   // disabled={organigram_current.fecha_terminado !== null}
                   onClick={clean_unitys}
                   startIcon={<CleanIcon />}
                 >
                   LIMPIAR CAMPOS
                 </Button>
-                <Button
+                <LoadingButton
+                  loading={loadingLevels}
                   type="submit"
-                  color="primary"
-                  variant="outlined"
+                  color="success"
+                  variant="contained"
                   startIcon={
                     title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
                   }
                 >
-                  {title_unidades === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
-                </Button>
+                  {title_unidades === 'Agregar'
+                    ? 'AGREGAR UNIDAD'
+                    : 'EDITAR UNIDAD'}
+                </LoadingButton>
                 <Button
                   onClick={() => {
                     // void dispatch(set_special_edit(false));
                     console.log('editando unidades propiedad activo');
                     edit_prop_activo_unidad_org(unity_organigram);
                   }}
-                  color="primary"
+                  color="success"
                   variant="outlined"
                   startIcon={<ToggleOnIcon />}
                 >
@@ -662,7 +685,7 @@ export const EditarOrganigrama = ({
           )}
         </Box>
 
-        {organigram_current.actual && specialEdit && (
+        {organigram_current?.actual && specialEdit && (
           <Box
             sx={{ mt: '20px' }}
             component="form"
@@ -685,17 +708,11 @@ export const EditarOrganigrama = ({
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
-
                       fullWidth
+                      type="number"
                       size="small"
                       label="Código"
                       variant="outlined"
-                      // eslint-disable-next-line eqeqeq
-                      /*  disabled={
-                          organigram_current.fecha_terminado !== null ||
-                          title_unidades !== 'Agregar'
-                        } */
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -848,8 +865,8 @@ export const EditarOrganigrama = ({
               sx={{ mb: '20px', mt: '20px' }}
             >
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 onClick={clean_unitys}
                 startIcon={<CleanIcon />}
               >
@@ -857,8 +874,8 @@ export const EditarOrganigrama = ({
               </Button>
               <Button
                 type="submit"
-                color="primary"
-                variant="outlined"
+                color="success"
+                variant="contained"
                 startIcon={<AddIcon />}
               >
                 AGREGAR UNIDAD (GRUPO)
@@ -869,7 +886,7 @@ export const EditarOrganigrama = ({
                   console.log('editando unidades propiedad activo');
                   edit_prop_activo_unidad_org(unity_organigram);
                 }}
-                color="primary"
+                color="success"
                 variant="outlined"
                 startIcon={<ToggleOnIcon />}
               >
@@ -881,16 +898,22 @@ export const EditarOrganigrama = ({
 
         <Grid item>
           <Box sx={{ width: '100%' }}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={unity_organigram}
-              columns={columns_unidades}
-              pageSize={10}
-              rowsPerPageOptions={[5]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => uuidv4()}
-            />
+            {dataloading ? (
+              <Loader
+              altura={150}
+               />
+            ) : (
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={unity_organigram}
+                columns={columns_unidades}
+                pageSize={10}
+                rowsPerPageOptions={[5]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => uuidv4()}
+              />
+            )}
           </Box>
         </Grid>
 
@@ -909,10 +932,12 @@ export const EditarOrganigrama = ({
             variant="outlined"
             startIcon={<ArrowBackIcon />}
             onClick={handle_to_go_back}
-          ></Button>
+          >
+            VOLVER
+          </Button>
           <Button
             disabled={mold_organigram.length === 0}
-            color="primary"
+            color="warning"
             variant="contained"
             startIcon={<VisibilityIcon />}
             onClick={() => {
@@ -920,9 +945,9 @@ export const EditarOrganigrama = ({
               set_view_organigram(true);
             }}
           >
-            VER
+            VISUALIZAR ORGANIGRAMA
           </Button>
-          {!organigram_current.fecha_terminado && (
+          {!organigram_current?.fecha_terminado && (
             <Button
               color="success"
               variant="contained"
@@ -930,7 +955,7 @@ export const EditarOrganigrama = ({
               onClick={() => {
                 void dispatch(
                   to_finalize_organigram_service(
-                    String(organigram_current.id_organigrama),
+                    String(organigram_current?.id_organigrama),
                     set_position_tab_organigrama
                   )
                 );
@@ -939,9 +964,9 @@ export const EditarOrganigrama = ({
               FINALIZAR
             </Button>
           )}
-          {organigram_current.fecha_terminado !== null &&
-            organigram_current.id_persona_cargo === null &&
-            !organigram_current.usado && (
+          {organigram_current?.fecha_terminado !== null &&
+            organigram_current?.id_persona_cargo === null &&
+            !organigram_current?.usado && (
               <Button
                 color="success"
                 variant="contained"
@@ -949,7 +974,9 @@ export const EditarOrganigrama = ({
                 onClick={() => {
                   void dispatch(
                     to_resume_organigram_service(
-                      String(organigram_current.id_organigrama)
+                      String(organigram_current?.id_organigrama),
+                      set_position_tab_organigrama,
+                      clean_unitys
                     )
                   );
                 }}
