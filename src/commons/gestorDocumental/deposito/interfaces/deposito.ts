@@ -5,7 +5,7 @@ export interface IDeposito {
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
   mode_estante: IMode;
-  bandeja: IObjBandeja[];
+  bandejas: IObjBandeja[];
   current_bandeja: IObjBandeja;
   data_estantes: GetEstantes;
   data_depositos: InfoDepositos;

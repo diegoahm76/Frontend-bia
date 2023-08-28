@@ -16,6 +16,7 @@ export const initial_state_deposito: IObjDeposito = {
   cod_municipio_nal: null,
   cod_pais_exterior: '',
   id_sucursal_entidad: null,
+  id_deposito: null,
   activo: false,
   orden_ubicacion_por_entidad: null,
   nombre_sucursal: null,
@@ -25,6 +26,8 @@ export const initial_state_deposito: IObjDeposito = {
 export const initial_state_bandeja: IObjBandeja = {
   id_estante_deposito: null,
   identificacion_por_estante: null,
+  orden_ubicacion_por_estante: null,
+  id_bandeja_estante: null
 
 }
 export const mode_estantes: IMode = {
@@ -58,7 +61,7 @@ export const initial_state: IDeposito = {
   current_deposito: initial_state_deposito,
   sucursales: [],
   mode_estante: mode_estantes,
-  bandeja: [],
+  bandejas: [],
   current_bandeja: initial_state_bandeja,
   data_estantes: estantes_slice,
   data_depositos: info_deposito_slice,
@@ -100,7 +103,7 @@ export const deposito_slice = createSlice({
       state: IDeposito,
       action: PayloadAction<IObjBandeja[]>
     ) => {
-      state.bandeja = action.payload;
+      state.bandejas = action.payload;
     },
     set_current_bandeja: (
       state: IDeposito,

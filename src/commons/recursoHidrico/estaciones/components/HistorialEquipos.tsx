@@ -119,11 +119,11 @@ export const HistorialEquipos: React.FC = () => {
             marginLeft: '-5px',
             spacing: "2px"
         }}>
-             <Grid item xs={12} sx={{ marginTop: "10px" }}     >
-                        <Title title="Historial  de equipos " />
-                    </Grid>
+            <Grid item xs={12} sx={{ marginTop: "10px" }}     >
+                <Title title="Historial  de equipos " />
+            </Grid>
             <Box component="form" onSubmit={handleSubmit(submit_historial_datos)}>
-                <Stack sx={{ m: '10px 0 20px 0',marginTop:"20px" }} direction="row" spacing={2}>
+                <Stack sx={{ m: '10px 0 20px 0', marginTop: "20px" }} direction="row" spacing={2}>
                     <FormControl fullWidth>
                         <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                             <DatePicker
@@ -164,8 +164,9 @@ export const HistorialEquipos: React.FC = () => {
                         )}
                     </FormControl>
                     <FormControl fullWidth>
-                        <Button
-                            variant="contained"
+                        <Button 
+                            color='primary'
+                            variant='contained' 
                             type="submit"
                             disabled={loading}
                             className="search-button text-capitalize rounded-pill"

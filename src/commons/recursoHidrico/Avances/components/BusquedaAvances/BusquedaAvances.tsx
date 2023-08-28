@@ -21,6 +21,7 @@ import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface PropsBuscador {
   onResult: (data_porh: InfoAvance) => void;
@@ -143,6 +144,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
         <Button
           variant="contained"
           color="primary"
+          startIcon={<SearchIcon />}
           onClick={() => {
             handle_click_open();
           }}

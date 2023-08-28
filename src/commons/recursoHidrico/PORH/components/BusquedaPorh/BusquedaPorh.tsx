@@ -21,6 +21,7 @@ import { search_avanzada_porh } from '../../Request/request';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
 import type { BusquedaPorhI } from '../../Interfaces/interfaces';
+import SearchIcon from '@mui/icons-material/Search';
 
 export const BusquedaPorh: React.FC = () => {
   const {
@@ -78,6 +79,7 @@ export const BusquedaPorh: React.FC = () => {
     formState: { errors },
   } = useForm();
 
+
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<BusquedaPorhI[]>([]);
@@ -128,7 +130,7 @@ export const BusquedaPorh: React.FC = () => {
         />
       </Grid>
       <Grid item xs={12} sm={6} md={2} container justifyContent="end">
-        <Button variant="contained" color="primary" onClick={handle_click_open}>
+        <Button    startIcon={<SearchIcon />} variant="contained" color="primary" onClick={handle_click_open}>
           Buscar
         </Button>
       </Grid>
@@ -170,6 +172,7 @@ export const BusquedaPorh: React.FC = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                 >

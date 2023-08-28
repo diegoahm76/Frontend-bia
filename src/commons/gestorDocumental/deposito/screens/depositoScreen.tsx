@@ -13,7 +13,7 @@ import { useAppDispatch, } from '../../../../hooks';
 import SucursalDirecciones from '../components/generadorDireccion';
 import FormButton from '../../../../components/partials/form/FormButton';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
-import { initial_state_deposito } from '../store/slice/indexDeposito';
+import { initial_state_deposito, set_current_deposito } from '../store/slice/indexDeposito';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -45,6 +45,7 @@ const DepositoScreen = () => {
 
     useEffect(() => {
         reset(selected_deposito)
+        dispatch(set_current_deposito(selected_deposito))
         set_direccion(selected_deposito.direccion_deposito ?? '')
     }, [selected_deposito])
 
@@ -163,8 +164,6 @@ const DepositoScreen = () => {
 
             <Grid item xs={12} marginY={1}>
                 <ListadoDeposito
-                    depositos={selected_deposito}
-                    get_values={get_values}
                     handle_edit_click={handle_edit_click} />
             </Grid>
 
@@ -190,16 +189,17 @@ const DepositoScreen = () => {
                         type_button="button"
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => { on_submit_eliminar(selected_deposito); }}
-                    >
-                        Eliminar
-                    </Button>
-                </Grid>
-
+                {selected_deposito.id_deposito !== null &&
+                    <Grid item xs={12} md={2}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => { on_submit_eliminar(selected_deposito); }}
+                        >
+                            Eliminar
+                        </Button>
+                    </Grid>
+                }
                 <Grid item xs={12} md={2}>
                     <ButtonSalir
                     />
