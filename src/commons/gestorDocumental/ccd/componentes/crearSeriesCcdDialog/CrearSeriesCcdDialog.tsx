@@ -280,7 +280,6 @@ const CrearSeriesCcdDialog = ({
               }}
             >
               <TextField
-                type="number"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"

@@ -180,7 +180,6 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
-                      type="number"
                       label="Versión del TCA"
                       size="small"
                       inputProps={{

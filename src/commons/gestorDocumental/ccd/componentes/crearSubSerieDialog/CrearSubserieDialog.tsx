@@ -250,7 +250,6 @@ const CrearSubSerieCcdDialog = ({
 
             <Grid item xs={12} sm={6}>
               <TextField
-                type="number"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"

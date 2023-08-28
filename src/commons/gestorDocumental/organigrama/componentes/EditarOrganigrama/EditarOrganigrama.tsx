@@ -486,7 +486,6 @@ export const EditarOrganigrama = ({
                     }) => (
                       <TextField
                         // margin="dense"
-                        type="number"
                         fullWidth
                         size="small"
                         label="Código"
@@ -523,11 +522,9 @@ export const EditarOrganigrama = ({
                         fullWidth
                         size="small"
                         label="Nombre"
-                        inputProps={
-                          {
-                             maxLength: 50
-                          }
-                        }
+                        inputProps={{
+                          maxLength: 50
+                        }}
                         variant="outlined"
                         disabled={organigram_current?.fecha_terminado}
                         value={value}
@@ -717,7 +714,6 @@ export const EditarOrganigrama = ({
                   }) => (
                     <TextField
                       fullWidth
-                      type="number"
                       size="small"
                       label="Código"
                       variant="outlined"
@@ -904,12 +900,25 @@ export const EditarOrganigrama = ({
           </Box>
         )}
 
+{/*        {organigram_current?.fecha_terminado && !organigram_current?.actual && (
+          <Button
+            onClick={() => {
+              // void dispatch(set_special_edit(false));
+              console.log('editando unidades propiedad activo');
+              edit_prop_activo_unidad_org(unity_organigram);
+            }}
+            color="success"
+            variant="outlined"
+            startIcon={<ToggleOnIcon />}
+          >
+            DESACTIVAR / ACTIVAR UNIDADES (GRUPO)
+          </Button>
+        )}
+*/}
         <Grid item>
           <Box sx={{ width: '100%' }}>
             {dataloading ? (
-              <Loader
-              altura={150}
-               />
+              <Loader altura={150} />
             ) : (
               <DataGrid
                 density="compact"
