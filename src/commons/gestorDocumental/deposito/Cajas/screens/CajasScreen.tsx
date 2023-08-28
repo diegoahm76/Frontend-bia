@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { BusquedaEstanteCajas } from '../components/BusquedaEstanteCajas';
@@ -5,8 +7,30 @@ import { LoadingButton } from '@mui/lab';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 // import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
 import SaveIcon from '@mui/icons-material/Save';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
-import { BusquedaCajas } from '../components/BusquedaCajas';
+// import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+// import { BusquedaCajas } from '../components/BusquedaCajas';
+// import { ListarCajas } from '../components/ListarCajas';
+import { lazy } from 'react';
+
+const ListarCajas = lazy(async () => {
+  const module = await import('../components/ListarCajas');
+  return { default: module.ListarCajas };
+});
+
+const BusquedaCajas = lazy(async () => {
+  const module = await import('../components/BusquedaCajas');
+  return { default: module.BusquedaCajas };
+});
+
+const ButtonSalir = lazy(async () => {
+  const module = await import('../../../../../components/Salir/ButtonSalir');
+  return { default: module.ButtonSalir };
+});
+
+const ButtonEliminar = lazy(async () => {
+  const module = await import('../../../../../utils/Eliminar/Eliminar');
+  return { default: module.ButtonEliminar };
+});
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CajasScreen: React.FC = () => {
@@ -37,11 +61,12 @@ export const CajasScreen: React.FC = () => {
           </Grid>
         </Grid>
         <BusquedaEstanteCajas />
+        <ListarCajas />
         <Grid container spacing={2} justifyContent="flex-end">
           <BusquedaCajas />
           <Grid item>
             <LoadingButton
-              variant="outlined" 
+              variant="outlined"
               color="primary"
               loading={false}
               disabled={false}

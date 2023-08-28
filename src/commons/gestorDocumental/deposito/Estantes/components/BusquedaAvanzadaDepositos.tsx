@@ -314,7 +314,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada" />
+            <Title title="Búsqueda avanzada depositos" />
             {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);

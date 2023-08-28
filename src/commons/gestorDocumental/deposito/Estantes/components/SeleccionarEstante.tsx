@@ -48,7 +48,7 @@ export const SeleccionarEstante: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Edición de estantes" />
+          <Title title="Estante" />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller

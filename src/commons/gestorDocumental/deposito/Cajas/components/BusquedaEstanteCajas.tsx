@@ -30,15 +30,19 @@ import {
 import { DataContext } from '../../Estantes/context/context';
 import type { InfoEstantes } from '../../Estantes/types/types';
 import { search_estante } from '../../Estantes/services/services';
-import { data } from '../../../../recaudo/chart/ChartComponent';
+import Select from 'react-select';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstanteCajas: React.FC = () => {
   const {
     depositos_selected_mover_estante,
-    set_id_deposito,
+    id_estante,
+    bandejas_selected,
+    set_id_bandeja,
+    set_id_estante,
     fetch_data_depositos,
     set_depositos_selected_mover_estante,
+    fetch_data_bandejas_estantes,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -75,13 +79,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                 orden_estante: params.row.orden_ubicacion_por_deposito,
                 nombre_deposito: params.row.identificacion_deposito,
               });
-              // dispatch(
-              //   set_current_mode_estantes({
-              //     ver: true,
-              //     crear: false,
-              //     editar: false,
-              //   })
-              // );
+              set_id_estante(params.row.id_estante_deposito);
               // dispatch(
               //   set_current_id_depo_est({
               //     id_deposito: params.row.id_deposito,
@@ -97,7 +95,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
               //     id_estante_deposito: params.row.id_estante_deposito,
               //     orden_ubicacion_por_deposito: params.row.nombre_deposito,
               //     identificacion_por_deposito:
-              //       params.row.identificacion_deposito,
+              //       params.row.identificacion_por_deposito,
               //   })
               // );
               // set_id_deposito(params.row.id_deposito);
@@ -115,61 +113,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
               variant="rounded"
             >
               <ChecklistOutlinedIcon
-                titleAccess="Seleccionar estante"
-                sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px',
-                }}
-              />
-            </Avatar>
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => {
-              // console.log(params.row);
-              // dispatch(
-              //   set_current_mode_estantes({
-              //     ver: false,
-              //     crear: false,
-              //     editar: true,
-              //   })
-              // );
-
-              // dispatch(
-              //   set_current_id_depo_est({
-              //     id_deposito: params.row.id_deposito,
-              //     id_estante_deposito: params.row.id_estante_deposito,
-              //     nombre_deposito: params.row.identificacion_deposito,
-              //     identificacion_por_deposito:
-              //       params.row.identificacion_por_deposito,
-              //   })
-              // );
-              // dispatch(
-              //   set_current_estantes({
-              //     id_estante_deposito: params.row.id_estante_deposito,
-              //     orden_ubicacion_por_deposito:
-              //       params.row.orden_ubicacion_por_deposito,
-              //     identificacion_por_deposito:
-              //       params.row.identificacion_deposito,
-              //   })
-              // );
-              // set_id_deposito(params.row.id_deposito);
-
-              handle_close();
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <EditIcon
-                titleAccess="Editar estante"
+                titleAccess="Seleccionar"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -197,6 +141,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
         value: '',
         label: '',
       },
+      id_bandeja_estante: '',
     },
   });
 
@@ -261,6 +206,19 @@ export const BusquedaEstanteCajas: React.FC = () => {
     set_is_search(false);
     void fetch_data_depositos();
   }, []);
+
+  useEffect(() => {
+    if (id_estante) {
+      void fetch_data_bandejas_estantes();
+    }
+  }, [id_estante]);
+
+  useEffect(() => {
+    if (data_watch?.id_bandeja_estante) {
+      set_id_bandeja(Number(data_watch?.id_bandeja_estante));
+    }
+  }, [data_watch?.id_bandeja_estante]);
+        
 
   return (
     <>
@@ -361,13 +319,63 @@ export const BusquedaEstanteCajas: React.FC = () => {
             Búscar
           </Button>
         </Grid>
-        {/* {id_deposito && (
+
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={3}
+          // sx={{
+          //   marginTop: '25px',
+          //   marginBottom: '10px',
+          // }}
+        >
+          <Controller
+            name="id_bandeja_estante"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <div>
+                <Select
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      height: '100%',
+                      minHeight: '100%',
+                    }),
+                  }}
+                  value={value}
+                  onChange={onChange}
+                  options={bandejas_selected as any[]}
+                  placeholder="Seleccionar"
+                  isDisabled={!id_estante}
+                />
+                <label>
+                  <small
+                    style={{
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      fontWeight: 'thin',
+                      fontSize: '0.75rem',
+                      marginTop: '0.25rem',
+                      // marginLeft: '0.25rem'
+                    }}
+                  >
+                    Bandeja actual
+                  </small>
+                </label>
+              </div>
+            )}
+          />
+        </Grid>
+
+        {data_watch?.id_bandeja_estante && (
           <>
             <Grid container spacing={2} justifyContent="flex-end">
               <Grid item>
                 <Button
                   variant="outlined"
                   color="primary"
+                  disabled={!data_watch?.id_bandeja_estante}
                   onClick={() => {
                     // set_id_deposito(null);
                     dispatch(
@@ -379,12 +387,12 @@ export const BusquedaEstanteCajas: React.FC = () => {
                     );
                   }}
                 >
-                  Agregar estante
+                  Agregar Caja
                 </Button>
               </Grid>
             </Grid>
           </>
-        )} */}
+        )}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
