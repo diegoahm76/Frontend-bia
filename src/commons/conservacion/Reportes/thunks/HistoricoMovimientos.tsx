@@ -104,16 +104,3 @@ export const historico_traslados: any = (filtros: {seleccion_vivero: number|stri
   };
 };
 
-export const obtiene_plantas_por_vivero: any = (seleccion_vivero: number) => {
-  return async () => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-inventario/get/?id_vivero=${seleccion_vivero}`);
-      return data;
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-

@@ -13,7 +13,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { image_data2_1, image_data_1 } from "../../../recursoHidrico/estaciones/imagenes/imagenes";
 import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import BuscarPlantas from "./BuscarPlantas";
