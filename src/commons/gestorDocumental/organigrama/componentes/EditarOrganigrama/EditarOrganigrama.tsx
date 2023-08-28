@@ -491,6 +491,9 @@ export const EditarOrganigrama = ({
                         size="small"
                         label="Código"
                         variant="outlined"
+                        inputProps={{
+                          maxLength: 10
+                        }}
                         // eslint-disable-next-line eqeqeq
                         disabled={organigram_current?.fecha_terminado}
                         value={value}
@@ -520,6 +523,11 @@ export const EditarOrganigrama = ({
                         fullWidth
                         size="small"
                         label="Nombre"
+                        inputProps={
+                          {
+                             maxLength: 50
+                          }
+                        }
                         variant="outlined"
                         disabled={organigram_current?.fecha_terminado}
                         value={value}

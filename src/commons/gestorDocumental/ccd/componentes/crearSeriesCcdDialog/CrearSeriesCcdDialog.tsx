@@ -196,7 +196,7 @@ const CrearSeriesCcdDialog = ({
             <Avatar sx={AvatarStyles} variant="rounded">
               <DeleteIcon
                 titleAccess="Eliminar serie"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                sx={{ color: 'red', width: '18px', height: '18px' }}
               />
             </Avatar>
           </IconButton>
@@ -223,8 +223,8 @@ const CrearSeriesCcdDialog = ({
       }}
     >
       <DialogTitle>
-      <Title title={title}/>
-      {/*  <IconButton
+        <Title title={title} />
+        {/*  <IconButton
           aria-label="close"
           onClick={() => {
             set_is_modal_active(false);
@@ -262,7 +262,7 @@ const CrearSeriesCcdDialog = ({
                 fullWidth
                 {...register('nombre', { required: true })}
                 inputProps={{
-                  maxLength: 150,
+                  maxLength: 150
                 }}
                 size="small"
                 label="Nombre"
@@ -303,15 +303,15 @@ const CrearSeriesCcdDialog = ({
               >
                 <Button
                   type="submit"
-                  color="primary"
+                  color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
                 >
                   {title_button}
                 </Button>
                 <Button
-                  color="success"
-                  variant="contained"
+                  color="primary"
+                  variant="outlined"
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     clean();
@@ -345,6 +345,7 @@ const CrearSeriesCcdDialog = ({
           sx={{ mr: '15px', mb: '10px', mt: '10px' }}
         >
           <Button
+            color="error"
             variant="outlined"
             onClick={() => {
               set_is_modal_active(false);
