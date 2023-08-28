@@ -27,13 +27,18 @@ import { useAppDispatch } from '../../../../../hooks';
 import {
   set_current_estantes,
   set_current_id_depo_est,
+  set_current_info_deposito,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
-  const { depositos_selected, set_id_deposito, fetch_data_depositos } =
-    useContext(DataContext);
+  const {
+    depositos_selected,
+    set_id_estante,
+    set_id_deposito,
+    fetch_data_depositos,
+  } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
@@ -64,6 +69,7 @@ export const BusquedaEstante: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_estante(params.row.id_estante_deposito);
               dispatch(
                 set_current_mode_estantes({
                   ver: true,
@@ -80,13 +86,22 @@ export const BusquedaEstante: React.FC = () => {
                     params.row.identificacion_por_deposito,
                 })
               );
+              dispatch(
+                set_current_info_deposito({
+                  id_deposito: params.row.id_deposito,
+                  orden_ubicacion_por_entidad:
+                    params.row.orden_ubicacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_entidad: params.row.id_estante_deposito,
+                })
+              );
 
               dispatch(
                 set_current_estantes({
                   id_estante_deposito: params.row.id_estante_deposito,
                   orden_ubicacion_por_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
-                    params.row.identificacion_deposito,
+                    params.row.identificacion_por_deposito,
                 })
               );
               set_id_deposito(params.row.id_deposito);
@@ -116,31 +131,39 @@ export const BusquedaEstante: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row);
+              set_id_estante(params.row.id_estante_deposito);
               dispatch(
                 set_current_mode_estantes({
-                  ver: false,
+                  ver: true,
                   crear: false,
-                  editar: true,
+                  editar: false,
                 })
               );
-
               dispatch(
                 set_current_id_depo_est({
                   id_deposito: params.row.id_deposito,
                   id_estante_deposito: params.row.id_estante_deposito,
-                  nombre_deposito: params.row.identificacion_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
                     params.row.identificacion_por_deposito,
                 })
               );
               dispatch(
+                set_current_info_deposito({
+                  id_deposito: params.row.id_deposito,
+                  orden_ubicacion_por_entidad:
+                    params.row.orden_ubicacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_entidad: params.row.id_estante_deposito,
+                })
+              );
+
+              dispatch(
                 set_current_estantes({
                   id_estante_deposito: params.row.id_estante_deposito,
-                  orden_ubicacion_por_deposito:
-                    params.row.orden_ubicacion_por_deposito,
+                  orden_ubicacion_por_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
-                    params.row.identificacion_deposito,
+                    params.row.identificacion_por_deposito,
                 })
               );
               set_id_deposito(params.row.id_deposito);
@@ -202,11 +225,7 @@ export const BusquedaEstante: React.FC = () => {
   };
 
   const on_submit_advance = handle_submit(
-    async ({
-      identificacion_estante,
-      orden_estante,
-      nombre_deposito,
-    }) => {
+    async ({ identificacion_estante, orden_estante, nombre_deposito }) => {
       set_is_search(true);
       try {
         set_rows([]);

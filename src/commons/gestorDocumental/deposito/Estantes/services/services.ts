@@ -59,7 +59,7 @@ export const get_orden_estantes = async (): Promise<ListarSucursales[]> => {
     return data ?? [];
 };
 // * bandejas por estantes
-export const get_depositos_estante = async (id_estante: number): Promise<GetBandejas[]> => {
+export const get_bandejas_estante = async (id_estante: number): Promise<GetBandejas[]> => {
     const response: AxiosResponse<ResponseServer<GetBandejas[]>> = await api.get<
         ResponseServer<GetBandejas[]>
     >(`gestor/depositos-archivos/bandejaEstante/listar-bandejas-por-estante/${id_estante}/`);

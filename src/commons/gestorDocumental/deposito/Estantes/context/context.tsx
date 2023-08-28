@@ -11,7 +11,7 @@ import type {
 } from '../types/types';
 import {
   get_depositos,
-  get_depositos_estante,
+  get_bandejas_estante,
   get_estantes_deposito,
   get_sucursales,
 } from '../services/services';
@@ -204,7 +204,7 @@ export const UserProvider = ({
   };
   const fetch_data_bandejas_estantes = async (): Promise<void> => {
     try {
-      const response = await get_depositos_estante(id_estante as number);
+      const response = await get_bandejas_estante(id_estante as number);
       if (response?.length > 0) {
         const data_bandejas: GetBandejas[] = response.map(
           (item: GetBandejas) => ({

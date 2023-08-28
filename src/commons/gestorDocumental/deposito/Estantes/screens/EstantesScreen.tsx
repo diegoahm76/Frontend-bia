@@ -34,6 +34,8 @@ export const EstantesScreen: React.FC = () => {
   const {
     id_deposito,
     identificacion_deposito,
+    nuevo_orden,
+    orden,
     fetch_data_estantes_depositos,
   } = useContext(DataContext);
 
@@ -55,6 +57,7 @@ export const EstantesScreen: React.FC = () => {
           e.preventDefault();
           e.stopPropagation();
           if (mode_estante.editar) {
+            console.log(nuevo_orden, orden, 'Nuevo orden, orden');
             onsubmit_editar();
           } else {
             void onsubmit_estantes();

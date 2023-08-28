@@ -140,17 +140,23 @@ export const useEstantesHook = (): any => {
           identificacion_por_deposito: identificacion_deposito,
         };
         await post_estante(data_estantes);
-        await fetch_data_estantes_depositos();
         control_success('Se creó estante correctamente');
+        set_value_estantes('orden', '');
+        set_value_estantes('nuevo_orden', '');
+        set_value_estantes('identificacion_por_deposito', '');
         reset_estantes({
           identificacion_por_deposito: '',
           orden: '',
           nuevo_orden: '',
         });
         set_identificacion_deposito('');
+        await fetch_data_estantes_depositos();
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail ||
+          'Hubo un error al crear, por favor intenta nuevamente'
+      );
     } finally {
       set_is_saving_estante(false);
     }
@@ -159,7 +165,8 @@ export const useEstantesHook = (): any => {
   const onsubmit_editar = async (): Promise<any> => {
     try {
       set_is_saving_estante(true);
-      if (nuevo_orden && orden) {
+      console.log(nuevo_orden, orden, 'Nuevo orden, orden');
+      if (!nuevo_orden && !orden) {
         control_error(
           'Hubo un error, intente nuevamente, si el error persiste comuníquese con el administrador'
         );

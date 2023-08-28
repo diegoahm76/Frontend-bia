@@ -74,6 +74,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_deposito(params.row.id_deposito);
               dispatch(set_current_info_deposito(params.row));
               reset({
                 nombre_deposito: params.row.nombre_deposito,
@@ -88,7 +89,6 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                 })
               );
 
-              set_id_deposito(params.row.id_deposito);
               handle_close();
             }}
           >
