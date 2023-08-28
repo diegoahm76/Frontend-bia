@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Divider, Grid, IconButton, Typography } from '@mui/material';
+import { ButtonGroup, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { useAlertaHook } from '../utils/useAlertaHook';
 import dayjs from 'dayjs';
@@ -14,6 +14,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from '@mui/lab';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 export const ProgramacionAlerta: React.FC = () => {
   const mesesEnEspanol: any = {
@@ -234,17 +236,26 @@ export const ProgramacionAlerta: React.FC = () => {
               <Typography variant="body2" color="text.secondary">
                 <strong>Alertas programadas</strong>
               </Typography>
+              
             </Grid>
             <Grid item xs={12} sm={6}>
+            <ButtonGroup
+              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+            >
+                {download_xls({ nurseries: rows_alerta_programada, columns: colums_alerta_programada })}
+                {download_pdf({ nurseries: rows_alerta_programada, columns: colums_alerta_programada, title: 'Alertas programadas' })}
+            </ButtonGroup> 
+            <Grid item xs={12}>
               <DataGrid
                 autoHeight
                 rows={rows_alerta_programada}
                 columns={colums_alerta_programada}
                 getRowId={(row) => uuidv4()}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             </Grid>
+             </Grid>
           </>
         )}
         <Grid container item justifyContent="flex-end" spacing={2}>
