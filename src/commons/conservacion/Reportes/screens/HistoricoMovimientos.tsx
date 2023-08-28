@@ -190,6 +190,9 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             if (seleccion_reporte === 'DDEV') {
                 generar_historico_distribuciones();
             }
+            if (seleccion_reporte === 'RES') {
+                generar_historico_siembras();
+            }
             if (seleccion_reporte === 'CEMV') {
                 generar_historico_cambios_etapa();
             }
@@ -207,17 +210,169 @@ export const HistoricoMovimientosScreen: React.FC = () => {
 
     const generar_historico_bajas: () => void = () => {
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        const page = doc.internal.pageSize.getHeight();
         let coordendas = 0;
         let page_position = 1;
+        let coordenada_y = 30;
         doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
         doc.text('Fecha', 16, 34);
         doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
         doc.text('Número de baja', (doc.internal.pageSize.width - 60), 34);
-        reporte.forEach((report: any) => {
-            if ((43 + coordendas) > doc_height) {
+        const test = [
+            {
+                "id_baja": 8,
+                "fecha_baja": "2023-06-20T22:11:01",
+                "fecha_registro": "2023-06-20T22:14:17.571311",
+                "id_vivero": 1,
+                "nro_baja_por_tipo": 2,
+                "nombre_vivero": "Vivero Principal",
+                "bienes_implicados": [
+                    {
+                        "id_bien": 243,
+                        "cantidad_baja": 1,
+                        "nombre_bien": "bien consumible 1",
+                        "unidad_medida": "kg"
+                    },
+                    {
+                        "id_bien": 243,
+                        "cantidad_baja": 1,
+                        "nombre_bien": "bien consumible 1",
+                        "unidad_medida": "kg"
+                    },
+                    {
+                        "id_bien": 243,
+                        "cantidad_baja": 1,
+                        "nombre_bien": "bien consumible 1",
+                        "unidad_medida": "kg"
+                    },
+                    {
+                        "id_bien": 243,
+                        "cantidad_baja": 1,
+                        "nombre_bien": "bien consumible 1",
+                        "unidad_medida": "kg"
+                    },
+                ]
+            },
+            {
+                "id_baja": 10,
+                "fecha_baja": "2023-07-07T13:51:06",
+                "fecha_registro": "2023-07-07T14:30:59.548826",
+                "id_vivero": 1,
+                "nro_baja_por_tipo": 4,
+                "nombre_vivero": "Vivero Principal",
+                "bienes_implicados": [
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                ]
+            },
+            {
+                "id_baja": 8,
+                "fecha_baja": "2023-06-20T22:11:01",
+                "fecha_registro": "2023-06-20T22:14:17.571311",
+                "id_vivero": 1,
+                "nro_baja_por_tipo": 2,
+                "nombre_vivero": "Vivero Principal",
+                "bienes_implicados": [
+                    {
+                        "id_bien": 243,
+                        "cantidad_baja": 1,
+                        "nombre_bien": "bien consumible 1",
+                        "unidad_medida": "kg"
+                    }
+                ]
+            },
+            {
+                "id_baja": 10,
+                "fecha_baja": "2023-07-07T13:51:06",
+                "fecha_registro": "2023-07-07T14:30:59.548826",
+                "id_vivero": 1,
+                "nro_baja_por_tipo": 4,
+                "nombre_vivero": "Vivero Principal",
+                "bienes_implicados": [
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                ]
+            },
+            {
+                "id_baja": 10,
+                "fecha_baja": "2023-07-07T13:51:06",
+                "fecha_registro": "2023-07-07T14:30:59.548826",
+                "id_vivero": 1,
+                "nro_baja_por_tipo": 4,
+                "nombre_vivero": "Vivero Principal",
+                "bienes_implicados": [
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                    {
+                        "id_bien": 318,
+                        "cantidad_baja": 5,
+                        "nombre_bien": "Pala jardinero",
+                        "unidad_medida": "und"
+                    },
+                ]
+            },
+        ]
+        
+        test.forEach((report: any) => {
+            // Cliclo
+            const reporte_dos = jso_object_detalle_bajas(report.bienes_implicados);
+            coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
+            if (coordenada_y >= (page - 30) || coordendas >= (page - 30)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
+                doc.text('Fecha', 16, 34);
+                doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+                doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
                 coordendas = 0;
+                coordenada_y = 30;
             }
             // Cliclo
             const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
@@ -233,14 +388,26 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             // Tabla
             autoTable(doc, {
                 theme: 'plain',
-                columns: [{ header: 'Bien implicado', dataKey: 'numero_registros' }, { header: 'Cantidad dada de baja', dataKey: 'cantidad_mortalidad' }],
-                body: [{ 'numero_registros': 'Semilla de girasol', 'cantidad_mortalidad': '30 Kg' + ' Und'}],
+                columns: [{ header: 'Bien implicado', dataKey: 'nombre_bien' }, { header: 'Cantidad dada de baja', dataKey: 'cantidad_baja' }],
+                body: reporte_dos,
                 styles: { halign: 'center' },
                 startY: 43 + coordendas,
                 margin: 60
             })
-            doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
-            coordendas = coordendas + 25;
+            // doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
+            if(coordenada_y !== 30){
+                doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                coordendas = coordenada_y - 30;
+            }
+            else{
+                if(page !== 1){
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+                    coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
+                    doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                }
+            }
         });
         set_visor(doc.output('datauristring'));
     }
@@ -445,11 +612,11 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             // Cliclo
             coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
             if (coordenada_y >= (page - 35) || coordendas >= (page - 35)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.text('Fecha', 16, 34);
                 doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
                 doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
-                page_position = page_position + 1;
-                nueva_pagina(doc, reporte_titulo.title, page_position);
                 coordendas = 0;
                 coordenada_y = 30;
             }
@@ -475,7 +642,73 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 margin: 30
             });
             if(coordenada_y !== 30){
+                doc.line(5, coordenada_y+5, (doc.internal.pageSize.width - 5), coordenada_y+5);// 30 Linea inferior
+                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y+3);
+                coordendas = coordenada_y - 30;
+            }
+            else{
+                if(page !== 1){
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+                    coordenada_y = reporte_dos.length === 1 ? (22 + coordendas) : reporte_dos.length === 2 ? (67 + coordendas) : (coordendas + (reporte_dos.length * 11));
+                    doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                }
+            }
+        });
+        set_visor(doc.output('datauristring'));
+    }
+    const generar_historico_siembras: () => void = () => {
+        const page = doc.internal.pageSize.getHeight();
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        let coordendas = 0;
+        let page_position = 1;
+        let coordenada_y = 30;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.setFont("Arial", "bold"); // establece la fuente en Arial
+        doc.text('Fecha', 14, 34);
+        doc.text('Vivero', 40, 34);
+        doc.text('Material vegetal sembrado', 80, 34);
+        doc.text('Distancia entre semillas', 130, 34);
+        doc.text('Lote creado', 180, 34);
+        reporte.forEach((report: any) => {
+            const reporte_dos = jso_object_detalle_siembras(report.bienes_consumidos);
+            // Cliclo
+            coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
+            if (coordenada_y >= (page - 35) || coordendas >= (page - 35)) {
+                doc.setFont("Arial", "bold"); // establece la fuente en Arial
+                doc.text('Fecha', 14, 34);
+                doc.text('Vivero', 40, 34);
+                doc.text('Material vegetal sembrado', 80, 34);
+                doc.text('Distancia entre semillas', 130, 34);
+                doc.text('Lote creado', 180, 34);
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                coordendas = 0;
+                coordenada_y = 30;
+            }
+            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.text(dayjs(report.fecha_siembra).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.text(report.nombre_vivero, 40, 41 + coordendas);
+            doc.text(report.nombre_bien, 80, 41 + coordendas);
+            doc.text(report.distancia_entre_semillas.toString(), 147, 41 + coordendas);
+            doc.text(report.nro_lote.toString(), 188, 41 + coordendas);
+            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
+            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
+            doc.line(64, 50 + coordendas, (doc.internal.pageSize.width - 50), 50 + coordendas);// Linea central de tabla
+            // Tabla
+            autoTable(doc, {
+                theme: 'plain',
+                columns: [{ header: 'Bienes consumidos', dataKey: 'nombre_bien' }, 
+                          { header: 'Cantidad', dataKey: 'cantidad' }],
+                          body: reporte_dos,
+                styles: { halign: 'center' },
+                startY: 43 + coordendas,
+                margin: 40
+            });
+            if(coordenada_y !== 30){
                 doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
                 coordendas = coordenada_y - 30;
             }
             else{
@@ -483,11 +716,13 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
                     coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
                     doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 70), coordenada_y-2);
                 }
             }
         });
         set_visor(doc.output('datauristring'));
     }
+
     const jso_object_detalle: (array: any, nombre_vivero: string) => any = (array: any, nombre_vivero: string) => {
         let resultado_json: any = [];
         array.forEach((data: any) => {
@@ -496,6 +731,25 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             'vivero_destino': nombre_vivero,
             'etapa_ingresa':data.etapa_ingresa,
             }]
+        });
+        return resultado_json;
+    }
+    const jso_object_detalle_siembras: (array: any) => any = (array: any) => {
+        let resultado_json: any = [];
+        array.forEach((data: any) => {
+            resultado_json = [...resultado_json,{
+                'nombre_bien': data.nombre_bien, 
+                'cantidad': data.cantidad + ' ' + data.unidad_medida
+            }]
+        });
+        return resultado_json;
+    }
+    const jso_object_detalle_bajas: (array: any) => any = (array: any) => {
+        let resultado_json: any = [];
+        array.forEach((data: any) => {
+            resultado_json = [...resultado_json,
+                { 'nombre_bien': data.nombre_bien, 
+                'cantidad_baja': data.cantidad_baja + ' ' + data.unidad_medida}]
         });
         return resultado_json;
     }
