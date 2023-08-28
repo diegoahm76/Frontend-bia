@@ -7,20 +7,15 @@ import {
   Typography,
   Button,
   Divider,
-  // Autocomplete,
-  // type AutocompleteChangeReason,
-  // type AutocompleteChangeDetails,
   Stack,
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import dayjs, { type Dayjs } from 'dayjs';
 import type {
-  // ClaseTercero,
   ClaseTerceroPersona,
   DataNaturaUpdate,
   PropsRegisterAdmin,
@@ -28,7 +23,6 @@ import type {
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
 import {
-  // consultar_clase_tercero,
   consultar_clase_tercero_persona,
   editar_persona_natural,
 } from '../request/Request';
@@ -48,7 +42,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
+export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
   data,
   register,
   handleSubmit: handle_submit,
@@ -92,10 +86,6 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
-  // const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
-  // const [clase_tercero_persona, set_clase_tercero_persona] = useState<
-  //   ClaseTercero[]
-  // >([]);
 
   // modales
   const [
@@ -120,19 +110,6 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
     false;
   const acepta_notificacion_sms =
     watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
-
-  // const handle_change_autocomplete = (
-  //   event: React.SyntheticEvent<Element, Event>,
-  //   value: ClaseTercero[],
-  //   reason: AutocompleteChangeReason,
-  //   details?: AutocompleteChangeDetails<ClaseTercero>
-  // ): void => {
-  //   set_value(
-  //     'datos_clasificacion_persona',
-  //     value.map((e) => e.value)
-  //   );
-  //   set_clase_tercero_persona(value);
-  // };
 
   // abre modal historial de autorizacion
   const handle_open_dialog_autorizacion = (): void => {
@@ -165,6 +142,7 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
     set_value('fecha_nacimiento', date);
     set_fecha_nacimiento(value);
   };
+  
   // trae todas las clase tercero
   const get_datos_clase_tercero = async (): Promise<void> => {
     try {
@@ -268,7 +246,9 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
       reset(); // limpiar formulario
     } catch (error) {
       set_loading(false);
-      control_error('hubo un error al actualizar los datos, intentelo de nuevo');
+      control_error(
+        'hubo un error al actualizar los datos, intentelo de nuevo'
+      );
     }
   });
 
@@ -521,7 +501,7 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                     <TextField
                       fullWidth
                       size="small"
-                      type="textarea"                      
+                      type="textarea"
                       rows="3"
                       required={false}
                       disabled={false}
@@ -540,7 +520,7 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
-                    color='warning'
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_direcciones();
@@ -886,45 +866,6 @@ export const BuscarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 </Stack>
               </Grid>
             </Grid>
-            {/* Datos de clasificación Cormacarena */}
-            {/* <Grid container spacing={2} mt={0.1}>
-              <Grid item xs={12}>
-                <Title title="Datos de clasificación" />
-              </Grid>
-              <Grid item xs={12}>
-                {clase_tercero.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <Autocomplete
-                        multiple
-                        fullWidth
-                        size="medium"
-                        options={clase_tercero}
-                        getOptionLabel={(option: any) => option.label}
-                        isOptionEqualToValue={(option: any, value) =>
-                          option?.value === value?.value
-                        }
-                        value={clase_tercero_persona}
-                        renderInput={(params) => (
-                          <TextField
-                            key={params.id}
-                            {...params}
-                            label="Datos clasificación Cormacarena"
-                            placeholder="Clasificacion Cormacarena"
-                          />
-                        )}
-                        {...register('datos_clasificacion_persona')}
-                        disabled // Deshabilita la interacción con el componente
-                        open={false} // Mantén el listado cerrado
-                        clearOnBlur={false} // Evita eliminar los datos al perder el foco
-                        onChange={handle_change_autocomplete}
-                      />
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-              
-            </Grid> */}
             {/* BOTONES */}
             {/* Datos de vinculación */}
             <Grid container spacing={2} mt={0.1}>

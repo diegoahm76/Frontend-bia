@@ -370,9 +370,8 @@ export const DatosRepresentanteLegal: React.FC<
                 size="small"
                 label="E-mail"
                 disabled
-                required={false}
                 autoFocus
-                value={datos_representante?.email_empresarial}
+                value={datos_representante?.email}
               />
             </Grid>
             <Grid item xs={12} sm={6}>

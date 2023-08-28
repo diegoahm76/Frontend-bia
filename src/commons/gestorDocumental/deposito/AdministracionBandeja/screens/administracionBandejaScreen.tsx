@@ -263,6 +263,7 @@ const AdministrarBandejaScreen = () => {
             </Grid>
         </Grid>
     );
+
 };
 
 // eslint-disable-next-line no-restricted-syntax

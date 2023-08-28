@@ -94,6 +94,7 @@ export interface Select_Alerta {
     nombre_funcion_comple_mensaje: string;
     id_modulo_destino: number;
     id_modulo_generador: number;
+    cod_categoria_clase_alerta_display: string;
   }
   export interface Props {
     selectedOption: string;

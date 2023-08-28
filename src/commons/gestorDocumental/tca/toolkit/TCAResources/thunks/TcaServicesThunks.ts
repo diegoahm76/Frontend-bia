@@ -177,6 +177,8 @@ export const get_catalogo_TCA_service = async (
 export const create_item_catalogo_tca_service: any = async (
   bodyPost: any,
   setLoadingButton: any,
+
+  mixed_tipologias: any
 ): Promise<any> => {
   const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
   setLoadingButton(true);
@@ -188,11 +190,18 @@ export const create_item_catalogo_tca_service: any = async (
 
     // console.log('bodyPost', bodyPost);
 
-    const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
-    const { data } = await api.post(url, {
+    const postData: any = {
       id_cat_serie_und_ccd_trd,
       cod_clas_expediente
-    });
+    };
+    if (mixed_tipologias?.length > 0) {
+      postData.tipologias_reservadas = mixed_tipologias.filter(
+        (el: any) => el.reservada
+      );
+    }
+
+    const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
+    const { data } = await api.post(url, postData);
     control_success(data.detail);
     // console.log('data TCA catalogo', data);
     return data;
