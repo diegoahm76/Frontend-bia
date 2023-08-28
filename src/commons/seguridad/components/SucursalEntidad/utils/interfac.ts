@@ -94,7 +94,8 @@ export interface SucursalDireccionesProps {
       event:any ,
       child?: React.ReactNode
   ) => void;
-
+  same_address:any;
+  setsame_address:any;
 }
 
 export interface Props {
@@ -105,6 +106,8 @@ export interface Props {
   data_entidad:any ;
   sucursal:any;
   fetchand_update_data: any;
+  setnew_number:any;
+  fetch_dataget:any;
 }
 export interface ISucursalEmpresa {
   id_sucursal_empresa: number;
