@@ -25,6 +25,7 @@ import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
 import { BotonConAlerta } from '../utils/MarcadorDeAlertasBoton';
 import { obtenerHoraDeFecha } from '../utils/ModificadorHora';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
 
@@ -302,8 +303,10 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
           
 
+
             <ButtonGroup style={{ margin: 7 }}>
               {download_xls({ nurseries: filtered_rows, columns })}
+              {download_pdf({ nurseries: filtered_rows, columns, title: 'Mis alertas' })}
             </ButtonGroup>
           </div>
           <Box component="form" sx={{ mt: '20px', width: '100%' }} noValidate autoComplete="off">

@@ -8,6 +8,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ModificadorFormatoFecha } from "../../utils/ModificaforFecha";
 import { v4 as uuidv4 } from 'uuid';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface MostrrModalArchivadoProps {
     data: any[];
@@ -21,11 +22,12 @@ export const MostrrModalArchivado: React.FC<MostrrModalArchivadoProps> = ({ data
 
     const footerContent = (
         <div>
-            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { setVisible(false) }}>Salir</Button>
+            <Button style={{ margin: 3 }} variant="contained" startIcon={<ClearIcon />} color="error" onClick={() => { setVisible(false) }}>Salir</Button>
+        
         </div>
     );
 
-    const titulo = <Title title={`Tabla histórico de animales`} />;
+    const titulo = <Title title={`Alertas archivadas`} />;
 
     const columns: GridColDef[] = [
         {
