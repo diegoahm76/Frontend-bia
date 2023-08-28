@@ -49,7 +49,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
 
 
 
-    const title = (<Title title="Cambiar " />);
+    const title = (<Title title="Informacion de alerta " />);
 
    // eslint-disable-next-line @typescript-eslint/naming-convention
     const {
@@ -346,8 +346,9 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
                         <TextField
                             style={{ margin: 6, width: "100%" }}
                             label="Mensaje"
+                            multiline
                             value={mensaje}
-                            id="description" 
+                            // id="description" 
                             disabled
                         />
 

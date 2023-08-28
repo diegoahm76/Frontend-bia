@@ -5,6 +5,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -23,6 +24,8 @@ import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/contextData';
 import { search_seccion_subseccion } from '../request/request';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
   const {
@@ -277,12 +280,18 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
                     <Title title="Resultados de la búsqueda" />
                   </Grid>
                   <Grid item xs={12}>
+                    <ButtonGroup
+                      style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      {download_xls({ nurseries: rows, columns })}
+                      {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                    </ButtonGroup> 
                     <Box sx={{ height: 400, width: '100%' }}>
                       <DataGrid
                         rows={rows}
                         columns={columns}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
                       />
                     </Box>

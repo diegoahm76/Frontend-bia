@@ -16,8 +16,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucursal, data_entidad, selected_id, setselected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
+export const SucursalActuaizar: React.FC<Props> = ({fetch_dataget, fetchand_update_data, sucursal, data_entidad, selected_id, setselected_id, siguiente_numeros_sucursal, esPrincipalExists }: Props) => {
   const isediting = selected_id !== null && selected_id !== undefined;
+  
+  const [same_address, setsame_address] = useState(false);
   const initial_state: ISucursalForm = {
     descripcion_sucursal: "",
     direccion: "",
@@ -101,13 +103,17 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
         setform_values(initial_state);
         setselected_id(null);
         set_loading(false);
+        setsame_address(false);
         
         await fetchand_update_data();
+        await fetch_dataget();
       })
       .catch((error) => {
         console.error("Error al crear o actualizar la sucursal:", error);
         control_error(isediting ? "Error al actualizada  " : "Error al  guardar ")
         set_loading(false);
+        setsame_address(false);
+        
       });
      
 
@@ -116,14 +122,13 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
     // Set all form field values to their i2nitial_state (empty values)
     setform_values(initial_state);
      setselected_id(null);
-    
+    setsame_address(false);
   }; 
   useEffect(() => {
     if (exiting) { 
       window.history.back();
     }
   }, [exiting]);
-
   return (
     <Grid container
       spacing={2}
@@ -206,7 +211,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
         <TextField
           variant="outlined"
           size="small"
-          label="telefono_sucursal"
+          label="teléfono sucursal"
           fullWidth
           InputLabelProps={{
             shrink: true,
@@ -258,7 +263,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
           </Select>
         </FormControl>
       </Grid> 
-      <SucursalDirecciones form_values={form_values} handleinput_change={handleinput_change} /> 
+      <SucursalDirecciones same_address={same_address} setsame_address={setsame_address} form_values={form_values} handleinput_change={handleinput_change} /> 
       <Grid  container marginTop={2} spacing={2} direction="row" justifyContent="flex-end" >
         <Grid item xs={12} sm={1.4}>
           {/* <Button startIcon={<SaveIcon />} variant="contained" fullWidth color="primary" onClick={handleform_submit}>
@@ -268,7 +273,7 @@ export const SucursalActuaizar: React.FC<Props> = ({ fetchand_update_data, sucur
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
             variant="contained"
             fullWidth
-            color="primary"
+            color='success'
             onClick={handleform_submit}
             loading={loading} // Set the loading prop
           >

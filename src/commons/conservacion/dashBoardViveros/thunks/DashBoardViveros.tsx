@@ -1,10 +1,9 @@
 
 import { api } from '../../../../api/axios';
 // Types
-import { type AxiosResponse, type AxiosError, } from 'axios';
+import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type ResponseServer } from '../../../../interfaces/globalModels';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -108,9 +107,4 @@ export const obtiene_ultimos_movimientos: any = (filtros: {seleccion_vivero: num
       return error as AxiosError;
     }
   };
-};
-
-// Obtiene los tipos de entrada
-export const obtener_tipos_entrada = async (): Promise<AxiosResponse<ResponseServer<any[]>>> => {
-  return await api.get<ResponseServer<any[]>>('almacen/bienes/entradas/tipos-entradas/');
 };

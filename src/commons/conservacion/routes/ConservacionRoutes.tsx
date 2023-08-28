@@ -6,9 +6,10 @@ import { GestorViveroRoutes } from '../gestorVivero/routes/GestorViveroRoutes';
 import { MaterialVegetalRoutes } from '../materialVegetal/routes/MaterialVegetalRoutes';
 import { NotificacionRoutes } from '../notificacion/routes/NotificacionRoutes';
 import { ProduccionRoutes } from '../produccion/routes/ProduccionRoutes';
-import { ReporteRoutes } from '../reporte/routes/ReporteRoutes';
+// import { ReporteRoutes } from '../reporte/routes/ReporteRoutes';
 import { SolicitudMaterialRoutes } from '../solicitudMaterial/routes/SolucitudMaterialRoutes';
 import { DashBoardViverosRoutes } from '../dashBoardViveros/routes/DashBoardViverosRoutes';
+import { ReportesRoutes } from '../Reportes/routes/ReportesRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConservacionRoutes: React.FC = () => {
@@ -20,12 +21,13 @@ export const ConservacionRoutes: React.FC = () => {
       <Route path="material_vegetal/*" element={<MaterialVegetalRoutes />} />
       <Route path="notificaciones_alertas/*" element={<NotificacionRoutes />} />
       <Route path="produccion/*" element={<ProduccionRoutes />} />
-      <Route path="reportes/*" element={<ReporteRoutes />} />
+      {/* <Route path="reportes/*" element={<ReporteRoutes />} /> */}
       <Route
         path="solicitud_material/*"
         element={<SolicitudMaterialRoutes />}
       />
       <Route path="tablero_control/*" element={<DashBoardViverosRoutes />} />
+      <Route path="reportes/*" element={<ReportesRoutes />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
