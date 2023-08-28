@@ -62,38 +62,38 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         })
     }
     const historico_bajas_fc: () => void = () => {
-        dispatch(historico_bajas({ seleccion_vivero: 1, seleccion_planta: 309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_bajas({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_distribuciones_fc: () => void = () => {
-        dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta:'', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
 
         })
     }
     const historico_siembras_fc: () => void = () => {
-        dispatch(historico_siembras({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_siembras({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_cambios_etapa_fc: () => void = () => {
-        dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_ingreso_cuarentena_fc: () => void = () => {
-        dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_levantamiento_cuarentena_fc: () => void = () => {
-        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_traslados_fc: () => void = () => {
-        dispatch(historico_traslados({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_traslados({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
@@ -216,150 +216,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         doc.text('Fecha', 16, 34);
         doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
         doc.text('Número de baja', (doc.internal.pageSize.width - 60), 34);
-        const test = [
-            {
-                "id_baja": 8,
-                "fecha_baja": "2023-06-20T22:11:01",
-                "fecha_registro": "2023-06-20T22:14:17.571311",
-                "id_vivero": 1,
-                "nro_baja_por_tipo": 2,
-                "nombre_vivero": "Vivero Principal",
-                "bienes_implicados": [
-                    {
-                        "id_bien": 243,
-                        "cantidad_baja": 1,
-                        "nombre_bien": "bien consumible 1",
-                        "unidad_medida": "kg"
-                    },
-                    {
-                        "id_bien": 243,
-                        "cantidad_baja": 1,
-                        "nombre_bien": "bien consumible 1",
-                        "unidad_medida": "kg"
-                    },
-                    {
-                        "id_bien": 243,
-                        "cantidad_baja": 1,
-                        "nombre_bien": "bien consumible 1",
-                        "unidad_medida": "kg"
-                    },
-                    {
-                        "id_bien": 243,
-                        "cantidad_baja": 1,
-                        "nombre_bien": "bien consumible 1",
-                        "unidad_medida": "kg"
-                    },
-                ]
-            },
-            {
-                "id_baja": 10,
-                "fecha_baja": "2023-07-07T13:51:06",
-                "fecha_registro": "2023-07-07T14:30:59.548826",
-                "id_vivero": 1,
-                "nro_baja_por_tipo": 4,
-                "nombre_vivero": "Vivero Principal",
-                "bienes_implicados": [
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                ]
-            },
-            {
-                "id_baja": 8,
-                "fecha_baja": "2023-06-20T22:11:01",
-                "fecha_registro": "2023-06-20T22:14:17.571311",
-                "id_vivero": 1,
-                "nro_baja_por_tipo": 2,
-                "nombre_vivero": "Vivero Principal",
-                "bienes_implicados": [
-                    {
-                        "id_bien": 243,
-                        "cantidad_baja": 1,
-                        "nombre_bien": "bien consumible 1",
-                        "unidad_medida": "kg"
-                    }
-                ]
-            },
-            {
-                "id_baja": 10,
-                "fecha_baja": "2023-07-07T13:51:06",
-                "fecha_registro": "2023-07-07T14:30:59.548826",
-                "id_vivero": 1,
-                "nro_baja_por_tipo": 4,
-                "nombre_vivero": "Vivero Principal",
-                "bienes_implicados": [
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                ]
-            },
-            {
-                "id_baja": 10,
-                "fecha_baja": "2023-07-07T13:51:06",
-                "fecha_registro": "2023-07-07T14:30:59.548826",
-                "id_vivero": 1,
-                "nro_baja_por_tipo": 4,
-                "nombre_vivero": "Vivero Principal",
-                "bienes_implicados": [
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                    {
-                        "id_bien": 318,
-                        "cantidad_baja": 5,
-                        "nombre_bien": "Pala jardinero",
-                        "unidad_medida": "und"
-                    },
-                ]
-            },
-        ]
-        
-        test.forEach((report: any) => {
+        reporte.forEach((report: any) => {
             // Cliclo
             const reporte_dos = jso_object_detalle_bajas(report.bienes_implicados);
             coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
