@@ -455,7 +455,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             }
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text(dayjs(report.fecha_baja).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.text(dayjs(report.fecha_distribucion).format('DD/MM/YYYY'), 14, 41 + coordendas);
             doc.text(nombre_vivero, ((doc.internal.pageSize.width/2)-21), 41 + coordendas);
             doc.text(report.numero_despacho.toString(), (doc.internal.pageSize.width - 50), 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
@@ -545,6 +545,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                         label="Vivero"
                                         onChange={cambio_seleccion_vivero}
                                     >
+                                        <MenuItem value={"Todos"}>Todos</MenuItem>
                                         {lista_viveros.map((vive: any) => (
                                             <MenuItem key={vive.id_vivero} value={vive.id_vivero}>
                                                 {vive.nombre}
