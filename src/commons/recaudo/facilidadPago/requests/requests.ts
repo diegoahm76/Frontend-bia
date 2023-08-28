@@ -206,8 +206,15 @@ export const get_seguimiento_fac = async (id: number): Promise<any> => {
   return data
 }
 
-// Datos para la amortización desde Pag. Usuario Interno
-export const get_datos_amortizacion = async (id: number): Promise<any> => {
+// Ver Datos para la amortización desde Pag. Usuario Interno
+export const get_datos_deudor_amortizacion = async (id: number): Promise<any> => {
   const data = await api.get(`recaudo/planes-pagos/datos-facilidad-pago/${id}/`)
+  return data
+}
+
+// Ver Datos para la amortización desde Pag. Usuario Interno
+export const get_datos_amortizacion = async (id_facilidad: number, fecha_final: string| Date | null): Promise<any> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const data = await api.get(`recaudo/planes-pagos/plan-obligaciones-facilidad/${id_facilidad}/?fecha_final=${fecha_final}`)
   return data
 }

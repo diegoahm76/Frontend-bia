@@ -73,7 +73,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
         selected.slice(selected_index + 1),
       );
     }
-
     set_selected(new_selected);
   };
 
@@ -291,8 +290,8 @@ export const TablaObligacionesUsuario: React.FC = () => {
               } else if(selected.length === 0){
                 handle_open(2);
               } else {
-                navigate('../registro');
                 void handle_submit();
+                navigate('../registro');
               }
             }}
           >

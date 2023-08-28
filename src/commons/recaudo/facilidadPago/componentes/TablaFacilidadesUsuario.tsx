@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type FacilidadPagoUsuario } from '../interfaces/interfaces';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
-import { estado_facilidad } from '../slices/FacilidadesSlice';
+import { datos_facilidad } from '../slices/FacilidadesSlice';
 import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
 import { get_validacion_resolucion } from '../slices/ResolucionSlice';
 // import { get_seguimiento_fac } from '../requests/requests';
@@ -77,7 +77,7 @@ export const TablaFacilidadesUsuario: React.FC = () => {
           <IconButton
             onClick={() => {
               try {
-                void dispatch(estado_facilidad(params.row.estado));
+                void dispatch(datos_facilidad(params.row.estado));
                 void dispatch(get_facilidad_solicitud(params.row.id));
                 void dispatch(get_validacion_plan_pagos(params.row.id));
                 void dispatch(get_validacion_resolucion(params.row.id));

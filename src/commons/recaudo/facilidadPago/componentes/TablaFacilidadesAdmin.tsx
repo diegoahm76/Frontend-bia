@@ -12,6 +12,7 @@ import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
 import { get_validacion_resolucion } from '../slices/ResolucionSlice';
 import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
 import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
+import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 interface RootStateFacilidades {
@@ -285,7 +286,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id_facilidad}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
                   />
                 </Box>
               </Grid>

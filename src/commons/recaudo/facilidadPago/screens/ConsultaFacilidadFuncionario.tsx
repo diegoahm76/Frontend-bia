@@ -8,14 +8,15 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
 import { type event, type check, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
-import { post_respuesta_fac_pago, get_datos_amortizacion } from '../requests/requests';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
 import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
 import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
 import { VistaProyeccionPagos } from '../componentes/VistaProyeccionPagos';
-import { deudores } from '../slices/DeudoresSlice';
+import { post_respuesta_fac_pago } from '../requests/requests';
+import { deudores, get_datos_deudor_amortizacion } from '../slices/DeudoresSlice';
+import { datos_facilidad } from '../slices/FacilidadesSlice';
 
 interface RootState {
   solicitud_facilidad: {
@@ -232,15 +233,8 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                   variant='contained'
                                   onClick={() => {
                                     try {
-                                      void dispatch(deudores({
-                                        identificacion: solicitud_facilidad.deudor.identificacion,
-                                        nombre: solicitud_facilidad.deudor.nombres,
-                                        apellido: solicitud_facilidad.deudor.apellidos,
-                                        numero_facilidad: solicitud_facilidad.facilidad_pago.numero_radicacion,
-                                        numero_cuotas: solicitud_facilidad.facilidad_pago.cuotas,
-                                        numero_periodicidad: solicitud_facilidad.facilidad_pago.periodicidad
-                                      }))
-                                      void get_datos_amortizacion(solicitud_facilidad.facilidad_pago.id)
+                                      void dispatch(get_datos_deudor_amortizacion(solicitud_facilidad.facilidad_pago.id))
+                                      void dispatch(datos_facilidad(solicitud_facilidad.facilidad_pago.numero_radicacion))
                                       navigate('../amortizacion')
                                     } catch (error: any) {
                                       throw new Error(error)

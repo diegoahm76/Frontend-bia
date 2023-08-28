@@ -10,6 +10,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_asignadas, get_facilidades_asignadas } from '../slices/FacilidadesSlice';
 import { get_validacion_plan_pagos } from '../requests/requests';
+import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 interface RootState {
@@ -192,7 +193,7 @@ export const TablaFacilidadesFuncionario: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id_facilidad}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
                   />
                 </Box>
               </Grid>
