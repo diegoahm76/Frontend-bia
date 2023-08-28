@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 import type { AxiosError } from 'axios';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 const columns: GridColDef[] = [
     { field: 'id_alerta_equipo_estacion', headerName: 'NÚMERO', width: 100 },
@@ -190,7 +191,7 @@ export const HistorialEquipos: React.FC = () => {
                     <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
 
                         {download_xls({ nurseries: dato, columns })}
-
+                        {download_pdf({ nurseries: dato, columns, title: 'Historial de alertas' })}
 
                     </ButtonGroup>
                     <Box sx={{ mt: '20px' }}>
@@ -199,8 +200,8 @@ export const HistorialEquipos: React.FC = () => {
                             rows={dato}
                             columns={columns}
                             getRowId={(row) => row.id_alerta_equipo_estacion}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
                         />
                     </Box>
                 </>

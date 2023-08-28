@@ -4,7 +4,7 @@ import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element => {
 
-    const titulo = title;
+    const titulo:any = title;
     console.log(titulo);
     const button_style = {
         color: 'white',

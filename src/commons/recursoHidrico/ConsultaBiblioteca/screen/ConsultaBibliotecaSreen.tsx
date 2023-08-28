@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Divider,
   Grid,
   IconButton,
@@ -23,6 +24,8 @@ import { BusquedaInstrumentosBasica } from '../components/BusquedaInstrumentosBa
 import { DialogLaboratorio } from '../components/DialogLaboratorio';
 import { DialogCartera } from '../components/DialogCartera';
 import { DialogBombeo } from '../components/DialogBombeo';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
@@ -255,6 +258,12 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 Listado de secciones existentes
               </Typography>
               <Divider />
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <ButtonGroup style={{ margin: 7 }}>
+                  {download_xls({ nurseries: rows_seccion, columns: columns_seccion })}
+                  {download_pdf({ nurseries: rows_seccion, columns: columns_seccion, title: 'Listado de secciones existentes' })}
+                </ButtonGroup>
+              </div>
             </Grid>
             <Grid item xs={12}>
               <DataGrid
@@ -278,6 +287,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               <Typography variant="subtitle1" fontWeight="bold">
                 Sección seleccionada:
               </Typography>
+            
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -293,6 +303,12 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 Listado de Subsecciones existentes
               </Typography>
               <Divider />
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                {download_xls({ nurseries: rows_subseccion, columns:columns_subseccion })}
+                {download_pdf({ nurseries: rows_subseccion, columns: columns_subseccion, title: 'Listado de Subsecciones existentes' })}
+
+              </ButtonGroup>
             </Grid>
             <Grid item xs={12}>
               <DataGrid
@@ -300,8 +316,8 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 rows={rows_subseccion}
                 columns={columns_subseccion}
                 getRowId={(row) => row.id_subseccion}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
                 rowHeight={80}
               />
             </Grid>
@@ -386,6 +402,12 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 Cuencas Asociadas al instrumento:
               </Typography>
               <Divider />
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                {download_xls({ nurseries: rows_cuencas_instrumentos, columns: columns_cuencas })}
+                {download_pdf({ nurseries: rows_cuencas_instrumentos, columns: columns_cuencas, title: 'Cuencas Asociadas' })}
+
+              </ButtonGroup>
               <DataGrid
                 autoHeight
                 rows={rows_cuencas_instrumentos}
@@ -399,14 +421,20 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               <Typography variant="subtitle1" fontWeight="bold">
                 Anexos asociados al instrumento:
               </Typography>
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                {download_xls({ nurseries: rows_anexos, columns: columns_anexos })}
+                {download_pdf({ nurseries: rows_anexos, columns: columns_anexos, title: 'Anexos asociados' })}
+
+              </ButtonGroup>
               <Divider />
               <DataGrid
                 autoHeight
                 rows={rows_anexos}
                 columns={columns_anexos}
                 getRowId={(row) => uuidv4()}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             </Grid>
             {info_instrumentos?.cod_tipo_agua === 'SUP' ? (
