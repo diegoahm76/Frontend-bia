@@ -125,13 +125,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       cod_clas_expediente: data2
     };
 
-    console.log(mixed_tipologias)
 
-    if (mixed_tipologias.length > 0) {
-      bodyToSend.tipologias_reservadas = mixed_tipologias;
-    }
+    
 
-    void create_item_catalogo_tca_service(bodyToSend, setLoadingButton)
+    void create_item_catalogo_tca_service(bodyToSend, setLoadingButton, mixed_tipologias)
       .then(async () => await updateCatalogoTRD(tca_current?.id_trd))
       .then(async () => await updateCatalogoTCA(tca_current?.id_tca))
       .then(() => {
@@ -174,6 +171,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       .then(() => {
         closeModalAdministracionTca();
         resetAdministrarTCA();
+        dispatch(set_mixed_tipologias([]));
       });
   };
 
