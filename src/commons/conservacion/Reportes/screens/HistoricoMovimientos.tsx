@@ -153,22 +153,20 @@ export const HistoricoMovimientosScreen: React.FC = () => {
 
     const crear_encabezado: () => { reporte_seleccionado: any, title: string } = () => {
         const reporte_seleccionado = lista_reporte.find((r: any) => r.value === seleccion_reporte);
-        const title = (`Reporte - ${(reporte_seleccionado !== null && reporte_seleccionado !== undefined) ? reporte_seleccionado.name : ''}`);
+        const title = (`${(reporte_seleccionado !== null && reporte_seleccionado !== undefined) ? reporte_seleccionado.name : ''}`);
         doc.setFont('Arial', 'normal');
         doc.setFontSize(12);
-        const img_width = 140;
-        const img_height = 15;
-        const img_x = (doc.internal.pageSize.width - img_width) / 2;
-        const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
-        const title_width = doc.getTextWidth(title);
-        const x_pos = (doc.internal.pageSize.width - title_width) / 2;
         doc.addImage(logo_cormacarena_h, 160, 10, 40, 15)
-        // doc.addImage(image_data2_1, img_x, img_y, img_width, img_height,);;
         doc.setFont("Arial", "bold"); // establece la fuente en Arial
-        doc.text(title, x_pos, 15);
-        doc.text(seleccion_planta.nombre ?? "", ((doc.internal.pageSize.width - doc.getTextWidth('planta 1')) / 2), 20);
+        doc.text('Reporte', ((doc.internal.pageSize.width - doc.getTextWidth('Reporte')) / 2), 10);
+        doc.text(title, ((doc.internal.pageSize.width - doc.getTextWidth(title)) / 2), 15);
+        const planta = seleccion_planta.nombre ?? "";
         const fechas = `${dayjs(fecha_desde).format('DD/MM/YYYY')} - ${dayjs(fecha_hasta).format('DD/MM/YYYY')}`;
-        doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
+        if(planta !== ""){
+            doc.text(planta , ((doc.internal.pageSize.width - doc.getTextWidth(planta)) / 2), 20);
+            doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
+        }else
+            doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 20);
         doc.setFont("Arial", "normal"); // establece la fuente en Arial
         const fecha_generacion = `Fecha de generación de reporte ${dayjs().format('DD/MM/YYYY')}`;
         doc.text(fecha_generacion, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion)) - 5), 5);
