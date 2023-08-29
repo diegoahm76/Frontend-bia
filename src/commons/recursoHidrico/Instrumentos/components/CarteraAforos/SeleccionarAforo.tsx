@@ -37,7 +37,7 @@ import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButt
 import { ButtonInstrumentos } from '../ButtonInstrumentos';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
-
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarAforo: React.FC = () => {
   const columns_anexos: GridColDef[] = [
