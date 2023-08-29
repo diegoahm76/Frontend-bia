@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   Avatar,
   Box,
