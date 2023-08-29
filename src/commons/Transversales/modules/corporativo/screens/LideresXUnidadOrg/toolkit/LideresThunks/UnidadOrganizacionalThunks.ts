@@ -33,7 +33,7 @@ export const createLiderUnidadOrganizacional = async (
   cleanElementComponent: any
 ): Promise<any> => {
   try {
-    if (!dataPost.id_lider || !dataPost.id_unidad_organizacional) {
+    if (!dataPost.id_unidad_organizacional) {
       control_warning('Todos los campos son obligatorios');
       return;
     }
@@ -59,7 +59,7 @@ export const updateLiderUnidadOrganizacional = async (
   cleanElementComponent: any
 ): Promise<any> => {
   try {
-    if (dataPost.id_lider_unidad_org === undefined) {
+    if (!dataPost.id_lider_unidad_org) {
       control_warning('Todos los campos son obligatorios');
       return;
     }

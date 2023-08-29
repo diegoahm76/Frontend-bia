@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -80,11 +81,18 @@ const DialogElegirOrganigramaActual = () => {
   };
 
   const on_submit = async (data: FormValues): Promise<void> => {
-    const data_cambio = {
+    const data_cambio: any = {
       justificacion: get_values_elegir_organigrama_actual('justificacion'),
       organigrama: get_values_elegir_organigrama_actual('organigrama'),
       id_ccd: get_values_elegir_organigrama_actual('ccd')
     };
+
+ /*   if(!get_values_elegir_organigrama_actual('ccd')){
+      delete data_cambio.id_ccd;
+    }
+*/
+
+    console.log(data_cambio);
     await dispatch(cambio_organigrama_actual(data_cambio));
     handle_close_crear_organigrama();
   };
