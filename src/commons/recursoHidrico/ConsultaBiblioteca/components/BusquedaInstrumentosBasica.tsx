@@ -4,6 +4,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,6 +24,8 @@ import { DataContext } from '../context/contextData';
 import SearchIcon from '@mui/icons-material/Search';
 import type { BusquedaBasica } from '../interfaces/interfaces';
 import { get_busqueda_basica } from '../request/request';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
@@ -192,11 +195,17 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
                       <>
+                        <ButtonGroup
+                          style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                        >
+                          {download_xls({ nurseries: rows, columns })}
+                          {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                        </ButtonGroup>
                         <DataGrid
                           rows={rows}
                           columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
                           getRowId={(row) => uuidv4()}
                         />
                       </>

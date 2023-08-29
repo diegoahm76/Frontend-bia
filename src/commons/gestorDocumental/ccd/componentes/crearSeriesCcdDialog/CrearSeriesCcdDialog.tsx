@@ -19,7 +19,8 @@ import {
   Grid,
   IconButton,
   TextField,
-  Avatar
+  Avatar,
+  ButtonGroup
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -42,6 +43,8 @@ import { get_subseries_service } from '../../store/thunks/subseriesThunks';
 import use_ccd from '../../hooks/useCCD';
 import { getCatalogoSeriesYSubseries } from '../CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 import { Title } from '../../../../../components';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 const CrearSeriesCcdDialog = ({
   is_modal_active,
@@ -323,12 +326,18 @@ const CrearSeriesCcdDialog = ({
             </Grid>
 
             <Grid item xs={12}>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: series_ccd, columns })}
+                {download_pdf({ nurseries: series_ccd, columns, title: title_button })}
+              </ButtonGroup> 
               <DataGrid
                 density="compact"
                 autoHeight
                 rows={series_ccd}
                 columns={columns}
-                pageSize={5}
+                pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowId={(row) => row.id_serie_doc}
