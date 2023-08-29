@@ -32,6 +32,8 @@ import {
 import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
