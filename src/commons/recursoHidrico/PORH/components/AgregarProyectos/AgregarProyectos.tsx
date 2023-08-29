@@ -467,7 +467,8 @@ export const AgregarProyectos: React.FC = () => {
   return (
     <>
       <Grid item xs={12}>
-        <Title title="INFORMACIÓN DE PROYECTO" />
+        <Title title="Información de proyecto
+" />
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextField

@@ -20,7 +20,8 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
-  Tooltip
+  Tooltip,
+  ButtonGroup
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -47,6 +48,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../components';
 import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -462,12 +465,18 @@ export const AdmnistrarFormatos = (): JSX.Element => {
 
             {data_format_documental_type.length > 0 ? (
               <Grid item xs={12}>
+                <ButtonGroup
+                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  {download_xls({ nurseries: data_format_documental_type, columns: columns_creacion_formatos })}
+                  {download_pdf({ nurseries: data_format_documental_type, columns: columns_creacion_formatos, title: title_button  })}
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={data_format_documental_type}
                   columns={columns_creacion_formatos}
-                  pageSize={5}
+                  pageSize={10}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}
                   getRowId={(row) => row.id_formato_tipo_medio}

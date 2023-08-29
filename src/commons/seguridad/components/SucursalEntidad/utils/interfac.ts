@@ -100,7 +100,7 @@ export interface SucursalDireccionesProps {
 
 export interface Props {
   selected_id: number | null;
-  siguiente_numeros_sucursal: any | boolean | string;
+  new_number: any;
   esPrincipalExists: any;
   setselected_id:number | null| any ; 
   data_entidad:any ;

@@ -7,7 +7,8 @@ import { DataContext } from '../context/contextData';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { AgregarSubseccion } from './AgregarSubseccion';
-
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeccion: React.FC = () => {
   const {
@@ -108,7 +109,8 @@ export const AgregarSeccion: React.FC = () => {
         <Grid item>
           <LoadingButton
             variant="outlined"
-            color="warning"
+            // color="warning"
+            startIcon={<CleanIcon />}
             onClick={() => {
               reset();
             }}
@@ -139,6 +141,7 @@ export const AgregarSeccion: React.FC = () => {
             color="success"
             disabled={is_saving}
             loading={is_saving}
+            startIcon={<SaveIcon />}
           >
             Guardar
           </LoadingButton>

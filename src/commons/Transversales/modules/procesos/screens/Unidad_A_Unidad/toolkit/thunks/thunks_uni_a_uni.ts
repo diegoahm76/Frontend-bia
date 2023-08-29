@@ -47,28 +47,28 @@ export const getListPersonasUnidades = async (
 ): Promise<any> => {
   try {
     setviweGridDataPersons(true);
-    const url = `transversal/organigrama/get-unidad-organizacional-desactualizada`;
+    const url = `transversal/organigrama/get-unidad-organizacional-desactualizada/`;
     const { data } = await api.get(url);
     console.log(data.data);
 
-    const dataToReturn = data.data.filter(
-      (data: any) => data.id_unidad_organizacional_actual === id_unidad
+    const dataToReturn = data?.data?.filter(
+      (data: any) => data?.id_unidad_organizacional_actual === id_unidad
     );
-    if (dataToReturn.length > 0) {
+    if (dataToReturn?.length > 0) {
       console.log('dataToReturn', dataToReturn);
       control_success(
         `Se han encontrado ${dataToReturn.length} personas para la unidad seleccionada`
       );
       return {
         dataFilter: dataToReturn || [],
-        dataTotal: data.data || []
+        dataTotal: data?.data || []
       };
     } else {
       control_warning('No se encontraron personas en la unidad seleccionada');
       console.error(`Unidad with id ${id_unidad} not found`);
       return {
         dataFilter: [],
-        dataTotal: data.data || []
+        dataTotal: data?.data || []
       };
     }
   } catch (error) {
@@ -76,7 +76,11 @@ export const getListPersonasUnidades = async (
       `Error fetching personas for unidad with id ${id_unidad}:`,
       error
     );
-    throw error;
+    control_warning('No hay personas de la unidad seleccionada');
+    return {
+      dataFilter: [],
+      dataTotal: []
+    };
   } finally {
     setviweGridDataPersons(false);
   }

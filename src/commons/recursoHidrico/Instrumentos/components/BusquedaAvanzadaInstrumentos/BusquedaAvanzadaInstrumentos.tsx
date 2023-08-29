@@ -221,6 +221,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
       <Grid item>
         <Button
           variant="contained"
+          startIcon={<SearchIcon />}
           color="primary"
           onClick={() => {
             handle_click_open();
@@ -289,6 +290,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     color="primary"
                     loading={is_search}
                     disabled={is_search}
+                    startIcon={<SearchIcon />}
                   >
                     Buscar
                   </LoadingButton>

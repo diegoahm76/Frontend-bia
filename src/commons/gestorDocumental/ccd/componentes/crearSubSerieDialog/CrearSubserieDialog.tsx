@@ -205,7 +205,7 @@ const CrearSubSerieCcdDialog = ({
               variant="rounded"
             >
               <DeleteIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                sx={{ color: 'red', width: '18px', height: '18px' }}
               />
             </Avatar>
           </IconButton>
@@ -224,20 +224,6 @@ const CrearSubSerieCcdDialog = ({
     >
       <DialogTitle>
         <Title title={title} />
-     {/*   <IconButton
-          aria-label="close"
-          onClick={() => {
-            set_is_modal_active(false);
-          }}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500]
-          }}
-        >
-          <CloseIcon />
-        </IconButton> */}
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
@@ -264,7 +250,6 @@ const CrearSubSerieCcdDialog = ({
 
             <Grid item xs={12} sm={6}>
               <TextField
-                type="number"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"
@@ -286,15 +271,15 @@ const CrearSubSerieCcdDialog = ({
               >
                 <Button
                   type="submit"
-                  color="primary"
+                  color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
                 >
                   {title_button}
                 </Button>
                 <Button
-                  color="success"
-                  variant="contained"
+                  color="primary"
+                  variant="outlined"
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     reset_form();
@@ -328,6 +313,7 @@ const CrearSubSerieCcdDialog = ({
           sx={{ mr: '15px', mb: '10px', mt: '10px' }}
         >
           <Button
+            color="error"
             variant="outlined"
             onClick={() => {
               set_is_modal_active(false);

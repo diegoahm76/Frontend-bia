@@ -165,7 +165,6 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
               fullWidth
               size="small"
               label="Dígito de verificación *"
-              type="number"
               error={errors.digito_verificacion?.type === 'required'}
               helperText={
                 errors.digito_verificacion?.type === 'required'

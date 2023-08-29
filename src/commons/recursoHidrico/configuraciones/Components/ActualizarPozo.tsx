@@ -19,7 +19,8 @@ import { useForm } from 'react-hook-form';
 import type { EditarPozo } from '../interfaces/interfaces';
 import { editar_pozo } from '../Request/request';
 import { control_error, control_success } from '../../../../helpers';
-
+import { Title } from '../../../../components';
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -93,7 +94,10 @@ export const ActualizarPozo: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-        <DialogTitle>Editar Pozo</DialogTitle>
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Editar Pozo" />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={2}>
@@ -184,6 +188,7 @@ export const ActualizarPozo: React.FC<IProps> = ({
           <Button
             variant="contained"
             disabled={is_loading}
+            startIcon={<SaveIcon />}
             color="success"
             type="submit"
           >

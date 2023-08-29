@@ -262,7 +262,6 @@ export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                   fullWidth
                   size="small"
                   label="Dígito de verificación *"
-                  type="number"
                   disabled={true}
                   value={data?.digito_verificacion}
                 />

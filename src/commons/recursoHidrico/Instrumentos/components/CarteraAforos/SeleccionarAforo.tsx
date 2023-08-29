@@ -234,7 +234,7 @@ export const SeleccionarAforo: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" INFORMACIÓN DE CARTERA DE AFOROS " />
+            <Title title="  Información de cartera de aforos " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -736,6 +736,8 @@ export const SeleccionarAforo: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
+                
+                startIcon={<SaveIcon />}
                 disabled={is_saving || rows_data_cartera.length === 0}
                 loading={is_saving}
               >

@@ -33,7 +33,8 @@ import {
   set_current_mode_cartera,
 } from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
-
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import SaveIcon from '@mui/icons-material/Save';
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
 
@@ -503,7 +504,8 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
             <Grid item>
               <Button
                 variant="outlined"
-                color="warning"
+                // color="warning"
+                 startIcon={<CleanIcon />}
                 onClick={() => {
                   limpiar_formulario();
                 }}
@@ -518,6 +520,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                 type="submit"
                 loading={is_loading_submit}
                 disabled={is_loading_submit}
+                startIcon={<SaveIcon />}
               >
                 Guardar
               </LoadingButton>

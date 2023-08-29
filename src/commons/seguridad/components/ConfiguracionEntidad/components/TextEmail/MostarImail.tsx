@@ -97,6 +97,8 @@ export const MostrarEmail: React.FC = () => {
           };
           setDataEntidad(updatedDataEntidadWithUpdatedEmail);
           control_success('Email Corporativo actualizado correctamente');
+          setConfirmEmailValue('');
+          setEmailValue('');
         })
         .catch((error: any) => {
           // console.error("Error al actualizar los datos:", error);
@@ -199,6 +201,8 @@ export const MostrarEmail: React.FC = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       handleChangeEmail();
+               
+                      
                     }}
                   >
                     Guardar

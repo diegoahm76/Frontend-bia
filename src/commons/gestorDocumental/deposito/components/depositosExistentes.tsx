@@ -1,10 +1,12 @@
 
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, ButtonGroup, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { Title } from '../../../../components/Title';
 import { useAppSelector } from '../../../../hooks';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 
 
@@ -94,7 +96,12 @@ const ListadoDeposito = ({ get_values, depositos, handle_edit_click }: IProps) =
                 <Box sx={{ width: '100%' }}>
                     <Title title="Listado de depósitos de la entidad" />
 
-
+                    <ButtonGroup
+                        style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                        {download_xls({ nurseries: deposito , columns })}
+                        {download_pdf({ nurseries: deposito, columns, title: 'Listado de depósitos' })}
+                    </ButtonGroup>
 
                     <DataGrid
                         density="compact"
