@@ -262,8 +262,8 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 rows={rows_seccion}
                 columns={columns_seccion}
                 getRowId={(row) => row.id_seccion}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
                 rowHeight={80}
               />
             </Grid>

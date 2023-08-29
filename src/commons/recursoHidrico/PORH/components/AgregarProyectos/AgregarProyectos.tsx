@@ -3,7 +3,7 @@
 
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Avatar, IconButton, TextField, Typography } from '@mui/material';
+import { Avatar, ButtonGroup, IconButton, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -23,6 +23,8 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 dayjs.extend(isSameOrAfter);
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -490,6 +492,12 @@ export const AgregarProyectos: React.FC = () => {
       </Grid>
       {rows_proyectos_register.length > 0 && (
         <Grid item xs={12}>
+          <ButtonGroup
+            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {download_xls({ nurseries: rows_proyectos_register, columns: columns_actividades })}
+            {download_pdf({ nurseries: rows_proyectos_register, columns: columns_actividades, title: 'Actividades' })}
+          </ButtonGroup> 
           <DataGrid
             autoHeight
             rows={rows_proyectos_register}
@@ -499,8 +507,8 @@ export const AgregarProyectos: React.FC = () => {
               if (row.id_proyecto) return row.id_proyecto;
               return uuidv4();
             }}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
           />
         </Grid>
       )}

@@ -16,12 +16,15 @@ import {
   Stack,
   Alert,
   Typography,
+  ButtonGroup,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Title } from '../../../../../components/Title';
 import { DataContext } from '../../context/contextData';
 import '../../css/styles.css';
 import type { Evidencia } from '../../Interfaces/interfaces';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 interface IProps {
   is_modal_active: boolean;
@@ -83,14 +86,18 @@ export const DialogEvidencias: React.FC<IProps> = ({
         >
           <Grid item xs={12}>
             {rows_evidencia.length > 0 ? (
-              <DataGrid
-                autoHeight
-                rows={rows_evidencia}
-                columns={columns}
-                getRowId={(row) => row.id_evidencia_avance}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-              />
+              <><ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: rows_evidencia, columns })}
+                {download_pdf({ nurseries: rows_evidencia, columns, title: 'Resultados' })}
+              </ButtonGroup><DataGrid
+                  autoHeight
+                  rows={rows_evidencia}
+                  columns={columns}
+                  getRowId={(row) => row.id_evidencia_avance}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]} /></>
             ) : (
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">

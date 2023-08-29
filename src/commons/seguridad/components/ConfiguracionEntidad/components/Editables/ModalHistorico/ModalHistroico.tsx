@@ -43,7 +43,7 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const [dataHistorico, setdataHistorico] = useState<DatosHistoricoPerfilEntidad[]>(datosInicialesHistorico);
 
-    const titulo = <Title title={`Tabla historico de ${cargo}`} />;
+    const titulo = <Title title={`Tabla Histórico de ${cargo}`} />;
 
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -165,7 +165,7 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
                 variant="outlined"
                 onClick={() => { setVisible(true) }}
 
-            >Historico
+            >Histórico
             </Button>
 
             <Dialog header={titulo} visible={visible} style={{ width: "55%" }} closable={false} onHide={(): void => { setVisible(false) }} footer={footerContent}>

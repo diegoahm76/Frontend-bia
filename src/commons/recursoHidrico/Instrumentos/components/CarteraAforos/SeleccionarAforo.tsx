@@ -5,6 +5,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Divider,
   Grid,
   MenuItem,
@@ -34,7 +35,9 @@ import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { ButtonInstrumentos } from '../ButtonInstrumentos';
-import SaveIcon from '@mui/icons-material/Save';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarAforo: React.FC = () => {
   const columns_anexos: GridColDef[] = [
@@ -680,6 +683,12 @@ export const SeleccionarAforo: React.FC = () => {
                   Datos Aforo:
                 </Typography>
                 <Divider />
+                <ButtonGroup
+                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  {download_xls({ nurseries: rows_data_cartera, columns: columns_aforo })}
+                  {download_pdf({ nurseries: rows_data_cartera, columns: columns_aforo, title: 'Resultados de la búsqueda' })}
+                </ButtonGroup> 
                 <DataGrid
                   autoHeight
                   rows={rows_data_cartera}
@@ -697,13 +706,20 @@ export const SeleccionarAforo: React.FC = () => {
           </Grid>
           <Grid item xs={12}>
             <>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: rows_anexos_cartera, columns: columns_anexos })}
+                {download_pdf({ nurseries: rows_anexos_cartera, columns: columns_anexos, title: 'Resultados de laboratorio' })}
+              </ButtonGroup> 
+
               <DataGrid
                 autoHeight
                 rows={rows_anexos_cartera}
                 columns={columns_anexos}
                 getRowId={(row) => uuidv4()}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             </>
           </Grid>

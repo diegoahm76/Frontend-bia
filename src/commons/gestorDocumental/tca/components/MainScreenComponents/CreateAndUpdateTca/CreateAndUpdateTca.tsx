@@ -180,9 +180,11 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
-                      type="number"
                       label="Versión del TCA"
                       size="small"
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
@@ -191,7 +193,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                           control_warning('máximo 10 caracteres');
                         onChange(e.target.value);
                       }}
-                      inputProps={{ maxLength: 10 }}
+                   
                     />
                   )}
                 />

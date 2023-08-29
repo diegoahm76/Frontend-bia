@@ -596,7 +596,7 @@ const use_ccd = () => {
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DeleteIcon
                   titleAccess="Eliminar relación"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>

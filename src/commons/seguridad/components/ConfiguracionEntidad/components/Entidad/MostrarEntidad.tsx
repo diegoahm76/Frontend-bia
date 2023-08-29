@@ -51,7 +51,7 @@ export const MostrarEntidad: React.FC = () => {
             }}
         >
             <Grid item md={12} xs={12}>
-                <Title title="Entidad" />
+                <Title title="Configuración de la Entidad" />
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
                     <Grid item container spacing={5}>
                         <Grid item xs={12} sm={6} md={2}>

@@ -134,7 +134,6 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                type="number"
                 fullWidth
                 size="small"
                 label="Versión"

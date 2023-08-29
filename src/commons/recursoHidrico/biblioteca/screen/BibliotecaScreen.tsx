@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Avatar, Divider, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, ButtonGroup, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/contextData';
@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form';
 import { SeccionSubseccionMain } from '../components/SeccionSubseccionMain';
 import '../css/styles.css';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BibliotecaScreen: React.FC = () => {
@@ -145,6 +147,12 @@ export const BibliotecaScreen: React.FC = () => {
                 Listado de secciones existentes
               </Typography>
               <Divider />
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: rows_seccion, columns })}
+                {download_pdf({ nurseries: rows_seccion, columns, title: '   Listado de secciones' })}
+              </ButtonGroup> 
             </Grid>
             <Grid item xs={12}>
               <DataGrid
@@ -152,8 +160,8 @@ export const BibliotecaScreen: React.FC = () => {
                 rows={rows_seccion}
                 columns={columns}
                 getRowId={(row) => row.id_seccion}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
                 rowHeight={150}
               />
             </Grid>
