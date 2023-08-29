@@ -15,6 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import { agregar_avance } from '../../request/request';
 import dayjs from 'dayjs';
 import { DataContext } from '../../context/contextData';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistroAvance: React.FC = () => {
@@ -132,7 +133,7 @@ export const RegistroAvance: React.FC = () => {
         >
           {' '}
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE AVANCE" />
+            <Title title="Registro de avance" />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -158,9 +159,9 @@ export const RegistroAvance: React.FC = () => {
             >
               <DatePicker
                 label="Fecha Avance"
-                inputFormat="YYYY/MM/DD"
+                inputFormat="DD/MM/YYYY"
                 openTo="day"
-                views={['year', 'month', 'day']}
+                views={['day', 'month','year' ]}
                 value={fecha_reporte}
                 onChange={handle_fecha_reporte_change}
                 renderInput={(params) => (
@@ -254,7 +255,8 @@ export const RegistroAvance: React.FC = () => {
           <Grid item>
             <LoadingButton
               variant="outlined"
-              color="error"
+              // color="error"
+              startIcon={<CleanIcon />}
               onClick={reset_form} // Use the modified reset function
             >
               Limpiar

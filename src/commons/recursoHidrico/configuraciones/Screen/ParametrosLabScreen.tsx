@@ -215,7 +215,7 @@ export const ParametrosLabScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CONFIGURACIONES BÁSICAS PARÁMETROS" />
+          <Title title="Configuraciones básicas parámetros" />
         </Grid>
         <Grid item xs={12}>
           <Button

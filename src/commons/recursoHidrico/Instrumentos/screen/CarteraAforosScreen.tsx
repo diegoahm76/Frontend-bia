@@ -40,7 +40,7 @@ export const CarteraAforosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CARTERA DE AFOROS " />
+          <Title title="Cartera de aforos " />
         </Grid>
       </Grid>
       {mode_carteras.crear ? (<AgregarCartera />): null}

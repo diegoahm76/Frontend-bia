@@ -246,7 +246,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="VISUALIZACIÓN BIBLIOTECA" />
+          <Title title="Visualización biblioteca" />
         </Grid>
         {rows_seccion.length > 0 ? (
           <>

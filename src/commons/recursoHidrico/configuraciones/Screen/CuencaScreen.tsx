@@ -176,7 +176,7 @@ export const CuencaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CONFIGURACIONES BÁSICAS CUENCAS" />
+          <Title title="Configuraciones básicas cuencas" />
         </Grid>
         <Grid item xs={12}>
           <Button

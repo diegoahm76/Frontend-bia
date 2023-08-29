@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../helpers/controlError';
 import { control_success, editar_estacion } from '../../requets/Request';
 import { municipios_meta, type IEstacionEstaciones } from '../interfaces/interfaces';
+import { Title } from '../../../../components';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
   is_modal_active: boolean;
@@ -75,7 +77,11 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
       onClose={handle_close}
       maxWidth="xs">
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-        <DialogTitle>Editar Estación</DialogTitle>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Editar Estación" />
+        </Grid>
+
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={1}>
@@ -197,7 +203,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
             handle_close();
             reset();
           }}>Cancelar</Button>
-          <Button variant="contained" color="primary" type='submit' >ACTUALIZAR</Button>
+          <Button variant="contained" color='success' type='submit' startIcon={<SaveIcon />} >ACTUALIZAR</Button>
         </DialogActions>
       </form>
     </Dialog>
