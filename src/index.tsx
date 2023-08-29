@@ -27,16 +27,16 @@ const root = ReactDOM.createRoot(
 const persistor = persistStore(store);
 
 root.render(
-  <Suspense fallback={<Loader />}>
-    <PersistGate persistor={persistor}>
-      <Provider store={store}>
-        <React.StrictMode>
+  <PersistGate persistor={persistor}>
+    <Provider store={store}>
+      <React.StrictMode>
+        <Suspense fallback={<Loader />}>
           <HashRouter>
             <ToastContainer />
             <App />
           </HashRouter>
-        </React.StrictMode>
-      </Provider>
-    </PersistGate>
-  </Suspense>,
+        </Suspense>
+      </React.StrictMode>
+    </Provider>
+  </PersistGate>
 );

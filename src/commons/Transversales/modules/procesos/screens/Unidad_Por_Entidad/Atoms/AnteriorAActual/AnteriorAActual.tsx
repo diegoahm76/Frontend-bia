@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { type FC } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
-import { Grid } from '@mui/material';
+import { Grid, Stack, TextField } from '@mui/material';
 // * react select
 import Select from 'react-select';
+import dayjs from 'dayjs';
 
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
@@ -22,10 +23,26 @@ export const AnteriorAActual: FC = (): JSX.Element => {
 
   //* context necesario
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  // ? use state to set the currentDate
+  const [currentDate, setCurrentDate] = useState(dayjs().format('DD-MM-YYYY'));
+
+  // ? useEffect to update the current date each day
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentDate(dayjs().format('DD-MM-YYYY'));
+    }, dayjs().endOf('day').diff(dayjs(), 'millisecond'));
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
     console.log('hello from submit');
   };
+
 
   return (
     <>
@@ -45,7 +62,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={12}
+                sm={6}
                 sx={{
                   zIndex: 2
                 }}
@@ -86,7 +103,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          Organigrama Actual
+                          Organigrama Anterior
                         </small>
                       </label>
                     </div>
@@ -97,7 +114,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={12}
+                sm={6}
                 sx={{
                   zIndex: 2
                 }}
@@ -147,6 +164,20 @@ export const AnteriorAActual: FC = (): JSX.Element => {
               </Grid>
             </Grid>
           </form>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            spacing={3}
+            // sx={{ mt: '40px' }}
+          >
+            <TextField
+              label="Fecha actual"
+              variant="outlined"
+              value={currentDate}
+              InputLabelProps={{ shrink: true }}
+              disabled={true}
+            />
+          </Stack>
         </Grid>
       </Grid>
     </>

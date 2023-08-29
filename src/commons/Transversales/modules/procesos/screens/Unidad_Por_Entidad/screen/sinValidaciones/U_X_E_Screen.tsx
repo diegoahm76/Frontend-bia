@@ -7,6 +7,7 @@ import { /* useContext */ type FC, lazy } from 'react';
 
 import { useAppSelector } from '../../../../../../../../hooks';
 import { ActualANuevo } from '../../Atoms/ActualANuevo/ActualANuevo';
+import { AnteriorAActual } from '../../Atoms/AnteriorAActual/AnteriorAActual';
 
 const ProcesoARealizar = lazy(async () => {
   const module = await import('../../Atoms/ProcesoARealizar/ProcesoARealizar');
@@ -30,7 +31,6 @@ export const U_X_E_Screen: FC = (): JSX.Element => {
       {/*  componente presente en ambos escenarios */}
       <ProcesoARealizar />
 
-
       {/*
         caso # 1:
         1.1 modo_entrada_sin_validacion_organigrama_actual_a_nuevo
@@ -38,14 +38,14 @@ export const U_X_E_Screen: FC = (): JSX.Element => {
       */}
 
       {controlModoTrasladoUnidadXEntidad ===
-        'modo_entrada_con_validacion_organigrama_actual_a_nuevo' ? (
-        <ActualANuevo/>
-      ): null}
+      'modo_entrada_con_validacion_organigrama_actual_a_nuevo' ? (
+        <ActualANuevo />
+      ) : null}
 
       {controlModoTrasladoUnidadXEntidad ===
-        'modo_entrada_con_validacion_organigrama_anterior_a_actual' && (
-        <div>modo_entrada_con_validacion_organigrma_ANTERIOR_a_nuevo</div>
-      )}
+      'modo_entrada_con_validacion_organigrama_anterior_a_actual' ? (
+        <AnteriorAActual />
+      ) : null}
 
       {/* cleand all data for the app, algunos de los valores deben aparecer dependiendo el funcionamiento de la app */}
       <CleanData />
