@@ -18,6 +18,8 @@ import { useForm } from 'react-hook-form';
 import { control_error, control_success } from '../../../../helpers';
 import type { EditarCuenca } from '../interfaces/interfaces';
 import { editar_cuenca } from '../Request/request';
+import { Title } from '../../../../components';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
   is_modal_active: boolean;
@@ -94,6 +96,11 @@ export const ActualizarCuenca: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
+        
+  <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Editar Cuenca" />
+        </Grid>
+
         <DialogTitle>Editar Cuenca</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -148,6 +155,7 @@ export const ActualizarCuenca: React.FC<IProps> = ({
             disabled={is_loading}
             color="success"
             type="submit"
+            startIcon={<SaveIcon />}
           >
             ACTUALIZAR
           </Button>

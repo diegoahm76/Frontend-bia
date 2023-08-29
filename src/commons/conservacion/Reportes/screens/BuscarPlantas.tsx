@@ -8,8 +8,8 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../components/Title';
 import { useAppDispatch } from "../../../../hooks";
-import { obtiene_plantas_por_vivero } from "../thunks/SubsistemaConservacion";
 import { obtener_bienes_viveros } from "../../dashBoardViveros/thunks/DashBoardViveros";
+import { obtiene_plantas_por_vivero } from "../thunks/SubsistemaConservacion";
 
 interface IProps {
   is_modal_active: boolean,
@@ -40,7 +40,14 @@ const BuscarPlantas = (props: IProps) => {
         set_data_plantas(response.data);
         set_data_filtrada(response.data);
       });
-    } else {
+    } 
+    else if(props.reporte === 'MHIS' || props.reporte === 'DDEV'){
+      dispatch(obtener_bienes_viveros({seleccion_tipo_bien: ''})).then((response: any) => {
+        response.data.map((resp: any, index: number) => { resp.id = index; });
+        set_data_plantas(response.data);
+        set_data_filtrada(response.data);
+      });
+    }else {
       set_tamaño_col(6);
       dispatch(obtener_bienes_viveros({seleccion_tipo_bien: 'PL'})).then((response: any) => {
         response.data.map((resp: any, index: number) => { resp.id = index; });

@@ -133,7 +133,7 @@ export const SeccionSubseccionMain: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="ADMINISTRACION SECCIONES BIBLIOTECA" />
+          <Title title="Administración secciones biblioteca" />
         </Grid>
         {is_register_seccion && <AgregarSeccion />}
         {is_editar_seccion && <EditarSeccion />}

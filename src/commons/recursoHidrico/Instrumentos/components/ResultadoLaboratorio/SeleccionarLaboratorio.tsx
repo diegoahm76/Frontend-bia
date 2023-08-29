@@ -39,7 +39,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { ButtonInstrumentos } from '../ButtonInstrumentos';
 import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
 import { delete_dato_registro_laboratorio } from '../../request/request';
-
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarLaboratorio: React.FC = () => {
   const colums_resultado: GridColDef[] = [
@@ -873,6 +873,7 @@ export const SeleccionarLaboratorio: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
+                startIcon={<SaveIcon />}
                 disabled={is_saving}
                 loading={is_saving}
               >

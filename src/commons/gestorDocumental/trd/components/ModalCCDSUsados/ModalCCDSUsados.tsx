@@ -6,6 +6,7 @@ import { type FC, useContext /* useEffect */ } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Button,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogActions,
@@ -21,6 +22,8 @@ import { ModalContextTRD } from '../../context/ModalsContextTrd';
 import { useAppSelector } from '../../../../../hooks';
 import { columnsModalCCDUsados } from './utils/columns';
 import { Title } from '../../../../../components';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 //! toolkit-redux values
 
@@ -91,14 +94,20 @@ export const ModalCCDUsados: FC = (): JSX.Element => {
             justifyContent: 'center'
           }}
         >
+          <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+            {download_xls({ nurseries: ccd_finished, columns: columns_trd_busqueda })}
+            {download_pdf({ nurseries: ccd_finished, columns: columns_trd_busqueda, title: 'CCDs Usados' })}
+
+          </ButtonGroup>
           <DataGrid
             sx={{ mt: '15px' }}
             density="compact"
             autoHeight
             rows={ccd_finished}
             columns={columns_trd_busqueda}
-            pageSize={5}
-            rowsPerPageOptions={[7]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_ccd}
           />

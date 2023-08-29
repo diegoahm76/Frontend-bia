@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
 import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { Avatar, Divider, IconButton } from '@mui/material';
+import { Avatar, ButtonGroup, Divider, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
@@ -27,6 +28,8 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { BusquedaAvanzada } from '../../components/BusquedaAvanzadaPORH/BusquedaAvanzada';
 import { ConsultaPorh } from '../../components/ConsultaPorh/ConsultaPorh';
 import { BusquedaPorh } from '../../components/BusquedaPorh/BusquedaPorh';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
@@ -77,13 +80,23 @@ export const PorhMainScreen: React.FC = () => {
       field: 'fecha_inicio',
       headerName: 'FECHA INICIO',
       sortable: true,
-      width: 250,
+      width: 250, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
+
     },
     {
       field: 'fecha_fin',
       headerName: 'FECHA FIN',
       sortable: true,
-      width: 250,
+      width: 250, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
+
     },
     {
       field: 'ACCIONES',
@@ -369,6 +382,12 @@ export const PorhMainScreen: React.FC = () => {
                       Programas
                     </Typography> */}
                     <Divider />
+                    <ButtonGroup
+                      style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      {download_xls({ nurseries: rows_programas, columns })}
+                      {download_pdf({ nurseries: rows_programas, columns, title: 'Programas' })}
+                    </ButtonGroup> 
                   </Grid>
                   <Grid item xs={12}>
                     <DataGrid
@@ -376,8 +395,8 @@ export const PorhMainScreen: React.FC = () => {
                       rows={rows_programas}
                       columns={columns}
                       getRowId={(row) => row.id_programa}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
                     />
                   </Grid>
                 </>

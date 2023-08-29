@@ -2,6 +2,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -20,6 +21,8 @@ import type { InfoPorh } from '../../Interfaces/interfaces';
 import { search_avanzada } from '../../Request/request';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -209,6 +212,12 @@ export const BusquedaAvanzada: React.FC = () => {
                 <>
                   <Grid item xs={12}>
                     <Typography>Resultados de la búsqueda</Typography>
+                    <ButtonGroup
+                      style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      {download_xls({ nurseries: rows, columns })}
+                      {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                    </ButtonGroup> 
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
@@ -216,8 +225,8 @@ export const BusquedaAvanzada: React.FC = () => {
                         <DataGrid
                           rows={rows}
                           columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
                           getRowId={(row) => row.id_programa}
                         />
                       </>

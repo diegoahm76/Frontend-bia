@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Button, Divider, Grid, Tooltip, Typography } from '@mui/material';
+import { Button, ButtonGroup, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { BusquedaAvanzada } from '../../components/BusquedaAvanzadaPORH/BusquedaAvanzada';
 import type { InfoAvance, InfoPorh } from '../../Interfaces/interfaces';
@@ -15,6 +16,8 @@ import { DialogActividades } from '../../components/DialogActividades/DialogActi
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import '../../css/styles.css';
 import { DialogEvidencias } from '../../components/DialogEvidencias/DialogEvidencias';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AvanceScreen: React.FC = () => {
@@ -37,7 +40,11 @@ export const AvanceScreen: React.FC = () => {
       field: 'fecha_reporte',
       headerName: 'FECHA REPORTE',
       sortable: true,
-      width: 150,
+      width: 150,valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'evidencia',
@@ -152,6 +159,12 @@ export const AvanceScreen: React.FC = () => {
               Avances
             </Typography>
             <Divider />
+            <ButtonGroup
+              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+            >
+              {download_xls({ nurseries: rows_avances, columns })}
+              {download_pdf({ nurseries: rows_avances, columns, title: 'Avances' })}
+            </ButtonGroup> 
           </Grid>
           <Grid item xs={12}>
             <DataGrid
@@ -159,8 +172,8 @@ export const AvanceScreen: React.FC = () => {
               rows={rows_avances}
               columns={columns}
               getRowId={(row) => row.id_avance}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               rowHeight={100}
             />
           </Grid>

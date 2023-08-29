@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Divider,
@@ -30,6 +31,8 @@ import {
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
 import { useAppDispatch } from '../../../../../hooks';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaDepositos: React.FC = () => {
@@ -416,6 +419,12 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ width: '100%' }}>
+                      <ButtonGroup
+                        style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                      >
+                        {download_xls({ nurseries: rows, columns })}
+                        {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                      </ButtonGroup>
                       <DataGrid
                         density="compact"
                         autoHeight

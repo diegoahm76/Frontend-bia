@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -21,6 +22,8 @@ import { control_error } from '../../../../../helpers';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 import SearchIcon from '@mui/icons-material/Search';
 
 interface PropsBuscador {
@@ -317,6 +320,12 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                 <>
                   <Grid item xs={12}>
                     <Typography>Resultados de la búsqueda</Typography>
+                      <ButtonGroup
+                        style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                      >
+                        {download_xls({ nurseries: rows, columns })}
+                        {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                      </ButtonGroup> 
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
@@ -324,8 +333,8 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                         <DataGrid
                           rows={rows}
                           columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
                           getRowId={(row) => row.id_programa}
                         />
                       </>

@@ -70,7 +70,7 @@ import { Select_Alerta } from '../../interfaces/types';
         }}
       > 
         <Grid item marginTop={-2} xs={12}>
-          <Title title="Configuracion de alerta - gestor" />
+          <Title title="Configuración de alerta - gestor" />
         </Grid>
       </Grid>
       <Grid container

@@ -19,7 +19,8 @@ import { crear_parametros } from '../Request/request';
 import type { Parametros } from '../interfaces/interfaces';
 import { control_error, control_success } from '../../../../helpers';
 import { tipo_parametro_choices } from '../../Instrumentos/components/ResultadoLaboratorio/utils/choices/choices';
-
+import { Title } from '../../../../components';
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -49,7 +50,7 @@ export const AgregarParametro: React.FC<IProps> = ({
   const handle_close = (): void => {
     set_is_modal_active(false);
   };
-  
+
   const tipo_patametro_value = watch('cod_tipo_parametro')
 
   const on_submit_cargo: SubmitHandler<FieldValues> = async (data) => {
@@ -70,7 +71,10 @@ export const AgregarParametro: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
       <Box component="form" onSubmit={handleSubmit(on_submit_cargo)}>
-        <DialogTitle>Registro de parametros de laboratorio</DialogTitle>
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Registro de parametros de laboratorio" />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent>
           <Grid container spacing={2}>
@@ -149,6 +153,7 @@ export const AgregarParametro: React.FC<IProps> = ({
           </Button>
           <Button
             variant="contained"
+            startIcon={<SaveIcon />}
             disabled={is_loading}
             color="success"
             type="submit"

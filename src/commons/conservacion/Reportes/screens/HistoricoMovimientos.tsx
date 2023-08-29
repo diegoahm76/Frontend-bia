@@ -13,7 +13,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { image_data2_1, image_data_1 } from "../../../recursoHidrico/estaciones/imagenes/imagenes";
 import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import BuscarPlantas from "./BuscarPlantas";
@@ -62,38 +61,38 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         })
     }
     const historico_bajas_fc: () => void = () => {
-        dispatch(historico_bajas({ seleccion_vivero: 1, seleccion_planta: 309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_bajas({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_distribuciones_fc: () => void = () => {
-        dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta:'', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
 
         })
     }
     const historico_siembras_fc: () => void = () => {
-        dispatch(historico_siembras({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_siembras({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_cambios_etapa_fc: () => void = () => {
-        dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_ingreso_cuarentena_fc: () => void = () => {
-        dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_levantamiento_cuarentena_fc: () => void = () => {
-        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
     const historico_traslados_fc: () => void = () => {
-        dispatch(historico_traslados({ seleccion_vivero, seleccion_planta: '', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(historico_traslados({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
         })
     }
@@ -153,22 +152,20 @@ export const HistoricoMovimientosScreen: React.FC = () => {
 
     const crear_encabezado: () => { reporte_seleccionado: any, title: string } = () => {
         const reporte_seleccionado = lista_reporte.find((r: any) => r.value === seleccion_reporte);
-        const title = (`Reporte - ${(reporte_seleccionado !== null && reporte_seleccionado !== undefined) ? reporte_seleccionado.name : ''}`);
+        const title = (`${(reporte_seleccionado !== null && reporte_seleccionado !== undefined) ? reporte_seleccionado.name : ''}`);
         doc.setFont('Arial', 'normal');
         doc.setFontSize(12);
-        const img_width = 140;
-        const img_height = 15;
-        const img_x = (doc.internal.pageSize.width - img_width) / 2;
-        const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
-        const title_width = doc.getTextWidth(title);
-        const x_pos = (doc.internal.pageSize.width - title_width) / 2;
         doc.addImage(logo_cormacarena_h, 160, 10, 40, 15)
-        // doc.addImage(image_data2_1, img_x, img_y, img_width, img_height,);;
         doc.setFont("Arial", "bold"); // establece la fuente en Arial
-        doc.text(title, x_pos, 15);
-        doc.text(seleccion_planta.nombre ?? "", ((doc.internal.pageSize.width - doc.getTextWidth('planta 1')) / 2), 20);
+        doc.text('Reporte', ((doc.internal.pageSize.width - doc.getTextWidth('Reporte')) / 2), 10);
+        doc.text(title, ((doc.internal.pageSize.width - doc.getTextWidth(title)) / 2), 15);
+        const planta = seleccion_planta.nombre ?? "";
         const fechas = `${dayjs(fecha_desde).format('DD/MM/YYYY')} - ${dayjs(fecha_hasta).format('DD/MM/YYYY')}`;
-        doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
+        if(planta !== ""){
+            doc.text(planta , ((doc.internal.pageSize.width - doc.getTextWidth(planta)) / 2), 20);
+            doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
+        }else
+            doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 20);
         doc.setFont("Arial", "normal"); // establece la fuente en Arial
         const fecha_generacion = `Fecha de generación de reporte ${dayjs().format('DD/MM/YYYY')}`;
         doc.text(fecha_generacion, ((doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion)) - 5), 5);
@@ -190,6 +187,9 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             if (seleccion_reporte === 'DDEV') {
                 generar_historico_distribuciones();
             }
+            if (seleccion_reporte === 'RES') {
+                generar_historico_siembras();
+            }
             if (seleccion_reporte === 'CEMV') {
                 generar_historico_cambios_etapa();
             }
@@ -207,17 +207,26 @@ export const HistoricoMovimientosScreen: React.FC = () => {
 
     const generar_historico_bajas: () => void = () => {
         const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        const page = doc.internal.pageSize.getHeight();
         let coordendas = 0;
         let page_position = 1;
+        let coordenada_y = 30;
         doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
         doc.text('Fecha', 16, 34);
         doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
         doc.text('Número de baja', (doc.internal.pageSize.width - 60), 34);
         reporte.forEach((report: any) => {
-            if ((43 + coordendas) > doc_height) {
+            // Cliclo
+            const reporte_dos = jso_object_detalle_bajas(report.bienes_implicados);
+            coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
+            if (coordenada_y >= (page - 30) || coordendas >= (page - 30)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
+                doc.text('Fecha', 16, 34);
+                doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+                doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
                 coordendas = 0;
+                coordenada_y = 30;
             }
             // Cliclo
             const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
@@ -233,14 +242,26 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             // Tabla
             autoTable(doc, {
                 theme: 'plain',
-                columns: [{ header: 'Bien implicado', dataKey: 'numero_registros' }, { header: 'Cantidad dada de baja', dataKey: 'cantidad_mortalidad' }],
-                body: [{ 'numero_registros': 'Semilla de girasol', 'cantidad_mortalidad': '30 Kg' + ' Und'}],
+                columns: [{ header: 'Bien implicado', dataKey: 'nombre_bien' }, { header: 'Cantidad dada de baja', dataKey: 'cantidad_baja' }],
+                body: reporte_dos,
                 styles: { halign: 'center' },
                 startY: 43 + coordendas,
                 margin: 60
             })
-            doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
-            coordendas = coordendas + 25;
+            // doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
+            if(coordenada_y !== 30){
+                doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                coordendas = coordenada_y - 30;
+            }
+            else{
+                if(page !== 1){
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+                    coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
+                    doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                }
+            }
         });
         set_visor(doc.output('datauristring'));
     }
@@ -445,17 +466,17 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             // Cliclo
             coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
             if (coordenada_y >= (page - 35) || coordendas >= (page - 35)) {
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.text('Fecha', 16, 34);
                 doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
                 doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
-                page_position = page_position + 1;
-                nueva_pagina(doc, reporte_titulo.title, page_position);
                 coordendas = 0;
                 coordenada_y = 30;
             }
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text(dayjs(report.fecha_baja).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.text(dayjs(report.fecha_distribucion).format('DD/MM/YYYY'), 14, 41 + coordendas);
             doc.text(nombre_vivero, ((doc.internal.pageSize.width/2)-21), 41 + coordendas);
             doc.text(report.numero_despacho.toString(), (doc.internal.pageSize.width - 50), 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
@@ -475,7 +496,73 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 margin: 30
             });
             if(coordenada_y !== 30){
+                doc.line(5, coordenada_y+5, (doc.internal.pageSize.width - 5), coordenada_y+5);// 30 Linea inferior
+                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y+3);
+                coordendas = coordenada_y - 30;
+            }
+            else{
+                if(page !== 1){
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+                    coordenada_y = reporte_dos.length === 1 ? (22 + coordendas) : reporte_dos.length === 2 ? (67 + coordendas) : (coordendas + (reporte_dos.length * 11));
+                    doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                }
+            }
+        });
+        set_visor(doc.output('datauristring'));
+    }
+    const generar_historico_siembras: () => void = () => {
+        const page = doc.internal.pageSize.getHeight();
+        const reporte_titulo: { reporte_seleccionado: any, title: string } = crear_encabezado();
+        let coordendas = 0;
+        let page_position = 1;
+        let coordenada_y = 30;
+        doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
+        doc.setFont("Arial", "bold"); // establece la fuente en Arial
+        doc.text('Fecha', 14, 34);
+        doc.text('Vivero', 40, 34);
+        doc.text('Material vegetal sembrado', 80, 34);
+        doc.text('Distancia entre semillas', 130, 34);
+        doc.text('Lote creado', 180, 34);
+        reporte.forEach((report: any) => {
+            const reporte_dos = jso_object_detalle_siembras(report.bienes_consumidos);
+            // Cliclo
+            coordenada_y = reporte_dos.length === 1 ? (45 + coordendas + 20) : reporte_dos.length === 2 ? (45 + coordendas + 30) : (45 + coordendas + (reporte_dos.length * 10));
+            if (coordenada_y >= (page - 35) || coordendas >= (page - 35)) {
+                doc.setFont("Arial", "bold"); // establece la fuente en Arial
+                doc.text('Fecha', 14, 34);
+                doc.text('Vivero', 40, 34);
+                doc.text('Material vegetal sembrado', 80, 34);
+                doc.text('Distancia entre semillas', 130, 34);
+                doc.text('Lote creado', 180, 34);
+                page_position = page_position + 1;
+                nueva_pagina(doc, reporte_titulo.title, page_position);
+                coordendas = 0;
+                coordenada_y = 30;
+            }
+            doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
+            doc.setFont("Arial", "normal"); // establece la fuente en Arial
+            doc.text(dayjs(report.fecha_siembra).format('DD/MM/YYYY'), 14, 41 + coordendas);
+            doc.text(report.nombre_vivero, 40, 41 + coordendas);
+            doc.text(report.nombre_bien, 80, 41 + coordendas);
+            doc.text(report.distancia_entre_semillas.toString(), 147, 41 + coordendas);
+            doc.text(report.nro_lote.toString(), 188, 41 + coordendas);
+            doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
+            doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
+            doc.line(64, 50 + coordendas, (doc.internal.pageSize.width - 50), 50 + coordendas);// Linea central de tabla
+            // Tabla
+            autoTable(doc, {
+                theme: 'plain',
+                columns: [{ header: 'Bienes consumidos', dataKey: 'nombre_bien' }, 
+                          { header: 'Cantidad', dataKey: 'cantidad' }],
+                          body: reporte_dos,
+                styles: { halign: 'center' },
+                startY: 43 + coordendas,
+                margin: 40
+            });
+            if(coordenada_y !== 30){
                 doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
                 coordendas = coordenada_y - 30;
             }
             else{
@@ -483,11 +570,13 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
                     coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
                     doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 70), coordenada_y-2);
                 }
             }
         });
         set_visor(doc.output('datauristring'));
     }
+
     const jso_object_detalle: (array: any, nombre_vivero: string) => any = (array: any, nombre_vivero: string) => {
         let resultado_json: any = [];
         array.forEach((data: any) => {
@@ -496,6 +585,25 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             'vivero_destino': nombre_vivero,
             'etapa_ingresa':data.etapa_ingresa,
             }]
+        });
+        return resultado_json;
+    }
+    const jso_object_detalle_siembras: (array: any) => any = (array: any) => {
+        let resultado_json: any = [];
+        array.forEach((data: any) => {
+            resultado_json = [...resultado_json,{
+                'nombre_bien': data.nombre_bien, 
+                'cantidad': data.cantidad + ' ' + data.unidad_medida
+            }]
+        });
+        return resultado_json;
+    }
+    const jso_object_detalle_bajas: (array: any) => any = (array: any) => {
+        let resultado_json: any = [];
+        array.forEach((data: any) => {
+            resultado_json = [...resultado_json,
+                { 'nombre_bien': data.nombre_bien, 
+                'cantidad_baja': data.cantidad_baja + ' ' + data.unidad_medida}]
         });
         return resultado_json;
     }
@@ -545,6 +653,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                         label="Vivero"
                                         onChange={cambio_seleccion_vivero}
                                     >
+                                        <MenuItem value={"Todos"}>Todos</MenuItem>
                                         {lista_viveros.map((vive: any) => (
                                             <MenuItem key={vive.id_vivero} value={vive.id_vivero}>
                                                 {vive.nombre}

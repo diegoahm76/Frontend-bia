@@ -20,6 +20,7 @@ import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
 import Swal from 'sweetalert2';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
@@ -229,26 +230,28 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 >
                     CREAR ESTACIÓN
                 </Button>
-           
-                <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end' }}>
-
-                {download_xls({ nurseries: list_estaciones, columns })}
-
-            </ButtonGroup>
 
             
              </Grid>
             <Grid item xs={12} container justifyContent='center'>
                 
                 {list_estaciones.length > 0 ? (
+                    <>
+                        <Grid item xs={12}><ButtonGroup
+                            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                        >
+                            {download_xls({ nurseries: list_estaciones, columns })}
+                            {download_pdf({ nurseries: list_estaciones, columns, title: '  CREAR ESTACIÓN' })}
+                        </ButtonGroup>
                     <DataGrid
-                        autoHeight
-                        rows={list_estaciones}
-                        columns={columns}
-                        getRowId={(row) => row.id_estacion}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                    />
+                                autoHeight
+                                rows={list_estaciones}
+                                columns={columns}
+                                getRowId={(row) => row.id_estacion}
+                                pageSize={10}
+                                rowsPerPageOptions={[10]} />
+                        </Grid>
+                    </>
                 ) : (
                     <CircularProgress color="secondary" />
                 )}

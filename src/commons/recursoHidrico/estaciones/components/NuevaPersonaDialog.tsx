@@ -23,7 +23,7 @@ import { crear_persona } from '../../requets/Request';
 import Select from 'react-select';
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components';
-
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -442,7 +442,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 >
                   Cancelar
                 </Button>
-                <Button variant="contained" color="primary" type="submit">
+                <Button startIcon={<SaveIcon />} variant="contained" color="success" type="submit">
                   Guardar
                 </Button>
               </DialogActions>
