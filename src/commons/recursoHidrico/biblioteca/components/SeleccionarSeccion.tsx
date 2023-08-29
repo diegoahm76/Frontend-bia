@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type React from 'react';
@@ -25,7 +26,7 @@ import { delete_seccion_id, delete_subseccion_id } from '../request/request';
 import Swal from 'sweetalert2';
 import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
-
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarSeccion: React.FC = () => {
   const {
@@ -65,7 +66,13 @@ export const SeleccionarSeccion: React.FC = () => {
       width: 300,
       renderCell: (params) => <div className="container">{params.value}</div>,
     },
-    { field: 'fechaCreacion', headerName: 'FECHA CREACIÓN', width: 200 },
+    { field: 'fechaCreacion', headerName: 'FECHA CREACIÓN', width: 200,
+     valueFormatter: (params) => {
+      const date = new Date(params.value);
+      const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+      return formattedDate;
+    },
+  },
     {
       field: 'nombre_completo',
       headerName: 'PERSONA CREADORA',
@@ -342,7 +349,7 @@ export const SeleccionarSeccion: React.FC = () => {
       {rows_subseccion.length > 0 && (
         <>
           <Grid item xs={12}>
-            <Title title="SUBSECCIÓN" />
+            <Title title="Subsección" />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -477,6 +484,7 @@ export const SeleccionarSeccion: React.FC = () => {
               type="submit"
               variant="contained"
               color="success"
+              startIcon={<SaveIcon />}
               disabled={is_saving}
               loading={is_saving}
             >

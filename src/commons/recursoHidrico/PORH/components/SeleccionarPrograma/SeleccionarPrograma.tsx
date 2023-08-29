@@ -60,13 +60,21 @@ export const SeleccionarPrograma: React.FC = () => {
       field: 'vigencia_inicial',
       headerName: 'VIGENCIA INICIAL',
       sortable: true,
-      width: 250,
+      width: 250, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'vigencia_final',
       headerName: 'VIGENCIA FINAL',
       sortable: true,
-      width: 250,
+      width: 250, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'inversion',
@@ -252,7 +260,7 @@ export const SeleccionarPrograma: React.FC = () => {
       >
         {' '}
         <Grid item xs={12}>
-          <Title title="INFORMACIÓN DE PROGRAMA" />
+          <Title title="Información de programa" />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -271,7 +279,7 @@ export const SeleccionarPrograma: React.FC = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
             <DatePicker
               label="Fecha Inical"
-              inputFormat="YYYY/MM/DD"
+              inputFormat="DD/MM/YYYY"
               openTo="day"
               views={['year', 'month', 'day']}
               value={start_date}
@@ -293,7 +301,7 @@ export const SeleccionarPrograma: React.FC = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
             <DatePicker
               label="Fecha Final"
-              inputFormat="YYYY/MM/DD"
+              inputFormat="DD/MM/YYYY"
               openTo="day"
               views={['year', 'month', 'day']}
               value={end_date}

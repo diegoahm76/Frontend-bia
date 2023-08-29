@@ -17,7 +17,9 @@ import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
 import { crear_pozo } from '../Request/request';
 import type { Pozo } from '../interfaces/interfaces';
 import { control_error, control_success } from '../../../../helpers';
-
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import SaveIcon from '@mui/icons-material/Save';
+import { Title } from '../../../../components';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -65,7 +67,10 @@ export const AgregarPozo: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit(on_submit_pozos)}>
-        <DialogTitle>Registro de pozos</DialogTitle>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Registro de pozos" />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent>
           <Grid container spacing={2}>
@@ -141,7 +146,8 @@ export const AgregarPozo: React.FC<IProps> = ({
           </Button>
           <Button
             variant="outlined"
-            color="warning"
+            // color="warning"
+            startIcon={<CleanIcon />}
             onClick={limpiar_formulario}
           >
             Limpiar
@@ -151,6 +157,7 @@ export const AgregarPozo: React.FC<IProps> = ({
             disabled={is_loading}
             color="success"
             type="submit"
+            startIcon={<SaveIcon />}
           >
             Guardar
           </Button>

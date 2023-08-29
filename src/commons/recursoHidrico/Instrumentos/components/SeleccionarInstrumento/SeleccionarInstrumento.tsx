@@ -168,7 +168,11 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       field: 'fecha_registro',
       headerName: 'FECHA DE REGISTRO',
       sortable: true,
-      width: 300,
+      width: 300, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'ACCIONES',
@@ -279,7 +283,11 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       field: 'fecha_registro',
       headerName: 'FECHA DE REGISTRO',
       sortable: true,
-      width: 300,
+      width: 300, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'ACCIONES',

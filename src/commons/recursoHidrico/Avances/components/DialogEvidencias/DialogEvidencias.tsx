@@ -63,7 +63,7 @@ export const DialogEvidencias: React.FC<IProps> = ({
         maxWidth={'sm'}
       >
         <DialogTitle>
-          <Title title="LISTADO DE EVIDENCIAS" />
+          <Title title="Listado de evidencias" />
         </DialogTitle>
         <Divider />
         <Grid

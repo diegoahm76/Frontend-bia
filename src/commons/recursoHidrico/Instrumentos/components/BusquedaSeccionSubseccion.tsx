@@ -23,6 +23,7 @@ import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/contextData';
 import { search_seccion_subseccion } from '../request/request';
+import SearchIcon from '@mui/icons-material/Search';
 
 export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
   const {
@@ -202,6 +203,8 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
+
             onClick={() => {
               handle_click_open();
             }}
@@ -267,6 +270,7 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
                   color="primary"
                   loading={is_search}
                   disabled={is_search}
+                  startIcon={<SearchIcon />}
                 >
                   Buscar
                 </LoadingButton>

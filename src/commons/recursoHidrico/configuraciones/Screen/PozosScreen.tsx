@@ -191,7 +191,7 @@ export const PozosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CONFIGURACIONES BÁSICAS POZOS" />
+          <Title title="Configuraciones básicas pozos" />
         </Grid>
         <Grid item xs={12}>
           <Button

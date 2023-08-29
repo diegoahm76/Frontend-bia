@@ -225,12 +225,12 @@ export const EditarAvance: React.FC = () => {
         >
           {is_select_avance && (
             <Grid item xs={12}>
-              <Title title=" INFORMACIÓN DE AVANCE" />
+              <Title title="Información de avance" />
             </Grid>
           )}
           {is_editar_avance && (
             <Grid item xs={12}>
-              <Title title=" EDICIÓN DE AVANCE" />
+              <Title title="Edición de avance" />
             </Grid>
           )}
           <Grid item xs={12} sm={6}>

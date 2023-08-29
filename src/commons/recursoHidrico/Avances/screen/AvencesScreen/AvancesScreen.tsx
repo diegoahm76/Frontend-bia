@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Button, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import { Title } from '../../../../../components/Title';
@@ -37,7 +38,11 @@ export const AvanceScreen: React.FC = () => {
       field: 'fecha_reporte',
       headerName: 'FECHA REPORTE',
       sortable: true,
-      width: 150,
+      width: 150,valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'evidencia',

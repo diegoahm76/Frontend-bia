@@ -2,7 +2,7 @@
 import { Button, Dialog, DialogActions, DialogContent,   Divider, Grid, InputAdornment, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
-
+import SaveIcon from '@mui/icons-material/Save';
 import { useForm } from 'react-hook-form';
 import { type ParametrosEditar } from '../interfaces/interfaces';
 import { control_success, editar_parametro } from '../../requets/Request';
@@ -562,7 +562,9 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
               >
                 Cancelar
               </Button>
-              <Button variant="contained" color="primary" type="submit">
+              <Button 
+              startIcon={<SaveIcon />}
+              variant="contained" color='success' type="submit">
                 Actualizar
               </Button>
             </DialogActions>

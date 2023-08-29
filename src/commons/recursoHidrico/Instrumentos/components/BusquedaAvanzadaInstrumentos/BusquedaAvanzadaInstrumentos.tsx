@@ -29,7 +29,7 @@ import {
   set_current_id_instrumento,
 } from '../../toolkit/slice/instrumentosSlice';
 import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
-
+import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
   const {
@@ -218,6 +218,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
       <Grid item>
         <Button
           variant="contained"
+          startIcon={<SearchIcon />}
           color="primary"
           onClick={() => {
             handle_click_open();
@@ -286,6 +287,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     color="primary"
                     loading={is_search}
                     disabled={is_search}
+                    startIcon={<SearchIcon />}
                   >
                     Buscar
                   </LoadingButton>
