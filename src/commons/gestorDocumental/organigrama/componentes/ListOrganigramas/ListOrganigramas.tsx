@@ -10,7 +10,8 @@ import {
   Avatar,
   Chip,
   Tooltip,
-  CircularProgress
+  CircularProgress,
+  ButtonGroup
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -35,6 +36,8 @@ import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Link } from 'react-router-dom';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -357,6 +360,12 @@ export function ListOrganigramas({
           </Box>
         ) : (
           <Box sx={{ width: '100%' }}>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: organigram, columns })}
+                {download_pdf({ nurseries: organigram, columns, title: 'Organigramas' })}
+              </ButtonGroup>
             <DataGrid
               density="compact"
               autoHeight

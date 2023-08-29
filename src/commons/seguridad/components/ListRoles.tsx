@@ -40,6 +40,7 @@ import {
 import { Title } from '../../../components/Title';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -233,7 +234,8 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
           
         <ButtonGroup >
           {download_xls({ nurseries: roles, columns })}
-         
+          {download_pdf({ nurseries: roles, columns, title: 'Roles' })}
+
         </ButtonGroup> 
 
       </Grid>

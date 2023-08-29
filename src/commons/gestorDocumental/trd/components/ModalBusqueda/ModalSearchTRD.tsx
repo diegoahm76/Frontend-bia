@@ -19,7 +19,8 @@ import {
   Divider,
   IconButton,
   Stack,
-  TextField
+  TextField,
+  ButtonGroup
 } from '@mui/material';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 //! helpers
@@ -43,6 +44,8 @@ import {
 import { columnsModalBusquedaTRD } from './utils/colums';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../components';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 //! toolkit-redux values
 
 export const ModalSearchTRD: FC = (): JSX.Element => {
@@ -259,14 +262,20 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 </LoadingButton>
               </Grid>
             </Grid>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+              {download_xls({ nurseries: trds, columns: columns_trd_busqueda })}
+              {download_pdf({ nurseries: trds, columns: columns_trd_busqueda, title: 'TRD que coincidan ' })}
+
+            </ButtonGroup>
             <DataGrid
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
               rows={trds}
               columns={columns_trd_busqueda}
-              pageSize={7}
-              rowsPerPageOptions={[7]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={(row) => row.id_trd}
             />

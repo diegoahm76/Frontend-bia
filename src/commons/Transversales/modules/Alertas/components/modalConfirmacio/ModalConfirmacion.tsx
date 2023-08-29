@@ -124,7 +124,9 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
                     const first_alert = data_entidad[updatedata_entidad_index];
 
                     const valor_archivado = first_alert.archivado;
+                    const valor_leido = first_alert.leido;
                     if (!valor_archivado) {
+                        if (valor_leido) {
                         const updateddata_entidad: Alerta_update = {
                             ...first_alert,
                             archivado: true,
@@ -135,8 +137,19 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
 
                         set_data_entidad(response.data.data);
                         control_success('Campo  archivado  correctamente');
-                    }
-                   
+                    }            
+                
+                
+                        else {
+                            // Aquí puedes poner el código que deseas ejecutar si la condición en el if no se cumple
+                            // Por ejemplo, puedes mostrar un mensaje de error o realizar alguna otra acción
+                            control_error('No se puede archivar la alerta,no esta leida');
+                        }
+                
+        
+                
+                };
+                    // control_error("no has revisado esta alerta");
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }

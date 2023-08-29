@@ -53,6 +53,8 @@ import { get_assignments_service } from '../store/thunks/assignmentsThunks';
 
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../fileWeight/fileWeight';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -866,6 +868,12 @@ export const CcdScreen: React.FC = () => {
               </Box>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
+                  <ButtonGroup
+                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    {download_xls({ nurseries: assignments_ccd, columns: columns_asignacion })}
+                    {download_pdf({ nurseries: assignments_ccd, columns: columns_asignacion, title: 'Actividades' })}
+                  </ButtonGroup> 
                   <DataGrid
                     density="compact"
                     autoHeight
@@ -875,8 +883,8 @@ export const CcdScreen: React.FC = () => {
                       zIndex: 2
                     }}
                     columns={columns_asignacion}
-                    pageSize={8}
-                    rowsPerPageOptions={[5]}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.id_cat_serie_und}
                   />
