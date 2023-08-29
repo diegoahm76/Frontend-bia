@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesRegistro } from '../componentes/TablaObligacionesRegistro';
@@ -96,11 +95,11 @@ export const RegistroFacilidadPago: React.FC = () => {
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const { solicitud_facilidad } = useSelector((state: RootStateSolicitud) => state.solicitud_facilidad);
 
-  const handle_change_date_abono = (date: Date | null) => {
+  const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
   };
 
-  const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
@@ -123,9 +122,9 @@ export const RegistroFacilidadPago: React.FC = () => {
     set_obligaciones_ids(arr_ids);
   }, [obligaciones])
 
-  const handle_close = () => { set_modal(false) }
+  const handle_close = (): void => { set_modal(false) }
 
-  const capitalize = (str: string) => {
+  const capitalize = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 

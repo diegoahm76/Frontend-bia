@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { Title } from '../../../../components/Title';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type event } from '../interfaces/interfaces';
+import { get_datos_amortizacion } from '../slices/PlanPagosSlice';
 import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
 import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
 import { TablaProyeccionPagos } from '../componentes/TablaProyeccionPagos';
 import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
 import dayjs from 'dayjs';
-import { get_datos_amortizacion } from '../requests/requests';
 
 interface RootStateDeudor {
   deudores: {
@@ -44,13 +44,14 @@ export const Amortizacion: React.FC = () => {
   const { facilidades } = useSelector((state: RootStateFacilidad) => state.facilidades);
   const [num_periodicidad, set_num_periodicidad] = useState(deudores.periodicidad);
   const [num_cuota, set_num_cuota] = useState(deudores.cuotas);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const valor_abono_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
     currency: "COP",
   }).format(parseFloat(deudores.valor_abonado))
 
-  const agregar_meses = (fecha: Date, meses: number) => {
+  const agregar_meses = (fecha: Date, meses: number): Date => {
     return new Date(fecha.setMonth(fecha.getMonth() + meses))
   }
 
@@ -60,14 +61,15 @@ export const Amortizacion: React.FC = () => {
   }, [tasa_usura])
 
   useEffect(() => {
-    const meses = num_periodicidad * num_cuota;
-    const arr_fecha_abono = deudores.fecha_abono.split('-');
-    const fecha_abono = new Date(parseInt(arr_fecha_abono[0]), (parseInt(arr_fecha_abono[1]) - 1), parseInt(arr_fecha_abono[2]))
-    const fecha_final = agregar_meses(fecha_abono, meses)
-    set_date_final(dayjs(fecha_final).format('DD/MM/YYYY'))
+    if(deudores.fecha_abono !== undefined){
+      const meses = num_periodicidad * num_cuota;
+      const arr_fecha_abono = deudores.fecha_abono.split('-');
+      const fecha_abono = new Date(parseInt(arr_fecha_abono[0]), (parseInt(arr_fecha_abono[1]) - 1), parseInt(arr_fecha_abono[2]))
+      const fecha_final = agregar_meses(fecha_abono, meses)
+      set_date_final(dayjs(fecha_final).format('YYYY-MM-DD'))
+    }
   }, [deudores, num_cuota, num_periodicidad])
 
-  console.log(date_final)
   return (
     <>
       <Title title='Liquidación de la Facilidad de Pago - Usuario Cormacarena' />
@@ -271,7 +273,7 @@ export const Amortizacion: React.FC = () => {
                       label="Fecha Final de Pago"
                       size="small"
                       fullWidth
-                      value={`${date_final}`}
+                      value={date_final !== '' ? `${dayjs(date_final).format('DD/MM/YYYY')}` : ''}
                       disabled
                     />
                   </Grid>
@@ -291,8 +293,17 @@ export const Amortizacion: React.FC = () => {
               startIcon={<Add />}
               sx={{ marginTop: '30px' }}
               onClick={() => {
-                void get_datos_amortizacion(deudores.id, dayjs(date_final).format('YYYY-MM-DD'))
-                set_modal(true)
+                try {
+                  void dispatch(get_datos_amortizacion({
+                    id_facilidad: deudores.id,
+                    fecha_final: date_final,
+                    cuotas: num_cuota,
+                    periodicidad: num_periodicidad,
+                  }));
+                  set_modal(true);
+                } catch (error: any) {
+                  throw new Error(error);
+                }
               }}
             >
               Generar Plan de Pagos

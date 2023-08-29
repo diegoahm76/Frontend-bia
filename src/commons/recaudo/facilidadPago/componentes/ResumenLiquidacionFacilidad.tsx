@@ -1,18 +1,92 @@
 import { Grid, Box, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { type TablasAmortizacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
+import { useEffect, useState } from 'react';
+
+interface RootState {
+  plan_pagos: {
+    plan_pagos: TablasAmortizacion;
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResumenLiquidacionFacilidad: React.FC = () => {
+  const [capital_total, set_capital_total] = useState(0);
+  const [abono_facilidad, set_abono_facilidad] = useState(0);
+  const [saldo_capital, set_saldo_capital] = useState(0);
+  const [intereses_mora, set_intereses_mora] = useState(0);
+  const [deuda_total, set_deuda_total] = useState(0);
+  const [capital_cuotas, set_capital_cuotas] = useState(0);
+  const [intereses_cuotas, set_intereses_cuotas] = useState(0);
+  const [total_cuotas, set_total_cuotas] = useState(0);
+  const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
+
+  useEffect(() => {
+    set_capital_total(plan_pagos.resumen_inicial.capital_total);
+    set_abono_facilidad(plan_pagos.resumen_inicial.abono_facilidad);
+    set_saldo_capital(plan_pagos.resumen_facilidad.saldo_total);
+    set_intereses_mora(plan_pagos.resumen_facilidad.intereses_mora);
+    set_deuda_total(plan_pagos.resumen_facilidad.deuda_total);
+    set_capital_cuotas(plan_pagos.distribucion_cuota.capital_cuotas);
+    set_intereses_cuotas(plan_pagos.distribucion_cuota.interes_cuotas);
+    set_total_cuotas(plan_pagos.distribucion_cuota.total_cuota);
+  }, [plan_pagos])
 
   const rows_resumen_inicial = [
     {
       parametro: 'Capital Total Inicial',
-      valor: '567078000',
+      valor: capital_total,
     },
     {
       parametro: 'Abono Facilidad',
-      valor: '123000',
+      valor: abono_facilidad,
+    },
+  ]
+
+  const rows_resumen_facilidad = [
+    {
+      parametro: 'Saldo Capital',
+      valor: saldo_capital,
+    },
+    {
+      parametro: 'Intereses de Mora',
+      valor: intereses_mora,
+    },
+    {
+      parametro: <strong>Deuda Total</strong>,
+      valor: deuda_total,
+    },
+  ]
+
+  const rows_abono = [
+    {
+      parametro: 'Abono a Capital',
+      valor: '',
+    },
+    {
+      parametro: 'Abono a Intereses',
+      valor: '',
+    },
+    {
+      parametro: <strong>Total Abono</strong>,
+      valor: '',
+    },
+  ]
+
+  const rows_cuota = [
+    {
+      parametro: 'Capital Distribuidos en Cuotas',
+      valor: capital_cuotas,
+    },
+    {
+      parametro: 'Intereses Distribuidos en Cuotas',
+      valor: intereses_cuotas,
+    },
+    {
+      parametro: <strong>Total Cuota</strong>,
+      valor: total_cuotas,
     },
   ]
 
@@ -45,21 +119,6 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
     },
   ];
 
-  const rows_resumen_facilidad = [
-    {
-      parametro: 'Saldo Capital',
-      valor: '117000000',
-    },
-    {
-      parametro: 'Intereses de Mora',
-      valor: '123000000',
-    },
-    {
-      parametro: <strong>Deuda Total</strong>,
-      valor: '240000000',
-    },
-  ]
-
   const columns_resumen_facilidad: GridColDef[] = [
     {
       field: 'parametro',
@@ -89,21 +148,6 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
     },
   ];
 
-  const rows_abono = [
-    {
-      parametro: 'Abono a Capital',
-      valor: '417000000',
-    },
-    {
-      parametro: 'Abono a Intereses',
-      valor: '157000000',
-    },
-    {
-      parametro: <strong>Total Abono</strong>,
-      valor: '575000000',
-    },
-  ]
-
   const columns_abono: GridColDef[] = [
     {
       field: 'parametro',
@@ -132,21 +176,6 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
       },
     },
   ];
-
-  const rows_cuota = [
-    {
-      parametro: 'Capital Distribuidos en Cuotas',
-      valor: '50000000',
-    },
-    {
-      parametro: 'Intereses Distribuidos en Cuotas',
-      valor: '35000000',
-    },
-    {
-      parametro: <strong>Total Cuota</strong>,
-      valor: '85000000',
-    },
-  ]
 
   const columns_cuota: GridColDef[] = [
     {

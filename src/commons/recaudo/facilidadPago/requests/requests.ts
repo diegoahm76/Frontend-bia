@@ -213,8 +213,8 @@ export const get_datos_deudor_amortizacion = async (id: number): Promise<any> =>
 }
 
 // Ver Datos para la amortización desde Pag. Usuario Interno
-export const get_datos_amortizacion = async (id_facilidad: number, fecha_final: string| Date | null): Promise<any> => {
+export const get_datos_amortizacion = async (id_facilidad: number, fecha_final: string| Date | null, cuotas: number, periodicidad: number): Promise<any> => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const data = await api.get(`recaudo/planes-pagos/plan-obligaciones-facilidad/${id_facilidad}/?fecha_final=${fecha_final}`)
+  const data = await api.get(`recaudo/planes-pagos/plan-obligaciones-facilidad/${id_facilidad}/?fecha_final=${fecha_final}&cuotas=${cuotas}&periodicidad=${periodicidad}`)
   return data
 }

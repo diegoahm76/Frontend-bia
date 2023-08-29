@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, Close, ManageAccounts, Help, Save, Article, Info } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -38,11 +37,11 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const handle_open = (): void => { set_modal(true) };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_open_sub = () => { set_sub_modal(true) };
-  const handle_close_sub = () => { set_sub_modal(false) };
+  const handle_open_sub = (): void => { set_sub_modal(true) };
+  const handle_close_sub = (): void => { set_sub_modal(false) };
 
   const get_lista_funcionarios = async (): Promise<void> => {
     try {

@@ -25,6 +25,7 @@ export interface Obligacion {
   monto_inicial: string;
   valor_intereses: string;
   dias_mora: number;
+  valor_capital_intereses: number;
 }
 
 export interface ObligacionesUsuario {
@@ -161,3 +162,37 @@ export interface FacilidadPagoUsuario {
   valor_total: number;
 }
 
+export interface Cartera {
+  obligaciones: Obligacion[];
+  total_intereses: number;
+  total_valor_capital: number;
+  total_valor_capital_con_intereses: number;
+}
+
+export interface ProyeccionPago {
+  capital: number;
+  cuota: number;
+  fecha_pago: string;
+  interes: number;
+  num_cuota: number;
+}
+
+export interface TablasAmortizacion {
+  data_cartera: Cartera;
+  data_cartera_modificada: Cartera;
+  distribucion_cuota: {
+    capital_cuotas: number;
+    interes_cuotas: number;
+    total_cuota: number;
+  };
+  resumen_facilidad : {
+    deuda_total: number;
+    intereses_mora: number;
+    saldo_total: number;
+  };
+  resumen_inicial: {
+    abono_facilidad: number;
+    capital_total: number;
+  };
+  proyeccion_plan: ProyeccionPago[];
+}
