@@ -48,7 +48,7 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
     doc.text(gato_text, gato_x, gato_y, { align: 'center' });
 
 
-    const start_y = img_y + img_height + 10; // Posición vertical para iniciar los encabezados y datos
+    const start_y = img_y + img_height -25; // Posición vertical para iniciar los encabezados y datos
 
     const data: any[][] = [];
     const headers: any[] = [];

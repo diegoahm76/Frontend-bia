@@ -146,24 +146,24 @@ export const PantallaPrincipalAlertas: React.FC = () => {
         return firstPart;
       },
     },
-    {
-      field: 'archivado',
-      headerName: 'Archivado',
-      width: 50,
-      valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
-    },
-    {
-      field: 'leido',
-      headerName: 'Leído',
-      width: 50,
-      renderCell: (params: any) => (params.row.leido === true ? "Sí" : "No"),
-    },
-    {
-      field: 'repeticiones_suspendidas',
-      headerName: 'Repeticiones Suspendidas',
-      width: 50,
-      renderCell: (params: any) => (params.row.repeticiones_suspendidas === true ? "Sí" : "No"),
-    },
+    // {
+    //   field: 'archivado',
+    //   headerName: 'Archivado',
+    //   width: 50,
+    //   valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
+    // },
+    // {
+    //   field: 'leido',
+    //   headerName: 'Leído',
+    //   width: 50,
+    //   renderCell: (params: any) => (params.row.leido === true ? "Sí" : "No"),
+    // },
+    // {
+    //   field: 'repeticiones_suspendidas',
+    //   headerName: 'Repeticiones Suspendidas',
+    //   width: 50,
+    //   renderCell: (params: any) => (params.row.repeticiones_suspendidas === true ? "Sí" : "No"),
+    // },
     {
       field: 'acciones',
       headerName: 'Acciones',
