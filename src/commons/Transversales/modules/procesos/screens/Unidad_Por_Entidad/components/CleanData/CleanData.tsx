@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ForwardIcon from '@mui/icons-material/Forward';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../hooks';
-import  SaveIcon  from '@mui/icons-material/Save';
+import SaveIcon from '@mui/icons-material/Save';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
@@ -95,9 +95,6 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     startIcon={
                       controlFaseEntrada === 1 ? <SaveIcon /> : <ForwardIcon />
                     }
-                    sx={{
-                      boxShadow: '5px 5px 30px 0px rgba(0,0,0,0.75)'
-                    }}
                     onClick={() => {
                       console.log('cleaning fields');
                     }}

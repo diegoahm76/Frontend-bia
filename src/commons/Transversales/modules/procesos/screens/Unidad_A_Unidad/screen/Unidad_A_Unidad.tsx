@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState, useEffect, type FC } from 'react';
-import { HistoricoTraslados } from '../components/HistoricoTraslados/screen/HistoricoTraslados';
-import { OrgAnteriorScreen } from '../components/OrganigramaAnterior/screen/OrgAnteriorScreen';
+import { useState, useEffect, type FC, lazy } from 'react';
+
 import {
   getOrganigramaAnterior,
   getUnidadesOrgActual,
@@ -18,10 +17,36 @@ import {
   setUnidadesOrgAnterior
 } from '../toolkit/slice/Uni_A_UniSlice';
 // import { Loader } from '../../../../../../../utils/Loader/Loader';
-import { ProcesoTrasladoScreen } from '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen';
-import { TotalPersonas } from '../components/TotalPersonas/screen/TotalPersonasScreen';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+
+const OrgAnteriorScreen = lazy(async () => {
+  const module = await import(
+    '../components/OrganigramaAnterior/screen/OrgAnteriorScreen'
+  );
+  return { default: module.OrgAnteriorScreen };
+});
+
+const HistoricoTraslados = lazy(async () => {
+  const module = await import(
+    '../components/HistoricoTraslados/screen/HistoricoTraslados'
+  );
+  return { default: module.HistoricoTraslados };
+});
+
+const ProcesoTrasladoScreen = lazy(async () => {
+  const module = await import(
+    '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen'
+  );
+  return { default: module.ProcesoTrasladoScreen };
+});
+
+const TotalPersonas = lazy(async () => {
+  const module = await import(
+    '../components/TotalPersonas/screen/TotalPersonasScreen'
+  );
+  return { default: module.TotalPersonas };
+});
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const navigate = useNavigate();

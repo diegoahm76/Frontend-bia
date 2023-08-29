@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 export const use_u_x_entidad = (): any => {
   // ! -------------------------- USE FORM NECESARIOS PARA EL FUNCIONAMIENTO DE LA APP -------------------------- //
 
+  // ? ----- use form de las opciones del traslado masivo de unidad por entidad ----- //
   const {
     control: control_opciones_traslado,
     handleSubmit: handleSubmit_opciones_traslado,
@@ -19,6 +20,27 @@ export const use_u_x_entidad = (): any => {
   });
 
   const values_watch_opciones_traslado = watch_opciones_traslado();
+
+  // ? ----- useform de la opción # 1 del traslado masivo (actual a nuevo)----- //
+
+  const {
+    control: control_opcion_actual_a_nuevo,
+    reset: reset_opcion_actual_a_nuevo,
+    watch: watch_opcion_actual_a_nuevo
+  } = useForm();
+
+  const watch_values_opcion_actual_a_nuevo = watch_opcion_actual_a_nuevo();
+
+  // ? ----- useform de la opción # 2 del traslado masivo (anterior a actual)----- //
+
+  const {
+    control: control_opcion_anterior_a_actual,
+    reset: reset_opcion_anterior_a_actual,
+    watch: watch_opcion_anterior_a_actual
+  } = useForm();
+
+  const watch_values_opcion_anterior_a_actual =
+    watch_opcion_anterior_a_actual();
 
   // * -------------------------- FUNCIONES NECESARIAS PARA EL FUNCIONAMIENTO DE LA APP -------------------------- *//
 
@@ -44,6 +66,17 @@ export const use_u_x_entidad = (): any => {
     handleSubmit_opciones_traslado,
     reset_opciones_traslado,
     values_watch_opciones_traslado,
+
+    //* - elementos para el control de la opción # 1 del traslado masivo (actual a nuevo) -- *//
+    control_opcion_actual_a_nuevo,
+    reset_opcion_actual_a_nuevo,
+    watch_values_opcion_actual_a_nuevo,
+
+    //* elementos para el control de la opción # 2 del traslado masivo (anterior a actual) - *//
+    control_opcion_anterior_a_actual,
+    reset_opcion_anterior_a_actual,
+    watch_values_opcion_anterior_a_actual,
+
 
     //* clean all data for the application
     cleanAllData

@@ -12,13 +12,13 @@ import { containerStyles } from '../../../../../../../gestorDocumental/tca/scree
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
-export const ActualANuevo: FC = (): JSX.Element => {
+export const AnteriorAActual: FC = (): JSX.Element => {
   //* dispatch declaration
   // ? redux toolkit - values
 
   //! use_u_x_entidad hooks
 
-  const { control_opcion_actual_a_nuevo } = use_u_x_entidad();
+  const { control_opcion_anterior_a_actual } = use_u_x_entidad();
 
   //* context necesario
 
@@ -45,14 +45,14 @@ export const ActualANuevo: FC = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={6}
+                sm={12}
                 sx={{
                   zIndex: 2
                 }}
               >
                 <Controller
-                  name="organigrama_actual_opcion_1" // posiblemenete se deba modificar el nombre
-                  control={control_opcion_actual_a_nuevo}
+                  name="opciones_traslado"
+                  control={control_opcion_anterior_a_actual} // posiblemenete se deba modificar el nombre
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -97,14 +97,14 @@ export const ActualANuevo: FC = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={6}
+                sm={12}
                 sx={{
                   zIndex: 2
                 }}
               >
                 <Controller
-                  name="organigrama_nuevo_opcion_1" // posiblemenete se deba modificar el nombre
-                  control={control_opcion_actual_a_nuevo}
+                  name="opciones_traslado"
+                  control={control_opcion_anterior_a_actual} // posiblemenete se deba modificar el nombre
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -138,7 +138,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          Organigrama Nuevo
+                          Organigrama Actual
                         </small>
                       </label>
                     </div>
