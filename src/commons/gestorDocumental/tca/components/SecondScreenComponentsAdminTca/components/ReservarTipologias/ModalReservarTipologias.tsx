@@ -8,6 +8,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -35,9 +36,12 @@ import { columnsResTipologias } from './columns/columnsResTipologias';
 
 import {
   set_mixed_tipologias,
+  set_tipologias_NO_reservadas,
   set_tipologias_reservadas
 } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { download_xls } from '../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../documentos-descargar/PDF_descargar';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -89,24 +93,25 @@ export const ModalReservarTipologias = (): JSX.Element => {
               onClick={() => {
                 // ? añdir tipologias con reservadass
                 dispatch(
-                  set_tipologias_reservadas(
-                    tipologias_NO_resevadas.length > 0
-                      ? [
-                          ...tipologias_resevadas,
-                          {
-                            ...params.row,
-                            reservada: true
-                          }
-                        ]
-                      : [
-                          ...tipologias_NO_resevadas,
-                          {
-                            ...params.row,
-                            reservada: true
-                          }
-                        ]
+                  set_tipologias_reservadas([
+                    ...tipologias_resevadas,
+                    {
+                      ...params.row,
+                      reservada: true
+                    }
+                  ])
+                );
+
+                dispatch(
+                  set_tipologias_NO_reservadas(
+                    tipologias_NO_resevadas.filter(
+                      (item: any) =>
+                        item.id_tipologia_documental !==
+                        params.row.id_tipologia_documental
+                    )
                   )
                 );
+
                 control_success('Ítem añadido como tipología restringida');
                 console.log(params.row);
               }}
@@ -147,32 +152,22 @@ export const ModalReservarTipologias = (): JSX.Element => {
               size="large"
               onClick={() => {
                 dispatch(
+                  set_tipologias_NO_reservadas([
+                    ...tipologias_NO_resevadas,
+                    {
+                      ...params.row,
+                      reservada: false
+                    }
+                  ])
+                );
+
+                dispatch(
                   set_tipologias_reservadas(
-                    tipologias_NO_resevadas.length > 0
-                      ? tipologias_resevadas
-                          .filter(
-                            (item: any) =>
-                              item.id_tipologia_documental !==
-                              params.row.id_tipologia_documental
-                          )
-                          .map((item: any) => {
-                            return {
-                              ...item,
-                              reservada: !item.reservada
-                            };
-                          })
-                      : tipologias_NO_resevadas
-                          .filter(
-                            (item: any) =>
-                              item.id_tipologia_documental !==
-                              params.row.id_tipologia_documental
-                          )
-                          .map((item: any) => {
-                            return {
-                              ...item,
-                              reservada: !item.reservada
-                            };
-                          })
+                    tipologias_resevadas.filter(
+                      (item: any) =>
+                        item.id_tipologia_documental !==
+                        params.row.id_tipologia_documental
+                    )
                   )
                 );
                 control_success('Ítem eliminado de tipologías restringidas');
@@ -228,25 +223,34 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 <Grid item xs={12} sm={12}>
                   <Box>
                     <Title title="Tipologías no restringidas" />
+                      <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
 
+                        {download_xls({ nurseries: tipologias_NO_resevadas, columns: columns_tipologias_NO_restringidas })}
+                        {download_pdf({ nurseries: tipologias_NO_resevadas, columns: columns_tipologias_NO_restringidas, title: 'Tipologías no restringidas' })}
+
+                      </ButtonGroup>
                     <DataGrid
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
                       autoHeight
-                      rows={
-                        // tipologias_NO_resevadas
-                        tipologias_NO_resevadas.filter(
-                          (item: any) =>
-                            !tipologias_resevadas.some(
-                              (element: any) =>
-                                element.id_tipologia_documental ===
-                                item.id_tipologia_documental
-                            )
-                        ) || tipologias_NO_resevadas
-                      }
+                      rows={tipologias_NO_resevadas}
+                      /* rows={
+                        tipologias_NO_resevadas?.length > 0
+                          ? tipologias_NO_resevadas?.filter((item: any) => {
+                              return tipologias_resevadas?.every(
+                                (element: any) => {
+                                  return (
+                                    element?.id_tipologia_documental !==
+                                    item?.id_tipologia_documental
+                                  );
+                                }
+                              );
+                            })
+                          : tipologias_resevadas
+                      } */
                       columns={columns_tipologias_NO_restringidas}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
                       experimentalFeatures={{ newEditingApi: true }}
                       getRowId={() => uuidv4()}
                     />
@@ -260,18 +264,31 @@ export const ModalReservarTipologias = (): JSX.Element => {
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
                       autoHeight
-                      rows={
-                        // tipologias_resevadas || []
-                        //  tipologias_resevadas
-                        tipologias_resevadas.filter(
-                          (item: any) =>
-                            !tipologias_NO_resevadas.some(
-                              (element: any) =>
-                                element.id_tipologia_documental ===
-                                item.id_tipologia_documental
-                            )
-                        ) || tipologias_resevadas
-                      }
+                      /* rows={tipologias_resevadas?.filter((item: any) => {
+                        return tipologias_NO_resevadas?.some(
+                          (element: any) => {
+                            return (
+                              element?.id_tipologia_documental !==
+                              item?.id_tipologia_documental
+                            );
+                          }
+                        );
+                      })} */
+                      rows={tipologias_resevadas}
+                      /*  rows={
+                        tipologias_NO_resevadas?.length > 0
+                          ? tipologias_resevadas?.filter((item: any) => {
+                              return tipologias_NO_resevadas?.some(
+                                (element: any) => {
+                                  return (
+                                    element?.id_tipologia_documental ===
+                                    item?.id_tipologia_documental
+                                  );
+                                }
+                              );
+                            })
+                          : tipologias_resevadas
+                      } */
                       columns={colums_tipologias_restringidas}
                       pageSize={5}
                       rowsPerPageOptions={[5]}

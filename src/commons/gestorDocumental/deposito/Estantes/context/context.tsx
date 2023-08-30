@@ -11,11 +11,16 @@ import type {
 } from '../types/types';
 import {
   get_depositos,
-  get_depositos_estante,
+  get_bandejas_estante,
   get_estantes_deposito,
   get_sucursales,
 } from '../services/services';
 import { control_error } from '../../../../../helpers';
+import type { ICajas, ICarpetas } from '../../Cajas/types/types';
+import {
+  get_caja_carpetas,
+  get_cajas_bandeja,
+} from '../../Cajas/services/services';
 
 interface UserContext {
   // * id
@@ -23,18 +28,38 @@ interface UserContext {
   set_id_deposito: (value: number | null) => void;
   id_estante: number | null;
   set_id_estante: (value: number | null) => void;
+  id_caja: number | null;
+  set_id_caja: (value: number | null) => void;
+  id_bandeja: number | null;
+  set_id_bandeja: (value: number | null) => void;
+
+  // * orden estantes
+  orden: number | null;
+  set_orden: (value: number | null) => void;
+  nuevo_orden: number | null;
+  set_nuevo_orden: (value: number | null) => void;
 
   // * select
   sucusal_selected: ValueProps[];
   depositos_selected: ValueProps[];
+  depositos_selected_mover_estante: ValueProps[];
+  nuevo_orden_estantes_selected: ValueProps[];
+  bandejas_selected: ValueProps[];
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
+  set_depositos_selected_mover_estante: (value: ValueProps[]) => void;
+  set_nuevo_orden_estantes_selected: (value: ValueProps[]) => void;
+  set_bandejas_selected: (value: ValueProps[]) => void;
 
   // * rows
   rows_estantes: GetEstantes[];
   set_rows_estantes: (value: GetEstantes[]) => void;
   rows_bandejas: GetBandejas[];
   set_rows_bandejas: (value: GetBandejas[]) => void;
+  rows_carpetas: ICarpetas[];
+  set_rows_carpetas: (value: ICarpetas[]) => void;
+  rows_cajas: ICajas[];
+  set_rows_cajas: (value: ICajas[]) => void;
 
   // * info
   identificacion_deposito: string;
@@ -45,6 +70,8 @@ interface UserContext {
   fetch_data_depositos: () => Promise<void>;
   fetch_data_estantes_depositos: () => Promise<void>;
   fetch_data_bandejas_estantes: () => Promise<void>;
+  fetch_data_caja_carpeta: () => Promise<void>;
+  fetch_data_caja_bandeja: () => Promise<void>;
 }
 
 export const DataContext = createContext<UserContext>({
@@ -53,18 +80,38 @@ export const DataContext = createContext<UserContext>({
   set_id_deposito: () => {},
   id_estante: null,
   set_id_estante: () => {},
+  id_caja: null,
+  set_id_caja: () => {},
+  id_bandeja: null,
+  set_id_bandeja: () => {},
+
+  // *orden estantes
+  orden: null,
+  set_orden: () => {},
+  nuevo_orden: null,
+  set_nuevo_orden: () => {},
 
   // * select
   sucusal_selected: [],
   depositos_selected: [],
+  depositos_selected_mover_estante: [],
+  nuevo_orden_estantes_selected: [],
+  bandejas_selected: [],
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
+  set_depositos_selected_mover_estante: () => {},
+  set_nuevo_orden_estantes_selected: () => {},
+  set_bandejas_selected: () => {},
 
   // * rows
   rows_estantes: [],
   set_rows_estantes: () => {},
   rows_bandejas: [],
   set_rows_bandejas: () => {},
+  rows_carpetas: [],
+  set_rows_carpetas: () => {},
+  rows_cajas: [],
+  set_rows_cajas: () => {},
 
   // * info
   identificacion_deposito: '',
@@ -75,6 +122,8 @@ export const DataContext = createContext<UserContext>({
   fetch_data_depositos: async () => {},
   fetch_data_estantes_depositos: async () => {},
   fetch_data_bandejas_estantes: async () => {},
+  fetch_data_caja_carpeta: async () => {},
+  fetch_data_caja_bandeja: async () => {},
 });
 
 export const UserProvider = ({
@@ -85,6 +134,12 @@ export const UserProvider = ({
   // * id
   const [id_deposito, set_id_deposito] = React.useState<number | null>(null);
   const [id_estante, set_id_estante] = React.useState<number | null>(null);
+  const [id_caja, set_id_caja] = React.useState<number | null>(null);
+  const [id_bandeja, set_id_bandeja] = React.useState<number | null>(null);
+
+  // * orden estantes
+  const [orden, set_orden] = React.useState<number | null>(null);
+  const [nuevo_orden, set_nuevo_orden] = React.useState<number | null>(null);
 
   // * select
   const [sucusal_selected, set_sucusal_selected] = React.useState<ValueProps[]>(
@@ -93,14 +148,28 @@ export const UserProvider = ({
   const [depositos_selected, set_depositos_selected] = React.useState<
     ValueProps[]
   >([]);
+  const [nuevo_orden_estantes_selected, set_nuevo_orden_estantes_selected] =
+    React.useState<ValueProps[]>([]);
+
+  const [
+    depositos_selected_mover_estante,
+    set_depositos_selected_mover_estante,
+  ] = React.useState<ValueProps[]>([]);
+
+  const [bandejas_selected, set_bandejas_selected] = React.useState<
+    ValueProps[]
+  >([]);
 
   // * rows
 
   const [rows_estantes, set_rows_estantes] = React.useState<GetEstantes[]>([]);
   const [rows_bandejas, set_rows_bandejas] = React.useState<GetBandejas[]>([]);
+  const [rows_carpetas, set_rows_carpetas] = React.useState<ICarpetas[]>([]);
+  const [rows_cajas, set_rows_cajas] = React.useState<ICajas[]>([]);
 
   // * info
-  const [identificacion_deposito, set_identificacion_deposito] = React.useState<string>('');
+  const [identificacion_deposito, set_identificacion_deposito] =
+    React.useState<string>('');
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -131,6 +200,15 @@ export const UserProvider = ({
           })
         );
         set_depositos_selected(data_sucursal);
+
+        const data_mover: ValueProps[] = response.map(
+          (item: ListarDepositos) => ({
+            value: item.identificacion_por_entidad,
+            label: item.nombre_deposito,
+            // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+          })
+        );
+        set_depositos_selected_mover_estante(data_mover);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -148,6 +226,13 @@ export const UserProvider = ({
           })
         );
         set_rows_estantes(data_estantes);
+
+        const data_selected: any[] = response.map((item: GetEstantes) => ({
+          value: item.orden_ubicacion_por_deposito ?? '',
+          label: item.orden_ubicacion_por_deposito ?? '',
+          // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+        }));
+        set_nuevo_orden_estantes_selected(data_selected);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -155,7 +240,7 @@ export const UserProvider = ({
   };
   const fetch_data_bandejas_estantes = async (): Promise<void> => {
     try {
-      const response = await get_depositos_estante(id_estante as number);
+      const response = await get_bandejas_estante(id_estante as number);
       if (response?.length > 0) {
         const data_bandejas: GetBandejas[] = response.map(
           (item: GetBandejas) => ({
@@ -165,6 +250,54 @@ export const UserProvider = ({
           })
         );
         set_rows_bandejas(data_bandejas);
+        const data_selected: any[] = response.map((item: GetBandejas) => ({
+          value: item.orden_ubicacion_por_estante ?? '',
+          label: item.orden_ubicacion_por_estante ?? '',
+          // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+        }));
+        set_nuevo_orden_estantes_selected(data_selected);
+
+        const data_bandeja: any[] = response.map((item: GetBandejas) => ({
+          value: item.id_bandeja_estante ?? '',
+          label: item.identificacion_por_estante ?? '',
+          // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+        }));
+        set_bandejas_selected(data_bandeja);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
+  const fetch_data_caja_carpeta = async (): Promise<void> => {
+    try {
+      const response = await get_caja_carpetas(id_caja as number);
+      if (response?.length > 0) {
+        const data_carpetas: ICarpetas[] = response.map((item: ICarpetas) => ({
+          id_caja_bandeja: item.id_caja_bandeja,
+          identificacion_por_bandeja: item.identificacion_por_bandeja,
+          orden_ubicacion_por_bandeja: item.orden_ubicacion_por_bandeja,
+          id_bandeja_estante: item.id_bandeja_estante,
+        }));
+        set_rows_carpetas(data_carpetas);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+  const fetch_data_caja_bandeja = async (): Promise<void> => {
+    try {
+      const response = await get_cajas_bandeja(id_caja as number);
+      if (response?.length > 0) {
+        const data_cajas: ICajas[] = response.map((item: ICajas) => ({
+          id_caja_bandeja: item.id_caja_bandeja,
+          identificacion_por_bandeja: item.identificacion_por_bandeja,
+          orden_ubicacion_por_bandeja: item.orden_ubicacion_por_bandeja,
+          id_bandeja_estante: item.id_bandeja_estante,
+        }));
+        set_rows_cajas(data_cajas);
+      } else {
+        set_rows_cajas([]);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -177,16 +310,35 @@ export const UserProvider = ({
     set_id_deposito,
     id_estante,
     set_id_estante,
+    id_caja,
+    set_id_caja,
+    id_bandeja,
+    set_id_bandeja,
+    // * orden estantes
+    orden,
+    set_orden,
+    nuevo_orden,
+    set_nuevo_orden,
     // * select
     sucusal_selected,
     depositos_selected,
+    depositos_selected_mover_estante,
+    nuevo_orden_estantes_selected,
+    bandejas_selected,
     set_depositos_selected,
     set_sucusal_selected,
+    set_depositos_selected_mover_estante,
+    set_nuevo_orden_estantes_selected,
+    set_bandejas_selected,
     // * rows
     rows_estantes,
     set_rows_estantes,
     rows_bandejas,
     set_rows_bandejas,
+    rows_carpetas,
+    set_rows_carpetas,
+    rows_cajas,
+    set_rows_cajas,
     // * info
     identificacion_deposito,
     set_identificacion_deposito,
@@ -195,6 +347,8 @@ export const UserProvider = ({
     fetch_data_depositos,
     fetch_data_estantes_depositos,
     fetch_data_bandejas_estantes,
+    fetch_data_caja_carpeta,
+    fetch_data_caja_bandeja,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

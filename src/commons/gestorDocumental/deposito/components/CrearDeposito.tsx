@@ -1,6 +1,9 @@
-import { Grid, TextField } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { Title } from '../../../../components/Title';
+import FormSelectController from '../../../../components/partials/form/FormSelectController';
+import { useAppSelector } from '../../../../hooks';
+import { useState } from 'react';
 
 
 
@@ -15,8 +18,12 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DepositoInfo = ({ control_deposito, get_values, open_modal, set_open_modal }: IProps) => {
-
-
+    const { deposito, current_deposito } = useAppSelector((state) => state.deposito);
+    const [select_orden, set_select_orden] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handle_orden = () => {
+        set_select_orden(true);
+    };
     return (
         <>
             <Grid container spacing={2}>
@@ -108,10 +115,40 @@ const DepositoInfo = ({ control_deposito, get_values, open_modal, set_open_modal
                         )}
                     />
                 </Grid>
+                {current_deposito.id_deposito !== null &&
+                    <>
 
+                        <Grid item xs={12} sm={4}>
+                            <Button
+                                variant="contained"
+                                onClick={handle_orden}
+                                disabled={false}
+                            >
+                                Cambiar órden
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <FormSelectController
+                                xs={12}
+                                md={4}
+                                control_form={control_deposito}
+                                control_name={'orden_ubicacion_por_entidad'}
+                                default_value=''
+                                rules={{}}
+                                label='Nuevo órden'
+                                disabled={!select_orden}
+                                helper_text=''
+                                select_options={deposito}
+                                option_label='orden_ubicacion_por_entidad'
+                                option_key='orden_ubicacion_por_entidad'
+                                multiple={false}
+                                hidden_text={false}
+                                auto_focus={false}
+                            />
+                        </Grid>
 
-
-
+                    </>
+                }
             </Grid>
 
         </>

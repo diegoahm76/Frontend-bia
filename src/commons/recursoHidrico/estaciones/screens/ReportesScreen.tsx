@@ -366,7 +366,7 @@ export const ReportesScreen: React.FC = () => {
     const title = `REPORTE MENSUAL DE LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
-    doc.addImage(image_data_1, 160, 5, 40, 15)
+    doc.addImage(image_data, 160, 5, 40, 15)
     doc.addImage(image_data2_1, img_x, img_y, img_width, img_height,);;
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(title, x_pos, 30);

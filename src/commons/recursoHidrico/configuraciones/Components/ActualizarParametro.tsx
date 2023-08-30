@@ -22,7 +22,8 @@ import type { EditarParametros, Parametros } from '../interfaces/interfaces';
 import { editar_parametros } from '../Request/request';
 import { control_error, control_success } from '../../../../helpers';
 import { tipo_parametro_choices } from '../../Instrumentos/components/ResultadoLaboratorio/utils/choices/choices';
-
+import { Title } from '../../../../components';
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -93,7 +94,10 @@ export const ActualizarParametro: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-        <DialogTitle>Editar Parametro</DialogTitle>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Editar Parametro" />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={2}>
@@ -193,6 +197,7 @@ export const ActualizarParametro: React.FC<IProps> = ({
             disabled={is_loading}
             color="success"
             type="submit"
+            startIcon={<SaveIcon />}
           >
             ACTUALIZAR
           </Button>

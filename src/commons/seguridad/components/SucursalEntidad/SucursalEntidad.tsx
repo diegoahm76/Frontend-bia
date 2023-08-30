@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Grid, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { control_error } from "./utils/control_error_or_success";
@@ -39,10 +39,10 @@ export const SucursalEntidad: React.FC = () => {
     return (
        <>
              
-             <Title title="Entidad" />
+             <Title title="Sucursales de la entidad " />
                <Grid item xs={12} sm={3.5} > 
                 <TextField
-                    label="   Tipo Documento ID"
+                    label="   Tipo Documento "
                     variant="outlined"
                     size="small"
                     disabled
@@ -52,7 +52,7 @@ export const SucursalEntidad: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={3.5}  > 
                 <TextField
-                    label=" Num Documento ID"
+                    label=" Num Documento "
                     variant="outlined"
                     size="small"
                     disabled
@@ -71,13 +71,13 @@ export const SucursalEntidad: React.FC = () => {
                     value={razon_social.toString()}
                 />
             </Grid>
-            <Grid item xs={12} sm={1} >
+            {/* <Grid item xs={12} sm={1} >
                 <Button
                     variant="contained" disabled
                 >
                     <SearchIcon />
                 </Button>
-            </Grid>
+            </Grid> */}
       
       </> 
     );

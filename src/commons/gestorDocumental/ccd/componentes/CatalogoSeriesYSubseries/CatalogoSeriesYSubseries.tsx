@@ -16,7 +16,8 @@ import {
   Grid,
   IconButton,
   TextField,
-  Avatar
+  Avatar,
+  ButtonGroup
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -32,6 +33,8 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { Title } from '../../../../../components';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const CatalogoSeriesYSubseries = () => {
   const { seriesAndSubseries } = useAppSelector(
@@ -132,12 +135,18 @@ export const CatalogoSeriesYSubseries = () => {
       </DialogTitle>
       <DialogContent>
         <Grid item xs={12} sx={{ width: 670 }}>
+          <ButtonGroup
+            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {download_xls({ nurseries: seriesAndSubseries, columns })}
+            {download_pdf({ nurseries: seriesAndSubseries, columns, title: 'Catálogo de series y subseries' })}
+          </ButtonGroup> 
           <DataGrid
             density="compact"
             autoHeight
             rows={seriesAndSubseries}
             columns={columns}
-            pageSize={8}
+            pageSize={10}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_catalogo_serie}

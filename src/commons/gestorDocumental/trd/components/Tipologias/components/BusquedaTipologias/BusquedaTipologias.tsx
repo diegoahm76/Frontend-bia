@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogActions,
@@ -45,6 +46,8 @@ import { AvatarStyles } from '../../../../../ccd/componentes/crearSeriesCcdDialo
 import { LoadingButton } from '@mui/lab';
 
 import { Title } from '../../../../../../../components';
+import { download_xls } from '../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../documentos-descargar/PDF_descargar';
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -257,6 +260,12 @@ export const BusquedaTipologias = (): JSX.Element => {
                 </Button>
               </Grid>
             </Grid>
+            <ButtonGroup
+              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+            >
+              {download_xls({ nurseries: tipologias, columns:columns_tipologias_documentales_trd })}
+              {download_pdf({ nurseries: tipologias, columns:columns_tipologias_documentales_trd, title: 'tipologiasas' })}
+            </ButtonGroup>
             <DataGrid
               //* provisional data
               sx={{ mt: '15px' }}
@@ -264,8 +273,8 @@ export const BusquedaTipologias = (): JSX.Element => {
               autoHeight
               rows={tipologias}
               columns={columns_tipologias_documentales_trd ?? []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={(row) => row.id_tipologia_documental}
             />

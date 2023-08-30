@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
@@ -8,7 +9,7 @@ import {
 // Slices
 
 import { api } from '../../../../../api/axios';
-import { set_depositos, set_sucursales } from '../slice/indexDeposito';
+import { set_bandejas, set_depositos, set_estantes, set_sucursales } from '../slice/indexDeposito';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -176,6 +177,107 @@ export const eliminar_deposito = (
         } catch (error: any) {
             console.log('annul_despacho_service');
             control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// listar bandejas
+export const get_bandejas_id = (
+    id: number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/depositos-archivos/bandejaEstante/listar-bandejas-por-estante/${id ?? ''}/`);
+
+            if (data.success === true) {
+                dispatch(set_bandejas(data.data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+
+export const crear_bandeja: any = (
+    bandeja: any,
+
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            const { data } = await api.post('gestor/depositos-archivos/bandejaEstante/crear/', bandeja);
+
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response);
+
+            return error as AxiosError;
+
+        };
+    }
+};
+
+
+// actualizar
+
+export const editar_bandeja: any = (
+    id: number,
+    bandeja: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            // console.log(despacho);
+            const { data } = await api.put(`gestor/depositos-archivos/bandejaEstante/actualizar-bandeja/${id}/`, bandeja);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// listar estantes por deposito 
+
+export const get_estantes_deposito = (
+    id: string | number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/depositos-archivos/estanteDeposito/listar-estante-por-deposito/${id ?? ''}/`);
+
+            if (data.success === true) {
+                dispatch(set_estantes(data.data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
             return error as AxiosError;
         }
     };
