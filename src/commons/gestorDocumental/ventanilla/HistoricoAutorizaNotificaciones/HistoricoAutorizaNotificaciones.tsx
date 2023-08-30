@@ -13,9 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import type {
-    HistoricoAutorizaNotificaciones,
-} from '../../../../interfaces/globalModels';
+import type { HistoricoAutorizaNotificaciones } from '../../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../../helpers';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -55,9 +53,19 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
             width: 120,
             renderCell: (params) => {
                 return params.row.respuesta_autorizacion_sms === true ? (
-                    <Chip size="small" label="Activo" color="success" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Activo"
+                        color="success"
+                        variant="outlined"
+                    />
                 ) : (
-                    <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Inactivo"
+                        color="error"
+                        variant="outlined"
+                    />
                 );
             },
         },
@@ -68,9 +76,19 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
             width: 170,
             renderCell: (params) => {
                 return params.row.respuesta_autorizacion_mail === true ? (
-                    <Chip size="small" label="Activo" color="success" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Activo"
+                        color="success"
+                        variant="outlined"
+                    />
                 ) : (
-                    <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Inactivo"
+                        color="error"
+                        variant="outlined"
+                    />
                 );
             },
         },
@@ -101,9 +119,19 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
             width: 120,
             renderCell: (params) => {
                 return params.row.respuesta_autorizacion_sms === true ? (
-                    <Chip size="small" label="Activo" color="success" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Activo"
+                        color="success"
+                        variant="outlined"
+                    />
                 ) : (
-                    <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Inactivo"
+                        color="error"
+                        variant="outlined"
+                    />
                 );
             },
         },
@@ -114,9 +142,19 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
             width: 170,
             renderCell: (params) => {
                 return params.row.respuesta_autorizacion_mail === true ? (
-                    <Chip size="small" label="Activo" color="success" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Activo"
+                        color="success"
+                        variant="outlined"
+                    />
                 ) : (
-                    <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+                    <Chip
+                        size="small"
+                        label="Inactivo"
+                        color="error"
+                        variant="outlined"
+                    />
                 );
             },
         },
@@ -141,9 +179,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
 
     const historico = async (): Promise<void> => {
         try {
-            const response = await consultar_historico_autorizaciones(
-                id_persona
-            );
+            const response = await consultar_historico_autorizaciones(id_persona);
             const new_historico = response.map(
                 (datos: HistoricoAutorizaNotificaciones) => ({
                     id_historico_autoriza_noti: datos.id_historico_autoriza_noti,
@@ -168,7 +204,6 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     }, [is_modal_active]);
     return (
         <>
-        
             <Dialog
                 open={is_modal_active}
                 onClose={handle_close}
@@ -232,7 +267,6 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                                 </Grid>
                             </Grid>
                         )}
-
                     </Grid>
                     <Grid item xs={12}>
                         <Stack

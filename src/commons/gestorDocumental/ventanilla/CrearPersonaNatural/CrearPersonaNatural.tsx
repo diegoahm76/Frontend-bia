@@ -100,17 +100,17 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
     const on_submit_create_natural = handle_submit(async (data: any) => {
         try {
             const numero_documento_as_number = parseInt(numero_documento);
-    
+
             if (numero_documento_as_number === 1) {
                 control_error('El número de documento no puede ser 1');
                 return;
             }
-    
+
             data.ubicacion_georeferenciada = '';
             data.numero_documento = numero_documento;
             data.tipo_documento = tipo_documento;
             data.tipo_persona = tipo_persona;
-    
+
             if (data.numero_documento !== '1') {
                 await crear_persona_natural(data as CrearPersonNaturalAdmin);
                 control_success('La persona se creó correctamente');
@@ -119,7 +119,7 @@ export const CrearPersonaNatural: React.FC<PropsRegisterAdministrador> = ({
         } catch (error) {
             control_error('Hubo un error al crear, inténtelo de nuevo');
         }
-    });    
+    });
 
     return (
         <>

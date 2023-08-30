@@ -142,7 +142,7 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
     set_value('fecha_nacimiento', date);
     set_fecha_nacimiento(value);
   };
-  
+
   // trae todas las clase tercero
   const get_datos_clase_tercero = async (): Promise<void> => {
     try {
