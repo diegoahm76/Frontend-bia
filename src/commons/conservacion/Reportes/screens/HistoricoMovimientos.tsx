@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import BuscarPlantas from "./BuscarPlantas";
 import { historico_bajas, historico_cambios_etapa, historico_distribuciones, historico_ingreso_cuarentena, historico_levantamiento_cuarentena, historico_siembras, historico_traslados } from "../thunks/HistoricoMovimientos";
+import { DialogNoticacionesComponent } from "../../../../components/DialogNotificaciones";
 
 const lista_reporte = [{ name: 'Movimientos de Bajas de Herramientas, Insumos y Semillas', value: 'MHIS' }, { name: 'Distribución de Despachos Entrantes a Viveros', value: 'DDEV' }, { name: 'Registros de Siembras', value: 'RES' }, { name: 'Cambio de Etapa de Material Vegetal', value: 'CEMV' }, { name: 'Ingreso a Cuarentena de Material Vegeta', value: 'ICMV' }, { name: 'Levantamiento de Cuarentena de Material Vegetal', value: 'LCMV' }, { name: 'Traslados Entre Viveros', value: 'TEV' }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -38,6 +39,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
     const [reporte_consolidado, set_reporte_consolidado] = useState<boolean>(false);
     const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
+    // Notificaciones
+    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
+    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
+    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
+    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
     // eslint-disable-next-line new-cap
     const [doc, set_doc] = useState<jsPDF>(new jsPDF());
     const [doc_height, set_doc_height] = useState<number>(0);
@@ -63,38 +70,59 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     const historico_bajas_fc: () => void = () => {
         dispatch(historico_bajas({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_distribuciones_fc: () => void = () => {
         dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
-
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_siembras_fc: () => void = () => {
         dispatch(historico_siembras({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_cambios_etapa_fc: () => void = () => {
         dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_ingreso_cuarentena_fc: () => void = () => {
         dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_levantamiento_cuarentena_fc: () => void = () => {
         dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_traslados_fc: () => void = () => {
         dispatch(historico_traslados({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
+            if (response.data.length === 0)
+            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
+    }
+
+    const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
+        set_titulo_notificacion(titulo);
+        set_tipo_notificacion(tipo);
+        set_mensaje_notificacion(mensaje)
+        set_dialog_notificaciones_is_active(active);
+        set_abrir_modal(active);
     }
 
     const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -858,6 +886,14 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     </Stack>
                 </Grid>
             </Grid>
+            {dialog_notificaciones_is_active && (
+                <DialogNoticacionesComponent
+                    titulo_notificacion={titulo_notificacion}
+                    abrir_modal={abrir_modal}
+                    tipo_notificacion={tipo_notificacion}
+                    mensaje_notificacion={mensaje_notificacion}
+                    abrir_dialog={set_abrir_modal} />
+            )}
         </>
     );
 }
