@@ -4,6 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   Grid,
   Box,
+  ButtonGroup,
   // IconButton,
   // Divider,
   // TextField,
@@ -14,6 +15,8 @@ import {
 import { /* useAppDispatch, */ useAppSelector } from '../../../../../hooks';
 import { Title } from '../../../../../components';
 import { columnsCCD } from './colums/colums';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // import { Avatar, IconButton } from "@mui/material";
 // import DeleteIcon from "@mui/icons-material/Delete";
@@ -44,6 +47,12 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
       >
         <Box sx={{ width: '100%' }}>
           <Title title="Cuadro de clasificación documental Seleccionado" />
+          <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+            {download_xls({ nurseries:catalado_series_subseries_unidad_organizacional , columns: columns_catalogo })}
+            {download_pdf({ nurseries: catalado_series_subseries_unidad_organizacional, columns: columns_catalogo, title: 'clasificación documental' })}
+
+          </ButtonGroup>
           <DataGrid
             sx={{
               marginTop: '.5rem',
@@ -52,8 +61,8 @@ export const CCDSeleccionadoCatalogo = (): JSX.Element => {
             autoHeight
             rows={catalado_series_subseries_unidad_organizacional || []}
             columns={columns_catalogo}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_cat_serie_und}
           />

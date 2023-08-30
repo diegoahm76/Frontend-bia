@@ -334,7 +334,7 @@ export const EditarLaboratorio: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" REGISTRO DE LABORATORIO " />
+            <Title title=" Registro de laboratorio" />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">

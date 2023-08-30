@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -22,6 +23,8 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
 import type { BusquedaPorhI } from '../../Interfaces/interfaces';
 import SearchIcon from '@mui/icons-material/Search';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 export const BusquedaPorh: React.FC = () => {
   const {
@@ -183,15 +186,22 @@ export const BusquedaPorh: React.FC = () => {
                 <>
                   <Grid item xs={12}>
                     <Typography>Resultados de la búsqueda</Typography>
-                  </Grid>
+                
+                  <ButtonGroup
+                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    {download_xls({ nurseries: rows, columns })}
+                    {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                  </ButtonGroup> 
+                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
                       <>
                         <DataGrid
                           rows={rows}
                           columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
                           getRowId={(row) => row.id_instrumento}
                         />
                       </>

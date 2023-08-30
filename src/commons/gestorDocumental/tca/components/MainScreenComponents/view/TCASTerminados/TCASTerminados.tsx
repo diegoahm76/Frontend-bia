@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Button,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogActions,
@@ -21,6 +22,8 @@ import { getTcaTerminados } from './services/TcaTerminados.service';
 import { type TcaTerminados } from './types/modalTcaTerminados.types';
 import { columnsTcasterminados } from './columns/columns';
 import { Title } from '../../../../../../../components';
+import { download_pdf } from '../../../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../../../documentos-descargar/XLS_descargar';
 
 export const TCASTerminados: FC<any> = (): JSX.Element => {
   // gestor/trd/get-terminados/ -- usado === true
@@ -138,14 +141,20 @@ export const TCASTerminados: FC<any> = (): JSX.Element => {
             justifyContent: 'center'
           }}
         >
+          <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+            {download_xls({ nurseries: rowsTcasTerminados, columns: newColums })}
+            {download_pdf({ nurseries: rowsTcasTerminados, columns: newColums, title: 'TCA TERMINADOS' })}
+
+          </ButtonGroup>
           <DataGrid
             sx={{ mt: '15px' }}
             density="compact"
             autoHeight
             rows={rowsTcasTerminados || []}
             columns={newColums}
-            pageSize={5}
-            rowsPerPageOptions={[7]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => uuidv4()}
           />

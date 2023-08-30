@@ -40,17 +40,17 @@ export const InstrumentosScreen: React.FC = () => {
       >
         {edit_instrumento && (
           <Grid item xs={12}>
-            <Title title="EDICIÓN DE INSTRUMENTOS EN BIBLIOTECA" />
+            <Title title="Edición de instrumentos en biblioteca" />
           </Grid>
         )}
         {select_instrumento && (
           <Grid item xs={12}>
-            <Title title="ADMINISTRACIÓN DE INSTRUMENTOS EN BIBLIOTECA" />
+            <Title title="Administración de instrumentos en biblioteca" />
           </Grid>
         )}
         {register_instrumento && (
           <Grid item xs={12}>
-            <Title title="REGISTRO DE INSTRUMENTOS EN BIBLIOTECA" />
+            <Title title="Registro de instrumentos en biblioteca" />
           </Grid>
         )}
       </Grid>

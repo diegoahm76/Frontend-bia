@@ -7,7 +7,7 @@ import { control_error } from '../../../../helpers/controlError';
 import { control_success, editar_conf_alarma } from '../../requets/Request';
 import { type CrearAlerta } from '../interfaces/interfaces';
 import { Title } from '../../../../components';
-
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -148,7 +148,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
                 handle_close();
                 reset();
               }}>Cancelar</Button>
-              <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
+              <Button startIcon={<SaveIcon />} variant="contained" color="success" type='submit'>Actualizar</Button>
             </DialogActions>
           </Grid>
         </Grid>

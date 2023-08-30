@@ -1,10 +1,9 @@
 
 import { api } from '../../../../api/axios';
 // Types
-import { type AxiosResponse, type AxiosError, } from 'axios';
+import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type ResponseServer } from '../../../../interfaces/globalModels';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -61,7 +60,7 @@ export const obtener_etapa_meterial_vegetal: any = () => {
 export const obtener_bienes_viveros: any = (filtros: {seleccion_tipo_bien: string}) => {
   return async () => {
     try {
-      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}`);
+      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}&&id_vivero=`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -108,9 +107,4 @@ export const obtiene_ultimos_movimientos: any = (filtros: {seleccion_vivero: num
       return error as AxiosError;
     }
   };
-};
-
-// Obtiene los tipos de entrada
-export const obtener_tipos_entrada = async (): Promise<AxiosResponse<ResponseServer<any[]>>> => {
-  return await api.get<ResponseServer<any[]>>('almacen/bienes/entradas/tipos-entradas/');
 };
