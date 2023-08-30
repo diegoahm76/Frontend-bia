@@ -75,6 +75,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   useEffect(() => {
     //* get unidades organigrama actual
     void getUnidadesOrgActual().then((unidades: any) => {
+      //* unidades.length !== 0
       if (unidades.length === 0) {
         void Swal.fire({
           icon: 'warning',
