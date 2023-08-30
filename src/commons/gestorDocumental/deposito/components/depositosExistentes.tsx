@@ -17,8 +17,6 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoDeposito = ({ handle_edit_click }: IProps) => {
     const { deposito, } = useAppSelector((state) => state.deposito);
-    //    const dispatch = useAppDispatch();
-
     const columns: GridColDef[] = [
 
         {

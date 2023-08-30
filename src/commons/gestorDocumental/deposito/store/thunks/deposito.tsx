@@ -9,7 +9,7 @@ import {
 // Slices
 
 import { api } from '../../../../../api/axios';
-import { set_bandejas, set_depositos, set_sucursales } from '../slice/indexDeposito';
+import { set_bandejas, set_depositos, set_estantes, set_sucursales } from '../slice/indexDeposito';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -253,6 +253,29 @@ export const editar_bandeja: any = (
             return data;
         } catch (error: any) {
             console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// listar estantes por deposito 
+
+export const get_estantes_deposito = (
+    id: string | number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/depositos-archivos/estanteDeposito/listar-estante-por-deposito/${id ?? ''}/`);
+
+            if (data.success === true) {
+                dispatch(set_estantes(data.data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
             control_error(error.response.data.detail);
 
             return error as AxiosError;

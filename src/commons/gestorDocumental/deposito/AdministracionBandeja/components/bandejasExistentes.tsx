@@ -40,7 +40,7 @@ const ListadoBandejas = ({
         {
             field: 'ACCIÓN',
             headerName: 'ACCIÓN',
-            width: 300,
+            width: 100,
             renderCell: (params) => (
                 <Button
                     onClick={() => handle_edit_click(params.row)}
