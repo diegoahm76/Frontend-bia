@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { type IList } from './types/use_u_x_entidad.types';
 
 export const use_u_x_entidad = (): any => {
   // ! -------------------------- USE FORM NECESARIOS PARA EL FUNCIONAMIENTO DE LA APP -------------------------- //
@@ -42,6 +44,23 @@ export const use_u_x_entidad = (): any => {
   const watch_values_opcion_anterior_a_actual =
     watch_opcion_anterior_a_actual();
 
+  // ? use states necesarios para el funcionamiento de la app
+  const [organigramaActual, setOrganigramaActual] = useState<IList[] | any>([
+    {
+      label: '',
+      value: 0
+    }
+  ]);
+
+  const [organigramasDisponibles, setOrganigramasDisponibles] = useState<
+    IList[] | any
+  >([
+    {
+      label: '',
+      value: 0
+    }
+  ]);
+
   // * -------------------------- FUNCIONES NECESARIAS PARA EL FUNCIONAMIENTO DE LA APP -------------------------- *//
 
   // ! -- clean all data function -- //
@@ -77,6 +96,11 @@ export const use_u_x_entidad = (): any => {
     reset_opcion_anterior_a_actual,
     watch_values_opcion_anterior_a_actual,
 
+    //* -- use states necesarios para el funcionamiento de la app -- *//
+    organigramaActual,
+    setOrganigramaActual,
+    organigramasDisponibles,
+    setOrganigramasDisponibles,
 
     //* clean all data for the application
     cleanAllData
