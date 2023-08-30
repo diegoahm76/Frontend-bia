@@ -1,45 +1,52 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
-import { useEstantesHook } from '../hooks/useEstantesHook';
-import { MoverEstantes } from './MoverEstantes';
 import { useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
-import { DataContext } from '../context/context';
+import { lazy, useContext, useEffect } from 'react';
+import { DataContext } from '../../Estantes/context/context';
+import { useCajaHook } from '../hook/useCajaHook';
+// import { MoverCaja } from './MoverCaja';
 // import Select from 'react-select';
 
+const MoverCaja = lazy(async () => {
+    const module = await import('../components/MoverCaja');
+    return { default: module.MoverCaja };
+  });
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarEstante: React.FC = () => {
+export const RegistrarCaja: React.FC = () => {
   const {
-    control_estantes,
-    errors_estantes,
-    reset_estantes,
+    control_cajas,
+    errors_cajas,
+    reset_cajas,
     // set_value_estantes,
     // * habilitar campos orden
-    is_habilita_cambiar_orden_estante,
-    set_is_habilita_cambiar_orden_estante,
+    is_habilita_cambiar_orden_cajas,
+    set_is_habilita_cambiar_orden_cajas,
     is_habilita_nuevo_orden,
     set_is_habilita_nuevo_orden,
     set_orden,
     set_nuevo_orden,
-  } = useEstantesHook();
+  } = useCajaHook();
 
   const { data_estantes } = useAppSelector((state) => state.deposito);
 
   const { nuevo_orden_estantes_selected } = useContext(DataContext);
 
-  useEffect(() => {
-    reset_estantes({
-      identificacion_por_deposito: data_estantes?.identificacion_por_deposito,
-      orden: data_estantes?.orden_ubicacion_por_deposito,
-      nuevo_orden: '',
-    });
-    set_orden(data_estantes?.orden_ubicacion_por_deposito);
-  }, [data_estantes]);
+//   useEffect(() => {
+//     reset_cajas({
+//       identificacion_por_deposito: data_estantes?.identificacion_por_deposito,
+//       orden: data_estantes?.orden_ubicacion_por_deposito,
+//       nuevo_orden: '',
+//     });
+//     set_orden(data_estantes?.orden_ubicacion_por_deposito);
+//   }, [data_estantes]);
 
-  return (
+  return (  
     <>
       <Grid
         container
@@ -61,8 +68,8 @@ export const EditarEstante: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller
-            name="identificacion_por_deposito"
-            control={control_estantes}
+            name="identificacion_por_bandeja"
+            control={control_cajas}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -74,9 +81,9 @@ export const EditarEstante: React.FC = () => {
                 disabled={false}
                 required={true}
                 onChange={onChange}
-                error={!!errors_estantes.identificacion_por_deposito}
+                error={!!errors_cajas.identificacion_por_bandeja}
                 helperText={
-                  errors_estantes.identificacion_por_deposito
+                  errors_cajas.identificacion_por_bandeja
                     ? 'Es obligatorio ingresar una identificación'
                     : 'Ingrese una identificación'
                 }
@@ -87,7 +94,7 @@ export const EditarEstante: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="orden"
-            control={control_estantes}
+            control={control_cajas}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -107,9 +114,9 @@ export const EditarEstante: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            disabled={is_habilita_cambiar_orden_estante}
+            disabled={is_habilita_cambiar_orden_cajas}
             onClick={() => {
-              set_is_habilita_cambiar_orden_estante(true);
+              set_is_habilita_cambiar_orden_cajas(true);
               set_is_habilita_nuevo_orden(false);
             }}
           >
@@ -119,7 +126,7 @@ export const EditarEstante: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="nuevo_orden"
-            control={control_estantes}
+            control={control_cajas}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -134,7 +141,7 @@ export const EditarEstante: React.FC = () => {
                 value={value}
                 onChange={(e) => {
                   onChange(e);
-                  console.log(e.target.value, 'e.target.value')
+                  console.log(e.target.value, 'e.target.value');
                   set_nuevo_orden(Number(e.target.value));
                 }}
               >
@@ -160,7 +167,7 @@ export const EditarEstante: React.FC = () => {
         >
           <Controller
             name="nuevo_orden"
-            control={control_estantes}
+            control={control_cajas}
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <div>
@@ -196,7 +203,7 @@ export const EditarEstante: React.FC = () => {
           />
         </Grid> */}
         <Grid container spacing={2} justifyContent="flex-end">
-          <MoverEstantes />
+          <MoverCaja />
           <Grid item></Grid>
         </Grid>
       </Grid>
