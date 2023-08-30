@@ -7,7 +7,7 @@ import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import DeleteIcon from '@mui/icons-material/Delete';
+// import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
@@ -34,16 +34,34 @@ export const EstantesScreen: React.FC = () => {
   const {
     id_deposito,
     identificacion_deposito,
+    nuevo_orden,
+    orden,
     fetch_data_estantes_depositos,
   } = useContext(DataContext);
 
-  const { onsubmit_estantes, is_saving_estante } = useEstantesHook();
+  const {
+    onsubmit_estantes,
+    is_saving_estante,
+    onsubmit_editar,
+    limpiar_formulario,
+  } = useEstantesHook();
+
+  useEffect(() => {
+    console.log('deposito_estante', deposito_estante);
+  }, [deposito_estante]);
 
   return (
     <>
       <form
         onSubmit={(e) => {
-          void onsubmit_estantes(e);
+          e.preventDefault();
+          e.stopPropagation();
+          if (mode_estante.editar) {
+            console.log(nuevo_orden, orden, 'Nuevo orden, orden');
+            onsubmit_editar();
+          } else {
+            void onsubmit_estantes();
+          }
         }}
       >
         <Grid
@@ -95,6 +113,9 @@ export const EstantesScreen: React.FC = () => {
                 loading={false}
                 disabled={false}
                 startIcon={<CleaningServicesIcon />}
+                onClick={() => {
+                  limpiar_formulario();
+                }}
               >
                 Limpiar
               </LoadingButton>
@@ -119,7 +140,6 @@ export const EstantesScreen: React.FC = () => {
                 </Grid>
               </>
             ) : null}
-
             <Grid item>
               <LoadingButton
                 variant="contained"
@@ -129,13 +149,14 @@ export const EstantesScreen: React.FC = () => {
                 disabled={
                   identificacion_deposito === '' ||
                   !id_deposito ||
-                  is_saving_estante
+                  is_saving_estante ||
+                  mode_estante.ver
                 }
                 startIcon={<SaveIcon />}
               >
-                Guardar
+                {mode_estante.editar ? 'Actualizar' : 'Guardar'}
               </LoadingButton>
-            </Grid>
+            </Grid>{' '}
             <Grid item>
               <ButtonSalir />
             </Grid>
