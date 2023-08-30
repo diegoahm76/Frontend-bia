@@ -61,6 +61,15 @@ export const use_u_x_entidad = (): any => {
     }
   ]);
 
+  const [organigramaAnterior, setOrganigramaAnterior] = useState<
+    IList[] | any
+  >([
+    {
+      label: '',
+      value: 0
+    }
+  ]);
+
   // * -------------------------- FUNCIONES NECESARIAS PARA EL FUNCIONAMIENTO DE LA APP -------------------------- *//
 
   // ! -- clean all data function -- //
@@ -101,6 +110,8 @@ export const use_u_x_entidad = (): any => {
     setOrganigramaActual,
     organigramasDisponibles,
     setOrganigramasDisponibles,
+    organigramaAnterior,
+    setOrganigramaAnterior,
 
     //* clean all data for the application
     cleanAllData

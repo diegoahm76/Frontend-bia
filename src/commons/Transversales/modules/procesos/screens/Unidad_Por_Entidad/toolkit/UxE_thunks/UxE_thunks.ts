@@ -52,7 +52,6 @@ export const get_organigrama_acual = async (navigate: any): Promise<any> => {
         allowEscapeKey: false
       }).then((result: any) => {
         if (result.isConfirmed) {
-          console.log('ir a crear organigrama');
           navigate('/app/gestor_documental/organigrama/crear');
         } else {
           window.location.reload();
@@ -82,7 +81,7 @@ export const getOrganigramasDispobibles = async (): Promise<any> => {
 
 // ? --- get organigrama anterior al actual -- //
 
-export const get_organigrama_anterior = async (): Promise<any> => {
+export const get_organigrama_anterior = async (navigate: any): Promise<any> => {
   try {
     const url1 =
       'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
@@ -91,12 +90,35 @@ export const get_organigrama_anterior = async (): Promise<any> => {
     const url2 = `transversal/organigrama/get/`;
     const { data: data2 } = await api.get(url2);
 
-    console.log(data2);
-
-   const dataToReturn = data2?.Organigramas?.filter(
+    const dataToReturn = data2?.Organigramas?.filter(
       (el: any) => el.id_organigrama === data?.data[0]?.id_organigrama
-    ) 
-    console.log(dataToReturn);
+    );
+    console.log('dataToReturn', dataToReturn);
+
+    if (dataToReturn.length === 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'NO HAY ORGANIGRAMA ANTERIOR AL ACTUAL',
+        text: 'Alguno organigrama debe salir de producción para usar esa opción de éste módulo',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText: 'Ir a organigramas',
+        confirmButtonColor: '#042F4A',
+
+        allowEscapeKey: false
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate('/app/gestor_documental/organigrama/crear');
+        } else {
+          window.location.reload();
+        }
+      });
+    }
+
+    return dataToReturn;
   } catch (error: any) {
     console.log(error);
   }

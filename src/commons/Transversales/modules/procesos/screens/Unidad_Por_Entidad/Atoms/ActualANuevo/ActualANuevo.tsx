@@ -62,7 +62,7 @@ useEffect(() => {
     console.log('hello from submit');
   };
 
-  if (!organigramaActual[0]?.label)
+  if (!organigramaActual[0]?.label || organigramasDisponibles.length === 0)
     return (
       <Grid
         container

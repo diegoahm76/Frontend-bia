@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
 import { type FC, useState, useEffect } from 'react';
@@ -11,16 +12,29 @@ import dayjs from 'dayjs';
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
-import { get_organigrama_anterior } from '../../toolkit/UxE_thunks/UxE_thunks';
-// import CleanIcon from '@mui/icons-material/CleaningServices';
+import {
+  get_organigrama_acual,
+  get_organigrama_anterior
+} from '../../toolkit/UxE_thunks/UxE_thunks';
+import { useNavigate } from 'react-router-dom';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
 
 export const AnteriorAActual: FC = (): JSX.Element => {
+  //* navigate declaration
+  const navigate = useNavigate();
+
   //* dispatch declaration
   // ? redux toolkit - values
 
   //! use_u_x_entidad hooks
 
-  const { control_opcion_anterior_a_actual } = use_u_x_entidad();
+  const {
+    control_opcion_anterior_a_actual,
+    organigramaAnterior,
+    setOrganigramaAnterior,
+    setOrganigramaActual,
+    organigramaActual
+  } = use_u_x_entidad();
 
   //* context necesario
 
@@ -40,15 +54,51 @@ export const AnteriorAActual: FC = (): JSX.Element => {
 
   // ? useeffect principal para las operaciones del módulo
   useEffect(() => {
-    void get_organigrama_anterior();
+    void get_organigrama_anterior(navigate).then((res) => {
+      setOrganigramaAnterior(
+        res?.map((item: any) => ({
+          label: item?.nombre,
+          value: item?.id_organigrama
+        }))
+      );
+    });
+
+    const obtenerOrganigramas = async (): Promise<any> => {
+      const organigramasActuales = await get_organigrama_acual(navigate);
+      console.log('res', organigramasActuales);
+      setOrganigramaActual(
+        organigramasActuales?.map((item: any) => ({
+          label: item?.nombre,
+          value: item?.id_organigrama
+        }))
+      );
+
+      /*  const organigramasDisponibles = await getOrganigramasDispobibles();
+      setOrganigramasDisponibles(filtrarOrganigramas(organigramasDisponibles)); */
+    };
+
+    void obtenerOrganigramas();
   }, []);
 
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
     console.log('hello from submit');
   };
 
+  if (!organigramaActual[0]?.label || !organigramaAnterior[0]?.label)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={120} />
+      </Grid>
+    );
 
   return (
     <>
@@ -83,18 +133,15 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   }) => (
                     <div>
                       <Select
-                        value={value}
-                        onChange={(selectedOption) => {
-                          //* dentro de esta seleccion, tambien debe existir una selección de modo
-                          /*  dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          ); */
-                          onChange(selectedOption);
-                        }}
-                        /* isDisabled={
-                        } */
+                        value={
+                          organigramaAnterior?.length > 0
+                            ? {
+                                label: organigramaAnterior[0]?.label,
+                                value: organigramaAnterior[0]?.value
+                              }
+                            : null
+                        }
+                        isDisabled={true}
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
                         options={[]} // deben ir seleccionado por defecto el org Actual
                         placeholder="Seleccionar"
@@ -135,20 +182,15 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   }) => (
                     <div>
                       <Select
-                        value={value}
-                        onChange={(selectedOption) => {
-                          //* dentro de esta seleccion, tambien debe existir una selección de modo
-                          /*  dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          ); */
-                          onChange(selectedOption);
-                        }}
-                        /* isDisabled={
-                        } */
-                        // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
-                        options={[]} // deben ir seleccionado por defecto el org Actual
+                        value={
+                          organigramaActual?.length > 0
+                            ? {
+                                label: organigramaActual[0]?.label,
+                                value: organigramaActual[0]?.value
+                              }
+                            : null
+                        }
+                        isDisabled={true}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -177,7 +219,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
             // sx={{ mt: '40px' }}
           >
             <TextField
-              label="Fecha actual"
+              label="Fecha de traslado"
               variant="outlined"
               value={currentDate}
               InputLabelProps={{ shrink: true }}
