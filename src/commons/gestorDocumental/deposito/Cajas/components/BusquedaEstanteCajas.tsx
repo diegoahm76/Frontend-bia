@@ -37,6 +37,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
   const {
     depositos_selected_mover_estante,
     id_estante,
+    id_bandeja,
     bandejas_selected,
     set_id_bandeja,
     set_id_estante,
@@ -219,10 +220,6 @@ export const BusquedaEstanteCajas: React.FC = () => {
 
   useEffect(() => {
     if (data_watch?.id_bandeja_estante?.value) {
-      console.log(
-        data_watch?.id_bandeja_estante?.value,
-        'data_watch?.id_bandeja_estante?.value'
-      );
       set_id_bandeja(data_watch?.id_bandeja_estante?.value as any);
     }
   }, [data_watch?.id_bandeja_estante?.value]);
@@ -323,7 +320,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
               handle_click_open();
             }}
           >
-            Búscar
+            Buscar
           </Button>
         </Grid>
 
@@ -374,7 +371,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
           />
         </Grid>
 
-        {data_watch?.id_bandeja_estante && (
+        {id_bandeja ? (
           <>
             <Grid container spacing={2} justifyContent="flex-end">
               <Grid item>
@@ -398,7 +395,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
               </Grid>
             </Grid>
           </>
-        )}
+        ) : null}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>

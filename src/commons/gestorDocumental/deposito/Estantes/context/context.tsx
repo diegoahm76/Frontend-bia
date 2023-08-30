@@ -287,7 +287,7 @@ export const UserProvider = ({
   };
   const fetch_data_caja_bandeja = async (): Promise<void> => {
     try {
-      const response = await get_cajas_bandeja(id_caja as number);
+      const response = await get_cajas_bandeja(id_bandeja as number);
       if (response?.length > 0) {
         const data_cajas: ICajas[] = response.map((item: ICajas) => ({
           id_caja_bandeja: item.id_caja_bandeja,
