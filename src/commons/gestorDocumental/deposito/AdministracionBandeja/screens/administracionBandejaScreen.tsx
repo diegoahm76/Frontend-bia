@@ -18,29 +18,36 @@ import { crear_bandeja, editar_bandeja, get_bandejas_id } from "../../store/thun
 import FormInputController from "../../../../../components/partials/form/FormInputController";
 import FormSelectController from "../../../../../components/partials/form/FormSelectController";
 import ListadoBandejas from "../components/bandejasExistentes";
+import MoverBandeja from "../components/MoverBandeja";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarBandejaScreen = () => {
-    const {
-        control: control_bandeja,
-        reset,
-        handleSubmit: handle_submit,
-    } = useForm<IObjBandeja>();
+    const { control: control_bandeja, reset, handleSubmit: handle_submit,
+        getValues: get_values } = useForm<IObjBandeja>();
     const { control: control_estante } = useForm<IdEstanteDeposito>();
     const [bandeja, set_bandeja] = useState(false);
     const [action, set_action] = useState<string>("Guardar");
     const [selected_bandeja, set_selected_bandeja] = useState<IObjBandeja>(
         initial_state_bandeja
     );
-    const [select_orden, set_select_orden] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handle_orden = () => {
-        set_select_orden(true);
-    };
     const dispatch = useAppDispatch();
     const { deposito_estante, bandejas } = useAppSelector(
         (state: { deposito: any }) => state.deposito
     );
+    const [select_orden, set_select_orden] = useState(false);
+    const [open_modal, set_open_modal] = useState(false);
+
+    const handle_orden = () => {
+        set_select_orden(true);
+    };
+
+    const handle_buscar = () => {
+        set_open_modal(true);
+    };
+    const handle_close_buscar = () => {
+        set_open_modal(false);
+    };
+
 
     const handle_bandeja = () => {
         set_selected_bandeja(initial_state_bandeja)
@@ -54,6 +61,7 @@ const AdministrarBandejaScreen = () => {
         set_bandeja(true);
         set_action("Editar");
     };
+
 
     useEffect(() => {
         console.log(selected_bandeja)
@@ -242,10 +250,78 @@ const AdministrarBandejaScreen = () => {
                 </Grid>
             )}
 
+            <Grid
+                container
+                spacing={2}
+                marginTop={2}
+                sx={{
+                    position: "relative",
+                    background: "#FAFAFA",
+                    borderRadius: "15px",
+                    p: "20px",
+                    mb: "20px",
+                    boxShadow: "0px 3px 6px #042F4A26",
+                }}
+            >
+                <Title title="Mover bandeja a otro Estante" />
+
+
+                <FormInputController
+                    xs={12}
+                    md={3}
+                    margin={0}
+                    control_form={control_bandeja}
+                    control_name="identificacion_por_estante"
+                    default_value=''
+                    rules={{}}
+                    type="text"
+                    disabled={false}
+                    helper_text=""
+                    hidden_text={null}
+                    label={"Deposito de archivo destino"}
+                />
+                <FormInputController
+                    xs={12}
+                    md={3}
+                    margin={0}
+                    control_form={control_bandeja}
+                    control_name="identificacion_por_estante"
+                    default_value=''
+                    rules={{}}
+                    type="text"
+                    disabled={false}
+                    helper_text=""
+                    hidden_text={null}
+                    label={"Estante destino"}
+                />
+
+                <Grid item xs={12} sm={4}>
+                    <Button
+                        variant="contained"
+                        onClick={handle_buscar}
+                        disabled={false}
+                    >
+                        Buscar
+                    </Button>
+                </Grid>
+            </Grid>
+            {open_modal && (
+                <Grid item xs={12} marginY={1}>
+                    <MoverBandeja
+                        control_bandeja={control_bandeja}
+                        open={open_modal}
+                        handle_close_buscar={handle_close_buscar}
+                        get_values={get_values}
+
+                    />
+                </Grid>
+            )}
+
             <Grid item xs={12} marginY={1}>
                 <ListadoBandejas
 
                     handle_edit_click={handle_edit_click}
+
                 />
             </Grid>
             <Grid item xs={12} md={2}>

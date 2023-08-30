@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid, TextField, } from '@mui/material';
@@ -25,12 +27,8 @@ const DepositoScreen = () => {
     const [action, set_action] = useState<string>("Guardar");
     const [modal, set_modal] = useState(false);
     const [direccion, set_direccion] = useState('');
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_close = () => { set_modal(false) }
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_open = () => { set_modal(true) }
-
-    // const { current_deposito } = useAppSelector((state) => state.deposito);
     const dispatch = useAppDispatch();
     const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
     const get_direccion_modal = (value: string): void => {
@@ -53,7 +51,6 @@ const DepositoScreen = () => {
 
 
     const on_submit = (data: IObjDeposito): void => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (action === "Editar" && selected_deposito) {
             const data_edit = {
                 ...selected_deposito,
@@ -116,8 +113,7 @@ const DepositoScreen = () => {
                 />
             </Grid>
             <Grid item xs={12} marginY={1}>
-                <SucursalDirecciones control_deposito={control_deposito}                   // form_values={form_values}
-                //  handleinput_change={handleinput_change}
+                <SucursalDirecciones control_deposito={control_deposito}
 
                 />
             </Grid>

@@ -3,6 +3,7 @@ import type {
   IDeposito,
   IdEstanteDeposito,
   IMode,
+  IObEstante,
   IObjBandeja,
   IObjDeposito,
   IObjSucursales,
@@ -66,6 +67,7 @@ export const initial_state: IDeposito = {
   data_estantes: estantes_slice,
   data_depositos: info_deposito_slice,
   deposito_estante: id_depo_est,
+  estantes: [],
 };
 
 export const deposito_slice = createSlice({
@@ -129,6 +131,12 @@ export const deposito_slice = createSlice({
     ) => {
       state.deposito_estante = action.payload;
     },
+    set_estantes: (
+      state: IDeposito,
+      action: PayloadAction<IObEstante[]>
+    ) => {
+      state.estantes = action.payload;
+    },
   }
 });
 
@@ -143,4 +151,5 @@ export const {
   set_current_estantes,
   set_current_info_deposito,
   set_current_id_depo_est,
+  set_estantes,
 } = deposito_slice.actions;
