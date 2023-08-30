@@ -79,6 +79,7 @@ export const BusquedaCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              console.log(params.row, 'params.row');
               //   dispatch(
               //     set_current_mode_estantes({
               //       ver: true,
