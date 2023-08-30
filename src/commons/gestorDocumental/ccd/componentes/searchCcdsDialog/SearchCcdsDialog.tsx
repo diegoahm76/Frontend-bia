@@ -7,6 +7,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogActions,
@@ -34,6 +35,8 @@ import use_ccd from '../../hooks/useCCD';
 import { LoadingButton } from '@mui/lab';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import DoNotTouchIcon from '@mui/icons-material/DoNotTouch';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -317,13 +320,18 @@ const SearchCcdModal = ({
             </Grid>
           </form>
         </Grid>
-
+        <ButtonGroup
+          style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+        >
+          {download_xls({ nurseries: ccds, columns: columns_ccds })}
+          {download_pdf({ nurseries: ccds, columns: columns_ccds, title: 'Consulta de CCD' })}
+        </ButtonGroup> 
         <DataGrid
           density="compact"
           autoHeight
           rows={ccds}
           columns={columns_ccds}
-          pageSize={7}
+          pageSize={10}
           rowsPerPageOptions={[10]}
           experimentalFeatures={{ newEditingApi: true }}
           getRowId={(row) => row.id_ccd}

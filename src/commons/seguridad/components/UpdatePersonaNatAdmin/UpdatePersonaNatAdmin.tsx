@@ -628,14 +628,14 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="E-mail *"
+                  // label="E-mail *"
                   defaultValue={data?.email}
                   error={errors.email?.type === 'required'}
                   type="email"
                   helperText={
                     errors.email?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : ''
+                      : 'Email'
                   }
                   {...register('email', {
                     required: true,
@@ -646,14 +646,14 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="Celular"
+                  // label="Celular"
                   defaultValue={data?.telefono_celular}
                   error={errors.telefono_celular?.type === 'required'}
                   type="text"
                   helperText={
                     errors.telefono_celular?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : ''
+                      : 'Celular'
                   }
                   {...register('telefono_celular')}
                 />

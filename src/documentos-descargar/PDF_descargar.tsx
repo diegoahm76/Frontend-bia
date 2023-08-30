@@ -4,8 +4,8 @@ import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element => {
 
-    const titulo = title;
-    console.log(titulo);
+    const titulo:any = title;
+    // console.log(titulo);
     const button_style = {
         color: 'white',
         backgroundColor: 'red',
@@ -18,7 +18,8 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
         justifyContent: 'center',
         marginRight: '10px'
     };
-
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+  const handleClick = (): void => {
     const doc = new JsPDF();
 
     const header_img_data = '../image/imagenes/PDF3.png'; // Reemplaza con la ruta de la imagen que deseas utilizar
@@ -48,7 +49,7 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
     doc.text(gato_text, gato_x, gato_y, { align: 'center' });
 
 
-    const start_y = img_y + img_height + 10; // Posición vertical para iniciar los encabezados y datos
+    const start_y = img_y + img_height -25; // Posición vertical para iniciar los encabezados y datos
 
     const data: any[][] = [];
     const headers: any[] = [];
@@ -80,8 +81,7 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
     const file_id = Math.random();
     const file_name = `Resultados_de_la_busqueda_${file_id}.pdf`;
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const handleClick = (): void => {
+ 
         doc.save(file_name);
     };
 
