@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
-import type { IBuscarCaja, ICajas, ICarpetas } from "../types/types";
+import type { IBuscarCaja, ICajas, ICarpetas, PostCajas } from "../types/types";
 import { api } from "../../../../../api/axios";
 
 export const search_caja = async ({
@@ -35,5 +35,16 @@ export const get_cajas_bandeja = async (id_bandeja: number): Promise<ICajas[]> =
         ResponseServer<ICajas[]>
     >(`gestor/depositos-archivos/cajaBandeja/listar-cajas-por-bandeja/${id_bandeja}/`);
     return response.data.data;
+}
+
+// * delete
+export const delete_caja = async (id_caja: number): Promise<AxiosResponse<ResponseServer<null>>> => {
+    return await api.delete<ResponseServer<null>>(`gestor/depositos-archivos/cajaBandeja/eliminar/${id_caja}/`);
+}
+
+// * post 
+export const post_caja = async (data: PostCajas): Promise<PostCajas> => {
+    const response = await api.post(`gestor/depositos-archivos/estanteDeposito/crear/`, data);
+    return response.data;
 }
 

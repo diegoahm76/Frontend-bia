@@ -6,7 +6,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../../Estantes/context/context';
-import { ButtonAdminCarpetas } from './ButtonAdminCarpetas';
+// import { ButtonAdminCarpetas } from './ButtonAdminCarpetas';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -65,6 +65,7 @@ export const ListarCajas: React.FC = () => {
     useContext(DataContext);
 
   useEffect(() => {
+    console.log(id_bandeja, 'id_bandeja');
     if (id_bandeja) {
       void fetch_data_caja_bandeja();
     }
@@ -107,11 +108,6 @@ export const ListarCajas: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <ButtonAdminCarpetas />
-          </Grid>
-        </Grid>
       </Grid>
     </>
   );

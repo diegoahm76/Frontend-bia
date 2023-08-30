@@ -14,30 +14,30 @@ export const useCajaHook = (): any => {
 
   // use form estantes
   const {
-    control: control_estantes,
-    watch: watch_estantes,
-    register: register_estantes,
-    handleSubmit: handleSubmit_estantes,
-    setValue: set_value_estantes,
-    reset: reset_estantes,
-    formState: { errors: errors_estantes },
+    control: control_cajas,
+    watch: watch_cajas,
+    register: register_cajas,
+    handleSubmit: handleSubmit_cajas,
+    setValue: set_value_cajas,
+    reset: reset_cajas,
+    formState: { errors: errors_cajas },
   } = useForm({
     defaultValues: {
-      identificacion_por_deposito: '',
+      identificacion_por_bandeja: '',
       orden: '',
       nuevo_orden: '',
     },
   });
 
-  // use form mover estantes
+  // use form mover cajas
   const {
-    control: control_mover_estantes,
-    watch: watch_mover_estantes,
-    register: register_mover_estantes,
-    handleSubmit: handleSubmit_mover_estantes,
-    setValue: set_value_mover_estantes,
-    reset: reset_mover_estantes,
-    formState: { errors: errors_mover_estantes },
+    control: control_mover_cajas,
+    watch: watch_mover_cajas,
+    register: register_mover_cajas,
+    handleSubmit: handleSubmit_mover_cajas,
+    setValue: set_value_mover_cajas,
+    reset: reset_mover_cajas,
+    formState: { errors: errors_mover_cajas },
   } = useForm({
     defaultValues: {
       identificacion_estante: '',
@@ -51,8 +51,8 @@ export const useCajaHook = (): any => {
     },
   });
 
-  const data_watch_mover_estantes = watch_mover_estantes();
-  const data_watch_estantes = watch_estantes();
+  const data_watch_mover_cajas = watch_mover_cajas();
+  const data_watch_cajas = watch_cajas();
 
   const {
     id_deposito,
@@ -70,7 +70,7 @@ export const useCajaHook = (): any => {
 
   const handle_close = (): void => {
     set_open_dialog(false);
-    set_value_mover_estantes('identificacion_por_entidad_destino', {
+    set_value_mover_cajas('identificacion_por_entidad_destino', {
       value: '',
       label: '',
     });
@@ -94,22 +94,22 @@ export const useCajaHook = (): any => {
   };
 
   useEffect(() => {
-    if (data_watch_estantes?.identificacion_por_deposito) {
+    if (data_watch_cajas?.identificacion_por_bandeja) {
       set_identificacion_deposito(
-        data_watch_estantes?.identificacion_por_deposito
+        data_watch_cajas?.identificacion_por_bandeja
       );
     }
-  }, [data_watch_estantes?.identificacion_por_deposito]);
+  }, [data_watch_cajas?.identificacion_por_bandeja]);
 
   // ? onsumit
 
-  const [is_saving_estante, set_is_saving_estante] = useState(false);
-  const [is_saving_mover_estante, set_is_saving_mover_estante] =
+  const [is_saving_cajas, set_is_saving_cajas] = useState(false);
+  const [is_saving_mover_cajas, set_is_saving_mover_cajas] =
     useState(false);
 
-  const onsubmit_estantes = handleSubmit_estantes(async (data) => {
+  const onsubmit_cajas = handleSubmit_cajas(async (data) => {
     try {
-      set_is_saving_estante(true);
+      set_is_saving_cajas(true);
       if (id_deposito) {
         const data_estantes: PostEstantes = {
           id_deposito,
@@ -118,18 +118,18 @@ export const useCajaHook = (): any => {
         await post_estante(data_estantes);
         await fetch_data_estantes_depositos();
         control_success('Se creó estante correctamente');
-        reset_estantes();
+        reset_cajas();
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
     } finally {
-      set_is_saving_estante(false);
+      set_is_saving_cajas(false);
     }
   });
 
-  const onsubmit_mover_estantes = handleSubmit_mover_estantes(async (data) => {
+  const onsubmit_mover_cajas = handleSubmit_mover_cajas(async (data) => {
     try {
-      set_is_saving_mover_estante(true);
+      set_is_saving_mover_cajas(true);
       if (selectedItem) {
         const data_estantes: PutMoverEstantes = {
           identificacion_por_entidad_destino: selectedItem.value as string,
@@ -144,45 +144,43 @@ export const useCajaHook = (): any => {
     } catch (error: any) {
       control_error(error.response.data.detail);
     } finally {
-      set_is_saving_mover_estante(false);
+      set_is_saving_mover_cajas(false);
     }
   });
   return {
-    // use form bandejas
-    control_estantes,
-    watch_estantes,
-    register_estantes,
-    handleSubmit_estantes,
-    set_value_estantes,
-    reset_estantes,
-    errors_estantes,
-    data_watch_estantes,
+    control_cajas,
+    watch_cajas,
+    register_cajas,
+    handleSubmit_cajas,
+    set_value_cajas,
+    reset_cajas,
+    errors_cajas,
+    data_watch_cajas,
 
-    // use form mover estantes
-    control_mover_estantes,
-    watch_mover_estantes,
-    register_mover_estantes,
-    handleSubmit_mover_estantes,
-    set_value_mover_estantes,
-    reset_mover_estantes,
-    errors_mover_estantes,
-    data_watch_mover_estantes,
+    control_mover_cajas,
+    watch_mover_cajas,
+    register_mover_cajas,
+    handleSubmit_mover_cajas,
+    set_value_mover_cajas,
+    reset_mover_cajas,
+    errors_mover_cajas,
+    data_watch_mover_cajas,
 
     // select
     selectedItem,
     setSelectedItem,
     handleSelectChange,
 
-    // * dialog mover estantes
+    // * dialog mover cajas
     open_dialog,
     handle_click_open,
     handle_close,
 
     // * onsumit
-    onsubmit_estantes,
-    onsubmit_mover_estantes,
+    onsubmit_cajas,
+    onsubmit_mover_cajas,
     //  * saving
-    is_saving_estante,
-    is_saving_mover_estante,
+    is_saving_cajas,
+    is_saving_mover_cajas,
   };
 };

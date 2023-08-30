@@ -74,6 +74,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              console.log(params.row, 'params.row');
               reset({
                 identificacion_estante: params.row.identificacion_por_deposito,
                 orden_estante: params.row.orden_ubicacion_por_deposito,
@@ -141,7 +142,10 @@ export const BusquedaEstanteCajas: React.FC = () => {
         value: '',
         label: '',
       },
-      id_bandeja_estante: '',
+      id_bandeja_estante: {
+        value: '',
+        label: '',
+      },
     },
   });
 
@@ -214,11 +218,14 @@ export const BusquedaEstanteCajas: React.FC = () => {
   }, [id_estante]);
 
   useEffect(() => {
-    if (data_watch?.id_bandeja_estante) {
-      set_id_bandeja(Number(data_watch?.id_bandeja_estante));
+    if (data_watch?.id_bandeja_estante?.value) {
+      console.log(
+        data_watch?.id_bandeja_estante?.value,
+        'data_watch?.id_bandeja_estante?.value'
+      );
+      set_id_bandeja(data_watch?.id_bandeja_estante?.value as any);
     }
-  }, [data_watch?.id_bandeja_estante]);
-        
+  }, [data_watch?.id_bandeja_estante?.value]);
 
   return (
     <>
@@ -357,7 +364,6 @@ export const BusquedaEstanteCajas: React.FC = () => {
                       fontWeight: 'thin',
                       fontSize: '0.75rem',
                       marginTop: '0.25rem',
-                      // marginLeft: '0.25rem'
                     }}
                   >
                     Bandeja actual
