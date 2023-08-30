@@ -272,10 +272,13 @@ export const update_levels_service: any = (
 
 // Unidades
 // Obtener Unidades
-export const get_unitys_service: any = (id: string | number,setDataloading: any) => {
+export const get_unitys_service: any = (
+  id: string | number,
+  setDataloading?: any
+) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      setDataloading(true);
+      setDataloading?.(true);
       const { data } = await api.get(
         `transversal/organigrama/unidades/get-by-organigrama/${id}/`
       );
@@ -287,8 +290,8 @@ export const get_unitys_service: any = (id: string | number,setDataloading: any)
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
-    }finally{
-      setDataloading(false);
+    } finally {
+      setDataloading?.(false);
     }
   };
 };

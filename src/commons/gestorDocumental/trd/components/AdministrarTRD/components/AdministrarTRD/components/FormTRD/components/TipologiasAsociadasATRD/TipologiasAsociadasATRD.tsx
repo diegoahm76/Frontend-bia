@@ -27,7 +27,16 @@ export const colums_tipologias_asociadas = [
   {
     field: 'cod_tipo_medio_doc',
     headerName: 'Cód. tipo medio doc',
-    width: 200
+    width: 200,
+    renderCell: (params: any) => {
+      if (params.row.cod_tipo_medio_doc === 'H') {
+        return 'Híbrido';
+      } else if (params.row.cod_tipo_medio_doc === 'F') {
+        return 'Físico';
+      } else if (params.row.cod_tipo_medio_doc === 'E') {
+        return 'Electrónico';
+      }
+    }
   },
   {
     headerName: 'Activo',

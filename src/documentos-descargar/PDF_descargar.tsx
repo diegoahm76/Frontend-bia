@@ -4,7 +4,7 @@ import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element => {
 
-    const titulo = title;
+    const titulo:any = title;
     console.log(titulo);
     const button_style = {
         color: 'white',
@@ -48,7 +48,7 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
     doc.text(gato_text, gato_x, gato_y, { align: 'center' });
 
 
-    const start_y = img_y + img_height + 10; // Posición vertical para iniciar los encabezados y datos
+    const start_y = img_y + img_height -25; // Posición vertical para iniciar los encabezados y datos
 
     const data: any[][] = [];
     const headers: any[] = [];

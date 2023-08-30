@@ -304,7 +304,6 @@ const DialogDelegarOrganigrama = ({
                     <TextField
                       fullWidth
                       label="Número de documento *"
-                      type="number"
                       size="small"
                       name='numero_documento'
                       value={data_user_por_asignar?.numero_documento}

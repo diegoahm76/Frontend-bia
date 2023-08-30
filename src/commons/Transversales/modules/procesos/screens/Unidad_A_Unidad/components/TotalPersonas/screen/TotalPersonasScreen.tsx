@@ -46,7 +46,7 @@ export const TotalPersonas: FC<{
         onClose={closeModalHistoricoTraslados}
       >
         <DialogTitle>
-          <Title title="Histórico de traslados masivos (Unidad a Unidad)" />
+          <Title title="Total Personas unidades del organigrama" />
         </DialogTitle>
         <Divider />
         <DialogContent

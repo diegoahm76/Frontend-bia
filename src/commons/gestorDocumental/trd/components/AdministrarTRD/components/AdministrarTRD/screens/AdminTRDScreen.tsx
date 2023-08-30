@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Avatar, Box, Button, Grid, IconButton, Stack } from '@mui/material';
+import { Avatar, Box, Button, ButtonGroup, Grid, IconButton, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Title } from '../../../../../../../../components';
 import { DataGrid } from '@mui/x-data-grid';
@@ -31,6 +31,8 @@ import {
 } from '../../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { use_trd } from '../../../../../hooks/use_trd';
 import { DownloadButton } from '../../../../../../../../utils/DownloadButton/DownLoadButton';
+import { download_xls } from '../../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../../documentos-descargar/PDF_descargar';
 
 export const AdminTRDScreen = (): JSX.Element | null => {
   //* dispatch declaration
@@ -254,27 +256,41 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               <Title title="Cuadro de clasificación documental Seleccionado - (Administración TRD)" />
 
               {trd_current?.actual ? null : (
+                <>
+                
+                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                  {download_xls({
+                    nurseries: catalado_series_subseries_unidad_organizacional.filter(
+                      (item: any) => !catalogo_trd.some(
+                        (otherItem: any) => otherItem.id_cat_serie_und === item.id_cat_serie_und
+                      )
+                    ), columns: columns_catalogo_ccd })}
+                  {download_pdf({
+                    nurseries: catalado_series_subseries_unidad_organizacional.filter(
+                      (item: any) => !catalogo_trd.some(
+                        (otherItem: any) => otherItem.id_cat_serie_und === item.id_cat_serie_und
+                      )
+                    ), columns: columns_catalogo_ccd, title: 'Clasificación documental' })}
+
+                </ButtonGroup>
+                
                 <DataGrid
-                  sx={{
-                    marginTop: '.5rem'
-                  }}
-                  density="compact"
-                  autoHeight
-                  rows={
-                    catalado_series_subseries_unidad_organizacional.filter(
-                      (item: any) =>
-                        !catalogo_trd.some(
-                          (otherItem: any) =>
-                            otherItem.id_cat_serie_und === item.id_cat_serie_und
-                        )
-                    ) || []
-                  }
-                  columns={columns_catalogo_ccd}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id_cat_serie_und ?? 0}
-                />
+                    sx={{
+                      marginTop: '.5rem'
+                    }}
+                    density="compact"
+                    autoHeight
+                    rows={catalado_series_subseries_unidad_organizacional.filter(
+                      (item: any) => !catalogo_trd.some(
+                        (otherItem: any) => otherItem.id_cat_serie_und === item.id_cat_serie_und
+                      )
+                    ) || []}
+                    columns={columns_catalogo_ccd}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => row.id_cat_serie_und ?? 0} /></>
               )}
 
               {trd_current?.actual &&
@@ -367,6 +383,12 @@ export const AdminTRDScreen = (): JSX.Element | null => {
           <Grid xs={12}>
             <Box sx={{ width: '100%' }}>
               <Title title="Catalogo TRD - Tabla de retención documental - (Administración TRD)" />
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                {download_xls({ nurseries: catalogo_trd, columns: columns_catalogo_trd })}
+                {download_pdf({ nurseries: catalogo_trd, columns: columns_catalogo_trd, title: 'Catálogo TRD' })}
+
+              </ButtonGroup>
               <DataGrid
                 sx={{
                   marginTop: '.5rem'
@@ -375,8 +397,8 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                 autoHeight
                 rows={catalogo_trd || []}
                 columns={columns_catalogo_trd}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowId={(row) => row.id_catserie_unidadorg ?? 0}
               />

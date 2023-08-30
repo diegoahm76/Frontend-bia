@@ -300,8 +300,18 @@ const use_editar_organigrama = () => {
       headerName: 'Tipo unidad',
       field: 'cod_tipo_unidad',
       headerAlign: 'center',
-      minWidth: 115,
-      maxWidth: 115
+      width: 120,
+      renderCell: (params: { row: { cod_tipo_unidad: any } }) => {
+        if (params.row.cod_tipo_unidad === 'LI') {
+          return 'Línea';
+        }
+        if (params.row.cod_tipo_unidad === 'AP') {
+          return 'Apoyo';
+        }
+        if (params.row.cod_tipo_unidad === 'AS') {
+          return 'Asesor';
+        }
+      }
     },
     {
       headerName: 'Agrupacion documental',
@@ -309,11 +319,16 @@ const use_editar_organigrama = () => {
       minWidth: 180,
       maxWidth: 180,
       valueFormatter: (params) => {
+        if (params.value === 'SEC') {
+          return 'Sección';
+        }
+        if (params.value === 'SUB') {
+          return 'Subsección';
+        }
         // eslint-disable-next-line no-extra-boolean-cast
         if (!Boolean(params.value)) {
           return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
-        return params.value;
       }
     },
     {
@@ -495,7 +510,7 @@ const use_editar_organigrama = () => {
 
           {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
 
-          {organigram_current?.actual &&
+          {organigram_current?.actua &&
           !params.row.cod_agrupacion_documental ? (
             <>
               <IconButton
