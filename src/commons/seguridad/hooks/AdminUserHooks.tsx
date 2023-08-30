@@ -196,10 +196,10 @@ export const use_admin_users = (): AdminUserHook => {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           data_create_user.append('roles', `${roles[i].value}`);
         }
-        data_create_user.append(
-          `${auth_url}/app/seguridad/administracion_usuarios`,
+        data_create_user.append(          
           'redirect_url',
           // 'http://localhost:3000/#/app/seguridad/administracion_usuarios'
+          `${auth_url}/auth/cambiar_contrasena/`,
         );
         data_create_user.append('profile_img', file_image ?? '');
 

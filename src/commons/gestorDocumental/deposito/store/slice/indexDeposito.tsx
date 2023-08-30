@@ -9,6 +9,7 @@ import type {
   IObjSucursales,
 } from '../../interfaces/deposito';
 import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
+import type{ IBuscarCaja } from '../../Cajas/types/types';
 
 export const initial_state_deposito: IObjDeposito = {
   nombre_deposito: null,
@@ -28,9 +29,8 @@ export const initial_state_bandeja: IObjBandeja = {
   id_estante_deposito: null,
   identificacion_por_estante: null,
   orden_ubicacion_por_estante: null,
-  id_bandeja_estante: null
-
-}
+  id_bandeja_estante: null,
+};
 export const mode_estantes: IMode = {
   ver: false,
   crear: false,
@@ -57,6 +57,18 @@ export const id_depo_est: IdEstanteDeposito = {
   identificacion_por_deposito: '',
 };
 
+export const cajas: IBuscarCaja = {
+  identificacion_deposito: null,
+  id_deposito: null,
+  identificacion_estante: '',
+  id_estante: null,
+  identificacion_bandeja: '',
+  id_bandeja: null,
+  identificacion_caja: '',
+  id_caja: null,
+  orden_caja: null,
+};
+
 export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
@@ -68,6 +80,7 @@ export const initial_state: IDeposito = {
   data_depositos: info_deposito_slice,
   deposito_estante: id_depo_est,
   estantes: [],
+  cajas,
 };
 
 export const deposito_slice = createSlice({
@@ -101,10 +114,7 @@ export const deposito_slice = createSlice({
     ) => {
       state.mode_estante = action.payload;
     },
-    set_bandejas: (
-      state: IDeposito,
-      action: PayloadAction<IObjBandeja[]>
-    ) => {
+    set_bandejas: (state: IDeposito, action: PayloadAction<IObjBandeja[]>) => {
       state.bandejas = action.payload;
     },
     set_current_bandeja: (
@@ -125,21 +135,17 @@ export const deposito_slice = createSlice({
     ) => {
       state.data_depositos = action.payload;
     },
-    set_current_id_depo_est: (
-      state: IDeposito,
-      action: PayloadAction<any>
-    ) => {
+    set_current_id_depo_est: (state: IDeposito, action: PayloadAction<any>) => {
       state.deposito_estante = action.payload;
     },
-    set_estantes: (
-      state: IDeposito,
-      action: PayloadAction<IObEstante[]>
-    ) => {
+    set_estantes: (state: IDeposito, action: PayloadAction<IObEstante[]>) => {
       state.estantes = action.payload;
     },
-  }
+    set_current_cajas: (state: IDeposito, action: PayloadAction<IBuscarCaja>) => {
+      state.cajas = action.payload;
+    },
+  },
 });
-
 
 export const {
   set_depositos,
@@ -152,4 +158,5 @@ export const {
   set_current_info_deposito,
   set_current_id_depo_est,
   set_estantes,
+  set_current_cajas,
 } = deposito_slice.actions;

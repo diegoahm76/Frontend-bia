@@ -630,7 +630,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
               disabled
               fullWidth
               {...register('direccion_laboral', {
-                required: true,
+                // required: true,
               })}
               value={direccion_laboral}
             />

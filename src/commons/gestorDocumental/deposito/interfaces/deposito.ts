@@ -1,3 +1,4 @@
+import type{ IBuscarCaja } from "../Cajas/types/types";
 import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
 
 export interface IDeposito {
@@ -11,6 +12,7 @@ export interface IDeposito {
   data_depositos: InfoDepositos;
   deposito_estante: IdEstanteDeposito;
   estantes: IObEstante[];
+  cajas: IBuscarCaja;
 }
 export interface IMode {
   ver: boolean;

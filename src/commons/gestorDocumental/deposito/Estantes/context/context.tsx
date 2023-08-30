@@ -44,11 +44,13 @@ interface UserContext {
   depositos_selected: ValueProps[];
   depositos_selected_mover_estante: ValueProps[];
   nuevo_orden_estantes_selected: ValueProps[];
+  nuevo_orden_cajas_selected: ValueProps[];
   bandejas_selected: ValueProps[];
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
   set_depositos_selected_mover_estante: (value: ValueProps[]) => void;
   set_nuevo_orden_estantes_selected: (value: ValueProps[]) => void;
+  set_nuevo_orden_cajas_selected: (value: ValueProps[]) => void;
   set_bandejas_selected: (value: ValueProps[]) => void;
 
   // * rows
@@ -96,11 +98,13 @@ export const DataContext = createContext<UserContext>({
   depositos_selected: [],
   depositos_selected_mover_estante: [],
   nuevo_orden_estantes_selected: [],
+  nuevo_orden_cajas_selected: [],
   bandejas_selected: [],
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
   set_depositos_selected_mover_estante: () => {},
   set_nuevo_orden_estantes_selected: () => {},
+  set_nuevo_orden_cajas_selected: () => {},
   set_bandejas_selected: () => {},
 
   // * rows
@@ -149,6 +153,9 @@ export const UserProvider = ({
     ValueProps[]
   >([]);
   const [nuevo_orden_estantes_selected, set_nuevo_orden_estantes_selected] =
+    React.useState<ValueProps[]>([]);
+
+  const [nuevo_orden_cajas_selected, set_nuevo_orden_cajas_selected] =
     React.useState<ValueProps[]>([]);
 
   const [
@@ -287,7 +294,7 @@ export const UserProvider = ({
   };
   const fetch_data_caja_bandeja = async (): Promise<void> => {
     try {
-      const response = await get_cajas_bandeja(id_caja as number);
+      const response = await get_cajas_bandeja(id_bandeja as number);
       if (response?.length > 0) {
         const data_cajas: ICajas[] = response.map((item: ICajas) => ({
           id_caja_bandeja: item.id_caja_bandeja,
@@ -296,6 +303,11 @@ export const UserProvider = ({
           id_bandeja_estante: item.id_bandeja_estante,
         }));
         set_rows_cajas(data_cajas);
+        const data_orden_deposito: any[] = response.map((item: ICajas) => ({
+          value: item.orden_ubicacion_por_bandeja ?? '',
+          label: item.orden_ubicacion_por_bandeja ?? '',
+        }));
+        set_nuevo_orden_cajas_selected(data_orden_deposito);
       } else {
         set_rows_cajas([]);
       }
@@ -324,11 +336,13 @@ export const UserProvider = ({
     depositos_selected,
     depositos_selected_mover_estante,
     nuevo_orden_estantes_selected,
+    nuevo_orden_cajas_selected,
     bandejas_selected,
     set_depositos_selected,
     set_sucusal_selected,
     set_depositos_selected_mover_estante,
     set_nuevo_orden_estantes_selected,
+    set_nuevo_orden_cajas_selected,
     set_bandejas_selected,
     // * rows
     rows_estantes,

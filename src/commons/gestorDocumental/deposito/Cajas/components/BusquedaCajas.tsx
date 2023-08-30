@@ -22,6 +22,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch } from '../../../../../hooks';
 import {
+  set_current_cajas,
   set_current_estantes,
   set_current_id_depo_est,
   set_current_mode_estantes,
@@ -34,7 +35,7 @@ import type { IBuscarCaja } from '../types/types';
 export const BusquedaCajas: React.FC = () => {
   const {
     depositos_selected_mover_estante,
-    set_id_deposito,
+    set_id_bandeja,
     fetch_data_depositos,
   } = useContext(DataContext);
 
@@ -79,86 +80,28 @@ export const BusquedaCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              //   dispatch(
-              //     set_current_mode_estantes({
-              //       ver: true,
-              //       crear: false,
-              //       editar: false,
-              //     })
-              //   );
-              //   dispatch(
-              //     set_current_id_depo_est({
-              //       id_deposito: params.row.id_deposito,
-              //       id_estante_deposito: params.row.id_estante_deposito,
-              //       nombre_deposito: params.row.nombre_deposito,
-              //       identificacion_por_deposito:
-              //         params.row.identificacion_por_deposito,
-              //     })
-              //   );
+              set_id_bandeja(params.row.id_bandeja);
+              dispatch(
+                set_current_mode_estantes({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
 
-              //   dispatch(
-              //     set_current_estantes({
-              //       id_estante_deposito: params.row.id_estante_deposito,
-              //       orden_ubicacion_por_deposito: params.row.nombre_deposito,
-              //       identificacion_por_deposito:
-              //         params.row.identificacion_deposito,
-              //     })
-              //   );
-              //   set_id_deposito(params.row.id_deposito);
-
-              handle_close();
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <ChecklistOutlinedIcon
-                titleAccess="Seleccionar estante"
-                sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px',
-                }}
-              />
-            </Avatar>
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => {
-              //   console.log(params.row);
-              //   dispatch(
-              //     set_current_mode_estantes({
-              //       ver: false,
-              //       crear: false,
-              //       editar: true,
-              //     })
-              //   );
-
-              //   dispatch(
-              //     set_current_id_depo_est({
-              //       id_deposito: params.row.id_deposito,
-              //       id_estante_deposito: params.row.id_estante_deposito,
-              //       nombre_deposito: params.row.identificacion_deposito,
-              //       identificacion_por_deposito:
-              //         params.row.identificacion_por_deposito,
-              //     })
-              //   );
-              //   dispatch(
-              //     set_current_estantes({
-              //       id_estante_deposito: params.row.id_estante_deposito,
-              //       orden_ubicacion_por_deposito:
-              //         params.row.orden_ubicacion_por_deposito,
-              //       identificacion_por_deposito:
-              //         params.row.identificacion_deposito,
-              //     })
-              //   );
-              //   set_id_deposito(params.row.id_deposito);
+              dispatch(
+                set_current_cajas({
+                  id_caja: params.row.id_caja,
+                  identificacion_caja: params.row.identificacion_caja,
+                  orden_caja: params.row.orden_caja,
+                  id_bandeja: params.row.id_bandeja,
+                  identificacion_bandeja: params.row.identificacion_bandeja,
+                  id_estante: params.row.id_estante,
+                  identificacion_estante: params.row.identificacion_estante,
+                  id_deposito: params.row.id_deposito,
+                  identificacion_deposito: params.row.identificacion_deposito,
+                })
+              );
 
               handle_close();
             }}
@@ -173,7 +116,7 @@ export const BusquedaCajas: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar estante"
+                titleAccess="Editar caja"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
