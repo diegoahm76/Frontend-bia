@@ -170,12 +170,16 @@ export const ActualANuevo: FC = (): JSX.Element => {
                             )
                           ); */
                           // 1. se realiza la consuta del listado de personas del organigrama actual
-                          void getListadoPersonasOrganigramaActual();
+                          void getListadoPersonasOrganigramaActual().then(
+                            (res) => {
+                              void getListaUnidadesOrganigramaSeleccionado(
+                                selectedOption.value
+                              );
+                            }
+                          );
                           // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado
 
-                          void getListaUnidadesOrganigramaSeleccionado(
-                            selectedOption.value
-                          );
+                        
 
                           console.log('selectedOption', selectedOption);
                           onChange(selectedOption);
