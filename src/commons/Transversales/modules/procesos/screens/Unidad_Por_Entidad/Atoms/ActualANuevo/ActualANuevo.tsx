@@ -144,7 +144,7 @@ useEffect(() => {
                 xs={12}
                 sm={6}
                 sx={{
-                  zIndex: 2
+                  zIndex: 8
                 }}
               >
                 <Controller

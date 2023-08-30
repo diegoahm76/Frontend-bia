@@ -66,11 +66,11 @@ export const get_organigrama_acual = async (navigate: any): Promise<any> => {
   }
 };
 
+// ? ---- get organigramas disponibles con sus respectivas validaciones -- //
 export const getOrganigramasDispobibles = async (): Promise<any> => {
   try {
     const url = `transversal/organigrama/get-terminados/`;
     const { data } = await api.get(url);
-    console.log(data);
     const dataToReturn = data.filter(
       (el: any) => el.fecha_terminado && !el.fecha_retiro_produccion
     );
@@ -79,3 +79,58 @@ export const getOrganigramasDispobibles = async (): Promise<any> => {
     console.log(error);
   }
 };
+
+// ? --- get organigrama anterior al actual -- //
+
+export const get_organigrama_anterior = async (): Promise<any> => {
+  try {
+    const url1 =
+      'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
+    const { data } = await api.get(url1);
+
+    const url2 = `transversal/organigrama/get/`;
+    const { data: data2 } = await api.get(url2);
+
+    console.log(data2);
+
+   const dataToReturn = data2?.Organigramas?.filter(
+      (el: any) => el.id_organigrama === data?.data[0]?.id_organigrama
+    ) 
+    console.log(dataToReturn);
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+/* export const getUnidadesOrgAnterior = async (): Promise<any[]> => {
+  const url =
+    'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
+  try {
+    const { data } = await api.get(url);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching unidades:', error);
+    throw error;
+  }
+};
+*/
+
+/* export const getOrganigramaAnterior = async (id_org: number): Promise<any> => {
+  const url = 'transversal/organigrama/get/';
+  try {
+    const { data } = await api.get(url);
+    const organigramaNecesario = data.Organigramas.find(
+      (el: any) => el.id_organigrama === id_org
+    );
+    if (organigramaNecesario) {
+      return organigramaNecesario;
+    } else {
+      // throw new Error(`Organigrama with id ${id_org} not found`);
+      console.error(`Organigrama with id ${id_org} not found`);
+    }
+  } catch (error) {
+    console.error('Error fetching organigrama:', error);
+    throw error;
+  }
+};
+*/

@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
+import { get_organigrama_anterior } from '../../toolkit/UxE_thunks/UxE_thunks';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const AnteriorAActual: FC = (): JSX.Element => {
@@ -27,7 +28,6 @@ export const AnteriorAActual: FC = (): JSX.Element => {
   const [currentDate, setCurrentDate] = useState(dayjs().format('DD-MM-YYYY'));
 
   // ? useEffect to update the current date each day
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentDate(dayjs().format('DD-MM-YYYY'));
@@ -37,6 +37,12 @@ export const AnteriorAActual: FC = (): JSX.Element => {
       clearInterval(intervalId);
     };
   }, []);
+
+  // ? useeffect principal para las operaciones del módulo
+  useEffect(() => {
+    void get_organigrama_anterior();
+  }, []);
+
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
