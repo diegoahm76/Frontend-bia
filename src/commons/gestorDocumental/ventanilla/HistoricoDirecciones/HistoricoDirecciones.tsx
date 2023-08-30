@@ -12,9 +12,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import type {
-    HistoricoDirecciones,
-} from '../../../../interfaces/globalModels';
+import type { HistoricoDirecciones } from '../../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../../helpers';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -113,21 +111,17 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
 
     const historico = async (): Promise<void> => {
         try {
-            const response = await consultar_historico_direcciones(
-                id_persona
-            );
-            const new_historico = response.map(
-                (datos: HistoricoDirecciones) => ({
-                    id_historico_direccion: datos.id_historico_direccion,
-                    direccion: datos.direccion,
-                    cod_municipio: datos.cod_municipio,
-                    cod_pais_exterior: null,
-                    tipo_direccion: datos.tipo_direccion,
-                    fecha_cambio: datos.fecha_cambio,
-                    id_persona: datos.id_persona,
-                    nombre_completo: datos.nombre_completo,
-                })
-            );
+            const response = await consultar_historico_direcciones(id_persona);
+            const new_historico = response.map((datos: HistoricoDirecciones) => ({
+                id_historico_direccion: datos.id_historico_direccion,
+                direccion: datos.direccion,
+                cod_municipio: datos.cod_municipio,
+                cod_pais_exterior: null,
+                tipo_direccion: datos.tipo_direccion,
+                fecha_cambio: datos.fecha_cambio,
+                id_persona: datos.id_persona,
+                nombre_completo: datos.nombre_completo,
+            }));
             set_rows(new_historico);
         } catch (err) {
             control_error(err);
