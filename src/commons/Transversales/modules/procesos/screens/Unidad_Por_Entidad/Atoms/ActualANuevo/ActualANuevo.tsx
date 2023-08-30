@@ -12,6 +12,8 @@ import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import {
+  getListaUnidadesOrganigramaSeleccionado,
+  getListadoPersonasOrganigramaActual,
   getOrganigramasDispobibles,
   get_organigrama_acual
 } from '../../toolkit/UxE_thunks/UxE_thunks';
@@ -39,23 +41,23 @@ export const ActualANuevo: FC = (): JSX.Element => {
   //* context necesario
 
   // ! use effects necesarios para el manejo del módulo
-useEffect(() => {
-  const obtenerOrganigramas = async (): Promise<any> => {
-    const organigramasActuales = await get_organigrama_acual(navigate);
-    console.log('res', organigramasActuales);
-    setOrganigramaActual(
-      organigramasActuales?.map((item: any) => ({
-        label: item?.nombre,
-        value: item?.id_organigrama
-      }))
-    );
+  useEffect(() => {
+    const obtenerOrganigramas = async (): Promise<any> => {
+      const organigramasActuales = await get_organigrama_acual(navigate);
+      console.log('res', organigramasActuales);
+      setOrganigramaActual(
+        organigramasActuales?.map((item: any) => ({
+          label: item?.nombre,
+          value: item?.id_organigrama
+        }))
+      );
 
-    const organigramasDisponibles = await getOrganigramasDispobibles();
-    setOrganigramasDisponibles(filtrarOrganigramas(organigramasDisponibles));
-  };
+      const organigramasDisponibles = await getOrganigramasDispobibles();
+      setOrganigramasDisponibles(filtrarOrganigramas(organigramasDisponibles));
+    };
 
-  void obtenerOrganigramas()
-}, []);
+    void obtenerOrganigramas();
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
@@ -158,6 +160,8 @@ useEffect(() => {
                     <div>
                       <Select
                         value={value}
+                        // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
+
                         onChange={(selectedOption) => {
                           //* dentro de esta seleccion, tambien debe existir una selección de modo
                           /*  dispatch(
@@ -165,9 +169,19 @@ useEffect(() => {
                               selectedOption.item
                             )
                           ); */
+                          // 1. se realiza la consuta del listado de personas del organigrama actual
+                          void getListadoPersonasOrganigramaActual();
+                          // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado
+
+                          void getListaUnidadesOrganigramaSeleccionado(
+                            selectedOption.value
+                          );
+
+                          console.log('selectedOption', selectedOption);
                           onChange(selectedOption);
                         }}
                         /* isDisabled={
+                            debe ir dehabilitado cuando ya se ha realizado una preselección de los datos de traslado que me permite generar un registro en la tabla temporal T026
                         } */
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
                         options={organigramasDisponibles} // deben ir seleccionado por defecto el org Actual

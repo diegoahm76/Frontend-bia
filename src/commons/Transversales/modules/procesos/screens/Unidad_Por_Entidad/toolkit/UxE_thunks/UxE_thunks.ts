@@ -3,7 +3,7 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
 
-// ! ----- consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
+// ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
 export const consultarTablaTemporal = async (setLoading: any): Promise<any> => {
   // setLoading(true);
   try {
@@ -124,35 +124,28 @@ export const get_organigrama_anterior = async (navigate: any): Promise<any> => {
   }
 };
 
-/* export const getUnidadesOrgAnterior = async (): Promise<any[]> => {
-  const url =
-    'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
-  try {
-    const { data } = await api.get(url);
-    return data.data;
-  } catch (error) {
-    console.error('Error fetching unidades:', error);
-    throw error;
-  }
-};
-*/
+// ! ------ GET PERSONAS DE ORGANIGRAMA ACTUAL Y DE ORGANIGRAMA QUE SELECCIONE PARA REALIZAR EL TRASLADO DE UNIDADES ------ //
 
-/* export const getOrganigramaAnterior = async (id_org: number): Promise<any> => {
-  const url = 'transversal/organigrama/get/';
+export const getListadoPersonasOrganigramaActual = async (): Promise<any> => {
   try {
+    const url = `transversal/organigrama/listado-personas-organigrama/`;
     const { data } = await api.get(url);
-    const organigramaNecesario = data.Organigramas.find(
-      (el: any) => el.id_organigrama === id_org
-    );
-    if (organigramaNecesario) {
-      return organigramaNecesario;
-    } else {
-      // throw new Error(`Organigrama with id ${id_org} not found`);
-      console.error(`Organigrama with id ${id_org} not found`);
-    }
-  } catch (error) {
-    console.error('Error fetching organigrama:', error);
-    throw error;
+    console.log('listado de personas del organigrama actual', data);
+    return data;
+  } catch (error: any) {
+    console.log(error);
   }
 };
-*/
+
+export const getListaUnidadesOrganigramaSeleccionado = async (
+  id_organigrama: number
+): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/unidades/get-by-organigrama/${id_organigrama}/`;
+    const { data } = await api.get(url);
+    console.log('lista de unidades del organigrama seleccionado ', data);
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
