@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   Stack,
   Button,
   Box,
@@ -25,6 +24,7 @@ import { FILEWEIGHT } from '../../../../../fileWeight/fileWeight';
 import use_editar_organigrama from '../../hooks/useEditarOrganigrama';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
+import { Title } from '../../../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
@@ -91,21 +91,7 @@ const DialogCrearOrganigrama = ({
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          Crear organigrama
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Title title="Crear organigrama" />
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -148,7 +134,6 @@ const DialogCrearOrganigrama = ({
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
-                // margin="dense"
                 fullWidth
                 size="small"
                 label="Versión"
@@ -189,7 +174,7 @@ const DialogCrearOrganigrama = ({
                 inputProps={{
                   maxLength: 255
                 }}
-                onChange={(e:any) => {
+                onChange={(e: any) => {
                   if (e.target.value.length === 255)
                     control_warning('máximo 255 caracteres');
 
@@ -262,10 +247,10 @@ const DialogCrearOrganigrama = ({
                       fontSize: '0.75rem'
                     }}
                   >
-                    {control_organigrama_creacion._formValues.ruta_resolucion
-                      ? control_organigrama_creacion._formValues.ruta_resolucion
+                    {control_organigrama_creacion?._formValues?.ruta_resolucion
+                      ? control_organigrama_creacion?._formValues?.ruta_resolucion
                           .name ??
-                        control_organigrama_creacion._formValues.ruta_resolucion.replace(
+                        control_organigrama_creacion?._formValues?.ruta_resolucion.replace(
                           /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
                           ''
                         )
@@ -284,8 +269,8 @@ const DialogCrearOrganigrama = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="contained"
-              color="success"
+              variant="outlined"
+              color="primary"
               onClick={() => {
                 reset_creacion_organigrama({
                   nombre: '',
@@ -300,6 +285,7 @@ const DialogCrearOrganigrama = ({
             </Button>
             <Button
               variant="outlined"
+              color="error"
               onClick={handle_close_crear_organigrama}
               startIcon={<CloseIcon />}
             >
@@ -309,6 +295,7 @@ const DialogCrearOrganigrama = ({
               loading={loadingButton}
               type="submit"
               variant="contained"
+              color="success"
               startIcon={<SaveIcon />}
             >
               CREAR

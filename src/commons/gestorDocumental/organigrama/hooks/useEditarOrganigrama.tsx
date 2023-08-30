@@ -79,6 +79,11 @@ const use_editar_organigrama = () => {
   const [options_agrupacion_d, set_option_agrupacion_d] = useState<
     IDocumentaryGroup[]
   >([]);
+
+  const [loadingLevels, setloadingLevels] = useState<boolean>(false);
+  const [dataloading, setDataloading] = useState<boolean>(false);
+  // const [dataloadingUnidades, setDataloadingUnidades] = useState<boolean>(false);
+
   const option_raiz = [
     { label: 'Si', value: true },
     { label: 'No', value: false }
@@ -215,7 +220,7 @@ const use_editar_organigrama = () => {
       headerName: 'Acciones',
       field: 'editar',
       minWidth: 140,
-      hide: organigram_current.fecha_terminado,
+      hide: organigram_current?.fecha_terminado,
       renderCell: (params: {
         row: {
           orden_nivel: number;
@@ -239,6 +244,7 @@ const use_editar_organigrama = () => {
               variant="rounded"
             >
               <EditIcon
+                titleAccess="Editar nivel"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -267,6 +273,7 @@ const use_editar_organigrama = () => {
               variant="rounded"
             >
               <DeleteIcon
+                titleAccess="Eliminar nivel"
                 sx={{ color: 'red', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -293,8 +300,18 @@ const use_editar_organigrama = () => {
       headerName: 'Tipo unidad',
       field: 'cod_tipo_unidad',
       headerAlign: 'center',
-      minWidth: 115,
-      maxWidth: 115
+      width: 120,
+      renderCell: (params: { row: { cod_tipo_unidad: any } }) => {
+        if (params.row.cod_tipo_unidad === 'LI') {
+          return 'Línea';
+        }
+        if (params.row.cod_tipo_unidad === 'AP') {
+          return 'Apoyo';
+        }
+        if (params.row.cod_tipo_unidad === 'AS') {
+          return 'Asesor';
+        }
+      }
     },
     {
       headerName: 'Agrupacion documental',
@@ -302,11 +319,16 @@ const use_editar_organigrama = () => {
       minWidth: 180,
       maxWidth: 180,
       valueFormatter: (params) => {
+        if (params.value === 'SEC') {
+          return 'Sección';
+        }
+        if (params.value === 'SUB') {
+          return 'Subsección';
+        }
         // eslint-disable-next-line no-extra-boolean-cast
         if (!Boolean(params.value)) {
           return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
-        return params.value;
       }
     },
     {
@@ -362,8 +384,8 @@ const use_editar_organigrama = () => {
         };
       }) => (
         <>
-          {!organigram_current.fecha_terminado &&
-            !organigram_current.actual && (
+          {!organigram_current?.fecha_terminado &&
+            !organigram_current?.actual && (
               <>
                 <IconButton
                   onClick={() => {
@@ -436,6 +458,7 @@ const use_editar_organigrama = () => {
                     variant="rounded"
                   >
                     <EditIcon
+                      titleAccess="Editar unidad"
                       sx={{
                         color: 'primary.main',
                         width: '18px',
@@ -459,6 +482,7 @@ const use_editar_organigrama = () => {
                     variant="rounded"
                   >
                     <DeleteIcon
+                      titleAccess="Eliminar unidad"
                       sx={{ color: 'red', width: '18px', height: '18px' }}
                     />
                   </Avatar>
@@ -486,7 +510,7 @@ const use_editar_organigrama = () => {
 
           {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
 
-          {organigram_current.actual &&
+          {organigram_current?.actua &&
           !params.row.cod_agrupacion_documental ? (
             <>
               <IconButton
@@ -567,7 +591,7 @@ const use_editar_organigrama = () => {
   // useEffect para obtener el MoldOrganigram (jerarquia de niveles & unidades)
   useEffect(() => {
     void dispatch(
-      get_mold_organigrams_service(organigram_current.id_organigrama)
+      get_mold_organigrams_service(organigram_current?.id_organigrama)
     );
   }, [unity_organigram]);
 
@@ -651,10 +675,12 @@ const use_editar_organigrama = () => {
 
   // useEffect para consultar los niveles y unidades
   useEffect(() => {
-    if (organigram_current.id_organigrama != null)
-      void dispatch(get_levels_service(organigram_current.id_organigrama));
-    if (organigram_current.id_organigrama != null)
-      void dispatch(get_unitys_service(organigram_current.id_organigrama));
+    if (organigram_current?.id_organigrama != null)
+      void dispatch(get_levels_service(organigram_current?.id_organigrama));
+    if (organigram_current?.id_organigrama != null)
+      void dispatch(
+        get_unitys_service(organigram_current?.id_organigrama, setDataloading)
+      );
   }, [organigram_current]);
 
   // useEffect para consultar  options
@@ -704,7 +730,7 @@ const use_editar_organigrama = () => {
       new_niveles = [
         ...levels_organigram,
         {
-          id_organigrama: organigram_current.id_organigrama,
+          id_organigrama: organigram_current?.id_organigrama,
           orden_nivel,
           nombre: data.nombre,
           id_nivel_organigrama: null
@@ -722,14 +748,49 @@ const use_editar_organigrama = () => {
       nombre: ''
     });
     void dispatch(
-      update_levels_service(organigram_current.id_organigrama, new_niveles)
+      update_levels_service(
+        organigram_current?.id_organigrama,
+        new_niveles,
+        setloadingLevels
+      )
     );
   };
 
   // Vuelve a los valores iniciales
   const clean_unitys = (): void => {
     // console.log('datos unidades' , datos_unidades);
-    reset_unidades(initial_state_unitys);
+    reset_unidades({
+      codigoExtra: '',
+      activo: true,
+      id_unidad_organizacional: '',
+      unidad_raiz: {
+        label: 'si',
+        value: true
+      },
+      codigo: '',
+      nombre: '',
+      tipo_unidad: {
+        label: '',
+        value: null,
+        isDisabled: false
+      },
+      nivel_unidad: {
+        label: '',
+        value: null,
+        orden: ''
+      },
+      agrupacion_documental: {
+        label: '',
+        value: null,
+        isDisabled: false
+      },
+      nivel_padre: {
+        label: '',
+        value: null,
+        id_nivel_organigrama: 0,
+        isDisabled: false
+      }
+    });
     // console.log('clean_unitys');
     set_title_unidades('Agregar');
   };
@@ -747,7 +808,7 @@ const use_editar_organigrama = () => {
     unidad_raiz,
     nivel_unidad,
     id_unidad_organizacional,
-    codigoExtra,
+    codigoExtra
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
@@ -757,14 +818,14 @@ const use_editar_organigrama = () => {
       cod_tipo_unidad: tipo_unidad!.value,
       cod_agrupacion_documental: agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
-      id_organigrama: organigram_current.id_organigrama,
+      id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
       id_unidad_organizacional
     };
 
     console.log(codigoExtra, 'codigoExtra');
 
-   /* const newUnidades = unity_organigram.map((unidad: any) =>
+    /* const newUnidades = unity_organigram.map((unidad: any) =>
       unidad.id_unidad_organizacional === id_unidad_organizacional
         ? newUnidad
         : unidad
@@ -775,12 +836,14 @@ const use_editar_organigrama = () => {
         return {
           ...newUnidad,
           cod_unidad_org_padre:
-            unidad.cod_unidad_org_padre === codigoExtra ? codigo : unidad.cod_unidad_org_padre,
+            unidad.cod_unidad_org_padre === codigoExtra
+              ? codigo
+              : unidad.cod_unidad_org_padre
         };
       } else if (unidad.cod_unidad_org_padre === codigoExtra) {
         return {
           ...unidad,
-          cod_unidad_org_padre: codigo,
+          cod_unidad_org_padre: codigo
         };
       } else {
         return unidad;
@@ -790,9 +853,11 @@ const use_editar_organigrama = () => {
     set_title_unidades('Agregar');
     dispatch(
       update_unitys_service(
-        organigram_current.id_organigrama,
+        organigram_current?.id_organigrama,
         newUnidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -814,9 +879,9 @@ const use_editar_organigrama = () => {
       cod_tipo_unidad: tipo_unidad!.value,
       cod_agrupacion_documental: agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
-      id_organigrama: organigram_current.id_organigrama,
+      id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      activo: true,
+      activo: true
     };
     console.log(newUnidad, 'newUnidad');
 
@@ -825,9 +890,11 @@ const use_editar_organigrama = () => {
     set_title_unidades('Agregar');
     dispatch(
       update_unitys_service(
-        organigram_current.id_organigrama,
+        organigram_current?.id_organigrama,
         newUnidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -842,7 +909,8 @@ const use_editar_organigrama = () => {
     tipo_unidad,
     agrupacion_documental,
     unidad_raiz,
-    nivel_unidad
+    nivel_unidad,
+    activo
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_unidad_organizacional: null,
@@ -852,8 +920,9 @@ const use_editar_organigrama = () => {
       cod_tipo_unidad: tipo_unidad!.value,
       cod_agrupacion_documental: agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
-      id_organigrama: organigram_current.id_organigrama,
-      cod_unidad_org_padre: nivel_padre?.value ?? null
+      id_organigrama: organigram_current?.id_organigrama,
+      cod_unidad_org_padre: nivel_padre?.value ?? null,
+      activo: true
     };
     console.log(newUnidad, 'newUnidad');
 
@@ -862,9 +931,11 @@ const use_editar_organigrama = () => {
     set_title_unidades('Agregar');
     dispatch(
       update_unitys_service(
-        organigram_current.id_organigrama,
+        organigram_current?.id_organigrama,
         newUnidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -876,9 +947,11 @@ const use_editar_organigrama = () => {
 
     dispatch(
       update_unitys_service(
-        organigram_current.id_organigrama,
+        organigram_current?.id_organigrama,
         newObject,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -893,7 +966,11 @@ const use_editar_organigrama = () => {
       (nivel: any) => nivel.orden_nivel !== level_row
     );
     void dispatch(
-      update_levels_service(organigram_current?.id_organigrama, new_niveles)
+      update_levels_service(
+        organigram_current?.id_organigrama,
+        new_niveles,
+        setloadingLevels
+      )
     );
   };
 
@@ -904,9 +981,11 @@ const use_editar_organigrama = () => {
     );
     void dispatch(
       update_unitys_service(
-        organigram_current.id_organigrama,
+        organigram_current?.id_organigrama,
         new_unidades,
-        clean_unitys
+        clean_unitys,
+        setloadingLevels,
+        setDataloading
       )
     );
   };
@@ -977,7 +1056,9 @@ const use_editar_organigrama = () => {
 
     control_edit__value_activo,
     reset_edit_value_activo,
-    edit_value_activo
+    edit_value_activo,
+    loadingLevels,
+    dataloading
   };
 };
 

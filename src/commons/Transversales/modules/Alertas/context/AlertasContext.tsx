@@ -25,15 +25,10 @@ export const AlertasProvider = ({ children }: any): JSX.Element => {
 
     return (
 
-        <AlertasContext.Provider
-            value={valueAlertas}
-        >
-
+        <AlertasContext.Provider value={valueAlertas}   >
             {children}
         </AlertasContext.Provider>
 
     )
-
-
 }
 

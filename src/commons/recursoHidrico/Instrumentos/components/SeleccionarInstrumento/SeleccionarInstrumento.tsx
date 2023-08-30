@@ -10,6 +10,7 @@ import {
   Typography,
   IconButton,
   Avatar,
+  ButtonGroup,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -44,6 +45,8 @@ import {
   delete_prueba_bombeo,
   delete_resultado_laboratorio,
 } from '../../request/request';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
@@ -82,7 +85,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                   editar: false,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo', {
                 replace: true,
               });
             }}
@@ -118,7 +121,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                   editar: true,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo', {
                 replace: true,
               });
             }}
@@ -168,7 +171,11 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       field: 'fecha_registro',
       headerName: 'FECHA DE REGISTRO',
       sortable: true,
-      width: 300,
+      width: 300, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'ACCIONES',
@@ -190,7 +197,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                   editar: false,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo', {
                 replace: true,
               });
             }}
@@ -228,7 +235,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                   editar: true,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo', {
                 replace: true,
               });
             }}
@@ -279,7 +286,11 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
       field: 'fecha_registro',
       headerName: 'FECHA DE REGISTRO',
       sortable: true,
-      width: 300,
+      width: 300, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'ACCIONES',
@@ -304,7 +315,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 })
               );
               navigate(
-                '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                 {
                   replace: true,
                 }
@@ -347,7 +358,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 })
               );
               navigate(
-                '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                 {
                   replace: true,
                 }
@@ -788,13 +799,19 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               {rows_cartera.length > 0 && (
                 <>
                   <Grid item xs={12}>
+                    <ButtonGroup
+                      style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      {download_xls({ nurseries: rows_cartera, columns: columns_aforo })}
+                      {download_pdf({ nurseries: rows_cartera, columns: columns_aforo, title: 'Carteras de aforo' })}
+                    </ButtonGroup> 
                     <DataGrid
                       autoHeight
                       rows={rows_cartera}
                       columns={columns_aforo}
                       getRowId={(row) => uuidv4()}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
                     />
                   </Grid>
                 </>
@@ -813,7 +830,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                         })
                       );
                       navigate(
-                        '/app/recurso_hidrico/instrumentos/cartera_aforo',
+                        '/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo',
                         {
                           replace: true,
                         }
@@ -863,7 +880,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                         })
                       );
                       navigate(
-                        '/app/recurso_hidrico/instrumentos/prueba_bombeo',
+                        '/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo',
                         {
                           replace: true,
                         }
@@ -885,13 +902,19 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
           {rows_laboratorio.length > 0 && (
             <>
               <Grid item xs={12}>
+                <ButtonGroup
+                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  {download_xls({ nurseries: rows_laboratorio, columns: colums_laboratorio })}
+                  {download_pdf({ nurseries: rows_laboratorio, columns: colums_laboratorio, title: 'Resultados de laboratorio' })}
+                </ButtonGroup> 
                 <DataGrid
                   autoHeight
                   rows={rows_laboratorio}
                   columns={colums_laboratorio}
                   getRowId={(row) => uuidv4()}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
                 />
               </Grid>
             </>
@@ -911,7 +934,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                     })
                   );
                   navigate(
-                    '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                    '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                     {
                       replace: true,
                     }

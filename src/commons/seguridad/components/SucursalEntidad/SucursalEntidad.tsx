@@ -1,15 +1,13 @@
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Grid, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { control_error } from "./utils/control_error_or_success";
 import { api } from "../../../../api/axios";
 import { Title } from "../../../../components";
-// import { IDataentidad } from "../ConfiguracionEntidad/interfaces/interfacesConEntidad";
-import SearchIcon from '@mui/icons-material/Search';
+ import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { IDataentidad } from "./utils/interfac";
-
-
+ 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalEntidad: React.FC = () => {
     const initial_state_array: IDataentidad = {
@@ -18,8 +16,7 @@ export const SucursalEntidad: React.FC = () => {
         numero_documento: "",
         digito_verificacion: "",
         razon_social: "",
-    };
-
+    }; 
     const [data_entidad, setdata_entidad] = useState(initial_state_array);
     const { numero_documento,
         //  digito_verificacion,
@@ -33,26 +30,19 @@ export const SucursalEntidad: React.FC = () => {
         } catch (error: any) {
             control_error(error.response.data.detail);
         }
-    };
-
+    }; 
     useEffect(() => {
         fetch_data().catch((error) => {
             console.error(error);
         });
-    }, []);
-
+    }, []); 
     return (
        <>
-            {/* <Grid item md={12} xs={12}> */}
-            <Grid   xs={12} > 
-            <Title title="Entidad" />
-            </Grid>
-            {/* <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off"> */}
-            {/* <Grid item container spacing={5}> */}
-            <Grid item xs={12} sm={3.5} >
-
+             
+             <Title title="Sucursales de la entidad " />
+               <Grid item xs={12} sm={3.5} > 
                 <TextField
-                    label="   Tipo Documento ID"
+                    label="   Tipo Documento "
                     variant="outlined"
                     size="small"
                     disabled
@@ -60,10 +50,9 @@ export const SucursalEntidad: React.FC = () => {
                     value={nombre_tipo_documento.toString()}
                 />
             </Grid>
-            <Grid item xs={12} sm={3.5}  >
-
+            <Grid item xs={12} sm={3.5}  > 
                 <TextField
-                    label=" Num Documento ID"
+                    label=" Num Documento "
                     variant="outlined"
                     size="small"
                     disabled
@@ -82,13 +71,13 @@ export const SucursalEntidad: React.FC = () => {
                     value={razon_social.toString()}
                 />
             </Grid>
-            <Grid item xs={12} sm={1} >
+            {/* <Grid item xs={12} sm={1} >
                 <Button
                     variant="contained" disabled
                 >
                     <SearchIcon />
                 </Button>
-            </Grid>
+            </Grid> */}
       
       </> 
     );

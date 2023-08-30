@@ -1,22 +1,16 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Stack,
   Button,
-  Divider,
   Grid,
   IconButton,
   TextField,
@@ -26,12 +20,11 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
-  Tooltip
+  Tooltip,
+  ButtonGroup
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
@@ -54,6 +47,9 @@ import { options_search_trd } from './utils/options';
 import InfoIcon from '@mui/icons-material/Info';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../components';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -76,13 +72,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   } = use_trd();
 
   //! context for the modal interacion
-  const {
-    modalCreacionFormatoTipo,
-    closeModalCreacionFormatoTipo,
-
-    createTRDLoadingButton,
-    setCreateTRDLoadingButton
-  } = useContext(ModalContextTRD);
+  const { createTRDLoadingButton, setCreateTRDLoadingButton } =
+    useContext(ModalContextTRD);
 
   // ? function that allow us to create a format documental type
   const onSubmitCreateFormate = async () => {
@@ -257,17 +248,23 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   ];
 
   return (
-    <Dialog
-      maxWidth="md"
-      open={modalCreacionFormatoTipo}
-      onClose={closeModalCreacionFormatoTipo}
+    <Grid
+      container
+      sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        p: '20px',
+        mb: '20px',
+        boxShadow: '0px 3px 6px #042F4A26'
+      }}
     >
-      <DialogTitle>
-        <Title title=" Módulo creación de Formatos para cada tipo de medio documental" />
-      </DialogTitle>
-      <Divider />
-      <DialogContent sx={{ mb: '0px' }}>
+      <Grid item xs={12}>
+        <Title title="Módulo de administración de formatos documentales" />
         <form
+          style={{
+            marginTop: '20px'
+          }}
           onSubmit={(e) => {
             e.preventDefault();
             title_button === 'Actualizar'
@@ -290,10 +287,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                     <Select
                       value={value}
                       onChange={(selectedOption) => {
-                        // console.log(selectedOption);
                         onChange(selectedOption);
                       }}
-                      // isDisabled={!control_format_documental_type._formValues.item.value}
                       options={options_search_trd}
                       placeholder="Seleccionar"
                     />
@@ -308,9 +303,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                         }}
                       >
                         Formato de tipo de medio documental
-                        {/* {trd_current != null
-                            ? `CCD seleccionado`
-                            : `CDD's no usados en otro TRD`} */}
                       </small>
                     </label>
                   </div>
@@ -322,30 +314,25 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 name="nombre"
                 control={control_format_documental_type}
                 defaultValue=""
-                // rules={{ required: false }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error }
                 }) => (
                   <TextField
-                    // margin="dense"
                     fullWidth
-                    // name="version"
                     label="Nombre tipo de formato"
                     inputProps={{ maxLength: 20 }}
-                    helperText={
-                      'Ingrese nombre'
-                      /*  trd_current != null
-                          ? 'Actualice la versión'
-                          : 'Ingrese versión' */
-                    }
+                    helperText={'Ingrese nombre'}
                     size="small"
                     variant="outlined"
                     value={value}
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
+                      if (e.target.value.length === 20) {
+                        control_warning('maximo 20 carácteres');
+                      }
+
                       onChange(e.target.value);
-                      // console.log(e.target.value);
                     }}
                   />
                 )}
@@ -363,7 +350,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                     name="activo"
                     control={control_format_documental_type}
                     defaultValue=""
-                    // rules={{ required: false }}
                     render={({
                       field: { onChange, value },
                       fieldState: { error }
@@ -427,12 +413,12 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 direction="row"
                 justifyContent="flex-end"
                 spacing={2}
-                sx={{ mt: '0' }}
+                sx={{ mt: '20px' }}
               >
                 <LoadingButton
                   loading={createTRDLoadingButton}
                   color="primary"
-                  variant="outlined"
+                  variant="contained"
                   startIcon={<SearchIcon />}
                   disabled={
                     control_format_documental_type._formValues['cod-tipo-medio']
@@ -455,9 +441,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 </LoadingButton>
 
                 <Button
-                  // loading={createTRDLoadingButton}
                   type="submit"
-                  color="primary"
+                  color="success"
                   variant="contained"
                   startIcon={
                     title_button === 'Actualizar' ? <SyncIcon /> : <SaveIcon />
@@ -466,8 +451,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   {title_button}
                 </Button>
                 <Button
-                  color="success"
-                  variant="contained"
+                  color="primary"
+                  variant="outlined"
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     reset_all_format_documental_type_modal();
@@ -478,37 +463,29 @@ export const AdmnistrarFormatos = (): JSX.Element => {
               </Stack>
             </Grid>
 
-            <Grid item xs={12}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={data_format_documental_type}
-                columns={columns_creacion_formatos}
-                pageSize={5}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_formato_tipo_medio}
-              />
-            </Grid>
+            {data_format_documental_type.length > 0 ? (
+              <Grid item xs={12}>
+                <ButtonGroup
+                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  {download_xls({ nurseries: data_format_documental_type, columns: columns_creacion_formatos })}
+                  {download_pdf({ nurseries: data_format_documental_type, columns: columns_creacion_formatos, title: title_button  })}
+                </ButtonGroup>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={data_format_documental_type}
+                  columns={columns_creacion_formatos}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id_formato_tipo_medio}
+                />
+              </Grid>
+            ) : null}
           </Grid>
         </form>
-      </DialogContent>
-      <Divider />
-      <DialogActions>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-        >
-          <Button
-            variant="outlined"
-            onClick={closeModalCreacionFormatoTipo}
-            startIcon={<CloseIcon />}
-          >
-            CERRAR
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      </Grid>
+    </Grid>
   );
 };

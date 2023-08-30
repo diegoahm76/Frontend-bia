@@ -9,24 +9,29 @@ import {
   getUnidadesOrgActual,
   getUnidadesOrgAnterior
 } from '../toolkit/thunks/thunks_uni_a_uni';
-import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import {
+  useAppDispatch /* useAppSelector */
+} from '../../../../../../../hooks';
 import {
   setOrganigramaAnterior,
   setUnidadesOrgActual,
   setUnidadesOrgAnterior
 } from '../toolkit/slice/Uni_A_UniSlice';
-import { Loader } from '../../../../../../../utils/Loader/Loader';
+// import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { ProcesoTrasladoScreen } from '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen';
 import { TotalPersonas } from '../components/TotalPersonas/screen/TotalPersonasScreen';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
+  const navigate = useNavigate();
   // ! -------------- dispatch declaration --------------------------------
   const dispatch = useAppDispatch();
 
   // ! ------ USE SELECTORS DECLARATIONS ------
-  const { organigrama_anterior } = useAppSelector(
+  /*  const { organigrama_anterior } = useAppSelector(
     (state) => state.uni_a_uni_slice
-  );
+  ); */
 
   // ! ------ USE STATES DECLARATIONS ------
 
@@ -35,29 +40,45 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const [modalHistoricoTraslados, setmModalHistoricoTraslados] =
     useState<boolean>(false);
 
-    const [modalTotalPersonas, setModalTotalPersonas] =
-    useState<boolean>(false);
+  const [modalTotalPersonas, setModalTotalPersonas] = useState<boolean>(false);
 
   // ? state para renderizas las unidades del org anterior
 
   // ! ------ USE EFFECTS DECLARATIONS------
 
   // ?  use effect that allow us to get the data to fill the select of unidad a unidad (unidades retiradas (organigrama anterior))
-
   useEffect(() => {
     //* get unidades organigrama actual
     void getUnidadesOrgActual().then((unidades: any) => {
-      const unidadesEditedOrganigramaActual = unidades
-        .filter((el: any) => el.activo)
-        .map((unidad: any) => {
-          return {
-            unidad,
-            value: unidad.id_unidad_organizacional,
-            label: unidad.nombre
-          };
+      if (unidades.length === 0) {
+        void Swal.fire({
+          icon: 'warning',
+          title: 'SIN ORGANIGRAMAS FUERA DE PRODUCCIÓN',
+          text: 'Debe haber un organigrama fuera de producción para usar este módulo',
+          showCloseButton: false,
+          allowOutsideClick: false,
+          showConfirmButton: true,
+          confirmButtonText: 'Ir al módulo de organigramas',
+          confirmButtonColor: '#042F4A',
+          allowEscapeKey: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/app/gestor_documental/organigrama/crear');
+          }
         });
-      //* setear unidades ogrnigrama actual
-      dispatch(setUnidadesOrgActual(unidadesEditedOrganigramaActual));
+      } else {
+        const unidadesEditedOrganigramaActual = unidades
+          .filter((el: any) => el.activo)
+          .map((unidad: any) => {
+            return {
+              unidad,
+              value: unidad.id_unidad_organizacional,
+              label: unidad.nombre
+            };
+          });
+        //* setear unidades ogrnigrama actual
+        dispatch(setUnidadesOrgActual(unidadesEditedOrganigramaActual));
+      }
     });
 
     //* get unidades organigrama anterior
@@ -80,9 +101,8 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
       });
     });
   }, []);
-
-  if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
-    return <Loader />;
+  /* if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
+    return <Loader />; */
 
   return (
     <>

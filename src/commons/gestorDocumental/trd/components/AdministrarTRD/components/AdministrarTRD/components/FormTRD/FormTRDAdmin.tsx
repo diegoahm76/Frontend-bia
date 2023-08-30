@@ -383,16 +383,14 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    // margin="dense"
                     fullWidth
-                    // disabled={ccd_current?.actual}
                     size="small"
-                    label="Tiempo de retención AG"
+                    label="Tiempo de retención archivo gestión"
                     variant="outlined"
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'años'}
+                    helperText={error != null ? 'campo obligatorio' : 'archivo gestión - años'}
                   />
                 )}
               />
@@ -408,16 +406,14 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    // margin="dense"
-                    fullWidth
-                    // disabled={ccd_current?.actual}
+                    fullWidth           
                     size="small"
-                    label="Tiempo de retención AC"
+                    label="Tiempo de retención archivo central"
                     variant="outlined"
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'años'}
+                    helperText={error != null ? 'campo obligatorio' : 'archivo central - años'}
                   />
                 )}
               />

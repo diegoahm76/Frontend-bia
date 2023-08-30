@@ -42,7 +42,7 @@ export const OrganigramaScreen: React.FC = () => {
               <Tab label="Organigramas" value="1" />
               <Tab
                 label={
-                  !organigram_current.fecha_terminado
+                  !organigram_current?.fecha_terminado || organigram_current?.fecha_terminado === null
                     ? 'Editar organigrama'
                     : 'Ver organigrama '
                 }

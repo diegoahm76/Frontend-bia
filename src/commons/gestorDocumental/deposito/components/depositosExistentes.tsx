@@ -1,25 +1,30 @@
 
-import { Box, Grid } from '@mui/material';
+import { Box, Button, ButtonGroup, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
-import { useAppSelector } from '../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
 import { Title } from '../../../../components/Title';
+import { useAppSelector } from '../../../../hooks';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 
 
+interface IProps {
+
+    handle_edit_click: any;
+}
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const ListadoDeposito = () => {
-
+const ListadoDeposito = ({ handle_edit_click }: IProps) => {
     const { deposito, } = useAppSelector((state) => state.deposito);
-
     const columns: GridColDef[] = [
 
         {
             field: 'orden_ubicacion_por_entidad',
             headerName: 'ORDÉN',
-            width: 250,
+            width: 100,
             cellClassName: 'truncate-cell'
 
         },
@@ -44,52 +49,76 @@ const ListadoDeposito = () => {
             cellClassName: 'truncate-cell'
 
         },
-        {
-            field: 'acciones',
-            headerName: 'ACCIONES',
-            width: 250,
-            cellClassName: 'truncate-cell'
 
+
+        {
+            field: 'ACCIÓN',
+            headerName: 'ACCIÓN',
+            width: 100,
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handle_edit_click(params.row)}
+                    startIcon={<EditIcon />}
+                >
+
+                </Button>
+            ),
         },
 
 
     ];
 
+    // const get_depositos: any = async () => {
+    //     console.log("buscar...");
+    //     const nombre_deposito = get_values('nombre_deposito') ?? '';
+    //     const identificacion_por_entidad = get_values('identificacion_por_entidad') ?? '';
+    //     // eslint-disable-next-line @typescript-eslint/await-thenable
+    //     void dispatch(get_depositos(nombre_deposito, identificacion_por_entidad));
+
+    // };
 
 
 
     return (
         <>
-            <Grid container direction="row" padding={2} borderRadius={2}>
-                <Grid
-                    container
-                    spacing={2}
-                    justifyContent="center"
-                    direction="row"
-                    marginTop={2}
-                >
-                    <Box sx={{ width: '100%' }}>
-                        <Title title="Listado de depósitos de la entidad" />
-                        <DataGrid
-                            density="compact"
-                            autoHeight
-                            columns={columns}
-                            pageSize={10}
-                            rowsPerPageOptions={[10]}
-                            experimentalFeatures={{ newEditingApi: true }}
-                            getRowId={(row) => row.id_deposito}
-                            rows={deposito}
-                        />
+            <Grid container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26'
+                }}>
 
-                    </Box>
-                </Grid>
+                <Box sx={{ width: '100%' }}>
+                    <Title title="Listado de depósitos de la entidad" />
+
+                    <ButtonGroup
+                        style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                        {download_xls({ nurseries: deposito , columns })}
+                        {download_pdf({ nurseries: deposito, columns, title: 'Listado de depósitos' })}
+                    </ButtonGroup>
+
+                    <DataGrid
+                        density="compact"
+                        autoHeight
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        getRowId={(row) => row.id_deposito}
+                        rows={deposito}
+                    />
+
+                </Box>
             </Grid>
+
         </>
     );
 };
 
 // eslint-disable-next-line no-restricted-syntax
 export default ListadoDeposito;
-
 
 

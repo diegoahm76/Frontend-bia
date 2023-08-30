@@ -182,6 +182,9 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                       fullWidth
                       label="Versión del TCA"
                       size="small"
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
@@ -190,7 +193,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                           control_warning('máximo 10 caracteres');
                         onChange(e.target.value);
                       }}
-                      inputProps={{ maxLength: 10 }}
+                   
                     />
                   )}
                 />
@@ -222,7 +225,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               </Button>
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalBusquedaTca}
               >
@@ -230,7 +233,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               </Button>
               <LoadingButton
                 loading={loadingButton}
-                color="primary"
+                color="success"
                 variant="contained"
                 type="submit"
                 startIcon={tca_current != null ? <SyncIcon /> : <SaveIcon />}
@@ -239,8 +242,8 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
               </LoadingButton>
 
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   console.log('cleaning');

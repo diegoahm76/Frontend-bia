@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable no-extra-boolean-cast */
@@ -11,11 +12,11 @@ import {
   Box,
   Button,
   Checkbox,
-  Dialog,
+  // Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  Divider,
+  // DialogTitle,
+  // Divider,
   FormControl,
   FormControlLabel,
   Grid,
@@ -31,7 +32,7 @@ import { ModalContextTRD } from '../../../../context/ModalsContextTrd';
 //* controller react-hook-form
 import { Controller } from 'react-hook-form';
 //* Icons
-import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
@@ -54,6 +55,7 @@ import {
 } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../../components';
+import { BusquedaTipologias } from '../BusquedaTipologias/BusquedaTipologias';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* se implmenta el dispatch para las funciones
@@ -82,7 +84,8 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
   //* context elements that are used in this component
   const {
     closeModalAdministracionTipologiasDocumentales,
-    modalAdministracionTipologiasDocumentales,
+    // modalAdministracionTipologiasDocumentales,
+    modalBusquedaTipologiasDocumentales,
     openModalBusquedaTipologiasDocumentales,
     createTRDLoadingButton,
     setCreateTRDLoadingButton
@@ -155,6 +158,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
     set_list_format_documental_type([]);
     resetBusquedaTipologiasDocumentales({
       nombre: '',
+
       cod_tipo_medio_doc: '',
       formatos: []
     });
@@ -252,14 +256,28 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
   return (
     <>
-      <Dialog
+      {/* <Dialog
         fullWidth
         maxWidth="md"
-        open={modalAdministracionTipologiasDocumentales}
+        open={true}
         onClose={resetOnCloseModal}
+      > */}
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26'
+        }}
       >
         <Box
           component="form"
+          sx={{
+            width: '100%'
+          }}
           onSubmit={(e: any) => {
             e.preventDefault();
             title_button_administrar_tipologias === 'Guardar'
@@ -267,13 +285,12 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               : edit_tipologia();
           }}
         >
-          <DialogTitle>
-            <Title title="Administración de Tipologias Documentales" />
-          </DialogTitle>
-          <Divider />
+          <Title title="Administración de Tipologias Documentales" />
+
           <DialogContent
             sx={{
-              mb: '0px',
+              mt: '15px',
+              mb: '10px',
               justifyContent: 'center'
             }}
           >
@@ -289,7 +306,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       label="Nombre de la Tipología Documental"
                       size="small"
@@ -304,24 +320,16 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         // console.log(e.target.value);
                       }}
                       error={!!error}
-                      /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
                     />
                   )}
                 />
               </Grid>
-
-              {/* pending to define active checkbox (especially it's interaction */}
               {title_button_administrar_tipologias === 'Actualizar' && (
                 <Grid item xs={4} sm={3}>
                   <Controller
                     name="activo"
                     control={controlBusquedaTipologiasDocumentales}
                     defaultValue=""
-                    // rules={{ required: false }}
                     render={({
                       field: { onChange, value },
                       fieldState: { error }
@@ -381,12 +389,10 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                   />
                 </Grid>
               )}
-
               {/* closed space checkbox */}
             </Grid>
           </DialogContent>
-          <Divider />
-          <DialogTitle>Medios documentales y formatos asociados</DialogTitle>
+          <Title title="Medios documentales y formatos asociados" />
           <DialogContent
             sx={{
               height: '235px',
@@ -417,7 +423,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                         onChange={(value) => {
                           handleSelectedOption(value, onChange);
                         }}
-                        // isDisabled={!control_format_documental_type._formValues.item.value}
                         options={options}
                         placeholder="Seleccionar"
                       />
@@ -432,9 +437,6 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                           }}
                         >
                           Tipo de medio documental
-                          {/* {trd_current != null
-                            ? `CCD seleccionado`
-                            : `CDD's no usados en otro TRD`} */}
                         </small>
                       </label>
                     </div>
@@ -500,7 +502,11 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
             <Stack
               direction="row"
               spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+              sx={{
+                justifyContent: 'center',
+                mr: '15px',
+                mb: '10px',
+              }}
             >
               <LoadingButton
                 loading={createTRDLoadingButton}
@@ -513,36 +519,16 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                     <SyncIcon />
                   )
                 }
-                color="primary"
-                // sx={{ ml: '10px' }}
+                color="success"
               >
                 {title_button_administrar_tipologias === 'Guardar'
                   ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
                   : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
               </LoadingButton>
-
-              {/*  <Button
-                variant="contained"
-                type="submit"
-                startIcon={
-                  title_button_administrar_tipologias === 'Guardar' ? (
-                    <SaveIcon />
-                  ) : (
-                    <SyncIcon />
-                  )
-                }
-                color="primary"
-                // sx={{ ml: '10px' }}
-              >
-                {title_button_administrar_tipologias === 'Guardar'
-                  ? 'GUARDAR TIPOLOGÍA DOCUMENTAL'
-                  : 'ACTUALIZAR TIPOLOGÍA DOCUMENTAL'}
-              </Button> */}
               <Button
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 color="primary"
-                // sx={{ ml: '10px' }}
                 onClick={() => {
                   resetOnCloseModal();
                   openModalBusquedaTipologiasDocumentales();
@@ -551,10 +537,9 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                 BUSCAR TIPLOGÍAS
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 startIcon={<CleanIcon />}
-                color="success"
-                // sx={{ ml: '10px' }}
+                color="primary"
                 onClick={() => {
                   resetBusquedaTipologiasDocumentales({
                     nombre: '',
@@ -568,17 +553,13 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
               >
                 LIMPIAR CAMPOS
               </Button>
-              <Button
-                variant="outlined"
-                onClick={resetOnCloseModal}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
             </Stack>
           </DialogActions>
         </Box>
-      </Dialog>
+      </Grid>
+
+      {/* buscador de tipologias */}
+      <BusquedaTipologias />
     </>
   );
 };

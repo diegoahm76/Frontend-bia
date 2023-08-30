@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
@@ -132,8 +133,9 @@ export const Traslado: FC<any> = (): JSX.Element => {
             setSelectedItems([]);
             setshowSecondPart(false);
             cleanFormAndGrid();
-            console.log(res);
-            dispatch(setListadoPersonasUnidades(res));
+            // console.log(res);
+            //? pendiente
+            // dispatch(setListadoPersonasUnidades(res));
             // * from this event I have to manage the modal show and hide of the grid
           });
         });
@@ -206,9 +208,9 @@ export const Traslado: FC<any> = (): JSX.Element => {
                           setviweGridDataPersons
                         ).then((res) => {
                           console.log(res);
-                          dispatch(setListadoPersonasUnidades(res.dataFilter));
+                          dispatch(setListadoPersonasUnidades(res?.dataFilter));
                           dispatch(
-                            setListadoPersonasTotalesUnidades(res.dataTotal)
+                            setListadoPersonasTotalesUnidades(res?.dataTotal)
                           );
                           // * from this event I have to manage the modal show and hide of the grid
                         });
@@ -240,8 +242,8 @@ export const Traslado: FC<any> = (): JSX.Element => {
                   <>
                     <RenderDataGrid
                       title="Personas pertenecientes a la unidad organizacional seleccionada"
-                      rows={listado_personas_unidades}
-                      columns={columnsToUseDataGrid}
+                      rows={listado_personas_unidades || []}
+                      columns={columnsToUseDataGrid || []}
                     />
                   </>
                 )}
@@ -304,7 +306,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                           selectedItems.length === 0 || !unidad_actual_current
                         }
                         variant="contained"
-                        color="primary"
+                        color="success"
                         sx={{ height: '100% !important' }}
                         startIcon={<ChecklistIcon />}
                       >

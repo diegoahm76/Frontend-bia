@@ -43,7 +43,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-
+import SaveIcon from '@mui/icons-material/Save';
 export const EditarInstrumento: React.FC = (): JSX.Element => {
   const columns_prueba_bombeo: GridColDef[] = [
     {
@@ -78,7 +78,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   editar: false,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo', {
                 replace: true,
               });
             }}
@@ -114,7 +114,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   editar: true,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo', {
                 replace: true,
               });
             }}
@@ -175,7 +175,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   editar: false,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo', {
                 replace: true,
               });
             }}
@@ -213,7 +213,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                   editar: true,
                 })
               );
-              navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo', {
                 replace: true,
               });
             }}
@@ -278,7 +278,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                 })
               );
               navigate(
-                '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                 {
                   replace: true,
                 }
@@ -321,7 +321,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                 })
               );
               navigate(
-                '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                 {
                   replace: true,
                 }
@@ -926,6 +926,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 type="submit"
+                startIcon={<SaveIcon />}
                 loading={is_loading_submit}
                 disabled={is_loading_submit}
               >
@@ -987,7 +988,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                         })
                       );
                       navigate(
-                        '/app/recurso_hidrico/instrumentos/cartera_aforo',
+                        '/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo',
                         {
                           replace: true,
                         }
@@ -1037,7 +1038,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                         })
                       );
                       navigate(
-                        '/app/recurso_hidrico/instrumentos/prueba_bombeo',
+                        '/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo',
                         {
                           replace: true,
                         }
@@ -1085,7 +1086,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                     })
                   );
                   navigate(
-                    '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                    '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                     {
                       replace: true,
                     }

@@ -19,7 +19,8 @@ import {
   Grid,
   IconButton,
   TextField,
-  Avatar
+  Avatar,
+  ButtonGroup
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -42,6 +43,8 @@ import { get_subseries_service } from '../../store/thunks/subseriesThunks';
 import use_ccd from '../../hooks/useCCD';
 import { getCatalogoSeriesYSubseries } from '../CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 import { Title } from '../../../../../components';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 const CrearSeriesCcdDialog = ({
   is_modal_active,
@@ -196,7 +199,7 @@ const CrearSeriesCcdDialog = ({
             <Avatar sx={AvatarStyles} variant="rounded">
               <DeleteIcon
                 titleAccess="Eliminar serie"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                sx={{ color: 'red', width: '18px', height: '18px' }}
               />
             </Avatar>
           </IconButton>
@@ -223,8 +226,8 @@ const CrearSeriesCcdDialog = ({
       }}
     >
       <DialogTitle>
-      <Title title={title}/>
-      {/*  <IconButton
+        <Title title={title} />
+        {/*  <IconButton
           aria-label="close"
           onClick={() => {
             set_is_modal_active(false);
@@ -262,7 +265,7 @@ const CrearSeriesCcdDialog = ({
                 fullWidth
                 {...register('nombre', { required: true })}
                 inputProps={{
-                  maxLength: 150,
+                  maxLength: 150
                 }}
                 size="small"
                 label="Nombre"
@@ -280,7 +283,6 @@ const CrearSeriesCcdDialog = ({
               }}
             >
               <TextField
-                // margin="dense"
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"
@@ -303,15 +305,15 @@ const CrearSeriesCcdDialog = ({
               >
                 <Button
                   type="submit"
-                  color="primary"
+                  color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
                 >
                   {title_button}
                 </Button>
                 <Button
-                  color="success"
-                  variant="contained"
+                  color="primary"
+                  variant="outlined"
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     clean();
@@ -323,12 +325,18 @@ const CrearSeriesCcdDialog = ({
             </Grid>
 
             <Grid item xs={12}>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: series_ccd, columns })}
+                {download_pdf({ nurseries: series_ccd, columns, title: title_button })}
+              </ButtonGroup> 
               <DataGrid
                 density="compact"
                 autoHeight
                 rows={series_ccd}
                 columns={columns}
-                pageSize={5}
+                pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowId={(row) => row.id_serie_doc}
@@ -345,6 +353,7 @@ const CrearSeriesCcdDialog = ({
           sx={{ mr: '15px', mb: '10px', mt: '10px' }}
         >
           <Button
+            color="error"
             variant="outlined"
             onClick={() => {
               set_is_modal_active(false);

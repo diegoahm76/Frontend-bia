@@ -10,7 +10,8 @@ import {
   Avatar,
   Chip,
   Tooltip,
-  CircularProgress
+  CircularProgress,
+  ButtonGroup
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -25,7 +26,6 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_organigrams_service } from '../../store/thunks/organigramThunks';
 // Dialogs
 import DialogCrearOrganigrama from '../DialogCrearOrganigrama/DialogCrearOrganigrama';
-import DialogElegirOrganigramaActual from '../DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
 import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarOrganigrama';
 // Slices
 import {
@@ -34,8 +34,10 @@ import {
 } from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
-import DialogElegirCcdActual from '../DialogElegirCcdActual/DialogElegirCcdActual';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { Link } from 'react-router-dom';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -63,17 +65,10 @@ export function ListOrganigramas({
   const { userinfo } = useAppSelector((state) => state.auth);
   const [crear_organigrama_is_active, set_crear_organigrama_is_active] =
     useState<boolean>(false);
-  const [
-    elegir_organigrama_actual_is_active,
-    set_elegir_organigrama_actual_is_active
-  ] = useState<boolean>(false);
-  const [elegir_ccd_actual_is_active, set_elegir_ccd_actual_is_active] =
-    useState<boolean>(false);
   const [delegar_organigrama_is_active, set_delegar_organigrama_is_active] =
     useState<boolean>(false);
 
   const columns: GridColDef[] = [
-    // { field: 'id_organigrama', headerName: 'ID', width: 20, }
     {
       field: 'nombre',
       headerName: 'Nombre',
@@ -164,7 +159,12 @@ export function ListOrganigramas({
     {
       field: 'justificacion_nueva_version',
       headerName: 'Justificacion nueva versión',
-      width: 150
+      width: 200
+      /* renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ) */
     },
 
     {
@@ -326,7 +326,8 @@ export function ListOrganigramas({
     <>
       <Stack direction="row" spacing={2} sx={{ mb: '20px' }}>
         <Button
-          variant="outlined"
+          variant="contained"
+          color="success"
           startIcon={<AddIcon />}
           onClick={() => {
             set_crear_organigrama_is_active(true);
@@ -334,24 +335,16 @@ export function ListOrganigramas({
         >
           CREAR ORGANIGRAMA
         </Button>
-        <Button
-          variant="outlined"
-          startIcon={<AssignmentTurnedInIcon />}
-          onClick={() => {
-            set_elegir_organigrama_actual_is_active(true);
-          }}
-        >
-          ELEGIR ORGANIGRAMA ACTUAL
-        </Button>
-        <Button
-          variant="outlined"
-          startIcon={<AssignmentTurnedInIcon />}
-          onClick={() => {
-            set_elegir_ccd_actual_is_active(true);
-          }}
-        >
-          ELEGIR CCD ACTUAL
-        </Button>
+        <Link to="/app/transversal/procesos/cambio_organigrama_actual">
+          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
+            ELEGIR ORGANIGRAMA ACTUAL
+          </Button>
+        </Link>
+        <Link to="/app/gestor_documental/activacion_instrumentos_archivisticos">
+          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
+            ACTIVACIÓN DE INSTRUMENTOS ARCHIVISTICOS
+          </Button>
+        </Link>
       </Stack>
       <Grid item>
         {organigram.length === 0 ? (
@@ -367,12 +360,18 @@ export function ListOrganigramas({
           </Box>
         ) : (
           <Box sx={{ width: '100%' }}>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: organigram, columns })}
+                {download_pdf({ nurseries: organigram, columns, title: 'Organigramas' })}
+              </ButtonGroup>
             <DataGrid
               density="compact"
               autoHeight
               rows={organigram}
               columns={columns}
-              pageSize={15}
+              pageSize={17}
               rowsPerPageOptions={[15]}
               getRowId={(row) => row.id_organigrama}
             />
@@ -384,17 +383,9 @@ export function ListOrganigramas({
         set_is_modal_active={set_crear_organigrama_is_active}
         set_position_tab_organigrama={set_position_tab_organigrama}
       />
-      <DialogElegirOrganigramaActual
-        is_modal_active={elegir_organigrama_actual_is_active}
-        set_is_modal_active={set_elegir_organigrama_actual_is_active}
-      />
       <DialogDelegarOrganigrama
         is_modal_active={delegar_organigrama_is_active}
         set_is_modal_active={set_delegar_organigrama_is_active}
-      />
-      <DialogElegirCcdActual
-        is_modal_active={elegir_ccd_actual_is_active}
-        set_is_modal_active={set_elegir_ccd_actual_is_active}
       />
     </>
   );

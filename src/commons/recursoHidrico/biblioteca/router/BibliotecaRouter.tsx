@@ -10,7 +10,7 @@ export const BibliotecaRouter = (): ReactElement => {
     <UserProvider>
       <Routes>
         <Route
-          path="registro_secion_sub_seccion/*"
+          path="secion_sub_seccion/*"
           element={<BibliotecaScreen />}
         />
         <Route path="/*" element={<Page404 />} />

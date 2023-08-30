@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
   Button,
+  ButtonGroup,
   Checkbox,
   Chip,
   FormControl,
@@ -21,6 +22,8 @@ import { v4 as uuidv4 } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { BuscarPersona } from './BuscarPersona';
 import { LoadingButton } from '@mui/lab';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Destinatarios: React.FC = () => {
@@ -311,16 +314,21 @@ export const Destinatarios: React.FC = () => {
           </>
         ) : null}
         {rows_personas_alertas.length > 0 && (
-          <Grid item xs={12}>
-            <DataGrid
-              autoHeight
-              rows={rows_personas_alertas}
-              columns={colums_persona_alerta}
-              getRowId={(row) => uuidv4()}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
-          </Grid>
+          <>       <Grid item xs={12}><ButtonGroup
+            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {download_xls({ nurseries: rows_personas_alertas, columns: colums_persona_alerta })}
+            {download_pdf({ nurseries: rows_personas_alertas, columns: colums_persona_alerta, title: 'Alertas programadas' })}
+          </ButtonGroup>
+        <Grid item xs={12}>
+              <DataGrid
+                autoHeight
+                rows={rows_personas_alertas}
+                columns={colums_persona_alerta}
+                getRowId={(row) => uuidv4()}
+                pageSize={10}
+                rowsPerPageOptions={[10]} />
+            </Grid> </Grid></>
         )}
         <Grid container item justifyContent="flex-end" spacing={2}>
           <Grid item>

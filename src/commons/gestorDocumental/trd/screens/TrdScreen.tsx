@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
 import { useContext, useState, useEffect, type FC } from 'react';
@@ -6,7 +7,6 @@ import { Controller } from 'react-hook-form';
 import { Grid, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
 // * react select
@@ -35,8 +35,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 import { control_error } from '../../../../helpers';
 import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
-import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
-import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 // import { set_selected_item_from_catalogo_trd_action } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
@@ -46,10 +44,8 @@ export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const {
-    trd_current,
-    catalado_series_subseries_unidad_organizacional,
-  } = useAppSelector((state: any) => state.trd_slice);
+  const { trd_current, catalado_series_subseries_unidad_organizacional } =
+    useAppSelector((state: any) => state.trd_slice);
 
   //! use_trd hook
   const {
@@ -92,7 +88,7 @@ export const TrdScreen: FC = (): JSX.Element => {
   const {
     openModalModalSearchTRD,
     openModalCCDUsados,
-    openModalCreacionFormatoTipo,
+    // openModalCreacionFormatoTipo,
     createTRDLoadingButton,
     setCreateTRDLoadingButton
   } = useContext(ModalContextTRD);
@@ -288,7 +284,7 @@ export const TrdScreen: FC = (): JSX.Element => {
               </Button>
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalModalSearchTRD}
               >
@@ -297,7 +293,7 @@ export const TrdScreen: FC = (): JSX.Element => {
               <LoadingButton
                 loading={createTRDLoadingButton}
                 type="submit"
-                color="primary"
+                color="success"
                 variant="contained"
                 startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
@@ -305,8 +301,8 @@ export const TrdScreen: FC = (): JSX.Element => {
               </LoadingButton>
 
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   reset_all_trd();
@@ -334,9 +330,10 @@ export const TrdScreen: FC = (): JSX.Element => {
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
-          display: catalado_series_subseries_unidad_organizacional.length > 0
-            ? ''
-            : 'none'
+          display:
+            catalado_series_subseries_unidad_organizacional.length > 0
+              ? ''
+              : 'none'
         }}
       >
         {catalado_series_subseries_unidad_organizacional.length > 0 ? (
@@ -365,71 +362,42 @@ export const TrdScreen: FC = (): JSX.Element => {
       </Grid>
       {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
 
-      {/* TRD module number 3 - starts with the title Tipologias */}
-
-      {/* data table with the "tipologias" */}
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
-        }}
-      >
-        <Grid item xs={12}>
-          <TipologiasScreen />
-        </Grid>
-      </Grid>
-      {/* finish data table with the "tipologias" */}
-
       <Stack
         direction="row"
         justifyContent="flex-end"
         spacing={2}
         sx={{ m: '20px 0' }}
       >
-        {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
 
-        <Button
-          color="warning"
-          variant="contained"
-          startIcon={<AddCircleIcon />}
-          onClick={openModalCreacionFormatoTipo}
-        >
-          MÓDULO DE CREACION DE FORMATOS
-        </Button>
-
-        {/* buttons end */}
-        <Button
-          color="success"
-          variant="contained"
-          startIcon={<SaveIcon />}
-          onClick={() => {
-            if (flag_finish_or_or_edit_trd) {
-              dispatch(
-                resume_trd_service(
-                  trd_current?.id_trd,
-                  set_flag_finish_or_edit_trd
-                )
-              );
-            } else {
-              dispatch(
-                finish_trd_service(
-                  trd_current?.id_trd,
-                  set_flag_finish_or_edit_trd
-                )
-              );
+        {!trd_current ? null : (
+          <Button
+            color="success"
+            variant="contained"
+            startIcon={<SaveIcon />}
+            onClick={() => {
+              if (flag_finish_or_or_edit_trd) {
+                dispatch(
+                  resume_trd_service(
+                    trd_current?.id_trd,
+                    set_flag_finish_or_edit_trd
+                  )
+                );
+              } else {
+                dispatch(
+                  finish_trd_service(
+                    trd_current?.id_trd,
+                    set_flag_finish_or_edit_trd
+                  )
+                );
+              }
+            }}
+          >
+            {
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+              flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
             }
-          }}
-        >
-          {
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
-          }
-        </Button>
+          </Button>
+        )}
       </Stack>
 
       {/* -- this modal allow us to do the TRD search  -- */}
@@ -440,9 +408,6 @@ export const TrdScreen: FC = (): JSX.Element => {
       <ModalCCDUsados />
       {/* -- this modal allow us to see the ccds used in other TRD -- */}
 
-      {/* -- this modal allow us to (create, edit, delete or deactivate) a new format type -- */}
-      <AdmnistrarFormatos />
-      {/* -- this modal allow us to (create, edit, delete or deactivate) a new format type -- */}
     </>
   );
 };

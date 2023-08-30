@@ -15,11 +15,9 @@ export const CarteraAforosScreen: React.FC = () => {
   );
   const navigate = useNavigate();
 
-  console.log('mode_carteras', mode_carteras);
-
   useEffect(() => {
     if (id_instrumento === 0) {
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+      navigate('/app/recurso_hidrico/biblioteca/instrumentos/administracion', {
         replace: true,
       });
     }
@@ -42,7 +40,7 @@ export const CarteraAforosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CARTERA DE AFOROS " />
+          <Title title="Cartera de aforos " />
         </Grid>
       </Grid>
       {mode_carteras.crear ? (<AgregarCartera />): null}

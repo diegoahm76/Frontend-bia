@@ -5,6 +5,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -23,6 +24,9 @@ import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/contextData';
 import { search_seccion_subseccion } from '../request/request';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
 
 export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
   const {
@@ -140,7 +144,21 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <Grid container spacing={1} m={2} p={2}>
+      <Grid
+        container
+        spacing={2}
+        // m={2}
+        // p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
         <Grid item xs={12} sm={6} md={4}>
           <Typography variant="subtitle1" fontWeight="bold">
             Nombre Sección
@@ -188,6 +206,8 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
+
             onClick={() => {
               handle_click_open();
             }}
@@ -253,6 +273,7 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
                   color="primary"
                   loading={is_search}
                   disabled={is_search}
+                  startIcon={<SearchIcon />}
                 >
                   Buscar
                 </LoadingButton>
@@ -263,12 +284,18 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
                     <Title title="Resultados de la búsqueda" />
                   </Grid>
                   <Grid item xs={12}>
+                    <ButtonGroup
+                      style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      {download_xls({ nurseries: rows, columns })}
+                      {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                    </ButtonGroup> 
                     <Box sx={{ height: 400, width: '100%' }}>
                       <DataGrid
                         rows={rows}
                         columns={columns}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
                       />
                     </Box>

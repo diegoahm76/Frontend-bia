@@ -176,7 +176,9 @@ export const get_catalogo_TCA_service = async (
 
 export const create_item_catalogo_tca_service: any = async (
   bodyPost: any,
-  setLoadingButton: any
+  setLoadingButton: any,
+
+  mixed_tipologias: any
 ): Promise<any> => {
   const { id_tca, id_cat_serie_und_ccd_trd, cod_clas_expediente } = bodyPost;
   setLoadingButton(true);
@@ -188,11 +190,18 @@ export const create_item_catalogo_tca_service: any = async (
 
     // console.log('bodyPost', bodyPost);
 
-    const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
-    const { data } = await api.post(url, {
+    const postData: any = {
       id_cat_serie_und_ccd_trd,
       cod_clas_expediente
-    });
+    };
+    if (mixed_tipologias?.length > 0) {
+      postData.tipologias_reservadas = mixed_tipologias.filter(
+        (el: any) => el.reservada
+      );
+    }
+
+    const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
+    const { data } = await api.post(url, postData);
     control_success(data.detail);
     // console.log('data TCA catalogo', data);
     return data;
@@ -227,7 +236,6 @@ export const update_item_catalogo_tca_service = async (
     return data;
   } catch (error: AxiosError | any) {
     control_error(
-
       error.response?.data?.detail || 'Error al actualizar el expediente'
     );
     return error;
@@ -305,3 +313,25 @@ export const resume_tca_service = async (
   }
 };
 
+// ! interacción de servicios relacionados a la entrega 52
+
+export const get_tipologias_relacion = async (
+  id_catserie_unidadorg: number = 1,
+  setLoadTipologias: any
+): Promise<any> => {
+  try {
+    setLoadTipologias(true);
+    if (!id_catserie_unidadorg) {
+      control_error('No se ha podido realizar la acción');
+      return;
+    }
+    const url = `gestor/trd/catalogo-trd/get-tipologias/${id_catserie_unidadorg}/`;
+    const { data } = await api.get(url);
+    return data.data;
+  } catch (error: AxiosError | any) {
+    control_error(error.response?.data?.detail);
+    return error;
+  } finally {
+    setLoadTipologias(false);
+  }
+};

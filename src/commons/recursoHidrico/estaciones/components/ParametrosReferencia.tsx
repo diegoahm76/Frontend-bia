@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import EditIcon from '@mui/icons-material/Edit';
 import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,6 +10,7 @@ import { control_error } from '../../../../helpers/controlError';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { Title } from '../../../../components';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ParametrosReferencia: React.FC = () => {
   const [parametro_referencia, set_data_parametro] = useState<Parametros[]>([]);
@@ -28,7 +30,12 @@ export const ParametrosReferencia: React.FC = () => {
     {
       field: 'fecha_modificacion',
       headerName: 'FECHA MODIFICACIÓN',
-      width: 140,
+      width: 140, 
+      valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
     },
     {
       field: 'frecuencia_solicitud_datos',
@@ -178,10 +185,8 @@ export const ParametrosReferencia: React.FC = () => {
         <Grid item container sx={{ justifyContent: "flex-end" }}  >
          
           <ButtonGroup style={{ margin: 7 }}>
-
             {download_xls({ nurseries: parametro_referencia, columns })}
-          
-
+            {download_pdf({ nurseries: parametro_referencia, columns, title: 'Parametros de referencia' })}
           </ButtonGroup>
         </Grid>
         <Grid container sx={{ marginTop: '10px' }}>
@@ -192,8 +197,8 @@ export const ParametrosReferencia: React.FC = () => {
                 rows={parametro_referencia}
                 columns={columns}
                 getRowId={(row) => row.id_parametro_referencia}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             ) : (
               <CircularProgress color="secondary" />

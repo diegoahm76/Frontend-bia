@@ -1,7 +1,28 @@
+import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
+
 export interface IDeposito {
   deposito: IObjDeposito[];
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
+  mode_estante: IMode;
+  bandejas: IObjBandeja[];
+  current_bandeja: IObjBandeja;
+  data_estantes: GetEstantes;
+  data_depositos: InfoDepositos;
+  deposito_estante: IdEstanteDeposito;
+  estantes: IObEstante[];
+}
+export interface IMode {
+  ver: boolean;
+  editar: boolean;
+  crear: boolean;
+}
+
+export interface IdEstanteDeposito {
+  id_deposito?: number | null;
+  id_estante_deposito?: number | null;
+  nombre_deposito?: string;
+  identificacion_por_deposito?: string;
 }
 
 export interface IObjDeposito {
@@ -11,15 +32,16 @@ export interface IObjDeposito {
   direccion_deposito?: string | null;
   orden_ubicacion_por_entidad: number | null;
   cod_municipio_nal?: number | null;
-  cod_pais_exterior?: number | null;
+  cod_pais_exterior?: string | null;
   id_sucursal_entidad?: number | null;
   nombre_sucursal: string | null;
   municipio: number | null;
-  activo?: boolean | null | string;
+  activo: boolean;
+  id_sucursal_empresa?: number | null;
 }
 
 export interface IObjSucursales {
-  id_sucursal_empresa?: number | null;
+  id_sucursal_empresa?: number;
   numero_sucursal?: number | null;
   descripcion_sucursal: string | null;
   direccion: string | null;
@@ -35,4 +57,18 @@ export interface IObjSucursales {
   activo: boolean | null;
   item_ya_usado: boolean | null;
   id_persona_empresa?: number | null;
+}
+
+export interface IObjBandeja {
+  id_estante_deposito?: number | null;
+  id_bandeja_estante?: number | null;
+  orden_ubicacion_por_estante?: number | null;
+  identificacion_por_estante?: string | number | null;
+}
+
+export interface IObEstante {
+  id_estante_deposito?: number | null;
+  orden_ubicacion_por_deposito?: number | null;
+  identificacion_por_deposito?: string | number | null;
+  id_deposito?: number | null;
 }

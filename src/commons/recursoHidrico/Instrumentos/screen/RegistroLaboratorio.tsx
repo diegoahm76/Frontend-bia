@@ -18,7 +18,7 @@ export const RegistroLaboratorio: React.FC = () => {
 
   useEffect(() => {
     if (id_instrumento === 0) {
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+      navigate('/app/recurso_hidrico/biblioteca/instrumentos/administracion', {
         replace: true,
       });
     }
@@ -42,7 +42,7 @@ export const RegistroLaboratorio: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="RESULTADO DE LABORATORIO - CALIDAD DE AGUA " />
+          <Title title="Resultado de laboratorio - calidad de agua " />
         </Grid>
       </Grid>
       {mode.crear && <AgregarLaboratorio />}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, Stack, TextField } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -18,8 +19,13 @@ import { Title } from '../../../../components/Title';
 import type { AxiosError } from 'axios';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 const columns: GridColDef[] = [
-    { field: 'fecha_registro', headerName: 'FECHA REGISTRO', width: 170 },
+    { field: 'fecha_registro', headerName: 'FECHA REGISTRO', width: 170,valueFormatter: (params) => {
+            const date = new Date(params.value);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            return formattedDate;
+          }, },
     { field: 'temperatura_ambiente', headerName: 'TEMPERATURA ', width: 170 },
     { field: 'humedad_ambiente', headerName: 'HUMEDAD ', width: 170 },
     { field: 'presion_barometrica', headerName: 'PRESIÓN BAROMETRICA', width: 170 },
@@ -34,7 +40,11 @@ const columns: GridColDef[] = [
 const columns_migracion: GridColDef[] = [
     { field: 'id_migracion_estacion', headerName: 'NÚMERO DATO', width: 170 },
     { field: 'nombre', headerName: 'ESTACIÓN', width: 170 },
-    { field: 'fecha', headerName: 'FECHA REGISTRO', width: 170 },
+    { field: 'fecha', headerName: 'FECHA REGISTRO', width: 170,valueFormatter: (params) => {
+            const date = new Date(params.value);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            return formattedDate;
+          }, },
     { field: 'temperatura', headerName: 'TEMPERATURA ', width: 100 },
     { field: 'temperatura_max', headerName: 'TEMPERATURA MAX', width: 100 },
     { field: 'temperatura_min', headerName: 'TEMPERATURA MIN', width: 100 },
@@ -282,7 +292,7 @@ export const HistorialDeDatos: React.FC = () => {
                     <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
 
                         {download_xls({ nurseries: dato, columns })}
-                      
+                        {download_pdf({ nurseries: dato, columns, title: 'Historial  de datos' })}
 
                     </ButtonGroup>
                     <Box sx={{ mt: '20px' }}>
@@ -300,14 +310,20 @@ export const HistorialDeDatos: React.FC = () => {
             {dato_migracion.length > 0 ? (
                 <>
                     <Title title="Historial de datos "></Title>
+                    <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                        {download_xls({ nurseries: dato_migracion, columns:columns_migracion })}
+                        {download_pdf({ nurseries: dato_migracion, columns:columns_migracion, title: 'Historial  de datos' })}
+
+                    </ButtonGroup>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight
                             rows={dato_migracion}
                             columns={columns_migracion}
                             getRowId={(row) => row.id_migracion_estacion}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
                         />
                     </Box>
                 </>

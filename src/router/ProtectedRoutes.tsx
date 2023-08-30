@@ -86,3 +86,4 @@ export const ProtectedRoutes: React.FC = () => {
     </AlertasProvider>
   );
 };
+

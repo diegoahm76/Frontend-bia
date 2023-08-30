@@ -31,9 +31,10 @@ const FormButton = ({
   style_button,
   color_button,
 }: IProps) => {
+  console.log(label)
   return (
     <Button
-      color={color_button ?? 'primary'}
+      color={(label === 'GUARDAR' || label === 'guardar' || label === 'Guardar') ? 'success' : color_button ?? 'primary'}
       fullWidth
       variant={variant_button}
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
