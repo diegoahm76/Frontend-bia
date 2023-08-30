@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/return-await */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useContext, useEffect } from 'react';
+import { lazy, useContext, useEffect } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
@@ -11,19 +12,66 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { BusquedaAvanzadaDepositos } from '../components/BusquedaAvanzadaDepositos';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
-import { BusquedaEstante } from '../components/BusquedaEstante';
 import { useAppSelector } from '../../../../../hooks';
-import { AgregarEstantes } from '../components/AgregarEstantes';
-import { ListarEstantes } from '../components/ListarEstantes';
-import { ListarBandejas } from '../components/ListarBandejas';
+// import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+// import { AgregarEstantes } from '../components/AgregarEstantes';
+// import { ListarEstantes } from '../components/ListarEstantes';
+// import { BusquedaAvanzadaDepositos } from '../components/BusquedaAvanzadaDepositos';
+// import { BusquedaEstante } from '../components/BusquedaEstante';
+// import { ListarBandejas } from '../components/ListarBandejas';
+// import { EditarEstante } from '../components/EditarEstante';
+// import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
+// import { SeleccionarEstante } from '../components/SeleccionarEstante';
+import { delete_estante } from '../services/services';
 import { DataContext } from '../context/context';
 import { useEstantesHook } from '../hooks/useEstantesHook';
-import { SeleccionarEstante } from '../components/SeleccionarEstante';
-import { EditarEstante } from '../components/EditarEstante';
-import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
-import { delete_estante } from '../services/services';
+
+const ButtonSalir = lazy(async () => {
+  const module = await import('../../../../../components/Salir/ButtonSalir');
+  return { default: module.ButtonSalir };
+});
+
+const ButtonEliminar = lazy(async () => {
+  const module = await import('../../../../../utils/Eliminar/Eliminar');
+  return { default: module.ButtonEliminar };
+});
+
+const EditarEstante = lazy(async () => {
+  const module = await import('../components/EditarEstante');
+  return { default: module.EditarEstante };
+});
+
+const SeleccionarEstante = lazy(async () => {
+  const module = await import('../components/SeleccionarEstante');
+  return { default: module.SeleccionarEstante };
+});
+
+const ListarBandejas = lazy(async () => {
+  const module = await import('../components/ListarBandejas');
+  return { default: module.ListarBandejas };
+});
+
+const ListarEstantes = lazy(async () => {
+  const module = await import('../components/ListarEstantes');
+  return { default: module.ListarEstantes };
+});
+
+const AgregarEstantes = lazy(async () => {
+  const module = await import('../components/AgregarEstantes');
+  return { default: module.AgregarEstantes };
+});
+
+const BusquedaAvanzadaDepositos = lazy(async () => {
+  const module = await import('../components/BusquedaAvanzadaDepositos');
+  return { default: module.BusquedaAvanzadaDepositos };
+});
+
+
+const BusquedaEstante = lazy(async () => {
+  const module = await import('../components/BusquedaEstante');
+  return { default: module.BusquedaEstante };
+});
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstantesScreen: React.FC = () => {
