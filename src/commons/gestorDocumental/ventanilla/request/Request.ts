@@ -17,7 +17,7 @@ import type {
   InfoPersona,
   ResponseServer,
   UpdateAutorizaNotificacion,
-  UpdateAutorizaNotificacionPropia
+  UpdateAutorizaNotificacionPropia,
 } from '../../../../interfaces/globalModels';
 
 // editar datos persona restringida naturual
@@ -147,9 +147,9 @@ export const consultar_notificaciones = async (
 export const consultar_notificaciones_cuenta_propia = async (
   id: number
 ): Promise<UpdateAutorizaNotificacionPropia> => {
-  const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacionPropia>>(
-    `personas/get-by-id/${id ?? 0}/`
-  );
+  const { data } = await api.get<
+    ResponseServer<UpdateAutorizaNotificacionPropia>
+  >(`personas/get-by-id/${id ?? 0}/`);
   return data.data;
 };
 // Historico autorizaciones
@@ -187,7 +187,7 @@ export const editar_autorizacion_notificaciones = async (
 export const crear_persona_natural = async (
   datos: CrearPersonNaturalAdmin
 ): Promise<any> => {
-  const {data} = await api.post(
+  const { data } = await api.post(
     `gestor/ventanilla/personas/register-persona-natural/`,
     datos
   );
@@ -197,7 +197,7 @@ export const crear_persona_natural = async (
 export const crear_persona_juridica = async (
   datos: CrearPersonJuridicaAdmin
 ): Promise<any> => {
-  const {data} = await api.post(
+  const { data } = await api.post(
     `gestor/ventanilla/personas/register-persona-juridica/`,
     datos
   );

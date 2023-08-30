@@ -11,11 +11,7 @@ import {
   Typography,
   LinearProgress,
 } from '@mui/material';
-
-
 import { useState } from 'react';
-
-
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Title } from '../../../../components/Title';
 import type { HistoricoDatosRestringidos } from '../../../../interfaces/globalModels';
@@ -81,9 +77,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
 
   const historico = async (): Promise<void> => {
     try {
-      const response = await consultar_historico_restringido(
-        id_persona ?? 0
-      );
+      const response = await consultar_historico_restringido(id_persona ?? 0);
       const new_historico = response.map(
         (datos: HistoricoDatosRestringidos) => ({
           id: datos.id,
@@ -148,7 +142,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
-                  <LinearProgress />
+                    <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>
