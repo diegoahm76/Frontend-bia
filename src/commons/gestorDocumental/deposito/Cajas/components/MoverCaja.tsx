@@ -11,18 +11,18 @@ import {
 } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
-import { useEstantesHook } from '../hooks/useEstantesHook';
 import { useContext, useEffect } from 'react';
-import { DataContext } from '../context/context';
 import { LoadingButton } from '@mui/lab';
 import { useAppSelector } from '../../../../../hooks';
+import { DataContext } from '../../Estantes/context/context';
+import { useEstantesHook } from '../../Estantes/hooks/useEstantesHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MoverEstantes: React.FC = () => {
+export const MoverCaja: React.FC = () => {
   const {
     control_mover_estantes,
     errors_mover_estantes,
-    reset_mover_estantes,
+    // reset_mover_estantes,
     set_value_mover_estantes,
     onsubmit_mover_estantes,
 
@@ -50,26 +50,6 @@ export const MoverEstantes: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // set_value_mover_estantes(
-    //   'identificacion_estante',
-    //   data_estantes?.identificacion_por_deposito
-    // );
-    // set_value_mover_estantes(
-    //   'deposito_actual',
-    //   data_depositos?.nombre_deposito
-    // );
-    console.log('entro');
-    console.log('data_depositos', data_depositos);
-    reset_mover_estantes({
-      identificacion_estante: data_estantes?.identificacion_por_deposito,
-      deposito_actual: data_depositos?.nombre_deposito,
-      identificacion_por_entidad_destino: {
-        value: '',
-        label: '',
-      },
-    });
-  }, [data_estantes, data_depositos]);
-  useEffect(() => {
     set_value_mover_estantes(
       'identificacion_estante',
       data_estantes?.identificacion_por_deposito
@@ -78,7 +58,6 @@ export const MoverEstantes: React.FC = () => {
       'deposito_actual',
       data_depositos?.nombre_deposito
     );
-    console.log('entro primero');
     // reset_mover_estantes({
     //   identificacion_estante: data_estantes?.identificacion_por_deposito,
     //   deposito_actual: data_depositos?.nombre_deposito,
@@ -87,7 +66,7 @@ export const MoverEstantes: React.FC = () => {
     //     label: '',
     //   },
     // });
-  }, []);
+  }, [data_estantes, data_depositos]);
 
   return (
     <>
