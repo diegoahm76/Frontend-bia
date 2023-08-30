@@ -7,6 +7,7 @@ import type { Itablaucursales } from "../../interfaces/interfacesConEntidad";
 import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
 import { useNavigate } from "react-router-dom";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { download_pdf } from "../../../../../../documentos-descargar/PDF_descargar";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaSucursales: React.FC = () => {
@@ -98,8 +99,8 @@ export const TablaSucursales: React.FC = () => {
                 <ButtonGroup
                     style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
                 >
-                    {download_xls({ nurseries: dataEntidad, columns })}
-            
+                    {download_xls({ nurseries: filtered_data, columns })}
+                    {download_pdf({ nurseries: filtered_data, columns, title: 'Tabla sucursales' })}            
                 </ButtonGroup>
 
                 <Box component="form" sx={{ mt: "20px" }} noValidate autoComplete="off">
