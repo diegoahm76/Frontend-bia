@@ -17,6 +17,7 @@ import {
 } from '../services/services';
 import { control_error } from '../../../../../helpers';
 import type { ICajas, ICarpetas } from '../../Cajas/types/types';
+import { useAppSelector } from '../../../../../hooks/hooks';
 import {
   get_caja_carpetas,
   get_cajas_bandeja,
@@ -45,12 +46,14 @@ interface UserContext {
   depositos_selected_mover_estante: ValueProps[];
   nuevo_orden_estantes_selected: ValueProps[];
   nuevo_orden_cajas_selected: ValueProps[];
+  estantes_selected: ValueProps[];
   bandejas_selected: ValueProps[];
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
   set_depositos_selected_mover_estante: (value: ValueProps[]) => void;
   set_nuevo_orden_estantes_selected: (value: ValueProps[]) => void;
   set_nuevo_orden_cajas_selected: (value: ValueProps[]) => void;
+  set_estantes_selected: (value: ValueProps[]) => void;
   set_bandejas_selected: (value: ValueProps[]) => void;
 
   // * rows
@@ -74,6 +77,11 @@ interface UserContext {
   fetch_data_bandejas_estantes: () => Promise<void>;
   fetch_data_caja_carpeta: () => Promise<void>;
   fetch_data_caja_bandeja: () => Promise<void>;
+
+  // ? --------------------------------- Mover cajas ---------------------------------
+  fetch_data_depositos_mover_caja: () => Promise<void>;
+  fetch_data_estantes_mover_cajas: () => Promise<void>;
+  fetch_data_bandejas_mover_caja: () => Promise<void>;
 }
 
 export const DataContext = createContext<UserContext>({
@@ -99,12 +107,14 @@ export const DataContext = createContext<UserContext>({
   depositos_selected_mover_estante: [],
   nuevo_orden_estantes_selected: [],
   nuevo_orden_cajas_selected: [],
+  estantes_selected: [],
   bandejas_selected: [],
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
   set_depositos_selected_mover_estante: () => {},
   set_nuevo_orden_estantes_selected: () => {},
   set_nuevo_orden_cajas_selected: () => {},
+  set_estantes_selected: () => {},
   set_bandejas_selected: () => {},
 
   // * rows
@@ -128,6 +138,11 @@ export const DataContext = createContext<UserContext>({
   fetch_data_bandejas_estantes: async () => {},
   fetch_data_caja_carpeta: async () => {},
   fetch_data_caja_bandeja: async () => {},
+
+  // ? --------------------------------- Mover cajas ---------------------------------
+  fetch_data_depositos_mover_caja: async () => {},
+  fetch_data_estantes_mover_cajas: async () => {},
+  fetch_data_bandejas_mover_caja: async () => {},
 });
 
 export const UserProvider = ({
@@ -135,6 +150,9 @@ export const UserProvider = ({
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
+  //* redux declaration
+  const { cajas } = useAppSelector((state) => state.deposito);
+
   // * id
   const [id_deposito, set_id_deposito] = React.useState<number | null>(null);
   const [id_estante, set_id_estante] = React.useState<number | null>(null);
@@ -162,6 +180,10 @@ export const UserProvider = ({
     depositos_selected_mover_estante,
     set_depositos_selected_mover_estante,
   ] = React.useState<ValueProps[]>([]);
+
+  const [estantes_selected, set_estantes_selected] = React.useState<
+    ValueProps[]
+  >([]);
 
   const [bandejas_selected, set_bandejas_selected] = React.useState<
     ValueProps[]
@@ -199,17 +221,18 @@ export const UserProvider = ({
     try {
       const response = await get_depositos();
       if (response?.length > 0) {
-        const data_sucursal: ValueProps[] = response.map(
+        const data_depo: ValueProps[] = response.map(
           (item: ListarDepositos) => ({
             value: item.id_deposito,
             label: item.nombre_deposito,
             // label: `${item.identificacion_por_entidad} - ${item.nombre_deposito}`,
           })
         );
-        set_depositos_selected(data_sucursal);
+        set_depositos_selected(data_depo);
 
         const data_mover: ValueProps[] = response.map(
           (item: ListarDepositos) => ({
+            item,
             value: item.identificacion_por_entidad,
             label: item.nombre_deposito,
             // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
@@ -275,7 +298,6 @@ export const UserProvider = ({
       control_error(error.response.data.detail);
     }
   };
-
   const fetch_data_caja_carpeta = async (): Promise<void> => {
     try {
       const response = await get_caja_carpetas(id_caja as number);
@@ -316,6 +338,71 @@ export const UserProvider = ({
     }
   };
 
+  // ? --------------------------------- Mover cajas ---------------------------------
+  const fetch_data_depositos_mover_caja = async (): Promise<void> => {
+    try {
+      const response = await get_depositos();
+      if (response?.length > 0) {
+        const filterDataMover = response.filter(
+          (el) => el.id_deposito !== cajas.id_deposito
+        );
+
+        const data_mover: ValueProps[] = filterDataMover.map(
+          (item: ListarDepositos) => ({
+            item,
+            value: item.identificacion_por_entidad,
+            // label: item.nombre_deposito,
+            label: `${item.identificacion_por_entidad} - ${item.nombre_deposito} `,
+          })
+        );
+        set_depositos_selected_mover_estante(data_mover);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
+  const fetch_data_estantes_mover_cajas = async (): Promise<void> => {
+    try {
+      const response = await get_estantes_deposito(id_deposito as number);
+      if (response?.length > 0) {
+        const filterDataMover = response.filter(
+          (el) => el.id_estante_deposito !== cajas.id_estante
+        );
+
+        const data_selected: any[] = filterDataMover.map(
+          (item: GetEstantes) => ({
+            value: item.identificacion_por_deposito ?? '',
+            label: item.identificacion_por_deposito ?? '',
+          })
+        );
+        set_estantes_selected(data_selected);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+  const fetch_data_bandejas_mover_caja = async (): Promise<void> => {
+    try {
+      const response = await get_bandejas_estante(id_estante as number);
+      if (response?.length > 0) {
+        const filterDataMover = response.filter(
+          (el) => el.id_bandeja_estante !== cajas.id_bandeja
+        );
+
+        const data_bandeja: any[] = filterDataMover.map(
+          (item: GetBandejas) => ({
+            value: item.identificacion_por_estante ?? '',
+            label: item.identificacion_por_estante ?? '',
+          })
+        );
+        set_bandejas_selected(data_bandeja);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
   const value: UserContext = {
     // * id
     id_deposito,
@@ -337,12 +424,14 @@ export const UserProvider = ({
     depositos_selected_mover_estante,
     nuevo_orden_estantes_selected,
     nuevo_orden_cajas_selected,
+    estantes_selected,
     bandejas_selected,
     set_depositos_selected,
     set_sucusal_selected,
     set_depositos_selected_mover_estante,
     set_nuevo_orden_estantes_selected,
     set_nuevo_orden_cajas_selected,
+    set_estantes_selected,
     set_bandejas_selected,
     // * rows
     rows_estantes,
@@ -363,6 +452,11 @@ export const UserProvider = ({
     fetch_data_bandejas_estantes,
     fetch_data_caja_carpeta,
     fetch_data_caja_bandeja,
+    // ? --------------------------------- Mover cajas ---------------------------------
+
+    fetch_data_depositos_mover_caja,
+    fetch_data_estantes_mover_cajas,
+    fetch_data_bandejas_mover_caja,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

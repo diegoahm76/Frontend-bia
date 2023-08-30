@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -6,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
 import type { ValueProps } from '../../../../recursoHidrico/Instrumentos/interfaces/interface';
 import { DataContext } from '../../Estantes/context/context';
-import type{ PostEstantes, PutMoverEstantes } from '../../Estantes/types/types';
-import { post_estante, put_mover_estante } from '../../Estantes/services/services';
+import type { PostEstantes } from '../../Estantes/types/types';
+import { post_estante } from '../../Estantes/services/services';
 
 export const useCajaHook = (): any => {
   // * context
@@ -40,24 +41,41 @@ export const useCajaHook = (): any => {
     formState: { errors: errors_mover_cajas },
   } = useForm({
     defaultValues: {
-      identificacion_estante: '',
       deposito_actual: '',
+      estante_actual: '',
+      bandeja_actual: '',
+      caja_actual: '',
 
-      identificacion_por_entidad_destino: {
+      deposito_destino: {
+        item: '',
         value: '',
         label: '',
       },
-      // nombre_deposito_destino: '',
+      estante_destino: {
+        value: '',
+        label: '',
+      },
+      bandeja_destino: {
+        value: '',
+        label: '',
+      },
     },
   });
 
   const data_watch_mover_cajas = watch_mover_cajas();
   const data_watch_cajas = watch_cajas();
 
+  // console.log(
+  //   'data_watch_mover_cajas',
+  //   data_watch_mover_cajas.deposito_destino.item
+  // );
+
   const {
     id_deposito,
     identificacion_deposito,
     depositos_selected_mover_estante,
+    set_id_deposito,
+    set_id_estante,
     set_identificacion_deposito,
     fetch_data_estantes_depositos,
   } = useContext(DataContext);
@@ -70,42 +88,43 @@ export const useCajaHook = (): any => {
 
   const handle_close = (): void => {
     set_open_dialog(false);
-    set_value_mover_cajas('identificacion_por_entidad_destino', {
-      value: '',
-      label: '',
-    });
+    // set_value_mover_cajas('identificacion_por_entidad_destino', {
+    //   value: '',
+    //   label: '',
+    // });
   };
 
   const [selectedItem, setSelectedItem] = useState<ValueProps | null>(null);
 
   const handleSelectChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
+    type?: string
   ): void => {
     const selectedValue = event.target.value;
     const selectedOption = depositos_selected_mover_estante.find(
       (option) => option.value === selectedValue
     );
     setSelectedItem(selectedOption ?? null);
-    console.log(
-      'Valor cambiado:',
-      selectedOption ? selectedOption.label : '',
-      selectedValue
-    );
+    console.log('Valor cambiado:', selectedOption?.item);
+    if (type === 'deposito') {
+      set_id_deposito(selectedOption?.item.id_deposito);
+    }
+    if (type === 'estante') {
+      console.log('estante', selectedOption);
+      // set_id_estante(selectedOption?.item.id_deposito_estante);
+    }
   };
 
   useEffect(() => {
     if (data_watch_cajas?.identificacion_por_bandeja) {
-      set_identificacion_deposito(
-        data_watch_cajas?.identificacion_por_bandeja
-      );
+      set_identificacion_deposito(data_watch_cajas?.identificacion_por_bandeja);
     }
   }, [data_watch_cajas?.identificacion_por_bandeja]);
 
   // ? onsumit
 
   const [is_saving_cajas, set_is_saving_cajas] = useState(false);
-  const [is_saving_mover_cajas, set_is_saving_mover_cajas] =
-    useState(false);
+  const [is_saving_mover_cajas, set_is_saving_mover_cajas] = useState(false);
 
   const onsubmit_cajas = handleSubmit_cajas(async (data) => {
     try {
@@ -127,26 +146,26 @@ export const useCajaHook = (): any => {
     }
   });
 
-  const onsubmit_mover_cajas = handleSubmit_mover_cajas(async (data) => {
-    try {
-      set_is_saving_mover_cajas(true);
-      if (selectedItem) {
-        const data_estantes: PutMoverEstantes = {
-          identificacion_por_entidad_destino: selectedItem.value as string,
-          nombre_deposito_destino: selectedItem.label,
-        };
-        const identificacion = data?.identificacion_estante ?? '';
-        await put_mover_estante(identificacion, data_estantes);
-        await fetch_data_estantes_depositos();
-        control_success('Se movió estante correctamente');
-        handle_close();
-      }
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-    } finally {
-      set_is_saving_mover_cajas(false);
-    }
-  });
+  // const onsubmit_mover_cajas = handleSubmit_mover_cajas(async (data) => {
+  //   try {
+  //     set_is_saving_mover_cajas(true);
+  //     if (selectedItem) {
+  //       const data_estantes: PutMoverEstantes = {
+  //         identificacion_por_entidad_destino: selectedItem.value as string,
+  //         nombre_deposito_destino: selectedItem.label,
+  //       };
+  //       const identificacion = data?.identificacion_estante ?? '';
+  //       await put_mover_estante(identificacion, data_estantes);
+  //       await fetch_data_estantes_depositos();
+  //       control_success('Se movió estante correctamente');
+  //       handle_close();
+  //     }
+  //   } catch (error: any) {
+  //     control_error(error.response.data.detail);
+  //   } finally {
+  //     set_is_saving_mover_cajas(false);
+  //   }
+  // });
   return {
     control_cajas,
     watch_cajas,
@@ -178,7 +197,7 @@ export const useCajaHook = (): any => {
 
     // * onsumit
     onsubmit_cajas,
-    onsubmit_mover_cajas,
+    // onsubmit_mover_cajas,
     //  * saving
     is_saving_cajas,
     is_saving_mover_cajas,

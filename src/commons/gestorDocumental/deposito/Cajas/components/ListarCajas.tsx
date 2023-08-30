@@ -36,6 +36,7 @@ export const ListarCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              console.log('params', params.row)
               dispatch(
                 set_current_cajas({
                   ...cajas,
@@ -43,6 +44,7 @@ export const ListarCajas: React.FC = () => {
                   id_caja: params.row.id_caja_bandeja,
                   identificacion_caja: params.row.identificacion_por_bandeja,
                   orden_caja: params.row.orden_ubicacion_por_bandeja,
+                  // identificacion_bandeja: params.row.identificacion_bandeja,
                 })
               );
               dispatch(

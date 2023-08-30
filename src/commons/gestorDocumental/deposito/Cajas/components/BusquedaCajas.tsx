@@ -88,7 +88,7 @@ export const BusquedaCajas: React.FC = () => {
                   editar: true,
                 })
               );
-
+                console.log('params.row', params.row);
               dispatch(
                 set_current_cajas({
                   id_caja: params.row.id_caja,
