@@ -80,6 +80,7 @@ export const initial_state: IDeposito = {
   data_depositos: info_deposito_slice,
   deposito_estante: id_depo_est,
   estantes: [],
+  cajas,
 };
 
 export const deposito_slice = createSlice({
@@ -140,6 +141,9 @@ export const deposito_slice = createSlice({
     set_estantes: (state: IDeposito, action: PayloadAction<IObEstante[]>) => {
       state.estantes = action.payload;
     },
+    set_current_cajas: (state: IDeposito, action: PayloadAction<IBuscarCaja>) => {
+      state.cajas = action.payload;
+    },
   },
 });
 
@@ -154,4 +158,5 @@ export const {
   set_current_info_deposito,
   set_current_id_depo_est,
   set_estantes,
+  set_current_cajas,
 } = deposito_slice.actions;

@@ -1,13 +1,13 @@
 export interface IBuscarCaja {
-    identificacion_deposito: number | null
-    id_deposito: number | null;
-    identificacion_estante: string;
-    id_estante: number | null;
-    identificacion_bandeja: string;
-    id_bandeja: number | null;
-    identificacion_caja: string;
-    id_caja: number | null;
-    orden_caja: number | null;
+    identificacion_deposito?: number | null
+    id_deposito?: number | null;
+    identificacion_estante?: string;
+    id_estante?: number | null;
+    identificacion_bandeja?: string;
+    id_bandeja?: number | null;
+    identificacion_caja?: string;
+    id_caja?: number | null;
+    orden_caja?: number | null;
 }
 export interface ICarpetas {
     id_caja_bandeja: number | null;

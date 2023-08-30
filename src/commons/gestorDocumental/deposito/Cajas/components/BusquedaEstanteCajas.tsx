@@ -21,8 +21,9 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import {
+  set_current_cajas,
   set_current_estantes,
   set_current_id_depo_est,
   set_current_mode_estantes,
@@ -75,32 +76,22 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row, 'params.row');
               reset({
                 identificacion_estante: params.row.identificacion_por_deposito,
                 orden_estante: params.row.orden_ubicacion_por_deposito,
                 nombre_deposito: params.row.identificacion_deposito,
               });
               set_id_estante(params.row.id_estante_deposito);
-              // dispatch(
-              //   set_current_id_depo_est({
-              //     id_deposito: params.row.id_deposito,
-              //     id_estante_deposito: params.row.id_estante_deposito,
-              //     nombre_deposito: params.row.nombre_deposito,
-              //     identificacion_por_deposito:
-              //       params.row.identificacion_por_deposito,
-              //   })
-              // );
 
-              // dispatch(
-              //   set_current_estantes({
-              //     id_estante_deposito: params.row.id_estante_deposito,
-              //     orden_ubicacion_por_deposito: params.row.nombre_deposito,
-              //     identificacion_por_deposito:
-              //       params.row.identificacion_por_deposito,
-              //   })
-              // );
-              // set_id_deposito(params.row.id_deposito);
+              dispatch(
+                set_current_cajas({
+                  id_deposito: params.row.id_deposito,
+                  id_estante: params.row.id_estante_deposito,
+                  identificacion_deposito: params.row.identificacion_deposito,
+                  identificacion_estante:
+                    params.row.identificacion_por_deposito,
+                })
+              );
 
               handle_close();
             }}
@@ -157,6 +148,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
   const [rows, set_rows] = useState<InfoEstantes[]>([]);
 
   const dispatch = useAppDispatch();
+  const { cajas } = useAppSelector((state) => state.deposito);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -220,6 +212,12 @@ export const BusquedaEstanteCajas: React.FC = () => {
 
   useEffect(() => {
     if (data_watch?.id_bandeja_estante?.value) {
+      dispatch(
+        set_current_cajas({
+          ...cajas,
+          id_bandeja: data_watch?.id_bandeja_estante?.value as any,
+        })
+      );
       set_id_bandeja(data_watch?.id_bandeja_estante?.value as any);
     }
   }, [data_watch?.id_bandeja_estante?.value]);
