@@ -124,17 +124,17 @@ const [variable,setvariable] = useState<boolean>(false);
         setvariable(true);
     
     };
-
+ // Update data_nombre whenever data_entidad changes
+    useEffect(() => {
+        void traer_personas_por_id();
+    }, [variable]);
 
     useEffect(() => {
         fetch_data_get().catch(console.error);
         setvariable(false);
     }, [variable]);
 
-    // Update data_nombre whenever data_entidad changes
-    useEffect(() => {
-        void traer_personas_por_id();
-    }, [variable]);
+   
 
 
     return (
