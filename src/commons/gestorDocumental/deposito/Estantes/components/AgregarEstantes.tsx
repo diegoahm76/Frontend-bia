@@ -27,7 +27,7 @@ export const AgregarEstantes: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Estante" />
+          <Title title="Registro estante" />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller
