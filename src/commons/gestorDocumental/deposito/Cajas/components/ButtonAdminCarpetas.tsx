@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ButtonAdminBandeja: React.FC = () => {
+export const ButtonAdminCarpetas: React.FC = () => {
   const navigate = useNavigate();
 
   const confirmar_admin_bandeja = (): void => {
@@ -14,7 +14,7 @@ export const ButtonAdminBandeja: React.FC = () => {
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estás seguro de ir a la ventana de administración de bandejas',
+      text: '¿Estás seguro de ir a la ventana de administración de carpetas?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',
@@ -24,7 +24,7 @@ export const ButtonAdminBandeja: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         navigate(
-          '/app/gestor_documental/configuracion_datos_basicos/archivo/administrar_bandeja',
+          '/app/gestor_documental/configuracion_datos_basicos/archivo/administrar_carpetas',
           {
             replace: true,
           }
