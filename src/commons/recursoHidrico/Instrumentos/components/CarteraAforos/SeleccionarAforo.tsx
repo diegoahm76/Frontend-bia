@@ -14,7 +14,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Title } from '../../../../../components/Title';
