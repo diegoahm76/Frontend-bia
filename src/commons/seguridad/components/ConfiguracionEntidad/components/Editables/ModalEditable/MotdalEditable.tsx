@@ -205,6 +205,9 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                 };
                 setDataEntidad(datosActualizados);
                 control_success("Cargo actualizado correctamente");
+                setValue("");
+                set_persona(undefined);
+
             })
             .catch((error: any) => {
 
@@ -212,6 +215,32 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             });
     
         setDataEntidad(updatedDataEntidad);
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
         };

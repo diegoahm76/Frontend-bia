@@ -8,27 +8,28 @@ import { PublicRoutes } from './PublicRoutes';
 export const AppRouter: React.FC = () => {
   return (
     <Routes>
-      {/* Login */}
-      <Route
-        path="auth/*"
-        element={
-          <PublicRoutes>
-            <AuthRoutes />
-          </PublicRoutes>
-        }
-      />
+        {/* Login */}
+        <Route
+          path="auth/*"
+          element={
+            <PublicRoutes>
+              <AuthRoutes />
+            </PublicRoutes>
+          }
+        />
 
-      {/* Rutas protegidas */}
-      <Route
-        path="app/*"
-        element={
-          <PrivateRoutes>
-            <ProtectedRoutes />
-          </PrivateRoutes>
-        }
-      />
+        {/* Rutas protegidas */}
+        <Route
+          path="app/*"
+          element={
+            <PrivateRoutes>
+              <ProtectedRoutes />
+            </PrivateRoutes>
+          }
+        />
 
-      <Route path="/*" element={<Navigate to="auth/login" />} />
+        <Route path="/*" element={<Navigate to="auth/login" />} />
+   
     </Routes>
   );
 };

@@ -21,8 +21,9 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import {
+  set_current_cajas,
   set_current_estantes,
   set_current_id_depo_est,
   set_current_mode_estantes,
@@ -37,7 +38,9 @@ export const BusquedaEstanteCajas: React.FC = () => {
   const {
     depositos_selected_mover_estante,
     id_estante,
-    bandejas_selected,
+    id_bandeja,
+    bandejas_selected_get,
+    set_orden,
     set_id_bandeja,
     set_id_estante,
     fetch_data_depositos,
@@ -74,32 +77,23 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row, 'params.row');
+              set_orden(params.row.orden_ubicacion_por_deposito);
               reset({
                 identificacion_estante: params.row.identificacion_por_deposito,
                 orden_estante: params.row.orden_ubicacion_por_deposito,
                 nombre_deposito: params.row.identificacion_deposito,
               });
               set_id_estante(params.row.id_estante_deposito);
-              // dispatch(
-              //   set_current_id_depo_est({
-              //     id_deposito: params.row.id_deposito,
-              //     id_estante_deposito: params.row.id_estante_deposito,
-              //     nombre_deposito: params.row.nombre_deposito,
-              //     identificacion_por_deposito:
-              //       params.row.identificacion_por_deposito,
-              //   })
-              // );
 
-              // dispatch(
-              //   set_current_estantes({
-              //     id_estante_deposito: params.row.id_estante_deposito,
-              //     orden_ubicacion_por_deposito: params.row.nombre_deposito,
-              //     identificacion_por_deposito:
-              //       params.row.identificacion_por_deposito,
-              //   })
-              // );
-              // set_id_deposito(params.row.id_deposito);
+              dispatch(
+                set_current_cajas({
+                  id_deposito: params.row.id_deposito,
+                  id_estante: params.row.id_estante_deposito,
+                  identificacion_deposito: params.row.identificacion_deposito,
+                  identificacion_estante:
+                    params.row.identificacion_por_deposito,
+                })
+              );
 
               handle_close();
             }}
@@ -156,6 +150,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
   const [rows, set_rows] = useState<InfoEstantes[]>([]);
 
   const dispatch = useAppDispatch();
+  const { cajas } = useAppSelector((state) => state.deposito);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -219,9 +214,11 @@ export const BusquedaEstanteCajas: React.FC = () => {
 
   useEffect(() => {
     if (data_watch?.id_bandeja_estante?.value) {
-      console.log(
-        data_watch?.id_bandeja_estante?.value,
-        'data_watch?.id_bandeja_estante?.value'
+      dispatch(
+        set_current_cajas({
+          ...cajas,
+          id_bandeja: data_watch?.id_bandeja_estante?.value as any,
+        })
       );
       set_id_bandeja(data_watch?.id_bandeja_estante?.value as any);
     }
@@ -323,7 +320,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
               handle_click_open();
             }}
           >
-            Búscar
+            Buscar
           </Button>
         </Grid>
 
@@ -353,7 +350,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                   }}
                   value={value}
                   onChange={onChange}
-                  options={bandejas_selected as any[]}
+                  options={bandejas_selected_get as any[]}
                   placeholder="Seleccionar"
                   isDisabled={!id_estante}
                 />
@@ -374,7 +371,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
           />
         </Grid>
 
-        {data_watch?.id_bandeja_estante && (
+        {id_bandeja ? (
           <>
             <Grid container spacing={2} justifyContent="flex-end">
               <Grid item>
@@ -398,7 +395,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
               </Grid>
             </Grid>
           </>
-        )}
+        ) : null}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
