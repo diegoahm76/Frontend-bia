@@ -9,11 +9,16 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 
 import Select from 'react-select';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { setGridActualANuevo, setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
-import { Button, Tooltip } from '@mui/material';
+import {
+  // setGridActualANuevo,
+  setUnidadesSeleccionadas
+} from '../../toolkit/UxE_slice/UxE_slice';
+import { Button, Grid, Tooltip } from '@mui/material';
 // import { Controller } from 'react-hook-form';
 // import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 
 export const GridActualANuevo: FC<any> = (): JSX.Element => {
   //* dispatch declaration
@@ -21,10 +26,12 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* use states redux declaration
-  const { gridActualANuevo, unidadesSeleccionadas } = useAppSelector((state) => state.u_x_e_slice);
+  const { gridActualANuevo, unidadesSeleccionadas } = useAppSelector(
+    (state) => state.u_x_e_slice
+  );
 
   //* hook use_x_entidad
-/*  const {
+  /*  const {
      control_grid_actual_a_nuevo
     reset_grid_actual_a_nuevo,
     watch_grid_actual_a_nuevo
@@ -35,17 +42,21 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   // const [unidadesSeleccionadas, setUnidadesSeleccionadas] = useState<any[]>([]);
 
   const onChange = (idPersona: number, unidadSeleccionada: any) => {
-    dispatch(setUnidadesSeleccionadas({
-      ...unidadesSeleccionadas,
-      [idPersona]: unidadSeleccionada
-    }));
+    dispatch(
+      setUnidadesSeleccionadas({
+        ...unidadesSeleccionadas,
+        [idPersona]: unidadSeleccionada
+      })
+    );
   };
 
   const handleLimpiarSelect = (idPersona: any) => {
-    dispatch(setUnidadesSeleccionadas({
-      ...unidadesSeleccionadas,
-      [idPersona]: null
-    }));
+    dispatch(
+      setUnidadesSeleccionadas({
+        ...unidadesSeleccionadas,
+        [idPersona]: null
+      })
+    );
   };
 
   // const [rowData, setRowData] = useState<any[]>([]);
@@ -63,7 +74,6 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   };
   obtenerDatos();
 }, []); */
-
 
   /* const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
@@ -133,20 +143,20 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       width: 100,
       renderCell: (params: any) => (
         <>
-        <Tooltip title="Limpiar lista desplegable">
-          <Button
-            variant="outlined"
-            color="primary"
-            sx={{
-              marginLeft: '5px',
-              width: '20px !important',
-              border: 'none'
-            }}
-            startIcon={<CleaningServicesIcon />}
-            onClick={() => {
-              handleLimpiarSelect(params.row.id_persona);
-            }}
-          />
+          <Tooltip title="Limpiar lista desplegable">
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{
+                marginLeft: '5px',
+                width: '20px !important',
+                border: 'none'
+              }}
+              startIcon={<CleaningServicesIcon />}
+              onClick={() => {
+                handleLimpiarSelect(params.row.id_persona);
+              }}
+            />
           </Tooltip>
         </>
       )
@@ -166,6 +176,21 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
         </select> */
     }
   ];
+
+  if (gridActualANuevo.length === 0)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={150} />
+      </Grid>
+    );
 
   return (
     //* renderiza los datos necesarios para el traslado unidades organizacionales actuales a nuevas
