@@ -9,13 +9,20 @@ import SearchIcon from '@mui/icons-material/Search';
 
 //* icons
 
+
+import { useContext, lazy } from 'react';
+
 import { useAppSelector } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';
 import { OrganigramaChip } from './utils/ChipComponent';
-import { BusquedaAvanOrgModal } from './components/BusquedaAvanzadaOrg/BusquedaAvanOrg';
-import { useContext } from 'react';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
+
+const BusquedaAvanOrgModal = lazy(async () => {
+  const module = await import('./components/BusquedaAvanzadaOrg/BusquedaAvanOrg');
+  return { default: module.BusquedaAvanOrgModal };
+});
+
 
 export const OrganigramaViewInicio = (): JSX.Element => {
   //* redux states
