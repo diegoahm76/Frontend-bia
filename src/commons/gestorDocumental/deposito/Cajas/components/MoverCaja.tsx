@@ -16,6 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import { useAppSelector } from '../../../../../hooks';
 import { DataContext } from '../../Estantes/context/context';
 import { useCajaHook } from '../hook/useCajaHook';
+import { confirmarAccion } from '../../utils/function';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface IProps {
@@ -92,14 +93,18 @@ export const MoverCaja: React.FC<IProps> = ({ Disabled }: IProps) => {
             style={{
               width: '100%',
               height: '100%',
-              display: 'flex',
+              display: 'fselex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              void onsubmit_mover_cajas();
+              void confirmarAccion(
+                onsubmit_mover_cajas,
+                '¿Esta seguro de mover esta caja ?'
+              );
+              // void onsubmit_mover_cajas();
             }}
           >
             <Grid

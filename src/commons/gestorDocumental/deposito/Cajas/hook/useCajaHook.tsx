@@ -79,6 +79,7 @@ export const useCajaHook = (): any => {
     identificacion_caja,
     nuevo_orden,
     orden,
+    set_id_bandeja,
     set_rows_cajas,
     set_rows_bandejas,
     set_rows_carpetas,
@@ -135,6 +136,7 @@ export const useCajaHook = (): any => {
   const onsubmit_cajas = handleSubmit_cajas(async (data) => {
     try {
       set_is_saving_cajas(true);
+      console.log(identificacion_caja, 'identificacion_caja');
       const id_bandeja: number = cajas?.id_bandeja as number;
       if (id_bandeja) {
         const data_caja: PostCajas = {
@@ -168,6 +170,9 @@ export const useCajaHook = (): any => {
 
   const onsubmit_update_cajas = handleSubmit_cajas(async (data) => {
     try {
+      console.log(identificacion_caja, 'identificacion_caja');
+      console.log(orden, 'orden');
+      console.log(nuevo_orden, 'nuevo_orden');
       set_is_saving_cajas(true);
 
       if (!nuevo_orden && !orden) {
@@ -200,16 +205,19 @@ export const useCajaHook = (): any => {
   });
 
   const limpiar_formulario_cajas = (): void => {
+    set_id_bandeja(null);
     reset_cajas({
       identificacion_por_bandeja: '',
       orden: '',
       nuevo_orden: '',
     });
-    set_current_mode_estantes({
-      ver: false,
-      crear: false,
-      editar: false,
-    });
+    dispatch(
+      set_current_mode_estantes({
+        ver: false,
+        crear: false,
+        editar: false,
+      })
+    );
     reset_mover_cajas({
       deposito_actual: '',
       estante_actual: '',
@@ -229,17 +237,19 @@ export const useCajaHook = (): any => {
         label: '',
       },
     });
-    set_current_cajas({
-      identificacion_deposito: null,
-      id_deposito: null,
-      identificacion_estante: '',
-      id_estante: null,
-      identificacion_bandeja: '',
-      id_bandeja: null,
-      identificacion_caja: '',
-      id_caja: null,
-      orden_caja: null,
-    });
+    dispatch(
+      set_current_cajas({
+        identificacion_deposito: null,
+        id_deposito: null,
+        identificacion_estante: '',
+        id_estante: null,
+        identificacion_bandeja: '',
+        id_bandeja: null,
+        identificacion_caja: '',
+        id_caja: null,
+        orden_caja: null,
+      })
+    );
     set_identificacion_caja('');
     set_orden(null);
     set_nuevo_orden(null);

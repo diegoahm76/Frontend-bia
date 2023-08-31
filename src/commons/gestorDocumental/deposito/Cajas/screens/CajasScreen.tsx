@@ -11,6 +11,7 @@ import { useAppSelector } from '../../../../../hooks';
 import { DataContext } from '../../Estantes/context/context';
 import { delete_caja } from '../services/services';
 import { useCajaHook } from '../hook/useCajaHook';
+import { confirmarAccion } from '../../utils/function';
 
 const RegistrarCaja = lazy(async () => {
   const module = await import('../components/RegistrarCajas');
@@ -44,7 +45,7 @@ const ListarCarpetas = lazy(async () => {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CajasScreen: React.FC = () => {
-  const { fetch_data_caja_bandeja } = useContext(DataContext);
+  const { nuevo_orden, fetch_data_caja_bandeja } = useContext(DataContext);
 
   const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
 
@@ -65,7 +66,14 @@ export const CajasScreen: React.FC = () => {
             void onsubmit_cajas();
           }
           if (mode_estante.editar) {
-            void onsubmit_update_cajas();
+            if (nuevo_orden) {
+              void confirmarAccion(
+                onsubmit_update_cajas,
+                '¿Estás seguro de actualizar el orden de la caja?'
+              );
+            } else {
+              void onsubmit_update_cajas();
+            }
           }
         }}
       >
@@ -148,10 +156,18 @@ export const CajasScreen: React.FC = () => {
               color="success"
               type="submit"
               loading={is_saving_cajas}
-              disabled={is_saving_cajas}
+              disabled={
+                is_saving_cajas ||
+                !cajas.id_bandeja ||
+                (!mode_estante.crear && !mode_estante.editar)
+              }
               startIcon={<SaveIcon />}
             >
-              {mode_estante.crear ? 'Guardar' : 'Actualizar'}
+              {mode_estante.crear
+                ? 'Guardar'
+                : mode_estante.editar
+                ? 'Actualizar'
+                : 'Guardar'}{' '}
             </LoadingButton>
           </Grid>
           <Grid item>

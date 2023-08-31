@@ -52,6 +52,8 @@ interface UserContext {
   bandejas_selected_get: ValueProps[];
   set_bandejas_selected_get: (value: ValueProps[]) => void;
   bandejas_selected: ValueProps[];
+  depositos_selected_mover_caja: ValueProps[];
+  set_depositos_selected_mover_caja: (value: ValueProps[]) => void;
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
   set_depositos_selected_mover_estante: (value: ValueProps[]) => void;
@@ -116,6 +118,8 @@ export const DataContext = createContext<UserContext>({
   estantes_selected: [],
   bandejas_selected: [],
   bandejas_selected_get: [],
+  depositos_selected_mover_caja: [],
+  set_depositos_selected_mover_caja: () => {},
   set_bandejas_selected_get: () => {},
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
@@ -202,6 +206,11 @@ export const UserProvider = ({
   const [bandejas_selected_get, set_bandejas_selected_get] = React.useState<
     ValueProps[]
   >([]);
+  const [
+  depositos_selected_mover_caja,
+  set_depositos_selected_mover_caja,
+] = React.useState<ValueProps[]>([]);
+
   // * rows
 
   const [rows_estantes, set_rows_estantes] = React.useState<GetEstantes[]>([]);
@@ -371,7 +380,7 @@ export const UserProvider = ({
             label: `${item.identificacion_por_entidad} - ${item.nombre_deposito} `,
           })
         );
-        set_depositos_selected_mover_estante(data_mover);
+        set_depositos_selected_mover_caja(data_mover);
       } else {
         control_warning('No hay depositos disponibles');
       }
@@ -462,6 +471,8 @@ export const UserProvider = ({
     estantes_selected,
     bandejas_selected,
     bandejas_selected_get,
+    depositos_selected_mover_caja,
+    set_depositos_selected_mover_caja,
     set_bandejas_selected_get,
     set_depositos_selected,
     set_sucusal_selected,
