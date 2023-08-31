@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useContext } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
-import { Grid } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 // * react select
 import Select from 'react-select';
-
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
@@ -20,6 +20,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { filtrarOrganigramas } from './utils/function/filterOrganigramas';
+import { GridActualANuevo } from '../../components/GridActualANuevo/GridActualANuevo';
+import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ActualANuevo: FC = (): JSX.Element => {
@@ -39,6 +41,10 @@ export const ActualANuevo: FC = (): JSX.Element => {
   } = use_u_x_entidad();
 
   //* context necesario
+
+  const { gridActualANuevo, handleGridActualANuevo } = useContext(
+    ContextUnidadxEntidad
+  );
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
@@ -75,7 +81,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
           justifyContent: 'center'
         }}
       >
-        <Loader altura={120} />
+        <Loader altura={150} />
       </Grid>
     );
 
@@ -163,6 +169,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
+                          handleGridActualANuevo(true);
                           //* dentro de esta seleccion, tambien debe existir una selección de modo
                           /*  dispatch(
                             getServiceSeriesSubseriesXUnidadOrganizacional(
@@ -178,8 +185,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
                             }
                           );
                           // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado
-
-                        
 
                           console.log('selectedOption', selectedOption);
                           onChange(selectedOption);
@@ -210,8 +215,40 @@ export const ActualANuevo: FC = (): JSX.Element => {
               </Grid>
             </Grid>
           </form>
+          {
+            // ! se debe tener en cuenta que en este button tambien se deben limpiar todos los datos de la tabla para comodidad del usuario y para buen funcionamiento del módulo
+
+            gridActualANuevo ? (
+              <Stack
+                direction="row"
+                justifyContent="center"
+                spacing={3}
+                sx={{ mt: '25px' }}
+              >
+                <Button
+                  startIcon={<CloseFullscreenIcon />}
+                  // endIcon={<CloseFullscreenIcon />}
+                  variant="contained"
+                  color="warning"
+                  onClick={() => {
+                    // se debe tener en cuenta que en este button tambien se deben limpiar todos los datos de la tabla para comodidad del usuario y para buen funcionamiento del módulo
+                    handleGridActualANuevo(false);
+                  }}
+                >
+                  Contraer tabla
+                </Button>
+              </Stack>
+            ) : (
+              <></>
+            )
+          }
         </Grid>
       </Grid>
+
+      {/* data grid traslado masico organigrama actual a nuevo */}
+      {gridActualANuevo ? <GridActualANuevo /> : <></>}
+      {/*  <GridActualANuevo /> */}
+      {/* data grid traslado masico organigrama actual a nuevo */}
     </>
   );
 };

@@ -96,7 +96,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
           justifyContent: 'center'
         }}
       >
-        <Loader altura={120} />
+        <Loader altura={180} />
       </Grid>
     );
 
