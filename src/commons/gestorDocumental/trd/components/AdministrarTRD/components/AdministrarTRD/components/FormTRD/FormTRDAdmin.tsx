@@ -384,7 +384,6 @@ export const FormTRDAdmin = (): JSX.Element => {
                 }) => (
                   <TextField
                     fullWidth
-                    type="number"
                     size="small"
                     label="Tiempo de retención archivo gestión"
                     variant="outlined"
@@ -407,8 +406,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    fullWidth
-                    type="number"
+                    fullWidth           
                     size="small"
                     label="Tiempo de retención archivo central"
                     variant="outlined"

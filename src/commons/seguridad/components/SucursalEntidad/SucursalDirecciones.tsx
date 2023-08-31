@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { Grid, Select } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -16,7 +17,7 @@ import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Pai
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values, handleinput_change }) => {
+export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_address ,same_address,form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
     const [selected_pais, setselected_pais] = useState('');
     const [paises, setpaises] = useState<Paises[]>([]);
@@ -42,6 +43,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                 const data: PaisesResponse = await response.json();
                 if (data.success) {
                     setpaises(data.data);
+                    
                 } else {
                     console.log(data.detail);
                 }
@@ -220,7 +222,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
     ] = useState('');
     console.log(is_error);
 
-    const [same_address, setsame_address] = useState(false);
+    // const [same_address, setsame_address] = useState(false);
 
     const handle_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setsame_address(event.target.checked);
@@ -334,7 +336,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <FormControl required size="small" fullWidth>
                         <InputLabel shrink={true}>pais</InputLabel>
                         <Select
-                            label="pais"
+                            label="país"
                             name="pais_sucursal_exterior"
                             /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
                             value={form_values.pais_sucursal_exterior ?? "dd"}
@@ -413,7 +415,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <TextField
                         variant="outlined"
                         size="small"
-                        label="direccion  "
+                        label="dirección  "
                         fullWidth
                         required
                         InputLabelProps={{
@@ -428,7 +430,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <TextField
                         variant="outlined"
                         size="small"
-                        label="direccion geografica  "
+                        label="dirección geograficá  "
                         fullWidth
                         required
                         InputLabelProps={{
@@ -532,7 +534,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <TextField
                         variant="outlined"
                         size="small"
-                        label="direccion_notificacion  "
+                        label="dirección notificación  "
                         fullWidth
                         InputLabelProps={{
                             shrink: true,
@@ -548,7 +550,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ form_values,
                     <TextField
                         variant="outlined"
                         size="small"
-                        label="direccion_notificacion_geografica"
+                        label="dirección notificación geográfica"
                         fullWidth
                         InputLabelProps={{
                             shrink: true,

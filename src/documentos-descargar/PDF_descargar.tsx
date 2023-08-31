@@ -4,8 +4,8 @@ import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element => {
 
-    const titulo = title;
-    console.log(titulo);
+    const titulo:any = title;
+    // console.log(titulo);
     const button_style = {
         color: 'white',
         backgroundColor: 'red',
@@ -18,7 +18,8 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
         justifyContent: 'center',
         marginRight: '10px'
     };
-
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+    const handleClick = (): void => {
     const doc = new JsPDF();
 
     const header_img_data = '../image/imagenes/PDF3.png'; // Reemplaza con la ruta de la imagen que deseas utilizar
@@ -33,55 +34,54 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
 
     // Agregar la palabra "CARRETERA" en medio y por encima de la imagen
     const text_x = page_width / 2;
-    const text_y =( img_y + img_height / 2)-5;
+    const text_y = img_y + img_height / 2 - 5;
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
     doc.text(titulo, text_x, text_y, { align: 'center' });
 
-    const gato_text = 'Fecha: ' + new Date().toLocaleDateString() ;
+    const gato_text = 'Fecha: ' + new Date().toLocaleDateString();
     const gato_text_width = doc.getStringUnitWidth(gato_text) * 16; // Calcula el ancho del texto en mm
-    const gato_x = text_x + gato_text_width / 2+8; // Calcula la posición x para centrar el texto
+    const gato_x = text_x + gato_text_width / 2 + 8; // Calcula la posición x para centrar el texto
     const gato_y = text_y; // Mantiene la misma posición y que la palabra "CARRETERA"
 
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
     doc.text(gato_text, gato_x, gato_y, { align: 'center' });
 
-
-    const start_y = img_y + img_height + 10; // Posición vertical para iniciar los encabezados y datos
+    const start_y = img_y + img_height - 25; // Posición vertical para iniciar los encabezados y datos
 
     const data: any[][] = [];
     const headers: any[] = [];
 
     // Obtener los nombres de las columnas de la cuadrícula
     columns.forEach((column: any) => {
-        headers.push(column.headerName);
+      headers.push(column.headerName);
     });
 
     // Obtener los datos de las filas de la cuadrícula
     nurseries.forEach((row: any) => {
-        const row_data: any[] = [];
+      const row_data: any[] = [];
 
-        columns.forEach((column: any) => {
-            const cell_data = row[column.field as keyof typeof row];
-            row_data.push(cell_data);
-        });
+      columns.forEach((column: any) => {
+        const cell_data = row[column.field as keyof typeof row];
+        row_data.push(cell_data);
+      });
 
-        data.push(row_data);
+      data.push(row_data);
     });
 
     // Utiliza la variable start_y como posición vertical de inicio en autoTable
     (doc as any).autoTable({
-        head: [headers],
-        body: data,
-        startY: start_y, // Utiliza la variable start_y para la posición vertical de inicio
+      head: [headers],
+      body: data,
+      startY: start_y // Utiliza la variable start_y para la posición vertical de inicio
     });
 
     const file_id = Math.random();
     const file_name = `Resultados_de_la_busqueda_${file_id}.pdf`;
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const handleClick = (): void => {
+
+ 
         doc.save(file_name);
     };
 
@@ -91,6 +91,3 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
         </button>
     );
 };
-
-
-

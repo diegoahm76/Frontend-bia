@@ -277,32 +277,32 @@ export function AdministrarViveroScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
-          { params.row.activo === true && params.row.id_viverista_actual === null ? (
-            <>              
+          {params.row.activo === true && params.row.id_viverista_actual === null ? (
+            <>
               <Tooltip title="Asignar Viverista">
-                  <IconButton 
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    href={`/#/app/conservacion/gestor_vivero/viverista/${params.row.id_vivero}/`}
+                <IconButton
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  href={`/#/app/conservacion/gestor_vivero/viverista/${params.row.id_vivero}/`}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
                   >
-                    <Avatar
+                    <PersonIcon
                       sx={{
-                        width: 24,
-                        height: 24,
-                        background: '#fff',
-                        border: '2px solid',
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
                       }}
-                      variant="rounded"
-                    >
-                      <PersonIcon
-                        sx={{
-                          color: 'primary.main',
-                          width: '18px',
-                          height: '18px',
-                        }}
-                      />
-                    </Avatar>
-                  </IconButton>
-              </Tooltip>              
+                    />
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
             </>
           ) : null}
 
@@ -348,8 +348,8 @@ export function AdministrarViveroScreen(): JSX.Element {
               )}
               {(params.row.fecha_ultima_apertura !== null ||
                 params.row.fecha_ultima_apertura !== '') &&
-              (params.row.en_funcionamiento === true ||
-                params.row.vivero_en_cuarentena === true) ? (
+                (params.row.en_funcionamiento === true ||
+                  params.row.vivero_en_cuarentena === true) ? (
                 <Tooltip
                   title={
                     params.row.vivero_en_cuarentena
@@ -394,7 +394,7 @@ export function AdministrarViveroScreen(): JSX.Element {
             </>
           ) : null}
           {params.row.fecha_ultima_apertura === null ||
-          params.row.fecha_ultima_apertura === '' ? (
+            params.row.fecha_ultima_apertura === '' ? (
             <Tooltip title="Eliminar">
               <IconButton
                 onClick={() => {
@@ -464,7 +464,7 @@ export function AdministrarViveroScreen(): JSX.Element {
                   set_action('create');
                   set_add_nursery_is_active(true);
                 }}
-                // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
+              // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
               >
                 Crear vivero
               </Button>

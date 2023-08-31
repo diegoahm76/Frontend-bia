@@ -43,7 +43,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-
+import SaveIcon from '@mui/icons-material/Save';
 export const EditarInstrumento: React.FC = (): JSX.Element => {
   const columns_prueba_bombeo: GridColDef[] = [
     {
@@ -926,6 +926,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 type="submit"
+                startIcon={<SaveIcon />}
                 loading={is_loading_submit}
                 disabled={is_loading_submit}
               >

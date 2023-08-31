@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,6 +20,7 @@ import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
 import Swal from 'sweetalert2';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
@@ -34,13 +36,22 @@ export const AdministradorDeEstaciones: React.FC = () => {
 
     const columns: GridColDef[] = [
         { field: 'id_estacion', headerName: 'NÚMERO', width: 140 },
-        { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170 },
+        { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170,
+        valueFormatter: (params) => {
+         const date = new Date(params.value);
+         const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+         return formattedDate;
+       }, },
         { field: 'nombre_estacion', headerName: 'NOMBRE', width: 170 },
         { field: 'cod_tipo_estacion', headerName: 'COD. ESTACIÓN', width: 170 },
         { field: 'latitud', headerName: 'LATITUD', width: 170 },
         { field: 'longitud', headerName: 'LONGITUD', width: 170 },
         { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
-        { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
+        { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170, valueFormatter: (params) => {
+            const date = new Date(params.value);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            return formattedDate;
+          }, },
         { field: 'nombre_persona_modifica', headerName: 'PERSONA MODIFICA', width: 200 },
         {
             field: 'ACCIONES',
@@ -219,26 +230,28 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 >
                     CREAR ESTACIÓN
                 </Button>
-           
-                <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end' }}>
-
-                {download_xls({ nurseries: list_estaciones, columns })}
-
-            </ButtonGroup>
 
             
              </Grid>
             <Grid item xs={12} container justifyContent='center'>
                 
                 {list_estaciones.length > 0 ? (
+                    <>
+                        <Grid item xs={12}><ButtonGroup
+                            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                        >
+                            {download_xls({ nurseries: list_estaciones, columns })}
+                            {download_pdf({ nurseries: list_estaciones, columns, title: '  CREAR ESTACIÓN' })}
+                        </ButtonGroup>
                     <DataGrid
-                        autoHeight
-                        rows={list_estaciones}
-                        columns={columns}
-                        getRowId={(row) => row.id_estacion}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                    />
+                                autoHeight
+                                rows={list_estaciones}
+                                columns={columns}
+                                getRowId={(row) => row.id_estacion}
+                                pageSize={10}
+                                rowsPerPageOptions={[10]} />
+                        </Grid>
+                    </>
                 ) : (
                     <CircularProgress color="secondary" />
                 )}

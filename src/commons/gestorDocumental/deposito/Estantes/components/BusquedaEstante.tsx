@@ -7,7 +7,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -19,17 +18,24 @@ import { Controller, useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-// import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import type { InfoEstantes } from '../types/types';
 import { search_estante } from '../services/services';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/context';
+import { useAppDispatch } from '../../../../../hooks';
+import {
+  set_current_estantes,
+  set_current_id_depo_est,
+  set_current_info_deposito,
+  set_current_mode_estantes,
+} from '../../store/slice/indexDeposito';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
   const {
-    id_deposito,
     depositos_selected,
+    set_id_estante,
     set_id_deposito,
     fetch_data_depositos,
   } = useContext(DataContext);
@@ -54,22 +60,52 @@ export const BusquedaEstante: React.FC = () => {
       width: 250,
     },
     {
-      field: 'ACCIONES',
+      field: 'acciones',
       headerName: 'ACCIONES',
+      sortable: true,
       width: 250,
       renderCell: (params) => (
         <>
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row, 'params.row')
-              reset({
-                orden_ubicacion_por_deposito:
-                  params.row.orden_ubicacion_por_deposito,
-                orden_estante: params.row.orden_ubicacion_por_entidad,
-                nombre_deposito: params.row.nombre_deposito,
-              });
+              set_id_estante(params.row.id_estante_deposito);
+              dispatch(
+                set_current_mode_estantes({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: params.row.id_deposito,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+              dispatch(
+                set_current_info_deposito({
+                  id_deposito: params.row.id_deposito,
+                  orden_ubicacion_por_entidad:
+                    params.row.orden_ubicacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_entidad: params.row.id_estante_deposito,
+                })
+              );
+
+              dispatch(
+                set_current_estantes({
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  orden_ubicacion_por_deposito: params.row.nombre_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
               set_id_deposito(params.row.id_deposito);
+
               handle_close();
             }}
           >
@@ -83,7 +119,7 @@ export const BusquedaEstante: React.FC = () => {
               variant="rounded"
             >
               <ChecklistOutlinedIcon
-                titleAccess="Seleccionar"
+                titleAccess="Seleccionar estante"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -92,9 +128,47 @@ export const BusquedaEstante: React.FC = () => {
               />
             </Avatar>
           </IconButton>
-          {/* <IconButton
+          <IconButton
             size="small"
             onClick={() => {
+              set_id_estante(params.row.id_estante_deposito);
+              dispatch(
+                set_current_mode_estantes({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              dispatch(
+                set_current_id_depo_est({
+                  id_deposito: params.row.id_deposito,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+              dispatch(
+                set_current_info_deposito({
+                  id_deposito: params.row.id_deposito,
+                  orden_ubicacion_por_entidad:
+                    params.row.orden_ubicacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_entidad: params.row.id_estante_deposito,
+                })
+              );
+
+              dispatch(
+                set_current_estantes({
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  orden_ubicacion_por_deposito: params.row.nombre_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+              set_id_deposito(params.row.id_deposito);
+
+              handle_close();
             }}
           >
             <Avatar
@@ -107,7 +181,7 @@ export const BusquedaEstante: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar instrumento"
+                titleAccess="Editar estante"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -115,7 +189,7 @@ export const BusquedaEstante: React.FC = () => {
                 }}
               />
             </Avatar>
-          </IconButton> */}
+          </IconButton>
         </>
       ),
     },
@@ -129,7 +203,7 @@ export const BusquedaEstante: React.FC = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      orden_ubicacion_por_deposito: '',
+      identificacion_estante: '',
       orden_estante: '',
       nombre_deposito: '',
     },
@@ -138,6 +212,8 @@ export const BusquedaEstante: React.FC = () => {
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoEstantes[]>([]);
+
+  const dispatch = useAppDispatch();
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -149,18 +225,14 @@ export const BusquedaEstante: React.FC = () => {
   };
 
   const on_submit_advance = handle_submit(
-    async ({
-      orden_ubicacion_por_deposito,
-      orden_estante,
-      nombre_deposito,
-    }) => {
+    async ({ identificacion_estante, orden_estante, nombre_deposito }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
         } = await search_estante({
-          orden_ubicacion_por_deposito,
+          identificacion_estante,
           orden_estante,
           nombre_deposito,
         });
@@ -193,7 +265,7 @@ export const BusquedaEstante: React.FC = () => {
             handle_click_open();
           }}
         >
-          Búscar
+          Buscar
         </Button>
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
@@ -212,120 +284,112 @@ export const BusquedaEstante: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada" />
-            <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Controller
-                    name="orden_ubicacion_por_deposito"
-                    control={control}
-                    render={(
-                      { field: { onChange, value } } // formState: { errors }
-                    ) => (
-                      <TextField
-                        fullWidth
-                        label="identificación del estante"
-                        value={value}
-                        onChange={onChange}
-                        size="small"
-                        margin="dense"
-                        disabled={false}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Controller
-                    name="orden_estante"
-                    control={control}
-                    render={(
-                      { field: { onChange, value } } // formState: { errors }
-                    ) => (
-                      <TextField
-                        label="Orden del estante"
-                        fullWidth
-                        value={value}
-                        onChange={onChange}
-                        size="small"
-                        margin="dense"
-                        disabled={false}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Controller
-                    name="nombre_deposito"
-                    control={control}
-                    rules={{ required: false }}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        label="Depósito de archivo"
-                        placeholder="Depósito de archivo"
-                        select
-                        size="small"
-                        margin="dense"
-                        disabled={false}
-                        fullWidth
-                        required={false}
-                        value={value}
-                        onChange={onChange}
-                      >
-                        {depositos_selected.map((option) => (
-                          <MenuItem key={option.label} value={option.label}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />{' '}
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3} container justifyContent="end">
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    loading={is_search}
-                    disabled={is_search}
-                  >
-                    Buscar
-                  </LoadingButton>
-                </Grid>
-                {rows.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <Title title="Resultados de la búsqueda" />
-                      {/* <Typography>Resultados de la búsqueda</Typography> */}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box sx={{ height: 400, width: '100%' }}>
-                        <>
-                          <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => uuidv4()}
-                          />
-                        </>
-                      </Box>
-                    </Grid>
-                  </>
-                )}
+            <Title title="Búsqueda avanzada estantes" />
+            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="identificacion_estante"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="identificación del estante"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
               </Grid>
-            </form>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="orden_estante"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      label="Orden del estante"
+                      fullWidth
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_deposito"
+                  control={control}
+                  rules={{ required: false }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label="Depósito de archivo"
+                      placeholder="Depósito de archivo"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                      fullWidth
+                      required={false}
+                      value={value}
+                      onChange={onChange}
+                    >
+                      {depositos_selected.map((option) => (
+                        <MenuItem key={option.label} value={option.label}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />{' '}
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  loading={is_search}
+                  disabled={is_search}
+                  onClick={(e) => {
+                    void on_submit_advance(e);
+                  }}
+                >
+                  Buscar
+                </LoadingButton>
+              </Grid>
+              {rows.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Title title="Resultados de la búsqueda" />
+                    {/* <Typography>Resultados de la búsqueda</Typography> */}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ width: '100%' }}>
+                      <>
+                        <DataGrid
+                          density="compact"
+                          autoHeight
+                          rows={rows}
+                          columns={columns}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
+                          getRowId={(row) => uuidv4()}
+                        />
+                      </>
+                    </Box>
+                  </Grid>
+                </>
+              )}
+            </Grid>
           </Grid>
         </DialogContent>
       </Dialog>

@@ -6,9 +6,6 @@ import {
   Checkbox,
   Typography,
   Button,
-  // Autocomplete,
-  // type AutocompleteChangeReason,
-  // type AutocompleteChangeDetails,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -82,18 +79,6 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
   const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
 
-  // const handle_change_autocomplete = (
-  //   event: React.SyntheticEvent<Element, Event>,
-  //   value: ClaseTercero[],
-  //   reason: AutocompleteChangeReason,
-  //   details?: AutocompleteChangeDetails<ClaseTercero>
-  // ): void => {
-  //   set_value(
-  //     'datos_clasificacion_persona',
-  //     value.map((e) => e.value)
-  //   );
-  // };
-
   // trae todas las clase tercero
   const get_datos_clase_tercero = async (): Promise<void> => {
     try {
@@ -124,21 +109,31 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
 
   const on_submit_create_juridica = handle_submit(async (data) => {
     try {
+      const numero_documento_as_number = parseInt(numero_documento);
+
+      if (numero_documento_as_number === 1) {
+        control_error('El número de documento no puede ser 1');
+        return;
+      }
+
       data.ubicacion_georeferenciada = '';
       data.numero_documento = numero_documento;
       data.tipo_documento = tipo_documento;
       data.tipo_persona = tipo_persona;
-      await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
-      control_success('la persona se creó correctamente');
-      reset(); // resetea el formulario
+
+      if (data.numero_documento !== '1') {
+        await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
+        control_success('la persona se creó correctamente');
+        reset(); // resetea el formulario
+      }
     } catch (error) {
       control_error('hubo un error al crear, intentelo de nuevo');
     }
   });
+
   return (
     <>
-      <Typography variant="h6" textAlign="center" pb={2}>
-      </Typography>
+      <Typography variant="h6" textAlign="center" pb={2}></Typography>
       <form
         onSubmit={(e) => {
           void on_submit_create_juridica(e);
@@ -154,7 +149,6 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
               fullWidth
               size="small"
               label="Dígito de verificación *"
-              type="number"
               error={errors.digito_verificacion?.type === 'required'}
               helperText={
                 errors.digito_verificacion?.type === 'required'
@@ -315,8 +309,8 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
                 errors.email?.type === 'required'
                   ? 'Este campo es obligatorio'
                   : error_email
-                    ? 'Los emails no coinciden'
-                    : ''
+                  ? 'Los emails no coinciden'
+                  : ''
               }
               {...register('email', {
                 required: true,
@@ -328,16 +322,14 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
               fullWidth
               size="small"
               label="Confirme su e-mail *"
-              error={
-                errors.confirmar_email?.type === 'required' || error_email
-              }
+              error={errors.confirmar_email?.type === 'required' || error_email}
               type="email"
               helperText={
                 errors.confirmar_email?.type === 'required'
                   ? 'Este campo es obligatorio'
                   : error_email
-                    ? 'Los emails no coinciden'
-                    : ''
+                  ? 'Los emails no coinciden'
+                  : ''
               }
               {...register('confirmar_email', {
                 required: true,
@@ -357,13 +349,15 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
               size="small"
               label="Celular"
               onCopy={(e: any) => e.preventDefault()}
-              error={errors.telefono_celular?.type === 'required' || error_phone}
+              error={
+                errors.telefono_celular?.type === 'required' || error_phone
+              }
               helperText={
                 errors.telefono_celular?.type === 'required'
                   ? 'Este campo es obligatorio'
                   : error_phone
-                    ? 'Los número de celular no son iguales'
-                    : ''
+                  ? 'Los número de celular no son iguales'
+                  : ''
               }
               {...register('telefono_celular')}
             />
@@ -382,7 +376,6 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
               {...register('confirmar_celular')}
             />
           </Grid>
-
         </Grid>
         {/* Datos del representante legal */}
         <Grid container spacing={2} mt={0.1}>
@@ -458,12 +451,10 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
                       required: true,
                     })}
                     error={
-                      errors.fecha_inicio_cargo_rep_legal?.type ===
-                      'required'
+                      errors.fecha_inicio_cargo_rep_legal?.type === 'required'
                     }
                     helperText={
-                      errors.fecha_inicio_cargo_rep_legal?.type ===
-                        'required'
+                      errors.fecha_inicio_cargo_rep_legal?.type === 'required'
                         ? 'Este campo es obligatorio'
                         : ''
                     }
@@ -473,17 +464,6 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
             </LocalizationProvider>
           </Grid>
           {/* BOTONES */}
-          {/* <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="warning"
-                href="#/auth/home"
-              >
-                Crear persona
-              </Button>
-            </Grid>
-          </Grid> */}
         </Grid>
         {/* Datos adicionales (opcionales) */}
         <Grid container spacing={2} mt={0.1}>
@@ -552,36 +532,8 @@ export const CrearPersonaJuridica: React.FC<PropsRegisterAdministrador> = ({
         </Grid>
         {/* Datos de clasificación Cormacarena */}
         <Grid container spacing={2} mt={0.1}>
-          {/* <Grid item xs={12}>
-            <Title title="Datos de clasificación" />
-          </Grid> */}
           <Grid item xs={12}>
-            {clase_tercero.length > 0 && (
-              <>
-                <Grid item xs={12}>
-                  {/* <Autocomplete
-                    multiple
-                    fullWidth
-                    size="medium"
-                    options={clase_tercero}
-                    getOptionLabel={(option) => option.label}
-                    isOptionEqualToValue={(option, value) =>
-                      option.value === value?.value
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        key={params.id}
-                        {...params}
-                        label="Datos clasificación Cormacarena"
-                        placeholder="Clasificacion Cormacarena"
-                      />
-                    )}
-                    {...register('datos_clasificacion_persona')}
-                    onChange={handle_change_autocomplete}
-                  /> */}
-                </Grid>
-              </>
-            )}
+            {clase_tercero.length > 0 && <></>}
           </Grid>
           {/* BOTONES */}
           <Grid item spacing={2} justifyContent="end" container>

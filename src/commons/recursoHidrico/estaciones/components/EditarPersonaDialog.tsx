@@ -8,7 +8,7 @@ import { type EditarPersona } from '../interfaces/interfaces';
 import { control_success, editar_persona } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components';
-
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -339,7 +339,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 >
                   Cancelar
                 </Button>
-                <Button variant="contained" color="primary" type="submit">
+                <Button startIcon={<SaveIcon />} variant="contained" color="success" type="submit">
                   ACTUALIZAR
                 </Button>
               </DialogActions>

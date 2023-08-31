@@ -22,6 +22,7 @@ import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/contextData';
 import { search_instrumento } from '../request/request';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
@@ -176,6 +177,7 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
         <Button
           variant="contained"
           color="primary"
+          startIcon={<SearchIcon />}
           onClick={() => {
             handle_click_open();
           }}

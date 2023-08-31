@@ -12,9 +12,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import type {
-  HistoricoEmail,
-} from '../../../../interfaces/globalModels';
+import type { HistoricoEmail } from '../../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../../helpers';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -89,16 +87,13 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
   const historico = async (): Promise<void> => {
     try {
       const response = await consultar_historico_email(id_persona);
-      const new_historico = response.map(
-        (datos: HistoricoEmail) => ({
-          id_histo_email: datos.id_histo_email,
-          email_notificacion: datos.email_notificacion,
-          fecha_cambio: datos.fecha_cambio,
-          id_persona: datos.id_persona,
-          nombre_completo: datos.nombre_completo,
-        }
-        )
-      );
+      const new_historico = response.map((datos: HistoricoEmail) => ({
+        id_histo_email: datos.id_histo_email,
+        email_notificacion: datos.email_notificacion,
+        fecha_cambio: datos.fecha_cambio,
+        id_persona: datos.id_persona,
+        nombre_completo: datos.nombre_completo,
+      }));
       set_rows(new_historico);
     } catch (err) {
       control_error(err);
@@ -114,7 +109,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
         open={is_modal_active}
         onClose={handle_close}
         fullWidth
-        maxWidth={'md'}
+        maxWidth={'lg'}
       >
         <DialogTitle>
           <Title title="HISTORICO DE CAMBIOS E-MAIL" />
@@ -167,7 +162,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
-                  <LinearProgress />
+                    <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>

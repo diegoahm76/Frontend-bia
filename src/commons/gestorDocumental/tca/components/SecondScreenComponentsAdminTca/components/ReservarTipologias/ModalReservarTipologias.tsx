@@ -8,6 +8,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -39,6 +40,8 @@ import {
   set_tipologias_reservadas
 } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { download_xls } from '../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../documentos-descargar/PDF_descargar';
 
 export const ModalReservarTipologias = (): JSX.Element => {
   //* useAppDispatch
@@ -220,7 +223,12 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 <Grid item xs={12} sm={12}>
                   <Box>
                     <Title title="Tipologías no restringidas" />
+                      <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
 
+                        {download_xls({ nurseries: tipologias_NO_resevadas, columns: columns_tipologias_NO_restringidas })}
+                        {download_pdf({ nurseries: tipologias_NO_resevadas, columns: columns_tipologias_NO_restringidas, title: 'Tipologías no restringidas' })}
+
+                      </ButtonGroup>
                     <DataGrid
                       sx={{ marginTop: '1.5rem' }}
                       density="compact"
@@ -241,8 +249,8 @@ export const ModalReservarTipologias = (): JSX.Element => {
                           : tipologias_resevadas
                       } */
                       columns={columns_tipologias_NO_restringidas}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
                       experimentalFeatures={{ newEditingApi: true }}
                       getRowId={() => uuidv4()}
                     />

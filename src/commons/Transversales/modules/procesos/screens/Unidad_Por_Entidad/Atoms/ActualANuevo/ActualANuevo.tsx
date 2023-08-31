@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { type FC } from 'react';
+import { type FC, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
 import { Grid } from '@mui/material';
@@ -9,20 +10,72 @@ import Select from 'react-select';
 
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
+import {
+  getOrganigramasDispobibles,
+  get_organigrama_acual
+} from '../../toolkit/UxE_thunks/UxE_thunks';
+import { useNavigate } from 'react-router-dom';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { filtrarOrganigramas } from './utils/function/filterOrganigramas';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ActualANuevo: FC = (): JSX.Element => {
+  //* navigate declaration
+  const navigate = useNavigate();
   //* dispatch declaration
   // ? redux toolkit - values
 
   //! use_u_x_entidad hooks
 
+  const {
+    control_opcion_actual_a_nuevo,
+    organigramaActual,
+    setOrganigramaActual,
+    organigramasDisponibles,
+    setOrganigramasDisponibles
+  } = use_u_x_entidad();
+
   //* context necesario
+
+  // ! use effects necesarios para el manejo del módulo
+useEffect(() => {
+  const obtenerOrganigramas = async (): Promise<any> => {
+    const organigramasActuales = await get_organigrama_acual(navigate);
+    console.log('res', organigramasActuales);
+    setOrganigramaActual(
+      organigramasActuales?.map((item: any) => ({
+        label: item?.nombre,
+        value: item?.id_organigrama
+      }))
+    );
+
+    const organigramasDisponibles = await getOrganigramasDispobibles();
+    setOrganigramasDisponibles(filtrarOrganigramas(organigramasDisponibles));
+  };
+
+  void obtenerOrganigramas()
+}, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
     console.log('hello from submit');
   };
+
+  if (!organigramaActual[0]?.label || organigramasDisponibles.length === 0)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={120} />
+      </Grid>
+    );
 
   return (
     <>
@@ -42,14 +95,14 @@ export const ActualANuevo: FC = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={12}
+                sm={6}
                 sx={{
                   zIndex: 2
                 }}
               >
                 <Controller
-                  name="opciones_traslado"
-                  // control={control_opciones_traslado}
+                  name="organigrama_actual_opcion_1" // posiblemenete se deba modificar el nombre
+                  control={control_opcion_actual_a_nuevo}
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -57,20 +110,15 @@ export const ActualANuevo: FC = (): JSX.Element => {
                   }) => (
                     <div>
                       <Select
-                        value={value}
-                        onChange={(selectedOption) => {
-                          //* dentro de esta seleccion, tambien debe existir una selección de modo
-                          /*  dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          ); */
-                          onChange(selectedOption);
-                        }}
-                        /* isDisabled={
-                        } */
-                        // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
-                        options={[]} // deben ir seleccionado por defecto el org Actual
+                        isDisabled={true}
+                        value={
+                          organigramaActual?.length > 0
+                            ? {
+                                label: organigramaActual[0]?.label,
+                                value: organigramaActual[0]?.value
+                              }
+                            : null
+                        }
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -94,14 +142,14 @@ export const ActualANuevo: FC = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={12}
+                sm={6}
                 sx={{
-                  zIndex: 2
+                  zIndex: 8
                 }}
               >
                 <Controller
-                  name="opciones_traslado"
-                  // control={control_opciones_traslado}
+                  name="organigrama_nuevo_opcion_1" // posiblemenete se deba modificar el nombre
+                  control={control_opcion_actual_a_nuevo}
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -122,7 +170,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                         /* isDisabled={
                         } */
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
-                        options={[]} // deben ir seleccionado por defecto el org Actual
+                        options={organigramasDisponibles} // deben ir seleccionado por defecto el org Actual
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -135,7 +183,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          Organigrama Actual
+                          Organigrama Nuevo
                         </small>
                       </label>
                     </div>

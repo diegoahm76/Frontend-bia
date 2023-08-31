@@ -16,24 +16,20 @@ import {
 } from '@mui/material';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useState, useEffect } from 'react';
-
-// import { LoadingButton } from '@mui/lab';
 import { Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-
 import type {
   IList,
   InfoPersona,
   ResponseServer,
 } from '../../../../interfaces/globalModels';
 import type { AxiosError } from 'axios';
-
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { CustomSelect } from '../../../../components/CustomSelect';
-import { control_error } from '../../../../helpers';
+import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { get_person_by_document, get_tipo_documento, search_avanzada } from '../../../../request';
 
@@ -187,6 +183,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
   const {
     register,
     handleSubmit: handle_submit,
+    watch,
     formState: { errors },
   } = useForm();
   const [is_loading, set_is_loading] = useState(false);
@@ -235,8 +232,10 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
       if (data !== undefined) {
+        control_success('El número de documento ya esta registrado'); // Mensaje alerta persona existe
         onResult(data);
       } else {
+        control_error('El número de documento no esta registrado'); // Mensaje alerta persona no existe
         const new_data = {
           id: 0,
           id_persona: 0,
@@ -299,7 +298,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         set_is_search(false);
       }
     }
-  ); 
+  );
 
   useEffect(() => {
     void get_selects_options();
@@ -313,9 +312,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         }}
       >
         <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-
-
-          <Grid item xs={12} sm={6}  lg={3}>
+          <Grid item xs={12} sm={6} lg={3}>
             <CustomSelect
               onChange={handle_change_select}
               label="Tipo de documento *"
@@ -329,7 +326,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}  lg={3}>
+          <Grid item xs={12} sm={6} lg={3}>
             {is_loading ? (
               <Skeleton variant="rectangular" width="100%" height={45} />
             ) : (
@@ -344,15 +341,23 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                 </InputLabel>
                 <OutlinedInput
                   id="documento"
-                  {...register('numero_documento', {})}
+                  {...register('numero_documento', {
+                    required: true,
+                  })}
                   label="Número de documento *"
+                  error={watch('numero_documento') === '1'}
                 />
+                {watch('numero_documento') === '1' && (
+                  <Typography variant="caption" color="error">
+                    No se permite el número 1 como número de documento
+                  </Typography>
+                )}
               </FormControl>
             )}
           </Grid>
-          <Grid item xs={12} sm={6}  lg={2}>
+          <Grid item xs={12} sm={6} lg={2}>
             <LoadingButton
-              color='primary'
+              color="primary"
               aria-label="toggle password visibility"
               variant="contained"
               startIcon={<SearchIcon />}
@@ -397,7 +402,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   required={true}
                   errors={errors}
                   register={register}
-                />               
+                />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
@@ -505,7 +510,14 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
           </form>
         </DialogContent>
         <DialogActions>
-          <Button color='error' variant="outlined" startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<ClearIcon />}
+            onClick={handle_close}
+          >
+            Salir
+          </Button>
         </DialogActions>
       </Dialog>
     </>

@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -29,6 +30,10 @@ import {
   set_current_id_instrumento,
 } from '../../toolkit/slice/instrumentosSlice';
 import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
@@ -218,6 +223,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
       <Grid item>
         <Button
           variant="contained"
+          startIcon={<SearchIcon />}
           color="primary"
           onClick={() => {
             handle_click_open();
@@ -286,6 +292,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     color="primary"
                     loading={is_search}
                     disabled={is_search}
+                    startIcon={<SearchIcon />}
                   >
                     Buscar
                   </LoadingButton>
@@ -297,13 +304,19 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                       {/* <Typography>Resultados de la búsqueda</Typography> */}
                     </Grid>
                     <Grid item xs={12}>
+                      <ButtonGroup
+                        style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                      >
+                        {download_xls({ nurseries: rows, columns })}
+                        {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                      </ButtonGroup> 
                       <Box sx={{ height: 400, width: '100%' }}>
                         <>
                           <DataGrid
                             rows={rows}
                             columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
                             getRowId={(row) => row.id_instrumento}
                           />
                         </>

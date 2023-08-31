@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { Avatar, Box, Grid, IconButton } from '@mui/material';
@@ -7,6 +8,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../context/context';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import {
+  set_current_estantes,
+  set_current_id_depo_est,
+  set_current_mode_estantes,
+} from '../../store/slice/indexDeposito';
+// import { IdEstanteDeposito } from '../../interfaces/deposito';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarEstantes: React.FC = () => {
@@ -30,40 +39,71 @@ export const ListarEstantes: React.FC = () => {
       width: 250,
       renderCell: (params) => (
         <>
-          {/* <IconButton
-          size="small"
-          onClick={() => {
-            console.log(params.row, 'params.row')
-            reset({
-              orden_ubicacion_por_deposito:
-                params.row.orden_ubicacion_por_deposito,
-              orden_estante: params.row.orden_ubicacion_por_entidad,
-              nombre_deposito: params.row.nombre_deposito,
-            });
-            set_id_deposito(params.row.id_deposito);
-            handle_close();
-          }}
-        >
-          <Avatar
-            sx={{
-              width: 24,
-              height: 24,
-              background: '#fff',
-              border: '2px solid',
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(
+                set_current_mode_estantes({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+
+              dispatch(
+                set_current_id_depo_est({
+                  ...deposito_estante,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+              set_id_estante(params.row.id_estante_deposito);
+              console.log(params.row, 'params.row');
+              dispatch(set_current_estantes(params.row));
             }}
-            variant="rounded"
           >
-            <ChecklistOutlinedIcon
-              titleAccess="Seleccionar"
+            <Avatar
               sx={{
-                color: 'primary.main',
-                width: '18px',
-                height: '18px',
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Avatar>
-        </IconButton> */}
-          <IconButton size="small" onClick={() => {}}>
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar estante"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(
+                set_current_id_depo_est({
+                  ...deposito_estante,
+                  id_estante_deposito: params.row.id_estante_deposito,
+                  identificacion_por_deposito:
+                    params.row.identificacion_por_deposito,
+                })
+              );
+
+              dispatch(
+                set_current_mode_estantes({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              dispatch(set_current_estantes(params.row));
+            }}
+          >
             <Avatar
               sx={{
                 width: 24,
@@ -74,7 +114,7 @@ export const ListarEstantes: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar instrumento"
+                titleAccess="Editar estante"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -88,8 +128,16 @@ export const ListarEstantes: React.FC = () => {
     },
   ];
 
-  const { rows_estantes, id_deposito, fetch_data_estantes_depositos } =
-    useContext(DataContext);
+  const { deposito_estante } = useAppSelector((state) => state.deposito);
+
+  const {
+    rows_estantes,
+    id_deposito,
+    set_id_estante,
+    fetch_data_estantes_depositos,
+  } = useContext(DataContext);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (id_deposito) {
@@ -119,13 +167,15 @@ export const ListarEstantes: React.FC = () => {
         </Grid>
         <>
           <Grid item xs={12}>
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ width: '100%' }}>
               <>
                 <DataGrid
+                  density="compact"
+                  autoHeight
                   rows={rows_estantes}
                   columns={columns_estantes}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
               </>

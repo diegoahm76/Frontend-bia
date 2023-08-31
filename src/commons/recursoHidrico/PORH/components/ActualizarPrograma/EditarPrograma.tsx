@@ -11,7 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DataContext } from '../../context/contextData';
 import dayjs, { type Dayjs } from 'dayjs';
 import { LoadingButton } from '@mui/lab';
-
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarPrograma: React.FC = () => {
   const {
@@ -68,7 +68,7 @@ export const EditarPrograma: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title=" EDICIÓN INFORMACIÓN DE PROGRAMA" />
+          <Title title=" Edición información de programa" />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -160,6 +160,7 @@ export const EditarPrograma: React.FC = () => {
             variant="contained"
             color="success"
             type="submit"
+            startIcon={<SaveIcon />}
             disabled={is_saving}
             loading={is_saving}
           >

@@ -17,7 +17,8 @@ import { crear_cuenca } from '../Request/request';
 import type { CrearCuenca } from '../interfaces/interfaces';
 import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
-
+import SaveIcon from '@mui/icons-material/Save';
+import { Title } from '../../../../components';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -62,7 +63,10 @@ export const AgregarCuenca: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
       <Box component="form" onSubmit={handleSubmit(on_submit_cuenca)}>
-        <DialogTitle>Crear Cuenca</DialogTitle>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title="Crear Cuenca" />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent>
           <Grid container spacing={1}>
@@ -101,6 +105,7 @@ export const AgregarCuenca: React.FC<IProps> = ({
             disabled={is_loading}
             color="success"
             type="submit"
+            startIcon={<SaveIcon />}
           >
             Guardar
           </Button>
