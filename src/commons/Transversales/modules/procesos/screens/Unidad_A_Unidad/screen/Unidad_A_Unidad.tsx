@@ -19,6 +19,7 @@ import {
 // import { Loader } from '../../../../../../../utils/Loader/Loader';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
 
 const OrgAnteriorScreen = lazy(async () => {
   const module = await import(
@@ -54,9 +55,9 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   // ! ------ USE SELECTORS DECLARATIONS ------
-  /*  const { organigrama_anterior } = useAppSelector(
+  const { organigrama_anterior } = useAppSelector(
     (state) => state.uni_a_uni_slice
-  ); */
+  );
 
   // ! ------ USE STATES DECLARATIONS ------
 
@@ -127,8 +128,22 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
       });
     });
   }, []);
-  /* if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
-    return <Loader />; */
+  if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
+  { 
+  return (
+    <Grid
+      container
+      sx={{
+        ...containerStyles,
+        position: 'static',
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <Loader altura="100vh" />
+    </Grid>
+  );
+}
 
   return (
     <>
