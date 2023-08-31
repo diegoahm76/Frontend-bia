@@ -36,6 +36,12 @@ export const get_fac_pago_autorizadas = createAsyncThunk('facilidades_pago/usuar
   return data.data
 })
 
+// Consultar facilidad pago desde Pag. Usuario Externo
+export const get_seguimiento_fac = createAsyncThunk('facilidades_pago/usuario_seguimiento', async (id_facilidad: number) => {
+  const { data } = await api.get(`recaudo/facilidades-pagos/respuesta-solicitud-funcionario/get/${id_facilidad}/`)
+  return data.data
+})
+
 
 export const facilidades_slice = createSlice({
   name: 'facilidades',
@@ -59,6 +65,9 @@ export const facilidades_slice = createSlice({
       state.facilidades = action.payload;
     });
     builder.addCase(get_fac_pago_autorizadas.fulfilled, (state, action) => {
+      state.facilidades = action.payload;
+    });
+    builder.addCase(get_seguimiento_fac.fulfilled, (state, action) => {
       state.facilidades = action.payload;
     });
   },

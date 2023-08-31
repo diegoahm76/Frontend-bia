@@ -24,14 +24,16 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
   const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
 
   useEffect(() => {
-    set_capital_total(plan_pagos.resumen_inicial.capital_total);
-    set_abono_facilidad(plan_pagos.resumen_inicial.abono_facilidad);
-    set_saldo_capital(plan_pagos.resumen_facilidad.saldo_total);
-    set_intereses_mora(plan_pagos.resumen_facilidad.intereses_mora);
-    set_deuda_total(plan_pagos.resumen_facilidad.deuda_total);
-    set_capital_cuotas(plan_pagos.distribucion_cuota.capital_cuotas);
-    set_intereses_cuotas(plan_pagos.distribucion_cuota.interes_cuotas);
-    set_total_cuotas(plan_pagos.distribucion_cuota.total_cuota);
+    if(plan_pagos.resumen_inicial !== undefined){
+      set_capital_total(plan_pagos.resumen_inicial.capital_total);
+      set_abono_facilidad(plan_pagos.resumen_inicial.abono_facilidad);
+      set_saldo_capital(plan_pagos.resumen_facilidad.saldo_total);
+      set_intereses_mora(plan_pagos.resumen_facilidad.intreses_mora);
+      set_deuda_total(plan_pagos.resumen_facilidad.deuda_total);
+      set_capital_cuotas(plan_pagos.distribucion_cuota.capital_cuotas);
+      set_intereses_cuotas(plan_pagos.distribucion_cuota.interes_cuotas);
+      set_total_cuotas(plan_pagos.distribucion_cuota.total_cuota);
+    }
   }, [plan_pagos])
 
   const rows_resumen_inicial = [

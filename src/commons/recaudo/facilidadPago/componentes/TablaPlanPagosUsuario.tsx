@@ -4,12 +4,31 @@ import { Preview } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { type CuotaPlanPagoValidacion } from '../interfaces/interfaces';
+import { get_cuota_recibo } from '../slices/DeudoresSlice';
+import { faker } from '@faker-js/faker';
+import dayjs from 'dayjs';
 import pse from '../assets/pse.png';
 import './Estilos/PlanPagos.css';
+
+interface RootStateValidacionPlanPagos {
+  plan_pagos: {
+    plan_pagos: {
+      data: {
+        cuotas: CuotaPlanPagoValidacion[];
+      }
+    }
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaPlanPagosUsuario: React.FC = () => {
   const [total, set_total] = useState(0);
+  const [lista, set_lista] = useState(Array<CuotaPlanPagoValidacion>);
+  const { plan_pagos } = useSelector((state: RootStateValidacionPlanPagos) => state.plan_pagos);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
   const total_cop = new Intl.NumberFormat("es-ES", {
@@ -17,30 +36,9 @@ export const TablaPlanPagosUsuario: React.FC = () => {
     currency: "COP",
   }).format(total)
 
-  const lista = [
-    {
-      cuota: 1,
-      fecha_pago: '25 de enero de 2023',
-      valor_total: '85000000',
-      estado: 'Pagada',
-    },
-    {
-      cuota: 2,
-      fecha_pago: '25 de febrero de 2023',
-      valor_total: '85000000',
-      estado: 'Vencida',
-    },
-    {
-      cuota: 3,
-      fecha_pago: '25 de marzo de 2023',
-      valor_total: '85000000',
-      estado: 'Pendiente',
-    }
-  ]
-
   const columns: GridColDef[] = [
     {
-      field: 'cuota',
+      field: 'nro_cuota',
       headerName: 'No Cuotas',
       width: 150,
       renderCell: (params) => (
@@ -50,17 +48,17 @@ export const TablaPlanPagosUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'fecha_pago',
+      field: 'fecha_vencimiento',
       headerName: 'Fechas de Pago',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value).format('DD/MM/YYYY')}
         </div>
       ),
     },
     {
-      field: 'valor_total',
+      field: 'monto_cuota',
       headerName: 'Cuota',
       width: 200,
       renderCell: (params) => {
@@ -84,7 +82,12 @@ export const TablaPlanPagosUsuario: React.FC = () => {
           <Tooltip title="Ver / Generar">
             <IconButton
               onClick={() => {
-                navigate('../recibo');
+                try {
+                  void dispatch(get_cuota_recibo(params.row.id));
+                  navigate('../recibo');
+                } catch (error: any) {
+                  throw new Error(error);
+                }
               }}
             >
               <Avatar
@@ -113,9 +116,7 @@ export const TablaPlanPagosUsuario: React.FC = () => {
         return (
           <Tooltip title="Pagar en Línea">
             <IconButton
-              onClick={() => {
-                navigate('../recibo');
-              }}
+              onClick={() => {}}
             >
               <Avatar
                 sx={{
@@ -146,9 +147,13 @@ export const TablaPlanPagosUsuario: React.FC = () => {
   ];
 
   useEffect(() => {
+    set_lista(plan_pagos.data.cuotas)
+  }, [plan_pagos])
+
+  useEffect(() => {
     let cuotas = 0
     for(let i=0; i< lista.length; i++){
-      cuotas = cuotas + parseFloat(lista[i].valor_total)
+      cuotas = cuotas + parseFloat(lista[i].monto_cuota)
       set_total(cuotas)
     }
   }, [lista])
@@ -177,7 +182,7 @@ export const TablaPlanPagosUsuario: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.cuota}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>

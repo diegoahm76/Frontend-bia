@@ -2,7 +2,7 @@ import { Grid, Box, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { type TablasAmortizacion, type Obligacion } from '../interfaces/interfaces';
+import { type TablasAmortizacion, type Obligacion, type event } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
@@ -135,14 +135,21 @@ export const TablaLiquidacion: React.FC = () => {
       headerName: 'Valor Abonado',
       width: 150,
       renderCell: (params) => {
-        const precio_cop = new Intl.NumberFormat("es-ES", {
-          style: "currency",
-          currency: "COP",
-        }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <Grid item xs={11} sm={150}>
+            <TextField
+              required
+              label="Valor Abonado"
+              size="small"
+              fullWidth
+              onChange={(event: event) => {
+                const { value } = event.target
+                console.log(value)
+              }}
+              name='valor_abonado'
+              type='number'
+            />
+          </Grid>
         )
       },
     },

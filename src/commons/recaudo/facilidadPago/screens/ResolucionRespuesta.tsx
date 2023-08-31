@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { Grid, Box, Button, Stack, TextField } from "@mui/material";
 import { Save, CloudUpload } from '@mui/icons-material';
@@ -6,8 +5,10 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { EditorTexto } from '../componentes/EditorTexto/EditorTexto';
 import { DialogoRegistro } from '../componentes/DialogoRegistro';
+import { post_resolucion } from '../requests/requests';
+import { type PlanPagoValidacion } from '../interfaces/interfaces';
 
-interface RootState {
+interface RootStateDeudor {
   deudores: {
     deudores: {
       identificacion: string;
@@ -18,19 +19,32 @@ interface RootState {
   }
 }
 
+interface RootStatePlanPagos {
+  plan_pagos: {
+    plan_pagos: {
+      data: {
+        plan_pago: PlanPagoValidacion;
+      }
+    }
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [file_name, set_file_name] = useState('');
-  const { deudores } = useSelector((state: RootState) => state.deudores);
+  const [file, set_file] = useState({});
+  const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
+  const { plan_pagos } = useSelector((state: RootStatePlanPagos) => state.plan_pagos);
 
-  const handle_open = () => { set_modal(true) }
-  const handle_close = () => { set_modal(false) }
+  const handle_open = (): void => { set_modal(true) }
+  const handle_close = (): void => { set_modal(false) }
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
+      set_file(selected_file);
       set_file_name(selected_file.name);
     }
   };
@@ -143,7 +157,16 @@ export const ResolucionRespuesta: React.FC = () => {
                 startIcon={<Save />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
-                  handle_open()
+                  try {
+                    void post_resolucion({
+                      id_plan_pago: plan_pagos.data.plan_pago.id,
+                      doc_asociado: file as File,
+                      observacion: 'observacion',
+                    });
+                    handle_open();
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
                 }}
               >
                 Guardar Resolución Facilidad

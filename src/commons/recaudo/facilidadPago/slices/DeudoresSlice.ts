@@ -30,6 +30,12 @@ export const get_datos_deudor_amortizacion = createAsyncThunk('facilidades_pago/
   return data.data
 })
 
+// Consultar información cuota plan de pagos desde Pag. Usuario Externo
+export const get_cuota_recibo = createAsyncThunk('facilidades_pago/get_datos_recibo', async (id: number) => {
+  const { data } = await api.get(`recaudo/planes-pagos/cuota-by-id/get/${id}/`)
+  return data.data
+})
+
 export const deudores_slice = createSlice({
   name: 'deudores',
   initialState: initial_state,
@@ -49,6 +55,9 @@ export const deudores_slice = createSlice({
       state.deudores = action.payload;
     });
     builder.addCase(get_datos_deudor_amortizacion.fulfilled, (state, action) => {
+      state.deudores = action.payload;
+    });
+    builder.addCase(get_cuota_recibo.fulfilled, (state, action) => {
       state.deudores = action.payload;
     });
   },

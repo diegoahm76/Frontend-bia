@@ -4,14 +4,44 @@ import { FileDownloadOutlined, Visibility, Save } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { type TablasAmortizacion, type ProyeccionPago } from '../interfaces/interfaces';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { type TablasAmortizacion, type ProyeccionPago, type AmortizacionDatosDeudor, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
+import { get_seguimiento_fac } from '../slices/FacilidadesSlice';
+import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
+import { get_validacion_resolucion } from '../slices/ResolucionSlice';
+import { post_plan_pagos } from '../requests/requests';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 interface RootState {
   plan_pagos: {
     plan_pagos: TablasAmortizacion;
+  }
+}
+
+interface RootStateDeudor {
+  deudores: {
+    deudores: AmortizacionDatosDeudor;
+  }
+}
+
+interface RootStateFacilidad {
+  solicitud_facilidad: {
+    solicitud_facilidad: FacilidadPagoSolicitud;
+  }
+}
+
+interface RootStateGenerarPlanPagos {
+  facilidades: {
+    facilidades: {
+      tasa_diaria_aplicada: number;
+      porcentaje_abono: number;
+      fecha_pago_abono: string;
+      cuotas: number;
+      periodicidad: number;
+    };
   }
 }
 
@@ -22,6 +52,10 @@ export const TablaProyeccionPagos: React.FC = () => {
   const [total, set_total] = useState(0);
   const [lista, set_lista] = useState(Array<ProyeccionPago>);
   const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
+  const { solicitud_facilidad } = useSelector((state: RootStateFacilidad) => state.solicitud_facilidad);
+  const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
+  const { facilidades } = useSelector((state: RootStateGenerarPlanPagos) => state.facilidades);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
   const total_cop = new Intl.NumberFormat("es-ES", {
@@ -171,12 +205,10 @@ export const TablaProyeccionPagos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        {
-          lista.length !== 0 ? (
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
-                  <h3>4. Proyección de Pagos</h3>
+                  <h3>Proyección de Pagos</h3>
                   <DataGrid
                     autoHeight
                     disableSelectionOnClick
@@ -233,7 +265,15 @@ export const TablaProyeccionPagos: React.FC = () => {
                   variant='contained'
                   startIcon={<Visibility />}
                   onClick={() => {
-                    navigate('../seguimiento')
+                    try {
+                      void dispatch(get_seguimiento_fac(solicitud_facilidad.facilidad_pago.id));
+                      void dispatch(get_facilidad_solicitud(solicitud_facilidad.facilidad_pago.id));
+                      void dispatch(get_validacion_plan_pagos(solicitud_facilidad.facilidad_pago.id));
+                      void dispatch(get_validacion_resolucion(solicitud_facilidad.facilidad_pago.id));
+                      navigate('../seguimiento');
+                    } catch (error: any) {
+                      throw new Error(error)
+                    }
                   }}
                 >
                   Ver como Usuario Externo
@@ -256,15 +296,30 @@ export const TablaProyeccionPagos: React.FC = () => {
                   color='primary'
                   variant='contained'
                   startIcon={<Save />}
-                  onClick={() => {}}
+                  onClick={() => {
+                    try {
+                      void post_plan_pagos({
+                        id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
+                        id_tasa_interes: 1,
+                        tasa_diaria_aplicada: facilidades.tasa_diaria_aplicada,
+                        abono_aplicado: parseFloat(deudores.valor_abonado),
+                        porcentaje_abono: facilidades.porcentaje_abono,
+                        fecha_pago_abono: facilidades.fecha_pago_abono,
+                        nro_cuotas: facilidades.cuotas,
+                        periodicidad: facilidades.periodicidad,
+                        saldo_total: plan_pagos.resumen_facilidad.saldo_total,
+                        intreses_mora: plan_pagos.resumen_facilidad.intreses_mora,
+                      })
+                    } catch (error: any) {
+                      throw new Error(error)
+                    }
+                  }}
                 >
                   Guardar Plan de Pagos
                 </Button>
               </Grid>
             </Stack>
           </Grid>
-          ) : null
-        }
       </Grid>
     </>
   );

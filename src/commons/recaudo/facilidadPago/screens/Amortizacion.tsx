@@ -4,8 +4,9 @@ import { Title } from '../../../../components/Title';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { type event } from '../interfaces/interfaces';
+import { type AmortizacionDatosDeudor, type FacilidadPagoSolicitud, type event } from '../interfaces/interfaces';
 import { get_datos_amortizacion } from '../slices/PlanPagosSlice';
+import { datos_facilidad } from '../slices/FacilidadesSlice';
 import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
 import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
 import { TablaProyeccionPagos } from '../componentes/TablaProyeccionPagos';
@@ -14,37 +15,31 @@ import dayjs from 'dayjs';
 
 interface RootStateDeudor {
   deudores: {
-    deudores: {
-      cuotas: number;
-      fecha_abono: string;
-      id: number;
-      identificacion: string;
-      nombre_deudor: string;
-      periodicidad: number;
-      porcentaje_abonado: number;
-      valor_abonado: string;
-    }
+    deudores: AmortizacionDatosDeudor;
   }
 }
 
 interface RootStateFacilidad {
-  facilidades: {
-    facilidades: string;
+  solicitud_facilidad: {
+    solicitud_facilidad: FacilidadPagoSolicitud;
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Amortizacion: React.FC = () => {
   const [date_final, set_date_final] = useState('');
+  const [date_final_inicial, set_date_final_inicial] = useState('');
+  const [cambio_date, set_cambio_date] = useState(false);
   const [periodicidad, set_periodicidad] = useState('');
   const [tasa_usura, set_tasa_usura] = useState(0);
   const [tasa_diaria, set_tasa_diaria] = useState(0);
   const [modal, set_modal] = useState(false);
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
-  const { facilidades } = useSelector((state: RootStateFacilidad) => state.facilidades);
-  const [num_periodicidad, set_num_periodicidad] = useState(deudores.periodicidad);
-  const [num_cuota, set_num_cuota] = useState(deudores.cuotas);
+  const { solicitud_facilidad } = useSelector((state: RootStateFacilidad) => state.solicitud_facilidad);
+  const [num_periodicidad, set_num_periodicidad] = useState(0);
+  const [num_cuota, set_num_cuota] = useState(0);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
 
   const valor_abono_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -62,13 +57,30 @@ export const Amortizacion: React.FC = () => {
 
   useEffect(() => {
     if(deudores.fecha_abono !== undefined){
+      const meses = deudores.periodicidad * deudores.cuotas;
+      const arr_fecha_abono = deudores.fecha_abono.split('-');
+      const fecha_abono = new Date(parseInt(arr_fecha_abono[0]), (parseInt(arr_fecha_abono[1]) - 1), parseInt(arr_fecha_abono[2]));
+      const fecha_final = agregar_meses(fecha_abono, meses);
+      set_date_final_inicial(dayjs(fecha_final).format('YYYY-MM-DD'));
+    }
+  }, [deudores])
+
+  useEffect(() => {
+    if(cambio_date){
+      if(num_periodicidad === 0){
+        set_num_periodicidad(deudores.periodicidad)
+      }
+      if(num_cuota === 0){
+        set_num_cuota(deudores.cuotas)
+      }
       const meses = num_periodicidad * num_cuota;
       const arr_fecha_abono = deudores.fecha_abono.split('-');
-      const fecha_abono = new Date(parseInt(arr_fecha_abono[0]), (parseInt(arr_fecha_abono[1]) - 1), parseInt(arr_fecha_abono[2]))
-      const fecha_final = agregar_meses(fecha_abono, meses)
-      set_date_final(dayjs(fecha_final).format('YYYY-MM-DD'))
+      const fecha_abono = new Date(parseInt(arr_fecha_abono[0]), (parseInt(arr_fecha_abono[1]) - 1), parseInt(arr_fecha_abono[2]));
+      const fecha_final = agregar_meses(fecha_abono, meses);
+      set_date_final(dayjs(fecha_final).format('YYYY-MM-DD'));
+      set_cambio_date(true);
     }
-  }, [deudores, num_cuota, num_periodicidad])
+  }, [cambio_date, num_cuota, num_periodicidad])
 
   return (
     <>
@@ -108,7 +120,7 @@ export const Amortizacion: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={`${deudores.identificacion}`}
+                  value={''.concat(deudores.identificacion)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -117,7 +129,7 @@ export const Amortizacion: React.FC = () => {
                   label="Nro. Solicitud Facilidad de Pago"
                   size="small"
                   fullWidth
-                  value={`${facilidades}`}
+                  value={''.concat(solicitud_facilidad.facilidad_pago.numero_radicacion)}
                 />
               </Grid>
             </Grid>
@@ -206,7 +218,7 @@ export const Amortizacion: React.FC = () => {
                       label="% Abono"
                       size="small"
                       fullWidth
-                      value={`${deudores.porcentaje_abonado}`}
+                      value={''.concat(deudores.porcentaje_abonado.toString())}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -246,6 +258,7 @@ export const Amortizacion: React.FC = () => {
                           if(value === '12') {
                             set_periodicidad('años')
                           }
+                          set_cambio_date(true)
                         }}
                       >
                         <MenuItem value="1">Mensual</MenuItem>
@@ -261,10 +274,11 @@ export const Amortizacion: React.FC = () => {
                       size="small"
                       fullWidth
                       type='number'
-                      defaultValue={`${deudores.cuotas}`}
+                      defaultValue={''.concat(deudores.cuotas.toString())}
                       onChange={(event: event) => {
                         const { value } = event.target
                         set_num_cuota(parseInt(value))
+                        set_cambio_date(true)
                       }}
                       />
                   </Grid>
@@ -273,7 +287,7 @@ export const Amortizacion: React.FC = () => {
                       label="Fecha Final de Pago"
                       size="small"
                       fullWidth
-                      value={date_final !== '' ? `${dayjs(date_final).format('DD/MM/YYYY')}` : ''}
+                      value={cambio_date ? `${dayjs(date_final).format('DD/MM/YYYY')}` : `${dayjs(date_final_inicial).format('DD/MM/YYYY')}`}
                       disabled
                     />
                   </Grid>
@@ -296,10 +310,17 @@ export const Amortizacion: React.FC = () => {
                 try {
                   void dispatch(get_datos_amortizacion({
                     id_facilidad: deudores.id,
-                    fecha_final: date_final,
-                    cuotas: num_cuota,
-                    periodicidad: num_periodicidad,
+                    fecha_final: cambio_date ? date_final : date_final_inicial,
+                    cuotas: num_cuota !== 0 ? num_cuota : deudores.cuotas,
+                    periodicidad: num_periodicidad !== 0 ? num_periodicidad : deudores.periodicidad,
                   }));
+                  void dispatch(datos_facilidad({
+                    tasa_diaria_aplicada: tasa_diaria.toFixed(2),
+                    porcentaje_abono: deudores.porcentaje_abonado,
+                    fecha_pago_abono: deudores.fecha_abono,
+                    cuotas: num_cuota !== 0 ? num_cuota : deudores.cuotas,
+                    periodicidad: num_periodicidad !== 0 ? num_periodicidad : deudores.periodicidad,
+                  }))
                   set_modal(true);
                 } catch (error: any) {
                   throw new Error(error);
