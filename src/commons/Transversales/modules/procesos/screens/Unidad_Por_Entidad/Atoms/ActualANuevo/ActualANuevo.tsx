@@ -22,12 +22,15 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { filtrarOrganigramas } from './utils/function/filterOrganigramas';
 import { GridActualANuevo } from '../../components/GridActualANuevo/GridActualANuevo';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
+import { useAppDispatch } from '../../../../../../../../hooks';
+import { setGridActualANuevo } from '../../toolkit/UxE_slice/UxE_slice';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const ActualANuevo: FC = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
   //* dispatch declaration
+  const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
   //! use_u_x_entidad hooks
@@ -170,25 +173,31 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
                         onChange={(selectedOption) => {
                           handleGridActualANuevo(true);
-                          //* dentro de esta seleccion, tambien debe existir una selección de modo
-                          /*  dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          ); */
-                          // 1. se realiza la consuta del listado de personas del organigrama actual
+                          //* dentro de esta seleccion, tambien debe existir una selección de modo que se pueda realizar la consulta de las unidades que se deben mostrar en la tabla de asignaciones
+                          //! 1. se realiza la consuta del listado de personas del organigrama actual
                           void getListadoPersonasOrganigramaActual().then(
-                            (res) => {
+                            (resListaPersonas: any) => {
                               void getListaUnidadesOrganigramaSeleccionado(
                                 selectedOption.value
-                              ).then((res) => {
-                                console.log('res', res);
+                              ).then((resListaUnidades) => {
+                                const dataMixed = resListaPersonas?.data?.map(
+                                  (item: any) => {
+                                    return {
+                                      ...item,
+                                      unidadesDisponiblesParaTraslado:
+                                        resListaUnidades?.data
+                                    };
+                                  }
+                                );
+                                // ! realizo la asignaciónde la dataMixed
+                                dispatch(setGridActualANuevo(dataMixed))
+                                console.log('data mixed', data);
                               });
                             }
                           );
                           // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado
 
-                          console.log('selectedOption', selectedOption);
+                          // console.log('selectedOption', selectedOption);
                           onChange(selectedOption);
                         }}
                         /* isDisabled={
