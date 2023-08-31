@@ -165,7 +165,6 @@ export const useEstantesHook = (): any => {
   const onsubmit_editar = async (): Promise<any> => {
     try {
       set_is_saving_estante(true);
-      console.log(nuevo_orden, orden, 'Nuevo orden, orden');
       if (!nuevo_orden && !orden) {
         control_error(
           'Hubo un error, intente nuevamente, si el error persiste comuníquese con el administrador'
