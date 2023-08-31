@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { type Slice } from './types/UxE_slice.types';
 
-const initialState = {
+const initialState: Slice = {
   //* --- control mode traslado unidad x entidad --- *//
   controlModoTrasladoUnidadXEntidad: 'modo_entrada_sin_validaciones',
 

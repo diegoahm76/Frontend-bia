@@ -190,8 +190,8 @@ export const ActualANuevo: FC = (): JSX.Element => {
                                   }
                                 );
                                 // ! realizo la asignaciónde la dataMixed
-                                dispatch(setGridActualANuevo(dataMixed))
-                                console.log('data mixed', data);
+                                dispatch(setGridActualANuevo(dataMixed));
+                                console.log('data mixed', dataMixed);
                               });
                             }
                           );
