@@ -7,7 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../../Estantes/context/context';
 // import { ButtonAdminCarpetas } from './ButtonAdminCarpetas';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { set_current_cajas, set_current_mode_estantes } from '../../store/slice/indexDeposito';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarCajas: React.FC = () => {
@@ -34,7 +36,22 @@ export const ListarCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row, 'params.row');
+              dispatch(
+                set_current_cajas({
+                  ...cajas,
+                  id_bandeja: params.row.id_bandeja_estante,
+                  id_caja: params.row.id_caja_bandeja,
+                  identificacion_caja: params.row.identificacion_por_bandeja,
+                  orden_caja: params.row.orden_ubicacion_por_bandeja,
+                })
+              );
+              dispatch(
+                set_current_mode_estantes({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
             }}
           >
             <Avatar
@@ -46,8 +63,8 @@ export const ListarCajas: React.FC = () => {
               }}
               variant="rounded"
             >
-              <ChecklistOutlinedIcon
-                titleAccess="Seleccionar caja"
+              <EditIcon
+                titleAccess="Editar caja"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -64,8 +81,11 @@ export const ListarCajas: React.FC = () => {
   const { rows_cajas, id_bandeja, fetch_data_caja_bandeja } =
     useContext(DataContext);
 
+  const dispatch = useAppDispatch();
+
+  const { cajas } = useAppSelector((state) => state.deposito);
+
   useEffect(() => {
-    console.log(id_bandeja, 'id_bandeja');
     if (id_bandeja) {
       void fetch_data_caja_bandeja();
     }

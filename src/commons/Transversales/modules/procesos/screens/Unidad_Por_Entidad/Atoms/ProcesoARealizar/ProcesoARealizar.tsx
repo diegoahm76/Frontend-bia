@@ -64,7 +64,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         });
 */
         console.log(
-          'hay campos en la tabla T026, se debe manejar otro comportamiento'
+          'si hay datos en la tabla temporal, se debe manejar otro comportamiento'
         );
       }
 
@@ -101,60 +101,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
           'Traslado de unidad organizanizacionales de organigrama anterior a actual'
       }
     ];
-   /* if (
-      controlModoTrasladoUnidadXEntidad === 'modo_entrada_sin_validaciones' ||
-      controlFaseEntrada === 1
-    ) {
-      return [
-        {
-          //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
-          label:
-            'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
-        },
-        {
-          //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
-          label:
-            'Traslado de unidad organizanizacionales de organigrama anterior a actual'
-        }
-      ];
-    } else if (
-      controlModoTrasladoUnidadXEntidad ===
-        'modo_entrada_con_validacion_organigrma_actual_a_nuevo' &&
-      controlFaseEntrada !== 1
-    ) {
-      return [
-        {
-          //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
-          label:
-            'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
-        }
-      ];
-    } else if (
-      controlModoTrasladoUnidadXEntidad ===
-        'modo_entrada_con_validacion_organigrama_anterior_a_actual' &&
-      controlFaseEntrada !== 1
-    ) {
-      return [
-        {
-          //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
-          label:
-            'Traslado de unidad organizanizacionales de organigrama anterior a actual'
-        }
-      ];
-    } else {
-      return [
-        {
-          //* el value también va a representar el modo de entrada
-          value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
-          label:
-            'Traslado de unidad organizanizacionales de organigrama anterior a actual'
-        }
-      ];
-    } */
   }
 
   return (

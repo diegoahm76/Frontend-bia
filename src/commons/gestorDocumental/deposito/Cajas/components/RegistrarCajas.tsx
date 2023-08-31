@@ -6,7 +6,7 @@ import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useAppSelector } from '../../../../../hooks';
-import { lazy, useContext, useEffect } from 'react';
+import { lazy, useContext, useEffect, useState } from 'react';
 import { DataContext } from '../../Estantes/context/context';
 import { useCajaHook } from '../hook/useCajaHook';
 // import { MoverCaja } from './MoverCaja';
@@ -33,18 +33,31 @@ export const RegistrarCaja: React.FC = () => {
     set_nuevo_orden,
   } = useCajaHook();
 
-  const { data_estantes } = useAppSelector((state) => state.deposito);
+  const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
 
   const { nuevo_orden_estantes_selected } = useContext(DataContext);
 
-//   useEffect(() => {
-//     reset_cajas({
-//       identificacion_por_deposito: data_estantes?.identificacion_por_deposito,
-//       orden: data_estantes?.orden_ubicacion_por_deposito,
-//       nuevo_orden: '',
-//     });
-//     set_orden(data_estantes?.orden_ubicacion_por_deposito);
-//   }, [data_estantes]);
+  const [title, setTitle] = useState("Cajas");
+
+
+  useEffect(() => {
+    if(mode_estante.crear){
+      setTitle("Registrar Caja");
+      reset_cajas({
+        identificacion_por_bandeja: '',
+        orden: '',
+        nuevo_orden: '',
+      });
+    } else if (mode_estante.editar) {
+      setTitle("Editar Caja");
+      reset_cajas({
+        identificacion_por_bandeja: cajas.identificacion_caja,
+        orden: cajas.orden_caja,
+        nuevo_orden: '',
+      });
+    }
+
+  }, [cajas, mode_estante]);
 
   return (  
     <>
@@ -64,7 +77,7 @@ export const RegistrarCaja: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Edición de estantes" />
+          <Title title={title} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller

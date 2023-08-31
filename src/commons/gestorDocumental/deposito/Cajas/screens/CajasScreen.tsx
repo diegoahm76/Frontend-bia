@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
@@ -7,6 +8,7 @@ import { LoadingButton } from '@mui/lab';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import { lazy } from 'react';
+import { useAppSelector } from '../../../../../hooks';
 
 const RegistrarCaja = lazy(async () => {
   const module = await import('../components/RegistrarCajas');
@@ -40,6 +42,8 @@ const ListarCarpetas = lazy(async () => {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CajasScreen: React.FC = () => {
+  const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
+
   return (
     <>
       <form
@@ -67,9 +71,9 @@ export const CajasScreen: React.FC = () => {
           </Grid>
         </Grid>
         <BusquedaEstanteCajas />
-        <RegistrarCaja />
-        <ListarCajas />
-        <ListarCarpetas />
+        {mode_estante.crear || mode_estante.editar ? <RegistrarCaja /> : null}
+        {cajas.id_bandeja ? <ListarCajas /> : null}
+        {cajas.id_caja ? <ListarCarpetas /> : null}
         <Grid container spacing={2} justifyContent="flex-end">
           <BusquedaCajas />
           <Grid item>
