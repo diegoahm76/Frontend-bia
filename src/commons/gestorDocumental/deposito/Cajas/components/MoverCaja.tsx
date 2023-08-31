@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   Button,
@@ -19,7 +18,10 @@ import { DataContext } from '../../Estantes/context/context';
 import { useCajaHook } from '../hook/useCajaHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MoverCaja: React.FC = () => {
+interface IProps {
+  Disabled: boolean;
+}
+export const MoverCaja: React.FC<IProps> = ({ Disabled }: IProps) => {
   const {
     control_mover_cajas,
     errors_mover_cajas,
@@ -27,7 +29,6 @@ export const MoverCaja: React.FC = () => {
     set_value_mover_cajas,
     onsubmit_mover_cajas,
 
-    selectedItem,
     handleSelectChange,
 
     open_dialog,
@@ -56,8 +57,6 @@ export const MoverCaja: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('id_deposito', id_deposito);
-    console.log('id_estante', id_estante);
     if (id_deposito) {
       void fetch_data_estantes_mover_cajas();
     }
@@ -79,6 +78,7 @@ export const MoverCaja: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
+          disabled={Disabled}
           onClick={() => {
             handle_click_open();
           }}
@@ -99,7 +99,7 @@ export const MoverCaja: React.FC = () => {
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              void onsubmit_mover_cajas(e);
+              void onsubmit_mover_cajas();
             }}
           >
             <Grid
@@ -283,10 +283,7 @@ export const MoverCaja: React.FC = () => {
                       }
                     >
                       {estantes_selected.map((option) => (
-                        <MenuItem
-                          key={option.value}
-                          value={option.value}
-                        >
+                        <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -322,10 +319,7 @@ export const MoverCaja: React.FC = () => {
                       }
                     >
                       {bandejas_selected.map((option) => (
-                        <MenuItem
-                          key={option.value}
-                          value={option.value}
-                        >
+                        <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -349,7 +343,7 @@ export const MoverCaja: React.FC = () => {
                   <LoadingButton
                     variant="outlined"
                     color="success"
-                    disabled={!selectedItem || is_saving_mover_caja}
+                    disabled={is_saving_mover_caja}
                     loading={is_saving_mover_caja}
                     type="submit"
                   >

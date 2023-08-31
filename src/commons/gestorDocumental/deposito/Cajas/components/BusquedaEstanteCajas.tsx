@@ -39,7 +39,8 @@ export const BusquedaEstanteCajas: React.FC = () => {
     depositos_selected_mover_estante,
     id_estante,
     id_bandeja,
-    bandejas_selected,
+    bandejas_selected_get,
+    set_orden,
     set_id_bandeja,
     set_id_estante,
     fetch_data_depositos,
@@ -76,6 +77,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_orden(params.row.orden_ubicacion_por_deposito);
               reset({
                 identificacion_estante: params.row.identificacion_por_deposito,
                 orden_estante: params.row.orden_ubicacion_por_deposito,
@@ -348,7 +350,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                   }}
                   value={value}
                   onChange={onChange}
-                  options={bandejas_selected as any[]}
+                  options={bandejas_selected_get as any[]}
                   placeholder="Seleccionar"
                   isDisabled={!id_estante}
                 />

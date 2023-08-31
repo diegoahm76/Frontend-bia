@@ -22,6 +22,8 @@ import {
   get_caja_carpetas,
   get_cajas_bandeja,
 } from '../../Cajas/services/services';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { type AxiosError } from 'axios';
 
 interface UserContext {
   // * id
@@ -47,6 +49,8 @@ interface UserContext {
   nuevo_orden_estantes_selected: ValueProps[];
   nuevo_orden_cajas_selected: ValueProps[];
   estantes_selected: ValueProps[];
+  bandejas_selected_get: ValueProps[];
+  set_bandejas_selected_get: (value: ValueProps[]) => void;
   bandejas_selected: ValueProps[];
   set_depositos_selected: (value: ValueProps[]) => void;
   set_sucusal_selected: (value: ValueProps[]) => void;
@@ -69,6 +73,8 @@ interface UserContext {
   // * info
   identificacion_deposito: string;
   set_identificacion_deposito: (value: string) => void;
+  identificacion_caja: string;
+  set_identificacion_caja: (value: string) => void;
 
   // * fetch
   fetch_data_sucursal: () => Promise<void>;
@@ -109,6 +115,8 @@ export const DataContext = createContext<UserContext>({
   nuevo_orden_cajas_selected: [],
   estantes_selected: [],
   bandejas_selected: [],
+  bandejas_selected_get: [],
+  set_bandejas_selected_get: () => {},
   set_depositos_selected: () => {},
   set_sucusal_selected: () => {},
   set_depositos_selected_mover_estante: () => {},
@@ -130,6 +138,8 @@ export const DataContext = createContext<UserContext>({
   // * info
   identificacion_deposito: '',
   set_identificacion_deposito: () => {},
+  identificacion_caja: '',
+  set_identificacion_caja: () => {},
 
   // * fetch
   fetch_data_sucursal: async () => {},
@@ -189,6 +199,9 @@ export const UserProvider = ({
     ValueProps[]
   >([]);
 
+  const [bandejas_selected_get, set_bandejas_selected_get] = React.useState<
+    ValueProps[]
+  >([]);
   // * rows
 
   const [rows_estantes, set_rows_estantes] = React.useState<GetEstantes[]>([]);
@@ -199,6 +212,7 @@ export const UserProvider = ({
   // * info
   const [identificacion_deposito, set_identificacion_deposito] =
     React.useState<string>('');
+  const [identificacion_caja, set_identificacion_caja] = React.useState('');
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -292,7 +306,7 @@ export const UserProvider = ({
           label: item.identificacion_por_estante ?? '',
           // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
         }));
-        set_bandejas_selected(data_bandeja);
+        set_bandejas_selected_get(data_bandeja);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -323,18 +337,21 @@ export const UserProvider = ({
           identificacion_por_bandeja: item.identificacion_por_bandeja,
           orden_ubicacion_por_bandeja: item.orden_ubicacion_por_bandeja,
           id_bandeja_estante: item.id_bandeja_estante,
+          identificacion_bandeja: item.identificacion_bandeja,
         }));
         set_rows_cajas(data_cajas);
-        const data_orden_deposito: any[] = response.map((item: ICajas) => ({
+        const data_orden: any[] = response.map((item: ICajas) => ({
           value: item.orden_ubicacion_por_bandeja ?? '',
           label: item.orden_ubicacion_por_bandeja ?? '',
         }));
-        set_nuevo_orden_cajas_selected(data_orden_deposito);
+        set_nuevo_orden_cajas_selected(data_orden);
       } else {
         set_rows_cajas([]);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Hubo un error, intente de nuevo'
+      );
     }
   };
 
@@ -351,11 +368,12 @@ export const UserProvider = ({
           (item: ListarDepositos) => ({
             item,
             value: item.identificacion_por_entidad,
-            // label: item.nombre_deposito,
             label: `${item.identificacion_por_entidad} - ${item.nombre_deposito} `,
           })
         );
         set_depositos_selected_mover_estante(data_mover);
+      } else {
+        control_warning('No hay depositos disponibles');
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -372,14 +390,26 @@ export const UserProvider = ({
 
         const data_selected: any[] = filterDataMover.map(
           (item: GetEstantes) => ({
+            item,
             value: item.identificacion_por_deposito ?? '',
             label: item.identificacion_por_deposito ?? '',
           })
         );
         set_estantes_selected(data_selected);
+      } else {
+        control_warning('No hay estantes disponibles');
+        set_estantes_selected([]);
+        set_id_deposito(null);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      const err: AxiosError = error;
+      if (err?.response?.status === 404) {
+        control_warning('No hay estantes disponibles');
+        set_estantes_selected([]);
+        set_id_deposito(null);
+      } else {
+        control_error(error.response.data.detail);
+      }
     }
   };
   const fetch_data_bandejas_mover_caja = async (): Promise<void> => {
@@ -392,11 +422,16 @@ export const UserProvider = ({
 
         const data_bandeja: any[] = filterDataMover.map(
           (item: GetBandejas) => ({
+            item,
             value: item.identificacion_por_estante ?? '',
             label: item.identificacion_por_estante ?? '',
           })
         );
         set_bandejas_selected(data_bandeja);
+      } else {
+        control_warning('No hay bandejas disponibles');
+        set_bandejas_selected([]);
+        set_id_estante(null);
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -426,6 +461,8 @@ export const UserProvider = ({
     nuevo_orden_cajas_selected,
     estantes_selected,
     bandejas_selected,
+    bandejas_selected_get,
+    set_bandejas_selected_get,
     set_depositos_selected,
     set_sucusal_selected,
     set_depositos_selected_mover_estante,
@@ -445,6 +482,8 @@ export const UserProvider = ({
     // * info
     identificacion_deposito,
     set_identificacion_deposito,
+    identificacion_caja,
+    set_identificacion_caja,
     // * fetch
     fetch_data_sucursal,
     fetch_data_depositos,
