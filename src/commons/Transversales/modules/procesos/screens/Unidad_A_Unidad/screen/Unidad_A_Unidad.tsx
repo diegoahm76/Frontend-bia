@@ -20,6 +20,8 @@ import {
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { Grid } from '@mui/material';
+import { containerStyles } from '../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 
 const OrgAnteriorScreen = lazy(async () => {
   const module = await import(
@@ -128,6 +130,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
       });
     });
   }, []);
+
   if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
   { 
   return (
