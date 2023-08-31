@@ -9,7 +9,8 @@ import {
   getUnidadesOrgAnterior
 } from '../toolkit/thunks/thunks_uni_a_uni';
 import {
-  useAppDispatch /* useAppSelector */
+  useAppDispatch, /* useAppSelector */
+  useAppSelector
 } from '../../../../../../../hooks';
 import {
   setOrganigramaAnterior,
@@ -131,22 +132,21 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
     });
   }, []);
 
-  if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
-  { 
-  return (
-    <Grid
-      container
-      sx={{
-        ...containerStyles,
-        position: 'static',
-        display: 'flex',
-        justifyContent: 'center'
-      }}
-    >
-      <Loader altura="100vh" />
-    </Grid>
-  );
-}
+  if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+    );
+  }
 
   return (
     <>

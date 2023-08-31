@@ -181,7 +181,9 @@ export const ActualANuevo: FC = (): JSX.Element => {
                             (res) => {
                               void getListaUnidadesOrganigramaSeleccionado(
                                 selectedOption.value
-                              );
+                              ).then((res) => {
+                                console.log('res', res);
+                              });
                             }
                           );
                           // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado

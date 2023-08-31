@@ -130,7 +130,6 @@ export const getListadoPersonasOrganigramaActual = async (): Promise<any> => {
   try {
     const url = `transversal/organigrama/listado-personas-organigrama/`;
     const { data } = await api.get(url);
-    console.log('listado de personas del organigrama actual', data);
     return data;
   } catch (error: any) {
     console.log(error);
@@ -143,7 +142,6 @@ export const getListaUnidadesOrganigramaSeleccionado = async (
   try {
     const url = `transversal/organigrama/unidades/get-by-organigrama/${id_organigrama}/`;
     const { data } = await api.get(url);
-    console.log('lista de unidades del organigrama seleccionado ', data);
     return data;
   } catch (error: any) {
     console.log(error);
