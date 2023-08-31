@@ -85,7 +85,8 @@
   "scripts": {
     "dev": "node --max-old-space-size=4096 node_modules/react-scripts/scripts/start.js",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "node --max_old_space_size=4096 node_modules/react-scripts/scripts/build.js",
+    "build -wm": "react-scripts build",
     "test": "react-scripts test --watchAll",
     "eject": "react-scripts eject",
     "cosmos": "cosmos",
