@@ -2,17 +2,17 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC /* useState */, useState } from 'react';
+import { type FC /* useState */ } from 'react';
 import { RenderDataGrid } from './../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { colOrgActANuevo } from './columns/collOrgActANuevo';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 
 import Select from 'react-select';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { setGridActualANuevo } from '../../toolkit/UxE_slice/UxE_slice';
-import { Button } from '@mui/material';
-import { Controller } from 'react-hook-form';
-import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
+import { setGridActualANuevo, setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
+import { Button, Tooltip } from '@mui/material';
+// import { Controller } from 'react-hook-form';
+// import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 
 export const GridActualANuevo: FC<any> = (): JSX.Element => {
@@ -21,24 +21,31 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* use states redux declaration
-  const { gridActualANuevo } = useAppSelector((state) => state.u_x_e_slice);
+  const { gridActualANuevo, unidadesSeleccionadas } = useAppSelector((state) => state.u_x_e_slice);
 
   //* hook use_x_entidad
-  const {
-    control_grid_actual_a_nuevo
-    // reset_grid_actual_a_nuevo,
-    // watch_grid_actual_a_nuevo
-  } = use_u_x_entidad();
+/*  const {
+     control_grid_actual_a_nuevo
+    reset_grid_actual_a_nuevo,
+    watch_grid_actual_a_nuevo
+  } = use_u_x_entidad(); */
 
   const title = 'Traslado masivo de organigrama actual a nuevo';
 
-  const [unidadesSeleccionadas, setUnidadesSeleccionadas] = useState<any[]>([]);
+  // const [unidadesSeleccionadas, setUnidadesSeleccionadas] = useState<any[]>([]);
 
   const onChange = (idPersona: number, unidadSeleccionada: any) => {
-    setUnidadesSeleccionadas({
+    dispatch(setUnidadesSeleccionadas({
       ...unidadesSeleccionadas,
       [idPersona]: unidadSeleccionada
-    });
+    }));
+  };
+
+  const handleLimpiarSelect = (idPersona: any) => {
+    dispatch(setUnidadesSeleccionadas({
+      ...unidadesSeleccionadas,
+      [idPersona]: null
+    }));
   };
 
   // const [rowData, setRowData] = useState<any[]>([]);
@@ -57,50 +64,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   obtenerDatos();
 }, []); */
 
-  /*  const handleCheckboxChange = (
-    event: any,
-    id_unidad_organizacional: number,
-    params: any
-  ): void => {
-    console.log(params.row, 'params.row');
-    const unidadActualizada = gridActualANuevo?.find((unidad: any) =>
-      unidad?.unidadesDisponiblesParaTraslado?.some(
-        (unidadDisponible: any) =>
-          unidadDisponible.id_unidad_organizacional === id_unidad_organizacional
-      )
-    );
-    if (unidadActualizada) {
-      const unidadesActualizaciónActivo = gridActualANuevo?.map((unidad: any) =>
-        unidad === unidadActualizada
-          ? {
-              ...unidad,
-              unidadesDisponiblesParaTraslado:
-                unidad.unidadesDisponiblesParaTraslado?.map(
-                  (unidadDisponible: any) =>
-                    unidadDisponible.id_unidad_organizacional ===
-                    id_unidad_organizacional
-                      ? { ...unidadDisponible, marcado: event.target.checked }
-                      : unidadDisponible
-                )
-            }
-          : unidad
-      );
-      // Eliminar la propiedad "marcado" antes de actualizar el estado
-      const unidadesActualizaciónActivoSinMarcado =
-        unidadesActualizaciónActivo?.map((unidad: any) => {
-          const { marcado, ...unidadSinMarcado } = unidad;
-          return unidadSinMarcado;
-        });
-      dispatch(setGridActualANuevo(unidadesActualizaciónActivoSinMarcado));
-    }
-  }; */
 
-  /*  const handleSelectChange = (event: any, rowIndex: number) => {
-    const newData = [...gridActualANuevo];
-    newData[rowIndex].unidadesDisponiblesParaTraslado = event.target.value;
-    dispatch(setGridActualANuevo(newData));
-  };
-*/
   /* const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
   const unidadesSeleccionadas = rowData.filter(row => row.seleccionado);
@@ -118,59 +82,58 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       width: 220,
       renderCell: (params: any) => (
         <>
-          <Controller
+          {/*          <Controller
             name="nuevaUnidadParaTraslado"
             control={control_grid_actual_a_nuevo}
             rules={{ required: true }}
-            render={({ field: { /* onChange */ value }, fieldState: { error } }) => (
-              <div>
-                <Select
-                  styles={{
-                    container: (provided, state) => ({
-                      ...provided,
-                      width: '200px',
-                      height: '30px',
-                      zIndex: 9999,
-                      borderRadius: '5px'
-                      // padding: '5px'
-                    })
-                    /* menu: (provided, state) => ({
+            render={({ field: { onChange, value }, fieldState: { error } }) => ( */}
+          <div>
+            <Select
+              styles={{
+                container: (provided, state) => ({
+                  ...provided,
+                  width: '200px',
+                  height: '30px',
+                  zIndex: 9999,
+                  borderRadius: '5px'
+                  // padding: '5px'
+                })
+                /* menu: (provided, state) => ({
                       ...provided,
                       zIndex: 9999,
                       width: '200px'
                     }) */
-                  }}
-                  value={value}
-                  onChange={(selectedOption) => {
-                    // onChange(selectedOption);
-                    onChange(
-                      params.row.id_persona,
-                      selectedOption
-                    );
-                  }}
-                  menuPortalTarget={document.body}
-                  // isDisabled={!control_format_documental_type._formValues.item.value}
-                  options={params?.row?.unidadesDisponiblesParaTraslado?.map(
-                    (unidad: any) => ({
-                      value: unidad.id_unidad_organizacional,
-                      label: unidad.nombre,
-                      data: unidad
-                    })
-                  )}
-                  placeholder="Seleccionar"
-                />
-              </div>
-            )}
-          />
+              }}
+              value={unidadesSeleccionadas[params.row.id_persona]}
+              // value={value}
+              onChange={(selectedOption) => {
+                // onChange(selectedOption);
+                onChange(params.row.id_persona, selectedOption);
+              }}
+              menuPortalTarget={document.body}
+              // isDisabled={!control_format_documental_type._formValues.item.value}
+              options={params?.row?.unidadesDisponiblesParaTraslado?.map(
+                (unidad: any) => ({
+                  value: unidad.id_unidad_organizacional,
+                  label: unidad.nombre,
+                  data: unidad
+                })
+              )}
+              placeholder="Seleccionar"
+            />
+          </div>
+          {/*  )}
+          /> */}
         </>
       )
     },
     {
       headerName: 'Acciones',
       field: 'acción',
-      width: 60,
+      width: 100,
       renderCell: (params: any) => (
         <>
+        <Tooltip title="Limpiar lista desplegable">
           <Button
             variant="outlined"
             color="primary"
@@ -181,10 +144,10 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
             }}
             startIcon={<CleaningServicesIcon />}
             onClick={() => {
-              console.log(params.row, 'params.row');
-              // handleSelectChange(event, params.rowIndex);
+              handleLimpiarSelect(params.row.id_persona);
             }}
           />
+          </Tooltip>
         </>
       )
 

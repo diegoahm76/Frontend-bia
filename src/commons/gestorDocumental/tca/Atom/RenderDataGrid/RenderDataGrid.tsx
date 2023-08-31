@@ -41,7 +41,7 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                   rows={rows}
                   columns={columns}
                   pageSize={10}
-                  rowHeight={100}
+                  rowHeight={75}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}
                   getRowId={(row) => uuidv4()}
