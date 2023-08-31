@@ -64,6 +64,7 @@ export interface IObjSucursales {
 export interface IObjBandeja {
   id_estante_deposito?: number | null;
   id_bandeja_estante?: number | null;
+  identificacion_por_deposito?: number | null;
   orden_ubicacion_por_estante?: number | null;
   identificacion_por_estante?: string | number | null;
 }
