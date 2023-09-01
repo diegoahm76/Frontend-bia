@@ -1,16 +1,27 @@
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
-import type { Expediente, FormDetalleLiquidacion, FormLiquidacion } from "../../interfaces/liquidacion";
+import type { Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
-import { useEffect, useState } from "react";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { type Dispatch, type SetStateAction } from "react";
+import dayjs, { type Dayjs } from "dayjs";
+import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
   nombre_deudor: string;
-  form_detalle_liquidacion: FormDetalleLiquidacion[];
+  rows_detalles: RowDetalles[];
+  expedientes_deudor: Expediente[];
+  expediente_liquidado: boolean;
+  fecha_liquidacion: dayjs.Dayjs;
+  fecha_vencimiento: dayjs.Dayjs;
+  id_liquidacion_pdf: string;
   handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
   handle_submit_liquidacion: () => void;
+  set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
+  set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
 }
 
 const periodos = [
@@ -32,37 +43,43 @@ const periodos = [
 export const GenerarLiquidacion: React.FC<IProps> = ({
   form_liquidacion,
   nombre_deudor,
-  form_detalle_liquidacion,
+  rows_detalles,
+  expedientes_deudor,
+  expediente_liquidado,
+  fecha_liquidacion,
+  fecha_vencimiento,
+  id_liquidacion_pdf,
   handle_input_form_liquidacion_change,
   handle_select_form_liquidacion_change,
-  handle_submit_liquidacion
+  handle_submit_liquidacion,
+  set_fecha_liquidacion,
+  set_fecha_vencimiento,
 }: IProps) => {
-  const [expedientes_deudor, set_expedientes_deudor] = useState<Expediente[]>([]);
-  const [expediente_liquidado, set_expediente_liquidado] = useState(false);
 
-  useEffect(() => {
-    if (form_liquidacion.id_deudor !== '') {
-      api.get(`recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`)
+  const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_liquidacion(date);
+    }
+  };
+
+  const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_vencimiento(date);
+    }
+  };
+
+  const handle_print_bill = (): void => {
+    if (id_liquidacion_pdf) {
+      api.get(`recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`)
         .then((response) => {
-          set_expedientes_deudor(response.data.data);
+          console.log(response);
+          window.open(response.config.url, '_blank', 'rel=noopener noreferrer');
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [form_liquidacion.id_deudor]);
-
-  useEffect(() => {
-    if (form_liquidacion.id_expediente !== '') {
-      api.get(`recaudo/liquidaciones/expedientes/${form_liquidacion.id_expediente}`)
-        .then((response) => {
-          set_expediente_liquidado(response.data.data.liquidado);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-    }
-  }, [form_liquidacion.id_expediente]);
+  };
 
   return (
     <>
@@ -101,30 +118,42 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TextField
-            type="date"
-            label='Fecha de liquidación'
-            InputLabelProps={{ shrink: true }}
-            helperText='Ingrese la fecha de liquidación'
-            size="small"
-            fullWidth
-            name="fecha_liquidacion"
-            value={form_liquidacion.fecha_liquidacion}
-            onChange={handle_input_form_liquidacion_change}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha de liquidación"
+              value={fecha_liquidacion}
+              onChange={(newValue) => { cambio_fecha_liquidacion(newValue); }}
+              inputFormat="DD/MM/YYYY"
+              renderInput={(params) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  helperText='Ingrese la fecha de liquidación'
+                  {...params}
+                />
+              )}
+              maxDate={dayjs()}
+            />
+          </LocalizationProvider>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TextField
-            type="date"
-            label='Fecha de vencimiento'
-            InputLabelProps={{ shrink: true }}
-            helperText='Ingrese la fecha de vencimiento'
-            size="small"
-            fullWidth
-            name="vencimiento"
-            value={form_liquidacion.vencimiento}
-            onChange={handle_input_form_liquidacion_change}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha de vencimiento"
+              value={fecha_vencimiento}
+              onChange={(newValue) => { cambio_fecha_vencimiento(newValue); }}
+              inputFormat="DD/MM/YYYY"
+              renderInput={(params) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  helperText='Ingrese la fecha de vencimiento'
+                  {...params}
+                />
+              )}
+              maxDate={dayjs()}
+            />
+          </LocalizationProvider>
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl size="small" fullWidth>
@@ -166,13 +195,31 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
       <Grid container justifyContent={'center'}>
         <Grid item xs={12} sm={3}>
           {expediente_liquidado ?
-            <Typography variant="h5" color={'green'} sx={{ textAlign: 'center' }}>Expediente ya liquidado</Typography> :
+            <>
+              <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                startIcon={<PrintIcon />}
+                onClick={handle_print_bill}
+              >
+                Imprimir recibo
+              </Button>
+            </> :
             <Button
               color="primary"
               variant="contained"
               startIcon={<SaveIcon />}
               fullWidth
-              disabled={form_liquidacion.id_deudor === '' || form_liquidacion.id_expediente === '' || form_liquidacion.fecha_liquidacion === '' || form_liquidacion.vencimiento === '' || form_liquidacion.periodo_liquidacion === '' || form_detalle_liquidacion.length === 0}
+              disabled={
+                form_liquidacion.id_deudor === '' ||
+                form_liquidacion.id_expediente === '' ||
+                fecha_liquidacion.toString() === '' ||
+                fecha_vencimiento.toString() === '' ||
+                form_liquidacion.periodo_liquidacion === '' ||
+                rows_detalles.length === 0
+              }
               onClick={handle_submit_liquidacion}
             >
               Guardar nueva liquidación
