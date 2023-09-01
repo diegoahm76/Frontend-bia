@@ -81,7 +81,15 @@ export const CreateProcesoModal = ({
         etapas_filtradas.push(item);
       }
     });
-    set_etapas_categorias(etapas_filtradas);
+    const new_etapas_filtradas = etapas_filtradas.map((etapa) => ({ ...etapa, subetapas: take_duplicated_objects(etapa.subetapas) }));
+    set_etapas_categorias(new_etapas_filtradas);
+  };
+
+  const take_duplicated_objects = (categorias: CategoriaAtributo[]): CategoriaAtributo[] => {
+    const unique_categorias: CategoriaAtributo[] = categorias.filter((value, index, self) => index === self.findIndex((element) => (
+      element.id === value.id
+    )));
+    return unique_categorias;
   };
 
   const set_filtered_categorias = (id_etapa: string): void => {
@@ -111,7 +119,7 @@ export const CreateProcesoModal = ({
     const { id_etapa, id_categoria } = form_data;
     create_new_proceso(fecha_inicio.format('YYYY-MM-DDTHH:mm:ss'), Number(id_etapa), Number(id_categoria));
     set_fecha_inicio(dayjs(new Date()));
-    set_form_data({id_etapa: '', id_categoria: ''});
+    set_form_data({ id_etapa: '', id_categoria: '' });
     handle_close();
   };
 
