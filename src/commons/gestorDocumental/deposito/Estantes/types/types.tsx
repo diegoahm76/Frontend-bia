@@ -73,3 +73,8 @@ export interface PutMoverEstantes {
   identificacion_por_entidad_destino: string;
   nombre_deposito_destino: string;
 }
+
+export interface ListarOrdenSiguiente {
+  success:         boolean;
+  orden_siguiente: number;
+}

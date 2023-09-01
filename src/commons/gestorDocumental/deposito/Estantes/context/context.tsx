@@ -7,6 +7,7 @@ import type {
   GetBandejas,
   GetEstantes,
   ListarDepositos,
+  ListarOrdenSiguiente,
   ListarSucursales,
 } from '../types/types';
 import {
@@ -14,6 +15,7 @@ import {
   get_bandejas_estante,
   get_estantes_deposito,
   get_sucursales,
+  listar_orden_estantes,
 } from '../services/services';
 import { control_error } from '../../../../../helpers';
 import type { ICajas, ICarpetas } from '../../Cajas/types/types';
@@ -21,6 +23,7 @@ import { useAppSelector } from '../../../../../hooks/hooks';
 import {
   get_caja_carpetas,
   get_cajas_bandeja,
+  listar_orden_cajas,
 } from '../../Cajas/services/services';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { type AxiosError } from 'axios';
@@ -77,6 +80,8 @@ interface UserContext {
   set_identificacion_deposito: (value: string) => void;
   identificacion_caja: string;
   set_identificacion_caja: (value: string) => void;
+  orden_siguiente: ListarOrdenSiguiente | undefined;
+  set_orden_siguiente: (value: ListarOrdenSiguiente | undefined) => void;
 
   // * fetch
   fetch_data_sucursal: () => Promise<void>;
@@ -85,6 +90,8 @@ interface UserContext {
   fetch_data_bandejas_estantes: () => Promise<void>;
   fetch_data_caja_carpeta: () => Promise<void>;
   fetch_data_caja_bandeja: () => Promise<void>;
+  fetch_data_orden_estante: () => Promise<void>;
+  fetch_data_orden_cajas: () => Promise<void>;
 
   // ? --------------------------------- Mover cajas ---------------------------------
   fetch_data_depositos_mover_caja: () => Promise<void>;
@@ -144,6 +151,11 @@ export const DataContext = createContext<UserContext>({
   set_identificacion_deposito: () => {},
   identificacion_caja: '',
   set_identificacion_caja: () => {},
+  orden_siguiente: {
+    success: false,
+    orden_siguiente: 0,
+  },
+  set_orden_siguiente: () => {},
 
   // * fetch
   fetch_data_sucursal: async () => {},
@@ -152,6 +164,8 @@ export const DataContext = createContext<UserContext>({
   fetch_data_bandejas_estantes: async () => {},
   fetch_data_caja_carpeta: async () => {},
   fetch_data_caja_bandeja: async () => {},
+  fetch_data_orden_estante: async () => {},
+  fetch_data_orden_cajas: async () => {},
 
   // ? --------------------------------- Mover cajas ---------------------------------
   fetch_data_depositos_mover_caja: async () => {},
@@ -206,10 +220,8 @@ export const UserProvider = ({
   const [bandejas_selected_get, set_bandejas_selected_get] = React.useState<
     ValueProps[]
   >([]);
-  const [
-  depositos_selected_mover_caja,
-  set_depositos_selected_mover_caja,
-] = React.useState<ValueProps[]>([]);
+  const [depositos_selected_mover_caja, set_depositos_selected_mover_caja] =
+    React.useState<ValueProps[]>([]);
 
   // * rows
 
@@ -222,6 +234,7 @@ export const UserProvider = ({
   const [identificacion_deposito, set_identificacion_deposito] =
     React.useState<string>('');
   const [identificacion_caja, set_identificacion_caja] = React.useState('');
+  const [orden_siguiente, set_orden_siguiente] = React.useState<ListarOrdenSiguiente>();
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -303,12 +316,12 @@ export const UserProvider = ({
           })
         );
         set_rows_bandejas(data_bandejas);
-        const data_selected: any[] = response.map((item: GetBandejas) => ({
-          value: item.orden_ubicacion_por_estante ?? '',
-          label: item.orden_ubicacion_por_estante ?? '',
-          // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
-        }));
-        set_nuevo_orden_estantes_selected(data_selected);
+        // const data_selected: any[] = response.map((item: GetBandejas) => ({
+        //   value: item.orden_ubicacion_por_estante ?? '',
+        //   label: item.orden_ubicacion_por_estante ?? '',
+        //   // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+        // }));
+        // set_nuevo_orden_estantes_selected(data_selected);
 
         const data_bandeja: any[] = response.map((item: GetBandejas) => ({
           value: item.id_bandeja_estante ?? '',
@@ -362,7 +375,27 @@ export const UserProvider = ({
         error.response.data.detail || 'Hubo un error, intente de nuevo'
       );
     }
+  }
+
+  const fetch_data_orden_estante = async (): Promise<void> => {
+    try {
+      const response = await listar_orden_estantes();
+      set_orden_siguiente(response);
+      // console.log('response', response);
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
   };
+  const fetch_data_orden_cajas = async (): Promise<void> => {
+    try {
+      const response = await listar_orden_cajas();
+      set_orden_siguiente(response);
+      // console.log('response', response);
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
 
   // ? --------------------------------- Mover cajas ---------------------------------
   const fetch_data_depositos_mover_caja = async (): Promise<void> => {
@@ -495,6 +528,8 @@ export const UserProvider = ({
     set_identificacion_deposito,
     identificacion_caja,
     set_identificacion_caja,
+    orden_siguiente,
+    set_orden_siguiente,
     // * fetch
     fetch_data_sucursal,
     fetch_data_depositos,
@@ -502,6 +537,8 @@ export const UserProvider = ({
     fetch_data_bandejas_estantes,
     fetch_data_caja_carpeta,
     fetch_data_caja_bandeja,
+    fetch_data_orden_estante,
+    fetch_data_orden_cajas,
     // ? --------------------------------- Mover cajas ---------------------------------
 
     fetch_data_depositos_mover_caja,

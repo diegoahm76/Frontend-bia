@@ -11,8 +11,8 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
-import { Suspense } from 'react';
-import { Loader } from '../../../utils/Loader/Loader';
+// import { Suspense } from 'react';
+// import { Loader } from '../../../utils/Loader/Loader';
 
 const routes = [
   {
@@ -68,7 +68,7 @@ const routes = [
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-    <Suspense fallback={<Loader />}>
+    // <Suspense fallback={<Loader />}>
       <Routes>
         {routes.map((route) => (
           <Route
@@ -79,6 +79,6 @@ export const GestorDocumentalRoutes: React.FC = () => {
         ))}
         <Route path="/*" element={<Page404 />} />
       </Routes>
-    </Suspense>
+    // </Suspense>
   );
 };

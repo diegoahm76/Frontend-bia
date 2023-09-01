@@ -7,7 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContext } from '../../Estantes/context/context';
 // import { ButtonAdminCarpetas } from './ButtonAdminCarpetas';
-import { set_current_cajas, set_current_mode_estantes } from '../../store/slice/indexDeposito';
+import {
+  set_current_cajas,
+  set_current_mode_estantes,
+} from '../../store/slice/indexDeposito';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -36,6 +39,8 @@ export const ListarCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_orden(params.row.orden_ubicacion_por_bandeja);
+              set_identificacion_caja(params.row.identificacion_por_bandeja);
               set_orden(params.row.orden_ubicacion_por_bandeja);
               dispatch(
                 set_current_cajas({
@@ -80,8 +85,13 @@ export const ListarCajas: React.FC = () => {
     },
   ];
 
-  const { rows_cajas, id_bandeja, set_orden, fetch_data_caja_bandeja } =
-    useContext(DataContext);
+  const {
+    rows_cajas,
+    id_bandeja,
+    set_orden,
+    set_identificacion_caja,
+    fetch_data_caja_bandeja,
+  } = useContext(DataContext);
 
   const dispatch = useAppDispatch();
 
