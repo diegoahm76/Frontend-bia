@@ -23,6 +23,7 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
 export const analitica_mortalidad: any = (filtros: {seleccion_vivero: string,seleccion_planta: any,fecha_desde: string,fecha_hasta: string}) => {
   return async () => {
     try {
+      console.log(filtros.seleccion_vivero);
       const { data } = await api.get(`conservacion/analitica/analitica-mortalidad-tiempo/get/?id_bien=${filtros.seleccion_planta === 0 ? '' : filtros.seleccion_planta.id_bien.toString()}&id_vivero=${filtros.seleccion_vivero}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}`);
       return data;
     } catch (error: any) {

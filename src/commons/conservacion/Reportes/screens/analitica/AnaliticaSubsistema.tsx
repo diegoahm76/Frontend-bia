@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, Autocomplete, Checkbox, type AutocompleteChangeReason, type AutocompleteChangeDetails, FormControlLabel, Paper, Divider, FormHelperText } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, Autocomplete, Checkbox, type AutocompleteChangeReason, type AutocompleteChangeDetails, FormControlLabel, Paper, Divider, FormHelperText, Card, CardContent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from "react-router-dom";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { jsPDF } from 'jspdf';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import dayjs from "dayjs";
 import { useAppDispatch } from "../../../../../hooks";
 import { obtener_tipos_bien, obtener_viveros } from "../../../dashBoardViveros/thunks/DashBoardViveros";
@@ -39,7 +39,10 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
     const [axis, set_axis] = useState<any[]>([]);
     const [reporte, set_reporte] = useState<any[]>([]);
     const [tipo_axis, set_tipo_axis] = useState<string>("");
+    const [titulo, set_titulo] = useState<string>("");
     const [seleccion_vivero, set_seleccion_vivero] = useState<any[]>([]);
+    const [seleccion_vivero_string, set_seleccion_vivero_string] = useState<string>("");
+    const [seleccion_tipo_elemento_string, set_seleccion_tipo_elemento_string] = useState<string>("");
     const [seleccion_tipo_elemento, set_seleccion_tipo_elemento] = useState<any[]>([]);
     const [lista_viveros, set_lista_viveros] = useState<any[]>([]);
     const [lista_tipo_bien, set_lista_tipo_bien] = useState<any[]>([]);
@@ -72,35 +75,35 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
     }
 
     const analitica_mortalidad_fc: () => void = () => {
-        dispatch(analitica_mortalidad({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        dispatch(analitica_mortalidad({ seleccion_vivero: seleccion_vivero_string, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const analitica_bajas_fc: () => void = () => {
-        dispatch(analitica_bajas({ seleccion_vivero, seleccion_tipo_elemento, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        dispatch(analitica_bajas({ seleccion_vivero: seleccion_vivero_string, seleccion_tipo_elemento: seleccion_tipo_elemento_string, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const analitica_cuarentena_fc: () => void = () => {
-        dispatch(analitica_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        dispatch(analitica_cuarentena({ seleccion_vivero: seleccion_vivero_string, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const analitica_despachos_fc: () => void = () => {
-        dispatch(analitica_despachos({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        dispatch(analitica_despachos({ seleccion_vivero: seleccion_vivero_string, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const analitica_solicitudes_fc: () => void = () => {
-        dispatch(analitica_solicitudes({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        dispatch(analitica_solicitudes({ seleccion_vivero: seleccion_vivero_string, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
@@ -108,20 +111,26 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
     }
 
     const visualizar_analitica: () => void = () => {
+        set_reporte([]);
         if (seleccion_reporte === 'MT') {
             analitica_mortalidad_fc();
+            set_titulo('Mortalidad a través del tiempo');
         }
         if (seleccion_reporte === 'BT') {
             analitica_bajas_fc();
+            set_titulo('Bajas de Bienes a Través del Tiempo');
         }
         if (seleccion_reporte === 'CT') {
             analitica_cuarentena_fc();
+            set_titulo('Cuarentena a través del tiempo');
         }
         if (seleccion_reporte === 'DMT') {
             analitica_despachos_fc();
+            set_titulo('Despacho de Material Vegetal a través del tiempo');
         }
         if (seleccion_reporte === 'SMT') {
             analitica_solicitudes_fc();
+            set_titulo('Solicitudes de Material Vegetal a través del tiempo');
         }
     }
 
@@ -194,10 +203,24 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
     const handle_change_autocomplete = (e: React.SyntheticEvent<Element, Event>, value: any[], r: AutocompleteChangeReason, d?: AutocompleteChangeDetails<any>): void => {
         set_error_vivero(value.length === 0);
         set_seleccion_vivero(value.map((e: any) => { return { id_vivero: e.id_vivero, nombre: e.nombre } }));
+        let return_string = '';
+        if (value.length === 0) {
+            set_seleccion_vivero_string('');
+            return
+        }
+        value.forEach(vivero => { return_string = return_string + vivero.id_vivero + ',' });
+        set_seleccion_vivero_string(return_string.substring(0, return_string.length - 1));
     };
 
     const cambio_seleccion_tipo = (e: React.SyntheticEvent<Element, Event>, value: any[], r: AutocompleteChangeReason, d?: AutocompleteChangeDetails<any>): void => {
-        set_seleccion_tipo_elemento(value.map((e: any) => {  return { 0: e[0], 1: e[1] } }));
+        set_seleccion_tipo_elemento(value.map((e: any) => { return { 0: e[0], 1: e[1] } }));
+        let return_string = '';
+        if (value.length === 0) {
+            set_seleccion_tipo_elemento_string('');
+            return
+        }
+        value.forEach(tipos => { return_string = return_string + tipos[0] + ',' });
+        set_seleccion_tipo_elemento_string(return_string.substring(0, return_string.length - 1));
     };
 
     const cambio_reporte: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -214,6 +237,16 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
         set_fecha_hasta(date);
         set_error_fecha_hasta(date === null);
     };
+
+    const limpiar: () => void = () => {
+       set_seleccion_planta(0);
+       set_seleccion_reporte('');
+       set_reporte([]);
+       set_seleccion_tipo_elemento([]);
+       set_seleccion_vivero([]);
+       set_seleccion_vivero_string('');
+       set_seleccion_tipo_elemento_string('');
+    }
 
     const salir_entrada: () => void = () => {
         navigate('/home');
@@ -324,7 +357,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                     spacing={2}
                                 >
                                     {seleccion_reporte === 'BT' && <Grid item xs={12} sm={6}>
-                                    <Autocomplete
+                                        <Autocomplete
                                             multiple
                                             id="checkboxes-tags-demo"
                                             options={lista_tipo_bien}
@@ -345,7 +378,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                             )}
                                             onChange={cambio_seleccion_tipo}
                                             renderInput={(params) => (
-                                                <TextField {...params} label="Tipo de bien"/>
+                                                <TextField {...params} label="Tipo de bien" />
                                             )}
                                         />
                                     </Grid>}
@@ -453,7 +486,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <Grid
+            {reporte.length !== 0 && <Grid
                 container
                 sx={{
                     position: 'relative',
@@ -468,21 +501,25 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="center"
-                                    spacing={2}
-                                    sx={{ mt: '20px' }}
-                                >
-                                    <Grid item xs={12} sm={12}>
-                                        <AnaliticaChart resumen={undefined} axis={axis} tipo_axis={tipo_axis} />
-                                    </Grid>
-                                </Stack>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="center"
+                                        >
+                                            <Typography variant="h5">
+                                                {titulo}
+                                            </Typography>
+                                        </Stack>
+                                        <AnaliticaChart reporte={reporte} axis={axis} tipo_axis={tipo_axis} />
+
+                                    </CardContent>
+                                </Card>
                             </Grid>
                         </Grid>
                     </Box>
                 </Grid>
-            </Grid>
+            </Grid>}
             <Grid container justifyContent="flex-end">
                 <Grid item xs={7}>
                     <Stack
@@ -491,6 +528,14 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                         spacing={2}
                         sx={{ mt: '20px', mr: '60px' }}
                     >
+                        <Button
+                            color='warning'
+                            variant='outlined'
+                            startIcon={<CleanIcon />}
+                            onClick={limpiar}
+                        >
+                            Limpiar
+                        </Button>
                         <Button
                             color='error'
                             variant='contained'
