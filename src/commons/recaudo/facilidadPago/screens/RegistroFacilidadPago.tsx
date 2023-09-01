@@ -36,8 +36,6 @@ interface RootStateSolicitud {
   }
 }
 
-
-
 interface BienInput {
   id: number;
   descripcion: string;
@@ -122,11 +120,11 @@ export const RegistroFacilidadPago: React.FC = () => {
     set_obligaciones_ids(arr_ids);
   }, [obligaciones])
 
-  const handle_close = (): void => { set_modal(false) }
+  const handle_close = (): void => { set_modal(false) };
 
   const capitalize = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  };
 
   const get_lista_bienes = async (): Promise<void> => {
     try {
@@ -135,7 +133,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     } catch (error: any) {
       throw new Error(error);
     }
-  }
+  };
 
   const get_lista_garantias = async (): Promise<void> => {
     try {
@@ -144,7 +142,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     } catch (error: any) {
       throw new Error(error);
     }
-  }
+  };
 
   useEffect(() => {
     void get_lista_bienes();
@@ -158,7 +156,7 @@ export const RegistroFacilidadPago: React.FC = () => {
       count = count + 1
       arr.push(count)
     }
-    set_arr_periodicidad(arr)
+    set_arr_periodicidad(arr);
   }, [limite])
 
   const columns_bienes: GridColDef[] = [

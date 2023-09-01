@@ -137,11 +137,25 @@ export const TablaPlanPagosUsuario: React.FC = () => {
       field: 'estado',
       headerName: 'Estado',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        let estado = '';
+        const fecha_actual = new Date();
+        const fecha_vencimiento = new Date(params.row.fecha_vencimiento);
+        fecha_actual.setHours(0,0,0,0);
+        fecha_vencimiento.setHours(0,0,0,0);
+        if(params.row.fecha_pago !== null){
+          estado = 'Pagada';
+        } else if(fecha_actual.getTime() <= fecha_vencimiento.getTime()){
+          estado = 'Pendiente';
+        } else if(fecha_actual.getTime() > fecha_vencimiento.getTime()){
+          estado = 'Vencida';
+        }
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {estado}
+          </div>
+        )
+      }
     },
   ];
 

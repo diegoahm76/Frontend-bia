@@ -1,12 +1,13 @@
 import { Title } from '../../../../components/Title';
 import { EncabezadoSolicitud } from '../componentes/EncabezadoSolicitud';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
+import { DialogoRegistro } from '../componentes/DialogoRegistro';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox, DialogContent, DialogContentText } from "@mui/material";
 import { Close, Save, CloudUpload, Help } from '@mui/icons-material';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
-import { type event, type check, type FacilidadPagoSolicitud, type Resolucion } from '../interfaces/interfaces';
+import { type event, type check, type FacilidadPagoSolicitud, type Resolucion, type RespuestaFacilidadPago } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { VistaProyeccionPagos } from '../componentes/VistaProyeccionPagos';
@@ -45,8 +46,10 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
   const [plan_pagos_pregunta, set_plan_pagos_pregunta] = useState('');
   const [resolucion_pregunta, set_resolucion_pregunta] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
+  const [modal, set_modal] = useState(false);
   const [modal_anular, set_modal_anular] = useState(false);
   const [modal_plan_pagos, set_modal_plan_pagos] = useState(false);
+  const [respuesta_registro, set_respuesta_registro] = useState<RespuestaFacilidadPago>();
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
@@ -56,6 +59,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
+  const handle_close = (): void => { set_modal(false) };
   const handle_open_anular = (): void => { set_modal_anular(true) };
   const handle_close_anular = (): void => { set_modal_anular(false) };
   const handle_close_plan_pagos = (): void => { set_modal_plan_pagos(false) };
@@ -68,6 +72,12 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
       set_file_name(selected_file.name);
     }
   };
+
+  useEffect(() => {
+    if(respuesta_registro !== undefined){
+      set_modal(true);
+    }
+  }, [respuesta_registro])
 
   return (
     <>
@@ -130,7 +140,11 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         >
                           <MenuItem value="ingresado">Ingresado</MenuItem>
                           <MenuItem value="revision">En revisión</MenuItem>
-                          <MenuItem value="anulado" onClick={handle_open_anular}>Cancelado/Anulado</MenuItem>
+                          {
+                            plan_pagos.success && resolucion_facilidad.success ? (
+                              <MenuItem onClick={handle_open_anular}>Cancelado/Anulado</MenuItem>
+                            ) : null
+                          }
                         </Select>
                       </FormControl>
                     </Grid>
@@ -404,13 +418,21 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       startIcon={<Save />}
                       sx={{ marginTop: '30px' }}
                       onClick={() => {
-                        void post_respuesta_fac_pago({
-                          ...form_state,
-                          id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
-                          id_funcionario: solicitud_facilidad.facilidad_pago.id_funcionario,
-                          reportado_dbme: check_dbme,
-                          informe_dbme: file,
-                        })
+                        const post_registro = async (): Promise<void> => {
+                          try {
+                            const { data: { data: res_registro } } = await post_respuesta_fac_pago({
+                              ...form_state,
+                              id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
+                              id_funcionario: solicitud_facilidad.facilidad_pago.id_funcionario,
+                              reportado_dbme: check_dbme,
+                              informe_dbme: file,
+                            })
+                            set_respuesta_registro(res_registro ?? {});
+                          } catch (error: any) {
+                            throw new Error(error);
+                          }
+                        }
+                        void post_registro();
                       }}
                     >
                       Actualizar / Enviar
@@ -419,6 +441,13 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                 </Box>
               </Grid>
             </Grid>
+            <DialogoRegistro
+              titulo_notificacion='La Respuesta de Facilidad de Pago fue Registrada con Éxito'
+              tipo=''
+              numero_registro={undefined}
+              abrir_modal={modal}
+              abrir_dialog={handle_close}
+            />
           </>
         ) : null
       }

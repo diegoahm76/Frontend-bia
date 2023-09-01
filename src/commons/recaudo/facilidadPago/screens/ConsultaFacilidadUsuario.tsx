@@ -48,6 +48,11 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
   const { resolucion_facilidad } = useSelector((state: RootStateValidacionResolucion) => state.resolucion_facilidad);
   const navigate = useNavigate();
 
+  const capitalize = (str: string): string => {
+    const str_min = str.toLowerCase();
+    return str_min.charAt(0).toUpperCase() + str_min.slice(1);
+  };
+
   return (
     <>
       <Grid
@@ -167,7 +172,7 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
                         fullWidth
                         label="Estado"
                         size="small"
-                        value={''.concat(facilidades.estado)}
+                        value={capitalize(''.concat(facilidades.estado))}
                         disabled
                       />
                     </Grid>

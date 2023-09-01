@@ -107,10 +107,14 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
-                  void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                  void dispatch(get_validacion_plan_pagos(params.row.id_facilidad));
-                  void dispatch(get_validacion_resolucion(params.row.id_facilidad));
-                  navigate('../solicitud');
+                  try {
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    void dispatch(get_validacion_plan_pagos(params.row.id_facilidad));
+                    void dispatch(get_validacion_resolucion(params.row.id_facilidad));
+                    navigate('../solicitud');
+                  } catch (error: any) {
+                    throw new Error(error)
+                  }
                 }}
               >
                 <Avatar

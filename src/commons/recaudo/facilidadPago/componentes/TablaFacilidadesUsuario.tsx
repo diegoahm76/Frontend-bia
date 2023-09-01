@@ -25,6 +25,11 @@ export const TablaFacilidadesUsuario: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
+  const capitalize = (str: string): string => {
+    const str_min = str.toLowerCase();
+    return str_min.charAt(0).toUpperCase() + str_min.slice(1);
+  };
+
   useEffect(() => {
     set_visible_rows(facilidades)
   }, [facilidades])
@@ -62,7 +67,7 @@ export const TablaFacilidadesUsuario: React.FC = () => {
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {capitalize(params.value)}
         </div>
       ),
     },
@@ -70,37 +75,59 @@ export const TablaFacilidadesUsuario: React.FC = () => {
       field: 'acciones',
       headerName: 'Acción',
       width: 150,
-      renderCell: (params) => (
-        <Tooltip title="Ver">
-          <IconButton
-            onClick={() => {
-              try {
-                void dispatch(get_seguimiento_fac(params.row.id));
-                void dispatch(get_facilidad_solicitud(params.row.id));
-                void dispatch(get_validacion_plan_pagos(params.row.id));
-                void dispatch(get_validacion_resolucion(params.row.id));
-                navigate('../seguimiento');
-              } catch (error: any) {
-                throw new Error(error);
-              }
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+      renderCell: (params) => {
+        return capitalize(params.row.estado) !== 'Sin responder'? (
+          <Tooltip title="Ver">
+            <IconButton
+              onClick={() => {
+                try {
+                  void dispatch(get_seguimiento_fac(params.row.id));
+                  void dispatch(get_facilidad_solicitud(params.row.id));
+                  void dispatch(get_validacion_plan_pagos(params.row.id));
+                  void dispatch(get_validacion_resolucion(params.row.id));
+                  navigate('../seguimiento');
+                } catch (error: any) {
+                  throw new Error(error);
+                }
               }}
-              variant="rounded"
             >
-              <Article
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-      ),
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <Article
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip disableFocusListener disableHoverListener disableInteractive disableTouchListener title="Ver">
+            <IconButton
+              disabled
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <Article
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        )
+      }
     },
   ];
 

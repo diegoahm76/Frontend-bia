@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { type TablasAmortizacion, type ProyeccionPago, type AmortizacionDatosDeudor, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+import { DialogoRegistro } from '../componentes/DialogoRegistro';
+import { type TablasAmortizacion, type ProyeccionPago, type AmortizacionDatosDeudor, type FacilidadPagoSolicitud, type PlanPagoValidacion } from '../interfaces/interfaces';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_seguimiento_fac } from '../slices/FacilidadesSlice';
 import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
@@ -51,12 +52,16 @@ export const TablaProyeccionPagos: React.FC = () => {
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const [lista, set_lista] = useState(Array<ProyeccionPago>);
+  const [modal, set_modal] = useState(false);
+  const [respuesta_registro, set_respuesta_registro] = useState<PlanPagoValidacion>();
   const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
   const { solicitud_facilidad } = useSelector((state: RootStateFacilidad) => state.solicitud_facilidad);
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { facilidades } = useSelector((state: RootStateGenerarPlanPagos) => state.facilidades);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+
+  const handle_close = (): void => { set_modal(false) };
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -76,6 +81,12 @@ export const TablaProyeccionPagos: React.FC = () => {
   useEffect(() => {
     set_lista(plan_pagos.proyeccion_plan)
   }, [plan_pagos])
+
+  useEffect(() => {
+    if(respuesta_registro !== undefined){
+      set_modal(true);
+    }
+  }, [respuesta_registro])
 
   const columns: GridColDef[] = [
     {
@@ -297,22 +308,26 @@ export const TablaProyeccionPagos: React.FC = () => {
                   variant='contained'
                   startIcon={<Save />}
                   onClick={() => {
-                    try {
-                      void post_plan_pagos({
-                        id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
-                        id_tasa_interes: 1,
-                        tasa_diaria_aplicada: facilidades.tasa_diaria_aplicada,
-                        abono_aplicado: parseFloat(deudores.valor_abonado),
-                        porcentaje_abono: facilidades.porcentaje_abono,
-                        fecha_pago_abono: facilidades.fecha_pago_abono,
-                        nro_cuotas: facilidades.cuotas,
-                        periodicidad: facilidades.periodicidad,
-                        saldo_total: plan_pagos.resumen_facilidad.saldo_total,
-                        intreses_mora: plan_pagos.resumen_facilidad.intreses_mora,
-                      })
-                    } catch (error: any) {
-                      throw new Error(error)
+                    const post_registro = async (): Promise<void> => {
+                      try {
+                        const { data: { data: res_registro } } = await post_plan_pagos({
+                          id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
+                          id_tasa_interes: 1,
+                          tasa_diaria_aplicada: facilidades.tasa_diaria_aplicada,
+                          abono_aplicado: parseFloat(deudores.valor_abonado),
+                          porcentaje_abono: facilidades.porcentaje_abono,
+                          fecha_pago_abono: facilidades.fecha_pago_abono,
+                          nro_cuotas: facilidades.cuotas,
+                          periodicidad: facilidades.periodicidad,
+                          saldo_total: plan_pagos.resumen_facilidad.saldo_total,
+                          intreses_mora: plan_pagos.resumen_facilidad.intreses_mora,
+                        })
+                        set_respuesta_registro(res_registro ?? {});
+                      } catch (error: any) {
+                        throw new Error(error)
+                      }
                     }
+                    void post_registro();
                   }}
                 >
                   Guardar Plan de Pagos
@@ -321,6 +336,13 @@ export const TablaProyeccionPagos: React.FC = () => {
             </Stack>
           </Grid>
       </Grid>
+      <DialogoRegistro
+        titulo_notificacion='El Plan de Pagos fue Registrado con Éxito'
+        tipo=''
+        numero_registro={undefined}
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   );
 }

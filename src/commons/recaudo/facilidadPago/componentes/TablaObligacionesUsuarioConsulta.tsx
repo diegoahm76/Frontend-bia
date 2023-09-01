@@ -224,81 +224,89 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <p>
-                {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
-              </p>
-              <DataGrid
-                autoHeight
-                disableSelectionOnClick
-                rows={lista_obligaciones}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => faker.database.mongodbObjectId()}
-              />
-            </Box>
-          </Grid>
-          <Stack
-            direction="row"
-            justifyContent="right"
-            spacing={2}
-            sx={{ mt: '30px' }}
-          >
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Total Capital"
-                size="small"
-                fullWidth
-                value={capital_cop}
-              />
+        {
+          lista_obligaciones.length !== 0 ? (
+            <Grid item xs={12}>
+              <Grid item>
+                <Box sx={{ width: '100%' }}>
+                  <p>
+                    {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
+                  </p>
+                  <DataGrid
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={lista_obligaciones}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
+                  />
+                </Box>
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                sx={{ mt: '30px' }}
+              >
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Capital"
+                    size="small"
+                    fullWidth
+                    value={capital_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Intereses"
+                    size="small"
+                    fullWidth
+                    value={intereses_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label={<strong>Gran Total a Deber</strong>}
+                    size="small"
+                    fullWidth
+                    value={total_cop}
+                  />
+                </Grid>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<Add />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {
+                  if(obligaciones.tiene_facilidad){
+                    handle_open(1);
+                  } else if(selected.length === 0){
+                    handle_open(2);
+                  } else {
+                    navigate('../registro');
+                    void handle_submit();
+                  }
+                }}
+              >
+                Crear Facilidad de Pago
+              </Button>
+            </Stack>
             </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Total Intereses"
-                size="small"
-                fullWidth
-                value={intereses_cop}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label={<strong>Gran Total a Deber</strong>}
-                size="small"
-                fullWidth
-                value={total_cop}
-              />
-            </Grid>
-        </Stack>
-        <Stack
-          direction="row"
-          justifyContent="right"
-          spacing={2}
-          sx={{ mb: '20px' }}
-        >
-          <Button
-            color='primary'
-            variant='contained'
-            startIcon={<Add />}
-            sx={{ marginTop: '30px' }}
-            onClick={() => {
-              if(obligaciones.tiene_facilidad){
-                handle_open(1);
-              } else if(selected.length === 0){
-                handle_open(2);
-              } else {
-                navigate('../registro');
-                void handle_submit();
-              }
-            }}
-          >
-            Crear Facilidad de Pago
-          </Button>
-        </Stack>
-        </Grid>
+          ) : (
+            <p>
+              {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}
+            </p>
+          )
+        }
       </Grid>
       <DialogoInformativo
         tipo_notificacion={ modal_opcion === 1 ? 'error' : 'warn' }
