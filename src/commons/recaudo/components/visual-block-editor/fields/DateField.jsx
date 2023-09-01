@@ -60,3 +60,4 @@ class ReactDateField extends BlocklyReactField {
 Blockly.fieldRegistry.register('field_react_date', ReactDateField);
 
 export { ReactDateField };
+
