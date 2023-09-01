@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Divider,
   Grid,
@@ -32,6 +33,8 @@ import { DataContext } from '../../Estantes/context/context';
 import type { InfoEstantes } from '../../Estantes/types/types';
 import { search_estante } from '../../Estantes/services/services';
 import Select from 'react-select';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstanteCajas: React.FC = () => {
@@ -62,7 +65,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
       width: 250,
     },
     {
-      field: 'identificacion_deposito',
+      field: 'nombre_deposito',
       headerName: 'DEPÓSITO DE ARCHIVO',
       sortable: true,
       width: 250,
@@ -79,9 +82,10 @@ export const BusquedaEstanteCajas: React.FC = () => {
             onClick={() => {
               set_orden(params.row.orden_ubicacion_por_deposito);
               reset({
+                ...data_watch,
                 identificacion_estante: params.row.identificacion_por_deposito,
                 orden_estante: params.row.orden_ubicacion_por_deposito,
-                nombre_deposito: params.row.identificacion_deposito,
+                // deposito: params.row.nombre_deposito,
               });
               set_id_estante(params.row.id_estante_deposito);
 
@@ -132,6 +136,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
     defaultValues: {
       identificacion_estante: '',
       orden_estante: '',
+      // deposito: '',
       nombre_deposito: {
         value: '',
         label: '',
@@ -316,6 +321,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
             onClick={() => {
               handle_click_open();
             }}
@@ -495,6 +501,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                     type="submit"
                     variant="contained"
                     color="primary"
+                    startIcon={<SearchIcon />}
                     loading={is_search}
                     disabled={is_search}
                     // onClick={(e) => {
@@ -531,6 +538,19 @@ export const BusquedaEstanteCajas: React.FC = () => {
             </Grid>
           </form>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
       </Dialog>
     </>
   );

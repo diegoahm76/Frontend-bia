@@ -9,13 +9,13 @@ import { useAppSelector } from '../../../../../hooks';
 import { lazy, useContext, useEffect, useState } from 'react';
 import { DataContext } from '../../Estantes/context/context';
 import { useCajaHook } from '../hook/useCajaHook';
-// import { MoverCaja } from './MoverCaja';
+import { MoverCaja } from './MoverCaja';
 // import Select from 'react-select';
 
-const MoverCaja = lazy(async () => {
-  const module = await import('../components/MoverCaja');
-  return { default: module.MoverCaja };
-});
+// const MoverCaja = lazy(async () => {
+//   const module = await import('../components/MoverCaja');
+//   return { default: module.MoverCaja };
+// });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistrarCaja: React.FC = () => {
@@ -33,17 +33,25 @@ export const RegistrarCaja: React.FC = () => {
 
   const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
 
-  const { nuevo_orden_cajas_selected, set_nuevo_orden } =
-    useContext(DataContext);
+  const {
+    nuevo_orden_cajas_selected,
+    orden_siguiente,
+    fetch_data_orden_cajas,
+    set_nuevo_orden,
+  } = useContext(DataContext);
 
   const [title, setTitle] = useState('Cajas');
+
+  useEffect(() => {
+    void fetch_data_orden_cajas();
+  }, []);
 
   useEffect(() => {
     if (mode_estante.crear) {
       setTitle('Registrar Caja');
       reset_cajas({
         identificacion_por_bandeja: '',
-        orden: '',
+        orden: orden_siguiente?.orden_siguiente,
         nuevo_orden: '',
       });
     } else if (mode_estante.editar) {
@@ -54,7 +62,7 @@ export const RegistrarCaja: React.FC = () => {
         nuevo_orden: '',
       });
     }
-  }, [cajas, mode_estante]);
+  }, [cajas, mode_estante, orden_siguiente]);
 
   return (
     <>
