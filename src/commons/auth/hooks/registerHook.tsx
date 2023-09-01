@@ -109,7 +109,7 @@ export const use_register = (): ReisterHookNew => {
           }
           set_is_avaiable(true);
           set_no_has_user(true);
-          return;
+          // return;
         } else {
           set_message_error(
             'Lo sentimos, este documento ya tiene un usuario, puede iniciar sesión con su usuario y contraseña, si ha olvidado sus datos de acceso, dirigase al inicio de sesión y haga click en ¿Olvidó su contraseña?'
@@ -117,7 +117,7 @@ export const use_register = (): ReisterHookNew => {
           set_is_error(true);
           reset();
           set_is_avaiable(false);
-          return;
+          // return;
         }
       } else {
         // Habilitamos todo el formulario
