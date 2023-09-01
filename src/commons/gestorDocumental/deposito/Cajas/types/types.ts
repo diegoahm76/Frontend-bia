@@ -20,8 +20,18 @@ export interface ICajas {
     identificacion_por_bandeja: string;
     orden_ubicacion_por_bandeja: number;
     id_bandeja_estante: number;
+    identificacion_bandeja: string;
 }
 export interface PostCajas {
     id_bandeja_estante: number;
     identificacion_por_bandeja: string;
+}
+export interface IPutCajas {
+    identificacion_bandeja_destino: string;
+    identificacion_estante_destino: string;
+    identificacion_deposito_destino: string;
+}
+export interface IPutOrdenCaja {
+    identificacion_por_bandeja: string;
+    orden_ubicacion_por_bandeja: number;
 }

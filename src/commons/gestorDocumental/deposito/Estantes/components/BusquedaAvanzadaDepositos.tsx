@@ -273,7 +273,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
               handle_click_open();
             }}
           >
-            Búscar
+            Buscar
           </Button>
         </Grid>
         {id_deposito && (

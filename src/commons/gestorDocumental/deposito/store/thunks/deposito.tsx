@@ -175,7 +175,7 @@ export const eliminar_deposito = (
             }
             return data;
         } catch (error: any) {
-            console.log('annul_despacho_service');
+
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -203,7 +203,7 @@ export const get_bandejas_id = (
         }
     };
 };
-
+// crear bandeja
 
 export const crear_bandeja: any = (
     bandeja: any,
@@ -217,11 +217,11 @@ export const crear_bandeja: any = (
             console.log(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
-                control_success(data.detail)
+                //  control_success(data.detail)
             } else {
                 control_error(data.detail)
             }
-            // control_success(' se agrego correctamente');
+            control_success('Se creo correctamente la bandeja');
             return data;
         } catch (error: any) {
             console.log(error);
@@ -263,11 +263,13 @@ export const editar_bandeja: any = (
 // listar estantes por deposito 
 
 export const get_estantes_deposito = (
-    id: string | number | null,
+    nombre_deposito: string | null,
+    identificacion_estante: string | number | null,
+    orden_estante: string | number | null,
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`gestor/depositos-archivos/estanteDeposito/listar-estante-por-deposito/${id ?? ''}/`);
+            const { data } = await api.get(`gestor/depositos-archivos/bandejaEstante/buscar-estante/?nombre_deposito=${nombre_deposito ?? ''}&identificacion_estante=${identificacion_estante ?? ''}&orden_estante=${orden_estante ?? ''}`);
 
             if (data.success === true) {
                 dispatch(set_estantes(data.data));
@@ -277,6 +279,56 @@ export const get_estantes_deposito = (
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// mover bandeja
+
+export const mover_bandeja: any = (
+    id: number,
+    bandeja: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.put(`gestor/depositos-archivos/bandejaEstante/mover-bandeja/${id}/`, bandeja);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+            control_success('Se traslado correctamente la bandeja');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// eliminar bandeja
+export const eliminar_bandeja = (
+    id: number | string,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.delete(`gestor/depositos-archivos/deposito/eliminar/${id}/`
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
 
             return error as AxiosError;
         }
