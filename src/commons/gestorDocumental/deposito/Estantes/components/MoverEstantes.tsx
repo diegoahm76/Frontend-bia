@@ -16,6 +16,7 @@ import { useContext, useEffect } from 'react';
 import { DataContext } from '../context/context';
 import { LoadingButton } from '@mui/lab';
 import { useAppSelector } from '../../../../../hooks';
+import { confirmarAccion } from '../../utils/function';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MoverEstantes: React.FC = () => {
@@ -115,7 +116,11 @@ export const MoverEstantes: React.FC = () => {
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              void onsubmit_mover_estantes(e);
+              void confirmarAccion(
+                onsubmit_mover_estantes,
+                '¿Estás seguro de mover el estante?'
+              );
+              // void onsubmit_mover_estantes(e);
             }}
           >
             <Grid

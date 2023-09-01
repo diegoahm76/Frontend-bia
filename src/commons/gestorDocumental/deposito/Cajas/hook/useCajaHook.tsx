@@ -89,6 +89,7 @@ export const useCajaHook = (): any => {
     set_id_deposito,
     set_id_estante,
     fetch_data_caja_bandeja,
+    fetch_data_orden_cajas,
   } = useContext(DataContext);
 
   const [open_dialog, set_open_dialog] = useState(false);
@@ -145,6 +146,7 @@ export const useCajaHook = (): any => {
         };
         await post_caja(data_caja);
         await fetch_data_caja_bandeja();
+        await fetch_data_orden_cajas()
         control_success('Se creó caja correctamente');
         dispatch(
           set_current_mode_estantes({
