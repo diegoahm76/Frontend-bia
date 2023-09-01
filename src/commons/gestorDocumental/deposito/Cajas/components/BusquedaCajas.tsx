@@ -35,6 +35,7 @@ import type { IBuscarCaja } from '../types/types';
 export const BusquedaCajas: React.FC = () => {
   const {
     depositos_selected_mover_estante,
+    set_nuevo_orden_cajas_selected,
     set_id_bandeja,
     fetch_data_depositos,
   } = useContext(DataContext);
@@ -88,7 +89,7 @@ export const BusquedaCajas: React.FC = () => {
                   editar: true,
                 })
               );
-
+              console.log('params.row', params.row);
               dispatch(
                 set_current_cajas({
                   id_caja: params.row.id_caja,
@@ -188,6 +189,11 @@ export const BusquedaCajas: React.FC = () => {
 
         if (data?.length > 0) {
           set_rows(data);
+          const data_orden: any[] = data.map((item: IBuscarCaja) => ({
+            value: item.orden_caja ?? '',
+            label: item.orden_caja ?? '',
+          }));
+          set_nuevo_orden_cajas_selected(data_orden);
         }
       } catch (error: any) {
         control_error(error.response?.data.detail);

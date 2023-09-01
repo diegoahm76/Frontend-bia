@@ -36,6 +36,7 @@ export const ListarCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_orden(params.row.orden_ubicacion_por_bandeja);
               dispatch(
                 set_current_cajas({
                   ...cajas,
@@ -43,6 +44,7 @@ export const ListarCajas: React.FC = () => {
                   id_caja: params.row.id_caja_bandeja,
                   identificacion_caja: params.row.identificacion_por_bandeja,
                   orden_caja: params.row.orden_ubicacion_por_bandeja,
+                  identificacion_bandeja: params.row.identificacion_bandeja,
                 })
               );
               dispatch(
@@ -78,7 +80,7 @@ export const ListarCajas: React.FC = () => {
     },
   ];
 
-  const { rows_cajas, id_bandeja, fetch_data_caja_bandeja } =
+  const { rows_cajas, id_bandeja, set_orden, fetch_data_caja_bandeja } =
     useContext(DataContext);
 
   const dispatch = useAppDispatch();
