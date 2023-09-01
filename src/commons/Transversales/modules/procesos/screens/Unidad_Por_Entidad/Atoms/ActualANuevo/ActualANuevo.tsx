@@ -23,8 +23,7 @@ import { filtrarOrganigramas } from './utils/function/filterOrganigramas';
 import { GridActualANuevo } from '../../components/GridActualANuevo/GridActualANuevo';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { useAppDispatch } from '../../../../../../../../hooks';
-import { setGridActualANuevo } from '../../toolkit/UxE_slice/UxE_slice';
-// import CleanIcon from '@mui/icons-material/CleaningServices';
+import { setGridActualANuevo, setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
 
 export const ActualANuevo: FC = (): JSX.Element => {
   //* navigate declaration
@@ -192,6 +191,11 @@ export const ActualANuevo: FC = (): JSX.Element => {
                                 // ! realizo la asignaciónde la dataMixed
                                 dispatch(setGridActualANuevo(dataMixed));
                                 console.log('data mixed', dataMixed);
+
+                                //* se limpian las unidades seleccionadas al realizar un cambio de organigrama - analizar que tan viable es esta opción al momento en el que se deben traer los datos
+                                dispatch(
+                                  setUnidadesSeleccionadas([])
+                                );
                               });
                             }
                           );

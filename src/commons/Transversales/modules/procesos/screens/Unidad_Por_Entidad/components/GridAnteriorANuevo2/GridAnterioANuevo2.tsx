@@ -4,48 +4,48 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC /* useState */ } from 'react';
 import { RenderDataGrid } from './../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
-import { colOrgActANuevo } from './columns/collOrgActANuevo';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import Select from 'react-select';
+// import { colOrgActANuevo } from './columns/collOrgActANuevo';
 import {
-  setUnidadesSeleccionadas
-} from '../../toolkit/UxE_slice/UxE_slice';
-import { Button, Grid, Tooltip } from '@mui/material';
-import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+  /* useAppDispatch, */ useAppSelector
+} from '../../../../../../../../hooks';
+// import Select from 'react-select';
+// import { setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
+import {/* Grid  Button,Tooltip */ } from '@mui/material';
+// import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+// import { Loader } from '../../../../../../../../utils/Loader/Loader';
+// import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { colGridAntANuevo } from './columns/colGridAntANuevo';
 
-export const GridActualANuevo: FC<any> = (): JSX.Element => {
+export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
   //* dispatch declaration
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   //* use states redux declaration
-  const { gridActualANuevo, unidadesSeleccionadas } = useAppSelector(
-    (state) => state.u_x_e_slice
-  );
+  // eslint-disable-next-line no-empty-pattern
+  const {/*  gridAnteriorAActual unidadesSeleccionadasAnteriorAActual */ } =
+    useAppSelector((state) => state.u_x_e_slice);
 
   //* hook use_x_entidad
 
   const title = 'Traslado masivo de organigrama actual a nuevo';
-  const onChange = (idPersona, unidadSeleccionada) => {
-    const unidadSeleccionadaConIdPersona = {
-      idPersona,
-      ...unidadSeleccionada,
-    };
-    dispatch(setUnidadesSeleccionadas((prevUnidadesSeleccionadas) => [
-      ...prevUnidadesSeleccionadas.filter(
-        (unidad) => unidad.idPersona !== idPersona
-      ),
-      unidadSeleccionadaConIdPersona,
-    ])
+  /*  const onChange = (idPersona: number, unidadSeleccionada: any) => {
+    dispatch(
+      setUnidadesSeleccionadasAnteriorAActual({
+        ...unidadesSeleccionadasAnteriorAActual,
+        [idPersona]: unidadesSeleccionadasAnteriorAActual
+      })
     );
   };
 
-  const handleLimpiarSelect = (idPersona) => {
-    dispatch(setUnidadesSeleccionadas((prevUnidadesSeleccionadas) =>
-      prevUnidadesSeleccionadas.filter((unidad) => unidad.idPersona !== idPersona)
-    ))
-  };
+  const handleLimpiarSelect = (idPersona: any) => {
+    dispatch(
+      setUnidadesSeleccionadasAnteriorAActual({
+        ...unidadesSeleccionadasAnteriorAActual,
+        [idPersona]: null
+      })
+    );
+  }; */
+
   /* useEffect(() => {
   const obtenerDatos = async () => {
     const datos = await obtenerDatosParaTraslado();
@@ -70,10 +70,10 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
 }; */
 
   const columnsModified = [
-    ...colOrgActANuevo,
-    {
+    ...colGridAntANuevo
+    /* {
       headerName: 'unidad organizacional nueva',
-      field: ' unidad organizacional nueva',
+      field: 'unidad organizacional nueva',
       width: 220,
       renderCell: (params: any) => (
         <>
@@ -88,7 +88,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
                   borderRadius: '5px'
                 })
               }}
-              value={unidadesSeleccionadas[params.row.id_persona]}
+              value={unidadesSeleccionadasAnteriorAActual[params.row.id_persona]}
              // value={unidadesSeleccionadas}
               onChange={(selectedOption) => {
                 // console.log(params.row.id_persona, 'selectedOption');
@@ -132,10 +132,10 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
           </Tooltip>
         </>
       )
-    }
+    } */
   ];
 
-  if (gridActualANuevo.length === 0)
+ /* if (gridAnteriorAActual.length === 0)
     return (
       <Grid
         container
@@ -149,13 +149,13 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
         <Loader altura={150} />
       </Grid>
     );
-
+*/
   return (
     //* renderiza los datos necesarios para el traslado unidades organizacionales actuales a nuevas
     <>
       <RenderDataGrid
         columns={columnsModified || []}
-        rows={gridActualANuevo || []}
+        rows={/* gridActualANuevo || */ []}
         title={title}
       />
     </>

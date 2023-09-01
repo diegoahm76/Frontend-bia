@@ -15,8 +15,10 @@ import SaveIcon from '@mui/icons-material/Save';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
-  const { controlModoTrasladoUnidadXEntidad /* controlFaseEntrada */ } =
-    useAppSelector((state) => state.u_x_e_slice);
+  const {
+    controlModoTrasladoUnidadXEntidad,
+    unidadesSeleccionadas /* controlFaseEntrada */
+  } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
 
@@ -24,6 +26,13 @@ export const CleanData: FC<any> = (): JSX.Element => {
 
   const guardarRegistrosT026 = (): void => {
     console.log('guardando registros T026');
+  /*  const elementToSendTablaTemporal = unidadesSeleccionadas.map((el: any) => {
+      return {
+        id_persona: el.idPersona,
+        id_nueva_unidad_organizacional: el.value
+      };
+    }); */
+    console.log([unidadesSeleccionadas]);
   };
 
   const procederACambioMasivoUxE = (): void => {

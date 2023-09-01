@@ -17,6 +17,9 @@ const initialState: Slice = {
   // ! --- grid actual a nuevo --- //
   gridActualANuevo: [],
   unidadesSeleccionadas: [],
+
+  gridAnteriorAActual: [],
+  unidadesSeleccionadasAnteriorAActual: []
   /*  gridActualANuevo: {
     data: [],
     dataSelectedUnidadNueva: []
@@ -55,8 +58,24 @@ export const u_x_e_slice = createSlice({
     setGridActualANuevo: (state: any, payloadAction: PayloadAction<any>) => {
       state.gridActualANuevo = payloadAction.payload;
     },
-    setUnidadesSeleccionadas: (state: any, payloadAction: PayloadAction<any>) => {
+    setUnidadesSeleccionadas: (
+      state: any,
+      payloadAction: PayloadAction<any>
+    ) => {
       state.unidadesSeleccionadas = payloadAction.payload;
+    },
+
+    //! --- set grid anterior a actual ---
+    setGridAnteriorAActual: (state: any, payloadAction: PayloadAction<any>) => {
+      state.gridAnteriorAActual = payloadAction.payload;
+    },
+
+    //! --- set unidades seleccionadas anterior a actual ---
+    setUnidadesSeleccionadasAnteriorAActual: (
+      state: any,
+      payloadAction: PayloadAction<any>
+    ) => {
+      state.unidadesSeleccionadasAnteriorAActual = payloadAction.payload;
     }
   }
 });
@@ -68,4 +87,7 @@ export const {
   //* esta funcion se debe analizar su uso , ya que tambien va a ser importante al momento de que la T026 tenga datos, así que su ejecucion se va a dar en dos momentos diferentes,probablemente en el useEffect de la pantalla principal ya que en ese momento no se da la opciókn de elegir el modo de traslado, y ese useEffect se ejecuta en el componente procesoARealizar.
   setGridActualANuevo,
   setUnidadesSeleccionadas,
+
+  setGridAnteriorAActual,
+  setUnidadesSeleccionadasAnteriorAActual,
 } = u_x_e_slice.actions;
