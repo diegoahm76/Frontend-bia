@@ -87,7 +87,7 @@ export const AnaliticaChart: React.FC<IProps> = (props: IProps) => {
       const points_data: any = [];
       props.axis.forEach(() => { points_data.push(0); });
       data.fechas.forEach((data_tiempo: any) => {
-        const fecha_reporte = data_tiempo.fecha_baja !== undefined ? data_tiempo.fecha_baja : data_tiempo.fecha_cuarentena_date !== undefined ? data_tiempo.fecha_cuarentena_date : data_tiempo.fecha_solicitud !== undefined ? data_tiempo.fecha_solicitud : data_tiempo.fecha_despachos !== undefined ? data_tiempo.fecha_despachos : undefined;
+        const fecha_reporte = data_tiempo.fecha_baja !== undefined ? data_tiempo.fecha_baja : data_tiempo.fecha_cuarentena_date !== undefined ? data_tiempo.fecha_cuarentena_date : data_tiempo.fecha_solicitud !== undefined ? data_tiempo.fecha_solicitud : data_tiempo.fecha_despacho !== undefined ? data_tiempo.fecha_despacho : undefined;
         let index_point = -1;
         // dias
         if (props.tipo_axis === 'dias') {
