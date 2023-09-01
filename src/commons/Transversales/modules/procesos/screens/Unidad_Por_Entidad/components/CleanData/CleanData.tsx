@@ -32,7 +32,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
         id_nueva_unidad_organizacional: el.value
       };
     }); */
-    console.log([unidadesSeleccionadas]);
+    console.log(unidadesSeleccionadas);
   };
 
   const procederACambioMasivoUxE = (): void => {

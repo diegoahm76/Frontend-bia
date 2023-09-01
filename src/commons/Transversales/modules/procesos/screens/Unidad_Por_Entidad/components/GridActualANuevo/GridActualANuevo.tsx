@@ -7,9 +7,7 @@ import { RenderDataGrid } from './../../../../../../../gestorDocumental/tca/Atom
 import { colOrgActANuevo } from './columns/collOrgActANuevo';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import Select from 'react-select';
-import {
-  setUnidadesSeleccionadas
-} from '../../toolkit/UxE_slice/UxE_slice';
+import { setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
 import { Button, Grid, Tooltip } from '@mui/material';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
@@ -27,25 +25,56 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   //* hook use_x_entidad
 
   const title = 'Traslado masivo de organigrama actual a nuevo';
-  const onChange = (idPersona, unidadSeleccionada) => {
-    const unidadSeleccionadaConIdPersona = {
-      idPersona,
-      ...unidadSeleccionada,
-    };
-    dispatch(setUnidadesSeleccionadas((prevUnidadesSeleccionadas) => [
-      ...prevUnidadesSeleccionadas.filter(
-        (unidad) => unidad.idPersona !== idPersona
-      ),
-      unidadSeleccionadaConIdPersona,
-    ])
+  const onChange = (idPersona: number, unidadSeleccionada: any) => {
+    dispatch(
+      setUnidadesSeleccionadas([
+        ...unidadesSeleccionadas.filter(
+          (unidad: any) => unidad.idPersona !== idPersona
+        ),
+        { idPersona, ...unidadSeleccionada }
+      ])
     );
   };
 
-  const handleLimpiarSelect = (idPersona) => {
-    dispatch(setUnidadesSeleccionadas((prevUnidadesSeleccionadas) =>
-      prevUnidadesSeleccionadas.filter((unidad) => unidad.idPersona !== idPersona)
-    ))
+  /* const handleLimpiarSelect = (idPersona: number) => {
+    dispatch(
+      setUnidadesSeleccionadas(
+        unidadesSeleccionadas.filter((unidad) => unidad.idPersona !== idPersona)
+      )
+    );
+  }; */
+
+    /*  const onChange = (idPersona: number, unidadSeleccionada: any) => {
+    dispatch(
+      setUnidadesSeleccionadasAnteriorAActual({
+        ...unidadesSeleccionadasAnteriorAActual,
+        [idPersona]: unidadesSeleccionadasAnteriorAActual
+      })
+    );
   };
+
+  const handleLimpiarSelect = (idPersona: any) => {
+    dispatch(
+      setUnidadesSeleccionadasAnteriorAActual({
+        ...unidadesSeleccionadasAnteriorAActual,
+        [idPersona]: null
+      })
+    );
+  }; */
+const handleLimpiarSelect = (idPersona: number) => {
+  const nuevasUnidadesSeleccionadas = unidadesSeleccionadas
+    .map((unidadSeleccionada) => {
+      if (unidadSeleccionada.idPersona === idPersona) {
+        return { value: null, idPersona: null, label: null };
+      } else {
+        return unidadSeleccionada;
+      }
+    })
+    .filter((unidadSeleccionada) => unidadSeleccionada.idPersona !== null);
+
+    console.log(nuevasUnidadesSeleccionadas, 'nuevasUnidadesSeleccionadas');
+  dispatch(setUnidadesSeleccionadas(nuevasUnidadesSeleccionadas));
+};
   /* useEffect(() => {
   const obtenerDatos = async () => {
     const datos = await obtenerDatosParaTraslado();
@@ -89,7 +118,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
                 })
               }}
               value={unidadesSeleccionadas[params.row.id_persona]}
-             // value={unidadesSeleccionadas}
+              // value={unidadesSeleccionadas}
               onChange={(selectedOption) => {
                 // console.log(params.row.id_persona, 'selectedOption');
                 onChange(params.row.id_persona, selectedOption);
@@ -99,8 +128,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
                 (unidad: any) => ({
                   value: unidad.id_unidad_organizacional,
                   label: unidad.nombre,
-                  // data: unidad,
-                  idPersona: params.row.id_persona,
+                  idPersona: params.row.id_persona
                 })
               )}
               placeholder="Seleccionar"
