@@ -134,7 +134,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
             setshowSecondPart(false);
             cleanFormAndGrid();
             // console.log(res);
-            //? pendiente
+            // ? pendiente
             // dispatch(setListadoPersonasUnidades(res));
             // * from this event I have to manage the modal show and hide of the grid
           });
