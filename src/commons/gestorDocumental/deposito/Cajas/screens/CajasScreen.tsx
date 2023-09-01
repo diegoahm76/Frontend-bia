@@ -6,47 +6,54 @@ import { BusquedaEstanteCajas } from '../components/BusquedaEstanteCajas';
 import { LoadingButton } from '@mui/lab';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
-import { lazy, useContext } from 'react';
-import { useAppSelector } from '../../../../../hooks';
+import { useContext, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { DataContext } from '../../Estantes/context/context';
 import { delete_caja } from '../services/services';
 import { useCajaHook } from '../hook/useCajaHook';
 import { confirmarAccion } from '../../utils/function';
+import { BusquedaCajas } from '../components/BusquedaCajas';
+import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { ListarCajas } from '../components/ListarCajas';
+import { ListarCarpetas } from '../components/ListarCarpetas';
+import { RegistrarCaja } from '../components/RegistrarCajas';
+import { set_current_mode_estantes } from '../../store/slice/indexDeposito';
 
-const RegistrarCaja = lazy(async () => {
-  const module = await import('../components/RegistrarCajas');
-  return { default: module.RegistrarCaja };
-});
+// const RegistrarCaja = lazy(async () => {
+//   const module = await import('../components/RegistrarCajas');
+//   return { default: module.RegistrarCaja };
+// });
 
-const ListarCajas = lazy(async () => {
-  const module = await import('../components/ListarCajas');
-  return { default: module.ListarCajas };
-});
+// const ListarCajas = lazy(async () => {
+//   const module = await import('../components/ListarCajas');
+//   return { default: module.ListarCajas };
+// });
 
-const BusquedaCajas = lazy(async () => {
-  const module = await import('../components/BusquedaCajas');
-  return { default: module.BusquedaCajas };
-});
+// const BusquedaCajas = lazy(async () => {
+//   const module = await import('../components/BusquedaCajas');
+//   return { default: module.BusquedaCajas };
+// });
 
-const ButtonSalir = lazy(async () => {
-  const module = await import('../../../../../components/Salir/ButtonSalir');
-  return { default: module.ButtonSalir };
-});
+// const ButtonSalir = lazy(async () => {
+//   const module = await import('../../../../../components/Salir/ButtonSalir');
+//   return { default: module.ButtonSalir };
+// });
 
-const ButtonEliminar = lazy(async () => {
-  const module = await import('../../../../../utils/Eliminar/Eliminar');
-  return { default: module.ButtonEliminar };
-});
+// const ButtonEliminar = lazy(async () => {
+//   const module = await import('../../../../../utils/Eliminar/Eliminar');
+//   return { default: module.ButtonEliminar };
+// });
 
-const ListarCarpetas = lazy(async () => {
-  const module = await import('../components/ListarCarpetas');
-  return { default: module.ListarCarpetas };
-});
+// const ListarCarpetas = lazy(async () => {
+//   const module = await import('../components/ListarCarpetas');
+//   return { default: module.ListarCarpetas };
+// });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CajasScreen: React.FC = () => {
   const { nuevo_orden, fetch_data_caja_bandeja } = useContext(DataContext);
-
+  const dispatch = useAppDispatch();
   const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
 
   const {
@@ -55,6 +62,16 @@ export const CajasScreen: React.FC = () => {
     is_saving_cajas,
     limpiar_formulario_cajas,
   } = useCajaHook();
+
+  useEffect(() => {
+    dispatch(
+      set_current_mode_estantes({
+        crear: false,
+        editar: false,
+        ver: false,
+      })
+    );
+  }, []);
 
   return (
     <>

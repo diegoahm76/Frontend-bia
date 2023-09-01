@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import type { AxiosResponse } from "axios";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
-import type { GetBandejas, GetEstantes, InfoDepositos, InfoEstantes, ListarDepositos, ListarSucursales, PostEstantes, PutMoverEstantes } from "../types/types";
+import type { GetBandejas, GetEstantes, InfoDepositos, InfoEstantes, ListarDepositos, ListarOrdenSiguiente, ListarSucursales, PostEstantes, PutMoverEstantes } from "../types/types";
 import { api } from "../../../../../api/axios";
 
 
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
+export const listar_orden_estantes = async (): Promise<ListarOrdenSiguiente> => {
+    const response = await api.get(`gestor/depositos-archivos/estanteDeposito/siguiente-orden/`);
+    return response.data
+};
+  
 export const search_deposito = async ({
     nombre_deposito,
     identificacion_por_entidad,

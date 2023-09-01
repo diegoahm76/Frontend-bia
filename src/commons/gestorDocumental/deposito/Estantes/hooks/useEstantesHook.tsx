@@ -75,6 +75,7 @@ export const useEstantesHook = (): any => {
     set_id_deposito,
     set_rows_bandejas,
     set_rows_estantes,
+    fetch_data_orden_estante,
     // * orden estantes
     orden,
     set_orden,
@@ -140,6 +141,7 @@ export const useEstantesHook = (): any => {
           identificacion_por_deposito: identificacion_deposito,
         };
         await post_estante(data_estantes);
+        await fetch_data_orden_estante();
         control_success('Se creó estante correctamente');
         set_value_estantes('orden', '');
         set_value_estantes('nuevo_orden', '');

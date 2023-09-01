@@ -9,6 +9,7 @@ import type {
   PostCajas,
 } from '../types/types';
 import { api } from '../../../../../api/axios';
+import type{ ListarOrdenSiguiente } from '../../Estantes/types/types';
 
 // * ----------------------------------------------- [ GET ] -----------------------------------------------
 
@@ -91,4 +92,9 @@ export const put_caja = async (
     data
   );
   return response.data;
+};
+
+export const listar_orden_cajas = async (): Promise<ListarOrdenSiguiente> => {
+  const response = await api.get(`gestor/depositos-archivos/cajaBandeja/siguiente-orden/`);
+  return response.data
 };
