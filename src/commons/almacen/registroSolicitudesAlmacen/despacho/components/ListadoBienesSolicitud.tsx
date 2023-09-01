@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { type IObjBienesSolicitud } from '../../solicitudBienConsumo/interfaces/solicitudBienConsumo';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,8 @@ import {
   set_bien_selected,
   set_bienes_solicitud_aux,
 } from '../store/slices/indexDespacho';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 // import { type IObjBienDespacho } from '../interfaces/despacho';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -182,6 +184,12 @@ const ListadoBienesSolicitud = () => {
         >
           <Box sx={{ width: '100%' }}>
             <Title title="Bienes de despacho solicitados"></Title>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+              {download_xls({ nurseries: bienes_solicitud_aux, columns: columns_bienes_solicitud })}
+              {download_pdf({ nurseries: bienes_solicitud_aux, columns: columns_bienes_solicitud, title: "Bienes de despacho" })}
+
+            </ButtonGroup>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"

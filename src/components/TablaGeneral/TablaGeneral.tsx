@@ -14,6 +14,9 @@ import { Tooltip } from 'primereact/tooltip';
 import { Button } from 'primereact/button';
 import { ModalAtom } from '../Modal/ModalAtom';
 import type { ActionTemplateProps, GeneralTableProps } from './types/types';
+import { ButtonGroup } from '@mui/material';
+import { download_xls } from '../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../documentos-descargar/PDF_descargar';
 
 // Creando el componente TableGeneral
 export const TablaGeneral = ({
@@ -119,6 +122,12 @@ export const TablaGeneral = ({
   return (
     <>
       <Tooltip target=".export-buttons>button" position="bottom" />
+      <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+        {download_xls({ nurseries: rowsData as any[], columns: columns as any[] })}
+        {download_pdf({ nurseries: rowsData, columns, title: "Mantenimientos" })}
+
+      </ButtonGroup>
       <DataTable
         size="small"
         value={filtered_data}

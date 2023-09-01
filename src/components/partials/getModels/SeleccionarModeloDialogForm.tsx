@@ -300,7 +300,7 @@ const SeleccionarModeloDialogForm = ({
                                 <Grid container justifyContent="flex-end" sx={{ marginTop: "6px" }}>
                                     <ButtonGroup style={{ margin: 7 }}  >
                                      
-                                        {download_xls({ nurseries: models, columns: columns_model })}
+                    {download_xls({ nurseries: models, columns: columns_model })}
                     {download_pdf({ nurseries: models, columns: columns_model, title: title_table_modal })}
 
 
