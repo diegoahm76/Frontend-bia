@@ -9,7 +9,7 @@ import {
 // Slices
 
 import { api } from '../../../../../api/axios';
-import { set_bandejas, set_depositos, set_estantes, set_sucursales } from '../slice/indexDeposito';
+import { set_bandejas, set_carpetas, set_depositos, set_estantes, set_sucursales } from '../slice/indexDeposito';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -329,6 +329,31 @@ export const eliminar_bandeja = (
             return data;
         } catch (error: any) {
 
+
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// listar carpetas 
+
+// listar bandejas
+export const get_carpeta_id = (
+    id: number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/depositos-archivos/carpetaCaja/listar-carpetas-por-caja/${id ?? ''}/`);
+
+            if (data.success === true) {
+                dispatch(set_carpetas(data.data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
 
             return error as AxiosError;
         }
