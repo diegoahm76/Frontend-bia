@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -32,13 +31,13 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open = (opcion: number) => {
+  const handle_open = (opcion: number): void => {
     set_modal(true)
     set_modal_opcion(opcion)
-  }
-  const handle_close = () => { set_modal(false) }
+  };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_submit = async () => {
+  const handle_submit = async (): Promise<void> => {
     const arr_registro = []
     for(let i=0; i<lista_obligaciones.length; i++){
       for(let j=0; j<selected.length; j++){
@@ -55,7 +54,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
     }
   };
 
-  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
+  const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
     const selected_index = selected.indexOf(name);
     let new_selected: readonly string[] = [];
 
@@ -71,7 +70,6 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
         selected.slice(selected_index + 1),
       );
     }
-
     set_selected(new_selected);
   };
 

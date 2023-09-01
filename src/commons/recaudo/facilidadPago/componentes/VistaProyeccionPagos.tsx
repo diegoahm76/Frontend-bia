@@ -142,7 +142,7 @@ export const VistaProyeccionPagos: React.FC = () => {
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
-              <h3>4. Proyección de Pagos</h3>
+              <h3>Proyección de Pagos</h3>
               <DataGrid
                 autoHeight
                 disableSelectionOnClick

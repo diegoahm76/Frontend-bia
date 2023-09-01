@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import { Grid, Box, TextField, Button, Stack, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { Add, Close, Save, CloudUpload, CloudDownload, Help } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -11,24 +10,26 @@ import { use_form } from '../../../../hooks/useForm';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistroIncumplimiento: React.FC = () => {
   const [file_name, set_file_name] = useState('');
+  const [file, set_file] = useState({});
   const [modal, set_modal] = useState(false);
   const [sub_modal, set_sub_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
   const navigate = useNavigate();
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
+      set_file(selected_file);
       set_file_name(selected_file.name);
     }
   };
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const handle_open = (): void => { set_modal(true) };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_open_sub = () => { set_sub_modal(true) };
-  const handle_close_sub = () => { set_sub_modal(false) };
+  const handle_open_sub = (): void => { set_sub_modal(true) };
+  const handle_close_sub = (): void => { set_sub_modal(false) };
 
   return (
     <>
@@ -227,7 +228,6 @@ export const RegistroIncumplimiento: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-
       <Dialog
         open={modal}
         onClose={handle_close}

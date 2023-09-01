@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { CloudDownload } from '@mui/icons-material';
