@@ -18,7 +18,7 @@ import { CreateUser } from '../CreateUser/CreateUser';
 import { use_register } from '../../hooks/registerHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC = () => {
+export const RegisterForm: React.FC = () => { 
   const {
     errors,
     message_error,

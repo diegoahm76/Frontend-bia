@@ -43,6 +43,7 @@ import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDir
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 import type { AxiosError } from 'axios';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
@@ -378,6 +379,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
+                    color='warning'
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_datos_r();
@@ -486,6 +488,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                   <Grid item xs={12} sm={6} md={4}>
                     <Button
                       variant="contained"
+                      startIcon={<SearchIcon />}
                       onClick={() => {
                         open_modal(true);
                         set_type_direction('residencia');
@@ -515,6 +518,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
+                    color='warning'
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_direcciones();
@@ -601,6 +605,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
               <Grid item xs={12} sm={6} md={4}>
                 <Button
                   variant="contained"
+                  startIcon={<SearchIcon />}
                   onClick={() => {
                     open_modal(true);
                     set_type_direction('notificacion');
@@ -623,14 +628,14 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="E-mail *"
+                  // label="E-mail *"
                   defaultValue={data?.email}
                   error={errors.email?.type === 'required'}
                   type="email"
                   helperText={
                     errors.email?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : ''
+                      : 'Email'
                   }
                   {...register('email', {
                     required: true,
@@ -641,14 +646,14 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="Celular"
+                  // label="Celular"
                   defaultValue={data?.telefono_celular}
                   error={errors.telefono_celular?.type === 'required'}
                   type="text"
                   helperText={
                     errors.telefono_celular?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : ''
+                      : 'Celular'
                   }
                   {...register('telefono_celular')}
                 />
@@ -662,6 +667,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
+                    color='warning'
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_email();

@@ -6,6 +6,7 @@ import './blocks/customblocks';
 import './generator/generator';
 
 export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
+
   return (
     <BlocklyComponent
       readOnly={readOnly}

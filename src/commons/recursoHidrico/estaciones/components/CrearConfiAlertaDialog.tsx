@@ -7,7 +7,7 @@ import { control_error } from '../../../../helpers/controlError';
 import { consultar_conf_alerta_persona, crear_confi_alerta } from '../../requets/Request';
 import { type conf_alarma } from '../interfaces/interfaces';
 import { Title } from '../../../../components';
-
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -227,7 +227,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                     <Grid item xs={12}>
                         <DialogActions>
                             <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
-                            <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_alerta)}>Guardar</Button>
+                            <Button startIcon={<SaveIcon />} variant="contained" color="success" onClick={handleSubmit(on_sumbit_alerta)}>Guardar</Button>
                         </DialogActions>
                     </Grid>
                 </Grid>

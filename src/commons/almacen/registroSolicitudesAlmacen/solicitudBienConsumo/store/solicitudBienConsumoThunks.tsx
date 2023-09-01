@@ -8,7 +8,7 @@ import { api } from '../../../../../api/axios';
 
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-// import { log } from '// ';
+// import { log } from 'console';
 import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero, set_current_bien_vivero, set_bienes_vivero } from './slices/indexSolicitudBienesConsumo';
 
 
@@ -67,7 +67,7 @@ export const get_num_solicitud_vivero = (): any => {
             if (data) {
                 dispatch(set_numero_solicitud_vivero(data.detail))
             }
-            // console.log(data)
+            console.log(data)
             return data;
         } catch (error: any) {
             return error as AxiosError;
@@ -83,10 +83,10 @@ export const crear_solicitud_bien_consumo: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // .log(solicitud)
+            console.log(solicitud)
             const { data } = await api.put('almacen/solicitudes/crear-solicitud-bienes-de-consumo/', solicitud);
 
-            // .log(data)
+            console.log(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -96,7 +96,7 @@ export const crear_solicitud_bien_consumo: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            // .log(error);
+            console.log(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -113,11 +113,11 @@ export const editar_solicitud: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // .log(solicitud)
+            console.log(solicitud)
             const { data } = await api.put(`almacen/solicitudes/crear-solicitud-bienes-de-consumo/`, solicitud);
             // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
             //  dispatch(get_solicitud_consumo_id());
-            // .log(data)
+            console.log(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -127,7 +127,7 @@ export const editar_solicitud: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            // .log(error);
+            console.log(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -148,10 +148,10 @@ export const crear_solicitud_bien_consumo_vivero: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // .log(solicitud)
+            console.log(solicitud)
             const { data } = await api.put('almacen/solicitudes-vivero/crear-solicitud/', solicitud);
             //  dispatch(get_solicitud_consumo_id());
-            // .log(data)
+            console.log(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -161,7 +161,7 @@ export const crear_solicitud_bien_consumo_vivero: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            // .log(error);
+            console.log(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -177,7 +177,7 @@ export const get_uni_organizacional = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('transversal/organigrama/unidades/get-list/organigrama-actual/');
-            // .log(data.data, "data")
+
             dispatch(get_unidad_organizacional(data.data));
             return data;
         } catch (error: any) {
@@ -192,12 +192,9 @@ export const get_medida_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('almacen/unidades-medida/get-list/');
-            // .log("medida")
-            // .log(data)
             dispatch(set_unidades_medida(data));
             return data;
         } catch (error: any) {
-            // .log('get_medida_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -212,7 +209,6 @@ export const get_bienes_consumo = (id: string | null, nombre: string | null): an
         try {
 
             const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitud/?nombre=${nombre ?? ""}&codigo_bien=${id ?? ""}`);
-            // .log(data)
             if ('detail' in data) {
                 dispatch(set_bienes(data.detail));
 
@@ -226,7 +222,6 @@ export const get_bienes_consumo = (id: string | null, nombre: string | null): an
             }
             return data;
         } catch (error: any) {
-            // .log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -240,7 +235,6 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
         try {
 
             const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitable-vivero/?codigo_bien=${id ?? ""}&nombre_cientifico=${nombre_cientifico ?? ""}&nombre=${nombre ?? ""}&cod_tipo_elemento_vivero=${cod_tipo_elemento_vivero ?? ""}`);
-            // .log(data)
             if ('detail' in data) {
                 dispatch(set_bienes_vivero(data.detail));
 
@@ -254,7 +248,6 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
             }
             return data;
         } catch (error: any) {
-            // .log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -269,7 +262,7 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
         try {
 
             const { data } = await api.get(`almacen/solicitudes/get-bienes-solicitud/?codigo_bien=${codigo ?? ""}`);
-            // .log(data)
+
             if ('detail' in data) {
                 dispatch(set_current_bien(data.detail[0]))
                 if (data.detail.length > 0) {
@@ -284,7 +277,6 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
 
             return data;
         } catch (error: any) {
-            // .log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -298,7 +290,6 @@ export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): an
         try {
 
             const { data } = await api.get(`almacen/solicitudes/get-bien-solicitable-vivero/?codigo_bien=${codigo ?? ""}`);
-            // .log(data)
             if ('detail' in data) {
                 dispatch(set_current_bien_vivero(data.detail[0]))
                 if (data.detail.length > 0) {
@@ -313,7 +304,6 @@ export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): an
 
             return data;
         } catch (error: any) {
-            // .log('data');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -326,10 +316,9 @@ export const get_bienes_solicitud = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // .log(`almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ""}`)
+
             const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ""}/`);
             dispatch(set_bienes_solicitud(data.detail.info_items));
-            // .log(data)
             if (data.data.length > 0) {
                 // control_success("Se encontrarón bienes")
             } else {
@@ -350,13 +339,11 @@ export const get_solicitud_service = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id ?? ""}/`);
-            // .log('Solicitudes recuperadas:', data);
             dispatch(set_current_solicitud(data.detail.info_solicitud));
             dispatch(set_bienes_solicitud(data.detail.info_items));
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            // .log('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -369,13 +356,13 @@ export const get_solicitud_service_vivero = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id ?? ""}/`);
-            // .log('Solicitudes recuperadas:', data);
+            console.log('Solicitudes recuperadas:', data);
             dispatch(set_current_solicitud_vivero(data.detail.info_solicitud));
             dispatch(set_bienes_solicitud(data.detail.info_items));
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            // .log('get_solicitud_service');
+            console.log('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -391,12 +378,12 @@ export const get_solicitud_documento_service = (
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/get-solicitudes-pendientes-por-aprobar/`);
-            // .log('Solicitudes recuperadas:', data);
+            console.log('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.detail));
 
             return data;
         } catch (error: any) {
-            // .log('get_solicitud_service');
+            console.log('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -409,7 +396,7 @@ export const get_solicitudes_id_persona_service = (id: number | string): any => 
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}`);
-            // .log('Solicitudes recuperadas:', data);
+            console.log('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data))
             if ('data' in data) {
                 if (data.data.length > 0) {
@@ -422,7 +409,7 @@ export const get_solicitudes_id_persona_service = (id: number | string): any => 
             }
             return data;
         } catch (error: any) {
-            // .log('get_solicitud_service');
+            console.log('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -434,7 +421,7 @@ export const get_solicitudes_id_persona_service_vivero = (id: number | string): 
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}`);
-            // .log('Solicitudes recuperadas:', data);
+            console.log('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes_vivero(data.data))
             if ('data' in data) {
                 if (data.data.length > 0) {
@@ -447,7 +434,7 @@ export const get_solicitudes_id_persona_service_vivero = (id: number | string): 
             }
             return data;
         } catch (error: any) {
-            // .log('get_solicitud_service');
+            console.log('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -460,7 +447,7 @@ export const get_person_id_service = (id: number,): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`personas/get-by-id/${id}/`);
-            // .log(data)
+            console.log(data)
             if ("data" in data) {
                 dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
 
@@ -469,7 +456,7 @@ export const get_person_id_service = (id: number,): any => {
             }
             return data;
         } catch (error: any) {
-            // .log('get_person_document_service');
+            console.log('get_person_document_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -482,7 +469,7 @@ export const get_funcionario_id_service = (id: number | null,): any => {
         try {
             const { data } = await api.get(`personas/get-by-id/${id ?? ""}/`);
             if ("data" in data) {
-                // // .log(data)
+                // console.log(data)
 
                 dispatch(set_current_funcionario({ id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, nombre_unidad_organizacional_actual: data.data.nombre_unidad_organizacional_actual, nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
 
@@ -491,7 +478,7 @@ export const get_funcionario_id_service = (id: number | null,): any => {
             }
             return data;
         } catch (error: any) {
-            // .log('get_person_document_service');
+            console.log('get_person_document_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -521,7 +508,7 @@ export const get_funcionario_document_service = (
             }
             return data;
         } catch (error: any) {
-            // .log('get_person_document_service');
+            console.log('get_person_document_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -549,7 +536,7 @@ export const get_funcionario_service = (
                 `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`
 
             );
-            // .log(data)
+            console.log(data)
             dispatch(set_funcionarios(data.data));
             if (data.data.length > 0) {
                 control_success("Se econtrarón funcionarios")
@@ -558,7 +545,7 @@ export const get_funcionario_service = (
             }
             return data;
         } catch (error: any) {
-            // .log(error);
+            console.log(error);
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -580,7 +567,7 @@ export const aprobacion_solicitud_pendiente: any = (
             const { data } = await api.put(
                 `almacen/solicitudes/aprobacion-solicitudes-pendientes/${id}/`, form_data
             );
-            // .log(data)
+            console.log(data)
             dispatch(get_solicitud_service(id));
             if (data.success === true) {
                 control_success("Se aprobó la solicitud")
@@ -589,7 +576,7 @@ export const aprobacion_solicitud_pendiente: any = (
             }
             return data;
         } catch (error: any) {
-            // .log('aprobar solicitud');
+            console.log('aprobar solicitud');
             control_error(error.response.data);
             return error as AxiosError;
         }
@@ -608,13 +595,13 @@ export const aprobacion_solicitud_pendiente_vivero: any = (
             const { data } = await api.put(
                 `almacen/solicitudes/aprobacion-solicitudes-pendientes-viveros/${id}/`, form_data
             );
-            // .log(data)
+            console.log(data)
             dispatch(get_solicitud_service_vivero(id));
             control_success('Se aprobo la solicitud de vivero');
 
             return data;
         } catch (error: any) {
-            // .log('aprobar solicitud');
+            console.log('aprobar solicitud');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -628,12 +615,12 @@ export const anular_solicitud_service: any = (
     return async (dispatch: Dispatch<any>) => {
         try {
 
-            // .log(form_data)
+            console.log(form_data)
             const { data } = await api.put(
                 `almacen/solicitudes/anular-solicitudes-bienes/${id}/`, form_data
 
             );
-            // .log(data)
+            console.log(data)
             dispatch(get_solicitud_service(id));
             control_success('Se anulo la solicitud');
 
@@ -641,7 +628,7 @@ export const anular_solicitud_service: any = (
         } catch (error: any) {
 
             control_error(error.response.data.detail);
-            // .log(error);
+            console.log(error);
             return error as AxiosError;
         }
     };
@@ -656,8 +643,8 @@ export const get_solicitudes_pendientes_despacho = (): any => {
         try {
             const { data } = await api.get('almacen/solicitudes/solicitudes-pendientes-por-despachar/');
             dispatch(set_solicitudes(data['Solicitudes pendientes por despahcar']))
-            // .log(data);
-            // .log(data, "data")
+            console.log(data);
+            console.log(data, "data")
             if ('data' in data) {
                 if (data.length > 0) {
                     control_success("Se encontrarón solicitudes aprobadas por despachar")
@@ -665,6 +652,29 @@ export const get_solicitudes_pendientes_despacho = (): any => {
                     control_error("No se encontrarón solicitudes")
                 }
             }
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+export const get_solicitudes_despacho_fecha = (fecha: string | number,): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/despachos/get-solicitudes-aprobados-abiertos/?fecha_despacho=${fecha}`);
+            dispatch(set_solicitudes(data.data))
+            console.log(data);
+            console.log(data, "data")
+            // if ('data' in data) {
+            //     if (data.length > 0) {
+            //         control_success("Se encontrarón solicitudes aprobadas por despachar")
+            //     } else {
+            //         control_error("No se encontrarón solicitudes")
+            //     }
+            // }
             return data;
         } catch (error: any) {
             return error as AxiosError;
@@ -681,12 +691,12 @@ export const rechazar_solicitud_service: any = (
     return async (dispatch: Dispatch<any>) => {
         try {
 
-            // .log(form_data)
+            console.log(form_data)
             const { data } = await api.put(
                 `almacen/solicitudes/rechazo-solicitudes-bienes-desde-almacen/${id}/`, form_data
 
             );
-            // .log(data)
+            console.log(data)
             dispatch(get_solicitud_service(id));
             control_success('Se rechazó la solicitud');
 
@@ -694,7 +704,7 @@ export const rechazar_solicitud_service: any = (
         } catch (error: any) {
 
             control_error(error.response.data.detail);
-            // .log(error);
+            console.log(error);
             return error as AxiosError;
         }
     };

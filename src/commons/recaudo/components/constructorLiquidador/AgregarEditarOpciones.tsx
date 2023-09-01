@@ -28,10 +28,12 @@ import { PruebasLiquidacionModal } from "./modal/PruebasLiquidacionModal";
 import type { OpcionLiquidacion } from "../../interfaces/liquidacion";
 import { api } from "../../../../api/axios";
 import { Add, Build, Save } from "@mui/icons-material";
+
 import { NotificationModal } from "../NotificationModal";
 import Blockly from 'blockly';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+
 import './AgregarEditarOpciones.css';
 
 interface Rows {
@@ -44,6 +46,7 @@ interface IProps {
   id_opcion_liquidacion: string;
   form_data: { variable: string, nombre_opcion_liquidacion: string, estado: string };
   edit_opcion: boolean;
+
   set_id_opcion_liquidacion: Dispatch<SetStateAction<string>>;
   set_refresh_page: Dispatch<SetStateAction<boolean>>;
   set_form_data: Dispatch<SetStateAction<{ variable: string, nombre_opcion_liquidacion: string, estado: string }>>
@@ -58,6 +61,7 @@ export const AgregarEditarOpciones = ({
   set_id_opcion_liquidacion,
   set_refresh_page,
   set_form_data
+
 }: IProps): JSX.Element => {
   const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
@@ -267,6 +271,7 @@ export const AgregarEditarOpciones = ({
           set_open_notification_modal(true);
         });
     }
+
   }
 
   const column: GridColDef[] = [
@@ -454,6 +459,7 @@ export const AgregarEditarOpciones = ({
               fullWidth
             >
               {edit_opcion ? 'Editar ': 'Guardar '}opción liquidación
+
             </Button>
           </Grid>
         </Stack>

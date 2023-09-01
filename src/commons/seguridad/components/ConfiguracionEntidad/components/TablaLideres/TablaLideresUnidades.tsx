@@ -6,6 +6,8 @@ import { api } from "../../../../../../api/axios";
 import type { ItablaUnidades } from "../../interfaces/interfacesConEntidad";
 import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { useNavigate } from "react-router-dom";
+import { download_pdf } from "../../../../../../documentos-descargar/PDF_descargar";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
@@ -41,6 +43,7 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
         { field: "observaciones_asignacion", headerName: "Observaciones", width: 200, flex: 1 },
        
     ];
+    const navigate = useNavigate();
     return (
         <Grid container sx={{
             position: 'relative',
@@ -55,6 +58,7 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
                 <Title title="Lideres de Unidades Organizacionales" />
                 <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }} >
                     {download_xls({ nurseries: data_lideres, columns })}
+                    {download_pdf({ nurseries: data_lideres, columns, title: 'Unidades Organizacionales' })}            
                 </ButtonGroup>
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <DataGrid
@@ -69,7 +73,15 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
                 </Box>
             </Grid>
             
-            <Button style={{ margin: 8 }} color="primary" startIcon={<ArrowOutwardIcon/>} variant="contained">Ir a lideres de grupo</Button>
+            <Button
+                style={{ margin: 8 }}
+                color="primary"
+                variant="contained"
+                startIcon={<ArrowOutwardIcon />}
+                onClick={() => { navigate("/app/transversal/corporativo/lideres_unidad_organizacional") }}
+            >
+                Ir a lideres de grupo
+            </Button>
         </Grid>
     );
 };

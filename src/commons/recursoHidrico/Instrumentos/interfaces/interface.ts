@@ -1,5 +1,6 @@
 export interface ValueProps {
-  value: number;
+  item?: any;
+  value: number | string;
   label: string;
 }
 

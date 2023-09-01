@@ -52,7 +52,7 @@ import {
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 import { LoadingButton } from '@mui/lab';
-
+import { FILEWEIGHT } from '../../../../../../../../../fileWeight/fileWeight';
 
 export const FormTRDAdmin = (): JSX.Element => {
   //* dispatch declaration
@@ -66,7 +66,7 @@ export const FormTRDAdmin = (): JSX.Element => {
     buttonSpecialEditionActualTRD,
     setButtonSpecialEditionActualTRD,
     setCreateTRDLoadingButton,
-    createTRDLoadingButton,
+    createTRDLoadingButton
   } = useContext(ModalContextTRD);
   // * state from trd_slice
   const {
@@ -133,24 +133,28 @@ export const FormTRDAdmin = (): JSX.Element => {
       descripcion_procedimiento:
         form_data_administrar_trd.descripcion_procedimiento
     };
-    dispatch(create_item_catalogo_trd(elementsToSendCreate, tipologias, setCreateTRDLoadingButton)).then(
-      (res: any) => {
-        closeModalAdministracionTRD();
-        reset_administrar_trd({
-          cod_disposicion_final: '',
-          digitalizacion_dis_final: true,
-          tiempo_retencion_ag: '',
-          tiempo_retencion_ac: '',
-          descripcion_procedimiento: '',
-          justificacion_cambio: '',
-          tipologias: [],
-          ruta_archivo_cambio: ''
-        });
-        dispatch(add_tipologia_documental_to_trd([]));
-        setButtonSpecialEditionActualTRD(false);
-        // dispatch(set_selected_item_from_catalogo_trd_action(null))
-      }
-    );
+    dispatch(
+      create_item_catalogo_trd(
+        elementsToSendCreate,
+        tipologias,
+        setCreateTRDLoadingButton
+      )
+    ).then((res: any) => {
+      closeModalAdministracionTRD();
+      reset_administrar_trd({
+        cod_disposicion_final: '',
+        digitalizacion_dis_final: true,
+        tiempo_retencion_ag: '',
+        tiempo_retencion_ac: '',
+        descripcion_procedimiento: '',
+        justificacion_cambio: '',
+        tipologias: [],
+        ruta_archivo_cambio: ''
+      });
+      dispatch(add_tipologia_documental_to_trd([]));
+      setButtonSpecialEditionActualTRD(false);
+      // dispatch(set_selected_item_from_catalogo_trd_action(null))
+    });
   };
 
   const edit_item_onSubmit_trd_catalogo = (): any => {
@@ -183,7 +187,7 @@ export const FormTRDAdmin = (): JSX.Element => {
           activo: el.activo
         };
       });
-     formData.append('tipologias', JSON.stringify(o));
+      formData.append('tipologias', JSON.stringify(o));
     } else {
       const t = tipologias_asociadas_a_trd.map((el: any) => {
         return {
@@ -379,16 +383,14 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    // margin="dense"
                     fullWidth
-                    // disabled={ccd_current?.actual}
                     size="small"
-                    label="Tiempo de retención AG"
+                    label="Tiempo de retención archivo gestión"
                     variant="outlined"
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'años'}
+                    helperText={error != null ? 'campo obligatorio' : 'archivo gestión - años'}
                   />
                 )}
               />
@@ -404,16 +406,14 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    // margin="dense"
-                    fullWidth
-                    // disabled={ccd_current?.actual}
+                    fullWidth           
                     size="small"
-                    label="Tiempo de retención AC"
+                    label="Tiempo de retención archivo central"
                     variant="outlined"
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'años'}
+                    helperText={error != null ? 'campo obligatorio' : 'archivo central - años'}
                   />
                 )}
               />
@@ -520,12 +520,22 @@ export const FormTRDAdmin = (): JSX.Element => {
                             accept="application/pdf"
                             // disabled={control_administrar_trd?.actual}
                             onChange={(e) => {
-                              const files = (e.target as HTMLInputElement).files;
+                              const files = (e.target as HTMLInputElement)
+                                .files;
                               if (files && files.length > 0) {
                                 const file = files[0];
                                 if (file.type !== 'application/pdf') {
-                                  control_warning('Solo formato pdf')
-                                  // dejar vacio el input file
+                                  control_warning(
+                                    'Precaución: Solo es admitido archivos en formato pdf'
+                                  );
+                                } else if (file.size > FILEWEIGHT.PDF) {
+                                  const MAX_FILE_SIZE_MB = (
+                                    FILEWEIGHT.PDF /
+                                    (1024 * 1024)
+                                  ).toFixed(1);
+                                  control_warning(
+                                    `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                                  );
                                 } else {
                                   onChange(file);
                                 }
@@ -577,7 +587,7 @@ export const FormTRDAdmin = (): JSX.Element => {
           </Grid>
           <Stack direction="row" spacing={2} sx={{ marginTop: '1.5rem' }}>
             <LoadingButton
-            loading={createTRDLoadingButton}
+              loading={createTRDLoadingButton}
               variant="contained"
               color="primary"
               type="submit"

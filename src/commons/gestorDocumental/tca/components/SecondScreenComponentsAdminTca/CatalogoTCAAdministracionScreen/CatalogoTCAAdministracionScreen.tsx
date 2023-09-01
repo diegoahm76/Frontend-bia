@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Chip, IconButton } from '@mui/material';
@@ -18,13 +17,17 @@ import { ModalContextTCA } from '../../../context/ModalContextTca';
 import {
   set_catalog_TCA_action,
   set_catalog_trd_action,
-  set_selected_item_from_catalogo_action
+  set_mixed_tipologias,
+  set_selected_item_from_catalogo_action,
+  set_tipologias_NO_reservadas,
+  set_tipologias_reservadas
 } from '../../../toolkit/TCAResources/slice/TcaSlice';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
   delete_item_catalogo_tca_service,
   get_catalogo_TCA_service,
-  get_catalogo_TRD_service
+  get_catalogo_TRD_service,
+  get_tipologias_relacion
 } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { use_tca } from '../../../hooks/use_tca';
 
@@ -37,22 +40,17 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
   const dispatch = useAppDispatch();
 
   //* context declaration
-  // eslint-disable-next-line no-empty-pattern
-  const {
-    // modalAdministracionTca,
-    openModalAdministracionTca,
-    closeModalAdministracionTca
-  } = useContext(ModalContextTCA);
+  const { openModalAdministracionTca, closeModalAdministracionTca } =
+    useContext(ModalContextTCA);
 
-  //* use_tca
-  const { reset_administrar_tca } = use_tca();
+  //* ------- HOOK USE_TCA DECLARATION -------------- */
+  const { reset_administrar_tca, setLoadTipologias } = use_tca();
 
   //* redux states declararion
   const { tca_current } = useAppSelector((state) => state.tca_slice);
 
-  const deleteCatalogoTCA = (id: number) => {
-    return delete_item_catalogo_tca_service(id);
-  };
+  const deleteCatalogoTCA = (id: number) =>
+    delete_item_catalogo_tca_service(id);
 
   const updateCatalogoTRD = async (id: number) => {
     const res = await get_catalogo_TRD_service(id);
@@ -69,7 +67,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
       id_cat_serie_und_ccd_trd: '',
       cod_clas_expediente: {
         label: '',
-        value: '',
+        value: ''
       }
     });
   };
@@ -98,6 +96,30 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
               title="Editar relación catalogo TCA"
               onClick={() => {
                 console.log(params.row);
+                void get_tipologias_relacion(
+                  params.row.id_cat_serie_und_ccd_trd,
+                  setLoadTipologias
+                ).then((res: any) => {
+                  const tipologias_reservadas = res.filter(
+                    (item: any) => item.reservada
+                  );
+
+                  const tipologias_NO_reservadas = res.filter(
+                    (item: any) => !item.reservada
+                  );
+
+                  console.log('tipologias_reservadas,', tipologias_reservadas);
+                  console.log(
+                    'tipologias_NO_reservadas,',
+                    tipologias_NO_reservadas
+                  );
+
+                  dispatch(set_mixed_tipologias(res))
+                  dispatch(set_tipologias_reservadas(tipologias_reservadas));
+                  dispatch(
+                    set_tipologias_NO_reservadas(tipologias_NO_reservadas)
+                  );
+                });
                 openModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(params.row));
               }}

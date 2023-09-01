@@ -9,7 +9,9 @@ import {
   IconButton,
   Avatar,
   Chip,
-  Tooltip
+  Tooltip,
+  CircularProgress,
+  ButtonGroup
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -24,14 +26,18 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_organigrams_service } from '../../store/thunks/organigramThunks';
 // Dialogs
 import DialogCrearOrganigrama from '../DialogCrearOrganigrama/DialogCrearOrganigrama';
-import DialogElegirOrganigramaActual from '../DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
 import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarOrganigrama';
 // Slices
-import { current_organigram, set_special_edit } from '../../store/slices/organigramSlice';
+import {
+  current_organigram,
+  set_special_edit
+} from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
-import DialogElegirCcdActual from '../DialogElegirCcdActual/DialogElegirCcdActual';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { Link } from 'react-router-dom';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -59,17 +65,10 @@ export function ListOrganigramas({
   const { userinfo } = useAppSelector((state) => state.auth);
   const [crear_organigrama_is_active, set_crear_organigrama_is_active] =
     useState<boolean>(false);
-  const [
-    elegir_organigrama_actual_is_active,
-    set_elegir_organigrama_actual_is_active
-  ] = useState<boolean>(false);
-  const [elegir_ccd_actual_is_active, set_elegir_ccd_actual_is_active] =
-    useState<boolean>(false);
   const [delegar_organigrama_is_active, set_delegar_organigrama_is_active] =
     useState<boolean>(false);
 
   const columns: GridColDef[] = [
-    // { field: 'id_organigrama', headerName: 'ID', width: 20, }
     {
       field: 'nombre',
       headerName: 'Nombre',
@@ -84,7 +83,12 @@ export function ListOrganigramas({
       field: 'descripcion',
       headerName: 'Descripción',
       type: 'number',
-      width: 200
+      width: 280,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      )
     },
     {
       field: 'version',
@@ -155,7 +159,12 @@ export function ListOrganigramas({
     {
       field: 'justificacion_nueva_version',
       headerName: 'Justificacion nueva versión',
-      width: 150
+      width: 200
+      /* renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ) */
     },
 
     {
@@ -268,48 +277,41 @@ export function ListOrganigramas({
             </Tooltip>
           )}
 
-
-         { /*  edición especial  */ }
+          {/*  edición especial  */}
 
           {params.row.actual && (
             <Tooltip title="Edición especial">
-            <IconButton
-            //! revisar esto detalladamente con el ing de backend
-           //  disabled={params.row.id_persona_cargo !== userinfo.id_persona}
-            onClick={() => {
-
-              console.log('params.row.id_persona_cargo', params.row);
-              console.log('userinfo.id_persona', userinfo);
-              dispatch(set_special_edit(true));
-              dispatch(current_organigram(params.row));
-              set_position_tab_organigrama('2');
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background:
-                  params.row.id_persona_cargo !== userinfo.id_persona
-                    ? ''
-                    : '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
-              <AutoFixHighIcon
-                sx={{
-                  color:
-                    params.row.id_persona_cargo !== userinfo.id_persona
-                      ? ''
-                      : 'primary.main',
-                  width: '18px',
-                  height: '18px'
+              <IconButton
+                //! revisar esto detalladamente con el ing de backend
+                //  disabled={params.row.id_persona_cargo !== userinfo.id_persona}
+                onClick={() => {
+                  console.log('params.row.id_persona_cargo', params.row);
+                  console.log('userinfo.id_persona', userinfo);
+                  dispatch(set_special_edit(true));
+                  dispatch(current_organigram(params.row));
+                  set_position_tab_organigrama('2');
                 }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                    boxShadow: '0px 0px 5px 0px rgba(105, 105, 105, 0.2)'
+                  }}
+                  variant="rounded"
+                >
+                  <AutoFixHighIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           )}
         </>
       )
@@ -324,7 +326,8 @@ export function ListOrganigramas({
     <>
       <Stack direction="row" spacing={2} sx={{ mb: '20px' }}>
         <Button
-          variant="outlined"
+          variant="contained"
+          color="success"
           startIcon={<AddIcon />}
           onClick={() => {
             set_crear_organigrama_is_active(true);
@@ -332,54 +335,57 @@ export function ListOrganigramas({
         >
           CREAR ORGANIGRAMA
         </Button>
-        <Button
-          variant="outlined"
-          startIcon={<AssignmentTurnedInIcon />}
-          onClick={() => {
-            set_elegir_organigrama_actual_is_active(true);
-          }}
-        >
-          ELEGIR ORGANIGRAMA ACTUAL
-        </Button>
-        <Button
-          variant="outlined"
-          startIcon={<AssignmentTurnedInIcon />}
-          onClick={() => {
-            set_elegir_ccd_actual_is_active(true);
-          }}
-        >
-          ELEGIR CCD ACTUAL
-        </Button>
+        <Link to="/app/transversal/procesos/cambio_organigrama_actual">
+          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
+            ELEGIR ORGANIGRAMA ACTUAL
+          </Button>
+        </Link>
+        <Link to="/app/gestor_documental/activacion_instrumentos_archivisticos">
+          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
+            ACTIVACIÓN DE INSTRUMENTOS ARCHIVISTICOS
+          </Button>
+        </Link>
       </Stack>
       <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={organigram}
-            columns={columns}
-            pageSize={15}
-            rowsPerPageOptions={[15]}
-            getRowId={(row) => row.id_organigrama}
-          />
-        </Box>
+        {organigram.length === 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100vh'
+            }}
+          >
+            <CircularProgress size={80} />
+          </Box>
+        ) : (
+          <Box sx={{ width: '100%' }}>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: organigram, columns })}
+                {download_pdf({ nurseries: organigram, columns, title: 'Organigramas' })}
+              </ButtonGroup>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={organigram}
+              columns={columns}
+              pageSize={17}
+              rowsPerPageOptions={[15]}
+              getRowId={(row) => row.id_organigrama}
+            />
+          </Box>
+        )}
       </Grid>
       <DialogCrearOrganigrama
         is_modal_active={crear_organigrama_is_active}
         set_is_modal_active={set_crear_organigrama_is_active}
         set_position_tab_organigrama={set_position_tab_organigrama}
       />
-      <DialogElegirOrganigramaActual
-        is_modal_active={elegir_organigrama_actual_is_active}
-        set_is_modal_active={set_elegir_organigrama_actual_is_active}
-      />
       <DialogDelegarOrganigrama
         is_modal_active={delegar_organigrama_is_active}
         set_is_modal_active={set_delegar_organigrama_is_active}
-      />
-      <DialogElegirCcdActual
-        is_modal_active={elegir_ccd_actual_is_active}
-        set_is_modal_active={set_elegir_ccd_actual_is_active}
       />
     </>
   );

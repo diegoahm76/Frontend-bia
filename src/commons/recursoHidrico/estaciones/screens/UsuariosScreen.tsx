@@ -89,7 +89,14 @@ export const UsuariosScreen: React.FC = () => {
             className="btn-tablas"
             onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon fontSize="small" 
+            titleAccess="Eliminar elemento"
+            sx={{
+              color: 'red',
+              width: '18px',
+              height: '18px',
+            }}
+            />
           </IconButton>
         </div>
       ),
@@ -317,7 +324,7 @@ export const UsuariosScreen: React.FC = () => {
               <ButtonGroup style={{ margin: 7, display: "flex", justifyContent: "flex-end" }}  >
 
                 {download_xls({ nurseries: estaciones_meteologicas, columns })}
-                {download_pdf({ nurseries: estaciones_meteologicas, columns })}
+                {download_pdf({ nurseries: estaciones_meteologicas, columns, title: "Información general" })}
 
               </ButtonGroup>
 

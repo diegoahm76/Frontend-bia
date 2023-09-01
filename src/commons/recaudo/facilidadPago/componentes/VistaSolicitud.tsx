@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { CloudDownload } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
+import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 
@@ -17,6 +17,11 @@ interface RootState {
 export const VistaSolicitud: React.FC = () => {
   const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
 
+  const valor_abonado = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(parseFloat(solicitud_facilidad.facilidad_pago.valor_abonado))
+
   const columns_bienes: GridColDef[] = [
     {
       field: 'nombre_tipo_bien',
@@ -29,7 +34,7 @@ export const VistaSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'identificacion',
+      field: 'descripcion',
       headerName: 'Identificación',
       width: 150,
       renderCell: (params) => (
@@ -75,7 +80,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='small'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Documento
             </Button>
@@ -96,7 +101,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='medium'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Documento Solicitud
             </Button>
@@ -109,7 +114,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='medium'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Soporte Consignación
             </Button>
@@ -129,7 +134,16 @@ export const VistaSolicitud: React.FC = () => {
             label="Valor Abonado"
             size="small"
             fullWidth
-            value={`${'Aún no esta'}`}
+            value={`${valor_abonado}`}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <TextField
+            label="Fecha del Abono"
+            size="small"
+            fullWidth
+            value={`${solicitud_facilidad.facilidad_pago.fecha_abono}`}
             disabled
           />
         </Grid>
@@ -177,7 +191,7 @@ export const VistaSolicitud: React.FC = () => {
               color='primary'
               variant='outlined'
               size='medium'
-              startIcon={<CloudDownloadIcon />}
+              startIcon={<CloudDownload />}
             >
               Ver Documento No Enajenación
             </Button>
@@ -195,7 +209,7 @@ export const VistaSolicitud: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
-                  startIcon={<CloudDownloadIcon />}
+                  startIcon={<CloudDownload />}
                 >
                   Ver Garantías Ofrecidas
                 </Button>

@@ -17,11 +17,11 @@ export interface Filtro {
 }
 
 export interface Obligacion {
+  id: number;
   nombre: string;
   inicio: string;
   nro_expediente: number;
   nro_resolucion: string;
-
   monto_inicial: string;
   valor_intereses: string;
   dias_mora: number;
@@ -97,8 +97,9 @@ export interface FacilidadPagoDetalle {
   observaciones: string;
   periodicidad: number;
   tipo_actuacion: string;
+  valor_abonado: string;
+  fecha_abono: string;
 }
-
 
 export interface FacilidadPagoSolicitud {
   bienes: Bien[];
@@ -107,11 +108,12 @@ export interface FacilidadPagoSolicitud {
   documento_garantia: string;
   documentos_deudor_actuacion: DocumentosDeudor[];
   facilidad_pago: FacilidadPagoDetalle;
+  obligaciones_seleccionadas: ObligacionesUsuario;
 }
 
 export interface RespuestaFacilidadPago {
   id_funcionario: number;
-  id_facilidades_pago : number;
+  id_facilidad_pago : number;
   estado : string;
   aprobacion : boolean;
   observacion : string;
@@ -125,25 +127,37 @@ export interface Contribuyente {
 }
 
 export interface RegistroFacilidadPago {
-  id_deudor: number;
-  id_tipo_actuacion: number;
+  id_deudor: string;
+  id_tipo_actuacion: string;
   fecha_generacion: string;
   observaciones: string;
-  periodicidad: number;
-  cuotas: number;
+  periodicidad: string;
+  cuotas: string;
   documento_no_enajenacion: File;
   consignacion_soporte: File;
   documento_soporte: File;
-  id_funcionario: number;
-  notificaciones: boolean;
+  id_funcionario: string;
+  notificaciones: string;
+  ids_obligaciones: string;
+  valor_abonado: string;
+  fecha_abono: string;
   documento_garantia: File;
-  id_rol: number;
-  documento_deudor: File;
-  descripcion: string;
-  direccion: string;
-  id_tipo_bien: number;
-  id_ubicacion: number;
-  valor: number;
-  documento_soporte_bien: File;
+  id_rol: string;
+  documento_deudor1: File;
+  documento_deudor2: File;
+  documento_deudor3: File;
+  identificaciones: string[];
+  direcciones: string[];
+  id_tipo_bienes: string[];
+  id_ubicaciones: string[];
+  valores: string[];
+  documentos_soporte_bien: File[];
+}
+
+export interface FacilidadPagoUsuario {
+  id: number;
+  estado: string;
+  numero_radicacion: string;
+  valor_total: number;
 }
 

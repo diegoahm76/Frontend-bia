@@ -33,6 +33,7 @@ import type {
   SelectChangeEvent,
 } from '@mui/material';
 import { set_action_admin_users } from '../store';
+import { auth_url } from '../../auth/api/auth';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error2 = (
@@ -195,9 +196,10 @@ export const use_admin_users = (): AdminUserHook => {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           data_create_user.append('roles', `${roles[i].value}`);
         }
-        data_create_user.append(
+        data_create_user.append(          
           'redirect_url',
-          'http://localhost:3000/#/app/seguridad/administracion_usuarios'
+          // 'http://localhost:3000/#/app/seguridad/administracion_usuarios'
+          `${auth_url}/auth/cambiar_contrasena/`,
         );
         data_create_user.append('profile_img', file_image ?? '');
 

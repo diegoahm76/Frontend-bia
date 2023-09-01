@@ -17,7 +17,7 @@ export const CarteraAforosScreen: React.FC = () => {
 
   useEffect(() => {
     if (id_instrumento === 0) {
-      navigate('/app/recurso_hidrico/instrumentos/instrumentos', {
+      navigate('/app/recurso_hidrico/biblioteca/instrumentos/administracion', {
         replace: true,
       });
     }
@@ -40,12 +40,12 @@ export const CarteraAforosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CARTERA DE AFOROS " />
+          <Title title="Cartera de aforos " />
         </Grid>
       </Grid>
-      {mode_carteras.crear && <AgregarCartera />}
-      {mode_carteras.ver && <SeleccionarAforo />}
-      {mode_carteras.editar && <EditarCartera />}
+      {mode_carteras.crear ? (<AgregarCartera />): null}
+      {mode_carteras.ver ? (<SeleccionarAforo />): null}
+      {mode_carteras.editar ? (<EditarCartera />): null}
     </>
   );
 };

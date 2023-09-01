@@ -52,6 +52,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { get_assignments_service } from '../store/thunks/assignmentsThunks';
 
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { FILEWEIGHT } from '../../../../fileWeight/fileWeight';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -281,7 +284,6 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       disabled={ccd_current?.actual}
                       size="small"
@@ -359,7 +361,6 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       size="small"
                       label="valor aumento subseries CCD"
@@ -414,15 +415,23 @@ export const CcdScreen: React.FC = () => {
                           style={{ display: 'none' }}
                           type="file"
                           accept="application/pdf"
-
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
                               const file = files[0];
                               if (file.type !== 'application/pdf') {
-                                control_warning('Solo formato pdf');
-                                // dejar vacio el input file
+                                control_warning(
+                                  'Precaución: Solo es admitido archivos en formato pdf'
+                                );
+                              } else if (file.size > FILEWEIGHT.PDF) {
+                                const MAX_FILE_SIZE_MB = (
+                                  FILEWEIGHT.PDF /
+                                  (1024 * 1024)
+                                ).toFixed(1);
+                                control_warning(
+                                  `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                                );
                               } else {
                                 onChange(file);
                               }
@@ -475,7 +484,7 @@ export const CcdScreen: React.FC = () => {
             >
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={() => {
                   set_consulta_ccd_is_active(true);
@@ -487,7 +496,7 @@ export const CcdScreen: React.FC = () => {
               <LoadingButton
                 loading={loadingButton}
                 type="submit"
-                color="primary"
+                color="success"
                 variant="contained"
                 disabled={ccd_current?.actual}
                 startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
@@ -495,8 +504,8 @@ export const CcdScreen: React.FC = () => {
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </LoadingButton>
               <Button
-                color="success"
-                variant="contained"
+                color="primary"
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   clean_ccd();
@@ -825,7 +834,7 @@ export const CcdScreen: React.FC = () => {
                         );
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
-                      color="primary"
+                      color="success"
                       variant="contained"
                       startIcon={<SaveIcon />}
                     >
@@ -848,8 +857,8 @@ export const CcdScreen: React.FC = () => {
                         });
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
-                      color="success"
-                      variant="contained"
+                      color="primary"
+                      variant="outlined"
                       startIcon={<CleanIcon />}
                     >
                       LIMPIAR CAMPOS
@@ -859,6 +868,12 @@ export const CcdScreen: React.FC = () => {
               </Box>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
+                  <ButtonGroup
+                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    {download_xls({ nurseries: assignments_ccd, columns: columns_asignacion })}
+                    {download_pdf({ nurseries: assignments_ccd, columns: columns_asignacion, title: 'Actividades' })}
+                  </ButtonGroup> 
                   <DataGrid
                     density="compact"
                     autoHeight
@@ -868,8 +883,8 @@ export const CcdScreen: React.FC = () => {
                       zIndex: 2
                     }}
                     columns={columns_asignacion}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.id_cat_serie_und}
                   />

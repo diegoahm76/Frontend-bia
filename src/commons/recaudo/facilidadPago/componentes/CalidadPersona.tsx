@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Box, TextField, Button } from "@mui/material";
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CloudDownload } from '@mui/icons-material';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { useSelector } from 'react-redux';
 
@@ -24,19 +24,27 @@ export const PersonaNatural: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={5}>
-              <a href={solicitud_facilidad.documentos_deudor_actuacion[0].documento} target="_blank" rel="noreferrer">
-                <Button
-                  fullWidth
-                  color='primary'
-                  variant='outlined'
-                  size='medium'
-                  startIcon={<CloudDownloadIcon />}
-                >
-                  Ver Documento de Identidad
-                </Button>
-              </a>
-            </Grid>
+          {
+              solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
+                if(obj.id_requisito_actuacion === 1){
+                  return(
+                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                      <a href={obj.documento} target="_blank" rel="noreferrer">
+                        <Button
+                          fullWidth
+                          color='primary'
+                          variant='outlined'
+                          size='medium'
+                          startIcon={<CloudDownload />}
+                        >
+                          Ver Documento de Identidad
+                        </Button>
+                      </a>
+                    </Grid>
+                  )
+                }
+              })
+            }
             <Grid item xs={12} sm={5}>
               <TextField
                 disabled
@@ -86,27 +94,6 @@ export const PersonaJuridica: React.FC = () => {
           <Grid container spacing={2}>
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 1){
-                  return(
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
-                      <a href={obj.documento} target="_blank" rel="noreferrer">
-                        <Button
-                          fullWidth
-                          color='primary'
-                          variant='outlined'
-                          size='medium'
-                          startIcon={<CloudDownloadIcon />}
-                        >
-                          Ver Documento de Identidad Apoderado
-                        </Button>
-                      </a>
-                    </Grid>
-                  )
-                }
-              })
-            }
-            {
-              solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if(obj.id_requisito_actuacion === 2){
                   return(
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
@@ -116,9 +103,9 @@ export const PersonaJuridica: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
-                          Ver Documento Poder
+                          Ver Documento de Identidad Apoderado
                         </Button>
                       </a>
                     </Grid>
@@ -137,7 +124,28 @@ export const PersonaJuridica: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
+                        >
+                          Ver Documento Poder
+                        </Button>
+                      </a>
+                    </Grid>
+                  )
+                }
+              })
+            }
+            {
+              solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
+                if(obj.id_requisito_actuacion === 4){
+                  return(
+                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                      <a href={obj.documento} target="_blank" rel="noreferrer">
+                        <Button
+                          fullWidth
+                          color='primary'
+                          variant='outlined'
+                          size='medium'
+                          startIcon={<CloudDownload />}
                         >
                           Ver Cert. Existencia y Representación Legal
                         </Button>
@@ -196,7 +204,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
           <Grid container spacing={2}>
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 1){
+                if(obj.id_requisito_actuacion === 5){
                   return(
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
@@ -205,7 +213,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Documento Deudor Solidario
                         </Button>
@@ -217,7 +225,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 2){
+                if(obj.id_requisito_actuacion === 6){
                   return(
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
@@ -226,7 +234,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Oficio Respaldando Deuda
                         </Button>
@@ -285,7 +293,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
           <Grid container spacing={2}>
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 1){
+                if(obj.id_requisito_actuacion === 7){
                   return(
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
@@ -294,7 +302,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Documento Deudor Solidario
                         </Button>
@@ -306,7 +314,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 2){
+                if(obj.id_requisito_actuacion === 8){
                   return(
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
@@ -315,7 +323,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Oficio Respaldando Deuda
                         </Button>
@@ -327,7 +335,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 3){
+                if(obj.id_requisito_actuacion === 9){
                   return(
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
@@ -336,7 +344,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                           color='primary'
                           variant='outlined'
                           size='medium'
-                          startIcon={<CloudDownloadIcon />}
+                          startIcon={<CloudDownload />}
                         >
                           Ver Cert. Existencia y Representación Legal
                         </Button>

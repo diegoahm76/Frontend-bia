@@ -26,8 +26,9 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleGuardarYPoner = (): void => {
-        setVisible(false)
         onClick();
+        setVisible(false)
+        
         setValue("");
         set_persona(undefined);
     };
@@ -81,8 +82,6 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     const nombre_completo = `${primer_nombre ?? ""} ${segundo_nombre ?? ""} ${primer_apellido ?? ""} ${segundo_apellido ?? ""}`;
     const nombre = nombre_completo ?? "";
     const id_personaa: number = id_persona ?? 0;
-
-
 
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -206,19 +205,52 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                 };
                 setDataEntidad(datosActualizados);
                 control_success("Cargo actualizado correctamente");
+                setValue("");
+                set_persona(undefined);
+
             })
             .catch((error: any) => {
 
                 control_error(error.response.data.detail);
             });
-    };
+    
+        setDataEntidad(updatedDataEntidad);
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        };
+
+
     useEffect(() => {
-        fetchDataGet().catch((error: any) => {
+        fetchDataGet().catch((error) => {
             console.error(error);
         });
-    }, []);
-
-
+    }, [handleChangeEmail]);
 
     return (
         <div>

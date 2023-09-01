@@ -1,10 +1,9 @@
 
 import { api } from '../../../../api/axios';
 // Types
-import { type AxiosResponse, type AxiosError, } from 'axios';
+import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type ResponseServer } from '../../../../interfaces/globalModels';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -58,10 +57,10 @@ export const obtener_etapa_meterial_vegetal: any = () => {
 };
 
 // Obtiene bienes para viveros
-export const obtener_bienes_viveros: any = (filtros: {seleccion_vivero: number|string,seleccion_tipo_bien: string,seleccion_material_vegetal: string}) => {
+export const obtener_bienes_viveros: any = (filtros: {seleccion_tipo_bien: string}) => {
   return async () => {
     try {
-      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}&cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}&cod_etapa_lote=${filtros.seleccion_material_vegetal === 'Todos' ? '': filtros.seleccion_material_vegetal}`);
+      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}&&id_vivero=`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -70,7 +69,7 @@ export const obtener_bienes_viveros: any = (filtros: {seleccion_vivero: number|s
   };
 };
 
-// Obtiene bienes para viveros
+// Obtiene los bienes para tabla de resultados viveros
 export const obtiene_analitica: any = (filtros: {seleccion_vivero: number|string,seleccion_tipo_bien: string,seleccion_material_vegetal: string, seleccion_bien_id: number|string, viveros_cuarentena: boolean, viveros_cerrados: boolean}) => {
   return async () => {
     try {
@@ -83,8 +82,29 @@ export const obtiene_analitica: any = (filtros: {seleccion_vivero: number|string
     }
   };
 };
+// Obtiene los bienes para resumen viveros
+export const obtiene_resumen: any = (filtros: {seleccion_vivero: number|string}) => {
+  return async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      const { data } = await api.get(`conservacion/analitica/tablero-control/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
-// Obtiene los tipos de entrada
-export const obtener_tipos_entrada = async (): Promise<AxiosResponse<ResponseServer<any[]>>> => {
-  return await api.get<ResponseServer<any[]>>('almacen/bienes/entradas/tipos-entradas/');
+// Obtiene ultimos movimientos
+export const obtiene_ultimos_movimientos: any = (filtros: {seleccion_vivero: number|string}) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`conservacion/analitica/historico-movimientos/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '': filtros.seleccion_vivero}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
 };

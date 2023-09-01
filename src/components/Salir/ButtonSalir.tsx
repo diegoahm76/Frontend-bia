@@ -1,12 +1,12 @@
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
+import ClearIcon from '@mui/icons-material/Clear';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ButtonSalir: React.FC = () => {
   const navigate = useNavigate();
 
-  const confirmar_eliminar = (): void => {
+  const confirmar_salir = (): void => {
     void Swal.fire({
       customClass: {
         confirmButton: 'square-btn',
@@ -31,7 +31,8 @@ export const ButtonSalir: React.FC = () => {
     <LoadingButton
       variant="contained"
       color="error"
-      onClick={confirmar_eliminar}
+      onClick={confirmar_salir}
+      startIcon={<ClearIcon />}
     >
       Salir
     </LoadingButton>

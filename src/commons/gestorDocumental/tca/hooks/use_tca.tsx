@@ -71,7 +71,6 @@ export const use_tca = () => {
   });
   const watch_administrar_tca_value = watch_administrar_tca();
 
-
   // ! -------- cleaning funcion for all tca screen ----------------->
 
   const cleaning_function = () => {
@@ -105,6 +104,9 @@ export const use_tca = () => {
       value: 0
     }
   ]);
+
+  // ? load tipologias
+  const [loadTipologias, setLoadTipologias] = useState<boolean>(false);
 
   //* -------------------------------------------------------------------------->
   //! useEffects that I will use in different components --------------------->
@@ -197,6 +199,8 @@ export const use_tca = () => {
     title_button_create_edit_tca,
 
     // ? cleaning function all
-    cleaning_function
+    cleaning_function,
+    loadTipologias,
+    setLoadTipologias
   };
 };

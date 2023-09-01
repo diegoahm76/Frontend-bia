@@ -13,6 +13,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen = (): JSX.Element => {
   const [position_tab, set_position_tab] = useState('1');
@@ -24,6 +25,7 @@ export const LiquidacionScreen = (): JSX.Element => {
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const [edit_opcion, set_edit_opcion] = useState<boolean>(false);
+
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/opciones-liquidacion-base')
@@ -65,6 +67,7 @@ export const LiquidacionScreen = (): JSX.Element => {
         console.log(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
+
       });
   };
 
@@ -250,6 +253,7 @@ export const LiquidacionScreen = (): JSX.Element => {
                     variant="outlined"
                     startIcon={<AddIcon />}
                     onClick={() => {
+
                       set_edit_opcion(false);
                       set_id_opcion_liquidacion('');
                       set_form_data((previousState) => ({ ...previousState, nombre_opcion_liquidacion: '', estado: '' }));
@@ -282,6 +286,7 @@ export const LiquidacionScreen = (): JSX.Element => {
                   set_refresh_page={set_refresh_page}
                   set_form_data={set_form_data}
                 />
+
               </TabPanel>
             </TabContext>
           </Box>

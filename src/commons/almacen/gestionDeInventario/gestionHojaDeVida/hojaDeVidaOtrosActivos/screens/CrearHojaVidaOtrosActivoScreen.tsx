@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { useEffect, useState } from 'react';
-import { Grid, } from '@mui/material';
+import { Button, Grid, } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { type IcvOthers as FormValues } from '../interfaces/CvOtrosActivos';
-import { create_cv_others_service, delete_cv_others_service, update_cv_other_service } from '../store/thunks/cvOtrosActivosThunks';
+import { create_cv_others_service, delete_cv_others_service, get_maintenance_other, update_cv_other_service } from '../store/thunks/cvOtrosActivosThunks';
 import SaveIcon from '@mui/icons-material/Save';
 import SeleccionarOtros from '../components/BuscarElemento';
 import EspecificacionesOtros from '../components/Especificaciones';
@@ -16,6 +16,7 @@ import EspecificacionesTec from '../components/EspecificacionesTec';
 import FormButton from '../../../../../../components/partials/form/FormButton';
 import { get_marca_service } from '../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { Title } from '../../../../../../components';
+import Mantenimiento_other from '../components/Mantenimientos';
 
 
 
@@ -33,7 +34,15 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
         if (current_cv_other.id_hoja_de_vida !== null) {
             set_action("editar")
         }
+        if (current_cv_other.id_articulo !== null) {
+            void dispatch(get_maintenance_other(current_cv_other.id_articulo ?? 0))
+        }
     }, [current_cv_other]);
+
+    const programacion_mantenimiento = (): void => {
+        navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_otros_activos');
+    };
+
 
 
     const on_submit = (data: FormValues): void => {
@@ -61,7 +70,6 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
 
     useEffect(() => {
         reset_other(current_cv_other);
-        console.log(current_cv_other)
     }, [current_cv_other]);
 
     return (
@@ -96,6 +104,7 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                     control_other={control_other}
                     get_values={get_values}
                     title="Adicional" />
+                <Mantenimiento_other />
 
                 <Grid
                     container
@@ -112,15 +121,24 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                             type_button="button"
                         />
                     </Grid>
+                    {current_cv_other.id_hoja_de_vida !== null &&
+                        <Grid item xs={12} md={2}>
+                            <FormButton
+                                variant_button="outlined"
+                                on_click_function={delete_hoja_vida}
+                                icon_class={<CloseIcon />}
+                                label={"Eliminar"}
+                                type_button="button"
+                            />
+                        </Grid>}
 
-                    <Grid item xs={12} md={2}>
-                        <FormButton
-                            variant_button="outlined"
-                            on_click_function={delete_hoja_vida}
-                            icon_class={<CloseIcon />}
-                            label={"Eliminar"}
-                            type_button="button"
-                        />
+                    <Grid item xs={12} md={3}>
+                        <Button
+                            variant="contained"
+                            onClick={programacion_mantenimiento}
+                        >
+                            Programar mantenimiento
+                        </Button>
                     </Grid>
                 </Grid>
 

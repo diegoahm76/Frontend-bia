@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
 import {
+  Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
+  IconButton,
   TextField,
   Tooltip,
 } from '@mui/material';
@@ -19,13 +22,18 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
 import type { BusquedaInstrumentos } from '../../interfaces/interface';
-import { search_instrumento } from '../../request/request';
+import { delete_instrumeto, search_instrumento } from '../../request/request';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from '../../../../../hooks';
 import {
   setCurrentInstrumento,
   set_current_id_instrumento,
 } from '../../toolkit/slice/instrumentosSlice';
+import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
@@ -61,61 +69,100 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 150,
+      width: 250,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar instrumento">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_id_instrumento(params.row.id_instrumento));
-                dispatch(
-                  setCurrentInstrumento({
-                    nombre: params.row.nombre,
-                    nombre_seccion: params.row.nombre_seccion,
-                    nombre_subseccion: params.row.nombre_subseccion,
-                    cod_tipo_agua: params.row.cod_tipo_agua,
-                    id_pozo: params.row.id_pozo,
-                  })
-                );
-                set_info_busqueda_instrumentos(params.row);
-                set_id_instrumento(params.row.id_instrumento);
-                set_nombre_seccion(params.row.nombre_seccion);
-                set_nombre_subseccion(params.row.nombre_subseccion);
-                set_mode('select_instrumento');
-                handle_close();
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_id_instrumento(params.row.id_instrumento));
+              dispatch(
+                setCurrentInstrumento({
+                  nombre: params.row.nombre,
+                  nombre_seccion: params.row.nombre_seccion,
+                  nombre_subseccion: params.row.nombre_subseccion,
+                  cod_tipo_agua: params.row.cod_tipo_agua,
+                  id_pozo: params.row.id_pozo,
+                })
+              );
+              set_info_busqueda_instrumentos(params.row);
+              set_id_instrumento(params.row.id_instrumento);
+              set_nombre_seccion(params.row.nombre_seccion);
+              set_nombre_subseccion(params.row.nombre_subseccion);
+              set_mode('select_instrumento');
+              handle_close();
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar instrumento">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_id_instrumento(params.row.id_instrumento));
-                dispatch(
-                  setCurrentInstrumento({
-                    nombre: params.row.nombre,
-                    nombre_seccion: params.row.nombre_seccion,
-                    nombre_subseccion: params.row.nombre_subseccion,
-                    cod_tipo_agua: params.row.cod_tipo_agua,
-                    id_pozo: params.row.id_pozo,
-                  })
-                );
-                set_info_busqueda_instrumentos(params.row);
-                set_id_instrumento(params.row.id_instrumento);
-                set_nombre_seccion(params.row.nombre_seccion);
-                set_nombre_subseccion(params.row.nombre_subseccion);
-                set_mode('edit_instrumento');
-                handle_close();
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar instrumento"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_id_instrumento(params.row.id_instrumento));
+              dispatch(
+                setCurrentInstrumento({
+                  nombre: params.row.nombre,
+                  nombre_seccion: params.row.nombre_seccion,
+                  nombre_subseccion: params.row.nombre_subseccion,
+                  cod_tipo_agua: params.row.cod_tipo_agua,
+                  id_pozo: params.row.id_pozo,
+                })
+              );
+              set_info_busqueda_instrumentos(params.row);
+              set_id_instrumento(params.row.id_instrumento);
+              set_nombre_seccion(params.row.nombre_seccion);
+              set_nombre_subseccion(params.row.nombre_subseccion);
+              set_mode('edit_instrumento');
+              handle_close();
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar instrumento"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <ButtonDelete
+            id={params.row.id_instrumento}
+            confirmationMessage="¿Estás seguro de eliminar este instrumento?"
+            successMessage="El instrumento se eliminó correctamente"
+            deleteFunction={async () =>
+              await delete_instrumeto(params.row.id_instrumento)
+            }
+            fetchDataFunction={async () => {
+              await on_submit_advance();
+            }}
+          />
         </>
       ),
     },
@@ -123,6 +170,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
 
   const {
     register,
+    reset,
     handleSubmit: handle_submit,
     formState: { errors },
   } = useForm();
@@ -165,6 +213,8 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
     }
   );
   useEffect(() => {
+    reset();
+    set_rows([]);
     set_is_search(false);
   }, []);
 
@@ -173,6 +223,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
       <Grid item>
         <Button
           variant="contained"
+          startIcon={<SearchIcon />}
           color="primary"
           onClick={() => {
             handle_click_open();
@@ -241,6 +292,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     color="primary"
                     loading={is_search}
                     disabled={is_search}
+                    startIcon={<SearchIcon />}
                   >
                     Buscar
                   </LoadingButton>
@@ -252,13 +304,19 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                       {/* <Typography>Resultados de la búsqueda</Typography> */}
                     </Grid>
                     <Grid item xs={12}>
+                      <ButtonGroup
+                        style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                      >
+                        {download_xls({ nurseries: rows, columns })}
+                        {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                      </ButtonGroup> 
                       <Box sx={{ height: 400, width: '100%' }}>
                         <>
                           <DataGrid
                             rows={rows}
                             columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
                             getRowId={(row) => row.id_instrumento}
                           />
                         </>

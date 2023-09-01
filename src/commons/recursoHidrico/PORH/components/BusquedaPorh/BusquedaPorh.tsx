@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogContent,
   Grid,
@@ -21,6 +22,9 @@ import { search_avanzada_porh } from '../../Request/request';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataContext } from '../../context/contextData';
 import type { BusquedaPorhI } from '../../Interfaces/interfaces';
+import SearchIcon from '@mui/icons-material/Search';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 export const BusquedaPorh: React.FC = () => {
   const {
@@ -78,6 +82,7 @@ export const BusquedaPorh: React.FC = () => {
     formState: { errors },
   } = useForm();
 
+
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<BusquedaPorhI[]>([]);
@@ -128,7 +133,7 @@ export const BusquedaPorh: React.FC = () => {
         />
       </Grid>
       <Grid item xs={12} sm={6} md={2} container justifyContent="end">
-        <Button variant="contained" color="primary" onClick={handle_click_open}>
+        <Button    startIcon={<SearchIcon />} variant="contained" color="primary" onClick={handle_click_open}>
           Buscar
         </Button>
       </Grid>
@@ -170,6 +175,7 @@ export const BusquedaPorh: React.FC = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                 >
@@ -180,15 +186,22 @@ export const BusquedaPorh: React.FC = () => {
                 <>
                   <Grid item xs={12}>
                     <Typography>Resultados de la búsqueda</Typography>
-                  </Grid>
+                
+                  <ButtonGroup
+                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    {download_xls({ nurseries: rows, columns })}
+                    {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
+                  </ButtonGroup> 
+                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
                       <>
                         <DataGrid
                           rows={rows}
                           columns={columns}
-                          pageSize={5}
-                          rowsPerPageOptions={[5]}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
                           getRowId={(row) => row.id_instrumento}
                         />
                       </>

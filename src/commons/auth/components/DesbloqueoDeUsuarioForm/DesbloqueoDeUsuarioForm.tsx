@@ -94,7 +94,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
     try {
       const { data } = await desbloquer_usuario({
         ...data_register,
-        telefono_celular: `57${data_register.telefono_celular}`,
+        telefono_celular: `${data_register.telefono_celular}`,
       });
       control_success(data.detail);
       window.location.href = '#/app/auth/login';

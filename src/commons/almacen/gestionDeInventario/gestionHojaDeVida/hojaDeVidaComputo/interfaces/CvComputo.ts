@@ -4,6 +4,7 @@ export interface Icv {
   current_cv_computer: ICvcomputers;
   cv_computer: ICvcomputers[];
   marcas: IMarca[];
+  maintenance: IObjMantenimiento[];
 }
 
 export interface IMarca {
@@ -70,4 +71,13 @@ export interface ICvcomputers {
   marca?: string;
   nombre?: string;
   id_marca?: number | null;
+}
+
+export interface IObjMantenimiento {
+  id_programacion_mantenimiento?: number | null;
+  tipo?: string | null;
+  fecha?: string | null;
+  estado?: string | null;
+  responsable?: string | null;
+  tipo_descripcion?: string | null;
 }

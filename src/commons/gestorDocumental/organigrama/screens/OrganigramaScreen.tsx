@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -15,12 +16,13 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 export const OrganigramaScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [position_tab, set_position_tab_organigrama] = useState('1');
-  const { organigram_current } = useAppSelector((state: any) => state.organigram);
+  const { organigram_current } = useAppSelector(
+    (state: any) => state.organigram
+  );
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab_organigrama(newValue);
     void dispatch(clean_current_organigram());
   };
-
   return (
     <Grid
       container
@@ -29,7 +31,7 @@ export const OrganigramaScreen: React.FC = () => {
         background: '#FAFAFA',
         borderRadius: '15px',
         p: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
+        boxShadow: '0px 3px 6px #042F4A26'
       }}
     >
       <Title title="ORGANIGRAMAS" />
@@ -40,11 +42,11 @@ export const OrganigramaScreen: React.FC = () => {
               <Tab label="Organigramas" value="1" />
               <Tab
                 label={
-                  organigram_current.fecha_terminado !== null
-                    ? 'Ver organigrama'
-                    : 'Editar organigrama'
+                  !organigram_current?.fecha_terminado || organigram_current?.fecha_terminado === null
+                    ? 'Editar organigrama'
+                    : 'Ver organigrama '
                 }
-                disabled={position_tab === '1' && true}
+                disabled={position_tab === '2' && true}
                 value="2"
               />
             </TabList>

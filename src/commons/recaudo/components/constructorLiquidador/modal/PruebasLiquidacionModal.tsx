@@ -21,6 +21,7 @@ import {
   useState,
   type Dispatch,
   type SetStateAction
+
 } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -124,3 +125,4 @@ export const PruebasLiquidacionModal: React.FC<IProps> = ({ is_modal_active, set
     </Dialog>
   )
 }
+

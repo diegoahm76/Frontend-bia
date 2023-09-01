@@ -5,6 +5,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Divider,
   Grid,
   MenuItem,
@@ -33,7 +34,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
-
+import { ButtonInstrumentos } from '../ButtonInstrumentos';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarAforo: React.FC = () => {
   const columns_anexos: GridColDef[] = [
@@ -97,7 +101,14 @@ export const SeleccionarAforo: React.FC = () => {
               variant="outlined"
               color="primary"
               size="small"
-              startIcon={<DeleteIcon />}
+              startIcon={<DeleteIcon 
+                titleAccess="Eliminar registro de cartera de aforo"
+                sx={{
+                  color: 'red',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />}
               onClick={() => {
                 handle_delete_select(params.row.id);
               }}
@@ -223,7 +234,7 @@ export const SeleccionarAforo: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title=" INFORMACIÓN DE CARTERA DE AFOROS " />
+            <Title title="  Información de cartera de aforos " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -672,6 +683,12 @@ export const SeleccionarAforo: React.FC = () => {
                   Datos Aforo:
                 </Typography>
                 <Divider />
+                <ButtonGroup
+                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  {download_xls({ nurseries: rows_data_cartera, columns: columns_aforo })}
+                  {download_pdf({ nurseries: rows_data_cartera, columns: columns_aforo, title: 'Resultados de la búsqueda' })}
+                </ButtonGroup> 
                 <DataGrid
                   autoHeight
                   rows={rows_data_cartera}
@@ -689,18 +706,28 @@ export const SeleccionarAforo: React.FC = () => {
           </Grid>
           <Grid item xs={12}>
             <>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: rows_anexos_cartera, columns: columns_anexos })}
+                {download_pdf({ nurseries: rows_anexos_cartera, columns: columns_anexos, title: 'Resultados de laboratorio' })}
+              </ButtonGroup> 
+
               <DataGrid
                 autoHeight
                 rows={rows_anexos_cartera}
                 columns={columns_anexos}
                 getRowId={(row) => uuidv4()}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             </>
           </Grid>
           <AgregarArchivo multiple={true} />
           <Grid item spacing={2} justifyContent="end" container>
+          <Grid item>
+              <ButtonInstrumentos />
+            </Grid>
             <Grid item>
               <ButtonSalir />
             </Grid>
@@ -709,6 +736,8 @@ export const SeleccionarAforo: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
+                
+                startIcon={<SaveIcon />}
                 disabled={is_saving || rows_data_cartera.length === 0}
                 loading={is_saving}
               >

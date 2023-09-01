@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LoadingButton } from '@mui/lab';
-import UpdateIcon from '@mui/icons-material/Update';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import type {
@@ -28,7 +27,7 @@ import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
   editar_persona_juridica,
-} from '../../request/Request'
+} from '../../request/Request';
 import { control_error, control_success } from '../../../../helpers';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 import { DialogHistorialDatosRestringidos } from '../DialogHistorialDatosRestringidos';
@@ -38,6 +37,9 @@ import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotif
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 import { DatosRepresentanteLegal } from '../DatosRepresentanteLegal/DataRepresentanteLegal';
 import { type AxiosError } from 'axios';
+import SearchIcon from '@mui/icons-material/Search';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import SaveIcon from '@mui/icons-material/Save';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
@@ -160,7 +162,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
         );
         set_clase_tercero_persona(data_persona_clase_tercero);
       }
-      return;
+      // return;
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {
@@ -294,6 +296,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_datos_r();
@@ -368,6 +371,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               <Grid item xs={12} sm={6} md={4}>
                 <Button
                   variant="contained"
+                  startIcon={<SearchIcon />}
                   onClick={() => {
                     open_modal(true);
                     set_type_direction('notificacion');
@@ -428,6 +432,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_direcciones();
@@ -437,6 +442,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                   </Button>
                   <Button
                     variant="outlined"
+                    color='warning'
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_email();
@@ -542,6 +548,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_dialog_autorizacion();
@@ -551,7 +558,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                   </Button>
                   <Button
                     variant="contained"
-                    startIcon={<UpdateIcon />}
+                    startIcon={<PlaylistAddCheckIcon />}
                     onClick={() => {
                       handle_open_dialog_notificaciones();
                     }}
@@ -603,6 +610,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                     variant="contained"
                     fullWidth
                     color="success"
+                    startIcon={<SaveIcon />}
                     loading={is_saving}
                     disabled={is_saving}
                   >

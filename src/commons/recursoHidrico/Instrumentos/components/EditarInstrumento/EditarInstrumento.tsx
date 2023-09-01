@@ -10,7 +10,6 @@ import {
   IconButton,
   MenuItem,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -44,7 +43,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-
+import SaveIcon from '@mui/icons-material/Save';
 export const EditarInstrumento: React.FC = (): JSX.Element => {
   const columns_prueba_bombeo: GridColDef[] = [
     {
@@ -65,52 +64,80 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_info_prueba_bombeo(params.row));
-                dispatch(
-                  set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
-                );
-                dispatch(
-                  set_current_mode_bombeo({
-                    ver: true,
-                    crear: false,
-                    editar: false,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
-                  replace: true,
-                });
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_prueba_bombeo(params.row));
+              dispatch(
+                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo)
+              );
+              dispatch(
+                set_current_mode_bombeo({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo', {
+                replace: true,
+              });
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar prueba de bombeo">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
-                set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/prueba_bombeo', {
-                  replace: true,
-                });
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar prueba de bombeo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_prueba_bombeo(params.row));
+              set_current_id_prueba_bombeo(params.row.id_prueba_bombeo);
+              dispatch(
+                set_current_mode_bombeo({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo', {
+                replace: true,
+              });
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar prueba de bombeo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -134,54 +161,83 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
-                dispatch(
-                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
-                );
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: true,
-                    crear: false,
-                    editar: false,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
-                  replace: true,
-                });
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_cartera(params.row));
+              dispatch(
+                set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+              );
+              dispatch(
+                set_current_mode_cartera({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo', {
+                replace: true,
+              });
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar cartera de aforo">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_info_cartera(params.row));
-                dispatch(
-                  set_current_id_cartera_aforos(params.row.id_cartera_aforos)
-                );
-                dispatch(
-                  set_current_mode_cartera({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate('/app/recurso_hidrico/instrumentos/cartera_aforo', {
-                  replace: true,
-                });
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar cartera de aforo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_cartera(params.row));
+              dispatch(
+                set_current_id_cartera_aforos(params.row.id_cartera_aforos)
+              );
+              dispatch(
+                set_current_mode_cartera({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              navigate('/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo', {
+                replace: true,
+              });
+            }}
+          >
+            {' '}
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar cartera de aforo"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -205,64 +261,92 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
       width: 200,
       renderCell: (params) => (
         <>
-          <Tooltip title="Seleccionar">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<ChecklistOutlinedIcon />}
-              onClick={() => {
-                dispatch(set_current_info_laboratorio(params.row));
-                dispatch(
-                  set_currente_id_resultado_laboratorio(
-                    params.row.id_resultado_laboratorio
-                  )
-                );
-                dispatch(
-                  set_current_mode({
-                    ver: true,
-                    crear: false,
-                    editar: false,
-                  })
-                );
-                navigate(
-                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
-                  {
-                    replace: true,
-                  }
-                );
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_laboratorio(params.row));
+              dispatch(
+                set_currente_id_resultado_laboratorio(
+                  params.row.id_resultado_laboratorio
+                )
+              );
+              dispatch(
+                set_current_mode({
+                  ver: true,
+                  crear: false,
+                  editar: false,
+                })
+              );
+              navigate(
+                '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
+                {
+                  replace: true,
+                }
+              );
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
-          <Tooltip title="Editar Registro de laboratorio">
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                dispatch(set_current_info_laboratorio(params.row));
-                dispatch(
-                  set_currente_id_resultado_laboratorio(
-                    params.row.id_resultado_laboratorio
-                  )
-                );
-                dispatch(
-                  set_current_mode({
-                    ver: false,
-                    crear: false,
-                    editar: true,
-                  })
-                );
-                navigate(
-                  '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
-                  {
-                    replace: true,
-                  }
-                );
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar resultado de laboratorio"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => {
+              dispatch(set_current_info_laboratorio(params.row));
+              dispatch(
+                set_currente_id_resultado_laboratorio(
+                  params.row.id_resultado_laboratorio
+                )
+              );
+              dispatch(
+                set_current_mode({
+                  ver: false,
+                  crear: false,
+                  editar: true,
+                })
+              );
+              navigate(
+                '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
+                {
+                  replace: true,
+                }
+              );
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
               }}
-            />
-          </Tooltip>
+              variant="rounded"
+            >
+              <EditIcon
+                titleAccess="Editar resultado de laboratorio"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -842,6 +926,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                 variant="contained"
                 color="success"
                 type="submit"
+                startIcon={<SaveIcon />}
                 loading={is_loading_submit}
                 disabled={is_loading_submit}
               >
@@ -852,148 +937,167 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
         </Grid>
       </form>
       {tipo_agua_selected !== 'OTR' ? (
-        <>
-          <Grid
-            container
-            spacing={2}
-            m={2}
-            p={2}
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px',
-              m: '10px 0 20px 0',
-              mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-            }}
-          >
-            {tipo_agua_selected === 'SUP' ? (
-              <>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    Carteras de aforo
-                  </Typography>
-                  <Divider />
-                </Grid>
-                {rows_cartera.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <DataGrid
-                        autoHeight
-                        rows={rows_cartera}
-                        columns={columns_aforo}
-                        getRowId={(row) => uuidv4()}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                      />
-                    </Grid>
-                  </>
-                )}
-                <Grid item spacing={2} justifyContent="end" container>
-                  <Grid item>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        navigate(
-                          '/app/recurso_hidrico/instrumentos/cartera_aforo',
-                          {
-                            replace: true,
-                          }
-                        );
-                      }}
-                    >
-                      Agregar nueva cartera de aforo
-                    </Button>
-                  </Grid>
-                </Grid>
-              </>
-            ) : null}
-            {tipo_agua_selected === 'SUB' ? (
-              <>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    Pruebas de bombeo
-                  </Typography>
-                  <Divider />
-                </Grid>
-                {rows_prueba_bombeo.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <DataGrid
-                        autoHeight
-                        rows={rows_prueba_bombeo}
-                        columns={columns_prueba_bombeo}
-                        getRowId={(row) => uuidv4()}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                      />
-                    </Grid>
-                  </>
-                )}
-                <Grid item spacing={2} justifyContent="end" container>
-                  <Grid item>
-                    <LoadingButton
-                      variant="outlined"
-                      color="primary"
-                      type="submit"
-                      onClick={() => {
-                        navigate(
-                          '/app/recurso_hidrico/instrumentos/prueba_bombeo',
-                          {
-                            replace: true,
-                          }
-                        );
-                      }}
-                    >
-                      Agregar nueva prueba de bombeo
-                    </LoadingButton>
-                  </Grid>
-                </Grid>
-              </>
-            ) : null}
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Resultados de laboratorio
-              </Typography>
-              <Divider />
-            </Grid>
-            {rows_laboratorio.length > 0 && (
-              <>
-                <Grid item xs={12}>
-                  <DataGrid
-                    autoHeight
-                    rows={rows_laboratorio}
-                    columns={colums_laboratorio}
-                    getRowId={(row) => uuidv4()}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                  />
-                </Grid>
-              </>
-            )}
-            <Grid item spacing={2} justifyContent="end" container>
-              <Grid item>
-                <LoadingButton
-                  variant="outlined"
-                  color="primary"
-                  type="submit"
-                  onClick={() => {
-                    navigate(
-                      '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
-                      {
-                        replace: true,
-                      }
-                    );
-                  }}
-                >
-                  Agregar nuevo resultado de laboratorio
-                </LoadingButton>
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          {tipo_agua_selected === 'SUP' ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Carteras de aforo
+                </Typography>
+                <Divider />
               </Grid>
+              {rows_cartera.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <DataGrid
+                      autoHeight
+                      rows={rows_cartera}
+                      columns={columns_aforo}
+                      getRowId={(row) => uuidv4()}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </Grid>
+                </>
+              )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      dispatch(
+                        set_current_mode_cartera({
+                          ver: false,
+                          crear: true,
+                          editar: false,
+                        })
+                      );
+                      navigate(
+                        '/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo',
+                        {
+                          replace: true,
+                        }
+                      );
+                    }}
+                  >
+                    Agregar nueva cartera de aforo
+                  </Button>
+                </Grid>
+              </Grid>
+            </>
+          ) : null}
+          {tipo_agua_selected === 'SUB' ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Pruebas de bombeo
+                </Typography>
+                <Divider />
+              </Grid>
+              {rows_prueba_bombeo.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <DataGrid
+                      autoHeight
+                      rows={rows_prueba_bombeo}
+                      columns={columns_prueba_bombeo}
+                      getRowId={(row) => uuidv4()}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </Grid>
+                </>
+              )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    variant="outlined"
+                    color="primary"
+                    type="submit"
+                    onClick={() => {
+                      dispatch(
+                        set_current_mode_bombeo({
+                          ver: false,
+                          crear: true,
+                          editar: false,
+                        })
+                      );
+                      navigate(
+                        '/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo',
+                        {
+                          replace: true,
+                        }
+                      );
+                    }}
+                  >
+                    Agregar nueva prueba de bombeo
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+            </>
+          ) : null}
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Resultados de laboratorio
+            </Typography>
+            <Divider />
+          </Grid>
+          {rows_laboratorio.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <DataGrid
+                  autoHeight
+                  rows={rows_laboratorio}
+                  columns={colums_laboratorio}
+                  getRowId={(row) => uuidv4()}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </Grid>
+            </>
+          )}
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <LoadingButton
+                variant="outlined"
+                color="primary"
+                type="submit"
+                onClick={() => {
+                  dispatch(
+                    set_current_mode({
+                      ver: false,
+                      crear: true,
+                      editar: false,
+                    })
+                  );
+                  navigate(
+                    '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
+                    {
+                      replace: true,
+                    }
+                  );
+                }}
+              >
+                Agregar nuevo resultado de laboratorio
+              </LoadingButton>
             </Grid>
           </Grid>
-        </>
+        </Grid>
       ) : null}
     </>
   );

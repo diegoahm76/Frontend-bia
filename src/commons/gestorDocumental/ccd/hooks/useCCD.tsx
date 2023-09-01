@@ -277,20 +277,37 @@ const use_ccd = () => {
   useEffect(() => {
     console.log('uniry_organigram', unity_organigram);
     const filteredUnityOrganigram = unity_organigram.filter(
-      (item: any) => item.cod_agrupacion_documental !== null
+      (item: any) => item.cod_agrupacion_documental !== null && item.activo
     );
-    set_list_unitys(
-      filteredUnityOrganigram.map((item: any) => ({
 
-        label: item?.nombre,
-        value: item.id_unidad_organizacional!
-      }))
+    const filter = filteredUnityOrganigram.map((item: any) => ({
+      item,
+      label: item?.nombre,
+      value: item.id_unidad_organizacional!
+    }));
+
+    console.log(filter, 'filter');
+
+    set_list_unitys(
+      filteredUnityOrganigram
+        .filter((item: any) => item.activo)
+        .map((item: any) => ({
+          label: item?.nombre,
+          value: item.id_unidad_organizacional!
+        }))
     );
   }, [unity_organigram]);
 
   useEffect(() => {
+    const orgActual = organigram.find((el: any) => el.actual);
+    const filteredOrganigramas = organigram.filter(
+      (el: any) =>
+        el.fecha_terminado &&
+        !el.fecha_retiro_produccion &&
+        el.fecha_terminado >= orgActual.fecha_terminado
+    );
     set_list_organigrams(
-      organigram.map((item: any) => ({
+      filteredOrganigramas.map((item: any) => ({
         label: item?.nombre,
         value: item.id_organigrama!
       }))
@@ -579,7 +596,7 @@ const use_ccd = () => {
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DeleteIcon
                   titleAccess="Eliminar relación"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>

@@ -7,7 +7,8 @@ import {
   Button,
   // Divider,
   // TextField,
-  Stack
+  Stack,
+  ButtonGroup
   // IconButton
   // ButtonGroup,
   // Button,
@@ -21,6 +22,8 @@ import {
 } from '../../../../../../../hooks';
 import { columns } from './utils/columsCatalogoTRD';
 import { Link } from 'react-router-dom';
+import { download_xls } from '../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../documentos-descargar/PDF_descargar';
 
 // import { Avatar, IconButton } from "@mui/material";
 /* import DeleteIcon from '@mui/icons-material/Delete';
@@ -92,6 +95,12 @@ export const CatalogoTRD = (): JSX.Element => {
       >
         <Box sx={{ width: '100%' }}>
           <Title title="Catálogo TRD - Tabla de retención documental" />
+          <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+            {download_xls({ nurseries: catalogo_trd, columns: columns_catalogo_trd })}
+            {download_pdf({ nurseries: catalogo_trd, columns: columns_catalogo_trd, title: 'Catálogo TRD' })}
+
+          </ButtonGroup>
           <DataGrid
             sx={{
               marginTop: '.5rem'
@@ -100,8 +109,8 @@ export const CatalogoTRD = (): JSX.Element => {
             autoHeight
             rows={catalogo_trd || []}
             columns={columns_catalogo_trd}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_catserie_unidadorg ?? 0}
           />

@@ -28,9 +28,13 @@ import { useAppDispatch /* useAppSelector */ } from '../../../../../hooks';
 import {
   setCurrentInstrumento,
   set_current_id_instrumento,
+  set_current_mode,
+  set_current_mode_bombeo,
+  set_current_mode_cartera,
 } from '../../toolkit/slice/instrumentosSlice';
 import { DataContext } from '../../context/contextData';
-
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import SaveIcon from '@mui/icons-material/Save';
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   // const { instrumentos } = useAppSelector((state) => state.instrumentos_slice);
 
@@ -168,6 +172,8 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     row_prueba_bombeo,
     row_result_laboratorio,
     is_loading_submit,
+    tipo_agua_instrumento,
+    set_tipo_agua_instrumento,
     set_is_loading_submit,
     handle_date_change,
     handle_change_autocomplete,
@@ -237,6 +243,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
         } = response;
         dispatch(set_current_id_instrumento(id_instrumento));
       });
+
       dispatch(
         setCurrentInstrumento({
           nombre: data.nombre,
@@ -248,19 +255,18 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
         })
       );
       control_success('Se agregó instrumento correctamente');
-      set_is_open_result_laboratorio(true);
       limpiar_formulario();
     } catch (error: any) {
       control_error(error.response.data.detail);
     } finally {
       set_is_loading_submit(false);
+      set_is_open_result_laboratorio(true);
     }
   });
 
   useEffect(() => {
     console.log(tipo_agua_selected, 'tipo_agua_selected');
   }, [tipo_agua_selected]);
-
 
   useEffect(() => {
     void fetch_data_cuencas();
@@ -295,7 +301,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
           }}
         >
           <Grid item xs={12}>
-            
             <Typography variant="subtitle1" fontWeight="bold">
               Información del Instrumento:
             </Typography>
@@ -344,9 +349,8 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
               control={control}
               defaultValue=""
               rules={{ required: true }}
-              render={({ field }) => (
+              render={({ field: { onChange, value } }) => (
                 <TextField
-                  {...field}
                   label="Tipo de agua"
                   select
                   size="small"
@@ -354,6 +358,11 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   disabled={false}
                   fullWidth
                   required
+                  value={value}
+                  onChange={(e) => {
+                    onChange(e.target.value);
+                    set_tipo_agua_instrumento(e.target.value);
+                  }}
                   error={!!formErrors.cod_tipo_agua}
                   helperText={
                     formErrors?.cod_tipo_agua?.type === 'required' &&
@@ -487,6 +496,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}></Grid>
             </>
           ) : null}
           <AgregarArchivo multiple={true} />
@@ -494,7 +504,8 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
             <Grid item>
               <Button
                 variant="outlined"
-                color="warning"
+                // color="warning"
+                 startIcon={<CleanIcon />}
                 onClick={() => {
                   limpiar_formulario();
                 }}
@@ -509,6 +520,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                 type="submit"
                 loading={is_loading_submit}
                 disabled={is_loading_submit}
+                startIcon={<SaveIcon />}
               >
                 Guardar
               </LoadingButton>
@@ -518,7 +530,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
       </form>
       {is_open_result_laboratorio ? (
         <>
-          {tipo_agua_selected !== 'OTR' ? (
+          {tipo_agua_instrumento !== 'OTR' ? (
             <Grid
               container
               spacing={2}
@@ -534,7 +546,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-              {tipo_agua_selected === 'SUP' ? (
+              {tipo_agua_instrumento === 'SUP' ? (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="subtitle1" fontWeight="bold">
@@ -562,8 +574,15 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                         variant="outlined"
                         color="primary"
                         onClick={() => {
+                          dispatch(
+                            set_current_mode_cartera({
+                              ver: false,
+                              crear: true,
+                              editar: false,
+                            })
+                          );
                           navigate(
-                            '/app/recurso_hidrico/instrumentos/cartera_aforo',
+                            '/app/recurso_hidrico/biblioteca/instrumentos/cartera_aforo',
                             {
                               replace: true,
                             }
@@ -576,7 +595,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                   </Grid>
                 </>
               ) : null}
-              {tipo_agua_selected === 'SUB' ? (
+              {tipo_agua_instrumento === 'SUB' ? (
                 <>
                   <Grid item xs={12}>
                     <Typography variant="subtitle1" fontWeight="bold">
@@ -605,8 +624,15 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                         color="primary"
                         type="submit"
                         onClick={() => {
+                          dispatch(
+                            set_current_mode_bombeo({
+                              ver: false,
+                              crear: true,
+                              editar: false,
+                            })
+                          );
                           navigate(
-                            '/app/recurso_hidrico/instrumentos/prueba_bombeo',
+                            '/app/recurso_hidrico/biblioteca/instrumentos/prueba_bombeo',
                             {
                               replace: true,
                             }
@@ -646,8 +672,15 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                     color="primary"
                     type="submit"
                     onClick={() => {
+                      dispatch(
+                        set_current_mode({
+                          ver: false,
+                          crear: true,
+                          editar: false,
+                        })
+                      );
                       navigate(
-                        '/app/recurso_hidrico/instrumentos/resultado_laboratorio',
+                        '/app/recurso_hidrico/biblioteca/instrumentos/resultado_laboratorio',
                         {
                           replace: true,
                         }

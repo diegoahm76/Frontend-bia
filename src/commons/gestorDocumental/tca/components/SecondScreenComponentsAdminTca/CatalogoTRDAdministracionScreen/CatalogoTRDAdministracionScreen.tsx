@@ -12,7 +12,14 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import type { dataGridTypes } from '../../../types/tca.types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { ModalContextTCA } from '../../../context/ModalContextTca';
-import { set_selected_item_from_catalogo_action } from '../../../toolkit/TCAResources/slice/TcaSlice';
+import {
+  set_selected_item_from_catalogo_action,
+  set_tipologias_NO_reservadas,
+  set_tipologias_reservadas
+} from '../../../toolkit/TCAResources/slice/TcaSlice';
+import { type GridColDef } from '@mui/x-data-grid';
+import { get_tipologias_relacion } from '../../../toolkit/TCAResources/thunks/TcaServicesThunks';
+import { use_tca } from '../../../hooks/use_tca';
 
 export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   rows,
@@ -23,21 +30,20 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
-
   //* context declaration
-  // eslint-disable-next-line no-empty-pattern
-  const {
-    // modalAdministracionTca,
-    openModalAdministracionTca
-    // closeModalAdministracionTca,
-  } = useContext(ModalContextTCA);
+  const { openModalAdministracionTca } = useContext(ModalContextTCA);
 
-  const newColums: any = [
+  const {
+    setLoadTipologias
+    // ? establishe the formState
+  } = use_tca();
+
+  const newColums: GridColDef[] = [
     {
       headerName: 'Acciones',
       field: 'acciones',
       width: 80,
-      renderCell: (params: { row: { id_cat_serie_und: string } }) => {
+      renderCell: (params: any) => {
         return (
           <>
             <IconButton
@@ -48,6 +54,29 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
                 console.log(params.row);
                 openModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(params.row));
+                void get_tipologias_relacion(
+                  params.row.id_catserie_unidadorg,
+                  setLoadTipologias
+                ).then((res: any) => {
+                  const tipologias_reservadas = res.filter(
+                    (item: any) => item.reservada
+                  );
+
+                  const tipologias_NO_reservadas = res.filter(
+                    (item: any) => !item.reservada
+                  );
+
+                  console.log('tipologias_reservadas,', tipologias_reservadas);
+                  console.log(
+                    'tipologias_NO_reservadas,',
+                    tipologias_NO_reservadas
+                  );
+
+                  dispatch(set_tipologias_reservadas(tipologias_reservadas));
+                  dispatch(
+                    set_tipologias_NO_reservadas(tipologias_NO_reservadas)
+                  );
+                });
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -96,19 +125,12 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
   return (
     <>
-
       <RenderDataGrid
         rows={rows || []}
         columns={newColums || []}
         title={title}
         aditionalElement={aditionalElement}
       />
-
-      {/*
-        mirar si se debe añadir componente adicional
-
-        button - añadir nueva relacion del TRD o cancelar relacion del TRD en la propiedad aditionalElement
-      */}
     </>
   );
 };

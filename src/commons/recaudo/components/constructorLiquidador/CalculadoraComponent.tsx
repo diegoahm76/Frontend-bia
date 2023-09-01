@@ -8,6 +8,7 @@ import {
   Select,
   type SelectChangeEvent,
   Stack
+
 } from "@mui/material";
 import { useState } from "react";
 import { PruebasLiquidacionModal } from "./modal/PruebasLiquidacionModal";
@@ -56,6 +57,7 @@ export const CalculadoraComponent: React.FC = () => {
 
   // MODAL PRUEBAS DE LIQUIDACION
   const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
+
 
 
   return (
@@ -135,3 +137,4 @@ export const CalculadoraComponent: React.FC = () => {
     </>
   )
 }
+

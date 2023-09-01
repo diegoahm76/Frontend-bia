@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, Checkbox, TextField, Stack, Button, DialogActions, Dialog, DialogTitle } from '@mui/material';
-import { Add, Close } from '@mui/icons-material';
+import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
 import { get_datos_deudor } from '../slices/DeudoresSlice';
+import { get_datos_contacto_solicitud } from '../slices/SolicitudSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
+import { DialogoInformativo } from './DialogoInformativo';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
@@ -49,6 +51,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
     try {
       dispatch(obligaciones_seleccionadas(arr_registro));
       void dispatch(get_datos_deudor(obligaciones.id_deudor));
+      void dispatch(get_datos_contacto_solicitud(obligaciones.id_deudor));
     } catch (error: any) {
       throw new Error(error);
     }
@@ -96,7 +99,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i< lista_obligaciones.length; i++){
+    for(let i=0; i<lista_obligaciones.length; i++){
       for(let j=0; j< selected.length; j++){
         if(lista_obligaciones[i].nombre === selected[j]){
           sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
@@ -159,7 +162,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'numero_resolucion',
+      field: 'nro_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
@@ -298,30 +301,15 @@ export const TablaObligacionesUsuario: React.FC = () => {
         </Stack>
         </Grid>
       </Grid>
-      <Dialog
-        open={modal}
-        onClose={handle_close}
-        maxWidth="xs"
-      >
-        <Box component="form">
-          {
-            modal_opcion === 1 ?
-              <DialogTitle>{`El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`}</DialogTitle> :
-            modal_opcion === 2 ?
-              <DialogTitle>Para continuar a la página de registro seleccione al menos una de las obligaciones</DialogTitle> : null
-          }
-          <DialogActions>
-            <Button
-              variant='outlined'
-              color="primary"
-              startIcon={<Close />}
-              onClick={handle_close}
-            >
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <DialogoInformativo
+        tipo_notificacion={ modal_opcion === 1 ? 'error' : 'warn' }
+        mensaje_notificacion={
+          modal_opcion === 1 ? `El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago` :
+          'Para continuar a la página de registro seleccione al menos una de las obligaciones'
+        }
+        abrir_modal={modal}
+        abrir_dialog={handle_close}
+      />
     </>
   );
 }

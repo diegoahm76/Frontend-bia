@@ -30,8 +30,7 @@ export const MostrarEmail: React.FC = () => {
 
   // Estado para almacenar los datos de la sucursal de la empresa
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [dataEntidad, setDataEntidad] =
-    useState<IconfiguracionEntidad>(initialState);
+  const [dataEntidad, setDataEntidad] = useState<IconfiguracionEntidad>(initialState);
 
   // Estado para almacenar el valor del campo de email
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -98,6 +97,8 @@ export const MostrarEmail: React.FC = () => {
           };
           setDataEntidad(updatedDataEntidadWithUpdatedEmail);
           control_success('Email Corporativo actualizado correctamente');
+          setConfirmEmailValue('');
+          setEmailValue('');
         })
         .catch((error: any) => {
           // console.error("Error al actualizar los datos:", error);
@@ -200,6 +201,8 @@ export const MostrarEmail: React.FC = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       handleChangeEmail();
+               
+                      
                     }}
                   >
                     Guardar

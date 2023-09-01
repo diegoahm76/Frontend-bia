@@ -8,11 +8,13 @@ import {
     set_bienes_entrada,
     set_bienes_entrega,
     set_current_bien,
+    set_current_entrada,
     set_entradas,
     set_entregas,
     set_nro_entrega,
     set_persona_entrega,
 } from '../slice/indexEntrega';
+import { set_bodega_seleccionada } from '../../../../configuracion/store/slice/BodegaSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -81,10 +83,13 @@ export const get_entregas_service = (): any => {
 };
 
 // obtener entradas disponibles
-export const get_entradas_disponible = (): any => {
+export const get_entradas_disponible = (
+    numero_entrada: string | null,
+    id_tipo_entrada: string | null | number
+): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`almacen/entregas/get-entradas-entregas/`);
+            const { data } = await api.get(`almacen/entregas/get-entradas-entregas/?numero_entrada_almacen=${numero_entrada ?? ''}&id_tipo_entrada=${id_tipo_entrada ?? ''}`);
 
             if (data.success === true) {
                 dispatch(set_entradas(data.data));
@@ -100,6 +105,49 @@ export const get_entradas_disponible = (): any => {
         }
     };
 };
+
+// entradas por id
+export const get_entrada_id = (
+    id_entrada: number | null
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/bienes/entradas/get-list/?id_entrada=${id_entrada ?? ''}`);
+            console.log(data)
+            if (data.success === true) {
+                dispatch(set_current_entrada(data.data.info_entrada));
+                // dispatch(set_bienes_entrada(data.data.info_items_entrada));
+                console.log(data);
+
+            }
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// bodega por id
+export const get_bodega_id = (
+    id_bodega: number | null
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/bodega/get-by-id/${id_bodega ?? ''}/`);
+            dispatch(set_bodega_seleccionada(data));
+            console.log(data);
+
+
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
 
 // obtener persona por iddocumento
 export const get_person_id_entrega = (id: number): any => {
@@ -141,8 +189,6 @@ export const get_tipo_entrada = (): any => {
                 // dispatch(set_entregas(data.data));
                 console.log(data);
                 //  control_success(data.detail);
-            } else {
-                // control_error(data.detail);
             }
             return data;
         } catch (error: any) {
@@ -165,6 +211,7 @@ export const get_bienes_entrada = (id_entrada_almacen: number | null): any => {
                 `almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ''
                 }/`
             );
+            console.log(data)
             if (data.success === true) {
                 dispatch(set_bienes_entrada(data.data));
                 console.log(data);
@@ -195,10 +242,10 @@ export const get_bien_code_service = (code: string, fecha: string): any => {
             if (data.data.length > 0) {
                 if (data.data.length === 1) {
                     dispatch(set_current_bien(data.data[0]));
-                    control_success('Se selecciono el bien');
+
                 } else {
                     dispatch(set_bienes(data.data));
-                    control_success('Se encontraron bienes');
+
                 }
             }
 
@@ -214,14 +261,14 @@ export const get_bien_code_service = (code: string, fecha: string): any => {
 export const crear_entrega: any = (entrega: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            //  console.log(despacho);
+
             const { data } = await api.post('almacen/entregas/create-entrega/', entrega);
             console.log(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
             }
-            control_success('se agrego correctamente');
+
             return data;
         } catch (error: any) {
             console.log(error);
@@ -235,11 +282,12 @@ export const crear_entrega: any = (entrega: any) => {
 // Editar entrega
 export const editar_entrega: any = (
     id: number,
+    entrada: any
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // console.log(despacho);
-            const { data } = await api.put(`almacen/entregas/actualizar-entrega/${id}/`);
+            const { data } = await api.patch(`almacen/entregas/actualizar-entrega/${id}/`, entrada);
             console.log(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
@@ -249,7 +297,7 @@ export const editar_entrega: any = (
             return data;
         } catch (error: any) {
             console.log(error);
-            //  control_error(error.response.data.detail);
+            control_error(error.response.data.detail);
 
             return error as AxiosError;
         }
@@ -323,7 +371,7 @@ export const get_bien_entrega_services = (id: number | null | undefined): any =>
             return data;
         } catch (error: any) {
 
-            control_error(error.response.data.detail);
+            //  control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };

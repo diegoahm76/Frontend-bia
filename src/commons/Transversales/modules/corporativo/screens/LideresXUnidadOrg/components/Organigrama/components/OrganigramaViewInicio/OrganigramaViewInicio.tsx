@@ -9,13 +9,20 @@ import SearchIcon from '@mui/icons-material/Search';
 
 //* icons
 
+
+import { useContext, lazy } from 'react';
+
 import { useAppSelector } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';
 import { OrganigramaChip } from './utils/ChipComponent';
-import { BusquedaAvanOrgModal } from './components/BusquedaAvanzadaOrg/BusquedaAvanOrg';
-import { useContext } from 'react';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
+
+const BusquedaAvanOrgModal = lazy(async () => {
+  const module = await import('./components/BusquedaAvanzadaOrg/BusquedaAvanOrg');
+  return { default: module.BusquedaAvanOrgModal };
+});
+
 
 export const OrganigramaViewInicio = (): JSX.Element => {
   //* redux states
@@ -76,7 +83,10 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                       label="Nombre del Organigrama"
                       size="small"
                       variant="outlined"
-                      value={organigrama_lideres_current?.nombre}
+                      value={
+                        organigrama_lideres_current?.nombre ||
+                        organigrama_lideres_current?.nombre_organigrama
+                      }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
@@ -98,7 +108,10 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                       rows={1}
                       maxRows={2}
                       variant="outlined"
-                      value={organigrama_lideres_current?.descripcion}
+                      value={
+                        organigrama_lideres_current?.descripcion ||
+                        organigrama_lideres_current?.descripcion_organigrama
+                      }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
@@ -121,7 +134,11 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                           ? new Date(
                               organigrama_lideres_current?.fecha_puesta_produccion
                             ).toLocaleString()
-                          : ''
+                          : '' ||
+                            (organigrama_lideres_current?.fecha_puesta_produccion_organigrama &&
+                              new Date(
+                                organigrama_lideres_current?.fecha_puesta_produccion_organigrama
+                              ).toLocaleString())
                       }
                       disabled={true}
                       InputLabelProps={{ shrink: true }}
@@ -141,7 +158,10 @@ export const OrganigramaViewInicio = (): JSX.Element => {
                       label="Versión"
                       size="small"
                       variant="outlined"
-                      value={organigrama_lideres_current?.version}
+                      value={
+                        organigrama_lideres_current?.version ||
+                        organigrama_lideres_current?.version_organigra
+                      }
                       InputLabelProps={{ shrink: true }}
                       disabled={true}
                     />
@@ -162,7 +182,7 @@ export const OrganigramaViewInicio = (): JSX.Element => {
 
               <Button
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={openModalBusquedaAvanzadaOrganigrama}
               >

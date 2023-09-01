@@ -31,6 +31,7 @@ import { choicesTipoClasificacion } from '../../../../screens/utils/choices/tipo
 import {
   set_catalog_TCA_action,
   set_catalog_trd_action,
+  set_mixed_tipologias,
   set_selected_item_from_catalogo_action
 } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 import {
@@ -40,45 +41,40 @@ import {
   update_item_catalogo_tca_service
 } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { LoadingButton } from '@mui/lab';
-import  CloudUploadIcon  from '@mui/icons-material/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/HistorialCambiosTCA';
+import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
+import SecurityIcon from '@mui/icons-material/Security';
+import { ModalReservarTipologias } from './../../components/ReservarTipologias/ModalReservarTipologias';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* define show or no show component
-
-  // eslint-disable-next-line no-empty-pattern
   const {
-    // modalAdministracionTca,
-    // openModalAdministracionTca,
     openModalHistorialCambios,
     closeModalAdministracionTca,
     loadingButton,
-    setLoadingButton
+    setLoadingButton,
+    openModalReservaTipologia
   } = useContext(ModalContextTCA);
   // * state from tca_slice
-  const { tca_current, selected_item_from_catalogo } = useAppSelector(
-    (state: any) => state.tca_slice
-  );
+  const { tca_current, selected_item_from_catalogo, mixed_tipologias } =
+    useAppSelector((state: any) => state.tca_slice);
 
   const {
     control_administrar_tca,
     reset_administrar_tca,
-    // handleSubmit_administrar_tca,
-    // formState_administrar_tca,
     watch_administrar_tca_value
   } = use_tca();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCatalogoTRD = async (id: number) => {
     const res = await get_catalogo_TRD_service(id);
     return dispatch(set_catalog_trd_action(res));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCatalogoTCA = async (id: number) => {
     const res = await get_catalogo_TCA_service(id);
     return dispatch(set_catalog_TCA_action(res));
@@ -114,7 +110,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       },
       id_cat_serie_und_ccd_trd:
         selected_item_from_catalogo?.id_cat_serie_und_ccd_trd,
-      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio,
+      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio
     });
   }, [selected_item_from_catalogo]);
 
@@ -123,17 +119,22 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     data1: string | number,
     data2: string | number
   ) => {
-    const bodyToSend = {
+    const bodyToSend: any = {
       id_tca: tca_current?.id_tca,
       id_cat_serie_und_ccd_trd: data1,
       cod_clas_expediente: data2
     };
-    void create_item_catalogo_tca_service(bodyToSend, setLoadingButton)
+
+
+    
+
+    void create_item_catalogo_tca_service(bodyToSend, setLoadingButton, mixed_tipologias)
       .then(async () => await updateCatalogoTRD(tca_current?.id_trd))
       .then(async () => await updateCatalogoTCA(tca_current?.id_tca))
       .then(() => {
         closeModalAdministracionTca();
         resetAdministrarTCA();
+        dispatch(set_mixed_tipologias([]));
       });
   };
 
@@ -143,20 +144,23 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     const dato: any = watch_administrar_tca_value?.cod_clas_expediente?.value;
 
     formData.append('cod_clas_expediente', dato);
-
     if (watch_administrar_tca_value.justificacion_cambio) {
       formData.append(
         'justificacion_cambio',
         watch_administrar_tca_value.justificacion_cambio
       );
     }
-
     if (watch_administrar_tca_value.ruta_archivo_cambio) {
       formData.append(
         'ruta_archivo_cambio',
         watch_administrar_tca_value.ruta_archivo_cambio
       );
     }
+
+    if(mixed_tipologias.length > 0){
+      formData.append('tipologias_reservadas', JSON.stringify(mixed_tipologias));
+    }
+
     void update_item_catalogo_tca_service(
       formData,
       selected_item_from_catalogo?.id_cat_serie_unidad_org_ccd_trd_tca,
@@ -167,6 +171,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       .then(() => {
         closeModalAdministracionTca();
         resetAdministrarTCA();
+        dispatch(set_mixed_tipologias([]));
       });
   };
 
@@ -216,8 +221,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                       value={value}
                       onChange={(selectedOption) => {
                         onChange(selectedOption);
-                        console.log(selectedOption);
-                        // handleSelectedOption(value, onChange);
                       }}
                       options={choicesTipoClasificacion}
                       placeholder="Seleccionar"
@@ -230,9 +233,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           fontSize: '0.75rem'
                         }}
                       >
-
-                        Disposición final
-
+                        Tipo de clasificación
                       </small>
                     </label>
                   </div>
@@ -240,9 +241,30 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               />
             </Grid>
 
+            {/* módulo nuevo, reserva de tipologías  */}
+
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              sx={{
+                zIndex: 2
+              }}
+            >
+              <Button
+                color="warning"
+                variant="outlined"
+                startIcon={<SecurityIcon />}
+                onClick={openModalReservaTipologia}
+              >
+                RESERVAR TIPOLOGÍAS
+              </Button>
+            </Grid>
+
+            {/* módulo nuevo, reserva de tipologías --> */}
+
             {/* new spaces */}
 
-            {/* justificación del cambio, solo aparece para trd actual */}
             {/* justificación del cambio, solo aparece para trd actual */}
             {/* ruta archivo soporte de cambio, solo aparece en trd actual */}
             {/* SOLO TRD ACTUAL */}
@@ -267,14 +289,21 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                         disabled={false}
                         variant="outlined"
                         value={value}
-                        onChange={onChange}
+                        onChange={(e: any) => {
+                          if (e.target.value.length === 1000) {
+                            control_warning(
+                              'Precaución: El campo justificación del cambio solo permite 1000 caracteres'
+                            );
+                          }
+                          onChange(e.target.value);
+                        }}
                         error={!(error == null)}
                         helperText={
                           error != null
                             ? 'Es obligatorio ingresar una justificación del cambio'
                             : 'Cambio'
                         }
-                        inputProps={{ maxLength: 250 }}
+                        inputProps={{ maxLength: 1000 }}
                       />
                     )}
                   />
@@ -309,15 +338,24 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
-                            accept='application/pdf'
+                            accept="application/pdf"
                             onChange={(e) => {
                               const files = (e.target as HTMLInputElement)
                                 .files;
                               if (files && files.length > 0) {
                                 const file = files[0];
                                 if (file.type !== 'application/pdf') {
-                                  control_warning('Solo formato pdf');
-                                  // dejar vacio el input file
+                                  control_warning(
+                                    'Precaución: Solo es admitido archivos en formato pdf'
+                                  );
+                                } else if (file.size > FILEWEIGHT.PDF) {
+                                  const MAX_FILE_SIZE_MB = (
+                                    FILEWEIGHT.PDF /
+                                    (1024 * 1024)
+                                  ).toFixed(1);
+                                  control_warning(
+                                    `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
+                                  );
                                 } else {
                                   onChange(file);
                                 }
@@ -360,7 +398,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
             <LoadingButton
               loading={loadingButton}
               variant="contained"
-              color="primary"
+              color="success"
               type="submit"
               startIcon={
                 selected_item_from_catalogo?.cod_clas_expediente ? (
@@ -379,7 +417,6 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               color="error"
               startIcon={<CancelIcon />}
               onClick={() => {
-                console.log('cancelando...');
                 reset_administrar_tca({
                   id_cat_serie_und_ccd_trd: '',
                   cod_clas_expediente: {
@@ -401,10 +438,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   variant="contained"
                   color="secondary"
                   startIcon={<VisibilityIcon />}
-                  // disabled={ccd_current?.actual}
                   onClick={() => {
                     console.log('viendo historial de cambios');
-                    // void get_historial_cambios_tca_service()
                     openModalHistorialCambios();
                   }}
                 >
@@ -417,8 +452,12 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       </Grid>
 
       {/* Modal historial de cambios TRD ACTUAL */}
-       <HistorialCambiosTCA /> 
+      <HistorialCambiosTCA />
       {/* Modal historial de cambios TRD ACTUAL */}
+
+      {/* Modal reserva de tipologías documentales */}
+      <ModalReservarTipologias />
+      {/* Modal reserva de tipologías documentales */}
     </>
   );
 };

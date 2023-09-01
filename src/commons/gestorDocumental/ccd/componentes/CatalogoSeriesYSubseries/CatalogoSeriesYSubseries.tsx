@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState, useContext } from 'react';
@@ -15,7 +16,8 @@ import {
   Grid,
   IconButton,
   TextField,
-  Avatar
+  Avatar,
+  ButtonGroup
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -29,6 +31,10 @@ import {
   getCatalogoSeriesYSubseries
 } from './services/CatalogoSeriesYSubseries.service';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { Title } from '../../../../../components';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const CatalogoSeriesYSubseries = () => {
   const { seriesAndSubseries } = useAppSelector(
@@ -83,31 +89,38 @@ export const CatalogoSeriesYSubseries = () => {
       minWidth: 200,
       maxWidth: 235,
       flex: 1,
-      renderCell: (params: any) => {
-        return params.row.codigo_subserie === null ? (
-          <>
-            <IconButton
-              sx={{
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                visibility: ccd_current?.actual ? ' hidden ' : ''
-              }}
-              onClick={() => {
-                // console.log('params', params);
-                delete_independente_series(params.row.id_catalogo_serie);
-              }}
-            >
-              <Avatar sx={AvatarStyles} variant="rounded">
-                <DeleteIcon
-                  titleAccess="Eliminar serie independiente"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-          </>
-        ) : (
-          <></>
-        );
-      }
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            sx={{
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+              visibility: ccd_current?.actual ? ' hidden ' : ''
+            }}
+            onClick={() => {
+              if (params.row.codigo_subserie) {
+                control_warning(
+                  'Solo es posible eliminar del catálogo series independientes'
+                );
+                return;
+              }
+
+              // console.log('params', params);
+              delete_independente_series(params.row.id_catalogo_serie);
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <DeleteIcon
+                titleAccess="Eliminar serie independiente"
+                sx={{
+                  color: params.row.codigo_subserie ? 'gray' : 'red',
+                  width: '18px',
+                  height: '18px'
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
     }
   ];
 
@@ -118,29 +131,48 @@ export const CatalogoSeriesYSubseries = () => {
       maxWidth="md"
     >
       <DialogTitle>
-        CATÁLOGO DE SERIES Y SUBSERIES
-        <IconButton
-          onClick={() => {
-            closeModalModalSeriesAndSubseries();
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+        <Title title="Catálogo de series y subseries" />
       </DialogTitle>
       <DialogContent>
         <Grid item xs={12} sx={{ width: 670 }}>
+          <ButtonGroup
+            style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {download_xls({ nurseries: seriesAndSubseries, columns })}
+            {download_pdf({ nurseries: seriesAndSubseries, columns, title: 'Catálogo de series y subseries' })}
+          </ButtonGroup> 
           <DataGrid
             density="compact"
             autoHeight
             rows={seriesAndSubseries}
             columns={columns}
-            pageSize={5}
+            pageSize={10}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_catalogo_serie}
           />
         </Grid>
       </DialogContent>
+
+      <DialogActions>
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="flex-end"
+          sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+        >
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={closeModalModalSeriesAndSubseries}
+            startIcon={<CloseIcon />}
+          >
+            CERRAR
+          </Button>
+        </Stack>
+      </DialogActions>
+
     </Dialog>
   );
 };
+

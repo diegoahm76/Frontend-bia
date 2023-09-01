@@ -109,35 +109,6 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
   };
   //* -------- columns declaration -------- *//
   const columns_busqueda_avazada_organigrama_lideres: GridColDef[] = [
-    {
-      headerName: 'Acción',
-      field: 'accion',
-      width: 65,
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            onClick={() => {
-              console.log(params.row);
-              dispatch(set_organigrama_lideres_current(params.row));
-              void get_asignaciones_lideres_by_id_organigrama_service(
-                params.row.id_organigrama
-              ).then((data: any) => {
-                dispatch(get_list_asignaciones_lideres(data));
-              });
-
-              closeModal();
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <VisibilityIcon
-                titleAccess="Ver Organigrama"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      )
-    },
     ...columsBusquedaAvanzada,
     {
       headerName: 'Fecha Terminado',
@@ -233,7 +204,36 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               />
             ) as JSX.Element);
       }
-    }
+    },
+    {
+      headerName: 'Acción',
+      field: 'accion',
+      width: 65,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            onClick={() => {
+              console.log(params.row);
+              dispatch(set_organigrama_lideres_current(params.row));
+              void get_asignaciones_lideres_by_id_organigrama_service(
+                params.row.id_organigrama
+              ).then((data: any) => {
+                dispatch(get_list_asignaciones_lideres(data));
+              });
+
+              closeModal();
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <VisibilityIcon
+                titleAccess="Ver Organigrama"
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
+    },
   ];
 
   return (
@@ -371,10 +371,10 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <LoadingButton
                   loading={loadingButton}
-                  variant="outlined"
+                  color="primary"
+                  variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
-                  color="primary"
                 >
                   BUSCAR
                 </LoadingButton>
@@ -400,8 +400,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
-                variant="contained"
-                color="success"
+                variant="outlined"
+                color="primary"
                 onClick={() => {
                   resetFunction();
                   console.log('cerrando');
@@ -412,6 +412,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 LIMPIAR BÚSQUEDA
               </Button>
               <Button
+                color="error"
                 variant="outlined"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}

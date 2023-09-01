@@ -2,7 +2,7 @@
 
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Box, Button, TextField, Tooltip } from '@mui/material';
+import { Box, Button, ButtonGroup, TextField, Tooltip } from '@mui/material';
 import { Fragment, useContext, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -19,6 +19,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarAvance: React.FC = () => {
@@ -225,12 +227,12 @@ export const EditarAvance: React.FC = () => {
         >
           {is_select_avance && (
             <Grid item xs={12}>
-              <Title title=" INFORMACIÓN DE AVANCE" />
+              <Title title="Información de avance" />
             </Grid>
           )}
           {is_editar_avance && (
             <Grid item xs={12}>
-              <Title title=" EDICIÓN DE AVANCE" />
+              <Title title="Edición de avance" />
             </Grid>
           )}
           <Grid item xs={12} sm={6}>
@@ -346,15 +348,23 @@ export const EditarAvance: React.FC = () => {
                 </Typography> */}
               </Grid>
               <Grid item xs={12} sm={6}>
+                <ButtonGroup
+                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  {download_xls({ nurseries: rows_evidencia, columns })}
+                  {download_pdf({ nurseries: rows_evidencia, columns, title: 'Evidencias' })}
+                </ButtonGroup>
+              
+              <Grid item xs={12} >
                 <DataGrid
                   autoHeight
                   rows={rows_evidencia}
                   columns={columns}
                   getRowId={(row) => row.id_evidencia_avance}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
                 />
-              </Grid>
+              </Grid></Grid>
               {is_evidencia && (
                 <Grid item xs={12} sm={6}>
                   <TextField

@@ -17,7 +17,7 @@ import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
 import { crear_estacion } from '../../requets/Request';
 import { municipios_meta } from '../interfaces/interfaces';
 import { Title } from '../../../../components/Title';
-
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -195,7 +195,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({
                         handle_close();
                         reset();
                     }}>Cancelar</Button>
-                    <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_estacion)}>Guardar</Button>
+                    <Button startIcon={<SaveIcon />}  variant="contained" color="success" onClick={handleSubmit(on_sumbit_estacion)}>Guardar</Button>
                 </DialogActions>
             </Box>
         </Dialog>

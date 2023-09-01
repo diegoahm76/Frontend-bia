@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Avatar, Button, Chip, Grid, IconButton, Stack } from '@mui/material';
+import { Avatar, Button, ButtonGroup, Chip, Grid, IconButton, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { ActualizarCuenca } from '../Components/EditarCuenca';
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const CuencaScreen: React.FC = () => {
@@ -88,7 +90,7 @@ export const CuencaScreen: React.FC = () => {
               >
                 <DeleteIcon
                   titleAccess="Eliminar cuenca"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>
@@ -174,7 +176,7 @@ export const CuencaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CONFIGURACIONES BÁSICAS CUENCAS" />
+          <Title title="Configuraciones básicas cuencas" />
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -189,13 +191,19 @@ export const CuencaScreen: React.FC = () => {
         <Grid item xs={12}>
           {rows.length > 0 && (
             <>
+              <ButtonGroup
+                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              >
+                {download_xls({ nurseries: rows, columns })}
+                {download_pdf({ nurseries: rows, columns, title: 'CREAR CUENCA' })}
+              </ButtonGroup> 
               <DataGrid
                 autoHeight
                 rows={rows}
                 columns={columns}
                 getRowId={(row) => row.id_cuenca}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             </>
           )}

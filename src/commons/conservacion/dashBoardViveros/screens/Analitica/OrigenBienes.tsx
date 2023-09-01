@@ -1,3 +1,4 @@
+// import { Stack, Typography } from "@mui/material";
 import { type ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 
@@ -7,10 +8,19 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
     const chart_data: ApexOptions =  {
-        series: [44, 55, 13, 43, 22],
         chart: {
         width: 380,
         type: 'pie',
+      },
+      subtitle:{
+        text: 'Plantas y Herramientas del vivero',
+        align: 'right',
+        floating: true,
+        offsetY: 175,
+        style: {
+          fontSize: '12px',
+          fontWeight: 'bold'
+        }
       },
       labels: ['Donaciones','Resarcimientos','Compensaciones','Producción propia','Compras / No identificado'],
       responsive: [{
@@ -32,7 +42,15 @@ export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
     }
     return (
         <>
-                <ReactApexChart options={chart_data} series={state.series} type="pie" height={215}/>
+                <ReactApexChart options={chart_data} series={state.series} type="pie" height={191}/>
+                {/* <Stack
+                      direction="row"
+                      justifyContent="center"
+                    >
+                      <Typography variant="subtitle1">
+                      Plantas y Herramientas del vivero
+                      </Typography>
+                </Stack> */}
         </>
     );
 }
