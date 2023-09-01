@@ -133,6 +133,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       <FormControl size="small" fullWidth>
                         <InputLabel>Asignar Estado</InputLabel>
                         <Select
+                          required
                           label="Asignar Estado"
                           defaultValue={''}
                           name='estado'
@@ -152,6 +153,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       <FormControl size="small" fullWidth>
                         <InputLabel>Aprobado</InputLabel>
                         <Select
+                          required
                           label="Aprobado"
                           defaultValue={''}
                           name='aprobacion'
@@ -196,6 +198,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={15}>
                       <TextField
+                        required
                         multiline
                         rows={4}
                         label="Observación Cormacarena"
@@ -249,16 +252,16 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                       void dispatch(datos_facilidad({
                                         id_facilidad: solicitud_facilidad.facilidad_pago.id,
                                         radicado: solicitud_facilidad.facilidad_pago.numero_radicacion,
-                                      }))
+                                      }));
                                       void dispatch(get_datos_amortizacion({
                                         id_facilidad: solicitud_facilidad.facilidad_pago.id,
                                         fecha_final: solicitud_facilidad.facilidad_pago.fecha_abono,
                                         cuotas: solicitud_facilidad.facilidad_pago.cuotas,
                                         periodicidad: solicitud_facilidad.facilidad_pago.periodicidad,
                                       }));
-                                      navigate('../amortizacion')
+                                      navigate('../amortizacion');
                                     } catch (error: any) {
-                                      throw new Error(error)
+                                      throw new Error(error);
                                     }
                                   }}
                                 >
@@ -317,10 +320,10 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                         nombre: solicitud_facilidad.deudor.nombres,
                                         apellido: solicitud_facilidad.deudor.apellidos,
                                         numero_facilidad: solicitud_facilidad.facilidad_pago.numero_radicacion
-                                      }))
-                                      navigate('../resolucion')
+                                      }));
+                                      navigate('../resolucion');
                                     } catch (error: any) {
-                                      throw new Error(error)
+                                      throw new Error(error);
                                     }
                                   }}
                                 >
@@ -364,7 +367,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         color="primary"
                         startIcon={<Save />}
                         onClick={() => {
-                          navigate('../incumplimiento')
+                          navigate('../incumplimiento');
                         }}
                       >
                         Aceptar

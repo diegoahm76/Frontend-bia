@@ -2,7 +2,7 @@ import { Grid, Box, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { type TablasAmortizacion, type Obligacion, type event } from '../interfaces/interfaces';
+import { type TablasAmortizacion, type Obligacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
@@ -142,9 +142,7 @@ export const TablaLiquidacion: React.FC = () => {
               label="Valor Abonado"
               size="small"
               fullWidth
-              onChange={(event: event) => {
-                const { value } = event.target
-                console.log(value)
+              onChange={() => {
               }}
               name='valor_abonado'
               type='number'
