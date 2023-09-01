@@ -39,6 +39,15 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
     const [reporte_consolidado, set_reporte_consolidado] = useState<boolean>(false);
     const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
+    // Errors
+    const mensaje_error = "El campo es obligatorio.";
+    const [error_reporte, set_error_reporte] = useState<boolean>(false);
+    const [error_vivero, set_error_vivero] = useState<boolean>(false);
+    const [error_planta, set_error_planta] = useState<boolean>(false);
+    const [error_fecha_desde, set_error_fecha_desde] = useState<boolean>(false);
+    const [error_fecha_hasta, set_error_fecha_hasta] = useState<boolean>(false);
+    const [error_año_lote, set_error_año_lote] = useState<boolean>(false);
+    const [error_numero_lote, set_error_numero_lote] = useState<boolean>(false);
     // Notificaciones
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
     const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
@@ -50,14 +59,6 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     const [doc_height, set_doc_height] = useState<number>(0);
 
     useEffect(() => {
-        // set_reporte([]);
-        // set_seleccion_vivero("");
-        // set_seleccion_reporte("");
-        // set_seleccion_planta(0);
-        // set_fecha_desde(null);
-        // set_fecha_hasta(null);
-        // set_reporte_consolidado(false);
-        // set_abrir_modal_bien(false);
         obtener_viveros_fc();
     }, []);
 
@@ -71,49 +72,49 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         dispatch(historico_bajas({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_distribuciones_fc: () => void = () => {
         dispatch(historico_distribuciones({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_siembras_fc: () => void = () => {
         dispatch(historico_siembras({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_cambios_etapa_fc: () => void = () => {
         dispatch(historico_cambios_etapa({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_ingreso_cuarentena_fc: () => void = () => {
         dispatch(historico_ingreso_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_levantamiento_cuarentena_fc: () => void = () => {
         dispatch(historico_levantamiento_cuarentena({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const historico_traslados_fc: () => void = () => {
         dispatch(historico_traslados({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
-            generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
+                generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
 
@@ -130,19 +131,32 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     }
     const cambio_reporte: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_reporte(e.target.value);
+        set_error_reporte(e.target.value === "");
     }
 
     const handle_change_fecha_desde = (date: Date | null): void => {
         set_fecha_desde(date);
+        set_error_fecha_desde(date === null);
     };
 
     const handle_change_fecha_hasta = (date: Date | null): void => {
         set_fecha_hasta(date);
+        set_error_fecha_hasta(date === null);
     };
 
     const descargar_pdf = () => {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         doc.save(`${(titulo_reporte.reporte_seleccionado !== null && titulo_reporte.reporte_seleccionado !== undefined) ? titulo_reporte.reporte_seleccionado.name : ''}.pdf`);
+    }
+
+    const validar_formulario: () => void = () => {
+        set_error_reporte(seleccion_reporte === "");
+        set_error_fecha_desde(fecha_desde === null);
+        set_error_fecha_hasta(fecha_hasta === null);
+
+        if (seleccion_reporte !== "" && fecha_desde !== null && fecha_hasta !== null) {
+            handle_export_pdf();
+        }
     }
 
     const handle_export_pdf = () => {
@@ -189,10 +203,10 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         doc.text(title, ((doc.internal.pageSize.width - doc.getTextWidth(title)) / 2), 15);
         const planta = seleccion_planta.nombre ?? "";
         const fechas = `${dayjs(fecha_desde).format('DD/MM/YYYY')} - ${dayjs(fecha_hasta).format('DD/MM/YYYY')}`;
-        if(planta !== ""){
-            doc.text(planta , ((doc.internal.pageSize.width - doc.getTextWidth(planta)) / 2), 20);
+        if (planta !== "") {
+            doc.text(planta, ((doc.internal.pageSize.width - doc.getTextWidth(planta)) / 2), 20);
             doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
-        }else
+        } else
             doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 20);
         doc.setFont("Arial", "normal"); // establece la fuente en Arial
         const fecha_generacion = `Fecha de generación de reporte ${dayjs().format('DD/MM/YYYY')}`;
@@ -241,7 +255,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         let coordenada_y = 30;
         doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
         doc.text('Fecha', 16, 34);
-        doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+        doc.text('Vivero', ((doc.internal.pageSize.width / 2) - 15), 34);
         doc.text('Número de baja', (doc.internal.pageSize.width - 60), 34);
         reporte.forEach((report: any) => {
             // Cliclo
@@ -251,7 +265,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.text('Fecha', 16, 34);
-                doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+                doc.text('Vivero', ((doc.internal.pageSize.width / 2) - 15), 34);
                 doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
                 coordendas = 0;
                 coordenada_y = 30;
@@ -261,7 +275,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
             doc.text(dayjs(report.fecha_baja).format('DD/MM/YYYY'), 14, 41 + coordendas);
-            doc.text(nombre_vivero, ((doc.internal.pageSize.width/2)-21), 41 + coordendas);
+            doc.text(nombre_vivero, ((doc.internal.pageSize.width / 2) - 21), 41 + coordendas);
             doc.text(report.nro_baja_por_tipo.toString(), (doc.internal.pageSize.width - 50), 41 + coordendas, { align: 'right' });
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
@@ -277,17 +291,17 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 margin: 60
             })
             // doc.line(5, 60 + coordendas, (doc.internal.pageSize.width - 5), 60 + coordendas);// 30 Linea inferior
-            if(coordenada_y !== 30){
+            if (coordenada_y !== 30) {
                 doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
-                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y - 2);
                 coordendas = coordenada_y - 30;
             }
-            else{
-                if(page !== 1){
-                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+            else {
+                if (page !== 1) {
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y + 10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
                     coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
                     doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
-                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                    doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y - 2);
                 }
             }
         });
@@ -308,7 +322,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         doc.text('Vivero destino', 150, 34);
         doc.text('Lote creado', 180, 34);
         reporte.forEach((report: any) => {
-            if ((43 + coordendas) > (doc_height-20)) {
+            if ((43 + coordendas) > (doc_height - 20)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.setFont("Arial", "bold"); // establece la fuente en Arial
@@ -328,7 +342,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.text(dayjs(report.fecha_traslado).format('DD/MM/YYYY'), 14, 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.text(report.nombre_bien, 35, 41 + coordendas);
-            doc.text(report.cantidad_a_trasladar.toString(), 85, 41 + coordendas,{align:'center'});
+            doc.text(report.cantidad_a_trasladar.toString(), 85, 41 + coordendas, { align: 'center' });
             doc.text(report.nombre_vivero_origen, 100, 41 + coordendas);
             doc.text(report.nro_lote_origen === null ? '' : report.nro_lote_origen.toString() + ' de ' + report.agno_lote_origen.toString(), 130, 41 + coordendas);
             doc.text(report.nombre_vivero_destino, 150, 41 + coordendas);
@@ -336,7 +350,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
             coordendas = coordendas + 20;
@@ -355,7 +369,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         doc.text('Cant. Levantada', 110, 34);
         doc.text('Lote', 170, 34);
         reporte.forEach((report: any) => {
-            if ((43 + coordendas) > (doc_height-20)) {
+            if ((43 + coordendas) > (doc_height - 20)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.setFont("Arial", "bold"); // establece la fuente en Arial
@@ -375,12 +389,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.text(nombre_vivero, 40, 41 + coordendas);
             doc.text(report.nombre_bien, 70, 41 + coordendas);
-            doc.text(report.cantidad_a_levantar.toString(), 125, 41 + coordendas,{align:'center'});
+            doc.text(report.cantidad_a_levantar.toString(), 125, 41 + coordendas, { align: 'center' });
             doc.text(report.nro_lote.toString() + ' de ' + report.agno_lote.toString() + ' - Etapa ' + report.etapa_lote, (doc.internal.pageSize.width - 60), 41 + coordendas);
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
             coordendas = coordendas + 20;
@@ -399,7 +413,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         doc.text('Cantidad a cuarentena', 120, 34);
         doc.text('Lote', 180, 34);
         reporte.forEach((report: any) => {
-            if ((43 + coordendas) > (doc_height-20)) {
+            if ((43 + coordendas) > (doc_height - 20)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.setFont("Arial", "bold"); // establece la fuente en Arial
@@ -419,12 +433,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.text(nombre_vivero, 50, 41 + coordendas);
             doc.text(report.nombre_bien, 80, 41 + coordendas);
-            doc.text(report.cantidad_cuarentena.toString(), 140, 41 + coordendas,{align:'center'});
+            doc.text(report.cantidad_cuarentena.toString(), 140, 41 + coordendas, { align: 'center' });
             doc.text(report.nro_lote.toString(), 183, 41 + coordendas);
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
             coordendas = coordendas + 20;
@@ -444,7 +458,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         doc.text('Etapa destino', 162, 34);
         doc.text('Lote', 193, 34);
         reporte.forEach((report: any) => {
-            if ((43 + coordendas) > (doc_height-20)) {
+            if ((43 + coordendas) > (doc_height - 20)) {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.setFont("Arial", "bold"); // establece la fuente en Arial
@@ -466,12 +480,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.text(nombre_vivero, 40, 41 + coordendas);
             doc.text(report.nombre_bien, 80, 41 + coordendas);
             doc.text(report.etapa_origen, 120, 41 + coordendas);
-            doc.text(report.etapa_destino, 162, 41 + coordendas,{isSymmetricSwapping: true, maxWidth: 50});
+            doc.text(report.etapa_destino, 162, 41 + coordendas, { isSymmetricSwapping: true, maxWidth: 50 });
             doc.text(report.nro_lote.toString(), 196, 41 + coordendas);
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
             doc.line(10, 50 + coordendas, 20, 50 + coordendas);// Linea vertical
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
-            doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
+            doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 60), 50 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(5, 52 + coordendas, (doc.internal.pageSize.width - 5), 52 + coordendas);// 30 Linea inferior
             coordendas = coordendas + 20;
@@ -486,7 +500,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         let coordenada_y = 30;
         doc.line(5, 35, (doc.internal.pageSize.width - 5), 35);
         doc.text('Fecha', 16, 34);
-        doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+        doc.text('Vivero', ((doc.internal.pageSize.width / 2) - 15), 34);
         doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
         reporte.forEach((report: any) => {
             const nombre_vivero = (report.nombre_vivero !== null && report.nombre_vivero !== undefined) ? report.nombre_vivero : 'Consolidado';
@@ -497,7 +511,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 page_position = page_position + 1;
                 nueva_pagina(doc, reporte_titulo.title, page_position);
                 doc.text('Fecha', 16, 34);
-                doc.text('Vivero', ((doc.internal.pageSize.width/2)-15), 34);
+                doc.text('Vivero', ((doc.internal.pageSize.width / 2) - 15), 34);
                 doc.text('Número despacho', (doc.internal.pageSize.width - 60), 34);
                 coordendas = 0;
                 coordenada_y = 30;
@@ -505,7 +519,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
             doc.text(dayjs(report.fecha_distribucion).format('DD/MM/YYYY'), 14, 41 + coordendas);
-            doc.text(nombre_vivero, ((doc.internal.pageSize.width/2)-21), 41 + coordendas);
+            doc.text(nombre_vivero, ((doc.internal.pageSize.width / 2) - 21), 41 + coordendas);
             doc.text(report.numero_despacho.toString(), (doc.internal.pageSize.width - 50), 41 + coordendas);
             doc.setFont("Arial", "normal"); // establece la fuente en Arial
             doc.line(10, 40 + coordendas, 10, 50 + coordendas);// Linea horizontal
@@ -514,26 +528,26 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             // Tabla
             autoTable(doc, {
                 theme: 'plain',
-                columns: [{ header: 'Bien implicado', dataKey: 'nombre_bien' }, 
-                          { header: 'Cantidad', dataKey: 'cantidad_asignada' }, 
-                          { header: 'Vivero destino', dataKey: 'vivero_destino' }, 
-                          { header: 'Etapa a la que ingresa', dataKey: 'etapa_ingresa' }],
-                          body: reporte_dos,
+                columns: [{ header: 'Bien implicado', dataKey: 'nombre_bien' },
+                { header: 'Cantidad', dataKey: 'cantidad_asignada' },
+                { header: 'Vivero destino', dataKey: 'vivero_destino' },
+                { header: 'Etapa a la que ingresa', dataKey: 'etapa_ingresa' }],
+                body: reporte_dos,
                 styles: { halign: 'center' },
                 startY: 43 + coordendas,
                 margin: 30
             });
-            if(coordenada_y !== 30){
-                doc.line(5, coordenada_y+5, (doc.internal.pageSize.width - 5), coordenada_y+5);// 30 Linea inferior
-                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y+3);
+            if (coordenada_y !== 30) {
+                doc.line(5, coordenada_y + 5, (doc.internal.pageSize.width - 5), coordenada_y + 5);// 30 Linea inferior
+                doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y + 3);
                 coordendas = coordenada_y - 30;
             }
-            else{
-                if(page !== 1){
-                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+            else {
+                if (page !== 1) {
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y + 10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
                     coordenada_y = reporte_dos.length === 1 ? (22 + coordendas) : reporte_dos.length === 2 ? (67 + coordendas) : (coordendas + (reporte_dos.length * 11));
                     doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
-                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                    doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y - 2);
                 }
             }
         });
@@ -581,24 +595,24 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             // Tabla
             autoTable(doc, {
                 theme: 'plain',
-                columns: [{ header: 'Bienes consumidos', dataKey: 'nombre_bien' }, 
-                          { header: 'Cantidad', dataKey: 'cantidad' }],
-                          body: reporte_dos,
+                columns: [{ header: 'Bienes consumidos', dataKey: 'nombre_bien' },
+                { header: 'Cantidad', dataKey: 'cantidad' }],
+                body: reporte_dos,
                 styles: { halign: 'center' },
                 startY: 43 + coordendas,
                 margin: 40
             });
-            if(coordenada_y !== 30){
+            if (coordenada_y !== 30) {
                 doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
-                doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y-2);
+                doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 55), coordenada_y - 2);
                 coordendas = coordenada_y - 30;
             }
-            else{
-                if(page !== 1){
-                    coordendas = reporte_dos.length === 1 ? (coordenada_y+10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
+            else {
+                if (page !== 1) {
+                    coordendas = reporte_dos.length === 1 ? (coordenada_y + 10) : reporte_dos.length === 2 ? (coordenada_y + 15) : (coordenada_y + (reporte_dos.length * 5));
                     coordenada_y = reporte_dos.length === 1 ? (20 + coordendas) : reporte_dos.length === 2 ? (65 + coordendas) : (coordendas + (reporte_dos.length * 9));
                     doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
-                    doc.text('Fecha de registro: '+ dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 70), coordenada_y-2);
+                    doc.text('Fecha de registro: ' + dayjs(report.fecha_registro).format('DD/MM/YYYY'), (doc.internal.pageSize.width - 70), coordenada_y - 2);
                 }
             }
         });
@@ -608,10 +622,11 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     const jso_object_detalle: (array: any, nombre_vivero: string) => any = (array: any, nombre_vivero: string) => {
         let resultado_json: any = [];
         array.forEach((data: any) => {
-            resultado_json = [...resultado_json,{'nombre_bien': data.nombre_bien, 
-            'cantidad_asignada': data.cantidad_asignada + ' ' + data.unidad_medida,
-            'vivero_destino': nombre_vivero,
-            'etapa_ingresa':data.etapa_ingresa,
+            resultado_json = [...resultado_json, {
+                'nombre_bien': data.nombre_bien,
+                'cantidad_asignada': data.cantidad_asignada + ' ' + data.unidad_medida,
+                'vivero_destino': nombre_vivero,
+                'etapa_ingresa': data.etapa_ingresa,
             }]
         });
         return resultado_json;
@@ -619,8 +634,8 @@ export const HistoricoMovimientosScreen: React.FC = () => {
     const jso_object_detalle_siembras: (array: any) => any = (array: any) => {
         let resultado_json: any = [];
         array.forEach((data: any) => {
-            resultado_json = [...resultado_json,{
-                'nombre_bien': data.nombre_bien, 
+            resultado_json = [...resultado_json, {
+                'nombre_bien': data.nombre_bien,
                 'cantidad': data.cantidad + ' ' + data.unidad_medida
             }]
         });
@@ -630,14 +645,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
         let resultado_json: any = [];
         array.forEach((data: any) => {
             resultado_json = [...resultado_json,
-                { 'nombre_bien': data.nombre_bien, 
-                'cantidad_baja': data.cantidad_baja + ' ' + data.unidad_medida}]
+            {
+                'nombre_bien': data.nombre_bien,
+                'cantidad_baja': data.cantidad_baja + ' ' + data.unidad_medida
+            }]
         });
         return resultado_json;
-    }
-
-    const realizar_analistica: () => void = () => {
-
     }
 
     return (
@@ -658,12 +671,13 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                <FormControl size='small' fullWidth>
+                                <FormControl required size='small' fullWidth>
                                     <InputLabel>Reporte</InputLabel>
                                     <Select
                                         value={seleccion_reporte}
                                         label="Tipo de bien"
                                         onChange={cambio_reporte}
+                                        error={error_reporte}
                                     >
                                         {lista_reporte.map((lr: any) => (
                                             <MenuItem key={lr.value} value={lr.value}>
@@ -672,6 +686,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
+                                {error_reporte && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl size='small' fullWidth>
@@ -761,11 +776,12 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                                     handle_change_fecha_desde(newValue);
                                                 }}
                                                 renderInput={(params) => (
-                                                    <TextField required fullWidth size="small" {...params} />
+                                                    <TextField required fullWidth size="small" {...params} error={error_fecha_desde}/>
                                                 )}
                                                 maxDate={fecha_hasta}
                                             />
                                         </LocalizationProvider>
+                                        {error_fecha_desde && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                                     </Grid>
                                 </Stack>
                             </Grid>
@@ -784,12 +800,13 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                                     handle_change_fecha_hasta(newValue);
                                                 }}
                                                 renderInput={(params) => (
-                                                    <TextField required fullWidth size="small" {...params} />
+                                                    <TextField required fullWidth size="small" {...params} error={error_fecha_hasta}/>
                                                 )}
                                                 minDate={fecha_desde}
                                                 disabled={fecha_desde == null}
                                             />
                                         </LocalizationProvider>
+                                        {error_fecha_hasta && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
                                     </Grid>
                                 </Stack>
                             </Grid>
@@ -805,8 +822,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                     <Button
                                         color='primary'
                                         variant='contained'
-                                        // startIcon={<SearchIcon />}
-                                        onClick={handle_export_pdf}
+                                        onClick={validar_formulario}
                                     >
                                         Ver movimientos
                                     </Button>
