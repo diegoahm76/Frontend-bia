@@ -5,11 +5,12 @@ import type {
   IMode,
   IObEstante,
   IObjBandeja,
+  IObjCarpeta,
   IObjDeposito,
   IObjSucursales,
 } from '../../interfaces/deposito';
 import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
-import type{ IBuscarCaja } from '../../Cajas/types/types';
+import type { IBuscarCaja } from '../../Cajas/types/types';
 
 export const initial_state_deposito: IObjDeposito = {
   nombre_deposito: null,
@@ -81,6 +82,7 @@ export const initial_state: IDeposito = {
   deposito_estante: id_depo_est,
   estantes: [],
   cajas,
+  carpetas: []
 };
 
 export const deposito_slice = createSlice({
@@ -144,6 +146,9 @@ export const deposito_slice = createSlice({
     set_current_cajas: (state: IDeposito, action: PayloadAction<IBuscarCaja>) => {
       state.cajas = action.payload;
     },
+    set_carpetas: (state: IDeposito, action: PayloadAction<IObjCarpeta[]>) => {
+      state.carpetas = action.payload;
+    },
   },
 });
 
@@ -159,4 +164,6 @@ export const {
   set_current_id_depo_est,
   set_estantes,
   set_current_cajas,
+  set_carpetas,
+
 } = deposito_slice.actions;

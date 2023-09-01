@@ -39,7 +39,7 @@ export const ButtonAdminCarpetas: React.FC = () => {
       color="warning"
       onClick={confirmar_admin_bandeja}
     >
-      Administrar bandejas
+      Administrar carpeta
     </LoadingButton>
   );
 };
