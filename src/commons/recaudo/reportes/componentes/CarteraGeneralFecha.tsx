@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Stack, TextField, Button, FormControl } from '@mui/material';
 import { FileDownloadOutlined, SearchOutlined } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -42,7 +41,7 @@ export const CarteraGeneralFecha: React.FC = () => {
     currency: "COP",
   }).format(total)
 
-  const handle_change_date = (date: Date | null) => {
+  const handle_change_date = (date: Date | null): void => {
     set_date(date);
   };
 
@@ -79,7 +78,7 @@ export const CarteraGeneralFecha: React.FC = () => {
       });
   };
 
-  const handle_export_pdf = () => {
+  const handle_export_pdf = (): void => {
     const fecha_seleccionada = dayjs(date).format('DD/MM/YYYY');
     const report = new JsPDF('l', 'pt', 'letter');
     report.text(`Reporte General de Cartera Fecha de Corte ${fecha_seleccionada}`, 40, 30);
