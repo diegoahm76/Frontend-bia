@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
@@ -149,12 +150,14 @@ export const getListaUnidadesOrganigramaSeleccionado = async (
 };
 
 
-export const putCrearRegistrosTemporales = async (): Promise<any> => {
+export const putCrearRegistrosTemporales = async (
+  data_create_table: any
+): Promise<any> => {
   try {
-    const url = `transversal/organigrama/crear-registros-temporales/`;
-    const { data } = api.put(url);
+    const url = `transversal/organigrama/guardar-actualizacion-unidad${data_create_table.id_organigrama_futuro}/}`;
+    const { data } = await api.put(url, {});
     return data;
   } catch (error: any) {
     console.log(error);
   }
-}
+};
