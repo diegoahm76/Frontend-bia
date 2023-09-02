@@ -147,3 +147,14 @@ export const getListaUnidadesOrganigramaSeleccionado = async (
     console.log(error);
   }
 };
+
+
+export const putCrearRegistrosTemporales = async (): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/crear-registros-temporales/`;
+    const { data } = api.put(url);
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+}

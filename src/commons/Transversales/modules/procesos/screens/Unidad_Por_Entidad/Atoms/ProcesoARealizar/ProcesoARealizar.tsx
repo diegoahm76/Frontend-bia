@@ -14,7 +14,8 @@ import { consultarTablaTemporal } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import {
   setControlFaseEntrada,
-  setControlModoTrasladoUnidadXEntidad
+  setControlModoTrasladoUnidadXEntidad,
+  setUnidadesSeleccionadas
 } from '../../toolkit/UxE_slice/UxE_slice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 // import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -32,7 +33,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     use_u_x_entidad();
 
   //* context necesario
-  const { setloadingConsultaT026 } = useContext(ContextUnidadxEntidad);
+  const { setloadingConsultaT026, handleGridActualANuevo } = useContext(ContextUnidadxEntidad);
 
   useEffect(() => {
     console.log('use_u_x_entidad');
@@ -47,7 +48,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         );
         dispatch(setControlFaseEntrada(1));
       } else {
-      /*  dispatch(setControlFaseEntrada(2));
+        /*  dispatch(setControlFaseEntrada(2));
 
         dispatch(
           setControlModoTrasladoUnidadXEntidad(
@@ -86,7 +87,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     value: string;
     label: string;
   }> {
-
     return [
       {
         //* el value también va a representar el modo de entrada
@@ -145,6 +145,11 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                             )
                           );
                           onChange(selectedOption);
+
+                          //! reiniciar modos
+
+                          handleGridActualANuevo(false);
+                          dispatch(setUnidadesSeleccionadas([]));
                         }}
                         isDisabled={controlFaseEntrada !== 1}
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026

@@ -25,78 +25,24 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   //* hook use_x_entidad
 
   const title = 'Traslado masivo de organigrama actual a nuevo';
+
   const onChange = (idPersona: number, unidadSeleccionada: any) => {
     dispatch(
-      setUnidadesSeleccionadas([
-        ...unidadesSeleccionadas.filter(
-          (unidad: any) => unidad.idPersona !== idPersona
-        ),
-        { idPersona, ...unidadSeleccionada }
-      ])
-    );
-  };
-
-  /* const handleLimpiarSelect = (idPersona: number) => {
-    dispatch(
-      setUnidadesSeleccionadas(
-        unidadesSeleccionadas.filter((unidad) => unidad.idPersona !== idPersona)
-      )
-    );
-  }; */
-
-    /*  const onChange = (idPersona: number, unidadSeleccionada: any) => {
-    dispatch(
-      setUnidadesSeleccionadasAnteriorAActual({
-        ...unidadesSeleccionadasAnteriorAActual,
-        [idPersona]: unidadesSeleccionadasAnteriorAActual
+      setUnidadesSeleccionadas({
+        ...unidadesSeleccionadas,
+        [idPersona]: unidadSeleccionada,
       })
     );
   };
 
   const handleLimpiarSelect = (idPersona: any) => {
     dispatch(
-      setUnidadesSeleccionadasAnteriorAActual({
-        ...unidadesSeleccionadasAnteriorAActual,
+      setUnidadesSeleccionadas({
+        ...unidadesSeleccionadas,
         [idPersona]: null
       })
     );
-  }; */
-const handleLimpiarSelect = (idPersona: number) => {
-  const nuevasUnidadesSeleccionadas = unidadesSeleccionadas
-    .map((unidadSeleccionada) => {
-      if (unidadSeleccionada.idPersona === idPersona) {
-        return { value: null, idPersona: null, label: null };
-      } else {
-        return unidadSeleccionada;
-      }
-    })
-    .filter((unidadSeleccionada) => unidadSeleccionada.idPersona !== null);
-
-    console.log(nuevasUnidadesSeleccionadas, 'nuevasUnidadesSeleccionadas');
-  dispatch(setUnidadesSeleccionadas(nuevasUnidadesSeleccionadas));
-};
-  /* useEffect(() => {
-  const obtenerDatos = async () => {
-    const datos = await obtenerDatosParaTraslado();
-    const datosConPropiedades = datos.map((dato: any) => ({
-      ...dato,
-      seleccionado: dato.seleccionado || false,
-      unidadesDisponiblesParaTraslado: dato.unidadesDisponiblesParaTraslado || '',
-      unidadOrganizacional: dato.unidadOrganizacional || dato.unidadOrganizacionalActual
-    }));
-    setRowData(datosConPropiedades);
   };
-  obtenerDatos();
-}, []); */
-
-  /* const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-  const unidadesSeleccionadas = rowData.filter(row => row.seleccionado);
-  unidadesSeleccionadas.forEach(row => {
-    row.unidadOrganizacional = row.unidadesDisponiblesParaTraslado;
-  });
-  console.log(unidadesSeleccionadas);
-}; */
 
   const columnsModified = [
     ...colOrgActANuevo,
