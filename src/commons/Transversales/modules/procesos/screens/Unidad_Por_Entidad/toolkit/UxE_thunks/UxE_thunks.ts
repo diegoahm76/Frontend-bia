@@ -149,8 +149,28 @@ export const getListaUnidadesOrganigramaSeleccionado = async (
   }
 };
 
+//* con esta funcion consulto si hay personas sin actualizar, eso quiere decir que si no hay por defecto entro a la primera opcion ya que no se ha realizado el cambio de organigrama, si trae registros en porqu eel cambio de organigrama ya se realizó y por ende se debe entrar a la segunda opcion ()
+export const getPersonasSinActualizarOrganigramaAnteriorAlActual =
+  async (): Promise<any> => {
+    try {
+      const url = `transversal/organigrama/get-unidad-organizacional-after/`;
+      const { data } = await api.get(url);
+      return {
+        data: data?.data,
+        success: data?.success,
+        detail: data?.detail
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        data: [],
+        success: false,
+        detail: error?.response?.data?.detail
+      };
+    }
+  };
 
-export const putCrearRegistrosTemporales = async (
+/* export const putCrearRegistrosTemporales = async (
   data_create_table: any
 ): Promise<any> => {
   try {
@@ -161,3 +181,4 @@ export const putCrearRegistrosTemporales = async (
     console.log(error);
   }
 };
+*/

@@ -10,9 +10,13 @@ import Select from 'react-select';
 import { Title } from '../../../../../../../../components';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
-import { consultarTablaTemporal } from '../../toolkit/UxE_thunks/UxE_thunks';
+import {
+  consultarTablaTemporal,
+  getPersonasSinActualizarOrganigramaAnteriorAlActual
+} from '../../toolkit/UxE_thunks/UxE_thunks';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import {
+  setAsignacionConsultaTablaTemporal,
   setControlFaseEntrada,
   setControlModoTrasladoUnidadXEntidad,
   setUnidadesSeleccionadas
@@ -33,49 +37,84 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     use_u_x_entidad();
 
   //* context necesario
-  const { setloadingConsultaT026, handleGridActualANuevo } = useContext(ContextUnidadxEntidad);
+  const { setloadingConsultaT026, handleGridActualANuevo } = useContext(
+    ContextUnidadxEntidad
+  );
 
   useEffect(() => {
     console.log('use_u_x_entidad');
-    void consultarTablaTemporal(setloadingConsultaT026).then((res: any) => {
-      console.log(res);
+    void consultarTablaTemporal(setloadingConsultaT026).then(
+      (resTablaTemporal: any) => {
+        console.log(resTablaTemporal);
 
-      //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
+        //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
 
-      if (res.data.length === 0) {
-        dispatch(
-          setControlModoTrasladoUnidadXEntidad('modo_entrada_sin_validaciones')
-        );
-        dispatch(setControlFaseEntrada(1));
-      } else {
-        /*  dispatch(setControlFaseEntrada(2));
+        if (resTablaTemporal.data.length !== 0) {
+          dispatch(
+            setControlModoTrasladoUnidadXEntidad(
+              'modo_entrada_sin_validaciones'
+            )
+          );
+          dispatch(setControlFaseEntrada(1));
+          //* se resetean resultados de la tabla temporal por si habian quedado rezagos
+          dispatch(setAsignacionConsultaTablaTemporal(null));
+        } else {
+          dispatch(
+            setAsignacionConsultaTablaTemporal({
+              data: [],
+              id_organigrama_anterior: 71
+            })
+          );
 
-        dispatch(
-          setControlModoTrasladoUnidadXEntidad(
-            'modo_entrada_con_validacion_organigrama_anterior_a_actual'
-          )
-        );
+          void getPersonasSinActualizarOrganigramaAnteriorAlActual().then(
+            (resListadoPersonasSinActualizar: any) => {
+              console.log(resListadoPersonasSinActualizar);
+              if (resListadoPersonasSinActualizar.data.length !== 0) {
+                dispatch(setControlFaseEntrada(2));
+                dispatch(
+                  setControlModoTrasladoUnidadXEntidad(
+                    'modo_entrada_con_validacion_organigrama_anterior_a_actual'
+                  )
+                );
+                reset_opciones_traslado({
+                  opciones_traslado: {
+                    value:
+                      'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+                    label:
+                      'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+                  }
+                });
+              } else {
+                dispatch(setControlFaseEntrada(2));
+                dispatch(
+                  setControlModoTrasladoUnidadXEntidad(
+                    'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
+                  )
+                );
+                reset_opciones_traslado({
+                  opciones_traslado: {
+                    value:
+                      'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
+                    label:
+                      'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+                  }
+                });
+              }
+            }
+          );
+          console.log(
+            'si hay datos en la tabla temporal, se debe manejar otro comportamiento'
+          );
+        }
 
-        reset_opciones_traslado({
-          opciones_traslado: {
-            value: 'modo_entrada_con_validacion_organigrama_anterior_a_actual',
-            label:
-              'Traslado de unidad organizanizacionales de organigrama anterior a actual'
-          }
-        });
-*/
-        console.log(
-          'si hay datos en la tabla temporal, se debe manejar otro comportamiento'
-        );
+        //* en esta operacion consulto la tabla temporal para saber si hay datos en ella y dispongo las opereaciones que se deben hacer para la aplicacion
+
+        // ? 1. si la tabla temporal no trae datos, la interacción no pasa de acá, debe dejarse al usuario elegir la opción que desea realizar
+        // ? 2. si la tabla temporal trae datos, hay dos posibles escenarios:
+        // ! 2.1. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama actual se debe seleccionar la opción de "traslado de unidad organizacional de organigrama actual a nuevo"
+        // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
       }
-
-      //* en esta operacion consulto la tabla temporal para saber si hay datos en ella y dispongo las opereaciones que se deben hacer para la aplicacion
-
-      // ? 1. si la tabla temporal no trae datos, la interacción no pasa de acá, debe dejarse al usuario elegir la opción que desea realizar
-      // ? 2. si la tabla temporal trae datos, hay dos posibles escenarios:
-      // ! 2.1. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama actual se debe seleccionar la opción de "traslado de unidad organizacional de organigrama actual a nuevo"
-      // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
-    });
+    );
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

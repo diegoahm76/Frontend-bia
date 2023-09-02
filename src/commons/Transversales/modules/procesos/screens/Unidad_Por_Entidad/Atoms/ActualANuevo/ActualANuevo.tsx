@@ -22,8 +22,12 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { filtrarOrganigramas } from './utils/function/filterOrganigramas';
 import { GridActualANuevo } from '../../components/GridActualANuevo/GridActualANuevo';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
-import { useAppDispatch } from '../../../../../../../../hooks';
-import { setGridActualANuevo, setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
+import {
+  //  setAsignacionConsultaTablaTemporal,
+  setGridActualANuevo,
+  setUnidadesSeleccionadas
+} from '../../toolkit/UxE_slice/UxE_slice';
 
 export const ActualANuevo: FC = (): JSX.Element => {
   //* navigate declaration
@@ -31,6 +35,9 @@ export const ActualANuevo: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
+  const { asignacionConsultaTablaTemporal } = useAppSelector(
+    (state) => state.u_x_e_slice
+  );
 
   //! use_u_x_entidad hooks
 
@@ -50,6 +57,8 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
+
+    //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
       console.log('res', organigramasActuales);
@@ -60,8 +69,36 @@ export const ActualANuevo: FC = (): JSX.Element => {
         }))
       );
 
-      const organigramasDisponibles = await getOrganigramasDispobibles();
-      setOrganigramasDisponibles(filtrarOrganigramas(organigramasDisponibles));
+
+      // * si hay algo en la tabla temporal se analiza para seleccionar de inmediato el organigrama correspondiente
+      if (asignacionConsultaTablaTemporal?.id_organigrama_anterior) {
+        // ! se debe realizar la consulta de los organigramas disponibles para el traslado
+        void getOrganigramasDispobibles().then((resOrganigramas: any) => {
+          console.log(resOrganigramas);
+          console.log(asignacionConsultaTablaTemporal?.id_organigrama_anterior);
+          const organigramaNecesario = resOrganigramas?.data?.filter(
+            (item: any) =>
+              item?.id_organigrama ===
+              asignacionConsultaTablaTemporal?.id_organigrama_anterior
+          );
+            
+          
+/*
+          setOrganigramasDisponibles(
+            organigramaNecesario?.map((item: any) => ({
+              label: item?.nombre,
+              value: item?.id_organigrama
+            }))
+          ); */
+
+          console.log('organigramaNecesario', organigramaNecesario);
+        });
+      } else {
+        const organigramasDisponibles = await getOrganigramasDispobibles();
+        setOrganigramasDisponibles(
+          filtrarOrganigramas(organigramasDisponibles)
+        );
+      }
     };
 
     void obtenerOrganigramas();
@@ -193,9 +230,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                                 console.log('data mixed', dataMixed);
 
                                 //* se limpian las unidades seleccionadas al realizar un cambio de organigrama - analizar que tan viable es esta opción al momento en el que se deben traer los datos
-                                dispatch(
-                                  setUnidadesSeleccionadas([])
-                                );
+                                dispatch(setUnidadesSeleccionadas([]));
                               });
                             }
                           );

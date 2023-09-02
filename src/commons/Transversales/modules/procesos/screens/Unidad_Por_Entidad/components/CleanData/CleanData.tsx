@@ -30,16 +30,20 @@ export const CleanData: FC<any> = (): JSX.Element => {
 
     // console.log('unidades seleccionadas', unidadesSeleccionadas);
 
-    const unidadesSeleccionadasArray = Object.entries(unidadesSeleccionadas)
-      .filter(
-        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-        ([key, value]) => value && value.idPersona && value.label && value.value
-      )
-      .map(([key, value]) => ({
-        id_persona: value.idPersona,
-        // label: value.label,
-        id_nueva_unidad_organizacional: value.value
-      }));
+    const unidadesSeleccionadasArray =
+      unidadesSeleccionadas &&
+      Object?.entries(unidadesSeleccionadas)
+        .filter(
+          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+          ([key, value]) => {
+            return value ? value?.idPersona && value?.label && value?.value : null;
+          }
+        )
+        .map(([key, value]) => ({
+          id_persona: value?.idPersona,
+          // label: value.label,
+          id_nueva_unidad_organizacional: value?.value
+        }));
     console.log(unidadesSeleccionadasArray);
   };
 

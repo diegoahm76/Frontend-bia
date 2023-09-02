@@ -1,4 +1,4 @@
-export interface Slice{
+export interface SliceTypeInterface{
   controlModoTrasladoUnidadXEntidad: string,
   controlFaseEntrada: number,
   eleccion_opcion_traslado_unidad_x_entidad: boolean,
@@ -6,4 +6,5 @@ export interface Slice{
   unidadesSeleccionadas: any[],
   gridAnteriorAActual: any[],
   unidadesSeleccionadasAnteriorAActual: any[],
+  asignacionConsultaTablaTemporal: any,
 }

@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Slice } from './types/UxE_slice.types';
+import { type SliceTypeInterface } from './types/UxE_slice.types';
+const initialState: SliceTypeInterface = {
 
-const initialState: Slice = {
+
+  //* --- asignacion de consulta de tabla temporal cuando trae información --- *//
+  asignacionConsultaTablaTemporal: null,
+
+
   //* --- control mode traslado unidad x entidad --- *//
   controlModoTrasladoUnidadXEntidad: 'modo_entrada_sin_validaciones',
 
@@ -30,6 +35,14 @@ export const u_x_e_slice = createSlice({
   name: 'u_x_e_slice',
   initialState,
   reducers: {
+    //! set asignacion de consulta de tabla temporal cuando trae información
+    setAsignacionConsultaTablaTemporal: (
+      state: any,
+      payloadAction: PayloadAction<any>
+    ) => {
+      state.asignacionConsultaTablaTemporal = payloadAction.payload;
+    },
+
     // ! --- set control mode traslado unidad x entidad ---
     setControlModoTrasladoUnidadXEntidad: (
       state: any,
@@ -81,6 +94,9 @@ export const u_x_e_slice = createSlice({
 });
 
 export const {
+  //* set asignación de tabla temporal
+  setAsignacionConsultaTablaTemporal,
+
   setControlModoTrasladoUnidadXEntidad,
   setEleccionOpcionTrasladoUnidadXEntidad,
   setControlFaseEntrada,
@@ -89,5 +105,5 @@ export const {
   setUnidadesSeleccionadas,
 
   setGridAnteriorAActual,
-  setUnidadesSeleccionadasAnteriorAActual,
+  setUnidadesSeleccionadasAnteriorAActual
 } = u_x_e_slice.actions;
