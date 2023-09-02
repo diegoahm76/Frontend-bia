@@ -76,20 +76,20 @@ export const ActualANuevo: FC = (): JSX.Element => {
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
           console.log(resOrganigramas);
           console.log(asignacionConsultaTablaTemporal?.id_organigrama_anterior);
-          const organigramaNecesario = resOrganigramas?.data?.filter(
+          const organigramaNecesario = resOrganigramas?.filter(
             (item: any) =>
               item?.id_organigrama ===
               asignacionConsultaTablaTemporal?.id_organigrama_anterior
           );
             
           
-/*
+
           setOrganigramasDisponibles(
             organigramaNecesario?.map((item: any) => ({
               label: item?.nombre,
               value: item?.id_organigrama
             }))
-          ); */
+          ); 
 
           console.log('organigramaNecesario', organigramaNecesario);
         });
