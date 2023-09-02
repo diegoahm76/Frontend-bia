@@ -57,7 +57,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
-
     //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
@@ -68,7 +67,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
           value: item?.id_organigrama
         }))
       );
-
 
       // * si hay algo en la tabla temporal se analiza para seleccionar de inmediato el organigrama correspondiente
       if (asignacionConsultaTablaTemporal?.id_organigrama_anterior) {
@@ -81,15 +79,13 @@ export const ActualANuevo: FC = (): JSX.Element => {
               item?.id_organigrama ===
               asignacionConsultaTablaTemporal?.id_organigrama_anterior
           );
-            
-          
 
           setOrganigramasDisponibles(
             organigramaNecesario?.map((item: any) => ({
               label: item?.nombre,
               value: item?.id_organigrama
             }))
-          ); 
+          );
 
           console.log('organigramaNecesario', organigramaNecesario);
         });
