@@ -6,7 +6,7 @@ import { useState, type SyntheticEvent, useEffect } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { CrearAtributoModal } from "../components/estadosProceso/CrearAtributoModal";
-import type { AtributoEtapa, CategoriaAtributo, EtapaProceso } from "../interfaces/proceso";
+import type { AtributoEtapa, CategoriaAtributo, EtapaProceso, FormDataCategoria } from "../interfaces/proceso";
 import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
 import { api } from "../../../api/axios";
 import { CrearEtapaModal } from "../components/estadosProceso/CrearEtapaModal";
@@ -28,6 +28,12 @@ export const EstadosProcesoScreen: React.FC = () => {
   const [descripcion_etapa, set_descripcion_etapa] = useState('');
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
+  const [form_data_categoria, set_form_data_categoria] = useState<FormDataCategoria>({
+    categoria: '',
+    orden: '',
+  });
+  const [id_update_categoria, set_id_update_categoria] = useState('');
+  const [actualizar_categoria, set_actualizar_categoria] = useState<boolean>(false);
 
   const columns_etapas: GridColDef[] = [
     {
@@ -109,7 +115,7 @@ export const EstadosProcesoScreen: React.FC = () => {
       minWidth: 110,
       flex: 1,
       valueGetter: (params) => {
-        if (!params.value){
+        if (!params.value) {
           return params.value;
         }
         return params.value.tipo;
@@ -149,10 +155,57 @@ export const EstadosProcesoScreen: React.FC = () => {
       flex: 0.3,
     },
     {
+      field: 'orden',
+      headerName: 'Orden',
+      minWidth: 90,
+      flex: 0.3,
+    },
+    {
       field: 'categoria',
       headerName: 'Categoría',
       minWidth: 110,
       flex: 1,
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      minWidth: 100,
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <Tooltip title='Editar'>
+              <IconButton
+                onClick={() => {
+                  const { id, categoria, orden } = params.row;
+                  set_id_update_categoria(id);
+                  set_form_data_categoria({ categoria, orden });
+                  set_actualizar_categoria(true);
+                  set_open_categoria_modal(true);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      }
     }
   ];
 
@@ -164,7 +217,7 @@ export const EstadosProcesoScreen: React.FC = () => {
       .catch((error) => {
         console.log(error);
       })
-  }, []);
+  }, [rows_etapas]);
 
   useEffect(() => {
     api.get('recaudo/procesos/categoria-atributos')
@@ -174,7 +227,7 @@ export const EstadosProcesoScreen: React.FC = () => {
       .catch((error) => {
         console.log(error);
       })
-  }, []);
+  }, [rows_categorias_atributos]);
 
   const handle_change = (event: SyntheticEvent, new_value: string): void => {
     set_position_tab_organigrama(new_value);
@@ -212,8 +265,8 @@ export const EstadosProcesoScreen: React.FC = () => {
       descripcion
     })
       .then((response) => {
-        console.log(response);
-        set_notification_info({ type: 'success', message: `Se creó correctamente la etapa "${etapa}".` });
+        set_rows_etapas([]);
+        set_notification_info({ type: 'success', message: `Se creó correctamente la etapa "${response.data.etapa as string}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -246,13 +299,27 @@ export const EstadosProcesoScreen: React.FC = () => {
       });
   };
 
-  const submit_new_categoria = (categoria: string): void => {
-    api.post('recaudo/procesos/categoria-atributos/', {
-      categoria,
-    })
+  const submit_new_categoria = (): void => {
+    api.post('recaudo/procesos/categoria-atributos/', form_data_categoria)
       .then((response) => {
-        console.log(response);
-        set_notification_info({ type: 'success', message: `Se creó correctamente la categoría "${categoria}".` });
+        set_rows_categorias_atributos([]);
+        set_form_data_categoria({ categoria: '', orden: '' });
+        set_notification_info({ type: 'success', message: `Se creó correctamente la categoría "${response.data.categoria as string}".` });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
+      });
+  };
+
+  const submit_updated_categoria = (): void => {
+    api.put(`recaudo/procesos/categoria-atributos/${id_update_categoria}`, form_data_categoria)
+      .then((response) => {
+        set_rows_categorias_atributos([]);
+        set_form_data_categoria({ categoria: '', orden: '' });
+        set_notification_info({ type: 'success', message: `Se actualizó correctamente la categoría "${response.data.categoria as string}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -380,6 +447,8 @@ export const EstadosProcesoScreen: React.FC = () => {
                     variant="outlined"
                     startIcon={<AddIcon />}
                     onClick={() => {
+                      set_form_data_categoria({ categoria: '', orden: '' });
+                      set_actualizar_categoria(false);
                       set_open_categoria_modal(true);
                     }}
                   >
@@ -416,9 +485,13 @@ export const EstadosProcesoScreen: React.FC = () => {
         submit_new_etapa={submit_new_etapa}
       />
       <CrearCategoriaModal
+        form_data_categoria={form_data_categoria}
         open_categoria_modal={open_categoria_modal}
+        actualizar_categoria={actualizar_categoria}
+        set_form_data_categoria={set_form_data_categoria}
         set_open_categoria_modal={set_open_categoria_modal}
         submit_new_categoria={submit_new_categoria}
+        submit_updated_categoria={submit_updated_categoria}
       />
       <NotificationModal
         open_notification_modal={open_notification_modal}

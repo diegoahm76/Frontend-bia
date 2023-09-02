@@ -15,11 +15,7 @@ export interface TipoAtributo {
 export interface CategoriaAtributo {
   id: number;
   categoria: string;
-}
-
-export interface CategoriaAtributo {
-  id: number;
-  categoria: string;
+  orden: number;
 }
 
 export interface AtributoEtapa {
@@ -45,4 +41,14 @@ export interface Proceso {
   id_funcionario: number;
   inicio: string;
   fin: string | null;
+}
+
+export interface FormDataCategoria {
+  categoria: string;
+  orden: string;
+}
+
+export interface EtapaFiltrada {
+  etapa: EtapaProceso;
+  subetapas: CategoriaAtributo[];
 }
