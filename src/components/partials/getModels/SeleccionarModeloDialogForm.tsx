@@ -337,7 +337,8 @@ const SeleccionarModeloDialogForm = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
+              color="error"
               onClick={handle_close_select_model}
               startIcon={<CloseIcon />}
             >

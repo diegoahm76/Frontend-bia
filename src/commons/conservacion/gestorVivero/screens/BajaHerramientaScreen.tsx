@@ -215,6 +215,7 @@ export function BajaHerramientaScreen(): JSX.Element {
                 icon_class={<SaveIcon />}
                 label={action}
                 type_button="button"
+                
               />
             </Grid>
           )}

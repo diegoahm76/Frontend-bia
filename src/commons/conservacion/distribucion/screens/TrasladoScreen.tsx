@@ -256,7 +256,7 @@ export function TrasladoScreen(): JSX.Element {
               dispatch={dispatch}
               reset_state={reset_state}
               set_initial_values={initial_values}
-              variant_button={'contained'}
+              variant_button={'outlined'}
             />
           </Grid>
           {current_transfer.id_traslado !== null && (

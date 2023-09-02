@@ -539,12 +539,12 @@ const DespachoBienesConsumoScreen = () => {
 
           </Grid>}
 
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={1.2}>
           <Limpiar
             dispatch={dispatch}
             reset_state={reset_state}
             set_initial_values={initial_values}
-            variant_button={'contained'}
+            variant_button={'outlined'}
           />
         </Grid>
         <Grid item xs={12} md={2}>

@@ -99,7 +99,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -109,7 +109,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cod_tipo_elemento_vivero',
       headerName: 'Tipo',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === 'P'
@@ -125,7 +125,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cantidad_entrante',
       headerName: 'Cantidad entrante',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -138,7 +138,7 @@ const ListadoBienesDespacho = () => {
         current_despacho.distribucion_confirmada === true
           ? 'Cantidad distribuida'
           : 'Cantidad a distribuir',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? 0}
@@ -148,7 +148,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cantidad_restante',
       headerName: 'Cantidad restante',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? params.row.cantidad}
@@ -158,7 +158,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'tipo_documento',
       headerName: 'Tipo de documento',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? params.row.cantidad}
@@ -168,7 +168,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'observacion',
       headerName: 'Observación',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}

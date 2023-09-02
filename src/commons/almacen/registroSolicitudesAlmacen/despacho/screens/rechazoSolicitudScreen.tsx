@@ -97,7 +97,7 @@ const RechazoSolicitudScreen = () => {
 
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudRechazo
-                    title={"INFORMACIÓN DE LA SOLICITUD"}
+                    title={"Información de la solicitud"}
                     control_solicitud_despacho={control_solicitud_despacho}
                     get_values={get_values}
                     open_modal={open_search_modal}
