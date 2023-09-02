@@ -83,6 +83,8 @@ export interface IObjNursery {
   cod_municipio: string | null;
   direccion: string | null;
   area_mt2: number | null;
+  coordenadas_lat: number | null;
+  coordenadas_lon: number | null;
   area_propagacion_mt2: number | null;
   tiene_area_produccion: boolean | null;
   tiene_areas_pep_sustrato: boolean | null;
