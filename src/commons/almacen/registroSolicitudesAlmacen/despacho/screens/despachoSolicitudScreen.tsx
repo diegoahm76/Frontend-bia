@@ -330,7 +330,7 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarBienDespacho />
       </Grid>
 
-      <Grid container direction="row" padding={2} spacing={2}>
+      <Grid     justifyContent="flex-end" container direction="row" padding={2} spacing={2}>
         {!(current_despacho.despacho_anulado === true) && (
           <Grid item xs={12} md={2}>
             <FormButton
@@ -547,7 +547,7 @@ const DespachoBienesConsumoScreen = () => {
             variant_button={'outlined'}
           />
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1.4}>
           <ButtonSalir
           />
         </Grid>

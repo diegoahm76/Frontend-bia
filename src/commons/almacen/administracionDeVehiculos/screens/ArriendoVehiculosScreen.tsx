@@ -404,7 +404,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                       sx={{ mt: '20px' }}
                     >
                       <Button
-                        color='secondary'
+                        color='primary'
                         variant='contained'
                         startIcon={<SearchIcon />}
                         onClick={() => { set_buscar_arriendo(true) }}
@@ -414,7 +414,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                       {buscar_arriendo && (<BuscarArriendoComponent is_modal_active={buscar_arriendo} set_is_modal_active={set_buscar_arriendo}
                         title={"Buscar arriendo"} lista_marcas={lista_marcas} arriendo_veh={set_arriendo}></BuscarArriendoComponent>)}
                       <Button
-                        color='primary'
+                        color='success'
                         variant='contained'
                         startIcon={<SaveIcon />}
                         onClick={guardar_formulario}
@@ -422,7 +422,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                         {actualiza ? 'Actualizar' : 'Guardar'}
                       </Button>
                       <Button
-                        color='secondary'
+                        color='error'
                         variant='contained'
                         startIcon={<ClearIcon />}
                         onClick={salir_entrada}

@@ -30,7 +30,7 @@ import {
   set_current_info_deposito,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
-
+import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
   const {
@@ -261,6 +261,7 @@ export const BusquedaEstante: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
+          startIcon={<SearchIcon />}
           onClick={() => {
             handle_click_open();
           }}

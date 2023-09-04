@@ -744,6 +744,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                             <Grid item xs={12} sm={10}  >
                                 <Stack
                                     direction="row"
+                                    marginLeft={21}
                                     justifyContent="center"
                                     spacing={2}>
                                     <Button

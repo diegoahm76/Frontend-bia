@@ -250,9 +250,10 @@ const EntregaScreen = () => {
 
             <Grid
                 container
-                direction="row"
+              
                 padding={2}
                 spacing={2}
+                direction="row" justifyContent="flex-end"
             >
 
                 <Grid item xs={12} md={2}>
@@ -374,7 +375,7 @@ const EntregaScreen = () => {
                         variant_button={'outlined'}
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.4}>
                     <ButtonSalir
                     />
                 </Grid>

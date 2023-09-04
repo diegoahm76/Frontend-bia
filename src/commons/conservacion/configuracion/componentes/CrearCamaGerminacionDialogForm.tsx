@@ -203,6 +203,7 @@ const CrearCamaGerminacionDialogForm = ({
             {action === 'create' ? (
               <Button
                 type="submit"
+                color='success'
                 variant="contained"
                 startIcon={<SaveIcon />}
               >

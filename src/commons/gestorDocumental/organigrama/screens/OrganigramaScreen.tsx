@@ -34,7 +34,7 @@ export const OrganigramaScreen: React.FC = () => {
         boxShadow: '0px 3px 6px #042F4A26'
       }}
     >
-      <Title title="ORGANIGRAMAS" />
+      <Title title="Organigramas" />
       <Box sx={{ width: '100%', typography: 'body1' }}>
         <TabContext value={position_tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

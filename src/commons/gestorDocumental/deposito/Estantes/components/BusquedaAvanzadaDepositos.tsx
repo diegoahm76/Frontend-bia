@@ -33,6 +33,7 @@ import {
 import { useAppDispatch } from '../../../../../hooks';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaDepositos: React.FC = () => {
@@ -269,6 +270,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
             onClick={() => {
               handle_click_open();
             }}
@@ -402,6 +404,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                   onClick={(e) => {

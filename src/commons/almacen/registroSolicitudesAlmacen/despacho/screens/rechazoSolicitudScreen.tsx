@@ -119,6 +119,13 @@ const RechazoSolicitudScreen = () => {
 
 
             <>
+            <Grid    container
+            spacing={2}
+            marginTop={2}
+            direction="row" justifyContent="flex-end"
+            >
+
+          
                 <Grid item xs={6} md={2}>
                     <FormButton
                         variant_button="contained"
@@ -142,7 +149,7 @@ const RechazoSolicitudScreen = () => {
                     <ButtonSalir
                     />
                 </Grid>
-
+  </Grid>
             </>
 
 

@@ -127,9 +127,10 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
         <Grid
           container
-          direction="row"
+         
           padding={2}
           spacing={2}
+          direction="row" justifyContent="flex-end"
         >
           <Grid item xs={12} md={2}>
             <FormButton
@@ -152,7 +153,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
               />
             </Grid>}
 
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             <Button
               variant="contained"
               onClick={programacion_mantenimiento}

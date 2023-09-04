@@ -772,7 +772,8 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                             <Grid item xs={12} sm={10}>
                                 <Stack
                                     direction="row"
-                                    marginLeft={2}
+                                    marginLeft={21}
+                                    
                                     justifyContent="center"
                                     spacing={2}>
                                     <Button
