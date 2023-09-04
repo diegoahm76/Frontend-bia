@@ -538,11 +538,11 @@ export const get_funcionario_service = (
             );
             console.log(data)
             dispatch(set_funcionarios(data.data));
-            if (data.data.length > 0) {
-                control_success("Se econtrarón funcionarios")
-            } else {
-                control_error("No se econtrarón funcionarios")
-            }
+            // if (data.data.length > 0) {
+            //     control_success("Se econtrarón funcionarios")
+            // } else {
+            //     control_error("No se econtrarón funcionarios")
+            // }
             return data;
         } catch (error: any) {
             console.log(error);

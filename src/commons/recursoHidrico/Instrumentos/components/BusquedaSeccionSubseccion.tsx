@@ -26,6 +26,7 @@ import { DataContext } from '../context/contextData';
 import { search_seccion_subseccion } from '../request/request';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
 
 export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
   const {
@@ -205,6 +206,8 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
+
             onClick={() => {
               handle_click_open();
             }}
@@ -270,6 +273,7 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
                   color="primary"
                   loading={is_search}
                   disabled={is_search}
+                  startIcon={<SearchIcon />}
                 >
                   Buscar
                 </LoadingButton>

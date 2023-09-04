@@ -25,7 +25,7 @@ export const Sucursal: FC = () => {
       const res = await api.get(url);
       const sucursales_data = res.data.data;
       setdata_entidad(sucursales_data);
-      
+
     } catch (error) {
       // console.error(error);
     }
@@ -39,10 +39,11 @@ export const Sucursal: FC = () => {
 
     const interval = setInterval(() => {
       fetch_dataget();
+
       fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 3500);
+    }, 6000);
 
     return () => { clearInterval(interval) };
   }, []);
@@ -53,13 +54,10 @@ export const Sucursal: FC = () => {
       const res = await api.get(url);
       const sucursales_data = res.data.data;
       setdata_entidad(sucursales_data);
- fetch_dataget();
+      fetch_dataget();
       const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => sucursal.numero_sucursal));
 
       setnew_number(max_numero_sucursal + 1);
-      // const siguiente_numeros_sucursal = max_numero_sucursal + 1;
-
-
     } catch (error) {
       console.error(error);
     }
@@ -105,8 +103,7 @@ export const Sucursal: FC = () => {
           // await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
-            fetch_dataget();
-            
+            fetch_dataget(); 
           })
           .catch((error) => {
             console.error(error);
@@ -200,7 +197,7 @@ export const Sucursal: FC = () => {
           />
         </Grid>
         <SucursalActuaizar fetch_dataget={fetch_dataget} setnew_number={setnew_number} fetchand_update_data={fetchand_update_data}
-          sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} siguiente_numeros_sucursal={new_number}
+          sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} new_number={new_number}
           esPrincipalExists={esPrincipalExists} />
       </Grid>
     </>

@@ -14,7 +14,7 @@ export const ButtonAdminBandeja: React.FC = () => {
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estás seguro?, al salir de la página puede perder información.',
+      text: '¿Estás seguro de ir a la ventana de administración de bandejas',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',

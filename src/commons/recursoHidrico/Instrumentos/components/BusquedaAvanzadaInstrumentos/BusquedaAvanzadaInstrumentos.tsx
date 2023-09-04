@@ -32,6 +32,8 @@ import {
 import { ButtonDelete } from '../../../../../utils/Eliminar/ButtonDelete';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaInstrumentos: React.FC = () => {
@@ -221,6 +223,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
       <Grid item>
         <Button
           variant="contained"
+          startIcon={<SearchIcon />}
           color="primary"
           onClick={() => {
             handle_click_open();
@@ -289,6 +292,7 @@ export const BusquedaAvanzadaInstrumentos: React.FC = () => {
                     color="primary"
                     loading={is_search}
                     disabled={is_search}
+                    startIcon={<SearchIcon />}
                   >
                     Buscar
                   </LoadingButton>

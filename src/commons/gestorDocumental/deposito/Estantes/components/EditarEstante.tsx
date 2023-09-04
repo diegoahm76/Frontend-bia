@@ -1,19 +1,34 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useEstantesHook } from '../hooks/useEstantesHook';
 import { MoverEstantes } from './MoverEstantes';
 import { useAppSelector } from '../../../../../hooks';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import { DataContext } from '../context/context';
+// import Select from 'react-select';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarEstante: React.FC = () => {
-  const { control_estantes, errors_estantes, reset_estantes } =
-    useEstantesHook();
+  const {
+    control_estantes,
+    errors_estantes,
+    reset_estantes,
+    // set_value_estantes,
+    // * habilitar campos orden
+    is_habilita_cambiar_orden_estante,
+    set_is_habilita_cambiar_orden_estante,
+    is_habilita_nuevo_orden,
+    set_is_habilita_nuevo_orden,
+    set_orden,
+    set_nuevo_orden,
+  } = useEstantesHook();
 
   const { data_estantes } = useAppSelector((state) => state.deposito);
+
+  const { nuevo_orden_estantes_selected } = useContext(DataContext);
 
   useEffect(() => {
     reset_estantes({
@@ -21,6 +36,7 @@ export const EditarEstante: React.FC = () => {
       orden: data_estantes?.orden_ubicacion_por_deposito,
       nuevo_orden: '',
     });
+    set_orden(data_estantes?.orden_ubicacion_por_deposito);
   }, [data_estantes]);
 
   return (
@@ -88,7 +104,15 @@ export const EditarEstante: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Button variant="contained" color="primary" disabled={true}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={is_habilita_cambiar_orden_estante}
+            onClick={() => {
+              set_is_habilita_cambiar_orden_estante(true);
+              set_is_habilita_nuevo_orden(false);
+            }}
+          >
             Cambiar orden
           </Button>
         </Grid>
@@ -99,20 +123,78 @@ export const EditarEstante: React.FC = () => {
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <TextField
-                fullWidth
+                label="Nuevo orden"
+                placeholder="Nuevo orden"
+                select
                 size="small"
-                // select
-                placeholder="Nuevo Orden"
-                label="Nuevo Orden"
-                variant="outlined"
-                value={value}
-                disabled={true}
+                margin="dense"
+                disabled={is_habilita_nuevo_orden}
+                fullWidth
                 required={false}
-                onChange={onChange}
-              />
+                value={value}
+                onChange={(e) => {
+                  onChange(e);
+                  console.log(e.target.value, 'e.target.value')
+                  set_nuevo_orden(Number(e.target.value));
+                }}
+              >
+                {nuevo_orden_estantes_selected.map((option) => (
+                  <MenuItem key={option.label} value={option.label}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />{' '}
+        </Grid>
+
+        {/* <Grid
+          item
+          xs={12}
+          sm={6}
+          md={3}
+          // sx={{
+          //   marginTop: '25px',
+          //   marginBottom: '10px',
+          // }}
+        >
+          <Controller
+            name="nuevo_orden"
+            control={control_estantes}
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <div>
+                <Select
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      height: '100%',
+                      minHeight: '100%',
+                    }),
+                  }}
+                  value={value}
+                  onChange={onChange}
+                  options={nuevo_orden_estantes_selected}
+                  placeholder="Seleccionar"
+                  isDisabled={is_habilita_nuevo_orden}
+                />
+                <label>
+                  <small
+                    style={{
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      fontWeight: 'thin',
+                      fontSize: '0.75rem',
+                      marginTop: '0.25rem',
+                      // marginLeft: '0.25rem'
+                    }}
+                  >
+                    Nuevo orden
+                  </small>
+                </label>
+              </div>
             )}
           />
-        </Grid>
+        </Grid> */}
         <Grid container spacing={2} justifyContent="flex-end">
           <MoverEstantes />
           <Grid item></Grid>

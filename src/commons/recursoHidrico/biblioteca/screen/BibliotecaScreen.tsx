@@ -138,7 +138,7 @@ export const BibliotecaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="SECCIÓN" />
+          <Title title="Sección" />
         </Grid>
         {rows_seccion.length > 0 && (
           <>
@@ -167,9 +167,9 @@ export const BibliotecaScreen: React.FC = () => {
             </Grid>
           </>
         )}
-      </Grid>
       <Grid item container justifyContent="flex-end" spacing={2}>
         <ButtonSalir/>
+      </Grid>
       </Grid>
     </>
   );

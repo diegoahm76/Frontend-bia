@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useContext } from 'react';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
@@ -11,16 +12,44 @@ import CloseIcon from '@mui/icons-material/Close';
 import ForwardIcon from '@mui/icons-material/Forward';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../hooks';
-import  SaveIcon  from '@mui/icons-material/Save';
+import SaveIcon from '@mui/icons-material/Save';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
-  const { controlModoTrasladoUnidadXEntidad, controlFaseEntrada } =
-    useAppSelector((state) => state.u_x_e_slice);
+  const {
+    controlModoTrasladoUnidadXEntidad,
+    unidadesSeleccionadas /* controlFaseEntrada */
+  } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
 
   const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
+
+  const guardarRegistrosT026 = (): void => {
+    console.log('guardando registros T026');
+
+    // console.log('unidades seleccionadas', unidadesSeleccionadas);
+
+    const unidadesSeleccionadasArray =
+      unidadesSeleccionadas &&
+      Object?.entries(unidadesSeleccionadas)
+        .filter(
+          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+          ([key, value]) => {
+            return value ? value?.idPersona && value?.label && value?.value : null;
+          }
+        )
+        .map(([key, value]) => ({
+          id_persona: value?.idPersona,
+          // label: value.label,
+          id_nueva_unidad_organizacional: value?.value
+        }));
+    console.log(unidadesSeleccionadasArray);
+  };
+
+  const procederACambioMasivoUxE = (): void => {
+    console.log('procediendo a cambio masivo UxE');
+  };
 
   return (
     <>
@@ -30,7 +59,10 @@ export const CleanData: FC<any> = (): JSX.Element => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log('hello from submit');
+              controlModoTrasladoUnidadXEntidad ===
+              'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
+                ? guardarRegistrosT026()
+                : procederACambioMasivoUxE();
             }}
             style={{
               textAlign: 'center',
@@ -61,9 +93,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   sx={{ m: '20px 0' }}
                 >
                   {/* la verdadera validación se da con este state
-                  
                   controlFaseEntrada !== 1
-
                   */}
                   {controlModoTrasladoUnidadXEntidad ===
                     'modo_entrada_con_validacion_organigrama_anterior_a_actual' && (
@@ -91,20 +121,23 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   <Button
                     color="primary"
                     variant="contained"
+                    type="submit"
                     // DEBE HABILITARSE LA CONDICIONAL DE GUARDAR O PROCEDER DEPENDIENDO EL ESCENARIO (MODE)
                     startIcon={
-                      controlFaseEntrada === 1 ? <SaveIcon /> : <ForwardIcon />
+                      controlModoTrasladoUnidadXEntidad ===
+                      'modo_entrada_con_validacion_organigrama_actual_a_nuevo' ? (
+                        <SaveIcon />
+                      ) : (
+                        <ForwardIcon />
+                      )
                     }
-                    sx={{
-                      boxShadow: '5px 5px 30px 0px rgba(0,0,0,0.75)'
-                    }}
-                    onClick={() => {
-                      console.log('cleaning fields');
-                    }}
                   >
                     {/* guardar en la primera opción, proceder en la segunda opción */}
 
-                    {controlFaseEntrada === 1 ? 'GUARDAR' : 'PROCEDER'}
+                    {controlModoTrasladoUnidadXEntidad ===
+                    'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
+                      ? 'GUARDAR'
+                      : 'PROCEDER'}
                   </Button>
 
                   <Link

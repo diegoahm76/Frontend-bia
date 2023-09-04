@@ -60,7 +60,7 @@ export const obtener_etapa_meterial_vegetal: any = () => {
 export const obtener_bienes_viveros: any = (filtros: {seleccion_tipo_bien: string}) => {
   return async () => {
     try {
-      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}`);
+      const { data } = await api.get(`conservacion/analitica/busqueda-bienes-mezclas/get/?cod_tipo_elemento_vivero=${filtros.seleccion_tipo_bien === 'Todos' ? '': filtros.seleccion_tipo_bien}&&id_vivero=`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

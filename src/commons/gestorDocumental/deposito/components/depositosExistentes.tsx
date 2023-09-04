@@ -11,17 +11,14 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 
 interface IProps {
-    depositos: any;
-    get_values: any;
+
     handle_edit_click: any;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const ListadoDeposito = ({ get_values, depositos, handle_edit_click }: IProps) => {
+const ListadoDeposito = ({ handle_edit_click }: IProps) => {
     const { deposito, } = useAppSelector((state) => state.deposito);
-    //    const dispatch = useAppDispatch();
-
     const columns: GridColDef[] = [
 
         {

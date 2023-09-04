@@ -242,7 +242,6 @@ export const TrdScreen: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      type="number"
                       // margin="dense"
                       fullWidth
                       // name="version"

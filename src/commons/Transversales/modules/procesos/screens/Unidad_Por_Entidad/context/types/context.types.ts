@@ -5,6 +5,8 @@ export interface ModalContextInterface {
   handleModalHistoricos: () => void;
   loadingConsultaT026: boolean;
   setloadingConsultaT026: (value: boolean) => void;
+  gridActualANuevo: boolean;
+  handleGridActualANuevo: (value: boolean) => void;
 }
 export interface ContextProps {
   children: ReactNode;

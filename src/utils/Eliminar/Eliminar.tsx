@@ -53,7 +53,7 @@ export const ButtonEliminar: React.FC<DeleteButtonProps> = ({
 
   return (
     <LoadingButton
-      size="small"
+      // size="small"
       onClick={() => {
         confirmar_eliminar(id);
       }}

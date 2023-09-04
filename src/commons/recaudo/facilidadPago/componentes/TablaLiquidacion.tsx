@@ -1,13 +1,24 @@
 import { Grid, Box, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { type TablasAmortizacion, type Obligacion } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
+import dayjs from 'dayjs';
+
+interface RootState {
+  plan_pagos: {
+    plan_pagos: TablasAmortizacion;
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLiquidacion: React.FC = () => {
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
-  const [saldo_capital, set_saldo_capital] = useState(0);
+  const [lista, set_lista] = useState(Array<Obligacion>);
+  const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -24,45 +35,15 @@ export const TablaLiquidacion: React.FC = () => {
     currency: "COP",
   }).format(intereses)
 
-  const saldo_capital_cop = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "COP",
-  }).format(saldo_capital)
-
-  const lista = [
-    {
-      item: 1,
-      numero_resolucion: 'EXP 3.11.016 RESOLUCIÓN PS-GJ 1.2.6',
-      monto_inicial: '300000',
-      fecha_mora: '18/09/2019',
-      dias_mora: '503',
-      valor_intereses: '150000',
-      valor_total: '450000',
-      valor_abonado: '100000',
-      porcentaje_abonado: '20%',
-      abono_capital: '200000',
-      abono_intereses: '50000',
-      saldo_capital: '120000',
-    },
-    {
-      item: 2,
-      numero_resolucion: 'EXP 6.11.06 RESOLUCIÓN PS-GJ 8.2.6',
-      monto_inicial: '300000',
-      fecha_mora: '11/03/2022',
-      dias_mora: '323',
-      valor_intereses: '150000',
-      valor_total: '450000',
-      valor_abonado: '100000',
-      porcentaje_abonado: '20%',
-      abono_capital: '200000',
-      abono_intereses: '50000',
-      saldo_capital: '120000',
+  useEffect(() => {
+    if(plan_pagos.data_cartera !== undefined){
+      set_lista(plan_pagos.data_cartera.obligaciones)
     }
-  ]
+  }, [plan_pagos])
 
   const columns: GridColDef[] = [
     {
-      field: 'item',
+      field: 'id',
       headerName: 'Item',
       width: 50,
       renderCell: (params) => (
@@ -72,7 +53,7 @@ export const TablaLiquidacion: React.FC = () => {
       ),
     },
     {
-      field: 'numero_resolucion',
+      field: 'nombre',
       headerName: 'Resolución',
       width: 300,
       renderCell: (params) => (
@@ -98,12 +79,12 @@ export const TablaLiquidacion: React.FC = () => {
       },
     },
     {
-      field: 'fecha_mora',
+      field: 'inicio',
       headerName: 'Fecha Cons. Mora',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value).format('DD/MM/YYYY')}
         </div>
       ),
     },
@@ -134,7 +115,7 @@ export const TablaLiquidacion: React.FC = () => {
       },
     },
     {
-      field: 'valor_total',
+      field: 'valor_capital_intereses',
       headerName: 'Capital + Intereses',
       width: 150,
       renderCell: (params) => {
@@ -154,14 +135,19 @@ export const TablaLiquidacion: React.FC = () => {
       headerName: 'Valor Abonado',
       width: 150,
       renderCell: (params) => {
-        const precio_cop = new Intl.NumberFormat("es-ES", {
-          style: "currency",
-          currency: "COP",
-        }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <Grid item xs={11} sm={150}>
+            <TextField
+              required
+              label="Valor Abonado"
+              size="small"
+              fullWidth
+              onChange={() => {
+              }}
+              name='valor_abonado'
+              type='number'
+            />
+          </Grid>
         )
       },
     },
@@ -228,18 +214,14 @@ export const TablaLiquidacion: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    let capital_final = 0
-    for(let i=0; i< lista.length; i++){
+    for(let i=0; i<lista.length; i++){
       sub_capital = sub_capital + parseFloat(lista[i].monto_inicial)
       sub_intereses = sub_intereses + parseFloat(lista[i].valor_intereses)
-      capital_final = capital_final + parseFloat(lista[i].saldo_capital)
       set_capital(sub_capital)
       set_intereses(sub_intereses)
-      set_saldo_capital(capital_final)
     }
-
     set_total(capital + intereses)
-  }, [capital, intereses, saldo_capital])
+  }, [lista, capital, intereses])
 
   return (
     <>
@@ -254,61 +236,65 @@ export const TablaLiquidacion: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <DataGrid
-                autoHeight
-                disableSelectionOnClick
-                rows={lista}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.item}
-              />
-            </Box>
-          </Grid>
-          <Stack
-            direction="row"
-            justifyContent="right"
-            spacing={2}
-            sx={{ mt: '30px' }}
-          >
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Total Capital"
-                size="small"
-                fullWidth
-                value={capital_cop}
-              />
+        {
+          lista.length !== 0 ? (
+            <Grid item xs={12}>
+              <Grid item>
+                <Box sx={{ width: '100%' }}>
+                  <DataGrid
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={lista}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
+                  />
+                </Box>
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                sx={{ mt: '30px' }}
+              >
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Capital"
+                    size="small"
+                    fullWidth
+                    value={capital_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Intereses"
+                    size="small"
+                    fullWidth
+                    value={intereses_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Capital + Intereses"
+                    size="small"
+                    fullWidth
+                    value={total_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Saldo Capital"
+                    size="small"
+                    fullWidth
+                    value={''}
+                  />
+                </Grid>
+              </Stack>
             </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Total Intereses"
-                size="small"
-                fullWidth
-                value={intereses_cop}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Capital + Intereses"
-                size="small"
-                fullWidth
-                value={total_cop}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Saldo Capital"
-                size="small"
-                fullWidth
-                value={saldo_capital_cop}
-              />
-            </Grid>
-        </Stack>
-        </Grid>
+          ) : null
+        }
       </Grid>
     </>
   );

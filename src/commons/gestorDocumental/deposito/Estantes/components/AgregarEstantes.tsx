@@ -4,10 +4,26 @@ import { Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { useEstantesHook } from '../hooks/useEstantesHook';
+import { useContext, useEffect } from 'react';
+import { DataContext } from '../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarEstantes: React.FC = () => {
-  const { control_estantes, errors_estantes } = useEstantesHook();
+  const { reset_estantes, control_estantes, errors_estantes } =
+    useEstantesHook();
+  const { orden_siguiente, fetch_data_orden_estante } = useContext(DataContext);
+
+  useEffect(() => {
+    void fetch_data_orden_estante();
+  }, []);
+  
+  useEffect(() => {
+    reset_estantes({
+      identificacion_por_deposito: '',
+      orden: orden_siguiente?.orden_siguiente,
+      nuevo_orden: '',
+    });
+  }, [orden_siguiente]);
 
   return (
     <>
@@ -27,7 +43,7 @@ export const AgregarEstantes: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Estante" />
+          <Title title="Registro estante" />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller

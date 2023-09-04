@@ -232,9 +232,10 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
       if (data !== undefined) {
-        control_success('El numero de documento ya esta registrado'); // Mensaje alerta persona existe
+        control_success('El número de documento ya esta registrado'); // Mensaje alerta persona existe
         onResult(data);
       } else {
+        control_error('El número de documento no esta registrado'); // Mensaje alerta persona no existe
         const new_data = {
           id: 0,
           id_persona: 0,
