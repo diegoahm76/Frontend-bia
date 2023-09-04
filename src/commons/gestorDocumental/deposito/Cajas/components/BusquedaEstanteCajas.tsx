@@ -96,6 +96,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                   identificacion_deposito: params.row.identificacion_deposito,
                   identificacion_estante:
                     params.row.identificacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
                 })
               );
 
@@ -335,10 +336,10 @@ export const BusquedaEstanteCajas: React.FC = () => {
           xs={12}
           sm={6}
           md={3}
-          // sx={{
-          //   marginTop: '25px',
-          //   marginBottom: '10px',
-          // }}
+        // sx={{
+        //   marginTop: '25px',
+        //   marginBottom: '10px',
+        // }}
         >
           <Controller
             name="id_bandeja_estante"
@@ -504,9 +505,9 @@ export const BusquedaEstanteCajas: React.FC = () => {
                     startIcon={<SearchIcon />}
                     loading={is_search}
                     disabled={is_search}
-                    // onClick={(e) => {
-                    //   void on_submit_advance(e);
-                    // }}
+                  // onClick={(e) => {
+                  //   void on_submit_advance(e);
+                  // }}
                   >
                     Buscar
                   </LoadingButton>
