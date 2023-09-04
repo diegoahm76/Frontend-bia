@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, Article } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,7 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { get_filtro_fac_pago_asignadas, get_facilidades_asignadas } from '../slices/FacilidadesSlice';
-import { get_validacion_plan_pagos } from '../requests/requests';
+import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
+import { get_validacion_resolucion } from '../slices/ResolucionSlice';
+import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 interface RootState {
@@ -78,9 +79,14 @@ export const TablaFacilidadesFuncionario: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
-                  void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                  void get_validacion_plan_pagos(params.row.id_facilidad);
-                  navigate('../solicitud');
+                  try {
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    void dispatch(get_validacion_plan_pagos(params.row.id_facilidad));
+                    void dispatch(get_validacion_resolucion(params.row.id_facilidad));
+                    navigate('../solicitud');
+                  } catch (error: any) {
+                    throw new Error(error)
+                  }
                 }}
               >
                 <Avatar
@@ -192,7 +198,7 @@ export const TablaFacilidadesFuncionario: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id_facilidad}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
                   />
                 </Box>
               </Grid>

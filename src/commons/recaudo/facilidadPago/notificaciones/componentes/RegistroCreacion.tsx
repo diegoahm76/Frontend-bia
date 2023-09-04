@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
@@ -20,10 +19,10 @@ export const Email: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const handle_open = (): void => { set_modal(true) };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
@@ -202,18 +201,18 @@ export const Fisico: React.FC = () => {
   const [registro, set_registro] = useState(false);
   const navigate = useNavigate();
 
-  const handle_open = () => {
+  const handle_open = (): void => {
     set_modal(true)
     set_registro(true)
   };
-  const handle_close = () => { set_modal(false) };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_date_change = (date: Date | null) => {
+  const handle_date_change = (date: Date | null): void => {
     set_date(date);
     set_fecha_string(dayjs(date).format('YYYY-MM-DD'));
   };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
@@ -420,10 +419,10 @@ export const Edicto: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const handle_open = (): void => { set_modal(true) };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {

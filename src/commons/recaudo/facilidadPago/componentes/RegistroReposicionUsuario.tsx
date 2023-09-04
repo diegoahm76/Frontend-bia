@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, TextField, Button, Stack, DialogTitle, Dialog, DialogActions, DialogContent, Divider } from "@mui/material";
 import { Close, Save, CloudUpload } from '@mui/icons-material';
 import { useState } from 'react';
@@ -12,8 +11,9 @@ export const RegistroReposicionUsuario: React.FC = () => {
   const { form_state, on_input_change } = use_form({});
   const { form_file, name_file, handle_change_one_file } = useFormFile({});
   const { form_multiple_files, name_multiple_files, handle_change_multiple_files } = useFormMultipleFiles({});
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+
+  const handle_open = (): void => { set_modal(true) };
+  const handle_close = (): void => { set_modal(false) };
 
   return (
     <>

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
 
-// ! ----- consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
+// ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
 export const consultarTablaTemporal = async (setLoading: any): Promise<any> => {
   // setLoading(true);
   try {
@@ -124,35 +125,60 @@ export const get_organigrama_anterior = async (navigate: any): Promise<any> => {
   }
 };
 
-/* export const getUnidadesOrgAnterior = async (): Promise<any[]> => {
-  const url =
-    'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
+// ! ------ GET PERSONAS DE ORGANIGRAMA ACTUAL Y DE ORGANIGRAMA QUE SELECCIONE PARA REALIZAR EL TRASLADO DE UNIDADES ------ //
+
+export const getListadoPersonasOrganigramaActual = async (): Promise<any> => {
   try {
+    const url = `transversal/organigrama/listado-personas-organigrama/`;
     const { data } = await api.get(url);
-    return data.data;
-  } catch (error) {
-    console.error('Error fetching unidades:', error);
-    throw error;
+    return data;
+  } catch (error: any) {
+    console.log(error);
   }
 };
-*/
 
-/* export const getOrganigramaAnterior = async (id_org: number): Promise<any> => {
-  const url = 'transversal/organigrama/get/';
+export const getListaUnidadesOrganigramaSeleccionado = async (
+  id_organigrama: number
+): Promise<any> => {
   try {
+    const url = `transversal/organigrama/unidades/get-by-organigrama/${id_organigrama}/`;
     const { data } = await api.get(url);
-    const organigramaNecesario = data.Organigramas.find(
-      (el: any) => el.id_organigrama === id_org
-    );
-    if (organigramaNecesario) {
-      return organigramaNecesario;
-    } else {
-      // throw new Error(`Organigrama with id ${id_org} not found`);
-      console.error(`Organigrama with id ${id_org} not found`);
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+//* con esta funcion consulto si hay personas sin actualizar, eso quiere decir que si no hay por defecto entro a la primera opcion ya que no se ha realizado el cambio de organigrama, si trae registros en porqu eel cambio de organigrama ya se realizó y por ende se debe entrar a la segunda opcion ()
+export const getPersonasSinActualizarOrganigramaAnteriorAlActual =
+  async (): Promise<any> => {
+    try {
+      const url = `transversal/organigrama/get-unidad-organizacional-after/`;
+      const { data } = await api.get(url);
+      return {
+        data: data?.data,
+        success: data?.success,
+        detail: data?.detail
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        data: [],
+        success: false,
+        detail: error?.response?.data?.detail
+      };
     }
-  } catch (error) {
-    console.error('Error fetching organigrama:', error);
-    throw error;
+  };
+
+/* export const putCrearRegistrosTemporales = async (
+  data_create_table: any
+): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/guardar-actualizacion-unidad${data_create_table.id_organigrama_futuro}/}`;
+    const { data } = await api.put(url, {});
+    return data;
+  } catch (error: any) {
+    console.log(error);
   }
 };
 */

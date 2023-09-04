@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState } from 'react';
 import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
 import { Add, CloudUpload } from '@mui/icons-material';
@@ -19,7 +18,7 @@ export const RegistroRecepcion: React.FC = () => {
   const { form_state, on_input_change } = use_form({});
   const { form_files, name_files, handle_change_file } = useFormFiles({});
 
-  const handle_change_date = (date: Date | null) => {
+  const handle_change_date = (date: Date | null): void => {
     set_date(date);
     set_fecha_string(dayjs(date).format('YYYY-MM-DD'));
   };

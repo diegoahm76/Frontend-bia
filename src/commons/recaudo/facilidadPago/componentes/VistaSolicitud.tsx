@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { CloudDownload } from '@mui/icons-material';
@@ -6,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
+import dayjs from 'dayjs';
 
 interface RootState {
   solicitud_facilidad: {
@@ -143,7 +143,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Fecha del Abono"
             size="small"
             fullWidth
-            value={`${solicitud_facilidad.facilidad_pago.fecha_abono}`}
+            value={`${dayjs(solicitud_facilidad.facilidad_pago.fecha_abono).format('DD/MM/YYYY')}`}
             disabled
           />
         </Grid>

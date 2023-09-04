@@ -1,14 +1,15 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint no-new-func: 0 */
 import { type SyntheticEvent, useState, useEffect } from 'react';
 import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
-import type { Deudor, FormDetalleLiquidacion, FormLiquidacion } from '../interfaces/liquidacion';
+import type { DetallesLiquidacion, Deudor, Expediente, FormDetalleLiquidacion, FormLiquidacion, Liquidacion, OpcionLiquidacion, RowDetalles } from '../interfaces/liquidacion';
 import { DataGrid, type GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { api } from '../../../api/axios';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { NotificationModal } from '../components/NotificationModal';
+import dayjs, { type Dayjs } from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
@@ -17,8 +18,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
     id_expediente: '',
-    fecha_liquidacion: '',
-    vencimiento: '',
     periodo_liquidacion: '',
     valor: 0,
   });
@@ -27,6 +26,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const [loading, set_loading] = useState(true);
+  const [expedientes_deudor, set_expedientes_deudor] = useState<Expediente[]>([]);
+  const [expediente_liquidado, set_expediente_liquidado] = useState<boolean>(false);
+  const [fecha_liquidacion, set_fecha_liquidacion] = useState<Dayjs>(dayjs());
+  const [fecha_vencimiento, set_fecha_vencimiento] = useState<Dayjs>(dayjs());
+  const [rows_detalles, set_rows_detalles] = useState<RowDetalles[]>([]);
+  const [id_row_detalles, set_id_row_detalles] = useState(0);
+  const [id_liquidacion_pdf, set_id_liquidacion_pdf] = useState('');
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/deudores')
@@ -39,6 +45,100 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_loading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (form_liquidacion.id_deudor !== '') {
+      api.get(`recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`)
+        .then((response) => {
+          set_expedientes_deudor(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error.response.data.detail);
+        });
+    }
+  }, [form_liquidacion.id_deudor]);
+
+  useEffect(() => {
+    if (form_liquidacion.id_expediente !== '') {
+      api.get(`recaudo/liquidaciones/expedientes/${form_liquidacion.id_expediente}`)
+        .then((response) => {
+          set_expediente_liquidado(response.data.data.liquidado);
+          get_liquidacion_por_expediente(response.data.data.liquidado);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+  }, [form_liquidacion.id_expediente]);
+
+  const get_liquidacion_por_expediente = (liquidado: boolean): void => {
+    if (liquidado) {
+      api.get(`recaudo/liquidaciones/liquidacion-base-por-expediente/${form_liquidacion.id_expediente}`)
+        .then((response) => {
+          agregar_datos_inputs(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      set_form_liquidacion((previousState) => ({ ...previousState, periodo_liquidacion: '', valor: 0 }));
+      set_fecha_liquidacion(dayjs(new Date()));
+      set_fecha_vencimiento(dayjs(new Date()));
+      set_rows_detalles([]);
+    }
+  };
+
+  const agregar_datos_inputs = (liquidacion_base: Liquidacion): void => {
+    const { id, fecha_liquidacion, vencimiento, periodo_liquidacion, valor } = liquidacion_base;
+    set_id_liquidacion_pdf(id.toString());
+    set_form_liquidacion((previousState) => ({
+      ...previousState,
+      periodo_liquidacion,
+      valor: valor,
+    }));
+    set_fecha_liquidacion(dayjs(fecha_liquidacion));
+    set_fecha_vencimiento(dayjs(vencimiento));
+    agregar_detalles(liquidacion_base.detalles);
+  };
+
+  const agregar_detalles = (detalles: DetallesLiquidacion[]): void => {
+    set_id_row_detalles(0);
+    const new_detalles: RowDetalles[] = detalles.map((detalle) => ({
+      id: detalle.id,
+      nombre_opcion: detalle.id_opcion_liq.nombre,
+      concepto: detalle.concepto,
+      formula_aplicada: detalle.id_opcion_liq.funcion,
+      variables: detalle.variables,
+      valor_liquidado: detalle.valor.toString(),
+    }));
+    set_rows_detalles(new_detalles);
+  };
+
+  const add_new_row_detalles = (formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string): void => {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const funcion = new Function(`return ${formula}`);
+    const new_row: RowDetalles = {
+      id: id_row_detalles,
+      nombre_opcion: opcion_liquidacion.nombre,
+      concepto,
+      formula_aplicada: opcion_liquidacion.funcion,
+      variables: nuevas_variables,
+      valor_liquidado: funcion()
+    };
+    set_form_liquidacion((previousData) => ({ ...previousData, valor: (previousData.valor as number || 0) + Number(funcion()) }));
+    set_rows_detalles([...rows_detalles, new_row]);
+    set_id_row_detalles(prevID => prevID + 1);
+    set_form_detalle_liquidacion((prevData) => [
+      ...prevData,
+      {
+        variables: nuevas_variables,
+        id_opcion_liq: id_opcion_liquidacion,
+        valor: Number(funcion()),
+        estado: 1,
+        concepto: concepto,
+      }
+    ]);
+  };
 
   const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab(newValue);
@@ -67,16 +167,17 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
           console.log(response);
-          set_position_tab('1');
           set_form_liquidacion({
             id_deudor: '',
             id_expediente: '',
-            fecha_liquidacion: '',
-            vencimiento: '',
             periodo_liquidacion: '',
             valor: 0,
           });
+          set_fecha_liquidacion(dayjs(new Date()));
+          set_fecha_vencimiento(dayjs(new Date()));
           set_form_detalle_liquidacion([]);
+          set_rows_detalles([]);
+          set_id_row_detalles(0);
         })
         .catch((error) => {
           console.log(error);
@@ -87,8 +188,11 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const handle_submit_liquidacion = (): void => {
     api.post('recaudo/liquidaciones/liquidacion-base/', {
       ...form_liquidacion,
+      fecha_liquidacion: fecha_liquidacion.format('YYYY-MM-DDTHH:mm:ss'),
+      vencimiento: fecha_vencimiento.format('YYYY-MM-DDTHH:mm:ss'),
       id_deudor: Number(form_liquidacion.id_deudor),
       id_expediente: Number(form_liquidacion.id_expediente),
+      valor: Math.round(form_liquidacion.valor ?? 0),
     })
       .then((response) => {
         console.log(response);
@@ -235,10 +339,17 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 <GenerarLiquidacion
                   form_liquidacion={form_liquidacion}
                   nombre_deudor={nombre_deudor}
-                  form_detalle_liquidacion={form_detalle_liquidacion}
+                  rows_detalles={rows_detalles}
+                  expedientes_deudor={expedientes_deudor}
+                  expediente_liquidado={expediente_liquidado}
+                  fecha_liquidacion={fecha_liquidacion}
+                  fecha_vencimiento={fecha_vencimiento}
+                  id_liquidacion_pdf={id_liquidacion_pdf}
                   handle_input_form_liquidacion_change={handle_input_form_liquidacion_change}
                   handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
                   handle_submit_liquidacion={handle_submit_liquidacion}
+                  set_fecha_liquidacion={set_fecha_liquidacion}
+                  set_fecha_vencimiento={set_fecha_vencimiento}
                 />
               </TabPanel>
             </TabContext>
@@ -250,8 +361,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
-            set_form_liquidacion={set_form_liquidacion}
-            set_form_detalle_liquidacion={set_form_detalle_liquidacion}
+            rows_detalles={rows_detalles}
+            expediente_liquidado={expediente_liquidado}
+            add_new_row_detalles={add_new_row_detalles}
           />
         </TabPanel>
       </TabContext>

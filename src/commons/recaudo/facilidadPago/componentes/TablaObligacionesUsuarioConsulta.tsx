@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -6,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
 import { get_datos_deudor } from '../slices/DeudoresSlice';
+import { get_datos_contacto_solicitud } from '../slices/SolicitudSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
@@ -32,13 +32,13 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open = (opcion: number) => {
+  const handle_open = (opcion: number): void => {
     set_modal(true)
     set_modal_opcion(opcion)
-  }
-  const handle_close = () => { set_modal(false) }
+  };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_submit = async () => {
+  const handle_submit = async (): Promise<void> => {
     const arr_registro = []
     for(let i=0; i<lista_obligaciones.length; i++){
       for(let j=0; j<selected.length; j++){
@@ -50,12 +50,13 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
     try {
       dispatch(obligaciones_seleccionadas(arr_registro));
       void dispatch(get_datos_deudor(obligaciones.id_deudor));
+      void dispatch(get_datos_contacto_solicitud(obligaciones.id_deudor));
     } catch (error: any) {
       throw new Error(error);
     }
   };
 
-  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
+  const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
     const selected_index = selected.indexOf(name);
     let new_selected: readonly string[] = [];
 
@@ -71,7 +72,6 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
         selected.slice(selected_index + 1),
       );
     }
-
     set_selected(new_selected);
   };
 
@@ -226,81 +226,89 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <p>
-                {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
-              </p>
-              <DataGrid
-                autoHeight
-                disableSelectionOnClick
-                rows={lista_obligaciones}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => faker.database.mongodbObjectId()}
-              />
-            </Box>
-          </Grid>
-          <Stack
-            direction="row"
-            justifyContent="right"
-            spacing={2}
-            sx={{ mt: '30px' }}
-          >
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Total Capital"
-                size="small"
-                fullWidth
-                value={capital_cop}
-              />
+        {
+          lista_obligaciones.length !== 0 ? (
+            <Grid item xs={12}>
+              <Grid item>
+                <Box sx={{ width: '100%' }}>
+                  <p>
+                    {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
+                  </p>
+                  <DataGrid
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={lista_obligaciones}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
+                  />
+                </Box>
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                sx={{ mt: '30px' }}
+              >
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Capital"
+                    size="small"
+                    fullWidth
+                    value={capital_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Intereses"
+                    size="small"
+                    fullWidth
+                    value={intereses_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label={<strong>Gran Total a Deber</strong>}
+                    size="small"
+                    fullWidth
+                    value={total_cop}
+                  />
+                </Grid>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<Add />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {
+                  if(obligaciones.tiene_facilidad){
+                    handle_open(1);
+                  } else if(selected.length === 0){
+                    handle_open(2);
+                  } else {
+                    navigate('../registro');
+                    void handle_submit();
+                  }
+                }}
+              >
+                Crear Facilidad de Pago
+              </Button>
+            </Stack>
             </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label="Total Intereses"
-                size="small"
-                fullWidth
-                value={intereses_cop}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2.5}>
-              <TextField
-                label={<strong>Gran Total a Deber</strong>}
-                size="small"
-                fullWidth
-                value={total_cop}
-              />
-            </Grid>
-        </Stack>
-        <Stack
-          direction="row"
-          justifyContent="right"
-          spacing={2}
-          sx={{ mb: '20px' }}
-        >
-          <Button
-            color='primary'
-            variant='contained'
-            startIcon={<Add />}
-            sx={{ marginTop: '30px' }}
-            onClick={() => {
-              if(obligaciones.tiene_facilidad){
-                handle_open(1);
-              } else if(selected.length === 0){
-                handle_open(2);
-              } else {
-                navigate('../registro');
-                void handle_submit();
-              }
-            }}
-          >
-            Crear Facilidad de Pago
-          </Button>
-        </Stack>
-        </Grid>
+          ) : (
+            <p>
+              {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}
+            </p>
+          )
+        }
       </Grid>
       <DialogoInformativo
         tipo_notificacion={ modal_opcion === 1 ? 'error' : 'warn' }

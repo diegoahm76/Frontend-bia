@@ -1,21 +1,20 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { EncabezadoSolicitud } from '../componentes/EncabezadoSolicitud';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
+import { DialogoRegistro } from '../componentes/DialogoRegistro';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox, DialogContent, DialogContentText } from "@mui/material";
 import { Close, Save, CloudUpload, Help } from '@mui/icons-material';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
-import { type event, type check, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
-import { post_respuesta_fac_pago, get_datos_amortizacion } from '../requests/requests';
+import { type event, type check, type FacilidadPagoSolicitud, type Resolucion, type RespuestaFacilidadPago } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
-import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
-import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
 import { VistaProyeccionPagos } from '../componentes/VistaProyeccionPagos';
-import { deudores } from '../slices/DeudoresSlice';
+import { post_respuesta_fac_pago } from '../requests/requests';
+import { deudores, get_datos_deudor_amortizacion } from '../slices/DeudoresSlice';
+import { datos_facilidad } from '../slices/FacilidadesSlice';
+import { get_datos_amortizacion } from '../slices/PlanPagosSlice';
 
 interface RootState {
   solicitud_facilidad: {
@@ -35,6 +34,7 @@ interface RootStateValidacionPlanPagos {
 interface RootStateValidacionResolucion {
   resolucion_facilidad: {
     resolucion_facilidad: {
+      data: Resolucion;
       detail: string;
       success: boolean;
     }
@@ -46,8 +46,10 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
   const [plan_pagos_pregunta, set_plan_pagos_pregunta] = useState('');
   const [resolucion_pregunta, set_resolucion_pregunta] = useState('');
   const [check_dbme, set_check_dbme] = useState(false);
+  const [modal, set_modal] = useState(false);
   const [modal_anular, set_modal_anular] = useState(false);
   const [modal_plan_pagos, set_modal_plan_pagos] = useState(false);
+  const [respuesta_registro, set_respuesta_registro] = useState<RespuestaFacilidadPago>();
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
@@ -57,11 +59,12 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open_anular = () => { set_modal_anular(true) };
-  const handle_close_anular = () => { set_modal_anular(false) };
-  const handle_close_plan_pagos = () => { set_modal_plan_pagos(false) };
+  const handle_close = (): void => { set_modal(false) };
+  const handle_open_anular = (): void => { set_modal_anular(true) };
+  const handle_close_anular = (): void => { set_modal_anular(false) };
+  const handle_close_plan_pagos = (): void => { set_modal_plan_pagos(false) };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
@@ -69,6 +72,12 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
       set_file_name(selected_file.name);
     }
   };
+
+  useEffect(() => {
+    if(respuesta_registro !== undefined){
+      set_modal(true);
+    }
+  }, [respuesta_registro])
 
   return (
     <>
@@ -124,6 +133,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       <FormControl size="small" fullWidth>
                         <InputLabel>Asignar Estado</InputLabel>
                         <Select
+                          required
                           label="Asignar Estado"
                           defaultValue={''}
                           name='estado'
@@ -131,7 +141,11 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         >
                           <MenuItem value="ingresado">Ingresado</MenuItem>
                           <MenuItem value="revision">En revisión</MenuItem>
-                          <MenuItem value="anulado" onClick={handle_open_anular}>Cancelado/Anulado</MenuItem>
+                          {
+                            plan_pagos.success && resolucion_facilidad.success ? (
+                              <MenuItem onClick={handle_open_anular}>Cancelado/Anulado</MenuItem>
+                            ) : null
+                          }
                         </Select>
                       </FormControl>
                     </Grid>
@@ -139,6 +153,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       <FormControl size="small" fullWidth>
                         <InputLabel>Aprobado</InputLabel>
                         <Select
+                          required
                           label="Aprobado"
                           defaultValue={''}
                           name='aprobacion'
@@ -183,6 +198,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={15}>
                       <TextField
+                        required
                         multiline
                         rows={4}
                         label="Observación Cormacarena"
@@ -232,18 +248,20 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                   variant='contained'
                                   onClick={() => {
                                     try {
-                                      void dispatch(deudores({
-                                        identificacion: solicitud_facilidad.deudor.identificacion,
-                                        nombre: solicitud_facilidad.deudor.nombres,
-                                        apellido: solicitud_facilidad.deudor.apellidos,
-                                        numero_facilidad: solicitud_facilidad.facilidad_pago.numero_radicacion,
-                                        numero_cuotas: solicitud_facilidad.facilidad_pago.cuotas,
-                                        numero_periodicidad: solicitud_facilidad.facilidad_pago.periodicidad
-                                      }))
-                                      void get_datos_amortizacion(solicitud_facilidad.facilidad_pago.id)
-                                      navigate('../amortizacion')
+                                      void dispatch(get_datos_deudor_amortizacion(solicitud_facilidad.facilidad_pago.id))
+                                      void dispatch(datos_facilidad({
+                                        id_facilidad: solicitud_facilidad.facilidad_pago.id,
+                                        radicado: solicitud_facilidad.facilidad_pago.numero_radicacion,
+                                      }));
+                                      void dispatch(get_datos_amortizacion({
+                                        id_facilidad: solicitud_facilidad.facilidad_pago.id,
+                                        fecha_final: solicitud_facilidad.facilidad_pago.fecha_abono,
+                                        cuotas: solicitud_facilidad.facilidad_pago.cuotas,
+                                        periodicidad: solicitud_facilidad.facilidad_pago.periodicidad,
+                                      }));
+                                      navigate('../amortizacion');
                                     } catch (error: any) {
-                                      throw new Error(error)
+                                      throw new Error(error);
                                     }
                                   }}
                                 >
@@ -255,36 +273,41 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         </>
                       ) : null
                     }
-                    <Grid item xs={12} sm={3}>
-                      <FormControl size="small" fullWidth>
-                        <InputLabel>¿Crear Resolución?</InputLabel>
-                        <Select
-                          defaultValue={''}
-                          label="¿Crear Resolución?"
-                          onChange={(event: event)=>{
-                            const { value } = event.target
-                            set_resolucion_pregunta(value)
-                          }}
-                        >
-                          <MenuItem value="si">Si</MenuItem>
-                          <MenuItem value="no">No</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                    {
+                      plan_pagos.success ? (
+                        <Grid item xs={12} sm={3}>
+                          <FormControl size="small" fullWidth>
+                            <InputLabel>¿Crear Resolución?</InputLabel>
+                            <Select
+                              defaultValue={''}
+                              label="¿Crear Resolución?"
+                              onChange={(event: event)=>{
+                                const { value } = event.target
+                                set_resolucion_pregunta(value)
+                              }}
+                            >
+                              <MenuItem value="si">Si</MenuItem>
+                              <MenuItem value="no">No</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      ) : null
+                    }
                     {
                       resolucion_pregunta === "si" ? (
                         <>
                           <Grid item xs={12} sm={3}>
                             {
                               resolucion_facilidad.success ? (
-                                <Button
-                                  fullWidth
-                                  color='primary'
-                                  variant='contained'
-                                  onClick={() => {}}
-                                >
-                                  Ver Resolución
-                                </Button>
+                                <a href={resolucion_facilidad.data.doc_asociado} target="_blank" rel="noreferrer">
+                                  <Button
+                                    fullWidth
+                                    color='primary'
+                                    variant='contained'
+                                  >
+                                    Ver Resolución
+                                  </Button>
+                                </a>
                               ) : (
                                 <Button
                                   fullWidth
@@ -297,10 +320,10 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                         nombre: solicitud_facilidad.deudor.nombres,
                                         apellido: solicitud_facilidad.deudor.apellidos,
                                         numero_facilidad: solicitud_facilidad.facilidad_pago.numero_radicacion
-                                      }))
-                                      navigate('../resolucion')
+                                      }));
+                                      navigate('../resolucion');
                                     } catch (error: any) {
-                                      throw new Error(error)
+                                      throw new Error(error);
                                     }
                                   }}
                                 >
@@ -344,7 +367,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         color="primary"
                         startIcon={<Save />}
                         onClick={() => {
-                          navigate('../incumplimiento')
+                          navigate('../incumplimiento');
                         }}
                       >
                         Aceptar
@@ -366,9 +389,6 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                           spacing={2}
                           sx={{ mb: '20px' }}
                         >
-                          <TablaLiquidacion />
-                          <TablaLiquidacionResumen />
-                          <ResumenLiquidacionFacilidad />
                           <VistaProyeccionPagos />
                           <Stack
                             direction="row"
@@ -401,13 +421,21 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       startIcon={<Save />}
                       sx={{ marginTop: '30px' }}
                       onClick={() => {
-                        void post_respuesta_fac_pago({
-                          ...form_state,
-                          id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
-                          id_funcionario: solicitud_facilidad.facilidad_pago.id_funcionario,
-                          reportado_dbme: check_dbme,
-                          informe_dbme: file
-                        })
+                        const post_registro = async (): Promise<void> => {
+                          try {
+                            const { data: { data: res_registro } } = await post_respuesta_fac_pago({
+                              ...form_state,
+                              id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
+                              id_funcionario: solicitud_facilidad.facilidad_pago.id_funcionario,
+                              reportado_dbme: check_dbme,
+                              informe_dbme: file,
+                            })
+                            set_respuesta_registro(res_registro ?? {});
+                          } catch (error: any) {
+                            throw new Error(error);
+                          }
+                        }
+                        void post_registro();
                       }}
                     >
                       Actualizar / Enviar
@@ -416,6 +444,13 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                 </Box>
               </Grid>
             </Grid>
+            <DialogoRegistro
+              titulo_notificacion='La Respuesta de Facilidad de Pago fue Registrada con Éxito'
+              tipo=''
+              numero_registro={undefined}
+              abrir_modal={modal}
+              abrir_dialog={handle_close}
+            />
           </>
         ) : null
       }
