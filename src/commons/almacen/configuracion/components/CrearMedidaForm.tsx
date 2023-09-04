@@ -7,13 +7,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BlockIcon from '@mui/icons-material/Block';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Box, Grid, Stack, Chip, Tooltip, IconButton, Avatar } from '@mui/material';
+import { Box, Grid, Stack, Chip, Tooltip, IconButton, Avatar, ButtonGroup } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {  activate_deactivate_medida_service, delete_medida_service,  get_medida_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 import { medida_seleccionada } from '../store/slice/MarcaMedidaPorcentajeSlice';
 import CrearMedidaModal from './modales/CrearMedidaModal';
 import { Title } from '../../../../components';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 
@@ -190,6 +192,10 @@ const columns: GridColDef[] = [
           </Stack>
           <Grid item>
             <Box sx={{ width: '100%' }}>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              {download_xls({ nurseries: medida, columns })}
+              {download_pdf({ nurseries: medida, columns, title: 'Unidad de medida' })}
+            </ButtonGroup>
               <DataGrid
                 density="compact"
                 autoHeight

@@ -6,13 +6,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import BlockIcon from '@mui/icons-material/Block';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import { Avatar, Box, Chip, Grid, IconButton, Stack, Tooltip } from '@mui/material';
+import { Avatar, Box, ButtonGroup, Chip, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { activate_deactivate_porcentaje_service, delete_porcentaje_service, get_porcentaje_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 import CrearPorcentajeModal from './modales/CrearPorcentajeModal';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { porcentaje_seleccionado } from '../store/slice/MarcaMedidaPorcentajeSlice';
 import { Title } from '../../../../components';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 
 const initial_state_porcentaje_seleccionado = {
@@ -193,6 +195,10 @@ export const CrearPorcentajeForm: React.FC = () => {
           </Stack>
           <Grid item>
             <Box sx={{ width: '100%' }}>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              {download_xls({ nurseries: porcentaje, columns })}
+              {download_pdf({ nurseries: porcentaje, columns, title: 'Porcentaje de IVA ' })}
+            </ButtonGroup>
               <DataGrid
                 density="compact"
                 autoHeight

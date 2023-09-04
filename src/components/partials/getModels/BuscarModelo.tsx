@@ -9,13 +9,15 @@ import { useEffect, useState } from 'react';
 import SeleccionarModeloDialogForm from './SeleccionarModeloDialogForm';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import { Box, Divider } from '@mui/material';
+import { Box, ButtonGroup, Divider } from '@mui/material';
 import { v4 as uuid } from 'uuid';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
 import ImageUploader from '../form/ImageUploader';
 import FormDateRangePickerController from '../form/FormDateRangePickerController';
 import FormDateTimePickerController from '../form/FormDateTimePickerController';
+import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 
 interface IProps {
   form_inputs: any[];
@@ -327,6 +329,12 @@ const BuscarModelo = ({
                 <Title title={title_list ?? ''}></Title>
               </Grid>
               <Grid item xs={12} md={12} marginTop={2}>
+                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                  {download_xls({ nurseries: list as any[], columns:columns_list as any[] })}
+                  {download_pdf({ nurseries: list, columns: columns_list, title: title_list })}
+
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
