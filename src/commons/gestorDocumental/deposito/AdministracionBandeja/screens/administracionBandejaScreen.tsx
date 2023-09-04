@@ -218,7 +218,7 @@ const AdministrarBandejaScreen = () => {
                 <Button variant="contained"
                     color="success"
                     onClick={handle_bandeja}>
-                    Agregar Carpeta
+                    Agregar Bandeja
                 </Button>
             </Grid>
 

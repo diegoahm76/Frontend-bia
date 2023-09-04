@@ -115,7 +115,7 @@ const AdministrarCarpetasScreen = () => {
 
         set_selected_carpeta(initial_state_carpeta);
         set_action("Guardar");
-        void dispatch(get_carpeta_id(cajas.id_caja))
+        void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
     };
 
     const on_submit_elimnar = (data: IObjCarpeta): void => {
@@ -324,7 +324,7 @@ const AdministrarCarpetasScreen = () => {
                                 <Button variant="contained"
                                     color="success"
                                     onClick={handle_boton_mover_carpeta}>
-                                    Mover Bandeja
+                                    Mover Carpeta
                                 </Button>
                             </Grid>
 
