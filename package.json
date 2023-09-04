@@ -73,7 +73,7 @@
     "redux-thunk": "^2.4.2",
     "sweetalert2": "^11.7.2",
     "swiper": "^9.1.0",
-    "typescript": "*",
+    "typescript": "5.0.2",
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13",
     "web-vitals": "^2.1.0",
@@ -109,6 +109,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@faker-js/faker": "^7.6.0",
     "@locator/babel-jsx": "^0.2.4",
     "@locator/runtime": "^0.2.4",
