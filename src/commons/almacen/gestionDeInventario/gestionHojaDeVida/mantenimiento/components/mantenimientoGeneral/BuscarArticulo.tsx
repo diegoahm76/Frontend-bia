@@ -2,7 +2,7 @@ import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogC
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTableValue } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_article_by_type } from "./thunks/maintenanceThunks";
@@ -29,7 +29,7 @@ const BuscarArticuloComponent = ({
   const [nombre, set_nombre] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState(null);
+  const [selected_product, set_selected_product] = useState<DataTableValue | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
