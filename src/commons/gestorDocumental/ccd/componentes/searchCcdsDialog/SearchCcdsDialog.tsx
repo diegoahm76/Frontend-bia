@@ -355,7 +355,7 @@ const SearchCcdModal = ({
             LIMPIAR CAMPOS
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
             color="error"
             onClick={() => {
               set_is_modal_active(false);
