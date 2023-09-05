@@ -172,13 +172,18 @@ export const getPersonasSinActualizarOrganigramaAnteriorAlActual =
 
 export const putCrearRegistrosTemporalesT026 = async (
   id_organigrama_posible_cambio: number,
-  data_almacenar_tabla_temporal: any
+  data_almacenar_tabla_temporal: any,
+  setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any> => {
   try {
-    const url = `transversal/organigrama/guardar-actualizacion-unidad${id_organigrama_posible_cambio}/}`;
+    setLoadingButton(true);
+    const url = `transversal/organigrama/guardar-actualizacion-unidad/${id_organigrama_posible_cambio}/`;
     const { data } = await api.put(url, data_almacenar_tabla_temporal);
+    console.log('data retorno creación de tabla temporal', data);
     return data;
   } catch (error: any) {
     console.log(error);
+  } finally {
+    setLoadingButton(false);
   }
 };

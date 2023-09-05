@@ -52,14 +52,18 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       width: 220,
       renderCell: (params: any) => (
         <>
-          <div>
+          <div
+            style = {{
+              zIndex: 999999,
+            }}
+          >
             <Select
               styles={{
                 container: (provided) => ({
                   ...provided,
                   width: '200px',
                   height: '30px',
-                  zIndex: 9999,
+                  zIndex: 999999,
                   borderRadius: '5px'
                 })
               }}

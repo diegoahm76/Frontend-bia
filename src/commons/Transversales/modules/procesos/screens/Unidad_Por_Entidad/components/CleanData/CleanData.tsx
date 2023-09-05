@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC, useContext } from 'react';
+import { type FC, useContext, useState } from 'react';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../../components';
@@ -14,8 +14,12 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
 import { putCrearRegistrosTemporalesT026 } from '../../toolkit/UxE_thunks/UxE_thunks';
+import { LoadingButton } from '@mui/lab';
 
 export const CleanData: FC<any> = (): JSX.Element => {
+  // ? loading  para los botones guardar y proceder respectivamente
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
+
   //* states from redux
   const {
     controlModoTrasladoUnidadXEntidad,
@@ -49,11 +53,12 @@ export const CleanData: FC<any> = (): JSX.Element => {
     console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
     console.log(organigrama_current, 'organigrama_current');
 
-    // ? almacenamiento de datos en tabla temporal
-    /* void putCrearRegistrosTemporalesT026(
-      organigrama_current?.id_organigrama,
-      unidadesSeleccionadasArray
-    ); */
+    // ? almacenamiento de datos en tabla temporal, lleva los parametros : (id_organigrama del cual al cual se va a realizar el traslado y una array de objetos en el cual va el id_person a trasladar y el id de la nueva unidad organizacional7)
+    void putCrearRegistrosTemporalesT026(
+      organigrama_current,
+      unidadesSeleccionadasArray,
+      setLoadingButton
+    );
   };
 
   const procederACambioMasivoUxE = (): void => {
@@ -91,7 +96,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                 xs={12}
                 sm={12}
                 sx={{
-                  zIndex: 2,
+                  // zIndex: 2,
                   justifyContent: 'center'
                 }}
               >
@@ -127,7 +132,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     REINICIAR CAMPOS
                   </Button>
 
-                  <Button
+                  <LoadingButton
+                    loading={loadingButton}
                     color="primary"
                     variant="contained"
                     type="submit"
@@ -147,7 +153,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
                       ? 'GUARDAR'
                       : 'PROCEDER'}
-                  </Button>
+                  </LoadingButton>
 
                   <Link
                     to="/app/home"

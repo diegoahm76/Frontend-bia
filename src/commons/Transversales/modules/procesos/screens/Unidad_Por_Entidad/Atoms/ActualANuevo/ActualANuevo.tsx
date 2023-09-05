@@ -208,6 +208,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
+                          console.log('selectedOption', selectedOption);
                           handleGridActualANuevo(true);
                           //* dentro de esta seleccion, tambien debe existir una selección de modo que se pueda realizar la consulta de las unidades que se deben mostrar en la tabla de asignaciones
                           //! 1. se realiza la consuta del listado de personas del organigrama actual
