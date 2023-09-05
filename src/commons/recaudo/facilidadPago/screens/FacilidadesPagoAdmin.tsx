@@ -20,7 +20,7 @@ export const FacilidadesPagoAdmin: React.FC = () => {
 
   return (
     <>
-      <Title title='Listado de Facilidades de Pago - Usuario Cormacarena Admin'/>
+
       <Grid
         container
         sx={{
@@ -33,7 +33,11 @@ export const FacilidadesPagoAdmin: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        
+
+        <Grid item xs={12}   >
+          <Title title={` Listado de Facilidades de Pago - Usuario Cormacarena Admin`} />
+        </Grid>
+
         <Grid item xs={12}>
           <Box
             component="form"

@@ -198,7 +198,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12} spacing={2}>
-          <Title title="ACTUALIZACIÓN DE DATOS RESTRINGIDOS" />
+          <Title title="Actualización de datos restringidos" />
           <BuscadorPersona onResult={on_result} />
           {persona?.tipo_persona === 'N' && (
             <Box component="form"
@@ -207,7 +207,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Title title="DATOS DE IDENTIFICACIÓN" />
+                  <Title title="Datos de identificación" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -397,6 +397,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     spacing={2}
                   >
                     <Button
+                    color="error"
                       variant="outlined"
                       startIcon={<CancelIcon />}
                       onClick={() => {
@@ -409,7 +410,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     <Button
                       id="actualiza-natural"
                       variant="contained"
-                      color="primary"
+                      color="success"
                       type="submit"
                       startIcon={
                         loading_natural ? (
@@ -449,7 +450,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Title title="DATOS DE IDENTIFICACIÓN" />
+                  <Title title="Datos de identificación" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField

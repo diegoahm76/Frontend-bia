@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-boolean-literal-compare */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import SeleccionarLevantamientoCuarentena from '../componentes/SeleccionarLevantamientoCuarentena';
