@@ -1,5 +1,6 @@
+// @ts-ignore
 import { useState, useEffect } from 'react';
-
+// @ts-ignore
 import { type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {

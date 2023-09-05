@@ -1,9 +1,11 @@
 
-import { Box, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../../../components/Title';
 import { useAppSelector } from '../../../../../../hooks';
+import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 
 
 
@@ -58,6 +60,12 @@ const Mantenimiento = () => {
                 >
                     <Box sx={{ width: '100%' }}>
                         <Title title="Mantenimientos" />
+                        <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+                            {download_xls({ nurseries: maintenance, columns: columns_mantenimientos })}
+                            {download_pdf({ nurseries: maintenance, columns: columns_mantenimientos, title: "Mantenimientos" })}
+
+                        </ButtonGroup>
                         <DataGrid
                             density="compact"
                             autoHeight

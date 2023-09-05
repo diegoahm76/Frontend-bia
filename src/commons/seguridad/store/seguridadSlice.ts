@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
+import { produce } from 'immer';
 import { type DataPersonas } from '../../../interfaces/globalModels';
 import type {
   ISeguridadInfo,
