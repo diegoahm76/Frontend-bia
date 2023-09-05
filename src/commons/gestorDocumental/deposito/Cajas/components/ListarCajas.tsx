@@ -39,6 +39,7 @@ export const ListarCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_caja(params.row.id_caja_bandeja);
               set_orden(params.row.orden_ubicacion_por_bandeja);
               set_identificacion_caja(params.row.identificacion_por_bandeja);
               set_orden(params.row.orden_ubicacion_por_bandeja);
@@ -88,6 +89,7 @@ export const ListarCajas: React.FC = () => {
   const {
     rows_cajas,
     id_bandeja,
+    set_id_caja,
     set_orden,
     set_identificacion_caja,
     fetch_data_caja_bandeja,

@@ -9,7 +9,8 @@ import {
   getUnidadesOrgAnterior
 } from '../toolkit/thunks/thunks_uni_a_uni';
 import {
-  useAppDispatch /* useAppSelector */
+  useAppDispatch, /* useAppSelector */
+  useAppSelector
 } from '../../../../../../../hooks';
 import {
   setOrganigramaAnterior,
@@ -19,6 +20,9 @@ import {
 // import { Loader } from '../../../../../../../utils/Loader/Loader';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { Grid } from '@mui/material';
+import { containerStyles } from '../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 
 const OrgAnteriorScreen = lazy(async () => {
   const module = await import(
@@ -54,9 +58,9 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   // ! ------ USE SELECTORS DECLARATIONS ------
-  /*  const { organigrama_anterior } = useAppSelector(
+  const { organigrama_anterior } = useAppSelector(
     (state) => state.uni_a_uni_slice
-  ); */
+  );
 
   // ! ------ USE STATES DECLARATIONS ------
 
@@ -75,6 +79,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   useEffect(() => {
     //* get unidades organigrama actual
     void getUnidadesOrgActual().then((unidades: any) => {
+      //* unidades.length !== 0
       if (unidades.length === 0) {
         void Swal.fire({
           icon: 'warning',
@@ -126,8 +131,22 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
       });
     });
   }, []);
-  /* if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
-    return <Loader />; */
+
+  if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+    );
+  }
 
   return (
     <>

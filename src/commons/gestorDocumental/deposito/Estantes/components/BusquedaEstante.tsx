@@ -57,7 +57,7 @@ export const BusquedaEstante: React.FC = () => {
       width: 250,
     },
     {
-      field: 'identificacion_deposito',
+      field: 'nombre_deposito',
       headerName: 'DEPÓSITO DE ARCHIVO',
       sortable: true,
       width: 250,

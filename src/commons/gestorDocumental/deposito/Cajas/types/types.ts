@@ -10,10 +10,12 @@ export interface IBuscarCaja {
     orden_caja?: number | null;
 }
 export interface ICarpetas {
-    id_caja_bandeja: number | null;
-    identificacion_por_bandeja: string;
-    orden_ubicacion_por_bandeja: number | null;
-    id_bandeja_estante: number | null;
+    id_carpeta_caja: number;
+    identificacion_por_caja: string;
+    orden_ubicacion_por_caja: number;
+    id_expediente: null;
+    id_caja_bandeja: number;
+    identificacion_caja: string;
 }
 export interface ICajas {
     id_caja_bandeja: number;

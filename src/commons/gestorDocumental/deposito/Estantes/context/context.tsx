@@ -234,7 +234,8 @@ export const UserProvider = ({
   const [identificacion_deposito, set_identificacion_deposito] =
     React.useState<string>('');
   const [identificacion_caja, set_identificacion_caja] = React.useState('');
-  const [orden_siguiente, set_orden_siguiente] = React.useState<ListarOrdenSiguiente>();
+  const [orden_siguiente, set_orden_siguiente] =
+    React.useState<ListarOrdenSiguiente>();
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -339,10 +340,12 @@ export const UserProvider = ({
       const response = await get_caja_carpetas(id_caja as number);
       if (response?.length > 0) {
         const data_carpetas: ICarpetas[] = response.map((item: ICarpetas) => ({
+          id_carpeta_caja: item.id_caja_bandeja,
+          identificacion_por_caja: item.identificacion_por_caja,
+          orden_ubicacion_por_caja: item.orden_ubicacion_por_caja,
+          id_expediente: item.id_expediente,
           id_caja_bandeja: item.id_caja_bandeja,
-          identificacion_por_bandeja: item.identificacion_por_bandeja,
-          orden_ubicacion_por_bandeja: item.orden_ubicacion_por_bandeja,
-          id_bandeja_estante: item.id_bandeja_estante,
+          identificacion_caja: item.identificacion_caja,
         }));
         set_rows_carpetas(data_carpetas);
       }
@@ -375,7 +378,7 @@ export const UserProvider = ({
         error.response.data.detail || 'Hubo un error, intente de nuevo'
       );
     }
-  }
+  };
 
   const fetch_data_orden_estante = async (): Promise<void> => {
     try {
@@ -395,7 +398,6 @@ export const UserProvider = ({
       control_error(error.response.data.detail);
     }
   };
-
 
   // ? --------------------------------- Mover cajas ---------------------------------
   const fetch_data_depositos_mover_caja = async (): Promise<void> => {
