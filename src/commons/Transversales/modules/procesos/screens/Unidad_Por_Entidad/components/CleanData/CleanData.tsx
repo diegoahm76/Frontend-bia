@@ -13,12 +13,15 @@ import ForwardIcon from '@mui/icons-material/Forward';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
+import { putCrearRegistrosTemporalesT026 } from '../../toolkit/UxE_thunks/UxE_thunks';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
   const {
     controlModoTrasladoUnidadXEntidad,
-    unidadesSeleccionadas /* controlFaseEntrada */
+    unidadesSeleccionadas,
+    organigrama_current
+    /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
@@ -26,17 +29,15 @@ export const CleanData: FC<any> = (): JSX.Element => {
   const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
 
   const guardarRegistrosT026 = (): void => {
-    console.log('guardando registros T026');
-
-    // console.log('unidades seleccionadas', unidadesSeleccionadas);
-
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
         .filter(
           // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
           ([key, value]) => {
-            return value ? value?.idPersona && value?.label && value?.value : null;
+            return value
+              ? value?.idPersona && value?.label && value?.value
+              : null;
           }
         )
         .map(([key, value]) => ({
@@ -44,7 +45,15 @@ export const CleanData: FC<any> = (): JSX.Element => {
           // label: value.label,
           id_nueva_unidad_organizacional: value?.value
         }));
-    console.log(unidadesSeleccionadasArray);
+
+    console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
+    console.log(organigrama_current, 'organigrama_current');
+
+    // ? almacenamiento de datos en tabla temporal
+    /* void putCrearRegistrosTemporalesT026(
+      organigrama_current?.id_organigrama,
+      unidadesSeleccionadasArray
+    ); */
   };
 
   const procederACambioMasivoUxE = (): void => {

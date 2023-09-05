@@ -49,7 +49,8 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
 
         //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
 
-        if (resTablaTemporal.data.length !== 0) {
+        //* el estado de esta variable para la validación siempre será === 0
+        if (resTablaTemporal.data.length === 0) {
           dispatch(
             setControlModoTrasladoUnidadXEntidad(
               'modo_entrada_sin_validaciones'
@@ -59,16 +60,18 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
           //* se resetean resultados de la tabla temporal por si habian quedado rezagos
           dispatch(setAsignacionConsultaTablaTemporal(null));
         } else {
-          dispatch(
+          //* esta asignacion de dispatch se debe realizar dentro de las peticiones fetch, no en este lugar, (se debe verificar en cual de los dos estados específicos va a realizarse dicha validación)
+          /* dispatch(
             setAsignacionConsultaTablaTemporal({
               data: [],
               id_organigrama_anterior: 71
             })
-          );
+          ); */
 
           void getPersonasSinActualizarOrganigramaAnteriorAlActual().then(
             (resListadoPersonasSinActualizar: any) => {
               console.log(resListadoPersonasSinActualizar);
+              //* el estado de esta variable para su validación siempre será !== 0
               if (resListadoPersonasSinActualizar.data.length !== 0) {
                 dispatch(setControlFaseEntrada(2));
                 dispatch(
@@ -85,6 +88,15 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                   }
                 });
               } else {
+                //! se realiza la asiganción de manera temporal a la tabla temporal (valga la redundancia), ya que esos valores se van a asignar cuando se realice la petición fetch de los datos dependiendo el id de los organigramas que traiga la T026 al realizar dicha solicitud, en cualquera de los dos escenarios de la tabla temporal
+
+                dispatch(
+                  setAsignacionConsultaTablaTemporal({
+                    data: [],
+                    id_organigrama_anterior: 71
+                  })
+                );
+
                 dispatch(setControlFaseEntrada(2));
                 dispatch(
                   setControlModoTrasladoUnidadXEntidad(

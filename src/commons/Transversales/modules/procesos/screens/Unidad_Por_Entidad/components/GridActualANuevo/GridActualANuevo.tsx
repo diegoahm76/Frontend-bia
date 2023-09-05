@@ -7,7 +7,7 @@ import { RenderDataGrid } from './../../../../../../../gestorDocumental/tca/Atom
 import { colOrgActANuevo } from './columns/collOrgActANuevo';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import Select from 'react-select';
-import { setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
+import { setUnidadesSeleccionadas, set_current_id_organigrama } from '../../toolkit/UxE_slice/UxE_slice';
 import { Button, Grid, Tooltip } from '@mui/material';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
@@ -30,7 +30,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
     dispatch(
       setUnidadesSeleccionadas({
         ...unidadesSeleccionadas,
-        [idPersona]: unidadSeleccionada,
+        [idPersona]: unidadSeleccionada
       })
     );
   };
@@ -68,10 +68,21 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
               onChange={(selectedOption) => {
                 // console.log(params.row.id_persona, 'selectedOption');
                 onChange(params.row.id_persona, selectedOption);
+
+                //* selecciona el id del organigrama sobre el que estoy trabajando para hacer el almacenamiento de datos dentro de la tabla temporal T026
+                dispatch(
+                  set_current_id_organigrama(selectedOption.id_organigrama)
+                );
+
+                console.log(
+                  selectedOption.id_organigrama,
+                  'selectedOption.id_organigrama'
+                );
               }}
               menuPortalTarget={document.body}
               options={params?.row?.unidadesDisponiblesParaTraslado?.map(
                 (unidad: any) => ({
+                  id_organigrama: unidad.id_organigrama,
                   value: unidad.id_unidad_organizacional,
                   label: unidad.nombre,
                   idPersona: params.row.id_persona

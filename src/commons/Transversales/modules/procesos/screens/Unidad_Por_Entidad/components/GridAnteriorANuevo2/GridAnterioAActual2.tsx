@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC /* useState */ } from 'react';
-import { RenderDataGrid } from './../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import { RenderDataGrid } from '../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 // import { colOrgActANuevo } from './columns/collOrgActANuevo';
 import {
   /* useAppDispatch, */ useAppSelector

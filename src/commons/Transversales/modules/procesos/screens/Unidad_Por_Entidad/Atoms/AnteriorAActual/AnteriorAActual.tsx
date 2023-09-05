@@ -18,7 +18,7 @@ import {
 } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { GridAnteriorAActual2 } from './../../components/GridAnteriorANuevo2/GridAnterioANuevo2';
+import { GridAnteriorAActual2 } from '../../components/GridAnteriorANuevo2/GridAnterioAActual2';
 
 export const AnteriorAActual: FC = (): JSX.Element => {
   //* navigate declaration

@@ -170,15 +170,15 @@ export const getPersonasSinActualizarOrganigramaAnteriorAlActual =
     }
   };
 
-/* export const putCrearRegistrosTemporales = async (
-  data_create_table: any
+export const putCrearRegistrosTemporalesT026 = async (
+  id_organigrama_posible_cambio: number,
+  data_almacenar_tabla_temporal: any
 ): Promise<any> => {
   try {
-    const url = `transversal/organigrama/guardar-actualizacion-unidad${data_create_table.id_organigrama_futuro}/}`;
-    const { data } = await api.put(url, {});
+    const url = `transversal/organigrama/guardar-actualizacion-unidad${id_organigrama_posible_cambio}/}`;
+    const { data } = await api.put(url, data_almacenar_tabla_temporal);
     return data;
   } catch (error: any) {
     console.log(error);
   }
 };
-*/

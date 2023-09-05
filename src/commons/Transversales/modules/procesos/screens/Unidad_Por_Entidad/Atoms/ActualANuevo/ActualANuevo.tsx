@@ -67,8 +67,12 @@ export const ActualANuevo: FC = (): JSX.Element => {
           value: item?.id_organigrama
         }))
       );
+      //* --- se cierra la petición de la asignación del organigrama actual
 
       // * si hay algo en la tabla temporal se analiza para seleccionar de inmediato el organigrama correspondiente
+
+
+      // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_anterior está presente
       if (asignacionConsultaTablaTemporal?.id_organigrama_anterior) {
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
