@@ -17,7 +17,7 @@ import { DataContext } from '../../context/contextData';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { LoadingButton } from '@mui/lab';
-
+import CleanIcon from '@mui/icons-material/CleaningServices';
 dayjs.extend(isSameOrBefore);
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -104,7 +104,7 @@ export const AgregarPrograma: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="INFORMACIÓN DE PROGRAMA" />
+          <Title title="Información de programa" />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -133,9 +133,9 @@ export const AgregarPrograma: React.FC = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
             <DatePicker
               label="Fecha Inicial"
-              inputFormat="YYYY/MM/DD"
+              inputFormat="DD/MM/YYYY"
               openTo="day"
-              views={['year', 'month', 'day']}
+              views={[  'day','month','year']}
               value={fecha_inicial}
               onChange={handle_start_date_change}
               renderInput={(params) => (
@@ -162,9 +162,9 @@ export const AgregarPrograma: React.FC = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
             <DatePicker
               label="Fecha Final"
-              inputFormat="YYYY/MM/DD"
+              inputFormat="DD/MM/YYYY"
               openTo="day"
-              views={['year', 'month', 'day']}
+              views={[ 'day','month','year']}
               value={fecha_fin}
               onChange={handle_end_date_change}
               renderInput={(params) => (
@@ -193,7 +193,8 @@ export const AgregarPrograma: React.FC = () => {
           <Grid item>
             <Button
               variant="outlined"
-              color="error"
+              // color="error"
+              startIcon={<CleanIcon />}
               onClick={() => {
                 reset_form_agregar_programa();
               }}

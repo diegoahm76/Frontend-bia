@@ -1,11 +1,11 @@
-import { Box, Button, Grid, Stack, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, Stack, TextField } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { Add, CloudDownload } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { TablaPlanPagosUsuario } from '../componentes/TablaPlanPagosUsuario';
-import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+import { type FacilidadPagoSolicitud, type ConsultaFacilidadPagoUsuario, type Resolucion } from '../interfaces/interfaces';
 import dayjs from 'dayjs';
 
 interface RootStateSolicitud {
@@ -16,7 +16,7 @@ interface RootStateSolicitud {
 
 interface RootStateFacilidad {
   facilidades: {
-    facilidades: string;
+    facilidades: ConsultaFacilidadPagoUsuario;
   }
 }
 
@@ -32,12 +32,12 @@ interface RootStateValidacionPlanPagos {
 interface RootStateValidacionResolucion {
   resolucion_facilidad: {
     resolucion_facilidad: {
+      data: Resolucion
       detail: string;
       success: boolean;
     }
   }
 }
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaFacilidadUsuario: React.FC = () => {
@@ -47,6 +47,11 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
   const { plan_pagos } = useSelector((state: RootStateValidacionPlanPagos) => state.plan_pagos);
   const { resolucion_facilidad } = useSelector((state: RootStateValidacionResolucion) => state.resolucion_facilidad);
   const navigate = useNavigate();
+
+  const capitalize = (str: string): string => {
+    const str_min = str.toLowerCase();
+    return str_min.charAt(0).toUpperCase() + str_min.slice(1);
+  };
 
   return (
     <>
@@ -72,7 +77,7 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
               >
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      <Title title={facilidades !== 'Cancelada/Anulada' ?
+                      <Title title={facilidades.estado !== 'Cancelada/Anulada' ?
                         `Detalle de la Facilidad de Pago ${'#2121231'}` :
                         `Facilidad de Pago Cancelada o Bloqueada ${'#2121231'}`}
                       />
@@ -104,24 +109,6 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
                       disabled
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sm={3}>
-                    <TextField
-                      label="Nombre Facilidad Pago"
-                      size="small"
-                      fullWidth
-                      value="Permiso 1"
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <TextField
-                      label="Días Mora"
-                      size="small"
-                      fullWidth
-                      value="180"
-                      disabled
-                    />
-                  </Grid>  */}
                   <Grid item xs={12} sm={3}>
                     <TextField
                       label="Número Resolución"
@@ -180,12 +167,58 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={2}>
                       <TextField
+                        fullWidth
                         label="Estado"
                         size="small"
+                        value={capitalize(''.concat(facilidades.estado))}
+                        disabled
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                      <a href={facilidades.informe_dbme !== undefined ? facilidades.informe_dbme : ''} target="_blank" rel="noreferrer">
+                        <Button
+                          fullWidth
+                          color='primary'
+                          variant='outlined'
+                          size='medium'
+                          startIcon={<CloudDownload />}
+                        >
+                          Informe DBME
+                        </Button>
+                      </a>
+                    </Grid>
+                    <Grid item xs={12} sm={15} mt='20px' mb='20px'>
+                      <Grid item xs={12} sm={3}>
+                        <FormGroup>
+                          {
+                            facilidades.reportado_dbme !== undefined ?
+                            facilidades.reportado_dbme ?
+                            (<FormControlLabel checked disabled control={<Checkbox />} label="Reportado en DBME" />) :
+                            (<FormControlLabel disabled control={<Checkbox />} label="Reportado en DBME" />) : null
+                          }
+                        </FormGroup>
+                      </Grid>
+                      <Grid item xs={12} sm={3}>
+                        <FormGroup>
+                          {
+                            facilidades.aprobacion !== undefined ?
+                            facilidades.aprobacion ?
+                            (<FormControlLabel checked disabled control={<Checkbox />} label="Aprobado" />) :
+                            (<FormControlLabel disabled control={<Checkbox />} label="Aprobado" />) : null
+                          }
+                        </FormGroup>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={15} mt='20px' mb='20px'>
+                      <TextField
+                        multiline
+                        rows={4}
+                        value={''.concat(facilidades.observacion)}
+                        label="Observación Funcionario"
+                        size="small"
                         fullWidth
-                        value={`${facilidades}`}
                         disabled
                       />
                     </Grid>
@@ -193,7 +226,7 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
                 </Box>
               </Grid>
               {
-                facilidades !== "Cancelada/Anulada" ? (
+                facilidades.estado !== "Cancelada/Anulada" ? (
                   <Grid item xs={12} mt='20px'>
                     <Box
                       component="form"
@@ -234,16 +267,17 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
                           />
                         </Grid>
                         <Grid item xs={12} sm={2}>
-                          <Button
-                            color='primary'
-                            variant='outlined'
-                            size='medium'
-                            disabled={!resolucion_facilidad.success}
-                            startIcon={<CloudDownload />}
-                            onClick={() => {}}
-                          >
-                            Ver
-                          </Button>
+                          <a href={resolucion_facilidad.success ? resolucion_facilidad.data.doc_asociado : ''} target="_blank" rel="noreferrer">
+                            <Button
+                              color='primary'
+                              variant='outlined'
+                              size='medium'
+                              disabled={!resolucion_facilidad.success}
+                              startIcon={<CloudDownload />}
+                            >
+                              Ver
+                            </Button>
+                          </a>
                         </Grid>
                       </Grid>
                     </Box>

@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState, useEffect, type FC } from 'react';
-import { HistoricoTraslados } from '../components/HistoricoTraslados/screen/HistoricoTraslados';
-import { OrgAnteriorScreen } from '../components/OrganigramaAnterior/screen/OrgAnteriorScreen';
+import { useState, useEffect, type FC, lazy } from 'react';
+
 import {
   getOrganigramaAnterior,
   getUnidadesOrgActual,
   getUnidadesOrgAnterior
 } from '../toolkit/thunks/thunks_uni_a_uni';
 import {
-  useAppDispatch /* useAppSelector */
+  useAppDispatch, /* useAppSelector */
+  useAppSelector
 } from '../../../../../../../hooks';
 import {
   setOrganigramaAnterior,
@@ -18,10 +18,39 @@ import {
   setUnidadesOrgAnterior
 } from '../toolkit/slice/Uni_A_UniSlice';
 // import { Loader } from '../../../../../../../utils/Loader/Loader';
-import { ProcesoTrasladoScreen } from '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen';
-import { TotalPersonas } from '../components/TotalPersonas/screen/TotalPersonasScreen';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { Grid } from '@mui/material';
+import { containerStyles } from '../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+
+const OrgAnteriorScreen = lazy(async () => {
+  const module = await import(
+    '../components/OrganigramaAnterior/screen/OrgAnteriorScreen'
+  );
+  return { default: module.OrgAnteriorScreen };
+});
+
+const HistoricoTraslados = lazy(async () => {
+  const module = await import(
+    '../components/HistoricoTraslados/screen/HistoricoTraslados'
+  );
+  return { default: module.HistoricoTraslados };
+});
+
+const ProcesoTrasladoScreen = lazy(async () => {
+  const module = await import(
+    '../components/ProcesoTraslado/screen/ProcesoTrasladoScreen'
+  );
+  return { default: module.ProcesoTrasladoScreen };
+});
+
+const TotalPersonas = lazy(async () => {
+  const module = await import(
+    '../components/TotalPersonas/screen/TotalPersonasScreen'
+  );
+  return { default: module.TotalPersonas };
+});
 
 export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const navigate = useNavigate();
@@ -29,9 +58,9 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   // ! ------ USE SELECTORS DECLARATIONS ------
-  /*  const { organigrama_anterior } = useAppSelector(
+  const { organigrama_anterior } = useAppSelector(
     (state) => state.uni_a_uni_slice
-  ); */
+  );
 
   // ! ------ USE STATES DECLARATIONS ------
 
@@ -50,6 +79,7 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
   useEffect(() => {
     //* get unidades organigrama actual
     void getUnidadesOrgActual().then((unidades: any) => {
+      //* unidades.length !== 0
       if (unidades.length === 0) {
         void Swal.fire({
           icon: 'warning',
@@ -101,8 +131,22 @@ export const Unidad_A_Unidad: FC = (): JSX.Element => {
       });
     });
   }, []);
-  /* if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0)
-    return <Loader />; */
+
+  if (!organigrama_anterior || Object.keys(organigrama_anterior).length === 0) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+    );
+  }
 
   return (
     <>

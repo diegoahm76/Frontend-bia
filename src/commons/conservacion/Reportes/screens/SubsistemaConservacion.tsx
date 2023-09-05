@@ -14,7 +14,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { image_data2_1, image_data_1 } from "../../../recursoHidrico/estaciones/imagenes/imagenes";
 import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import { reporte_estado_actividad, reporte_evolucion_lote, reporte_mortalidad, reporte_plantas_sd } from "../thunks/SubsistemaConservacion";
@@ -61,16 +60,19 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const [doc_height, set_doc_height] = useState<number>(doc.internal.pageSize.getHeight());
 
     useEffect(() => {
-        // set_reporte([]);
-        // set_seleccion_vivero("");
-        // set_seleccion_reporte("");
-        // set_seleccion_planta(0);
-        // set_fecha_desde(null);
-        // set_fecha_hasta(null);
-        // set_reporte_consolidado(false);
-        // set_abrir_modal_bien(false);
         obtener_viveros_fc();
     }, []);
+
+    const limpiar_formulario: () => void = () => {
+        set_reporte([]);
+        set_seleccion_vivero("");
+        set_seleccion_reporte("");
+        set_seleccion_planta(0);
+        set_fecha_desde(null);
+        set_fecha_hasta(null);
+        set_reporte_consolidado(false);
+        set_abrir_modal_bien(false);
+    }
 
     const obtener_viveros_fc: () => void = () => {
         dispatch(obtener_viveros()).then((response: any) => {
@@ -80,14 +82,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     }
 
     const reporte_mortalidad_fc: () => void = () => {
-        dispatch(reporte_mortalidad({ seleccion_vivero, seleccion_planta: 309, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_mortalidad({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
         })
     }
     const reporte_plantas_sd_fc: () => void = () => {
-        dispatch(reporte_plantas_sd({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_plantas_sd({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
@@ -95,7 +97,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         })
     }
     const reporte_estado_actividad_fc: () => void = () => {
-        dispatch(reporte_estado_actividad({ seleccion_vivero, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
+        dispatch(reporte_estado_actividad({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
@@ -103,7 +105,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         })
     }
     const reporte_evolucion_lote_fc: () => void = () => {
-        dispatch(reporte_evolucion_lote({ seleccion_vivero: 96, seleccion_planta: 316, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado, numero_lote, año_lote })).then((response: any) => {
+        dispatch(reporte_evolucion_lote({ seleccion_vivero, seleccion_planta, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), reporte_consolidado, numero_lote, año_lote })).then((response: any) => {
             set_reporte(response.data);
             if (response.data.length === 0)
                 generar_notificación_reporte('Notificación', 'info', 'No se encontró información con los filtros seleccionados.', true);
@@ -114,6 +116,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_vivero(e.target.value);
         set_error_vivero(e.target.value === "");
+        if(e.target.value === "Todos")
+            set_reporte_consolidado(false);
     }
     const cambio_reporte: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_reporte(e.target.value);
@@ -193,13 +197,11 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         const img_height = 15;
         const img_x = (doc.internal.pageSize.width - img_width) / 2;
         const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
-        const title_width = doc.getTextWidth(title);
-        const x_pos = (doc.internal.pageSize.width - title_width) / 2;
         doc.addImage(logo_cormacarena_h, 160, 10, 40, 15)
         // doc.addImage(image_data2_1, img_x, img_y, img_width, img_height,);;
         doc.setFont("Arial", "bold"); // establece la fuente en Arial
-        doc.text(title, x_pos, 15);
-        doc.text(seleccion_planta.nombre ?? "", ((doc.internal.pageSize.width - doc.getTextWidth('planta 1')) / 2), 20);
+        doc.text(title, ((doc.internal.pageSize.width - doc.getTextWidth(title)) / 2), 15);
+        doc.text(seleccion_planta.nombre ?? "", ((doc.internal.pageSize.width - doc.getTextWidth(seleccion_planta.nombre)) / 2), 20);
         const fechas = `${dayjs(fecha_desde).format('DD/MM/YYYY')} - ${dayjs(fecha_hasta).format('DD/MM/YYYY')}`;
         doc.text(fechas, ((doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2), 25);
         doc.setFont("Arial", "normal"); // establece la fuente en Arial
@@ -248,14 +250,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         set_error_reporte(seleccion_reporte === "");
         set_error_fecha_desde(fecha_desde === null);
         set_error_fecha_hasta(fecha_hasta === null);
+        set_error_planta(seleccion_planta === 0);
         if (seleccion_reporte === "EL") {
             set_error_vivero(seleccion_vivero === "");
             set_error_numero_lote(numero_lote === "")
             set_error_año_lote(año_lote === "")
-            set_error_planta(seleccion_planta === 0);
         }
         if(seleccion_reporte !== ""){
-            if(fecha_desde !== null && fecha_hasta !== null)
+            if(fecha_desde !== null && fecha_hasta !== null && seleccion_planta !== 0)
                 handle_export_pdf();
             if(seleccion_reporte === "EL" && fecha_desde !== null && fecha_hasta !== null && seleccion_vivero !== "" && numero_lote !== "" && año_lote !== "" && seleccion_planta !== 0)
                 handle_export_pdf();
@@ -417,6 +419,8 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             doc.line(17, 116.5 + coordendas, 21, 116.5 + coordendas);// Linea superior central
             doc.line(17, 117.5 + coordendas, 21, 117.5 + coordendas);// Linea superior central
             doc.text('Actualidad', 21, 118 + coordendas);
+            const e_actual = 'Existencia actual (' + dayjs().format('DD/MM/YYYY') + ')';
+            doc.text(e_actual, ((doc.internal.pageSize.width - doc.getTextWidth(e_actual)) / 2), 122 + coordendas);
             doc.line(55, 127 + coordendas, (doc.internal.pageSize.width - 56), 127 + coordendas);// Linea central de tabla
             autoTable(doc, {
                 theme: 'plain',
@@ -430,7 +434,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 }
                 ],
                 styles: { halign: 'center' },
-                startY: 120 + coordendas,
+                startY: 121 + coordendas,
                 margin: 32
             });
             doc.line(17, 135 + coordendas, (doc.internal.pageSize.width - 20), 135 + coordendas);// 30 Linea inferior
@@ -457,7 +461,23 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 coordendas = 0;
                 coordenada_y = 40;
             }
-            doc.line(5, coordenada_y, (doc.internal.pageSize.width - 5), coordenada_y);// 30 Linea inferior
+            doc.text('Descripción', 24, coordenada_y);
+            doc.rect(24, 2 + coordenada_y, 150, 20, 'S');
+            let break_line = 6;
+            const resultado: any = [];
+            if(report.descripcion.length > 78){
+                break_line = 3;
+                for (let i = 0; i < report.descripcion.length; i += 78) {
+                    resultado.push(report.descripcion.substr(i, 78));
+                    if(report.descripcion.substr(i, 78).length >= 78)
+                        break_line = break_line + 3;
+                }
+            }else{
+                resultado.push(report.descripcion);
+            }
+            doc.text(resultado, 25, break_line + coordenada_y);
+            doc.line(5, 24 + coordenada_y, (doc.internal.pageSize.width - 5), 24 + coordenada_y);// 30 Linea inferior
+            //
             doc.circle(10, 40 + coordendas, 2, 'FD');// Circulo x vivero
             doc.setFont("Arial", "bold"); // establece la fuente en Arial
             doc.text(dayjs(report.fecha_incidencia).format('DD/MM/YYYY'), 14, 41 + coordendas);
@@ -535,8 +555,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         onChange={cambio_seleccion_vivero}
                                         error={error_vivero}
                                     >
-                                        <MenuItem value={"Todos"}>Todos</MenuItem>
-
+                                        {seleccion_reporte !== 'EL' && <MenuItem value={"Todos"}>Todos</MenuItem>}
                                         {lista_viveros.map((vive: any) => (
                                             <MenuItem key={vive.id_vivero} value={vive.id_vivero}>
                                                 {vive.nombre}
@@ -566,7 +585,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                             InputProps={{
                                                 readOnly: true,
                                             }}
-                                            required={seleccion_reporte === 'EL'}
+                                            required
                                             error={error_planta}
                                         />
                                         {error_planta && (<FormHelperText error >{mensaje_error}</FormHelperText>)}
@@ -708,7 +727,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                             </Grid>
                         </Grid>
                     </Box>
-                    {(seleccion_reporte !== 'EL') && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+                    {(seleccion_reporte !== 'EL' && seleccion_vivero !== 'Todos') && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
                                 <Stack

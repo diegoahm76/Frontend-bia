@@ -248,7 +248,6 @@ export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
         <>
           <form
             onSubmit={(e) => {
-              console.log("este es el error: ",errors);
               void on_submit_update_juridica(e);
             }}
           >
@@ -262,7 +261,6 @@ export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                   fullWidth
                   size="small"
                   label="Dígito de verificación *"
-                  type="number"
                   disabled={true}
                   value={data?.digito_verificacion}
                 />

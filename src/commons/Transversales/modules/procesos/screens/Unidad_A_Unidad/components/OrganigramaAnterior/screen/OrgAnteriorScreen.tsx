@@ -8,6 +8,7 @@ import { Title } from '../../../../../../../../../components';
 import { useUnidadAUnidad } from '../../../hook/useUnidadAUnidad';
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { containerStyles } from '../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 
 export const OrgAnteriorScreen = (): JSX.Element => {
   // ! ------ USE SELECTORS DECLARATIONS ------
@@ -29,6 +30,22 @@ export const OrgAnteriorScreen = (): JSX.Element => {
   const onSubmit = (data?: any): void => {
     console.log(data);
   };
+
+  if (!organigrama_anterior?.descripcion) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+    );
+  }
 
   return (
     <>

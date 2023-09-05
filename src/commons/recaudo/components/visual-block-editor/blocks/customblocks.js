@@ -76,3 +76,4 @@ Blockly.Blocks.test_react_field = {
     this.setStyle('loop_blocks');
   }
 };
+

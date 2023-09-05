@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid, TextField, } from '@mui/material';
@@ -13,7 +15,7 @@ import { useAppDispatch, } from '../../../../hooks';
 import SucursalDirecciones from '../components/generadorDireccion';
 import FormButton from '../../../../components/partials/form/FormButton';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
-import { initial_state_deposito } from '../store/slice/indexDeposito';
+import { initial_state_deposito, set_current_deposito } from '../store/slice/indexDeposito';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -25,12 +27,8 @@ const DepositoScreen = () => {
     const [action, set_action] = useState<string>("Guardar");
     const [modal, set_modal] = useState(false);
     const [direccion, set_direccion] = useState('');
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_close = () => { set_modal(false) }
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_open = () => { set_modal(true) }
-
-    // const { current_deposito } = useAppSelector((state) => state.deposito);
     const dispatch = useAppDispatch();
     const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
     const get_direccion_modal = (value: string): void => {
@@ -45,6 +43,7 @@ const DepositoScreen = () => {
 
     useEffect(() => {
         reset(selected_deposito)
+        dispatch(set_current_deposito(selected_deposito))
         set_direccion(selected_deposito.direccion_deposito ?? '')
     }, [selected_deposito])
 
@@ -52,7 +51,6 @@ const DepositoScreen = () => {
 
 
     const on_submit = (data: IObjDeposito): void => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (action === "Editar" && selected_deposito) {
             const data_edit = {
                 ...selected_deposito,
@@ -115,8 +113,7 @@ const DepositoScreen = () => {
                 />
             </Grid>
             <Grid item xs={12} marginY={1}>
-                <SucursalDirecciones control_deposito={control_deposito}                   // form_values={form_values}
-                //  handleinput_change={handleinput_change}
+                <SucursalDirecciones control_deposito={control_deposito}
 
                 />
             </Grid>
@@ -163,8 +160,6 @@ const DepositoScreen = () => {
 
             <Grid item xs={12} marginY={1}>
                 <ListadoDeposito
-                    depositos={selected_deposito}
-                    get_values={get_values}
                     handle_edit_click={handle_edit_click} />
             </Grid>
 
@@ -190,16 +185,17 @@ const DepositoScreen = () => {
                         type_button="button"
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => { on_submit_eliminar(selected_deposito); }}
-                    >
-                        Eliminar
-                    </Button>
-                </Grid>
-
+                {selected_deposito.id_deposito !== null &&
+                    <Grid item xs={12} md={2}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => { on_submit_eliminar(selected_deposito); }}
+                        >
+                            Eliminar
+                        </Button>
+                    </Grid>
+                }
                 <Grid item xs={12} md={2}>
                     <ButtonSalir
                     />

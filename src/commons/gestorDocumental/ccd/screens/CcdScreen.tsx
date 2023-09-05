@@ -284,7 +284,6 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      type="number"
                       fullWidth
                       disabled={ccd_current?.actual}
                       size="small"
@@ -323,7 +322,6 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      type="number"
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
@@ -363,7 +361,6 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      type="number"
                       fullWidth
                       size="small"
                       label="valor aumento subseries CCD"

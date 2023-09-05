@@ -1,43 +1,41 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { Title } from '../../../../../components/Title';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_bandejas } from '../../store/thunks/deposito';
+import { get_bandejas_id } from '../../store/thunks/deposito';
+import { useEffect } from 'react';
 
 
 interface IProps {
-    bandejas: any;
-    get_values: any;
+
+
     handle_edit_click: any;
 }
 
-
-
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const ListadoBandejas = ({ get_values, bandejas, handle_edit_click }: IProps) => {
-    const { bandeja } = useAppSelector((state) => state.deposito);
-    //    const dispatch = useAppDispatch();
+const ListadoBandejas = ({
+    handle_edit_click }: IProps) => {
+    const { bandejas, deposito_estante } = useAppSelector((state) => state.deposito);
     const dispatch = useAppDispatch();
     const columns: GridColDef[] = [
 
         {
             field: 'orden_ubicacion_por_estante',
-            headerName: 'Órden',
-            width: 100,
+            headerName: 'ÓRDEN',
+            width: 300,
             cellClassName: 'truncate-cell'
 
         },
         {
             field: 'identificacion_por_estante',
-            headerName: 'Indetificación',
-            width: 250,
+            headerName: 'IDENTIFICACIÒN',
+            width: 300,
             cellClassName: 'truncate-cell'
 
         },
-
-
 
         {
             field: 'ACCIÓN',
@@ -56,7 +54,14 @@ const ListadoBandejas = ({ get_values, bandejas, handle_edit_click }: IProps) =>
 
     ];
 
-    void dispatch(get_bandejas())
+    useEffect(() => {
+        if (deposito_estante.id_estante_deposito !== null && deposito_estante.id_estante_deposito !== undefined) {
+            void dispatch(get_bandejas_id(deposito_estante.id_estante_deposito))
+        }
+    }, [])
+
+
+
 
 
 
@@ -85,7 +90,7 @@ const ListadoBandejas = ({ get_values, bandejas, handle_edit_click }: IProps) =>
                         rowsPerPageOptions={[10]}
                         experimentalFeatures={{ newEditingApi: true }}
                         getRowId={(row) => row.id_bandeja_estante}
-                        rows={bandeja}
+                        rows={bandejas}
                     />
 
                 </Box>

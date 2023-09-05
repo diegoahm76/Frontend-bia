@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, Checkbox, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -22,7 +21,7 @@ export const TablaObligacionesUsuarioSolicitud: React.FC = () => {
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
 
-  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
+  const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
     const selected_index = selected.indexOf(name);
     let new_selected: readonly string[] = [];
 
@@ -38,7 +37,6 @@ export const TablaObligacionesUsuarioSolicitud: React.FC = () => {
         selected.slice(selected_index + 1),
       );
     }
-
     set_selected(new_selected);
   };
 

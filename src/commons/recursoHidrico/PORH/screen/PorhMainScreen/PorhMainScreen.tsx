@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
@@ -79,13 +80,23 @@ export const PorhMainScreen: React.FC = () => {
       field: 'fecha_inicio',
       headerName: 'FECHA INICIO',
       sortable: true,
-      width: 250,
+      width: 250, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
+
     },
     {
       field: 'fecha_fin',
       headerName: 'FECHA FIN',
       sortable: true,
-      width: 250,
+      width: 250, valueFormatter: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        return formattedDate;
+      },
+
     },
     {
       field: 'ACCIONES',

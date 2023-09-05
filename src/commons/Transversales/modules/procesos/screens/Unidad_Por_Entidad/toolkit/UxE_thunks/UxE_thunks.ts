@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
+import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
 
+// ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
 export const consultarTablaTemporal = async (setLoading: any): Promise<any> => {
   // setLoading(true);
   try {
@@ -23,6 +26,159 @@ export const consultarTablaTemporal = async (setLoading: any): Promise<any> => {
       detail: error?.response?.data?.detail
     };
   } finally {
-   // setLoading(false);
+    // setLoading(false);
   }
 };
+
+// ? -- consulta del organigrama actual -- //
+export const get_organigrama_acual = async (navigate: any): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/get/`;
+    const { data } = await api.get(url);
+    const dataToReturn = data.Organigramas.filter((el: any) => el.actual);
+
+    if (dataToReturn.length === 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'NO HAY ORGANIGRAMA ACTUAL',
+        text: 'Porfavor seleccione uno para usar ésta opción de este módulo',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText: 'Ir a seleccionar organigrama',
+        confirmButtonColor: '#042F4A',
+
+        allowEscapeKey: false
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate('/app/gestor_documental/organigrama/crear');
+        } else {
+          window.location.reload();
+        }
+      });
+    }
+
+    return dataToReturn;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+// ? ---- get organigramas disponibles con sus respectivas validaciones -- //
+export const getOrganigramasDispobibles = async (): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/get-terminados/`;
+    const { data } = await api.get(url);
+    const dataToReturn = data.filter(
+      (el: any) => el.fecha_terminado && !el.fecha_retiro_produccion
+    );
+    return dataToReturn;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+// ? --- get organigrama anterior al actual -- //
+
+export const get_organigrama_anterior = async (navigate: any): Promise<any> => {
+  try {
+    const url1 =
+      'transversal/organigrama/unidades/get-list/organigrama-retirado-reciente/';
+    const { data } = await api.get(url1);
+
+    const url2 = `transversal/organigrama/get/`;
+    const { data: data2 } = await api.get(url2);
+
+    const dataToReturn = data2?.Organigramas?.filter(
+      (el: any) => el.id_organigrama === data?.data[0]?.id_organigrama
+    );
+    console.log('dataToReturn', dataToReturn);
+
+    if (dataToReturn.length === 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'NO HAY ORGANIGRAMA ANTERIOR AL ACTUAL',
+        text: 'Alguno organigrama debe salir de producción para usar esa opción de éste módulo',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText: 'Ir a organigramas',
+        confirmButtonColor: '#042F4A',
+
+        allowEscapeKey: false
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate('/app/gestor_documental/organigrama/crear');
+        } else {
+          window.location.reload();
+        }
+      });
+    }
+
+    return dataToReturn;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+// ! ------ GET PERSONAS DE ORGANIGRAMA ACTUAL Y DE ORGANIGRAMA QUE SELECCIONE PARA REALIZAR EL TRASLADO DE UNIDADES ------ //
+
+export const getListadoPersonasOrganigramaActual = async (): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/listado-personas-organigrama/`;
+    const { data } = await api.get(url);
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+export const getListaUnidadesOrganigramaSeleccionado = async (
+  id_organigrama: number
+): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/unidades/get-by-organigrama/${id_organigrama}/`;
+    const { data } = await api.get(url);
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+//* con esta funcion consulto si hay personas sin actualizar, eso quiere decir que si no hay por defecto entro a la primera opcion ya que no se ha realizado el cambio de organigrama, si trae registros en porqu eel cambio de organigrama ya se realizó y por ende se debe entrar a la segunda opcion ()
+export const getPersonasSinActualizarOrganigramaAnteriorAlActual =
+  async (): Promise<any> => {
+    try {
+      const url = `transversal/organigrama/get-unidad-organizacional-after/`;
+      const { data } = await api.get(url);
+      return {
+        data: data?.data,
+        success: data?.success,
+        detail: data?.detail
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        data: [],
+        success: false,
+        detail: error?.response?.data?.detail
+      };
+    }
+  };
+
+/* export const putCrearRegistrosTemporales = async (
+  data_create_table: any
+): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/guardar-actualizacion-unidad${data_create_table.id_organigrama_futuro}/}`;
+    const { data } = await api.put(url, {});
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+*/

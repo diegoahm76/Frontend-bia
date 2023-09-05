@@ -272,7 +272,6 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      type="number"
                       fullWidth
                       label="Versión del TCA"
                       size="small"

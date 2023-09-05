@@ -50,17 +50,6 @@ export const ListarEstantes: React.FC = () => {
                 })
               );
 
-              /*  dispatch(
-                set_current_id_depo_est((prev: IdEstanteDeposito) => ({
-                  ...prev,
-                  id_estante_deposito: params.row.id_estante_deposito,
-                  identificacion_por_deposito:
-                    params.row.identificacion_por_deposito,
-                })) || {}
-
-                deposito_estante
-              ); */
-
               dispatch(
                 set_current_id_depo_est({
                   ...deposito_estante,
@@ -69,7 +58,8 @@ export const ListarEstantes: React.FC = () => {
                     params.row.identificacion_por_deposito,
                 })
               );
-
+              set_id_estante(params.row.id_estante_deposito);
+              console.log(params.row, 'params.row');
               dispatch(set_current_estantes(params.row));
             }}
           >
@@ -140,8 +130,12 @@ export const ListarEstantes: React.FC = () => {
 
   const { deposito_estante } = useAppSelector((state) => state.deposito);
 
-  const { rows_estantes, id_deposito, fetch_data_estantes_depositos } =
-    useContext(DataContext);
+  const {
+    rows_estantes,
+    id_deposito,
+    set_id_estante,
+    fetch_data_estantes_depositos,
+  } = useContext(DataContext);
 
   const dispatch = useAppDispatch();
 

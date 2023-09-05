@@ -3,11 +3,14 @@ import type {
   IDeposito,
   IdEstanteDeposito,
   IMode,
+  IObEstante,
   IObjBandeja,
+  IObjCarpeta,
   IObjDeposito,
   IObjSucursales,
 } from '../../interfaces/deposito';
 import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
+import type { IBuscarCaja } from '../../Cajas/types/types';
 
 export const initial_state_deposito: IObjDeposito = {
   nombre_deposito: null,
@@ -16,6 +19,7 @@ export const initial_state_deposito: IObjDeposito = {
   cod_municipio_nal: null,
   cod_pais_exterior: '',
   id_sucursal_entidad: null,
+  id_deposito: null,
   activo: false,
   orden_ubicacion_por_entidad: null,
   nombre_sucursal: null,
@@ -25,8 +29,9 @@ export const initial_state_deposito: IObjDeposito = {
 export const initial_state_bandeja: IObjBandeja = {
   id_estante_deposito: null,
   identificacion_por_estante: null,
-
-}
+  orden_ubicacion_por_estante: null,
+  id_bandeja_estante: null,
+};
 export const mode_estantes: IMode = {
   ver: false,
   crear: false,
@@ -53,16 +58,31 @@ export const id_depo_est: IdEstanteDeposito = {
   identificacion_por_deposito: '',
 };
 
+export const cajas: IBuscarCaja = {
+  identificacion_deposito: null,
+  id_deposito: null,
+  identificacion_estante: '',
+  id_estante: null,
+  identificacion_bandeja: '',
+  id_bandeja: null,
+  identificacion_caja: '',
+  id_caja: null,
+  orden_caja: null,
+};
+
 export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
   sucursales: [],
   mode_estante: mode_estantes,
-  bandeja: [],
+  bandejas: [],
   current_bandeja: initial_state_bandeja,
   data_estantes: estantes_slice,
   data_depositos: info_deposito_slice,
   deposito_estante: id_depo_est,
+  estantes: [],
+  cajas,
+  carpetas: []
 };
 
 export const deposito_slice = createSlice({
@@ -96,11 +116,8 @@ export const deposito_slice = createSlice({
     ) => {
       state.mode_estante = action.payload;
     },
-    set_bandejas: (
-      state: IDeposito,
-      action: PayloadAction<IObjBandeja[]>
-    ) => {
-      state.bandeja = action.payload;
+    set_bandejas: (state: IDeposito, action: PayloadAction<IObjBandeja[]>) => {
+      state.bandejas = action.payload;
     },
     set_current_bandeja: (
       state: IDeposito,
@@ -120,15 +137,20 @@ export const deposito_slice = createSlice({
     ) => {
       state.data_depositos = action.payload;
     },
-    set_current_id_depo_est: (
-      state: IDeposito,
-      action: PayloadAction<any>
-    ) => {
+    set_current_id_depo_est: (state: IDeposito, action: PayloadAction<any>) => {
       state.deposito_estante = action.payload;
     },
-  }
+    set_estantes: (state: IDeposito, action: PayloadAction<IObEstante[]>) => {
+      state.estantes = action.payload;
+    },
+    set_current_cajas: (state: IDeposito, action: PayloadAction<IBuscarCaja>) => {
+      state.cajas = action.payload;
+    },
+    set_carpetas: (state: IDeposito, action: PayloadAction<IObjCarpeta[]>) => {
+      state.carpetas = action.payload;
+    },
+  },
 });
-
 
 export const {
   set_depositos,
@@ -140,4 +162,8 @@ export const {
   set_current_estantes,
   set_current_info_deposito,
   set_current_id_depo_est,
+  set_estantes,
+  set_current_cajas,
+  set_carpetas,
+
 } = deposito_slice.actions;

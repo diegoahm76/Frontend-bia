@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Grid,
   IconButton,
@@ -27,13 +28,20 @@ import { useAppDispatch } from '../../../../../hooks';
 import {
   set_current_estantes,
   set_current_id_depo_est,
+  set_current_info_deposito,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
-  const { depositos_selected, set_id_deposito, fetch_data_depositos } =
-    useContext(DataContext);
+  const {
+    depositos_selected,
+    set_id_estante,
+    set_id_deposito,
+    fetch_data_depositos,
+  } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
@@ -49,7 +57,7 @@ export const BusquedaEstante: React.FC = () => {
       width: 250,
     },
     {
-      field: 'identificacion_deposito',
+      field: 'nombre_deposito',
       headerName: 'DEPÓSITO DE ARCHIVO',
       sortable: true,
       width: 250,
@@ -64,6 +72,7 @@ export const BusquedaEstante: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_estante(params.row.id_estante_deposito);
               dispatch(
                 set_current_mode_estantes({
                   ver: true,
@@ -80,13 +89,22 @@ export const BusquedaEstante: React.FC = () => {
                     params.row.identificacion_por_deposito,
                 })
               );
+              dispatch(
+                set_current_info_deposito({
+                  id_deposito: params.row.id_deposito,
+                  orden_ubicacion_por_entidad:
+                    params.row.orden_ubicacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_entidad: params.row.id_estante_deposito,
+                })
+              );
 
               dispatch(
                 set_current_estantes({
                   id_estante_deposito: params.row.id_estante_deposito,
                   orden_ubicacion_por_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
-                    params.row.identificacion_deposito,
+                    params.row.identificacion_por_deposito,
                 })
               );
               set_id_deposito(params.row.id_deposito);
@@ -116,7 +134,7 @@ export const BusquedaEstante: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row);
+              set_id_estante(params.row.id_estante_deposito);
               dispatch(
                 set_current_mode_estantes({
                   ver: false,
@@ -124,23 +142,31 @@ export const BusquedaEstante: React.FC = () => {
                   editar: true,
                 })
               );
-
               dispatch(
                 set_current_id_depo_est({
                   id_deposito: params.row.id_deposito,
                   id_estante_deposito: params.row.id_estante_deposito,
-                  nombre_deposito: params.row.identificacion_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
                     params.row.identificacion_por_deposito,
                 })
               );
               dispatch(
+                set_current_info_deposito({
+                  id_deposito: params.row.id_deposito,
+                  orden_ubicacion_por_entidad:
+                    params.row.orden_ubicacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
+                  identificacion_por_entidad: params.row.id_estante_deposito,
+                })
+              );
+
+              dispatch(
                 set_current_estantes({
                   id_estante_deposito: params.row.id_estante_deposito,
-                  orden_ubicacion_por_deposito:
-                    params.row.orden_ubicacion_por_deposito,
+                  orden_ubicacion_por_deposito: params.row.nombre_deposito,
                   identificacion_por_deposito:
-                    params.row.identificacion_deposito,
+                    params.row.identificacion_por_deposito,
                 })
               );
               set_id_deposito(params.row.id_deposito);
@@ -180,7 +206,7 @@ export const BusquedaEstante: React.FC = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      orden_ubicacion_por_deposito: '',
+      identificacion_estante: '',
       orden_estante: '',
       nombre_deposito: '',
     },
@@ -189,6 +215,8 @@ export const BusquedaEstante: React.FC = () => {
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoEstantes[]>([]);
+
+  const { set_nuevo_orden_estantes_selected } = useContext(DataContext);
 
   const dispatch = useAppDispatch();
 
@@ -202,24 +230,26 @@ export const BusquedaEstante: React.FC = () => {
   };
 
   const on_submit_advance = handle_submit(
-    async ({
-      orden_ubicacion_por_deposito,
-      orden_estante,
-      nombre_deposito,
-    }) => {
+    async ({ identificacion_estante, orden_estante, nombre_deposito }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
         } = await search_estante({
-          orden_ubicacion_por_deposito,
+          identificacion_estante,
           orden_estante,
           nombre_deposito,
         });
 
         if (data?.length > 0) {
           set_rows(data);
+          const data_selected: any[] = data.map((item: InfoEstantes) => ({
+            value: item.orden_ubicacion_por_deposito ?? '',
+            label: item.orden_ubicacion_por_deposito ?? '',
+            // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+          }));
+          set_nuevo_orden_estantes_selected(data_selected);
         }
       } catch (error: any) {
         control_error(error.response?.data.detail);
@@ -242,6 +272,7 @@ export const BusquedaEstante: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
+          startIcon={<SearchIcon />}
           onClick={() => {
             handle_click_open();
           }}
@@ -269,7 +300,7 @@ export const BusquedaEstante: React.FC = () => {
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="orden_ubicacion_por_deposito"
+                  name="identificacion_estante"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
@@ -338,6 +369,7 @@ export const BusquedaEstante: React.FC = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                   onClick={(e) => {
@@ -373,6 +405,19 @@ export const BusquedaEstante: React.FC = () => {
             </Grid>
           </Grid>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
       </Dialog>
     </>
   );

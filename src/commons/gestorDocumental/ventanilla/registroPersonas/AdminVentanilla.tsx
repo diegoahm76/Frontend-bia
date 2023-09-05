@@ -2,7 +2,10 @@
 import { useState } from 'react';
 import { Divider, Grid, Box } from '@mui/material';
 import type { AxiosError } from 'axios';
-import type { DataPersonas, InfoPersona } from '../../../../interfaces/globalModels';
+import type {
+    DataPersonas,
+    InfoPersona,
+} from '../../../../interfaces/globalModels';
 import { use_register } from '../../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../request/Request';
 import { control_error } from '../../../../helpers';
@@ -12,7 +15,6 @@ import { CrearPersonaNatural } from '../CrearPersonaNatural/CrearPersonaNatural'
 import { CrearPersonaJuridica } from '../CrearPersonaJuridica/CrearPersonaJuridica';
 import { ActualizarPersonaNatural } from './ActualizarPersonaNatural';
 import { ActualizarPersonaJuridica } from './ActualizarPersonaJuridica';
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminVentanilla: React.FC = () => {
@@ -45,7 +47,6 @@ export const AdminVentanilla: React.FC = () => {
                 set_is_update(true);
                 set_is_register(false);
             }
-
         } catch (err) {
             const temp = err as AxiosError;
             if (temp.response?.status !== 404) {
@@ -55,14 +56,16 @@ export const AdminVentanilla: React.FC = () => {
     };
 
     return (
-        <Box sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-        }}>
+        <Box
+            sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+            }}
+        >
             <Grid container>
                 <Grid item xs={12}>
                     <Title title="Crear personas desde ventanilla" />
@@ -98,25 +101,26 @@ export const AdminVentanilla: React.FC = () => {
                                 />
                             </>
                         )}
-                        {datos_persona !== undefined && datos_persona?.tipo_persona === 'J' && (
-                            <>
-                                <ActualizarPersonaJuridica
-                                    id_persona={datos_persona.id_persona}
-                                    data={datos_persona}
-                                    numero_documento={datos_persona?.numero_documento}
-                                    tipo_persona={datos_persona.tipo_persona}
-                                    tipo_documento={datos_persona.tipo_documento}
-                                    errors={errors}
-                                    handleSubmit={handle_submit}
-                                    isValid={is_valid}
-                                    register={register}
-                                    setValue={set_value}
-                                    getValues={get_values}
-                                    watch={watch}
-                                    reset={reset}
-                                />
-                            </>
-                        )}
+                        {datos_persona !== undefined &&
+                            datos_persona?.tipo_persona === 'J' && (
+                                <>
+                                    <ActualizarPersonaJuridica
+                                        id_persona={datos_persona.id_persona}
+                                        data={datos_persona}
+                                        numero_documento={datos_persona?.numero_documento}
+                                        tipo_persona={datos_persona.tipo_persona}
+                                        tipo_documento={datos_persona.tipo_documento}
+                                        errors={errors}
+                                        handleSubmit={handle_submit}
+                                        isValid={is_valid}
+                                        register={register}
+                                        setValue={set_value}
+                                        getValues={get_values}
+                                        watch={watch}
+                                        reset={reset}
+                                    />
+                                </>
+                            )}
                     </>
                 )}
                 {is_register && (
