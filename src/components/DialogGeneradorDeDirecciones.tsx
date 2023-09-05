@@ -1,5 +1,6 @@
 // @ts-ignore
 import { type Dispatch, type SetStateAction } from 'react';
+
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -23,7 +24,7 @@ import type { Direccion, keys_direccion } from '../interfaces/globalModels';
 interface Props {
 
   open: boolean;
-  openDialog: Dispatch<SetStateAction<boolean>>;
+  openDialog: react.Dispatch<react.SetStateAction<boolean>>;
   onChange: (value: string, type: string) => void;
   type: string;
 }
