@@ -26,7 +26,8 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import {
   //  setAsignacionConsultaTablaTemporal,
   setGridActualANuevo,
-  setUnidadesSeleccionadas
+  setUnidadesSeleccionadas,
+  set_current_id_organigrama
 } from '../../toolkit/UxE_slice/UxE_slice';
 
 export const ActualANuevo: FC = (): JSX.Element => {
@@ -35,7 +36,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { asignacionConsultaTablaTemporal } = useAppSelector(
+  const { asignacionConsultaTablaTemporal, organigrama_current } = useAppSelector(
     (state) => state.u_x_e_slice
   );
 
@@ -70,7 +71,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
       //* --- se cierra la petición de la asignación del organigrama actual
 
       // * si hay algo en la tabla temporal se analiza para seleccionar de inmediato el organigrama correspondiente
-
 
       // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_anterior está presente
       if (asignacionConsultaTablaTemporal?.id_organigrama_anterior) {
@@ -209,6 +209,12 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
                         onChange={(selectedOption) => {
                           console.log('selectedOption', selectedOption);
+                          //* selecciona el id del organigrama sobre el que estoy trabajando para hacer el almacenamiento de datos dentro de la tabla temporal T026
+                          dispatch(
+                            set_current_id_organigrama(selectedOption.value)
+                          );
+                          console.log(organigrama_current);
+
                           handleGridActualANuevo(true);
                           //* dentro de esta seleccion, tambien debe existir una selección de modo que se pueda realizar la consulta de las unidades que se deben mostrar en la tabla de asignaciones
                           //! 1. se realiza la consuta del listado de personas del organigrama actual

@@ -12,13 +12,13 @@ import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/Di
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 
-
 const routes = [
   {
     path: 'organigrama/',
     name: 'organigrama',
     component: () => <OrganigramaRoutes />
   },
+  //! dentro de ccd va a estar la ruta de permisos sobre series documentales
   {
     path: 'ccd/',
     name: 'ccd',
@@ -58,14 +58,11 @@ const routes = [
     component: () => <DialogCcdActual />
   },
   {
-    path: "alertas_gestor/",
-    name: "alertas_gestor",
-    component: () => (
-      <Alertas_gestor_Routes />
-    ),
-  },
+    path: 'alertas_gestor/',
+    name: 'alertas_gestor',
+    component: () => <Alertas_gestor_Routes />
+  }
 ];
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
