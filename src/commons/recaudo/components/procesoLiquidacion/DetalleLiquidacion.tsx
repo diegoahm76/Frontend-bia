@@ -1,25 +1,17 @@
 /* eslint-disable object-shorthand */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint no-new-func: 0 */
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { Box, Button, Grid, List, ListItemText } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { Title } from "../../../../components";
 import { DetalleModal } from "./modal/DetalleModal";
-import type { FormDetalleLiquidacion, FormLiquidacion, OpcionLiquidacion } from "../../interfaces/liquidacion";
+import type { OpcionLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import AddIcon from '@mui/icons-material/Add';
 interface IProps {
-  set_form_liquidacion: Dispatch<SetStateAction<FormLiquidacion>>;
-  set_form_detalle_liquidacion: Dispatch<SetStateAction<FormDetalleLiquidacion[]>>;
-}
-
-interface Row {
-  id: number,
-  nombre_opcion: string;
-  concepto: string;
-  formula_aplicada: string;
-  variables: Record<string, string>;
-  valor_liquidado: string;
+  rows_detalles: RowDetalles[];
+  expediente_liquidado: boolean;
+  add_new_row_detalles: (formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string) => void;
 }
 
 const column_detalle: GridColDef[] = [
@@ -47,15 +39,15 @@ const column_detalle: GridColDef[] = [
     field: 'variables',
     headerName: 'Variables',
     width: 300,
-    renderCell: (cellValues) => {
+    renderCell: (params) => {
       return (
         <List dense>
-          {Object.entries(cellValues.row.variables).map((entry, index) => {
+          {Object.entries(params.value).map((entry, index) => {
             const [key, value] = entry;
             return <ListItemText key={index}>{key}: {value as string}</ListItemText>
           })}
         </List>
-      )
+      );
     }
   },
   {
@@ -66,36 +58,8 @@ const column_detalle: GridColDef[] = [
 ]
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
-export const DetalleLiquidacion: React.FC<IProps> = ({ set_form_liquidacion, set_form_detalle_liquidacion }: IProps) => {
-  const [rows, set_rows] = useState<Row[]>([]);
+export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente_liquidado, add_new_row_detalles }: IProps) => {
   const [modal_detalle, set_modal_detalle] = useState<boolean>(false);
-  const [id_row, set_id_row] = useState(0);
-
-  const add_new_row = (valor: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string): void => {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    const funcion = new Function(`return ${valor}`);
-    const new_row: Row = {
-      id: id_row,
-      nombre_opcion: opcion_liquidacion.nombre,
-      concepto,
-      formula_aplicada: opcion_liquidacion.funcion,
-      variables: nuevas_variables,
-      valor_liquidado: funcion()
-    };
-    set_form_liquidacion((previousData) => ({ ...previousData, valor: (previousData.valor as number || 0) + Number(funcion()) }));
-    set_rows([...rows, new_row]);
-    set_id_row(prevID => prevID + 1);
-    set_form_detalle_liquidacion((prevData) => [
-      ...prevData,
-      {
-        variables: nuevas_variables,
-        id_opcion_liq: id_opcion_liquidacion,
-        valor: Number(funcion()),
-        estado: 1,
-        concepto: concepto,
-      }
-    ]);
-  };
 
   const handle_liquidar = (): void => {
     set_modal_detalle(true);
@@ -120,7 +84,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ set_form_liquidacion, set
             <DataGrid
               density="compact"
               autoHeight
-              rows={rows}
+              rows={rows_detalles}
               columns={column_detalle}
               getRowHeight={() => 'auto'}
             />
@@ -128,22 +92,24 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ set_form_liquidacion, set
         </Grid>
         <Grid container justifyContent='center' sx={{ my: '20px' }}>
           <Grid item xs={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={<AddIcon />}
-              onClick={handle_liquidar}
-            >
-              Agregar detalle de liquidación
-            </Button>
+            {!expediente_liquidado && (
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<AddIcon />}
+                onClick={handle_liquidar}
+              >
+                Agregar detalle de liquidación
+              </Button>
+            )}
           </Grid>
         </Grid>
       </Grid>
       <DetalleModal
         is_modal_active={modal_detalle}
         set_is_modal_active={set_modal_detalle}
-        add_new_row={add_new_row}
+        add_new_row={add_new_row_detalles}
       />
     </>
   )

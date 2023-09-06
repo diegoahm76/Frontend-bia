@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { TablaFacilidadesFuncionario } from '../componentes/TablaFacilidadesFuncionario';
@@ -21,7 +20,7 @@ export const FacilidadesPagoFuncionario: React.FC = () => {
   const { facilidades } = useSelector((state: RootState) => state.facilidades);
   const [modal, set_modal] = useState(facilidades.length === 0);
 
-  const handle_close = () => { set_modal(false) };
+  const handle_close = (): void => { set_modal(false) };
 
   useEffect(() => {
     try {

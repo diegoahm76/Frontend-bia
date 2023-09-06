@@ -12,13 +12,13 @@ import { ButtonAdminCarpetas } from './ButtonAdminCarpetas';
 export const ListarCarpetas: React.FC = () => {
   const columns_carpetas: GridColDef[] = [
     {
-      field: 'orden_ubicacion_por_bandeja',
+      field: 'orden_ubicacion_por_caja',
       headerName: 'ORDEN',
       sortable: true,
       width: 250,
     },
     {
-      field: 'identificacion_por_bandeja',
+      field: 'identificacion_por_caja',
       headerName: 'IDENTIFICACIÓN',
       sortable: true,
       width: 250,
@@ -27,6 +27,8 @@ export const ListarCarpetas: React.FC = () => {
 
   const { rows_carpetas, id_caja, fetch_data_caja_carpeta } =
     useContext(DataContext);
+
+    console.log(rows_carpetas, 'rows_carpetas')
 
   useEffect(() => {
     if (id_caja) {

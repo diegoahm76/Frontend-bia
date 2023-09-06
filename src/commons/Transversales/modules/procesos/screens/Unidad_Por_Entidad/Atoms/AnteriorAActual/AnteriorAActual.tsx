@@ -18,6 +18,7 @@ import {
 } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { GridAnteriorAActual2 } from './../../components/GridAnteriorANuevo2/GridAnterioANuevo2';
 
 export const AnteriorAActual: FC = (): JSX.Element => {
   //* navigate declaration
@@ -96,7 +97,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
           justifyContent: 'center'
         }}
       >
-        <Loader altura={120} />
+        <Loader altura={180} />
       </Grid>
     );
 
@@ -228,6 +229,11 @@ export const AnteriorAActual: FC = (): JSX.Element => {
           </Stack>
         </Grid>
       </Grid>
+
+      {/* data grid traslado masico organigrama anterio a actual */}
+      {<GridAnteriorAActual2 />}
+      {/*  {gridActualANuevo ? <GridActualANuevo /> : <></> } */}
+      {/* data grid traslado masico organigrama anterio a actual */}
     </>
   );
 };

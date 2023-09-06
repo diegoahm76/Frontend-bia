@@ -7,12 +7,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BlockIcon from '@mui/icons-material/Block';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Box, Grid, Stack, Chip, Tooltip, IconButton, Avatar } from '@mui/material';
+import { Box, Grid, Stack, Chip, Tooltip, IconButton, Avatar, ButtonGroup } from '@mui/material';
 import CrearMarcaModal from './modales/CrearMarcaModal';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { activate_deactivate_marca_service, delete_marca_service, get_marca_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 import { marca_seleccionada } from '../store/slice/MarcaMedidaPorcentajeSlice';
 import { Title } from '../../../../components/Title';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 const initial_state_marca_seleccionada = {
 
@@ -185,6 +187,10 @@ export const CrearMarcaForm: React.FC = () => {
           </Stack>
           <Grid item>
             <Box sx={{ width: '100%' }}>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              {download_xls({ nurseries: marca, columns })}
+              {download_pdf({ nurseries: marca, columns, title: 'Marca' })}
+            </ButtonGroup>
               <DataGrid
                 density="compact"
                 autoHeight

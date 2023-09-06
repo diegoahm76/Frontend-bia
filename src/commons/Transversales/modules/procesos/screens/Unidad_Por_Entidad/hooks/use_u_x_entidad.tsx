@@ -44,6 +44,21 @@ export const use_u_x_entidad = (): any => {
   const watch_values_opcion_anterior_a_actual =
     watch_opcion_anterior_a_actual();
 
+  //* control grid actual a nuevo
+  const {
+    control: control_grid_actual_a_nuevo,
+    reset: reset_grid_actual_a_nuevo,
+    watch: watch_grid_actual_a_nuevo
+  } = useForm({
+    defaultValues: {
+      desmarcar: false,
+      nuevaUnidadParaTraslado: {
+        value: '',
+        label: ''
+      }
+    }
+  });
+
   // ? use states necesarios para el funcionamiento de la app
   const [organigramaActual, setOrganigramaActual] = useState<IList[] | any>([
     {
@@ -61,14 +76,14 @@ export const use_u_x_entidad = (): any => {
     }
   ]);
 
-  const [organigramaAnterior, setOrganigramaAnterior] = useState<
-    IList[] | any
-  >([
-    {
-      label: '',
-      value: 0
-    }
-  ]);
+  const [organigramaAnterior, setOrganigramaAnterior] = useState<IList[] | any>(
+    [
+      {
+        label: '',
+        value: 0
+      }
+    ]
+  );
 
   // * -------------------------- FUNCIONES NECESARIAS PARA EL FUNCIONAMIENTO DE LA APP -------------------------- *//
 
@@ -104,6 +119,12 @@ export const use_u_x_entidad = (): any => {
     control_opcion_anterior_a_actual,
     reset_opcion_anterior_a_actual,
     watch_values_opcion_anterior_a_actual,
+
+
+    //* -- elementos para el control de la grid actual a nuevo -- *//
+    control_grid_actual_a_nuevo,
+    reset_grid_actual_a_nuevo,
+    watch_grid_actual_a_nuevo,
 
     //* -- use states necesarios para el funcionamiento de la app -- *//
     organigramaActual,

@@ -1,6 +1,6 @@
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl,
-  Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField
+  Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField, ButtonGroup
 } from '@mui/material';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,6 +13,8 @@ import { useAppDispatch } from '../../../../hooks';
 import { obtener_entrada_items, obtener_entradas } from '../thunks/Entradas';
 import { Title } from '../../../../components/Title';
 import dayjs from 'dayjs';
+import { download_xls_dos } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf_dos } from '../../../../documentos-descargar/PDF_descargar';
 
 interface IProps {
   is_modal_active: boolean;
@@ -83,6 +85,24 @@ const BuscarEntradasComponent = (props: IProps) => {
       })
     }
   };
+
+  const columnsss = [
+    {
+      field: "numero_entrada_almacen",
+      header: "#",
+      style: { width: '10%' },
+    },
+    {
+      field: "fecha_entrada",
+      header: "Fecha entrada",
+      style: { width: '30%' },
+    },
+    {
+      field: "motivo",
+      header: "Motivo",
+      style: { width: '60%' },
+    },
+  ];
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -189,13 +209,17 @@ const BuscarEntradasComponent = (props: IProps) => {
               <Grid item xs={12} sm={12}>
                 <Title title="Resultados" />
                 <Box sx={{ width: '100%', mt: '20px' }}>
+                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              {download_xls_dos({ nurseries: grid_filtrada, columns:columnsss })}
+              {download_pdf_dos({ nurseries: grid_filtrada, columns:columnsss, title: 'Resultados' })}
+            </ButtonGroup>
                   <div className="card">
                     <DataTable
                       value={grid_filtrada}
                       sortField="nombre"
                       stripedRows
                       paginator
-                      rows={5}
+                      rows={10}
                       rowsPerPageOptions={[5, 10, 25, 50]}
                       tableStyle={{ minWidth: '50rem' }}
                       selectionMode="single"

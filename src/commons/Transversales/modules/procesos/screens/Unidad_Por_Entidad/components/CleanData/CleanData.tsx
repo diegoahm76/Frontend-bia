@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useContext } from 'react';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
@@ -15,8 +16,10 @@ import SaveIcon from '@mui/icons-material/Save';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
-  const { controlModoTrasladoUnidadXEntidad /* controlFaseEntrada */ } =
-    useAppSelector((state) => state.u_x_e_slice);
+  const {
+    controlModoTrasladoUnidadXEntidad,
+    unidadesSeleccionadas /* controlFaseEntrada */
+  } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
 
@@ -24,6 +27,24 @@ export const CleanData: FC<any> = (): JSX.Element => {
 
   const guardarRegistrosT026 = (): void => {
     console.log('guardando registros T026');
+
+    // console.log('unidades seleccionadas', unidadesSeleccionadas);
+
+    const unidadesSeleccionadasArray =
+      unidadesSeleccionadas &&
+      Object?.entries(unidadesSeleccionadas)
+        .filter(
+          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+          ([key, value]) => {
+            return value ? value?.idPersona && value?.label && value?.value : null;
+          }
+        )
+        .map(([key, value]) => ({
+          id_persona: value?.idPersona,
+          // label: value.label,
+          id_nueva_unidad_organizacional: value?.value
+        }));
+    console.log(unidadesSeleccionadasArray);
   };
 
   const procederACambioMasivoUxE = (): void => {
