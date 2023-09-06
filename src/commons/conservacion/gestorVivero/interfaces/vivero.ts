@@ -24,6 +24,7 @@ export interface INursery {
   bienes_bajas: IObjBienBaja[];
   current_bien_baja: IObjBienBaja;
   persona: Persona;
+  realizar_despacho_manual: IObjDespacho;
 }
 
 export interface IList {
@@ -75,6 +76,8 @@ export interface IDespacho {
   id_despacho_consumo_alm?: number | null;
   id_persona_distribuye?: number | null;
   persona_distribuye?: string | null;
+  id_vivero_solicita?: number | null;
+  nombre_vivero_solicita?: string | null;
 }
 
 export interface IObjNursery {
@@ -199,4 +202,7 @@ export interface IObjBien {
   unidad_medida: string | null;
   tipo_bien?: string | null;
 
+}
+export interface IObjDespacho {
+  realizar_despacho_manual?: boolean | null;
 }
