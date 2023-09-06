@@ -667,7 +667,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 }}
             >
                 <Grid item md={12} xs={12}>
-                    <Title title="Filtros de búsqueda" />
+                    <Title title="Histórico de movimientos por módulo" />
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>

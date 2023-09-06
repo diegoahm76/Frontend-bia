@@ -154,7 +154,7 @@ const DestinoSolicitud = ({
                             control_name: "direccion_destino",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Requerido" } },
-                            label: "Dirección del predio:",
+                            label: "Dirección del predio",
                             type: "text",
                             disabled: false,
                             helper_text: ""
@@ -167,7 +167,7 @@ const DestinoSolicitud = ({
                             control_name: "coordenadas_destino_lat",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Requerido" } },
-                            label: "Latitud:",
+                            label: "Latitud",
                             type: "number",
                             disabled: false,
                             helper_text: ""
@@ -180,7 +180,7 @@ const DestinoSolicitud = ({
                             control_name: "coordenadas_destino_lon",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Requerido" } },
-                            label: "Lóngitud:",
+                            label: "Lóngitud",
                             type: "number",
                             disabled: false,
                             helper_text: ""
