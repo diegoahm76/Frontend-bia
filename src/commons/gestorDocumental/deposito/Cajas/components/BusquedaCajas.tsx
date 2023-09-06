@@ -107,6 +107,7 @@ export const BusquedaCajas: React.FC = () => {
                   identificacion_estante: params.row.identificacion_estante,
                   id_deposito: params.row.id_deposito,
                   identificacion_deposito: params.row.identificacion_deposito,
+                  nombre_deposito: params.row.nombre_deposito
                 })
               );
 
