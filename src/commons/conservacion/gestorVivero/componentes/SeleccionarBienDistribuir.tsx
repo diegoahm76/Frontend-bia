@@ -46,6 +46,7 @@ const SeleccionarBienDistribuir = () => {
     items_distribuidos,
     nurseries,
     current_bien,
+    realizar_despacho_manual,
   } = useAppSelector((state) => state.nursery);
   const dispatch = useAppDispatch();
 
@@ -323,7 +324,7 @@ const SeleccionarBienDistribuir = () => {
         } else {
           control_error(
             'La cantidad asignada debe ser máximo ' +
-              String(current_bien.cantidad_restante)
+            String(current_bien.cantidad_restante)
           );
         }
       } else {
@@ -382,7 +383,7 @@ const SeleccionarBienDistribuir = () => {
 
   return (
     <>
-      <Grid container direction="row" padding={2} borderRadius={2}>
+      {(realizar_despacho_manual.realizar_despacho_manual || current_despacho.id_vivero_solicita === null) && <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_current_bien}
           row_id={'id_item_despacho_entrante'}
@@ -500,7 +501,7 @@ const SeleccionarBienDistribuir = () => {
           modal_form_filters={[]}
           title_table_modal="Lista de bienes en despacho"
         />
-      </Grid>
+      </Grid>}
     </>
   );
 };
