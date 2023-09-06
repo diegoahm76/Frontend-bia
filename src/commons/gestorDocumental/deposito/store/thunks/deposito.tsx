@@ -247,7 +247,7 @@ export const editar_bandeja: any = (
             console.log(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
-                control_success(data.detail);
+                control_success('Se actualizó correctamente la bandeja');
             }
             // control_success(' se agrego correctamente');
             return data;
@@ -315,15 +315,13 @@ export const eliminar_bandeja = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.delete(`gestor/depositos-archivos/deposito/eliminar/${id}/`
+            const { data } = await api.delete(`gestor/depositos-archivos/bandejaEstante/eliminar/${id}/`
 
             );
             console.log(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
-                control_success(data.detail);
-            } else {
-                control_error(data.detail);
+                control_success('Se eliminó la bandeja correctamente');
             }
             return data;
         } catch (error: any) {
@@ -400,8 +398,6 @@ export const crear_carpeta: any = (
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 //  control_success(data.detail)
-            } else {
-                control_error(data.detail)
             }
             control_success('Se creo correctamente la carpeta');
             return data;
@@ -457,8 +453,6 @@ export const eliminar_carpeta = (
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 // control_success(data.detail);
-            } else {
-                control_error(data.detail);
             }
             control_success('Se eliminó la carpeta correctamente');
             return data;
