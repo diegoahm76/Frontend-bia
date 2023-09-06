@@ -24,7 +24,7 @@ import type { Direccion, keys_direccion } from '../interfaces/globalModels';
 interface Props {
 
   open: boolean;
-  openDialog: react.Dispatch<react.SetStateAction<boolean>>;
+  openDialog: React.Dispatch<React.SetStateAction<boolean>>;
   onChange: (value: string, type: string) => void;
   type: string;
 }
