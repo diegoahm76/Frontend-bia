@@ -24,13 +24,18 @@ import InfoIcon from '@mui/icons-material/Info';
 
 export const Actual: React.FC = () => {
   const {
+    // * useForm
     control_radicados,
     errors_radicados,
     reset_radicados,
+    data_watch_radicados,
     // * años
     currentYear,
-    data_watch_radicados,
+    formattedDate,
+    // * onSubmit
     onSubmit_radicados,
+    // * datos usuario
+    datos,
   } = useRadicadosHook();
   const { tipos_radicado_selected, fetch_data_tipos_radicado_selected } =
     useContext(DataContext);
@@ -307,8 +312,35 @@ export const Actual: React.FC = () => {
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Fecha de configuración"
+              placeholder="Fecha de configuración"
+              size="small"
+              margin="dense"
+              disabled={true}
+              fullWidth
+              required={false}
+              value={formattedDate}
+              helperText="Fecha de configuración"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              // label="Persona que configuró"
+              // placeholder="Persona que configuró"
+              size="small"
+              margin="dense"
+              disabled={true}
+              fullWidth
+              required={false}
+              value={datos?.nombre_completo}
+              helperText="Persona que configurá"
+            />
+          </Grid>
         </Grid>
-
         <Grid
           container
           spacing={2}

@@ -4,6 +4,11 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { post_tipos_radicado } from '../services/services';
 import { control_error, control_success } from '../../../../helpers';
+import { useAppSelector } from '../../../../hooks';
+import { get_user_by_id } from '../../../../request';
+import type { AxiosError } from 'axios';
+import type { Users } from '../../../seguridad/interfaces';
+import { useEffect, useState } from 'react';
 
 export const useRadicadosHook = () => {
   // useForm
@@ -31,6 +36,30 @@ export const useRadicadosHook = () => {
   // * años
   const currentYear = dayjs().year();
   const nextYear = dayjs().add(1, 'year').year();
+
+  const currentDate = dayjs();
+  const formattedDate = currentDate.format('DD/MM/YYYY');
+
+  const { userinfo } = useAppSelector((state) => state.auth);
+  const [datos, set_datos] = useState<Users>();
+
+  const datos_usuario = async (id_usuario: number): Promise<void> => {
+    try {
+      const {
+        data: { data },
+      } = await get_user_by_id(id_usuario);
+      set_datos(data);
+    } catch (err) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404) {
+        control_error(err);
+      }
+    }
+  };
+  // * useEffect
+  useEffect(() => {
+    void datos_usuario(userinfo.id_usuario);
+  }, []);
 
   // * onSubmit
   const onSubmit_radicados = handleSubmit_radicados(async (data) => {
@@ -64,8 +93,12 @@ export const useRadicadosHook = () => {
     // * años
     currentYear,
     nextYear,
+    formattedDate,
 
     // * onSubmit
     onSubmit_radicados,
+
+    // * datos login
+    datos,
   };
 };
