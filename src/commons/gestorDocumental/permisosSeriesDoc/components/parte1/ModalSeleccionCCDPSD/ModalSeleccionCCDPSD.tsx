@@ -47,7 +47,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import { get_busqueda_ccds_psd } from '../../../toolkit/thunks/psdThunks';
 import { set_busqueda_ccds_action } from '../../../toolkit/slice/PSDSlice';
 
-const ModalSeleccionCCDPSD = (): JSX.Element => {
+export const ModalSeleccionCCDPSD = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const {
     modalSeleccionCCD_PSD,
@@ -90,6 +90,15 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
       }
     },
     {
+      headerName: 'Fecha terminado',
+      field: 'fecha_terminado',
+      width: 150,
+      renderCell: (params: any) => {
+        const date = new Date(params.row.fecha_terminado);
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+      }
+    },
+    {
       headerName: 'Seleccionar',
       field: 'accion',
       renderCell: (params: any) => (
@@ -127,7 +136,6 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
                 variant="rounded"
               >
                 <ChecklistIcon
-                  titleAccess="Ver CCD"
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
               </Avatar>
@@ -316,6 +324,3 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
     </Dialog>
   );
 };
-
-// eslint-disable-next-line no-restricted-syntax
-export default ModalSeleccionCCDPSD;
