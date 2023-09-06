@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjItem } from '../interfaces/vivero';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,8 @@ import {
   set_current_bien,
   set_items_despacho_aux,
 } from '../store/slice/viveroSlice';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesDespacho = () => {
@@ -135,7 +137,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cantidad_distribuida',
       headerName:
-        current_despacho.distribucion_confirmada === true
+        current_despacho.distribucion_confirmada
           ? 'Cantidad distribuida'
           : 'Cantidad a distribuir',
       width: 140,
@@ -201,6 +203,23 @@ const ListadoBienesDespacho = () => {
         >
           <Box sx={{ width: '100%' }}>
             <Title title="Bienes recibidos"></Title>
+            <ButtonGroup
+                    style={{
+                      margin: 7,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    {download_xls({
+                      nurseries: items_despacho_aux,
+                      columns: columns_items_despacho,
+                    })}
+                    {download_pdf({
+                      nurseries: items_despacho_aux,
+                      columns: columns_items_despacho,
+                      title: 'Resultados',
+                    })}
+                  </ButtonGroup>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"
