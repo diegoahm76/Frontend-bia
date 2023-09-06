@@ -17,7 +17,8 @@ import {
   Grid,
   IconButton,
   Stack,
-  TextField
+  TextField,
+  Tooltip
 } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -41,43 +42,31 @@ import { ModalContextPSD } from '../../../context/ModalContextPSD';
 import { v4 as uuidv4 } from 'uuid';
 import { columnnsSelCCDPSD } from './columns/columnsSelCCDPSD';
 import { usePSD } from '../../../hook/usePSD';
+//* select icon
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import { get_busqueda_ccds_psd } from '../../../toolkit/thunks/psdThunks';
+import { set_busqueda_ccds_action } from '../../../toolkit/slice/PSDSlice';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ModalSeleccionCCDPSD = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const {
     modalSeleccionCCD_PSD,
-    // handleSeleccionCCD_PSD,
-    loadingButtonPSD
-    // setLoadingButtonPSD
+    handleSeleccionCCD_PSD,
+    loadingButtonPSD,
+    setLoadingButtonPSD
   } = useContext(ModalContextPSD);
 
-  // const { ccds } = useAppSelector((state) => state.ccd);
+  const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);
 
-  // Hooks
-  const { control_search_ccd_psd } = usePSD();
+  // ! Hooks
+  const { control_search_ccd_psd, reset_search_ccd_psd } = usePSD();
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
-    /* {
-  "id_ccd": 31,
-  "usado": true,
-  "version": "4.0",
-  "nombre": "CCD Prueba Activación 4",
-  "fecha_terminado": "2023-05-29T15:57:44.379136",
-  "fecha_puesta_produccion": "2023-08-26T20:01:16.515643",
-  "fecha_retiro_produccion": "2023-08-26T20:15:58.378548",
-  "justificacion": "justificacion",
-  "ruta_soporte": "https://back-end-bia-beta.up.railway.app/media/Commit_conventions_b4WhK6O.png",
-  "actual": false,
-  "valor_aumento_serie": 1,
-  "valor_aumento_subserie": 1,
-  "id_organigrama": 54
-}, */
     {
       headerName: 'Usado',
       field: 'usado',
-      width: 300,
+      width: 80,
       renderCell: (params: any) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.usado ? (
@@ -101,15 +90,16 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
       }
     },
     {
-      headerName: 'Acciones',
+      headerName: 'Seleccionar',
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          <IconButton
-            onClick={() => {
-              console.log(' CCD seleccionado', params.row);
-              // console.log('params para ver ccd en el icono del ojito', params);
-              /*  void dispatch(
+          <Tooltip title="Seleccionar ccd" arrow>
+            <IconButton
+              onClick={() => {
+                console.log(' CCD seleccionado', params.row);
+                // console.log('params para ver ccd en el icono del ojito', params);
+                /*  void dispatch(
                   get_classification_ccds_service(
                     activateLoadingButtonBusquedaCCD,
                     desactivateLoadingButtonBusquedaCCD,
@@ -118,28 +108,31 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
                     params.row.id_ccd
                   )
                 );
+
                 openModalBusquedaCreacionCCD();
                 // dispatch(get_assignments_service(params.row.id_ccd));
                 // console.log('params para ver ccd en el icono del ojito', params);
                 // dispatch(get_ccd_current(params.row.id_ccd));
                 set_is_modal_active(false); */
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
+                handleSeleccionCCD_PSD(false);
               }}
-              variant="rounded"
             >
-              <VisibilityIcon
-                titleAccess="Ver CCD"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid'
+                }}
+                variant="rounded"
+              >
+                <ChecklistIcon
+                  titleAccess="Ver CCD"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       )
     }
@@ -151,10 +144,10 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
       maxWidth="md"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
+        handleSeleccionCCD_PSD(false);
         console.log('cerrando modal');
-        // set_is_modal_active(false);
-        // dispatch(get_ccds([]));
-        // reset_search_ccd({ nombre_ccd: '', version: '' });
+        dispatch(set_busqueda_ccds_action([]));
+        reset_search_ccd_psd({ nombre: '', version: '' });
       }}
     >
       <DialogTitle>
@@ -171,23 +164,32 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
             onSubmit={(e: any) => {
               console.log('onSubmit');
               e.preventDefault();
-              /* void dispatch(
-                get_classification_ccds_service(
-                  activateLoadingButtonBusquedaCCD,
-                  desactivateLoadingButtonBusquedaCCD,
-                  control_search_ccd._formValues.nombre_ccd,
-                  control_search_ccd._formValues.version
-                )
+              void get_busqueda_ccds_psd(
+                control_search_ccd_psd._formValues.nombre,
+                control_search_ccd_psd._formValues.version,
+                setLoadingButtonPSD
               ).then((data: any) => {
-                openModalBusquedaCreacionCCD();
-                console.log('data', data);
-              }); */
+                const sortedData = data.slice().sort((a: any, b: any) => {
+                  // Si hay un elemento con la propiedad "actual" en true, mostrarlo primero
+                  if (a.actual && !b.actual) {
+                    return -1;
+                  } else if (!a.actual && b.actual) {
+                    return 1;
+                  }
+
+                  // Si no hay un elemento con la propiedad "actual" en true, ordenar por fecha_terminado
+                  const dateA: any = new Date(a.fecha_terminado);
+                  const dateB: any = new Date(b.fecha_terminado);
+                  return dateA - dateB;
+                });
+                dispatch(set_busqueda_ccds_action(sortedData));
+              });
             }}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name="nombre_ccd"
+                  name="nombre"
                   control={control_search_ccd_psd}
                   defaultValue=""
                   rules={{ required: true }}
@@ -196,7 +198,6 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       size="small"
                       label="Nombre CCD"
@@ -224,7 +225,7 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      type="number"
+                      type="text"
                       fullWidth
                       size="small"
                       label="Versión CCD"
@@ -242,11 +243,7 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  //  sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-                >
+                <Stack direction="row" spacing={2}>
                   <LoadingButton
                     loading={loadingButtonPSD}
                     color="primary"
@@ -264,22 +261,23 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
         <ButtonGroup
           style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
         >
-          {/*  {download_xls({ nurseries: ccds, columns: columns_ccds })}
+          {/* reemplazar los espaciois por las respectivas columnas y filas */}
+          {download_xls({ nurseries: ccdsBusqueda, columns: columns_ccds })}
           {download_pdf({
-            nurseries: ccds,
+            nurseries: ccdsBusqueda,
             columns: columns_ccds,
             title: 'Selección de CCD persmisos sobre series documentales'
-          })} */}
+          })}
         </ButtonGroup>
         <DataGrid
           density="compact"
           autoHeight
-          rows={[]}
-          columns={[]}
+          rows={ccdsBusqueda ?? []}
+          columns={columns_ccds ?? []}
           pageSize={10}
           rowsPerPageOptions={[10]}
           experimentalFeatures={{ newEditingApi: true }}
-          getRowId={(row) => uuidv4()}
+          getRowId={() => uuidv4()}
         />
       </DialogContent>
       <Divider />
@@ -293,8 +291,7 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
             variant="outlined"
             color="primary"
             onClick={() => {
-              console.log('reseteando campos CCD');
-              // reset_search_ccd({ nombre_ccd: '', version: '' });
+              reset_search_ccd_psd({ nombre: '', version: '' });
             }}
             startIcon={<CleanIcon />}
           >
@@ -305,9 +302,10 @@ const ModalSeleccionCCDPSD = (): JSX.Element => {
             color="error"
             onClick={() => {
               console.log('cerrando modal');
+              handleSeleccionCCD_PSD(false);
               /*
               dispatch(get_ccds([]));
-              reset_search_ccd({ nombre_ccd: '', version: '' }); */
+              reset_search_ccd_psd({ nombre: '', version: '' }); */
             }}
             startIcon={<CloseIcon />}
           >

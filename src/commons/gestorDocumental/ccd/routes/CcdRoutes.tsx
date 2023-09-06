@@ -7,6 +7,7 @@ import { ModalProvider } from '../context/ModalContext';
 import { Page404 } from '../../../../screens/404';
 import { ScreenPerSerDoc as PermisosSobreSeriesDocumentales } from '../../permisosSeriesDoc/screens/ScreenPerSerDoc';
 import { ScreenControlAccExp as ControlAccesoExpedientes } from '../../controlAccesExped/screens/ScreenControlAccExp';
+import { ModalProviderPSD } from '../../permisosSeriesDoc/context/ModalContextPSD';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const routes = [
@@ -30,13 +31,15 @@ const routes = [
 
 const CcdRoutesContent = () => {
   return (
-    <ModalProvider>
-      <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element()} />
-        ))}
-      </Routes>
-    </ModalProvider>
+    <ModalProviderPSD>
+      <ModalProvider>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element()} />
+          ))}
+        </Routes>
+      </ModalProvider>
+    </ModalProviderPSD>
   );
 };
 

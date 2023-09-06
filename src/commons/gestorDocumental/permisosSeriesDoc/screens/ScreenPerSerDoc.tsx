@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, type FC } from 'react';
 import { SerieAdministrar } from '../components/parte1/SerieAdministrar/SerieAdministrar';
@@ -7,10 +8,7 @@ export const ScreenPerSerDoc: FC<any> = (): JSX.Element => {
 
   // ? context necesarios
   const {
-    modalSeleccionCCD_PSD,
-    // handleSeleccionCCD_PSD,
-    loadingButtonPSD
-    // setLoadingButtonPSD
+    handleSeleccionCCD_PSD,
   } = useContext(ModalContextPSD);
 
 
@@ -21,7 +19,11 @@ export const ScreenPerSerDoc: FC<any> = (): JSX.Element => {
       {/* definición parte administración de la serie */}
       <SerieAdministrar />
 
-      <button>
+      <button
+        onClick={
+          () => handleSeleccionCCD_PSD(true)
+        }
+      >
         open
       </button>
     </>
