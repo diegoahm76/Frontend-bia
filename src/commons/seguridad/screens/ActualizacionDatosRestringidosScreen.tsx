@@ -23,6 +23,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DialogHistorialDatosRestringidos } from '../components/DialogHistorialDatosRestringidos';
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const [historico, set_historico] = useState<boolean>(false);
@@ -276,7 +277,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Title title="DATOS PERSONALES" />
+                  <Title title="Datos persónale" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -398,7 +399,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   >
                     <Button
                     color="error"
-                      variant="outlined"
+                      variant="contained"
                       startIcon={<CancelIcon />}
                       onClick={() => {
                         cancelar();
@@ -420,7 +421,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                             className="align-middle ml-1"
                           />
                         ) : (
-                          ''
+                          <SaveIcon />
                         )
                       }
                       aria-label="Actualizar"

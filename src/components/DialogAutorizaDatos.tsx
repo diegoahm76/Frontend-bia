@@ -97,7 +97,7 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                 maxWidth={'sm'}
             >
                 <DialogTitle>
-                    <Title title="ACTUALIZACIÓN NOTIFICACIONES" />
+                    <Title title="Actualización notificaciones" />
                 </DialogTitle>
                 <Divider />
                 <Grid
@@ -166,7 +166,7 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                                 spacing={1}
                             >
                                 <Button
-                                    variant="outlined"
+                                    variant="contained"
                                     color="error"
                                     size="medium"
                                     startIcon={<CancelIcon />}

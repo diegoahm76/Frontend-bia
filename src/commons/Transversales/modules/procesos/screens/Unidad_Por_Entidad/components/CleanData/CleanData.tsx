@@ -89,7 +89,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   </Button>
 
                   <Button
-                    color="primary"
+                    color="success"
                     variant="contained"
                     // DEBE HABILITARSE LA CONDICIONAL DE GUARDAR O PROCEDER DEPENDIENDO EL ESCENARIO (MODE)
                     startIcon={
@@ -115,7 +115,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   >
                     <Button
                       color="error"
-                      variant="outlined"
+                      variant="contained"
                       startIcon={<CloseIcon />}
                     >
                       SALIR DEL MÓDULO

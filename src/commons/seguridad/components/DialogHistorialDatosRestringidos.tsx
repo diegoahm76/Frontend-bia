@@ -114,7 +114,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
         maxWidth={'lg'}
       >
         <DialogTitle>
-          <Title title="HISTORICO DE CAMBIOS" />
+          <Title title="Histórico de cambios" />
         </DialogTitle>
         <Divider />
         <Grid
@@ -161,7 +161,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               spacing={1}
             >
               <Button
-                variant="outlined"
+                variant="contained"
                 color="error"
                 // eslint-disable-next-line react/jsx-no-undef
                 startIcon={<CancelIcon />}

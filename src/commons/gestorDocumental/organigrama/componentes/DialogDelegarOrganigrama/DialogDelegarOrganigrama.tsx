@@ -26,7 +26,7 @@ import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
-import { CustomSelect } from '../../../../../components';
+import { CustomSelect, Title } from '../../../../../components';
 import DialogBusquedaAvanzadaUserOrganigrama from '../DialogBusquedaAvanzadaUserOrganigrama/DialogBusquedaAvanzadaUserOrganigrama';
 import { useAppSelector } from '../../../../../hooks';
 import { get_tipo_documento } from '../../../../../request';
@@ -172,8 +172,12 @@ const DialogDelegarOrganigrama = ({
         open={is_modal_active}
         onClose={handle_close_delegar_organigrama}
       >
+
         <DialogTitle>
-          Delegación de organigrama
+          <Grid item xs={12}     >
+            <Title title={` Delegación de organigrama `} />
+          </Grid>
+
           <IconButton
             aria-label="close"
             onClick={() => {
@@ -294,7 +298,7 @@ const DialogDelegarOrganigrama = ({
                     register={register_search_for_delegation}
                   />
 
-               
+
 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
@@ -318,7 +322,7 @@ const DialogDelegarOrganigrama = ({
                       }
                       helperText={
                         errors_search_for_delegation.numero_documento?.type ===
-                        'required'
+                          'required'
                           ? 'Este campo es obligatorio'
                           : ''
                       }
@@ -346,7 +350,7 @@ const DialogDelegarOrganigrama = ({
                     <TextField
                       fullWidth
                       value={data_user_por_asignar?.nombre_completo}
-                     // label="Nombre de usuario"
+                      // label="Nombre de usuario"
                       size="small"
                       disabled={true}
                     />
@@ -376,8 +380,8 @@ const DialogDelegarOrganigrama = ({
               LIMPIAR FORMULARIO
             </Button>
             <Button
-            color="error"
-              variant="outlined"
+              color="error"
+              variant="contained"
               onClick={handle_close_delegar_organigrama}
               startIcon={<CloseIcon />}
             >
@@ -397,7 +401,7 @@ const DialogDelegarOrganigrama = ({
             <Button
               type="button"
               variant="contained"
-              color = "success"
+              color="success"
               onClick={() => {
                 void handle_submit_delegacion_organigrama();
               }}
