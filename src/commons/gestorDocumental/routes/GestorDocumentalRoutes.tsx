@@ -13,6 +13,8 @@ import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/Di
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 import { Suspense } from 'react';
 import { Loader } from '../../../utils/Loader/Loader';
+import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
+import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 
 const routes = [
   {
@@ -63,6 +65,19 @@ const routes = [
     name: 'alertas_gestor',
     component: () => <Alertas_gestor_Routes />,
   },
+  {
+    path: 'encuesta_configuracion/',
+    name: 'encuesta_configuracion',
+    component: () => <Confi_Encuasta_Routes />,
+  },
+  {
+    path: 'encuesta_datos/',
+    name: 'encuesta_datos',
+    component: () => <InfoEncuesta />,
+  },
+
+
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

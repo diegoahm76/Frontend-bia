@@ -74,7 +74,15 @@ export const CajasScreen: React.FC = () => {
         {mode_estante.crear || mode_estante.editar ? <RegistrarCaja /> : null}
         {cajas.id_bandeja ? <ListarCajas /> : null}
         {cajas.id_caja ? <ListarCarpetas /> : null}
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} justifyContent="flex-end"  sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}>
           <BusquedaCajas />
           <Grid item>
             <LoadingButton
