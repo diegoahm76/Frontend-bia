@@ -28,7 +28,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { /* controlModoTrasladoUnidadXEntidad, */ controlFaseEntrada } =
+  const { /* controlModoTrasladloadingConsultaT026oUnidadXEntidad, */ controlFaseEntrada } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -37,13 +37,13 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     use_u_x_entidad();
 
   //* context necesario
-  const { setloadingConsultaT026, handleGridActualANuevo } = useContext(
+  const { /* setloadingConsultaT026,  */ handleGridActualANuevo } = useContext(
     ContextUnidadxEntidad
   );
 
   useEffect(() => {
     console.log('use_u_x_entidad');
-    void consultarTablaTemporal(setloadingConsultaT026).then(
+    void consultarTablaTemporal().then(
       (resTablaTemporal: any) => {
         console.log(resTablaTemporal);
 

@@ -13,6 +13,7 @@ import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import {
+  consultarTablaTemporal,
   get_organigrama_acual,
   get_organigrama_anterior
 } from '../../toolkit/UxE_thunks/UxE_thunks';
@@ -55,30 +56,43 @@ export const AnteriorAActual: FC = (): JSX.Element => {
 
   // ? useeffect principal para las operaciones del módulo
   useEffect(() => {
-    void get_organigrama_anterior(navigate).then((res) => {
-      setOrganigramaAnterior(
-        res?.map((item: any) => ({
-          label: item?.nombre,
-          value: item?.id_organigrama
-        }))
-      );
-    });
-
-    const obtenerOrganigramas = async (): Promise<any> => {
-      const organigramasActuales = await get_organigrama_acual(navigate);
-      console.log('res', organigramasActuales);
+    //* funcion que me permite obtener el organigrama que se encuentra como actual dentro del sistema
+    const obtenerOrganigramaActual = async (): Promise<any> => {
+      const organigramaActual = await get_organigrama_acual(navigate);
       setOrganigramaActual(
-        organigramasActuales?.map((item: any) => ({
+        organigramaActual?.map((item: any) => ({
           label: item?.nombre,
           value: item?.id_organigrama
         }))
       );
 
-      /*  const organigramasDisponibles = await getOrganigramasDispobibles();
-      setOrganigramasDisponibles(filtrarOrganigramas(organigramasDisponibles)); */
-    };
+      return organigramaActual;
 
-    void obtenerOrganigramas();
+      // ! debo entrar a consultar dos cosas necesariamente (la tabla temporal y el registro de personas sin actualizar)
+
+      // ? necesariamente se debe entrar a comparar la data que retornan esos dos servicios para hacer una especie de merge entre la información de ambos, donde la data que trae la tabla temporal será la prioridad y en consecuencia si algunos de los datos se repite en la T026 y en la lista de personas sin actualizar se debe dejar el dato que esté presente en la T026 (tabla temporal)
+    };
+    //* obtengo la infomración del organigrama anterior
+    void get_organigrama_anterior(navigate).then((infoOrganigramaAnterior) => {
+      setOrganigramaAnterior(
+        infoOrganigramaAnterior?.map((item: any) => ({
+          label: item?.nombre,
+          value: item?.id_organigrama
+        }))
+      );
+
+      // ! en consecuencia obtengo los datos del organigrama actual dentro del sistema
+      // !
+      void obtenerOrganigramaActual().then((infoOrganigramaActual) => {
+        //* luego de haber obtenido el organigrama actual y el organigrama actual debo realizar la consulta de la tabal temporal y de la lista de las personas que en teoría habían quedado sin actualizarse, si no hay personas en ninguna de las dos listas la ídea es mostrar un alerta en la que se mencione que no se encuentran personas disponibles en este momento para realizar el traslado masivo necesario
+
+        // ? se realiza la consulta a la tabla temporal, si la tabla temporal no trae datos se dejan solo los datos de la lista de personas sin actualizar y viceversa
+        void consultarTablaTemporal()
+
+        console.log('info organigrama anterior', infoOrganigramaAnterior);
+        console.log('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
+      });
+    });
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
