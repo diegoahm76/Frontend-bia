@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
@@ -13,14 +14,16 @@ import {
 import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SaveIcon from '@mui/icons-material/Save';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { Controller } from 'react-hook-form';
 import { DataContext } from '../context/context/context';
 // import Select from 'react-select';
 import { useRadicadosHook } from '../hooks/useRadicadosHook';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
+import { AñosCerrados } from '../components/AñosCerrados';
 
 export const Actual: React.FC = () => {
   const {
@@ -34,22 +37,79 @@ export const Actual: React.FC = () => {
     formattedDate,
     // * onSubmit
     onSubmit_radicados,
+    onSubmit_radicados_update,
+    is_saving,
     // * datos usuario
     datos,
   } = useRadicadosHook();
-  const { tipos_radicado_selected, fetch_data_tipos_radicado_selected } =
-    useContext(DataContext);
+
+  const {
+    tipos_radicado_selected,
+    data_consecutivo,
+    fetch_data_tipos_radicado_selected,
+    fetch_data_consecutivo,
+  } = useContext(DataContext);
+
+  const [tipos_radicado, set_tipos_radicado] = useState<string>('');
+  const [id_radicado, set_id_radicado] = useState<number>(0);
+  const [open_dialog, set_open_dialog] = useState<boolean>(false);
 
   useEffect(() => {
     void fetch_data_tipos_radicado_selected();
-    reset_radicados({
-      agno_radicado: currentYear,
-      cod_tipo_radicado: '',
-      prefijo_consecutivo: '',
-      consecutivo_inicial: 1,
-      cantidad_digitos: 0,
-    });
+    reset_radicados(
+      {
+        agno_radicado: currentYear,
+        cod_tipo_radicado: '',
+        prefijo_consecutivo: '',
+        consecutivo_inicial: '1',
+        cantidad_digitos: '0',
+      },
+      {
+        keepErrors: true, // Mantener los errores después de resetear el formulario
+        keepDirty: true, // Mantener el estado "dirty" después de resetear el formulario
+        keepIsSubmitted: false, // Establecer el estado "isSubmitted" a false después de resetear el formulario
+        keepTouched: false, // Establecer el estado "touched" a false después de resetear el formulario
+        keepIsValid: false, // Establecer el estado "isValid" a false después de resetear el formulario
+      }
+    );
   }, []);
+
+  useEffect(() => {
+    if (tipos_radicado !== '') {
+      void fetch_data_consecutivo(currentYear, tipos_radicado);
+    }
+  }, [tipos_radicado]);
+
+  useEffect(() => {
+    if (data_consecutivo) {
+      set_id_radicado(data_consecutivo?.id_config_tipo_radicado_agno);
+      reset_radicados({
+        agno_radicado: currentYear,
+        implementar: data_consecutivo?.implementar,
+        cod_tipo_radicado: data_watch_radicados?.cod_tipo_radicado,
+        prefijo_consecutivo: data_consecutivo?.prefijo_consecutivo,
+        consecutivo_inicial: data_consecutivo?.consecutivo_inicial as any,
+        cantidad_digitos: data_consecutivo?.cantidad_digitos as any,
+      });
+    } else {
+      reset_radicados(
+        {
+          agno_radicado: currentYear,
+          cod_tipo_radicado: '',
+          prefijo_consecutivo: '',
+          consecutivo_inicial: '1',
+          cantidad_digitos: '0',
+        },
+        {
+          keepErrors: true, // Mantener los errores después de resetear el formulario
+          keepDirty: true, // Mantener el estado "dirty" después de resetear el formulario
+          keepIsSubmitted: false, // Establecer el estado "isSubmitted" a false después de resetear el formulario
+          keepTouched: false, // Establecer el estado "touched" a false después de resetear el formulario
+          keepIsValid: false, // Establecer el estado "isValid" a false después de resetear el formulario
+        }
+      );
+    }
+  }, [data_consecutivo]);
 
   return (
     <>
@@ -57,7 +117,11 @@ export const Actual: React.FC = () => {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          void onSubmit_radicados();
+          if (!data_consecutivo) {
+            void onSubmit_radicados();
+          } else {
+            void onSubmit_radicados_update(id_radicado as any);
+          }
         }}
       >
         <Grid
@@ -86,7 +150,7 @@ export const Actual: React.FC = () => {
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Año radicado"
-                  placeholder="Año radicado"
+                  // placeholder="Año radicado"
                   size="small"
                   margin="dense"
                   disabled={true}
@@ -112,8 +176,8 @@ export const Actual: React.FC = () => {
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
-                  label="Depósito de archivo"
-                  placeholder="Depósito de archivo"
+                  label="Tipo de radicado"
+                  // placeholder="Depósito de archivo"
                   select
                   size="small"
                   margin="dense"
@@ -121,7 +185,10 @@ export const Actual: React.FC = () => {
                   fullWidth
                   required={true}
                   value={value}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    onChange(e.target.value);
+                    set_tipos_radicado(e.target.value);
+                  }}
                   error={!!errors_radicados.cod_tipo_radicado}
                   helperText={
                     errors_radicados.cod_tipo_radicado
@@ -230,7 +297,7 @@ export const Actual: React.FC = () => {
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Asignar prefijo"
-                  placeholder="Asignar prefijo"
+                  // placeholder="Asignar prefijo"
                   size="small"
                   margin="dense"
                   disabled={false}
@@ -253,6 +320,7 @@ export const Actual: React.FC = () => {
             <Controller
               name="consecutivo_inicial"
               control={control_radicados}
+              defaultValue="1"
               rules={{
                 required: data_watch_radicados.implementar
                   ? 'Este campo es requerido'
@@ -261,8 +329,8 @@ export const Actual: React.FC = () => {
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Valor inicial del consecutivo"
-                  placeholder="Valor inicial del consecutivo"
-                  type="number"
+                  // placeholder="Valor inicial del consecutivo"
+                  // type="number"
                   size="small"
                   margin="dense"
                   disabled={false}
@@ -284,6 +352,7 @@ export const Actual: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <Controller
               name="cantidad_digitos"
+              defaultValue="0"
               control={control_radicados}
               rules={{
                 required: data_watch_radicados.implementar
@@ -293,8 +362,8 @@ export const Actual: React.FC = () => {
               render={({ field: { onChange, value } }) => (
                 <TextField
                   label="Cantidad de dígitos"
-                  placeholder="Cantidad de dígitos"
-                  type="number"
+                  // placeholder="Cantidad de dígitos"
+                  // type="number"
                   size="small"
                   margin="dense"
                   disabled={false}
@@ -316,7 +385,7 @@ export const Actual: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Fecha de configuración"
-              placeholder="Fecha de configuración"
+              // placeholder="Fecha de configuración"
               size="small"
               margin="dense"
               disabled={true}
@@ -360,13 +429,42 @@ export const Actual: React.FC = () => {
             <Grid item>
               <LoadingButton
                 variant="outlined"
-                color="primary"
+                color="warning"
                 loading={false}
                 disabled={false}
+                startIcon={<RemoveRedEyeIcon />}
+                onClick={() => {
+                  set_open_dialog(true);
+                }}
+              >
+                Consultar años cerrados
+              </LoadingButton>
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                variant="outlined"
+                color="primary"
+                loading={false}
+                disabled={!!data_consecutivo}
                 startIcon={<CleaningServicesIcon />}
-                // onClick={() => {
-                //   limpiar_formulario();
-                // }}
+                onClick={() => {
+                  reset_radicados(
+                    {
+                      agno_radicado: currentYear,
+                      cod_tipo_radicado: '',
+                      prefijo_consecutivo: '',
+                      consecutivo_inicial: '1',
+                      cantidad_digitos: '0',
+                    },
+                    {
+                      keepErrors: true, // Mantener los errores después de resetear el formulario
+                      keepDirty: true, // Mantener el estado "dirty" después de resetear el formulario
+                      keepIsSubmitted: false, // Establecer el estado "isSubmitted" a false después de resetear el formulario
+                      keepTouched: false, // Establecer el estado "touched" a false después de resetear el formulario
+                      keepIsValid: false, // Establecer el estado "isValid" a false después de resetear el formulario
+                    }
+                  );
+                }}
               >
                 Limpiar
               </LoadingButton>
@@ -376,13 +474,12 @@ export const Actual: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                loading={false}
-                disabled={false}
+                loading={is_saving}
+                disabled={is_saving}
                 startIcon={<SaveIcon />}
               >
-                {/* {mode_estante.editar ? 'Actualizar' : 'Guardar'} */}
-                Guardar
-              </LoadingButton>
+                {!data_consecutivo ? 'Guardar' : 'Actualizar'}
+              </LoadingButton>{' '}
             </Grid>{' '}
             <Grid item>
               <ButtonSalir />
@@ -390,6 +487,10 @@ export const Actual: React.FC = () => {
           </Grid>
         </Grid>
       </form>
+      <AñosCerrados
+        open_dialog={open_dialog}
+        set_open_dialog={set_open_dialog}
+      />
     </>
   );
 };
