@@ -10,7 +10,9 @@ const initialState: SliceTypeInterface = {
 
 
   //* --- control mode traslado unidad x entidad --- *//
-  controlModoTrasladoUnidadXEntidad: 'modo_entrada_sin_validaciones',
+
+  // ? si causa algún error el cambio volver a este valor : modo_entrada_sin_validaciones
+  controlModoTrasladoUnidadXEntidad: '',
 
   //* ---- validacion de fase de entrada --- *//
   controlFaseEntrada: 1,

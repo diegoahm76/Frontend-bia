@@ -14,18 +14,25 @@ import { containerStyles } from '../../../../../../../gestorDocumental/tca/scree
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import {
   consultarTablaTemporal,
+  getPersonasSinActualizarOrganigramaAnteriorAlActual,
+  getUnidadesOrganizacionalesOrganigramaActual,
   get_organigrama_acual,
   get_organigrama_anterior
 } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { GridAnteriorAActual2 } from '../../components/GridAnteriorANuevo2/GridAnterioAActual2';
+import { eliminarObjetosDuplicadosPorId } from '../../functions/functions';
+import { useAppDispatch } from '../../../../../../../../hooks';
+import { setGridAnteriorAActual } from '../../toolkit/UxE_slice/UxE_slice';
+import Swal from 'sweetalert2';
 
 export const AnteriorAActual: FC = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
 
   //* dispatch declaration
+  const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
   //! use_u_x_entidad hooks
@@ -87,10 +94,76 @@ export const AnteriorAActual: FC = (): JSX.Element => {
         //* luego de haber obtenido el organigrama actual y el organigrama actual debo realizar la consulta de la tabal temporal y de la lista de las personas que en teoría habían quedado sin actualizarse, si no hay personas en ninguna de las dos listas la ídea es mostrar un alerta en la que se mencione que no se encuentran personas disponibles en este momento para realizar el traslado masivo necesario
 
         // ? se realiza la consulta a la tabla temporal, si la tabla temporal no trae datos se dejan solo los datos de la lista de personas sin actualizar y viceversa
-        void consultarTablaTemporal()
+        void consultarTablaTemporal().then((informacionTablaTemporal) => {
+          /* La informacionTablaTemporal de la tabla temporal siempre va a ser un objeto compuesto de tres elementos:
+            data - array de datos que puedan estar presentes en la tabla temporal
+            success - booleano que me indica si la consulta fue exitosa o no
+            detail - mensaje de error en caso de que la consulta no haya sido exitosa
+          */
+          void getPersonasSinActualizarOrganigramaAnteriorAlActual().then(
+            (personasSinActualizar) => {
+              /* La información de personas sin actualizar siempre va a serun objeto compuesto de 3 propiedades:
+                -data - array de datos que puedan estar presentes en la lista de personas sin actualizar
+                -success - booleano que me indica si la consulta fue exitosa o no
+                -detail - mensaje de error en caso de que la consulta no haya sido exitosa
+              */
+              console.log('data tabla temporal', informacionTablaTemporal);
+              console.log(
+                'personas sin actualizar organigrama anterior',
+                personasSinActualizar
+              );
 
-        console.log('info organigrama anterior', infoOrganigramaAnterior);
-        console.log('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
+              // ? se deben hacer un merge de los datos de la tabla temporal y de la lista de personas sin actualizar, eliminando los elemenetos repetidos (deben prevalecer los de la tabla temporal) en el caso de que se repitan los datosen ambas listas
+              void getUnidadesOrganizacionalesOrganigramaActual().then(
+                (unidadesOrganizacionalesOrgActual) => {
+                  // console.log(unidadesOrganizacionalesOrgActual);
+                  const arraySinRepetidos = [
+                    ...informacionTablaTemporal?.data,
+                    ...personasSinActualizar?.data
+                  ];
+
+                  const elementosNoRepetidos =
+                    eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+
+                  if (elementosNoRepetidos.length === 0) {
+                    void Swal.fire({
+                      icon: 'warning',
+                      title: 'NO HAY PERSONAS PARA TRASLADAR',
+                      text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
+                      showCloseButton: false,
+                      allowOutsideClick: false,
+                      showCancelButton: true,
+                      showConfirmButton: true,
+                      cancelButtonText: 'Reiniciar módulo',
+                      confirmButtonText: 'Ir a administrador de personas',
+                      confirmButtonColor: '#042F4A',
+
+                      allowEscapeKey: false
+                    }).then((result: any) => {
+                      if (result.isConfirmed) {
+                        navigate('/app/transversal/administracion_personas');
+                      } else {
+                        window.location.reload();
+                      }
+                    });
+                  } else {
+                    const dataMixed = elementosNoRepetidos?.map((item: any) => {
+                      return {
+                        ...item,
+                        unidadesDisponiblesParaTraslado:
+                          unidadesOrganizacionalesOrgActual?.data
+                      };
+                    });
+
+                    dispatch(setGridAnteriorAActual(dataMixed));
+                  }
+                }
+              );
+            }
+          );
+        });
+        // console.log('info organigrama anterior', infoOrganigramaAnterior);
+        // console.log('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
       });
     });
   }, []);

@@ -10,7 +10,7 @@ export const consultarTablaTemporal = async (/* setLoading: any */): Promise<any
   try {
     const url = `transversal/organigrama/listado-registro-temporal/`;
     const { data } = await api.get(url);
-    console.log(data);
+    // console.log(data);
     //* revisar ese data.data luego, ya que cuando si existen registros retorna una lista y otros valores muy útiles, pero cuando no, retorna un objeto con un mensaje
     return {
       data: data?.data,
@@ -185,5 +185,18 @@ export const putCrearRegistrosTemporalesT026 = async (
     console.log(error);
   } finally {
     setLoadingButton(false);
+  }
+};
+
+
+// ! get unidades organizacionales de organigrama actual
+export const getUnidadesOrganizacionalesOrganigramaActual = async (): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/unidades/get-list/organigrama-actual/`;
+    const { data } = await api.get(url);
+    console.log('unidades organizacionales de organigrama actual', data)
+    return data;
+  } catch (error: any) {
+    console.log(error);
   }
 };

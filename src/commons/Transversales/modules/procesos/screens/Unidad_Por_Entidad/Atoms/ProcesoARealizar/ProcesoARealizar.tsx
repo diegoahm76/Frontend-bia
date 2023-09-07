@@ -51,11 +51,13 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
 
         //* el estado de esta variable para la validación siempre será === 0
         if (resTablaTemporal.data.length === 0) {
-          dispatch(
+          // ? se causa algún error el cambio, volver a poner el dispatch
+         /* dispatch(
             setControlModoTrasladoUnidadXEntidad(
               'modo_entrada_sin_validaciones'
             )
-          );
+          ); */
+          console.log('jiji siuuu')
           dispatch(setControlFaseEntrada(1));
           //* se resetean resultados de la tabla temporal por si habian quedado rezagos
           dispatch(setAsignacionConsultaTablaTemporal(null));

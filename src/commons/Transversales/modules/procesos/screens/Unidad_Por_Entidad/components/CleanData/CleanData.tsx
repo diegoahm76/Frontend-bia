@@ -65,6 +65,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
     console.log('procediendo a cambio masivo UxE');
   };
 
+  if(!controlModoTrasladoUnidadXEntidad) return (<></>)
+
   return (
     <>
       <Grid container sx={containerStyles}>
