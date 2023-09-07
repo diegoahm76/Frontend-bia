@@ -11,6 +11,7 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
+import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
 // import { Suspense } from 'react';
 // import { Loader } from '../../../utils/Loader/Loader';
 
@@ -62,6 +63,11 @@ const routes = [
     path: 'alertas_gestor/',
     name: 'alertas_gestor',
     component: () => <Alertas_gestor_Routes />,
+  },
+  {
+    path: 'configuracion_pqr/',
+    name: 'configuracion_pqr',
+    component: () => <PQR_Configuracion_Routes />,
   },
 ];
 

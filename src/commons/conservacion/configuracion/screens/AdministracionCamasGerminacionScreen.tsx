@@ -9,6 +9,7 @@ import {
   IconButton,
   Avatar,
   Divider,
+  ButtonGroup,
 } from '@mui/material';
 import { Title } from '../../../../components';
 import {
@@ -38,6 +39,8 @@ import ArticleIcon from '@mui/icons-material/Article';
 import CrearCamaGerminacionDialogForm from '../componentes/CrearCamaGerminacionDialogForm';
 import AutocompleteVivero from '../../componentes/AutocompleteVivero';
 import Limpiar from '../../componentes/Limpiar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministracionCamasGerminacionScreen(): JSX.Element {
@@ -292,6 +295,11 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                 />
 
                 <Box sx={{ width: '100%' }}>
+                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              
+              {download_xls({ nurseries: aux_germination_beds, columns })}
+              {download_pdf({ nurseries: aux_germination_beds, columns ,title: 'Camas de germinacion', })}
+            </ButtonGroup>
                   <DataGrid
                     density="compact"
                     autoHeight
