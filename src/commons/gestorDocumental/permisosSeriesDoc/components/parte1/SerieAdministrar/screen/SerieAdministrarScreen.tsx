@@ -6,6 +6,7 @@ import { containerStyles } from '../../../../../tca/screens/utils/constants/cons
 import { ModalSeleccionCCDPSD } from '../../ModalSeleccionCCDPSD/ModalSeleccionCCDPSD';
 import { Title } from '../../../../../../../components';
 import { BusquedaCCDPSD } from '../components/BusquedaCCDPSD/BusquedaCCDPSD';
+import { SeleccionSeccion } from '../components/SeleccionSeccion/SeleccionSeccion';
 
 export const SerieAdministrar: FC<any> = (): JSX.Element => {
   return (
@@ -20,29 +21,22 @@ export const SerieAdministrar: FC<any> = (): JSX.Element => {
             justifyContent: 'center'
           }}
         >
+          {/* cajas de texto en las que se asignan los valores de la búsqueda de los ccd (nombre y versión CCD) */}
+
           <BusquedaCCDPSD />
         </Grid>
 
-        <Grid container spacing={4}>
-          <BusquedaCCDPSD />
-        </Grid>
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            justifyContent: 'center'
+          }}
+        >
+          {/* aqui me encargo de elegir la respectiva sección o subsección sobre la cual voy a realizar la búsqueda de las series y subseries asociadas */}
 
-        {/*  <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mb: '20px', mt: '20px' }}
-            >
-              <Button
-                color="primary"
-                variant="contained"
-                startIcon={<SearchIcon />}
-                onClick={openModalBusquedaTca}
-              >
-                BUSCAR
-              </Button>
-            </Stack> */}
-        {/* </Grid> */}
+          <SeleccionSeccion />
+        </Grid>
       </Grid>
 
       {/* se define modal de búsqueda de los CCD para la administración de la serie */}

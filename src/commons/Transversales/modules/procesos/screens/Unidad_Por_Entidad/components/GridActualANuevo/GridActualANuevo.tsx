@@ -75,7 +75,6 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
               menuPortalTarget={document.body}
               options={params?.row?.unidadesDisponiblesParaTraslado?.map(
                 (unidad: any) => ({
-                  id_organigrama: unidad.id_organigrama,
                   value: unidad.id_unidad_organizacional,
                   label: unidad.nombre,
                   idPersona: params.row.id_persona

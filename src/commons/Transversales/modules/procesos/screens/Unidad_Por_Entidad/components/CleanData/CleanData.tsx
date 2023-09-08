@@ -13,7 +13,10 @@ import ForwardIcon from '@mui/icons-material/Forward';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
-import { putCrearRegistrosTemporalesT026 } from '../../toolkit/UxE_thunks/UxE_thunks';
+import {
+  putCrearRegistrosTemporalesT026,
+  putTrasladoMasivoUnidadesPorEntidad
+} from '../../toolkit/UxE_thunks/UxE_thunks';
 import { LoadingButton } from '@mui/lab';
 
 export const CleanData: FC<any> = (): JSX.Element => {
@@ -27,7 +30,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
     unidadesSeleccionadas,
     //* unidades seleccionadas traslado anterior a actual
     unidadesSeleccionadasAnteriorAActual,
-    organigrama_current
+    organigrama_current,
+    gridAnteriorAActual
     /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
 
@@ -65,37 +69,47 @@ export const CleanData: FC<any> = (): JSX.Element => {
   };
 
   const procederACambioMasivoUxE = (): void => {
-    // console.log('procediendo a cambio masivo UxE');
-    console.log(
-      'unidades seleccionadas PROCEDER traslado masivo',
-      unidadesSeleccionadasAnteriorAActual
-    );
-
     const unidadesSeleccionadasArray =
-    unidadesSeleccionadasAnteriorAActual &&
+      unidadesSeleccionadasAnteriorAActual &&
       Object?.entries(unidadesSeleccionadasAnteriorAActual)
         .filter(
           // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
           ([key, value]) => {
             return value
-              ? value?.idPersona && value?.label && value?.value
+              ? value?.idPersona && value?.label && value?.value && value?.data
               : null;
           }
         )
         .map(([key, value]) => ({
+          // data: value?.data,
           id_persona: value?.idPersona,
-          // label: value.label,
+          nombre_nueva_unidad_organizacional: value?.label,
           id_nueva_unidad_organizacional: value?.value
         }));
 
-    console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
+    const arraysComparados = unidadesSeleccionadasArray?.map((unidad) => {
+      const unidadEncontrada = gridAnteriorAActual?.filter(
+        (unidadGrid) => unidadGrid.id_persona === unidad.id_persona
+      );
+      return {
+        ...unidad,
+        nombre_completo: unidadEncontrada[0]?.nombre_completo,
+        id_unidad_organizacional_actual:
+          unidadEncontrada[0]?.id_unidad_organizacional_actual,
+        nombre_unidad_organizacional_actual:
+          unidadEncontrada[0]?.nombre_unidad_organizacional_actual,
+        es_unidad_organizacional_actual:
+          unidadEncontrada[0]?.es_unidad_organizacional_actual
+      };
+    });
 
-    // ? se debe reemplazar por la función de proceder con los cambios masivos
-    /*  void putCrearRegistrosTemporalesT026(
-    organigrama_current,
-    unidadesSeleccionadasArray,
-    setLoadingButton
-  ); */
+    console.log('newArray', arraysComparados);
+
+    // ? el servicio el cual se manda a llamar cuando se ejecuta la función está fallando en el backend, se debe revisar
+    void putTrasladoMasivoUnidadesPorEntidad(
+      arraysComparados,
+      setLoadingButton
+    );
   };
 
   if (!controlModoTrasladoUnidadXEntidad) return <></>;

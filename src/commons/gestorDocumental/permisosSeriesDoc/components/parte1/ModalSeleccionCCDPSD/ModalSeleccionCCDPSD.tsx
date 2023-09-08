@@ -45,10 +45,15 @@ import { usePSD } from '../../../hook/usePSD';
 //* select icon
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { get_busqueda_ccds_psd } from '../../../toolkit/thunks/psdThunks';
-import { set_busqueda_ccds_action } from '../../../toolkit/slice/PSDSlice';
+import {
+  set_busqueda_ccds_action,
+  set_ccd_current_busqueda_action
+} from '../../../toolkit/slice/PSDSlice';
 
 export const ModalSeleccionCCDPSD = (): JSX.Element => {
+  //* dispatch declaration
   const dispatch = useAppDispatch();
+  //* context declaration
   const {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
@@ -107,22 +112,9 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
             <IconButton
               onClick={() => {
                 console.log(' CCD seleccionado', params.row);
-                // console.log('params para ver ccd en el icono del ojito', params);
-                /*  void dispatch(
-                  get_classification_ccds_service(
-                    activateLoadingButtonBusquedaCCD,
-                    desactivateLoadingButtonBusquedaCCD,
-                    params.row.nombre,
-                    params.row.version,
-                    params.row.id_ccd
-                  )
-                );
 
-                openModalBusquedaCreacionCCD();
-                // dispatch(get_assignments_service(params.row.id_ccd));
-                // console.log('params para ver ccd en el icono del ojito', params);
-                // dispatch(get_ccd_current(params.row.id_ccd));
-                set_is_modal_active(false); */
+                // ! se selecciona el ccd para establecerlo como "actual" dentro del funcionamiento de la app
+                dispatch(set_ccd_current_busqueda_action(params.row));
                 handleSeleccionCCD_PSD(false);
               }}
             >

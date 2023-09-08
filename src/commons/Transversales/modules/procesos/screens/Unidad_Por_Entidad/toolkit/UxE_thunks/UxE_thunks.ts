@@ -200,3 +200,25 @@ export const getUnidadesOrganizacionalesOrganigramaActual = async (): Promise<an
     console.log(error);
   }
 };
+
+// ! proceder a realizar el traslado masivo de unidar por entidad
+export const putTrasladoMasivoUnidadesPorEntidad = async (
+  data_traslado_masivo: any,
+  setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<any> => {
+  try {
+    setLoadingButton(true);
+
+    console.log(data_traslado_masivo)
+   // const url = `transversal/organigrama/finalizar-actualizacion-unidad/`;
+   // const { data } = await api.put(url, data_traslado_masivo);
+   // console.log('data retorno creación de tabla temporal', data);
+   // return data;
+  } catch (error: any) {
+    console.log(error);
+  } finally {
+    setLoadingButton(false);
+  }
+}
+
+
