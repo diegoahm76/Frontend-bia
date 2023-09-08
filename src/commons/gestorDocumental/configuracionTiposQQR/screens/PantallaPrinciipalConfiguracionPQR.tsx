@@ -17,6 +17,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../../api/axios';
 import { confirmarAccion } from '../../deposito/utils/function';
+import { control_error, control_success } from '../../../seguridad/components/SucursalEntidad/utils/control_error_or_success';
+
 
 interface TipoPQR {
   cod_tipo_pqr: string;
@@ -32,7 +34,6 @@ const data: TipoPQR[] = [
     nombre: '',
     tiempo_respuesta_en_dias: null,
   },
-  // Otros objetos TipoPQR aquí...
 ];
 
 export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
@@ -41,8 +42,9 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<string>('');
   const [consulta_letra, set_consulta_letra] = useState<TipoPQR[]>(data);
-
-  const [tiempoRespuesta, setTiempoRespuesta] = useState(null); // Nuevo estado para el valor editable
+  const [tiempoRespuesta, setTiempoRespuesta] = useState<number | null>(null); // Nuevo estado para el valor editable
+  const [activador, set_activador] = useState(false);
+  const [tipos_pqer, set_tipos_pqer] = useState<any>(null);
 
   const fetch_data_get = async (): Promise<void> => {
     try {
@@ -57,6 +59,13 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
   const fetch_data_get_buscar_letra = async (): Promise<void> => {
     try {
+      // Verificar si PQR_seleccionado es un string vacío
+      if (PQR_seleccionado.trim() === '') {
+        set_loading(false);
+        // PQR_seleccionado es un string vacío, no ejecutar el fetch
+        return;
+      }
+
       const url = `/gestor/pqr/tipos_pqr/get/${PQR_seleccionado}/`;
       const res: any = await api.get(url);
       const dato_consulta_letra: any = res.data.data;
@@ -70,68 +79,93 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       console.error(error);
     }
   };
+
   const primerElementoConsulta = consulta_letra[0];
   const { cod_tipo_pqr } = primerElementoConsulta;
 
-  const [tipos_pqer, set_tipos_pqer] = useState<any>(null);
-  console.log(tipos_pqer);
-
   const fetch_data_get_buscar_letraaaa = async (): Promise<void> => {
     try {
+      if (tiempoRespuesta === null || tiempoRespuesta <= 0) {
+        // tiempoRespuesta no cumple con las condiciones, mostrar un mensaje de error o manejarlo según tus necesidades
+        control_error('El valor de tiempo de respuesta no es válido');
+        return; // Salir de la función sin hacer la solicitud PUT
+      }
+  
       const updatedDataEntidad: TipoPQR = {
         ...primerElementoConsulta,
         tiempo_respuesta_en_dias: tiempoRespuesta,
       };
-
+  
       const payload = {
         ...updatedDataEntidad,
       };
-
-      const response = await api.put('gestor/pqr/tipos_pqr/update/D/', payload);
-
-      if (response.status === 200) {
-        // La solicitud PUT fue exitosa
+  
+      const response = await api.put(
+        `gestor/pqr/tipos_pqr/update/${PQR_seleccionado}/`,
+        payload
+      );
+  
         const updatedEmail = response.data.tiempo_respuesta_en_dias;
         const updatedDataEntidadWithUpdatedEmail: TipoPQR = {
           ...updatedDataEntidad,
           tiempo_respuesta_en_dias: updatedEmail,
         };
         set_tipos_pqer(updatedDataEntidadWithUpdatedEmail);
-        // Hacer algo con updatedDataEntidadWithUpdatedEmail si es necesario
-      } else {
-        // Manejar el caso en que la respuesta no fue exitosa
-        console.error(
-          'La solicitud PUT no fue exitosa. Código de estado:',
-          response.status
-        );
-        // Puedes mostrar un mensaje de error al usuario si es apropiado
-      }
-    } catch (error) {
-      // Manejar errores si es necesario
-      console.error('Error al actualizar los datos:', error);
+        control_success('Tiempo de respuesta actualizado correctamente');
+       
+        set_loading(false);
+    } catch (error:any) {
+      control_error(error.response.data.detail);
     }
+    set_loading(false);
+    set_activador(true);
   };
+  
 
   const handleTiempoRespuestaChange = (event: any): void => {
     setTiempoRespuesta(event.target.value); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
+  const handleTiempoRespuestaChangeee = (event: any): void => {
+    setTiempoRespuesta(0); // Actualizar el estado con el nuevo valor ingresado por el usuario
+  };
 
-  const handleChangeee = (): void => {
+  const handleChange_guardar = (): void => {
     fetch_data_get_buscar_letraaaa().catch((error) => {
       console.error(error);
     });
-
     set_loading(true);
   };
 
   const handleLimpiarCampos = (): void => {
+    set_consulta_letra(data);
+    setTiempoRespuesta(null);
+    set_PQR_seleccionado('');
     set_loading(false);
+    handleLimpiarCamposss();
   };
+
+  const handleLimpiarCamposss = (): void => {
+    handleTiempoRespuestaChangeee(0);
+  };
+
+  useEffect(() => {
+    fetch_data_get().catch((error) => {
+      console.error(error);
+    });
+  }, [activador]);
+
+  useEffect(() => {
+    fetch_data_get_buscar_letra().catch((error) => {
+      console.error(error);
+    });
+  }, [activador]);
+
   useEffect(() => {
     fetch_data_get_buscar_letra().catch((error) => {
       console.error(error);
     });
   }, [PQR_seleccionado]);
+
   useEffect(() => {
     fetch_data_get().catch((error) => {
       console.error(error);
@@ -165,7 +199,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
           <Grid item xs={12} sm={4} md={2}>
             <h5>Registrado desde:</h5>
           </Grid>
-          <Grid item xs={12} sm={5} md={4.5} lg={3} xl={2}>
+          <Grid item xs={12} sm={5}>
             <FormControl fullWidth>
               <Select
                 labelId="demo-simple-select-label"
@@ -174,8 +208,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
                 label="PQR_seleccionado"
                 onChange={(event): any => {
                   set_PQR_seleccionado(event.target.value);
-                }}
-              >
+                }} >
                 {tipos_pqr?.map((item: any, index: number) => (
                   <MenuItem key={index} value={item.value}>
                     {item.label}
@@ -190,7 +223,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
           <Grid item xs={12} sm={4} md={2}>
             <h5>Codigo de PQR:</h5>
           </Grid>
-          <Grid item sm={3}>
+          <Grid item xs={12} sm={3}>
             <TextField
               variant="outlined"
               size="small"
@@ -205,16 +238,18 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
             <h5>Tiempo de respuesta:</h5>
-            <h1>{tiempoRespuesta}</h1>
           </Grid>
-          <Grid item sm={4}>
+          <Grid item xs={12} sm={3}>
             <TextField
               variant="outlined"
               size="small"
               fullWidth
-              name="email_sucursal"
-              value={tiempoRespuesta} // Usar el estado para el valor editable
-              onChange={handleTiempoRespuestaChange} // Manejar cambios en el input
+              value={
+                tiempoRespuesta !== null && tiempoRespuesta !== 0
+                  ? tiempoRespuesta
+                  : ''
+              }
+              onChange={handleTiempoRespuestaChange}
               style={{ marginTop: 9, width: '95%' }}
             />
           </Grid>
@@ -241,7 +276,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
               color="success"
               onClick={() => {
                 void confirmarAccion(
-                  handleChangeee,
+                  handleChange_guardar,
                   '¿Estás seguro de realizar este proceso?'
                 );
               }}
