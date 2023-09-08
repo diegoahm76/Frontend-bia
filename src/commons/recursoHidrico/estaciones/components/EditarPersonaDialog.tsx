@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { Button, Dialog, DialogActions, DialogContent,   Divider, Grid, TextField } from '@mui/material';
@@ -68,8 +69,8 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       persona(estaciones_options.map((estacion: { value: number; }) => estacion.value))
       reset();
       // console.log("Id estacion", estaciones_options.map((estacion: { value: number; }) => estacion.value))
-    } catch (error) {
-      control_error(error);
+    } catch (error: any) {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   

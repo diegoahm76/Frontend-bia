@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { createContext } from 'react';
 import type { ValueProps } from '../../../../recursoHidrico/Instrumentos/interfaces/interface';
@@ -74,8 +75,14 @@ export const UserProvider = ({
   );
 
   const fetch_data_tipos_radicado_selected = async (): Promise<void> => {
-    const response = await get_tipos_radicado();
-    set_tipos_radicado_selected(response);
+    try {
+      const response = await get_tipos_radicado();
+      set_tipos_radicado_selected(response);
+    } catch (error: any) {
+      control_warning(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
   };
 
   const fetch_data_consecutivo = async (
@@ -86,7 +93,9 @@ export const UserProvider = ({
       const response = await get_datos_consecutivos(agno, condigo_consecutivo);
       set_data_consecutivo(response);
     } catch (error: any) {
-      control_warning(error.response.data.detail);
+      control_warning(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 
@@ -101,7 +110,9 @@ export const UserProvider = ({
       );
       set_rows_radicado(response);
     } catch (error: any) {
-      control_warning(error.response.data.detail);
+      control_warning(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 

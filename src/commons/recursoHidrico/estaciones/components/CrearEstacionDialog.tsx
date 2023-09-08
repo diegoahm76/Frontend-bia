@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   Box,
@@ -18,6 +19,7 @@ import { crear_estacion } from '../../requets/Request';
 import { municipios_meta } from '../interfaces/interfaces';
 import { Title } from '../../../../components/Title';
 import SaveIcon from '@mui/icons-material/Save';
+import { control_error } from '../../../../helpers';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -42,19 +44,23 @@ export const CrearEstacionDialog: React.FC<IProps> = ({
   } = useForm();
 
   const on_sumbit_estacion: SubmitHandler<FieldValues> = (data): void => {
-    const nueva_estacion = {
-      nombre_estacion: data.nombre_estacion,
-      cod_tipo_estacion: data.cod_tipo_estacion,
-      latitud: data.latitud,
-      longitud: data.longitud,
-      cod_municipio: data.cod_municipio,
-      indicaciones_ubicacion: data.indicaciones_ubicacion,
-    };
+    try {
+      const nueva_estacion = {
+        nombre_estacion: data.nombre_estacion,
+        cod_tipo_estacion: data.cod_tipo_estacion,
+        latitud: data.latitud,
+        longitud: data.longitud,
+        cod_municipio: data.cod_municipio,
+        indicaciones_ubicacion: data.indicaciones_ubicacion,
+      };
 
-    void crear_estacion(nueva_estacion);
-    set_is_modal_active(!is_modal_active);
-    void estacion();
-    reset();
+      void crear_estacion(nueva_estacion);
+      set_is_modal_active(!is_modal_active);
+      void estacion();
+      reset();
+    } catch (err: any) {
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
+    }
   };
 
   const tipo_estacion = [

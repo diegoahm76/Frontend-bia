@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button, Dialog, DialogActions, DialogContent,   Divider, Grid, InputAdornment, TextField } from '@mui/material';
 import type React from 'react';
@@ -70,8 +71,8 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       control_success('El parametro se actualizó correctamente')
       void parametros()
       reset()
-    } catch (error) {
-      control_error(error);
+    } catch (error: any) {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   return (
