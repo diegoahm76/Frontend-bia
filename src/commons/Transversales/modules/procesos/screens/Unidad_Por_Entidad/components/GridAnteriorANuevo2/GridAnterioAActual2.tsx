@@ -11,15 +11,14 @@ import {
 } from '../../../../../../../../hooks';
 // import Select from 'react-select';
 // import { setUnidadesSeleccionadas } from '../../toolkit/UxE_slice/UxE_slice';
-// import { Grid } from '@mui/material';
 // import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-// import { Loader } from '../../../../../../../../utils/Loader/Loader';
-// import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { colGridAntANuevo } from './columns/colGridAntANuevo';
 // import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 // import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import Select from 'react-select';
-import { Button, Tooltip } from '@mui/material';
+import { Grid, Button, Tooltip } from '@mui/material';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { setUnidadesSeleccionadasAnteriorAActual } from '../../toolkit/UxE_slice/UxE_slice';
 
@@ -39,7 +38,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
     dispatch(
       setUnidadesSeleccionadasAnteriorAActual({
         ...unidadesSeleccionadasAnteriorAActual,
-        [idPersona]: unidadesSeleccionadasAnteriorAActual
+        [idPersona]: unidadSeleccionada
       })
     );
   };
@@ -102,7 +101,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
               onChange={(selectedOption) => {
                 // console.log(params.row.id_persona, 'selectedOption');
                 console.log(selectedOption, 'selectedOption');
-                // onChange(params.row.id_persona, selectedOption);
+                onChange(params.row.id_persona, selectedOption);
               }}
               menuPortalTarget={document.body}
               options={params?.row?.unidadesDisponiblesParaTraslado?.map(
@@ -137,7 +136,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
               startIcon={<CleaningServicesIcon />}
               onClick={() => {
                 console.log('limpiando select');
-                // handleLimpiarSelect(params.row.id_persona);
+                handleLimpiarSelect(params.row.id_persona);
               }}
             />
           </Tooltip>
@@ -146,7 +145,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
     }
   ];
 
-  /*  if (gridAnteriorAActual.length === 0)
+  if (gridAnteriorAActual.length === 0)
     return (
       <Grid
         container
@@ -159,7 +158,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
       >
         <Loader altura={150} />
       </Grid>
-    ); */
+    );
 
   return (
     //* renderiza los datos necesarios para el traslado unidades organizacionales actuales a nuevas

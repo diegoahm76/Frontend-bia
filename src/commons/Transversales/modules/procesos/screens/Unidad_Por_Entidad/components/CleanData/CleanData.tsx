@@ -23,7 +23,10 @@ export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
   const {
     controlModoTrasladoUnidadXEntidad,
+    //* unidades seleccionadas traslado actual a nuevo
     unidadesSeleccionadas,
+    //* unidades seleccionadas traslado anterior a actual
+    unidadesSeleccionadasAnteriorAActual,
     organigrama_current
     /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
@@ -62,10 +65,40 @@ export const CleanData: FC<any> = (): JSX.Element => {
   };
 
   const procederACambioMasivoUxE = (): void => {
-    console.log('procediendo a cambio masivo UxE');
+    // console.log('procediendo a cambio masivo UxE');
+    console.log(
+      'unidades seleccionadas PROCEDER traslado masivo',
+      unidadesSeleccionadasAnteriorAActual
+    );
+
+    const unidadesSeleccionadasArray =
+    unidadesSeleccionadasAnteriorAActual &&
+      Object?.entries(unidadesSeleccionadasAnteriorAActual)
+        .filter(
+          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+          ([key, value]) => {
+            return value
+              ? value?.idPersona && value?.label && value?.value
+              : null;
+          }
+        )
+        .map(([key, value]) => ({
+          id_persona: value?.idPersona,
+          // label: value.label,
+          id_nueva_unidad_organizacional: value?.value
+        }));
+
+    console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
+
+    // ? se debe reemplazar por la función de proceder con los cambios masivos
+    /*  void putCrearRegistrosTemporalesT026(
+    organigrama_current,
+    unidadesSeleccionadasArray,
+    setLoadingButton
+  ); */
   };
 
-  if(!controlModoTrasladoUnidadXEntidad) return (<></>)
+  if (!controlModoTrasladoUnidadXEntidad) return <></>;
 
   return (
     <>

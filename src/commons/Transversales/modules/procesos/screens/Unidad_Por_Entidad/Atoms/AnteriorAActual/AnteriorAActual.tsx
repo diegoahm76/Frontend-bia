@@ -154,6 +154,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                           unidadesOrganizacionalesOrgActual?.data
                       };
                     });
+                    console.log(dataMixed);
 
                     dispatch(setGridAnteriorAActual(dataMixed));
                   }
