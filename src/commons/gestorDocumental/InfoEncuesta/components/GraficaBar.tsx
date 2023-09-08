@@ -55,7 +55,7 @@ export const GraficaBar: React.FC = () => {
     return (
         <>
             <>
-                <ReactApexChart options={chartData} series={series} type="bar" height={430} />
+                <ReactApexChart options={chartData} series={series} type="bar" height={330} />
             </>
         </>
     );

@@ -11,6 +11,7 @@ import { Line } from 'react-chartjs-2';
 import { GraficaBar } from "./GraficaBar";
 import { Graficapie } from "./Graficapie";
 import { GraficaArea } from "./GraficaArea";
+import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Datos: React.FC = () => {
@@ -52,25 +53,21 @@ export const Datos: React.FC = () => {
     ],
   };
 
-
+  const miEstilo = {
+    position: 'relative',
+    background: '#FAFAFA',
+    borderRadius: '15px',
+    p: '20px',
+    m: '10px 0 20px 0',
+    mb: '20px',
+    boxShadow: '0px 3px 6px #042F4A26',
+};
   return (
     <>
-
-
-
-
-
-
-
+ 
       <Grid container
         spacing={2} m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0', mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={miEstilo}
       >
         <Grid item xs={12}  >
 
@@ -96,20 +93,12 @@ export const Datos: React.FC = () => {
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0', mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={miEstilo}
       >
         <Grid item xs={12}  >
           <Title title="Datos generales  " />
         </Grid>
-
-
-
+ 
         <Grid item xs={12}  >
           <DataGrid
             density="compact"
@@ -124,20 +113,8 @@ export const Datos: React.FC = () => {
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0', mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-
-
-
-
-
-
+        sx={miEstilo}
+      > 
         <Grid item xs={12} marginTop={2} sm={6}>
           <Line data={chartData} /> {/* Renderiza la gráfica liena */}
         </Grid>
@@ -150,11 +127,7 @@ export const Datos: React.FC = () => {
         <Grid item xs={12} marginTop={4} sm={6}>
           <GraficaArea />           {/* Renderiza la gráfica area */}
         </Grid>
-
-
-
-
-
+ 
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
@@ -177,11 +150,12 @@ export const Datos: React.FC = () => {
             descargar
           </Button>
         </Grid>
-        <Grid item xs={12} sm={1.2}>
-          <Button color='error' fullWidth variant="contained"    >
-            salir
-          </Button>
+
+
+        <Grid item xs={12} sm={1}>
+          <ButtonSalir/> 
         </Grid>
+
 
       </Grid>
 

@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 import { Buscar } from "./Buscar";
 import { useNavigate } from "react-router-dom";
+import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalEntidadd: React.FC = () => {
 
@@ -63,17 +64,20 @@ export const SucursalEntidadd: React.FC = () => {
     set_is_buscar(true);
   };
   const navigate = useNavigate();
+  const miEstilo = {
+    position: 'relative',
+    background: '#FAFAFA',
+    borderRadius: '15px',
+    p: '20px',
+    m: '10px 0 20px 0',
+    mb: '20px',
+    boxShadow: '0px 3px 6px #042F4A26',
+};
   return (
     <>
       <Grid container
         spacing={2} m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0', mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={miEstilo}
       >
         <Title title="Encabezado" />
 
@@ -127,13 +131,7 @@ export const SucursalEntidadd: React.FC = () => {
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0', mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={miEstilo}
       >
 
         <Title title="Detalle - Pregunta" />
@@ -192,13 +190,7 @@ export const SucursalEntidadd: React.FC = () => {
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0', mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={miEstilo}
       >
         <Title title="Preguntas asociadas " />
         <Grid item xs={12}>
@@ -227,7 +219,7 @@ export const SucursalEntidadd: React.FC = () => {
 
 
         <Grid item xs={12} sm={1.2}>
-          <Button onClick={() => {navigate("/app/gestor_documental/encuesta_datos/datos")}}  fullWidth variant="outlined"    >
+          <Button onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
             informe
           </Button>
         </Grid>
@@ -251,16 +243,14 @@ export const SucursalEntidadd: React.FC = () => {
             buscar
           </Button>
         </Grid>
-        <Grid item xs={12} sm={1.2}>
-          <Button color='error' fullWidth variant="contained"    >
-            salir
-          </Button>
-        </Grid>
-
+        
+        <Grid item xs={12} sm={1}>
+          <ButtonSalir/> 
+        </Grid> 
       </Grid>
 
       <Buscar is_modal_active={is_buscar} set_is_modal_active={set_is_buscar} />
-       
+
     </>
   );
 };

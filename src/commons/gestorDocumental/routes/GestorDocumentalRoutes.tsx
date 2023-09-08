@@ -15,6 +15,7 @@ import { Suspense } from 'react';
 import { Loader } from '../../../utils/Loader/Loader';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
+import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 
 const routes = [
   {
@@ -75,7 +76,11 @@ const routes = [
     name: 'encuesta_datos',
     component: () => <InfoEncuesta />,
   },
-
+  {
+    path: 'encuesta/',
+    name: 'encuesta',
+    component: () => <Encuasta_Routes />,
+  },
 
 
 ];
