@@ -107,9 +107,11 @@ export function BajaHerramientaScreen(): JSX.Element {
       if (vivero !== undefined) {
         dispatch(set_current_nursery(vivero));
       } else {
+        // @ts-ignore
         dispatch(set_current_nursery(initial_state_current_nursery));
       }
     } else {
+    // @ts-ignore
       dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero')]);

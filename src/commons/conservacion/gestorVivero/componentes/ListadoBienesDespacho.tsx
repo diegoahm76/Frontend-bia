@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Box, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { IObjDespacho, type IObjItem } from '../interfaces/vivero';
@@ -31,7 +32,7 @@ const ListadoBienesDespacho = () => {
 
   useEffect(() => {
     current_despacho.id_vivero_solicita !== null ? set_titulo('Bienes recibidos y solicitados por vivero ' + current_despacho.nombre_vivero_solicita) : set_titulo('Bienes recibidos');
-  },[current_despacho])
+  }, [current_despacho])
 
   // const [item_solicitudes, set_item_solicitudes] = useState<ItemSolicitudConsumible[]>([]);
   const dispatch = useAppDispatch();
@@ -202,7 +203,7 @@ const ListadoBienesDespacho = () => {
       realizar_despacho_manual: distribucion_manual
     }
     dispatch(set_despacho_manual(despacho_manual));
-  },[distribucion_manual]);
+  }, [distribucion_manual]);
 
   return (
     <>

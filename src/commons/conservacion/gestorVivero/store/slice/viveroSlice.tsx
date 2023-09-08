@@ -163,6 +163,7 @@ export const despacho_manual_state: IObjDespacho = {
 
 const initial_state: INursery = {
   nurseries: [],
+  // @ts-ignore
   current_nursery: initial_state_current_nursery,
   items_despacho: [],
   items_despacho_aux: [],

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/prop-types */

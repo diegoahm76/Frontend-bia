@@ -20,7 +20,7 @@ export const DepositosRoutes = (): ReactElement => {
           element={<AdministrarBandejaScreen />}
         />
         <Route path="cajas/*" element={<CajasScreen />} />
-        <Route path="carpetas/*" element={<AdministrarCarpetasScreen />} />
+        <Route path="administrar_carpetas/*" element={<AdministrarCarpetasScreen />} />
         <Route path="/*" element={<Page404 />} />
       </Routes>
     </UserProvider>
