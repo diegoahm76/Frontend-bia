@@ -86,7 +86,9 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   const fetch_data_get_buscar_letraaaa = async (): Promise<void> => {
     try {
       if (tiempoRespuesta === null || tiempoRespuesta <= 0) {
-        // tiempoRespuesta no cumple con las condiciones, mostrar un mensaje de error o manejarlo según tus necesidades
+        // tiempoRespuesta no cumple con las condiciones, mostrar un mensaje de error o manejarlo según tus necesidades 
+        set_loading(false);
+        
         control_error('El valor de tiempo de respuesta no es válido');
         return; // Salir de la función sin hacer la solicitud PUT
       }
@@ -125,7 +127,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   const handleTiempoRespuestaChange = (event: any): void => {
     setTiempoRespuesta(event.target.value); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
-  const handleTiempoRespuestaChangeee = (event: any): void => {
+  const handle_restableser_tiempo = (event: any): void => {
     setTiempoRespuesta(0); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
 
@@ -145,7 +147,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   };
 
   const handleLimpiarCamposss = (): void => {
-    handleTiempoRespuestaChangeee(0);
+    handle_restableser_tiempo(0);
   };
 
   useEffect(() => {
@@ -280,8 +282,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
                   '¿Estás seguro de realizar este proceso?'
                 );
               }}
-              loading={loading} // Set the loading prop
-            >
+              loading={loading}  >
               Guardar
             </LoadingButton>
           </Grid>
@@ -292,8 +293,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
               fullWidth
               variant="contained"
               color="secondary"
-              onClick={handleLimpiarCampos}
-            >
+              onClick={handleLimpiarCampos}>
               limpiar
             </Button>
           </Grid>
@@ -306,8 +306,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
               color="error"
               onClick={() => {
                 navigate('/app/home');
-              }}
-            >
+              }}   >
               Salir
             </Button>
           </Grid>

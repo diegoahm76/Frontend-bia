@@ -12,6 +12,7 @@ import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/Di
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
+import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 // import { Suspense } from 'react';
 // import { Loader } from '../../../utils/Loader/Loader';
 
@@ -69,7 +70,13 @@ const routes = [
     name: 'configuracion_pqr',
     component: () => <PQR_Configuracion_Routes />,
   },
+  {
+    path: 'plantilladocumentos/',
+    name: 'plantilladocumentos',
+    component: () => <AdministracionPlantillaDocumentos_Routes />,
+  },
 ];
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
