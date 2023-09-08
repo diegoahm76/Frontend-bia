@@ -81,12 +81,13 @@ export const Actual: React.FC = () => {
   }, [tipos_radicado]);
 
   useEffect(() => {
-    if (data_consecutivo) {
+    if (data_consecutivo?.id_config_tipo_radicado_agno) {
       set_id_radicado(data_consecutivo?.id_config_tipo_radicado_agno);
+      console.log('data_consecutivo', data_consecutivo);
       reset_radicados({
         agno_radicado: currentYear,
         implementar: data_consecutivo?.implementar,
-        cod_tipo_radicado: data_watch_radicados?.cod_tipo_radicado,
+        cod_tipo_radicado: data_consecutivo?.cod_tipo_radicado,
         prefijo_consecutivo: data_consecutivo?.prefijo_consecutivo,
         consecutivo_inicial: data_consecutivo?.consecutivo_inicial as any,
         cantidad_digitos: data_consecutivo?.cantidad_digitos as any,
@@ -95,8 +96,9 @@ export const Actual: React.FC = () => {
       reset_radicados(
         {
           agno_radicado: currentYear,
-          cod_tipo_radicado: '',
-          prefijo_consecutivo: '',
+          cod_tipo_radicado: data_watch_radicados.cod_tipo_radicado,
+          implementar: data_watch_radicados.implementar,
+          prefijo_consecutivo: data_watch_radicados.prefijo_consecutivo,
           consecutivo_inicial: '1',
           cantidad_digitos: '0',
         },

@@ -14,8 +14,14 @@ export const get_datos_consecutivos = async (agno: number | string, cod_tipo_rad
     const response = await api.get(`gestor/adminitrador_radicados/config_tipos_radicado_agno/get/${agno}/${cod_tipo_radicado}/`);
     const data = response.data.data;
 
-    console.log('data', data[0]);
     return data[0]
+};
+
+export const get_consulta_consecutivos = async (agno: number | string, cod_tipo_radicado: string): Promise<IConsecutivos[]> => {
+    const response = await api.get(`gestor/adminitrador_radicados/config_tipos_radicado_agno/get/${agno}/${cod_tipo_radicado}/`);
+    const data = response.data.data;
+
+    return data
 };
 
 // ? post

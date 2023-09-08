@@ -2,18 +2,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import {
+  Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
   Grid,
+  IconButton,
   MenuItem,
   TextField,
 } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { Title } from '../../../../components/Title';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/context/context';
 import { useRadicadosHook } from '../hooks/useRadicadosHook';
 import CloseIcon from '@mui/icons-material/Close';
@@ -22,6 +25,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import type { IConsecutivos } from '../types/types';
+import type { DataPersonas } from '../../../../interfaces/globalModels';
+import { consultar_datos_persona } from '../../../seguridad/request/Request';
+import { control_error } from '../../../../helpers';
+import type { AxiosError } from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface IProps {
@@ -41,34 +52,42 @@ export const AñosCerrados: React.FC<IProps> = ({
       width: 200,
     },
     {
-      field: 'prefijo_consecutivo',
-      headerName: 'PREFIJO CONSECUTIVO',
+      field: 'fecha_inicial_config_implementacion',
+      headerName: 'FECHA INICIAL CONFIGURACIÓN',
       width: 200,
     },
     {
-      field: 'consecutivo_inicial',
-      headerName: 'CONSECUTIVO INICIAL',
+      field: 'Acciones',
+      headerName: 'ACCIONES',
       width: 200,
-    },
-    { field: 'cantidad_digitos', headerName: 'CANTIDAD DIGITOS', width: 200 },
-  ];
-
-  const rows = [
-    {
-      id: 1,
-      agno_radicado: 2021,
-      cod_tipo_radicado: 'TIPO1',
-      prefijo_consecutivo: 'PREF1',
-      consecutivo_inicial: 1,
-      cantidad_digitos: 4,
-    },
-    {
-      id: 2,
-      agno_radicado: 2022,
-      cod_tipo_radicado: 'TIPO2',
-      prefijo_consecutivo: 'PREF2',
-      consecutivo_inicial: 10,
-      cantidad_digitos: 5,
+      renderCell: (params) => (
+        <IconButton
+          size="small"
+          onClick={() => {
+            set_info_radicado(params.row);
+            console.log(params.row);
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 24,
+              height: 24,
+              background: '#fff',
+              border: '2px solid',
+            }}
+            variant="rounded"
+          >
+            <ChecklistOutlinedIcon
+              titleAccess="Seleccionar"
+              sx={{
+                color: 'primary.main',
+                width: '18px',
+                height: '18px',
+              }}
+            />
+          </Avatar>
+        </IconButton>
+      ),
     },
   ];
 
@@ -81,34 +100,62 @@ export const AñosCerrados: React.FC<IProps> = ({
 
   const {
     tipos_radicado_selected,
-    fetch_data_consecutivo,
+    rows_radicado,
+    fetch_consulta_consecutivo,
     fetch_data_tipos_radicado_selected,
   } = useContext(DataContext);
 
   const maxDate = dayjs().add(1, 'year').startOf('year');
+  const [tipos_radicado, set_tipos_radicado] = useState<string>('');
+  const [agno_radicado, set_agno_radicado] = useState<number>(0);
+  const [info_radicado, set_info_radicado] = useState<IConsecutivos>();
+  const [
+    datos_persona_config_implementacion,
+    set_datos_persona_config_implementacion,
+  ] = useState<DataPersonas>();
+  const [
+    datos_persona_consecutivo_actual,
+    set_datos_persona_consecutivo_actual,
+  ] = useState<DataPersonas>();
+
+  const fetch_data_personas = async (): Promise<void> => {
+    try {
+      const {
+        data: { data },
+      } = await consultar_datos_persona(
+        info_radicado?.id_persona_config_implementacion as number
+      );
+      if (data) {
+        set_datos_persona_config_implementacion(data);
+      }
+
+      const response = await consultar_datos_persona(
+        info_radicado?.id_persona_consecutivo_actual as number
+      );
+      if (response.data) {
+        set_datos_persona_consecutivo_actual(response.data.data);
+      }
+    } catch (err) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404) {
+        control_error(err);
+      }
+    }
+  };
 
   useEffect(() => {
     void fetch_data_tipos_radicado_selected();
   }, []);
 
-  console.log(data_watch_radicados, 'data_watch_radicados');
-  console.log(
-    dayjs(data_watch_radicados?.agno_radicado).format('YYYY') as any,
-    'dayjs(data_watch_radicados?.agno_radicado).format(YYYY) as any'
-  );
+  useEffect(() => {
+    if (!tipos_radicado || !agno_radicado) return;
+    void fetch_consulta_consecutivo(agno_radicado, tipos_radicado);
+  }, [data_watch_radicados]);
 
   useEffect(() => {
-    if (!data_watch_radicados?.cod_tipo_radicado) return;
-    if (
-      data_watch_radicados?.agno_radicado === 0 &&
-      data_watch_radicados.cod_tipo_radicado === ''
-    )
-      return;
-    void fetch_data_consecutivo(
-      data_watch_radicados?.cod_tipo_radicado as any,
-      dayjs(data_watch_radicados?.agno_radicado).format('YYYY') as any
-    );
-  }, [data_watch_radicados]);
+    if (!info_radicado) return;
+    void fetch_data_personas();
+  }, [info_radicado]);
 
   const handle_close = (): void => {
     set_open_dialog(false);
@@ -152,7 +199,7 @@ export const AñosCerrados: React.FC<IProps> = ({
                     value={value}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      //   set_tipos_radicado(e.target.value);
+                      set_tipos_radicado(e.target.value);
                     }}
                     error={!!errors_radicados.cod_tipo_radicado}
                     helperText={
@@ -183,7 +230,11 @@ export const AñosCerrados: React.FC<IProps> = ({
                     <DatePicker
                       label="Seleccione año"
                       value={value || null}
-                      onChange={onChange}
+                      onChange={(newValue) => {
+                        onChange(newValue);
+                        const valor = dayjs(newValue).format('YYYY') as any;
+                        set_agno_radicado(Number(valor));
+                      }}
                       renderInput={(params: any) => (
                         <TextField
                           {...params}
@@ -205,7 +256,7 @@ export const AñosCerrados: React.FC<IProps> = ({
                 />
               </LocalizationProvider>
             </Grid>
-            {rows.length > 0 && (
+            {rows_radicado.length > 0 && (
               <>
                 <Grid item xs={12}>
                   <Title title="Resultados de la búsqueda" />
@@ -213,21 +264,158 @@ export const AñosCerrados: React.FC<IProps> = ({
                 </Grid>
                 <Grid item xs={12}>
                   <Box sx={{ width: '100%' }}>
+                    <ButtonGroup
+                      style={{
+                        margin: 7,
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      {download_xls({ nurseries: rows_radicado, columns })}
+                      {download_pdf({
+                        nurseries: rows_radicado,
+                        columns,
+                        title: 'Resultados de la búsqueda',
+                      })}
+                    </ButtonGroup>
                     <>
                       <DataGrid
                         density="compact"
                         autoHeight
-                        rows={rows}
+                        rows={rows_radicado}
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
-                        getRowId={(row) => uuidv4()}
+                        getRowId={(row) =>
+                          row.id_config_tipo_radicado_agno || uuidv4()
+                        }
                       />
                     </>
                   </Box>
                 </Grid>
               </>
             )}
+            {info_radicado ? (
+              <>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Año radicado"
+                    value={info_radicado.agno_radicado}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Tipo de radicado"
+                    value={info_radicado.cod_tipo_radicado_legible}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Prefijo"
+                    value={info_radicado.prefijo_consecutivo}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Consecutivo inicial"
+                    value={info_radicado.consecutivo_inicial}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Cantidad de dígitos"
+                    value={info_radicado.cantidad_digitos}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Persona que configuró"
+                    value={`${
+                      datos_persona_config_implementacion?.primer_nombre ?? ''
+                    } ${
+                      datos_persona_config_implementacion?.segundo_nombre ?? ''
+                    } ${
+                      datos_persona_config_implementacion?.primer_apellido ?? ''
+                    } ${
+                      datos_persona_config_implementacion?.segundo_apellido ??
+                      ''
+                    }`}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Fecha inicial configuración"
+                    value={info_radicado.fecha_inicial_config_implementacion}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Último consecutivo asignado"
+                    value={info_radicado.consecutivo_actual}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Fecha última asignación"
+                    value={info_radicado.fecha_consecutivo_actual}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Persona que solicitó último consecutivo"
+                    value={`${
+                      datos_persona_consecutivo_actual?.primer_nombre ?? ''
+                    } ${
+                      datos_persona_consecutivo_actual?.segundo_nombre ?? ''
+                    } ${
+                      datos_persona_consecutivo_actual?.primer_apellido ?? ''
+                    } ${
+                      datos_persona_consecutivo_actual?.segundo_apellido ?? ''
+                    }`}
+                    disabled
+                    fullWidth
+                    margin="dense"
+                    size="small"
+                  />
+                </Grid>
+              </>
+            ) : null}
           </Grid>
         </DialogContent>
         <DialogActions>

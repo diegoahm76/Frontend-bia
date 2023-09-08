@@ -106,8 +106,6 @@ import { Select_Alerta } from '../../interfaces/types';
         {/* {alertas.find(alerta => alerta.cod_clase_alerta === selectedOption)?.descripcion_clase_alerta} */}
         {selectedOption && (
           <>
-
-
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
