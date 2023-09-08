@@ -18,6 +18,7 @@ import { logo_cormacarena_h } from "../logos/logos";
 import BuscarPlantas from "./BuscarPlantas";
 import { historico_bajas, historico_cambios_etapa, historico_distribuciones, historico_ingreso_cuarentena, historico_levantamiento_cuarentena, historico_siembras, historico_traslados } from "../thunks/HistoricoMovimientos";
 import { DialogNoticacionesComponent } from "../../../../components/DialogNotificaciones";
+import ReportesXLS from "./reportesXLS";
 
 const lista_reporte = [{ name: 'Movimientos de Bajas de Herramientas, Insumos y Semillas', value: 'MHIS' }, { name: 'Distribución de Despachos Entrantes a Viveros', value: 'DDEV' }, { name: 'Registros de Siembras', value: 'RES' }, { name: 'Cambio de Etapa de Material Vegetal', value: 'CEMV' }, { name: 'Ingreso a Cuarentena de Material Vegeta', value: 'ICMV' }, { name: 'Levantamiento de Cuarentena de Material Vegetal', value: 'LCMV' }, { name: 'Traslados Entre Viveros', value: 'TEV' }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -845,7 +846,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             >
                 <Grid container justifyContent="flex-end">
                     <Grid item xs={12}>
-                        <Box
+                        {/* <Box
                             component="form"
                             sx={{ mb: '20px' }}
                             noValidate
@@ -872,7 +873,8 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                     </Button>
                                 </Stack>
                             </Grid>
-                        </Box>
+                        </Box> */}
+                        <ReportesXLS doc={doc} titulo_reporte={titulo_reporte} reporte={reporte} tipo_reporte={seleccion_reporte}></ReportesXLS>
                         <Box
                             component="form"
                             noValidate
