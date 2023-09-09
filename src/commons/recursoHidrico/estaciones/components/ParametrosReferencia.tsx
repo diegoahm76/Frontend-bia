@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import EditIcon from '@mui/icons-material/Edit';
 import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
@@ -18,8 +19,6 @@ export const ParametrosReferencia: React.FC = () => {
     useState<boolean>(false);
   const [parametro_editado, set_parametro_editado] = useState(null);
 
-
-
   const columns: GridColDef[] = [
     {
       field: 'id_parametro_referencia',
@@ -30,10 +29,14 @@ export const ParametrosReferencia: React.FC = () => {
     {
       field: 'fecha_modificacion',
       headerName: 'FECHA MODIFICACIÓN',
-      width: 140, 
+      width: 140,
       valueFormatter: (params) => {
         const date = new Date(params.value);
-        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(
+          date.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, '0')}-${date.getFullYear()}`;
         return formattedDate;
       },
     },
@@ -158,8 +161,8 @@ export const ParametrosReferencia: React.FC = () => {
       }));
 
       set_data_parametro(parametros);
-    } catch (err) {
-      control_error(err);
+    } catch (err: any) {
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   useEffect(() => {
@@ -175,18 +178,22 @@ export const ParametrosReferencia: React.FC = () => {
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
-          p: '20px', mb: '20px',
+          p: '20px',
+          mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
           marginTop: '20px',
           marginLeft: '-5px',
         }}
       >
         <Title title="Parametros de referencia " />
-        <Grid item container sx={{ justifyContent: "flex-end" }}  >
-         
+        <Grid item container sx={{ justifyContent: 'flex-end' }}>
           <ButtonGroup style={{ margin: 7 }}>
             {download_xls({ nurseries: parametro_referencia, columns })}
-            {download_pdf({ nurseries: parametro_referencia, columns, title: 'Parametros de referencia' })}
+            {download_pdf({
+              nurseries: parametro_referencia,
+              columns,
+              title: 'Parametros de referencia',
+            })}
           </ButtonGroup>
         </Grid>
         <Grid container sx={{ marginTop: '10px' }}>

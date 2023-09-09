@@ -5,7 +5,7 @@ import { Page404 } from '../../../../../screens/404';
 import { Unidad_A_Unidad } from '../screens/Unidad_A_Unidad/screen/Unidad_A_Unidad';
 import { ContextUnidadxEntidadProvider } from '../screens/Unidad_Por_Entidad/context/ContextUnidadxEntidad';
 import { type FC } from 'react';
-import { U_X_E_Screen } from '../screens/Unidad_Por_Entidad/screen/sinValidaciones/U_X_E_Screen';
+import { U_X_E_Screen } from '../screens/Unidad_Por_Entidad/screen/U_X_E_Screen/U_X_E_Screen';
 import DialogElegirOrganigramaActual from '../../../../gestorDocumental/organigrama/componentes/DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
 
 const routes = [
