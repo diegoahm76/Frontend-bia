@@ -7,6 +7,7 @@ import {
   Button,
   ButtonGroup,
   Dialog,
+  DialogActions,
   DialogContent,
   Divider,
   Grid,
@@ -33,6 +34,7 @@ import {
 import { useAppDispatch } from '../../../../../hooks';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -275,7 +277,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
               handle_click_open();
             }}
           >
-            Búscar
+            Buscar
           </Button>
         </Grid>
         {id_deposito && (
@@ -445,6 +447,20 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
             {/* </form> */}
           </Grid>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
+
       </Dialog>
     </>
   );

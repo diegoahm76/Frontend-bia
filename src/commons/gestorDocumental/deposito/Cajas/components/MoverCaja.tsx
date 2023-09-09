@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   Button,
@@ -15,18 +15,21 @@ import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { useAppSelector } from '../../../../../hooks';
 import { DataContext } from '../../Estantes/context/context';
-import { useEstantesHook } from '../../Estantes/hooks/useEstantesHook';
+import { useCajaHook } from '../hook/useCajaHook';
+import { confirmarAccion } from '../../utils/function';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MoverCaja: React.FC = () => {
+interface IProps {
+  Disabled: boolean;
+}
+export const MoverCaja: React.FC<IProps> = ({ Disabled }: IProps) => {
   const {
-    control_mover_estantes,
-    errors_mover_estantes,
-    // reset_mover_estantes,
-    set_value_mover_estantes,
-    onsubmit_mover_estantes,
+    control_mover_cajas,
+    errors_mover_cajas,
 
-    selectedItem,
+    set_value_mover_cajas,
+    onsubmit_mover_cajas,
+
     handleSelectChange,
 
     open_dialog,
@@ -34,39 +37,41 @@ export const MoverCaja: React.FC = () => {
     handle_close,
 
     //  * saving
-    is_saving_mover_estante,
-  } = useEstantesHook();
+    is_saving_mover_caja,
+  } = useCajaHook();
 
-  const { depositos_selected_mover_estante, fetch_data_depositos } =
-    useContext(DataContext);
+  const {
+    depositos_selected_mover_estante,
+    estantes_selected,
+    bandejas_selected,
+    id_deposito,
+    id_estante,
+    fetch_data_depositos_mover_caja,
+    fetch_data_estantes_mover_cajas,
+    fetch_data_bandejas_mover_caja,
+  } = useContext(DataContext);
 
-  const { data_estantes, data_depositos } = useAppSelector(
-    (state) => state.deposito
-  );
+  const { cajas } = useAppSelector((state) => state.deposito);
 
   useEffect(() => {
-    // reset();
-    void fetch_data_depositos();
+    void fetch_data_depositos_mover_caja();
   }, []);
 
   useEffect(() => {
-    set_value_mover_estantes(
-      'identificacion_estante',
-      data_estantes?.identificacion_por_deposito
-    );
-    set_value_mover_estantes(
-      'deposito_actual',
-      data_depositos?.nombre_deposito
-    );
-    // reset_mover_estantes({
-    //   identificacion_estante: data_estantes?.identificacion_por_deposito,
-    //   deposito_actual: data_depositos?.nombre_deposito,
-    //   identificacion_por_entidad_destino: {
-    //     value: '',
-    //     label: '',
-    //   },
-    // });
-  }, [data_estantes, data_depositos]);
+    if (id_deposito) {
+      void fetch_data_estantes_mover_cajas();
+    }
+    if (id_estante) {
+      void fetch_data_bandejas_mover_caja();
+    }
+  }, [id_deposito, id_estante]);
+
+  useEffect(() => {
+    set_value_mover_cajas?.('deposito_actual', cajas?.identificacion_deposito);
+    set_value_mover_cajas?.('Estante_actual', cajas?.identificacion_estante);
+    set_value_mover_cajas?.('bandeja_actual', cajas?.identificacion_bandeja);
+    set_value_mover_cajas?.('caja_actual', cajas?.identificacion_caja);
+  }, [cajas]);
 
   return (
     <>
@@ -74,11 +79,12 @@ export const MoverCaja: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
+          disabled={Disabled}
           onClick={() => {
             handle_click_open();
           }}
         >
-          Mover estante
+          Mover Caja
         </Button>
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="md">
@@ -87,14 +93,18 @@ export const MoverCaja: React.FC = () => {
             style={{
               width: '100%',
               height: '100%',
-              display: 'flex',
+              display: 'fselex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              void onsubmit_mover_estantes(e);
+              void confirmarAccion(
+                onsubmit_mover_cajas,
+                '¿Esta seguro de mover esta caja ?'
+              );
+              // void onsubmit_mover_cajas();
             }}
           >
             <Grid
@@ -113,28 +123,25 @@ export const MoverCaja: React.FC = () => {
               }}
             >
               <Grid item xs={12}>
-                <Title title="Mover Estante a otro deposito de archivo" />
+                <Title title="Mover caja a otra bandeja" />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12}>
                 <Controller
-                  name="identificacion_estante"
-                  control={control_mover_estantes}
+                  name="caja_actual"
+                  control={control_mover_cajas}
                   rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
-                      fullWidth
                       size="small"
-                      label="Identificación estante"
+                      label="Identificación de la caja"
                       variant="outlined"
                       value={value}
                       disabled={true}
                       required={true}
                       onChange={onChange}
-                      error={
-                        !!errors_mover_estantes.identificacion_por_deposito
-                      }
+                      error={!!errors_mover_cajas.caja_actual}
                       helperText={
-                        errors_mover_estantes.identificacion_por_deposito
+                        errors_mover_cajas.caja_actual
                           ? 'Es obligatorio ingresar una identificación'
                           : 'Ingrese una identificación'
                       }
@@ -142,10 +149,10 @@ export const MoverCaja: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="deposito_actual"
-                  control={control_mover_estantes}
+                  control={control_mover_cajas}
                   rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
@@ -157,9 +164,9 @@ export const MoverCaja: React.FC = () => {
                       value={value}
                       required={true}
                       onChange={onChange}
-                      error={!!errors_mover_estantes.deposito_actual}
+                      error={!!errors_mover_cajas.deposito_actual}
                       helperText={
-                        errors_mover_estantes.deposito_actual
+                        errors_mover_cajas.deposito_actual
                           ? 'Es obligatorio ingresar el deposito actual'
                           : 'Ingrese el deposito actual'
                       }
@@ -167,10 +174,60 @@ export const MoverCaja: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
-                  name="identificacion_por_entidad_destino"
-                  control={control_mover_estantes}
+                  name="Estante_actual"
+                  control={control_mover_cajas}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Identificación estante"
+                      variant="outlined"
+                      value={value}
+                      disabled={true}
+                      required={true}
+                      onChange={onChange}
+                      error={!!errors_mover_cajas.Estante_actual}
+                      helperText={
+                        errors_mover_cajas.Estante_actual
+                          ? 'Es obligatorio ingresar una identificación'
+                          : 'Ingrese una identificación'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="bandeja_actual"
+                  control={control_mover_cajas}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Bandeja actual"
+                      variant="outlined"
+                      disabled={true}
+                      value={value}
+                      required={true}
+                      onChange={onChange}
+                      error={!!errors_mover_cajas.bandeja_actual}
+                      helperText={
+                        errors_mover_cajas.bandeja_actual
+                          ? 'Es obligatorio ingresar el deposito actual'
+                          : 'Ingrese el deposito actual'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="deposito_destino"
+                  control={control_mover_cajas}
                   rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
@@ -185,13 +242,11 @@ export const MoverCaja: React.FC = () => {
                       value={value}
                       onChange={(event) => {
                         onChange(event);
-                        handleSelectChange(event);
+                        handleSelectChange(event, 'deposito');
                       }}
-                      error={
-                        !!errors_mover_estantes.identificacion_por_entidad_destino
-                      }
+                      error={!!errors_mover_cajas.deposito_destino}
                       helperText={
-                        errors_mover_estantes.identificacion_por_entidad_destino
+                        errors_mover_cajas.deposito_destino
                           ? 'Es obligatorio ingresar el deposito de destino'
                           : 'Ingrese el deposito de destino'
                       }
@@ -204,7 +259,80 @@ export const MoverCaja: React.FC = () => {
                     </TextField>
                   )}
                 />
-              </Grid>{' '}
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="estante_destino"
+                  control={control_mover_cajas}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label="Estante destino"
+                      placeholder="Estante destino"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={!id_deposito}
+                      fullWidth
+                      required={true}
+                      value={value}
+                      onChange={(event) => {
+                        onChange(event);
+                        handleSelectChange(event, 'estante');
+                      }}
+                      error={!!errors_mover_cajas.estante_destino}
+                      helperText={
+                        errors_mover_cajas.estante_destino
+                          ? 'Es obligatorio ingresar el estante de destino'
+                          : 'Ingrese el estante de destino'
+                      }
+                    >
+                      {estantes_selected.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="bandeja_destino"
+                  control={control_mover_cajas}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      label="Bandeja destino"
+                      placeholder="Bandeja destino"
+                      select
+                      size="small"
+                      margin="dense"
+                      disabled={!id_estante}
+                      fullWidth
+                      required={true}
+                      value={value}
+                      onChange={(event) => {
+                        onChange(event);
+                        handleSelectChange(event);
+                      }}
+                      error={!!errors_mover_cajas.bandeja_destino}
+                      helperText={
+                        errors_mover_cajas.bandeja_destino
+                          ? 'Es obligatorio ingresar la bandeja de destino'
+                          : 'Ingrese la bandeja de destino'
+                      }
+                    >
+                      {bandejas_selected.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+
               <Grid container spacing={2} justifyContent="flex-end">
                 <Grid item>
                   <LoadingButton
@@ -220,8 +348,8 @@ export const MoverCaja: React.FC = () => {
                   <LoadingButton
                     variant="outlined"
                     color="success"
-                    disabled={!selectedItem || is_saving_mover_estante}
-                    loading={is_saving_mover_estante}
+                    disabled={is_saving_mover_caja}
+                    loading={is_saving_mover_caja}
                     type="submit"
                   >
                     Aceptar

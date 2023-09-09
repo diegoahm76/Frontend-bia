@@ -235,6 +235,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         control_success('El número de documento ya esta registrado'); // Mensaje alerta persona existe
         onResult(data);
       } else {
+        control_error('El número de documento no esta registrado'); // Mensaje alerta persona no existe
         const new_data = {
           id: 0,
           id_persona: 0,

@@ -234,7 +234,7 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
               default_value: '',
               rules: {},
               label: 'Tipo documento',
-              disabled: false,
+              disabled: true,
               helper_text: '',
               select_options: document_type,
               option_label: 'label',

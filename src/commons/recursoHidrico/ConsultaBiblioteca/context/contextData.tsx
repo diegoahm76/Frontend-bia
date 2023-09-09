@@ -427,7 +427,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -442,7 +442,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -458,7 +458,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -472,7 +472,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -487,7 +487,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -503,7 +503,7 @@ export const UserProvider = ({
         return response;
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -519,7 +519,7 @@ export const UserProvider = ({
         return response;
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -531,7 +531,7 @@ export const UserProvider = ({
         set_rows_parametro(response);
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -546,7 +546,7 @@ export const UserProvider = ({
         return response;
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -558,7 +558,7 @@ export const UserProvider = ({
         set_rows_data_cartera(response);
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -572,7 +572,7 @@ export const UserProvider = ({
         set_rows_bombeo_general(response);
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const fetch_data_general_sesion = async (): Promise<void> => {
@@ -585,7 +585,7 @@ export const UserProvider = ({
         set_rows_sesion_bombeo(response);
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const fetch_data_sesion = async (): Promise<void> => {
@@ -596,7 +596,7 @@ export const UserProvider = ({
         set_rows_data_sesion_bombeo(response);
       }
     } catch (err: any) {
-      control_error(err.response.data.detail);
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const fetch_data_anexos_laboratorio = async (
@@ -609,7 +609,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -623,7 +623,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -637,7 +637,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };

@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Grid,
   IconButton,
@@ -30,7 +31,10 @@ import {
   set_current_info_deposito,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
+
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstante: React.FC = () => {
   const {
@@ -54,7 +58,7 @@ export const BusquedaEstante: React.FC = () => {
       width: 250,
     },
     {
-      field: 'identificacion_deposito',
+      field: 'nombre_deposito',
       headerName: 'DEPÓSITO DE ARCHIVO',
       sortable: true,
       width: 250,
@@ -134,9 +138,9 @@ export const BusquedaEstante: React.FC = () => {
               set_id_estante(params.row.id_estante_deposito);
               dispatch(
                 set_current_mode_estantes({
-                  ver: true,
+                  ver: false,
                   crear: false,
-                  editar: false,
+                  editar: true,
                 })
               );
               dispatch(
@@ -213,6 +217,8 @@ export const BusquedaEstante: React.FC = () => {
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoEstantes[]>([]);
 
+  const { set_nuevo_orden_estantes_selected } = useContext(DataContext);
+
   const dispatch = useAppDispatch();
 
   const handle_click_open = (): void => {
@@ -239,6 +245,12 @@ export const BusquedaEstante: React.FC = () => {
 
         if (data?.length > 0) {
           set_rows(data);
+          const data_selected: any[] = data.map((item: InfoEstantes) => ({
+            value: item.orden_ubicacion_por_deposito ?? '',
+            label: item.orden_ubicacion_por_deposito ?? '',
+            // label: `${item.nombre_deposito} - ${item.identificacion_por_entidad}`,
+          }));
+          set_nuevo_orden_estantes_selected(data_selected);
         }
       } catch (error: any) {
         control_error(error.response?.data.detail);
@@ -358,6 +370,7 @@ export const BusquedaEstante: React.FC = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                   onClick={(e) => {
@@ -393,6 +406,19 @@ export const BusquedaEstante: React.FC = () => {
             </Grid>
           </Grid>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
       </Dialog>
     </>
   );

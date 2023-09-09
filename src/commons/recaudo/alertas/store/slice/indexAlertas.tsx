@@ -1,0 +1,96 @@
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { Alerta, IList, IObjConfiguracionAlerta, IObjDestinatario, IPersona, } from '../../interfaces/alerta';
+
+
+export const initial_state_configuracion: IObjConfiguracionAlerta = {
+    cod_clase_alerta: null,
+    nombre_clase_alerta: null,
+    descripcion_clase_alerta: null,
+    cod_tipo_clase_alerta: null,
+    cod_categoria_clase_alerta: null,
+    cant_dias_previas: null,
+    frecuencia_previas: null,
+    cant_dias_post: null,
+    frecuencia_post: null,
+    envios_email: false,
+    mensaje_base_dia: null,
+    mensaje_base_previo: null,
+    mensaje_base_vencido: null,
+    nivel_prioridad: null,
+    activa: false,
+    asignar_responsable: false,
+    id_modulo_destino: null,
+    id_modulo_generador: null,
+
+}
+
+export const initial_state: Alerta = {
+    configuraciones: [],
+    current_configuracion: initial_state_configuracion,
+    destinatario: [],
+    perfil_sistema: [],
+    tipo_documento: [],
+    persona: [],
+
+}
+
+export const alerta_slice = createSlice({
+    name: 'alerta',
+    initialState: initial_state,
+    reducers: {
+        reset_state: () => initial_state,
+
+        set_alerta: (
+            state: Alerta,
+            action: PayloadAction<IObjConfiguracionAlerta[]>
+        ) => {
+            state.configuraciones = action.payload;
+        },
+
+        set_current_alerta: (
+            state: Alerta,
+            action: PayloadAction<IObjConfiguracionAlerta>
+        ) => {
+            state.current_configuracion = action.payload;
+        },
+        set_destinatario: (
+            state: Alerta,
+            action: PayloadAction<IObjDestinatario[]>
+        ) => {
+            state.destinatario = action.payload;
+        },
+        set_perfil_sistema: (
+            state: Alerta,
+            action: PayloadAction<IList[]>
+        ) => {
+            state.perfil_sistema = action.payload;
+        },
+        set_tipo_documento: (
+            state: Alerta,
+            action: PayloadAction<IList[]>
+        ) => {
+            state.tipo_documento = action.payload;
+        },
+        set_persona: (
+            state: Alerta,
+            action: PayloadAction<IPersona[]>
+        ) => {
+            state.persona = action.payload;
+        },
+
+
+
+
+
+
+    },
+});
+
+export const {
+    set_alerta,
+    set_current_alerta,
+    set_destinatario,
+    set_perfil_sistema,
+    set_tipo_documento,
+    set_persona,
+} = alerta_slice.actions;

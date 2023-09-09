@@ -28,22 +28,23 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import FormSelectController from '../../../../../components/partials/form/FormSelectController';
 import { get_depositos, get_estantes_deposito } from '../../store/thunks/deposito';
+import FormInputController from '../../../../../components/partials/form/FormInputController';
 
 interface IProps {
 
-    control_bandeja: any;
+    control_bandeja_destino: any;
     open: any;
     handle_close_buscar: any;
     get_values: any;
+    handle_mover_bandeja: any;
 
 }
 
 
 
-const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values }: IProps) => {
+const MoverBandeja = ({ control_bandeja_destino, open, handle_close_buscar, get_values, handle_mover_bandeja }: IProps) => {
     const { deposito, estantes } = useAppSelector((state) => state.deposito);
     console.log(deposito)
-    const [selected_deposito_id, set_selected_deposito_id] = useState("");
     const dispatch = useAppDispatch();
 
     const columns: GridColDef[] = [
@@ -70,7 +71,7 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values }
             width: 250,
             renderCell: (params) => (
                 <Button
-                    //   onClick={() => handle_edit_click(params.row)}
+                    onClick={() => handle_mover_bandeja(params.row)}
                     startIcon={<EditIcon />}
                 >
 
@@ -87,9 +88,13 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values }
     }, [])
 
     const mostrar_estante: any = async () => {
-        const id = get_values('id_deposito') ?? '';
-        void dispatch(get_estantes_deposito(id))
+        const nombre_deposito = get_values('nombre_deposito') ?? '';
+        console.log(nombre_deposito)
+        const identificacion_estante = get_values('identificacion_por_deposito') ?? '';
+        const orden_estante = get_values('orden_estante') ?? '';
+        void dispatch(get_estantes_deposito(nombre_deposito, identificacion_estante, orden_estante))
     }
+
 
 
     return (
@@ -119,7 +124,7 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values }
                             marginLeft: '-5px',
                         }}
                     >
-                        <Title title="Búsqueda avanzada estantes" />
+                        <Title title="Búsqueda avanzada de bandejas" />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
                             <Grid container spacing={2}>
@@ -127,8 +132,8 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values }
                                 <FormSelectController
                                     xs={12}
                                     md={4}
-                                    control_form={control_bandeja}
-                                    control_name={'id_deposito'}
+                                    control_form={control_bandeja_destino}
+                                    control_name={'nombre_deposito'}
                                     default_value=''
                                     rules={{}}
                                     label='Depósito'
@@ -136,12 +141,40 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values }
                                     helper_text=''
                                     select_options={deposito}
                                     option_label='nombre_deposito'
-                                    option_key='id_deposito'
+                                    option_key='nombre_deposito'
                                     multiple={false}
                                     hidden_text={false}
                                     auto_focus={false}
                                 />
-                                <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+                                <FormInputController
+                                    xs={12}
+                                    md={3}
+                                    margin={0}
+                                    control_form={control_bandeja_destino}
+                                    control_name="identificacion_por_deposito"
+                                    default_value=''
+                                    rules={{}}
+                                    type="text"
+                                    disabled={false}
+                                    helper_text=""
+                                    hidden_text={null}
+                                    label={"Estante"}
+                                />
+                                <FormInputController
+                                    xs={12}
+                                    md={2}
+                                    margin={0}
+                                    control_form={control_bandeja_destino}
+                                    control_name="orden_estante"
+                                    default_value=''
+                                    rules={{}}
+                                    type="text"
+                                    disabled={false}
+                                    helper_text=""
+                                    hidden_text={null}
+                                    label={"Òrden"}
+                                />
+                                <Grid item xs={12} md={3} container justifyContent="end">
                                     <LoadingButton
                                         type="submit"
                                         variant="contained"

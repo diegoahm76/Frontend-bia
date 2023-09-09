@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Avatar, Button, ButtonGroup, Chip, Grid, IconButton, Stack } from '@mui/material';
@@ -145,7 +146,7 @@ export const PozosScreen: React.FC = () => {
       set_rows(datos_pozo);
       console.log(datos_pozo, 'datos_pozo');
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const confirmar_eliminar_pozo = (id_pozo: number): void => {

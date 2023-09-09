@@ -5,11 +5,13 @@ import type {
   IMode,
   IObEstante,
   IObjBandeja,
+  IObjCaja,
+  IObjCarpeta,
   IObjDeposito,
   IObjSucursales,
 } from '../../interfaces/deposito';
 import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
-import type{ IBuscarCaja } from '../../Cajas/types/types';
+import type { IBuscarCaja } from '../../Cajas/types/types';
 
 export const initial_state_deposito: IObjDeposito = {
   nombre_deposito: null,
@@ -31,6 +33,15 @@ export const initial_state_bandeja: IObjBandeja = {
   orden_ubicacion_por_estante: null,
   id_bandeja_estante: null,
 };
+export const initial_state_carpeta: IObjCarpeta = {
+  orden_ubicacion_por_bandeja: null,
+  identificacion_por_bandeja: null,
+  id_carpeta_caja: null,
+  id_caja_bandeja: null,
+  id_bandeja_estante: null,
+  identificacion_bandeja: null,
+};
+
 export const mode_estantes: IMode = {
   ver: false,
   crear: false,
@@ -67,6 +78,7 @@ export const cajas: IBuscarCaja = {
   identificacion_caja: '',
   id_caja: null,
   orden_caja: null,
+  nombre_deposito: '',
 };
 
 export const initial_state: IDeposito = {
@@ -76,11 +88,14 @@ export const initial_state: IDeposito = {
   mode_estante: mode_estantes,
   bandejas: [],
   current_bandeja: initial_state_bandeja,
+  carpetas: [],
   data_estantes: estantes_slice,
   data_depositos: info_deposito_slice,
   deposito_estante: id_depo_est,
   estantes: [],
+  cajas_lista: [],
   cajas,
+
 };
 
 export const deposito_slice = createSlice({
@@ -141,8 +156,14 @@ export const deposito_slice = createSlice({
     set_estantes: (state: IDeposito, action: PayloadAction<IObEstante[]>) => {
       state.estantes = action.payload;
     },
+    set_cajas: (state: IDeposito, action: PayloadAction<IObjCaja[]>) => {
+      state.cajas_lista = action.payload;
+    },
     set_current_cajas: (state: IDeposito, action: PayloadAction<IBuscarCaja>) => {
       state.cajas = action.payload;
+    },
+    set_carpetas: (state: IDeposito, action: PayloadAction<IObjCarpeta[]>) => {
+      state.carpetas = action.payload;
     },
   },
 });
@@ -159,4 +180,7 @@ export const {
   set_current_id_depo_est,
   set_estantes,
   set_current_cajas,
+  set_carpetas,
+  set_cajas,
+
 } = deposito_slice.actions;

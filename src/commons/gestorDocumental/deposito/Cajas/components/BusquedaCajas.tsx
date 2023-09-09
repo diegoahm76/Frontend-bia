@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Grid,
   IconButton,
@@ -30,12 +31,17 @@ import {
 import { DataContext } from '../../Estantes/context/context';
 import { search_caja } from '../services/services';
 import type { IBuscarCaja } from '../types/types';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaCajas: React.FC = () => {
   const {
     depositos_selected_mover_estante,
+    set_nuevo_orden_cajas_selected,
     set_id_bandeja,
+    set_identificacion_caja,
+    set_orden,
     fetch_data_depositos,
   } = useContext(DataContext);
 
@@ -80,6 +86,8 @@ export const BusquedaCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_orden(params.row.orden_caja);
+              set_identificacion_caja(params.row.identificacion_caja);
               set_id_bandeja(params.row.id_bandeja);
               dispatch(
                 set_current_mode_estantes({
@@ -88,7 +96,6 @@ export const BusquedaCajas: React.FC = () => {
                   editar: true,
                 })
               );
-
               dispatch(
                 set_current_cajas({
                   id_caja: params.row.id_caja,
@@ -100,6 +107,7 @@ export const BusquedaCajas: React.FC = () => {
                   identificacion_estante: params.row.identificacion_estante,
                   id_deposito: params.row.id_deposito,
                   identificacion_deposito: params.row.identificacion_deposito,
+                  nombre_deposito: params.row.nombre_deposito
                 })
               );
 
@@ -188,6 +196,11 @@ export const BusquedaCajas: React.FC = () => {
 
         if (data?.length > 0) {
           set_rows(data);
+          const data_orden: any[] = data.map((item: IBuscarCaja) => ({
+            value: item.orden_caja ?? '',
+            label: item.orden_caja ?? '',
+          }));
+          set_nuevo_orden_cajas_selected(data_orden);
         }
       } catch (error: any) {
         control_error(error.response?.data.detail);
@@ -210,6 +223,7 @@ export const BusquedaCajas: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
+          startIcon={<SearchIcon />}
           onClick={() => {
             handle_click_open();
           }}
@@ -347,6 +361,7 @@ export const BusquedaCajas: React.FC = () => {
                   color="primary"
                   loading={is_search}
                   disabled={is_search}
+                  startIcon={<SearchIcon />}
                   onClick={(e) => {
                     void on_submit_advance(e);
                   }}
@@ -379,6 +394,19 @@ export const BusquedaCajas: React.FC = () => {
             </Grid>
           </Grid>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
       </Dialog>
     </>
   );

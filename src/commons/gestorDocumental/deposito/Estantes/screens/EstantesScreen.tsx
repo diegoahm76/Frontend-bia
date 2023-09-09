@@ -12,78 +12,77 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { useAppSelector } from '../../../../../hooks';
-// import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
-// import { AgregarEstantes } from '../components/AgregarEstantes';
-// import { ListarEstantes } from '../components/ListarEstantes';
-// import { BusquedaAvanzadaDepositos } from '../components/BusquedaAvanzadaDepositos';
-// import { BusquedaEstante } from '../components/BusquedaEstante';
-// import { ListarBandejas } from '../components/ListarBandejas';
-// import { EditarEstante } from '../components/EditarEstante';
-// import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
-// import { SeleccionarEstante } from '../components/SeleccionarEstante';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { AgregarEstantes } from '../components/AgregarEstantes';
+import { ListarEstantes } from '../components/ListarEstantes';
+import { BusquedaAvanzadaDepositos } from '../components/BusquedaAvanzadaDepositos';
+import { BusquedaEstante } from '../components/BusquedaEstante';
+import { ListarBandejas } from '../components/ListarBandejas';
+import { EditarEstante } from '../components/EditarEstante';
+import { ButtonEliminar } from '../../../../../utils/Eliminar/Eliminar';
+import { SeleccionarEstante } from '../components/SeleccionarEstante';
 import { delete_estante } from '../services/services';
 import { DataContext } from '../context/context';
 import { useEstantesHook } from '../hooks/useEstantesHook';
+import { confirmarAccion } from '../../utils/function';
+import { set_current_mode_estantes } from '../../store/slice/indexDeposito';
 
-const ButtonSalir = lazy(async () => {
-  const module = await import('../../../../../components/Salir/ButtonSalir');
-  return { default: module.ButtonSalir };
-});
+// const ButtonSalir = lazy(async () => {
+//   const module = await import('../../../../../components/Salir/ButtonSalir');
+//   return { default: module.ButtonSalir };
+// });
 
-const ButtonEliminar = lazy(async () => {
-  const module = await import('../../../../../utils/Eliminar/Eliminar');
-  return { default: module.ButtonEliminar };
-});
+// const ButtonEliminar = lazy(async () => {
+//   const module = await import('../../../../../utils/Eliminar/Eliminar');
+//   return { default: module.ButtonEliminar };
+// });
 
-const EditarEstante = lazy(async () => {
-  const module = await import('../components/EditarEstante');
-  return { default: module.EditarEstante };
-});
+// const EditarEstante = lazy(async () => {
+//   const module = await import('../components/EditarEstante');
+//   return { default: module.EditarEstante };
+// });
 
-const SeleccionarEstante = lazy(async () => {
-  const module = await import('../components/SeleccionarEstante');
-  return { default: module.SeleccionarEstante };
-});
+// const SeleccionarEstante = lazy(async () => {
+//   const module = await import('../components/SeleccionarEstante');
+//   return { default: module.SeleccionarEstante };
+// });
 
-const ListarBandejas = lazy(async () => {
-  const module = await import('../components/ListarBandejas');
-  return { default: module.ListarBandejas };
-});
+// const ListarBandejas = lazy(async () => {
+//   const module = await import('../components/ListarBandejas');
+//   return { default: module.ListarBandejas };
+// });
 
-const ListarEstantes = lazy(async () => {
-  const module = await import('../components/ListarEstantes');
-  return { default: module.ListarEstantes };
-});
+// const ListarEstantes = lazy(async () => {
+//   const module = await import('../components/ListarEstantes');
+//   return { default: module.ListarEstantes };
+// });
 
-const AgregarEstantes = lazy(async () => {
-  const module = await import('../components/AgregarEstantes');
-  return { default: module.AgregarEstantes };
-});
+// const AgregarEstantes = lazy(async () => {
+//   const module = await import('../components/AgregarEstantes');
+//   return { default: module.AgregarEstantes };
+// });
 
-const BusquedaAvanzadaDepositos = lazy(async () => {
-  const module = await import('../components/BusquedaAvanzadaDepositos');
-  return { default: module.BusquedaAvanzadaDepositos };
-});
+// const BusquedaAvanzadaDepositos = lazy(async () => {
+//   const module = await import('../components/BusquedaAvanzadaDepositos');
+//   return { default: module.BusquedaAvanzadaDepositos };
+// });
 
-
-const BusquedaEstante = lazy(async () => {
-  const module = await import('../components/BusquedaEstante');
-  return { default: module.BusquedaEstante };
-});
-
+// const BusquedaEstante = lazy(async () => {
+//   const module = await import('../components/BusquedaEstante');
+//   return { default: module.BusquedaEstante };
+// });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstantesScreen: React.FC = () => {
   const { mode_estante, data_estantes, deposito_estante } = useAppSelector(
     (state) => state.deposito
   );
-
+  const dispatch = useAppDispatch();
   const {
     id_deposito,
     identificacion_deposito,
     nuevo_orden,
-    orden,
     fetch_data_estantes_depositos,
   } = useContext(DataContext);
 
@@ -95,8 +94,14 @@ export const EstantesScreen: React.FC = () => {
   } = useEstantesHook();
 
   useEffect(() => {
-    console.log('deposito_estante', deposito_estante);
-  }, [deposito_estante]);
+    dispatch(
+      set_current_mode_estantes({
+        crear: false,
+        editar: false,
+        ver: false,
+      })
+    );
+  }, []);
 
   return (
     <>
@@ -105,8 +110,15 @@ export const EstantesScreen: React.FC = () => {
           e.preventDefault();
           e.stopPropagation();
           if (mode_estante.editar) {
-            console.log(nuevo_orden, orden, 'Nuevo orden, orden');
-            onsubmit_editar();
+            if (nuevo_orden) {
+              void confirmarAccion(
+                onsubmit_editar,
+                '¿Estás seguro de actualizar el orden del estante?'
+              );
+              // onsubmit_editar();
+            } else {
+              onsubmit_editar();
+            }
           } else {
             void onsubmit_estantes();
           }

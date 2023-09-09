@@ -1,4 +1,4 @@
-import type{ IBuscarCaja } from "../Cajas/types/types";
+import type { IBuscarCaja } from "../Cajas/types/types";
 import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
 
 export interface IDeposito {
@@ -12,7 +12,9 @@ export interface IDeposito {
   data_depositos: InfoDepositos;
   deposito_estante: IdEstanteDeposito;
   estantes: IObEstante[];
+  cajas_lista: IObjCaja[];
   cajas: IBuscarCaja;
+  carpetas: IObjCarpeta[];
 }
 export interface IMode {
   ver: boolean;
@@ -29,8 +31,9 @@ export interface IdEstanteDeposito {
 
 export interface IObjDeposito {
   id_deposito?: number | null;
+  identificacion_deposito?: number | null;
   nombre_deposito?: string | null;
-  identificacion_por_entidad?: number | null;
+  identificacion_por_entidad?: string | number | null;
   direccion_deposito?: string | null;
   orden_ubicacion_por_entidad: number | null;
   cod_municipio_nal?: number | null;
@@ -64,6 +67,8 @@ export interface IObjSucursales {
 export interface IObjBandeja {
   id_estante_deposito?: number | null;
   id_bandeja_estante?: number | null;
+  id_deposito?: number | null;
+  identificacion_por_deposito?: number | null;
   orden_ubicacion_por_estante?: number | null;
   identificacion_por_estante?: string | number | null;
 }
@@ -73,4 +78,23 @@ export interface IObEstante {
   orden_ubicacion_por_deposito?: number | null;
   identificacion_por_deposito?: string | number | null;
   id_deposito?: number | null;
+}
+export interface IObjCaja {
+  orden_ubicacion_por_bandeja?: number | null;
+  identificacion_por_bandeja?: string | number | null;
+  id_caja_bandeja?: number | null;
+  id_bandeja_estante?: number | null;
+  identificacion_bandeja?: string | number | null;
+}
+export interface IObjCarpeta {
+  orden_ubicacion_por_bandeja?: number | null;
+  identificacion_por_bandeja?: number | null;
+  id_caja_bandeja?: number | null;
+  id_carpeta_caja?: number | null;
+  id_carpeta?: number | null;
+  id_bandeja_estante?: number | null;
+  identificacion_bandeja?: string | number | null;
+  identificacion_caja?: string | number | null;
+  identificacion_estante?: string | number | null;
+  identificacion_deposito?: string | number | null;
 }

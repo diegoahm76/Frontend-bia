@@ -9,13 +9,13 @@ import { useAppSelector } from '../../../../../hooks';
 import { lazy, useContext, useEffect, useState } from 'react';
 import { DataContext } from '../../Estantes/context/context';
 import { useCajaHook } from '../hook/useCajaHook';
-// import { MoverCaja } from './MoverCaja';
+import { MoverCaja } from './MoverCaja';
 // import Select from 'react-select';
 
-const MoverCaja = lazy(async () => {
-    const module = await import('../components/MoverCaja');
-    return { default: module.MoverCaja };
-  });
+// const MoverCaja = lazy(async () => {
+//   const module = await import('../components/MoverCaja');
+//   return { default: module.MoverCaja };
+// });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistrarCaja: React.FC = () => {
@@ -23,43 +23,48 @@ export const RegistrarCaja: React.FC = () => {
     control_cajas,
     errors_cajas,
     reset_cajas,
-    // set_value_estantes,
     // * habilitar campos orden
     is_habilita_cambiar_orden_cajas,
     set_is_habilita_cambiar_orden_cajas,
     is_habilita_nuevo_orden,
     set_is_habilita_nuevo_orden,
-    set_orden,
-    set_nuevo_orden,
+    set_identificacion_caja,
   } = useCajaHook();
 
   const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
 
-  const { nuevo_orden_estantes_selected } = useContext(DataContext);
+  const {
+    nuevo_orden_cajas_selected,
+    orden_siguiente,
+    fetch_data_orden_cajas,
+    set_nuevo_orden,
+  } = useContext(DataContext);
 
-  const [title, setTitle] = useState("Cajas");
-
+  const [title, setTitle] = useState('Cajas');
 
   useEffect(() => {
-    if(mode_estante.crear){
-      setTitle("Registrar Caja");
+    void fetch_data_orden_cajas();
+  }, []);
+
+  useEffect(() => {
+    if (mode_estante.crear) {
+      setTitle('Registrar Caja');
       reset_cajas({
         identificacion_por_bandeja: '',
-        orden: '',
+        orden: orden_siguiente?.orden_siguiente,
         nuevo_orden: '',
       });
     } else if (mode_estante.editar) {
-      setTitle("Editar Caja");
+      setTitle('Editar Caja');
       reset_cajas({
         identificacion_por_bandeja: cajas.identificacion_caja,
         orden: cajas.orden_caja,
         nuevo_orden: '',
       });
     }
+  }, [cajas, mode_estante, orden_siguiente]);
 
-  }, [cajas, mode_estante]);
-
-  return (  
+  return (
     <>
       <Grid
         container
@@ -84,6 +89,7 @@ export const RegistrarCaja: React.FC = () => {
             name="identificacion_por_bandeja"
             control={control_cajas}
             rules={{ required: true }}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 fullWidth
@@ -93,7 +99,10 @@ export const RegistrarCaja: React.FC = () => {
                 value={value}
                 disabled={false}
                 required={true}
-                onChange={onChange}
+                onChange={(e) => {
+                  set_identificacion_caja(e.target.value);
+                  onChange(e);
+                }}
                 error={!!errors_cajas.identificacion_por_bandeja}
                 helperText={
                   errors_cajas.identificacion_por_bandeja
@@ -109,6 +118,7 @@ export const RegistrarCaja: React.FC = () => {
             name="orden"
             control={control_cajas}
             rules={{ required: true }}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 fullWidth
@@ -127,10 +137,10 @@ export const RegistrarCaja: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            disabled={is_habilita_cambiar_orden_cajas}
+            disabled={is_habilita_cambiar_orden_cajas || mode_estante.crear}
             onClick={() => {
-              set_is_habilita_cambiar_orden_cajas(true);
-              set_is_habilita_nuevo_orden(false);
+              set_is_habilita_cambiar_orden_cajas(false);
+              set_is_habilita_nuevo_orden(true);
             }}
           >
             Cambiar orden
@@ -141,6 +151,7 @@ export const RegistrarCaja: React.FC = () => {
             name="nuevo_orden"
             control={control_cajas}
             rules={{ required: true }}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 label="Nuevo orden"
@@ -148,7 +159,7 @@ export const RegistrarCaja: React.FC = () => {
                 select
                 size="small"
                 margin="dense"
-                disabled={is_habilita_nuevo_orden}
+                disabled={!is_habilita_nuevo_orden || mode_estante.crear}
                 fullWidth
                 required={false}
                 value={value}
@@ -158,7 +169,7 @@ export const RegistrarCaja: React.FC = () => {
                   set_nuevo_orden(Number(e.target.value));
                 }}
               >
-                {nuevo_orden_estantes_selected.map((option) => (
+                {nuevo_orden_cajas_selected.map((option) => (
                   <MenuItem key={option.label} value={option.label}>
                     {option.label}
                   </MenuItem>
@@ -194,7 +205,7 @@ export const RegistrarCaja: React.FC = () => {
                   }}
                   value={value}
                   onChange={onChange}
-                  options={nuevo_orden_estantes_selected}
+                  options={nuevo_orden_cajas_selected}
                   placeholder="Seleccionar"
                   isDisabled={is_habilita_nuevo_orden}
                 />
@@ -216,7 +227,7 @@ export const RegistrarCaja: React.FC = () => {
           />
         </Grid> */}
         <Grid container spacing={2} justifyContent="flex-end">
-          <MoverCaja />
+          <MoverCaja Disabled={mode_estante.crear} />
           <Grid item></Grid>
         </Grid>
       </Grid>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   Button,
@@ -24,6 +25,7 @@ import Select from 'react-select';
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components';
 import SaveIcon from '@mui/icons-material/Save';
+import { control_error } from '../../../../helpers';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -62,47 +64,51 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
         })
       );
       set_estaciones_options(estaciones_maped);
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
   useEffect(() => {
     void get_data_initial();
-    const datos = get_data_initial();
-    console.log('data inical', datos);
+    // const datos = get_data_initial();
+    // console.log('data inical', datos);
   }, []);
 
   const on_sumbit_persona: SubmitHandler<FieldValues> = (data): void => {
-    const nueva_persona = {
-      cod_tipo_documento_id: data.cod_tipo_documento_id,
-      numero_documento_id: data.numero_documento_id,
-      primer_nombre: data.primer_nombre,
-      segundo_nombre: data.segundo_nombre,
-      primer_apellido: data.primer_apellido,
-      segundo_apellido: data.segundo_apellido,
-      entidad: data.entidad,
-      cargo: data.cargo,
-      email_notificacion: data.email_notificacion,
-      nro_celular_notificacion: data.nro_celular_notificacion,
-      observacion: data.observacion,
-      id_estacion: data.estacion.value,
-    };
-    // Verifique si el nro_celular_notificacion comienza con
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!data.nro_celular_notificacion.startsWith('57')) {
-      // Si no es así, agréguelo
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      nueva_persona.nro_celular_notificacion = `57${data.nro_celular_notificacion}`;
-    } else {
-      // Si ya tiene 57, use el valor original.
-      nueva_persona.nro_celular_notificacion = data.nro_celular_notificacion;
-    }
+    try {
+      const nueva_persona = {
+        cod_tipo_documento_id: data.cod_tipo_documento_id,
+        numero_documento_id: data.numero_documento_id,
+        primer_nombre: data.primer_nombre,
+        segundo_nombre: data.segundo_nombre,
+        primer_apellido: data.primer_apellido,
+        segundo_apellido: data.segundo_apellido,
+        entidad: data.entidad,
+        cargo: data.cargo,
+        email_notificacion: data.email_notificacion,
+        nro_celular_notificacion: data.nro_celular_notificacion,
+        observacion: data.observacion,
+        id_estacion: data.estacion.value,
+      };
+      // Verifique si el nro_celular_notificacion comienza con
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (!data.nro_celular_notificacion.startsWith('57')) {
+        // Si no es así, agréguelo
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        nueva_persona.nro_celular_notificacion = `57${data.nro_celular_notificacion}`;
+      } else {
+        // Si ya tiene 57, use el valor original.
+        nueva_persona.nro_celular_notificacion = data.nro_celular_notificacion;
+      }
 
-    void crear_persona(nueva_persona);
-    set_is_modal_active(!is_modal_active);
-    persona(nueva_persona.id_estacion);
-    reset();
+      void crear_persona(nueva_persona);
+      set_is_modal_active(!is_modal_active);
+      persona(nueva_persona.id_estacion);
+      reset();
+    } catch (err: any) {
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
+    }
   };
 
   const tiposdoc = [
@@ -442,7 +448,12 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 >
                   Cancelar
                 </Button>
-                <Button startIcon={<SaveIcon />} variant="contained" color="success" type="submit">
+                <Button
+                  startIcon={<SaveIcon />}
+                  variant="contained"
+                  color="success"
+                  type="submit"
+                >
                   Guardar
                 </Button>
               </DialogActions>

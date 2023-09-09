@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -51,7 +52,7 @@ export const GeolocalizacionScreen: React.FC = () => {
       }));
 
       set_info(pos_maped);
-    } catch (err: unknown) {
+    } catch (err: any) {
       const temp_error = err as AxiosError
       console.log("Error", temp_error)
       if (temp_error.response?.status === 404) {
@@ -59,7 +60,7 @@ export const GeolocalizacionScreen: React.FC = () => {
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
-        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     };
   }
@@ -89,7 +90,7 @@ export const GeolocalizacionScreen: React.FC = () => {
         id_estacion: ultimo_dato.id_estacion,
       };
       set_dato([datos])
-    } catch (err: unknown) {
+    } catch (err: any) {
       const temp_error = err as AxiosError
       console.log("Error", temp_error.response?.status)
       if (temp_error.response?.status === 404) {
@@ -98,7 +99,7 @@ export const GeolocalizacionScreen: React.FC = () => {
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
-        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     };
   };
@@ -133,7 +134,7 @@ export const GeolocalizacionScreen: React.FC = () => {
       console.log("Paso");
       console.log("Datos", [datos]);
       set_dato_migracion([datos]);
-    } catch (err: unknown) {
+    } catch (err: any) {
       const temp_error = err as AxiosError
       console.log("Error", temp_error.response?.status)
       if (temp_error.response?.status === 404) {
@@ -142,7 +143,7 @@ export const GeolocalizacionScreen: React.FC = () => {
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
-        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     };
   };

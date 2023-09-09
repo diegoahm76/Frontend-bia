@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Divider,
   Grid,
@@ -32,6 +33,8 @@ import { DataContext } from '../../Estantes/context/context';
 import type { InfoEstantes } from '../../Estantes/types/types';
 import { search_estante } from '../../Estantes/services/services';
 import Select from 'react-select';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaEstanteCajas: React.FC = () => {
@@ -39,7 +42,8 @@ export const BusquedaEstanteCajas: React.FC = () => {
     depositos_selected_mover_estante,
     id_estante,
     id_bandeja,
-    bandejas_selected,
+    bandejas_selected_get,
+    set_orden,
     set_id_bandeja,
     set_id_estante,
     fetch_data_depositos,
@@ -61,7 +65,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
       width: 250,
     },
     {
-      field: 'identificacion_deposito',
+      field: 'nombre_deposito',
       headerName: 'DEPÓSITO DE ARCHIVO',
       sortable: true,
       width: 250,
@@ -76,10 +80,12 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_orden(params.row.orden_ubicacion_por_deposito);
               reset({
+                ...data_watch,
                 identificacion_estante: params.row.identificacion_por_deposito,
                 orden_estante: params.row.orden_ubicacion_por_deposito,
-                nombre_deposito: params.row.identificacion_deposito,
+                // deposito: params.row.nombre_deposito,
               });
               set_id_estante(params.row.id_estante_deposito);
 
@@ -90,6 +96,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                   identificacion_deposito: params.row.identificacion_deposito,
                   identificacion_estante:
                     params.row.identificacion_por_deposito,
+                  nombre_deposito: params.row.nombre_deposito,
                 })
               );
 
@@ -130,6 +137,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
     defaultValues: {
       identificacion_estante: '',
       orden_estante: '',
+      // deposito: '',
       nombre_deposito: {
         value: '',
         label: '',
@@ -314,6 +322,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
             onClick={() => {
               handle_click_open();
             }}
@@ -327,10 +336,10 @@ export const BusquedaEstanteCajas: React.FC = () => {
           xs={12}
           sm={6}
           md={3}
-          // sx={{
-          //   marginTop: '25px',
-          //   marginBottom: '10px',
-          // }}
+        // sx={{
+        //   marginTop: '25px',
+        //   marginBottom: '10px',
+        // }}
         >
           <Controller
             name="id_bandeja_estante"
@@ -348,7 +357,7 @@ export const BusquedaEstanteCajas: React.FC = () => {
                   }}
                   value={value}
                   onChange={onChange}
-                  options={bandejas_selected as any[]}
+                  options={bandejas_selected_get as any[]}
                   placeholder="Seleccionar"
                   isDisabled={!id_estante}
                 />
@@ -493,11 +502,12 @@ export const BusquedaEstanteCajas: React.FC = () => {
                     type="submit"
                     variant="contained"
                     color="primary"
+                    startIcon={<SearchIcon />}
                     loading={is_search}
                     disabled={is_search}
-                    // onClick={(e) => {
-                    //   void on_submit_advance(e);
-                    // }}
+                  // onClick={(e) => {
+                  //   void on_submit_advance(e);
+                  // }}
                   >
                     Buscar
                   </LoadingButton>
@@ -529,6 +539,19 @@ export const BusquedaEstanteCajas: React.FC = () => {
             </Grid>
           </form>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
       </Dialog>
     </>
   );

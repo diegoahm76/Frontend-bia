@@ -11,18 +11,18 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
-import { Suspense } from 'react';
-import { Loader } from '../../../utils/Loader/Loader';
+// import { Suspense } from 'react';
+// import { Loader } from '../../../utils/Loader/Loader';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
-
 const routes = [
   {
     path: 'organigrama/',
     name: 'organigrama',
     component: () => <OrganigramaRoutes />,
   },
+  //! dentro de ccd va a estar la ruta de permisos sobre series documentales
   {
     path: 'ccd/',
     name: 'ccd',
@@ -82,13 +82,11 @@ const routes = [
     component: () => <Encuasta_Routes />,
   },
 
-
 ];
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-    <Suspense fallback={<Loader />}>
+    // <Suspense fallback={<Loader />}>
       <Routes>
         {routes.map((route) => (
           <Route
@@ -99,6 +97,6 @@ export const GestorDocumentalRoutes: React.FC = () => {
         ))}
         <Route path="/*" element={<Page404 />} />
       </Routes>
-    </Suspense>
+    // </Suspense>
   );
 };
