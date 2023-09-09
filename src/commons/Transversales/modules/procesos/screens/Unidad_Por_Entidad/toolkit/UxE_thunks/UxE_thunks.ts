@@ -3,7 +3,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
-import { control_error, control_success } from '../../../../../../../../helpers';
+import {
+  control_error,
+  control_success
+} from '../../../../../../../../helpers';
+import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
 
@@ -18,7 +22,8 @@ export const consultarTablaTemporal =
       return {
         data: data?.data,
         success: data?.success,
-        detail: data?.detail
+        detail: data?.detail,
+        totalData: data,
       };
     } catch (error: any) {
       // control_warning('No hay datos para mostrar');
@@ -26,13 +31,13 @@ export const consultarTablaTemporal =
       return {
         data: [],
         success: false,
-        detail: error?.response?.data?.detail
+        detail: error?.response?.data?.detail,
+        totalData: {},
       };
     } finally {
       // setLoading(false);
     }
   };
-
 
 // ? -- consulta del organigrama actual -- //
 export const get_organigrama_acual = async (navigate: any): Promise<any> => {
@@ -179,14 +184,18 @@ export const putCrearRegistrosTemporalesT026 = async (
   data_almacenar_tabla_temporal: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any> => {
+  if (data_almacenar_tabla_temporal.length === 0)
+    return control_warning('No hay datos para guardar el traslado masivo');
   try {
     setLoadingButton(true);
     const url = `transversal/organigrama/guardar-actualizacion-unidad/${id_organigrama_posible_cambio}/`;
     const { data } = await api.put(url, data_almacenar_tabla_temporal);
     console.log('data retorno creación de tabla temporal', data);
+    control_success('Traslado masivo de unidad guardado con éxito');
     return data;
   } catch (error: any) {
     console.log(error);
+    control_error('Error al guardar traslado masivo de unidades');
   } finally {
     setLoadingButton(false);
   }
@@ -210,6 +219,9 @@ export const putTrasladoMasivoUnidadesPorEntidad = async (
   data_traslado_masivo: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any> => {
+  if (data_traslado_masivo.length === 0)
+    return control_warning('No hay datos para proceder al traslado masivo');
+
   try {
     setLoadingButton(true);
     const url = `transversal/organigrama/finalizar-actualizacion-unidad/`;

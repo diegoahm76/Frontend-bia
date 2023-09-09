@@ -26,7 +26,12 @@ import { LoadingButton } from '@mui/lab';
 import { setOrganigramaAnterior } from '../../../Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice';
 import { eliminarObjetosDuplicadosPorId } from '../../functions/functions';
 import Swal from 'sweetalert2';
-import { setGridAnteriorAActual } from '../../toolkit/UxE_slice/UxE_slice';
+import {
+  setAsignacionConsultaTablaTemporal,
+  setGridAnteriorAActual,
+  setUnidadesSeleccionadas,
+  setUnidadesSeleccionadasAnteriorAActual
+} from '../../toolkit/UxE_slice/UxE_slice';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 
 export const CleanData: FC<any> = (): JSX.Element => {
@@ -56,6 +61,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
   const { setOrganigramaActual } = use_u_x_entidad();
 
   const guardarRegistrosT026 = (): void => {
+    console.log(unidadesSeleccionadas);
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
@@ -81,7 +87,11 @@ export const CleanData: FC<any> = (): JSX.Element => {
       organigrama_current,
       unidadesSeleccionadasArray,
       setLoadingButton
-    );
+    ).finally(() => {
+      dispatch(setUnidadesSeleccionadas([]));
+      dispatch(setAsignacionConsultaTablaTemporal(null));
+    });
+    // ! el finally debe pasar al final de la función tal como paso con el proceder ya que los valores deben volverse a actualizar
   };
 
   const procederACambioMasivoUxE = (): void => {
@@ -127,7 +137,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
       setLoadingButton
     ).then((res) => {
       //* ejecucion get informacion
-
+      setLoadingButton(true);
       const obtenerOrganigramaActual = async (): Promise<any> => {
         const organigramaActual = await get_organigrama_acual(navigate);
         setOrganigramaActual(
@@ -179,8 +189,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   );
 
                   // ? se deben hacer un merge de los datos de la tabla temporal y de la lista de personas sin actualizar, eliminando los elemenetos repetidos (deben prevalecer los de la tabla temporal) en el caso de que se repitan los datosen ambas listas
-                  void getUnidadesOrganizacionalesOrganigramaActual().then(
-                    (unidadesOrganizacionalesOrgActual) => {
+                  void getUnidadesOrganizacionalesOrganigramaActual()
+                    .then((unidadesOrganizacionalesOrgActual) => {
                       // console.log(unidadesOrganizacionalesOrgActual);
                       const arraySinRepetidos = [
                         ...informacionTablaTemporal?.data,
@@ -227,8 +237,12 @@ export const CleanData: FC<any> = (): JSX.Element => {
 
                         dispatch(setGridAnteriorAActual(dataMixed));
                       }
-                    }
-                  );
+                    })
+                    .finally(() => {
+                      dispatch(setAsignacionConsultaTablaTemporal(null));
+                      dispatch(setUnidadesSeleccionadasAnteriorAActual([]));
+                      setLoadingButton(false);
+                    });
                 }
               );
             });
