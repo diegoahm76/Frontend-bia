@@ -314,7 +314,8 @@ export const Destinatarios: React.FC = () => {
           </>
         ) : null}
         {rows_personas_alertas.length > 0 && (
-          <>       <Grid item xs={12}><ButtonGroup
+          <>      
+           <Grid item xs={12}><ButtonGroup
             style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
           >
             {download_xls({ nurseries: rows_personas_alertas, columns: colums_persona_alerta })}
