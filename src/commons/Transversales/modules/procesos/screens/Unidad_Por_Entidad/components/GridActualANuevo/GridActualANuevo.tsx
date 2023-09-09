@@ -30,7 +30,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
     dispatch(
       setUnidadesSeleccionadas({
         ...unidadesSeleccionadas,
-        [idPersona]: unidadSeleccionada,
+        [idPersona]: unidadSeleccionada
       })
     );
   };
@@ -52,21 +52,24 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       width: 220,
       renderCell: (params: any) => (
         <>
-          <div>
+          <div
+            style = {{
+              zIndex: 999999,
+            }}
+          >
             <Select
               styles={{
                 container: (provided) => ({
                   ...provided,
                   width: '200px',
                   height: '30px',
-                  zIndex: 9999,
+                  zIndex: 999999,
                   borderRadius: '5px'
                 })
               }}
               value={unidadesSeleccionadas[params.row.id_persona]}
               // value={unidadesSeleccionadas}
               onChange={(selectedOption) => {
-                // console.log(params.row.id_persona, 'selectedOption');
                 onChange(params.row.id_persona, selectedOption);
               }}
               menuPortalTarget={document.body}

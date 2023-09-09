@@ -1,23 +1,40 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, Stack, Button, FormControl, FormHelperText, Typography, ButtonGroup } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Stack,
+  Button,
+  FormControl,
+  FormHelperText,
+  Typography,
+  ButtonGroup,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import CircularProgress from '@mui/material/CircularProgress';
-import Select from "react-select";
-import type {
-  GridColDef,
-} from '@mui/x-data-grid';
+import Select from 'react-select';
+import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import type React from "react";
-import { useEffect, useState } from "react";
-import { Controller, useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
-import Swal from "sweetalert2";
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import {
+  Controller,
+  useForm,
+  type FieldValues,
+  type SubmitHandler,
+} from 'react-hook-form';
+import Swal from 'sweetalert2';
 import { api } from '../../../../api/axios';
 import { type Persona } from '../interfaces/interfaces';
-import { consultar_estaciones_id, control_success, eliminar_usuario } from '../../requets/Request';
+import {
+  consultar_estaciones_id,
+  control_success,
+  eliminar_usuario,
+} from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
 import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
@@ -28,48 +45,51 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
-  const [crear_persona_is_active, set_crear_persona_is_active] = useState<boolean>(false);
+  const [crear_persona_is_active, set_crear_persona_is_active] =
+    useState<boolean>(false);
   const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
   const [estaciones_options, set_estaciones_options] = useState<any[]>([]);
   const [loading, set_loading] = useState(false);
-  const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
+  const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<
+    Persona[]
+  >([]);
   const [usuario_editado, set_usuario_editado] = useState(null);
 
   // const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
   const handle_open_crear_persona = (): void => {
     set_crear_persona_is_active(true);
-  }
+  };
 
   const columns: GridColDef[] = [
     {
-      headerName: "ESTACIÓN",
-      field: "nombre_estacion",
+      headerName: 'ESTACIÓN',
+      field: 'nombre_estacion',
       minWidth: 140,
       editable: true,
     },
     {
-      headerName: "TIPO DOC.",
-      field: "cod_tipo_documento_id",
+      headerName: 'TIPO DOC.',
+      field: 'cod_tipo_documento_id',
       minWidth: 140,
       editable: true,
     },
     {
-      headerName: "IDENTIFICACIÓN",
-      field: "numero_documento_id",
+      headerName: 'IDENTIFICACIÓN',
+      field: 'numero_documento_id',
       minWidth: 140,
       editable: true,
     },
-    { headerName: "PRIMER NOMBRE", field: "primer_nombre", minWidth: 140 },
-    { headerName: "PRIMER APELLIDO", field: "primer_apellido", minWidth: 140 },
-    { headerName: "ENTIDAD", field: "entidad", minWidth: 140 },
-    { headerName: "CARGO", field: "cargo", minWidth: 140 },
-    { headerName: "EMAIL", field: "email_notificacion", minWidth: 140 },
-    { headerName: "CELULAR", field: "nro_celular_notificacion", minWidth: 140 },
-    { headerName: "OBSERVACIÓN", field: "observacion", minWidth: 140 },
+    { headerName: 'PRIMER NOMBRE', field: 'primer_nombre', minWidth: 140 },
+    { headerName: 'PRIMER APELLIDO', field: 'primer_apellido', minWidth: 140 },
+    { headerName: 'ENTIDAD', field: 'entidad', minWidth: 140 },
+    { headerName: 'CARGO', field: 'cargo', minWidth: 140 },
+    { headerName: 'EMAIL', field: 'email_notificacion', minWidth: 140 },
+    { headerName: 'CELULAR', field: 'nro_celular_notificacion', minWidth: 140 },
+    { headerName: 'OBSERVACIÓN', field: 'observacion', minWidth: 140 },
     {
-      headerName: "ACCIONES",
-      field: "acciones",
+      headerName: 'ACCIONES',
+      field: 'acciones',
       minWidth: 140,
       renderCell: (params) => (
         <div className="d-flex gap-1">
@@ -87,15 +107,18 @@ export const UsuariosScreen: React.FC = () => {
           <IconButton
             size="small"
             className="btn-tablas"
-            onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
-          >
-            <DeleteIcon fontSize="small" 
-            titleAccess="Eliminar elemento"
-            sx={{
-              color: 'red',
-              width: '18px',
-              height: '18px',
+            onClick={() => {
+              confirmar_eliminar_usuario(params.row.id_persona);
             }}
+          >
+            <DeleteIcon
+              fontSize="small"
+              titleAccess="Eliminar elemento"
+              sx={{
+                color: 'red',
+                width: '18px',
+                height: '18px',
+              }}
             />
           </IconButton>
         </div>
@@ -103,26 +126,29 @@ export const UsuariosScreen: React.FC = () => {
     },
   ];
 
-
   const {
     handleSubmit: handle_submit_filtrar,
     control: control_filtrar,
     formState: { errors: errors_filtrar },
   } = useForm();
 
-
   const get_data_initial = async (): Promise<void> => {
     try {
       set_loading(true);
       const { data } = await api.get('/estaciones/consultar-estaciones/');
-      const estaciones_maped = data.data.map((estacion: { nombre_estacion: string; id_estacion: number | string; }) => ({
-        label: estacion.nombre_estacion,
-        value: estacion.id_estacion,
-      }));
+      const estaciones_maped = data.data.map(
+        (estacion: {
+          nombre_estacion: string;
+          id_estacion: number | string;
+        }) => ({
+          label: estacion.nombre_estacion,
+          value: estacion.id_estacion,
+        })
+      );
       set_estaciones_options(estaciones_maped);
       set_loading(false);
-    } catch (err) {
-      control_error(err);
+    } catch (err: any) {
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       set_loading(false);
     }
   };
@@ -134,7 +160,7 @@ export const UsuariosScreen: React.FC = () => {
   const on_submit_filtrar: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_loading(true);
-      set_estaciones_meteologicas([])
+      set_estaciones_meteologicas([]);
       const estacion_id = data.estacion?.value;
       const estacion = await consultar_estaciones_id(estacion_id);
       const personas = estacion.personas.map((persona) => ({
@@ -155,17 +181,18 @@ export const UsuariosScreen: React.FC = () => {
       }));
       set_estaciones_meteologicas(personas);
       set_loading(false);
-    } catch (err: unknown) {
-      const temp_error = err as AxiosError
-      console.log("Error", temp_error.response?.status)
+    } catch (err: any) {
+      const temp_error = err as AxiosError;
       if (temp_error.response?.status === 500) {
         set_loading(false);
-        return ""
+        return '';
       } else {
         // Otro error, mostrar mensaje de error genérico
-        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+        control_error(
+          err.response.data.detail || 'Algo paso, intente de nuevo'
+        );
       }
-    };
+    }
   };
 
   const {
@@ -177,29 +204,31 @@ export const UsuariosScreen: React.FC = () => {
     void Swal.fire({
       // title: "Estas seguro?",
       customClass: {
-        confirmButton: "square-btn",
-        cancelButton: "square-btn",
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn',
       },
       width: 350,
-      text: "¿Estás seguro?",
-      icon: "warning",
+      text: '¿Estás seguro?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#8BC34A",
-      cancelButtonColor: "#B71C1C",
-      confirmButtonText: "Si, elminar!",
-      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#8BC34A',
+      cancelButtonColor: '#B71C1C',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
         await eliminar_usuario(idPersona);
-        on_submit_filtrar(estaciones_options.map((estacion) => estacion.value))
-        control_success('La persona se eliminó correctamente')
+        on_submit_filtrar(estaciones_options.map((estacion) => estacion.value));
+        control_success('La persona se eliminó correctamente');
       }
     });
   };
 
   return (
     <>
-      <Grid container spacing={2}
+      <Grid
+        container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
@@ -208,7 +237,8 @@ export const UsuariosScreen: React.FC = () => {
           mb: '20px',
           mt: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
-        }}>
+        }}
+      >
         <style>
           {`
           .square-btn {
@@ -224,29 +254,29 @@ export const UsuariosScreen: React.FC = () => {
           <Grid
             item
             className={`border px-4 text-white fs-5 p-1`}
-          // sx={{
-          //   display: 'grid',
-          //   background:
-          //     'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-          //   width: '100%',
-          //   height: '40px',
+            // sx={{
+            //   display: 'grid',
+            //   background:
+            //     'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
+            //   width: '100%',
+            //   height: '40px',
 
-          //   borderRadius: '10px',
-          //   pl: '20px',
-          //   fontSize: '17px',
-          //   fontWeight: 'bold',
-          //   alignContent: 'center',
-          // }}
+            //   borderRadius: '10px',
+            //   pl: '20px',
+            //   fontSize: '17px',
+            //   fontWeight: 'bold',
+            //   alignContent: 'center',
+            // }}
           >
             <Title title="Partes interesadas"></Title>
           </Grid>
-          <Typography sx={{ mt: '10px' }}>
-            Estación:
-          </Typography>
-          <Box component="form" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
+          <Typography sx={{ mt: '10px' }}>Estación:</Typography>
+          <Box
+            component="form"
+            onSubmit={handle_submit_filtrar(on_submit_filtrar)}
+          >
             <Grid item xs={12}>
               <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
-
                 <FormControl fullWidth>
                   <Controller
                     name="estacion"
@@ -273,15 +303,21 @@ export const UsuariosScreen: React.FC = () => {
                     disabled={loading}
                     className="search-button text-capitalize rounded-pill"
                     startIcon={
-                      loading
-                        ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                        : <SearchIcon />
+                      loading ? (
+                        <CircularProgress
+                          size={20}
+                          key={1}
+                          className="align-middle ml-1"
+                        />
+                      ) : (
+                        <SearchIcon />
+                      )
                     }
                     aria-label="Buscar "
                     size="large"
                   >
                     Buscar
-                    {loading ? '' : ""}
+                    {loading ? '' : ''}
                   </Button>
                 </FormControl>
                 <FormControl fullWidth>
@@ -301,7 +337,6 @@ export const UsuariosScreen: React.FC = () => {
             <>
               <Grid
                 item
-
                 className={`border px-4 text-white fs-5 p-1`}
                 // sx={{
                 //   display: 'grid',
@@ -321,14 +356,22 @@ export const UsuariosScreen: React.FC = () => {
                 <Title title="Información general"></Title>
               </Grid>
 
-              <ButtonGroup style={{ margin: 7, display: "flex", justifyContent: "flex-end" }}  >
-
+              <ButtonGroup
+                style={{
+                  margin: 7,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
+              >
                 {download_xls({ nurseries: estaciones_meteologicas, columns })}
-                {download_pdf({ nurseries: estaciones_meteologicas, columns, title: "Información general" })}
-
+                {download_pdf({
+                  nurseries: estaciones_meteologicas,
+                  columns,
+                  title: 'Información general',
+                })}
               </ButtonGroup>
 
-              <Grid item spacing={2} sx={{ marginTop: "10px", }}>
+              <Grid item spacing={2} sx={{ marginTop: '10px' }}>
                 <Box>
                   <DataGrid
                     density="compact"
@@ -352,14 +395,16 @@ export const UsuariosScreen: React.FC = () => {
         set_is_modal_active={set_crear_persona_is_active}
         persona={on_submit_filtrar}
       />
-      {<EditarPersonaDialog
-        set_is_modal_active={set_is_modal_editar_active}
-        is_modal_active={is_modal_editar_active}
-        usuario_editado={usuario_editado}
-        set_usuario_editado={set_usuario_editado}
-        persona={on_submit_filtrar}
-        estaciones_options={estaciones_options}
-      />}
+      {
+        <EditarPersonaDialog
+          set_is_modal_active={set_is_modal_editar_active}
+          is_modal_active={is_modal_editar_active}
+          usuario_editado={usuario_editado}
+          set_usuario_editado={set_usuario_editado}
+          persona={on_submit_filtrar}
+          estaciones_options={estaciones_options}
+        />
+      }
     </>
-  )
+  );
 };

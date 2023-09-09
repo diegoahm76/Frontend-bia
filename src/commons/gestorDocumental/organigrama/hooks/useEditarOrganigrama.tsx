@@ -510,7 +510,7 @@ const use_editar_organigrama = () => {
 
           {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
 
-          {organigram_current?.actua &&
+          {organigram_current?.actual &&
           !params.row.cod_agrupacion_documental ? (
             <>
               <IconButton

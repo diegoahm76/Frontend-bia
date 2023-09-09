@@ -15,7 +15,8 @@ import { useEffect, useState } from "react";
 import { LoadingButton } from '@mui/lab';
 import { initial_state_bandeja, } from "../../store/slice/indexDeposito";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks";
-import { crear_bandeja, editar_bandeja, eliminar_bandeja, get_bandejas_id } from "../../store/thunks/deposito";
+import { crear_bandeja, editar_bandeja, eliminar_bandeja, get_bandejas_id, mover_bandeja_seleccionada } from "../../store/thunks/deposito";
+import DeleteIcon from '@mui/icons-material/Delete';
 import FormInputController from "../../../../../components/partials/form/FormInputController";
 import FormSelectController from "../../../../../components/partials/form/FormSelectController";
 import ListadoBandejas from "../components/bandejasExistentes";
@@ -24,7 +25,8 @@ import MoverBandeja from "../components/MoverBandeja";
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarBandejaScreen = () => {
     const { control: control_bandeja, reset, handleSubmit: handle_submit,
-        getValues: get_values } = useForm<IObjBandeja>();
+    } = useForm<IObjBandeja>();
+    const { control: control_bandeja_destino, getValues: get_values_bandeja_destino, reset: reset_bandeja_destino, handleSubmit: handle_submit_bendaje_destino } = useForm<IObjBandeja>();
     const { control: control_estante } = useForm<IdEstanteDeposito>();
     const [bandeja, set_bandeja] = useState(false);
     const [mover_bandeja, set_mover_bandeja] = useState(false);
@@ -70,6 +72,7 @@ const AdministrarBandejaScreen = () => {
 
     // editar desde la tabla
     const handle_edit_click = (bandeja: IObjBandeja) => {
+        console.log(bandeja)
         set_selected_bandeja(bandeja);
         set_bandeja(true);
         set_action("Editar");
@@ -77,7 +80,8 @@ const AdministrarBandejaScreen = () => {
     // pasar el modal mover bandeja
     const handle_mover_bandeja = (bandeja_mover: IObjBandeja) => {
         set_mover_bandeja(true);
-        console.log(bandeja_mover)
+        reset_bandeja_destino(bandeja_mover)
+        console.log(get_values_bandeja_destino('id_deposito'))
 
     };
 
@@ -142,6 +146,21 @@ const AdministrarBandejaScreen = () => {
         }
 
     }
+
+
+    const on_submit_mover_bandeja = (data: IObjBandeja): void => {
+        console.log(data)
+        const data_mover = {
+            id_deposito_destino: data.id_deposito,
+            id_estante_destino: data.id_estante_deposito
+
+
+        };
+
+        void dispatch(mover_bandeja_seleccionada(selected_bandeja.id_bandeja_estante, data_mover));
+
+    }
+
 
 
 
@@ -317,7 +336,7 @@ const AdministrarBandejaScreen = () => {
                         xs={12}
                         md={3}
                         margin={0}
-                        control_form={control_bandeja}
+                        control_form={control_bandeja_destino}
                         control_name="nombre_deposito"
                         default_value=''
                         rules={{}}
@@ -331,7 +350,7 @@ const AdministrarBandejaScreen = () => {
                         xs={12}
                         md={3}
                         margin={0}
-                        control_form={control_bandeja}
+                        control_form={control_bandeja_destino}
                         control_name="identificacion_por_deposito"
                         default_value=''
                         rules={{}}
@@ -355,7 +374,8 @@ const AdministrarBandejaScreen = () => {
                         <Grid item>
                             <Button variant="outlined"
                                 color="success"
-                                onClick={handle_cerrar_ventana}>
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                                onClick={handle_submit_bendaje_destino(on_submit_mover_bandeja)}>
                                 Aceptar
                             </Button>
                         </Grid>
@@ -373,10 +393,10 @@ const AdministrarBandejaScreen = () => {
             {open_modal && (
                 <Grid item xs={12} marginY={1}>
                     <MoverBandeja
-                        control_bandeja={control_bandeja}
+                        control_bandeja_destino={control_bandeja_destino}
                         open={open_modal}
                         handle_close_buscar={handle_close_buscar}
-                        get_values={get_values}
+                        get_values={get_values_bandeja_destino}
                         handle_mover_bandeja={handle_mover_bandeja}
 
                     />
@@ -402,8 +422,9 @@ const AdministrarBandejaScreen = () => {
             {selected_bandeja.identificacion_por_estante !== null &&
                 <Grid item xs={12} md={2}>
                     <Button
-                        variant="contained"
-                        color="secondary"
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        color="error"
                         onClick={() => { on_submit_elimnar(selected_bandeja); }}
                     >
                         Eliminar

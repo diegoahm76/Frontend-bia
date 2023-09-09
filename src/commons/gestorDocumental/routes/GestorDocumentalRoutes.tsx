@@ -11,10 +11,13 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
+<<<<<<< HEAD
 import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 // import { Suspense } from 'react';
 // import { Loader } from '../../../utils/Loader/Loader';
+=======
+>>>>>>> 6f7db5c7879cbd53349433c6e787880935a1c9fb
 
 const routes = [
   {
@@ -22,6 +25,7 @@ const routes = [
     name: 'organigrama',
     component: () => <OrganigramaRoutes />,
   },
+  //! dentro de ccd va a estar la ruta de permisos sobre series documentales
   {
     path: 'ccd/',
     name: 'ccd',

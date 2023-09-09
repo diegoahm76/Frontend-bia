@@ -236,7 +236,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };
@@ -251,7 +251,7 @@ export const UserProvider = ({
     } catch (err: any) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404 && temp.response?.status !== 400) {
-        control_error(err.response.data.detail);
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };

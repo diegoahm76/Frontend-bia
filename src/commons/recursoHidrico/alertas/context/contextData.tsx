@@ -191,7 +191,7 @@ export const UserProvider = ({
         set_alertas_selected(data_pozo);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const fetch_data_alerta_cod = async (
@@ -203,7 +203,7 @@ export const UserProvider = ({
         set_alertas(response);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -214,7 +214,7 @@ export const UserProvider = ({
         set_perfiles_selected(response);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -227,7 +227,7 @@ export const UserProvider = ({
         set_rows_personas_alertas(response);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -240,7 +240,7 @@ export const UserProvider = ({
         set_rows_alerta_programada(response);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const [alertas_prioridad, set_alertas_prioridad] = React.useState<
@@ -254,7 +254,7 @@ export const UserProvider = ({
         set_alertas_prioridad(response);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
