@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,8 +23,6 @@ import { get_programmed_maintenance } from './thunks/maintenanceThunks';
 import { get_cv_vehicle_service } from '../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks';
 import { get_cv_computer_service } from '../../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { get_cv_others_service } from '../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks';
-
-import ClearIcon from '@mui/icons-material/Clear';
 
 interface IProps {
   is_modal_active: boolean;
@@ -136,24 +133,6 @@ const BuscarProgramacionComponent = ({
     parent_details(articulo);
   }, [articulo, parent_details]);
 
-  const columnsss = [
-    {
-      field: "articulo",
-      header: "Artículo",
-      style: { width: "20%" },
-    },
-    {
-      field: "tipo_descripcion",
-      header: "Tipo mantenimiento",
-      style: { width: "40%" },
-    },
-    {
-      field: "fecha",
-      header: "Fecha programado",
-      style: { width: "40%" },
-    },
-  ];
-
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <Dialog
@@ -164,10 +143,7 @@ const BuscarProgramacionComponent = ({
         set_is_modal_active(false);
       }}
     >
-      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-        <Title title={`${title} `} />
-      </Grid>
-      <DialogTitle> </DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText
           component={'span'}
@@ -253,10 +229,6 @@ const BuscarProgramacionComponent = ({
                 <Title title="Resultados" />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
-                  <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
-              {download_xls_dos({ nurseries: grid_busqueda, columns:columnsss })}
-              {download_pdf_dos({ nurseries: grid_busqueda, columns:columnsss, title: 'Resultados' })}
-            </ButtonGroup>
                     <DataTable
                       value={grid_busqueda}
                       sortField="nombre"
@@ -297,23 +269,21 @@ const BuscarProgramacionComponent = ({
       </DialogContent>
       <DialogActions>
         <Button
-          color="error"
-          variant="contained"
-          startIcon={<ClearIcon />}
-          onClick={() => {
-            set_is_modal_active(false);
-          }}
-        >
-          Salir
-        </Button>
-         <Button
           color="primary"
           variant="contained"
           onClick={selected_product_grid}
         >
           Seleccionar
         </Button>
-       
+        <Button
+          color="inherit"
+          variant="contained"
+          onClick={() => {
+            set_is_modal_active(false);
+          }}
+        >
+          Salir
+        </Button>
       </DialogActions>
     </Dialog>
   );

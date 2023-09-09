@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable import/no-duplicates */
 import React from "react";
 import { type ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";

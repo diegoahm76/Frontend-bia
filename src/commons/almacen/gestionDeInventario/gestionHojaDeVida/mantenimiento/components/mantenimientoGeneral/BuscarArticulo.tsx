@@ -1,13 +1,11 @@
-import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField } from "@mui/material"
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import { Column } from "primereact/column";
-import { DataTable, DataTableValue } from "primereact/datatable";
+import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_article_by_type } from "./thunks/maintenanceThunks";
-
-import ClearIcon from '@mui/icons-material/Clear';
 
 
 interface IProps {
@@ -29,7 +27,7 @@ const BuscarArticuloComponent = ({
   const [nombre, set_nombre] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState<DataTableValue | null>(null);
+  const [selected_product, set_selected_product] = useState(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +52,6 @@ const BuscarArticuloComponent = ({
     set_is_modal_active(false);
   }
 
-
   useEffect(() => {
     const tipo = tipos_articulos.find(ta => ta.tipo === title);
     set_columna_hidden(false);
@@ -63,28 +60,7 @@ const BuscarArticuloComponent = ({
       set_grid_busqueda(articulos);
       set_grid_busqueda_before([...articulos]);
     })
-  }, [title]);
-
-
-  const columnsss = [
-    { field: "id_bien", header: "Id", style: { width: "25%" } },
-    { field: "codigo_bien", header: "Código", style: { width: "25%" } },
-    { field: "nombre", header: "Nombre", style: { width: "25%" } },
-    {
-      field: "doc_identificador_nro",
-      header: "Placa",
-      style: { width: "25%" },
-      hidden: columna_hidden,
-    },
-    {
-      field: "doc_identificador_nro",
-      header: "Serial",
-      style: { width: "25%" },
-      hidden: !columna_hidden,
-    },
-  ];
-
-
+  }, [title])
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <Dialog
@@ -93,10 +69,7 @@ const BuscarArticuloComponent = ({
       open={is_modal_active}
       onClose={() => { set_is_modal_active(false); }}
     >
-       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-                    <Title title={`Buscar ${title}`}/>
-                </Grid>
-      <DialogTitle> </DialogTitle>
+      <DialogTitle>Buscar {title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box
@@ -156,10 +129,6 @@ const BuscarArticuloComponent = ({
               <Grid item xs={12} sm={12}>
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
-                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
-              {download_xls_dos({ nurseries: grid_busqueda, columns:columnsss })}
-              {download_pdf_dos({ nurseries: grid_busqueda, columns:columnsss, title: 'Resultados' })}
-            </ButtonGroup>
                   <div className="card">
                     <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                     // @ts-ignore
@@ -180,13 +149,12 @@ const BuscarArticuloComponent = ({
       </DialogContent>
       <DialogActions>
         <Button
-          color='error'
+          color='inherit'
           variant='contained'
-          startIcon={<ClearIcon />}
           onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
         <Button
           color='primary'
-          variant='contained' 
+          variant='contained'
           onClick={selected_product_grid}>Seleccionar</Button>
       </DialogActions>
     </Dialog>
