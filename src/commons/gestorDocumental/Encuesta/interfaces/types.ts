@@ -1,4 +1,4 @@
-export interface Genero {
-    codigo: string;
-    descripcion: string;
-  }
+export interface IGeneroOption {
+  codigo: string;
+  descripcion: string;
+}
