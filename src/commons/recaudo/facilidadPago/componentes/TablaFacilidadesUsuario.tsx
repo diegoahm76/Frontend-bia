@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip } from '@mui/material';
 import { Article } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -8,10 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type FacilidadPagoUsuario } from '../interfaces/interfaces';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
-import { estado_facilidad } from '../slices/FacilidadesSlice';
+import { get_seguimiento_fac } from '../slices/FacilidadesSlice';
 import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
 import { get_validacion_resolucion } from '../slices/ResolucionSlice';
-// import { get_seguimiento_fac } from '../requests/requests';
 import { faker } from '@faker-js/faker';
 
 interface RootState {
@@ -26,6 +24,11 @@ export const TablaFacilidadesUsuario: React.FC = () => {
   const { facilidades } = useSelector((state: RootState) => state.facilidades);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+
+  const capitalize = (str: string): string => {
+    const str_min = str.toLowerCase();
+    return str_min.charAt(0).toUpperCase() + str_min.slice(1);
+  };
 
   useEffect(() => {
     set_visible_rows(facilidades)
@@ -64,7 +67,7 @@ export const TablaFacilidadesUsuario: React.FC = () => {
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {capitalize(params.value)}
         </div>
       ),
     },
@@ -72,38 +75,59 @@ export const TablaFacilidadesUsuario: React.FC = () => {
       field: 'acciones',
       headerName: 'Acción',
       width: 150,
-      renderCell: (params) => (
-        <Tooltip title="Ver">
-          <IconButton
-            onClick={() => {
-              try {
-                void dispatch(estado_facilidad(params.row.estado));
-                void dispatch(get_facilidad_solicitud(params.row.id));
-                void dispatch(get_validacion_plan_pagos(params.row.id));
-                void dispatch(get_validacion_resolucion(params.row.id));
-                // void get_seguimiento_fac(params.row.id);
-                navigate('../seguimiento');
-              } catch (error: any) {
-                throw new Error(error);
-              }
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+      renderCell: (params) => {
+        return capitalize(params.row.estado) !== 'Sin responder'? (
+          <Tooltip title="Ver">
+            <IconButton
+              onClick={() => {
+                try {
+                  void dispatch(get_seguimiento_fac(params.row.id));
+                  void dispatch(get_facilidad_solicitud(params.row.id));
+                  void dispatch(get_validacion_plan_pagos(params.row.id));
+                  void dispatch(get_validacion_resolucion(params.row.id));
+                  navigate('../seguimiento');
+                } catch (error: any) {
+                  throw new Error(error);
+                }
               }}
-              variant="rounded"
             >
-              <Article
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-      ),
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <Article
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip disableFocusListener disableHoverListener disableInteractive disableTouchListener title="Ver">
+            <IconButton
+              disabled
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <Article
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        )
+      }
     },
   ];
 

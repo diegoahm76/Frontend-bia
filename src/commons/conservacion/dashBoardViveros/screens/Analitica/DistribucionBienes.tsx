@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { type ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 
@@ -35,3 +36,4 @@ export const DistribucionBienes: React.FC<IProps> = (props: IProps) => {
         </>
     );
 }
+

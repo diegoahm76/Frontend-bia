@@ -28,6 +28,7 @@ import {
   setGridActualANuevo,
   setUnidadesSeleccionadas,
   set_current_id_organigrama
+
 } from '../../toolkit/UxE_slice/UxE_slice';
 
 export const ActualANuevo: FC = (): JSX.Element => {
@@ -36,6 +37,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
+
   const { asignacionConsultaTablaTemporal, organigrama_current } = useAppSelector(
     (state) => state.u_x_e_slice
   );
@@ -68,11 +70,13 @@ export const ActualANuevo: FC = (): JSX.Element => {
           value: item?.id_organigrama
         }))
       );
+
       //* --- se cierra la petición de la asignación del organigrama actual
 
       // * si hay algo en la tabla temporal se analiza para seleccionar de inmediato el organigrama correspondiente
 
       // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_anterior está presente
+
       if (asignacionConsultaTablaTemporal?.id_organigrama_anterior) {
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
@@ -208,6 +212,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
+
                           console.log('selectedOption', selectedOption);
                           //* selecciona el id del organigrama sobre el que estoy trabajando para hacer el almacenamiento de datos dentro de la tabla temporal T026
                           dispatch(

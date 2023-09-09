@@ -1,13 +1,34 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, Grid, Stack } from '@mui/material';
 import { CloudDownload } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
+import { type CuotaPlanPagoValidacion, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import logoEmpresa from '../assets/logo_cormacarena.png';
 import pse from '../assets/pse.png';
 import dayjs from 'dayjs';
 import './Estilos/ReciboPago.css';
 
+interface RootStateDatosPago {
+  deudores: {
+    deudores: CuotaPlanPagoValidacion;
+  }
+}
+
+interface RootStateDatosDeudor {
+  solicitud_facilidad: {
+    solicitud_facilidad: FacilidadPagoSolicitud;
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReciboPagoModulo: React.FC = () => {
+  const { deudores } = useSelector((state: RootStateDatosPago) => state.deudores);
+  const { solicitud_facilidad } = useSelector((state: RootStateDatosDeudor) => state.solicitud_facilidad);
+
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(parseFloat(deudores.monto_cuota))
+
   return (
     <Stack
       direction="column"
@@ -32,14 +53,14 @@ export const ReciboPagoModulo: React.FC = () => {
                 <p className='descripcionRecibo'><strong>Ref. Pago</strong></p>
               </div>
               <div className='referenciaRecibo__info'>
-                <p className='descripcionRecibo'><strong>{'WFE-19304023'}</strong></p>
+                <p className='descripcionRecibo'><strong>{solicitud_facilidad.facilidad_pago.numero_radicacion}</strong></p>
               </div>
             </section>
             <section className='pagoRecibo__fecha--titulo'>
               <p className='descripcionRecibo'><strong>FECHA LIMITE DE PAGO</strong></p>
             </section>
             <div className='pagoRecibo__fecha--info'>
-              <p className='descripcionRecibo'><strong>{'20/08/2023'}</strong></p>
+              <p className='descripcionRecibo'><strong>{dayjs(deudores.fecha_vencimiento).format('DD/MM/YYYY')}</strong></p>
             </div>
           </div>
         </section>
@@ -62,7 +83,7 @@ export const ReciboPagoModulo: React.FC = () => {
               <p className='descripcionRecibo'><strong>Cédula/NIT</strong></p>
             </div>
             <div className='datosRecibo__info'>
-              <p className='descripcionRecibo'><strong>{'12984244993'}</strong></p>
+              <p className='descripcionRecibo'><strong>{solicitud_facilidad.deudor.identificacion}</strong></p>
             </div>
           </section>
           <section className='datosRecibo'>
@@ -70,7 +91,7 @@ export const ReciboPagoModulo: React.FC = () => {
               <p className='descripcionRecibo'><strong>Nombre Titular</strong></p>
             </div>
             <div className='datosRecibo__info'>
-              <p className='descripcionRecibo'><strong>{'Juan David Fajardo'}</strong></p>
+              <p className='descripcionRecibo'><strong>{''.concat(solicitud_facilidad.deudor.nombres, ' ', solicitud_facilidad.deudor.apellidos)}</strong></p>
             </div>
           </section>
           <section className='datosRecibo'>
@@ -79,13 +100,13 @@ export const ReciboPagoModulo: React.FC = () => {
             </div>
             <div className='datosRecibo__info--ultimo'>
               <div className='datosRecibo__info--fila'>
-                <p className='descripcionRecibo'><strong>{'3'}</strong></p>
+                <p className='descripcionRecibo'><strong>{deudores.nro_cuota}</strong></p>
               </div>
               <div className='datosRecibo__info--fila2'>
                 <p className='descripcionRecibo'><strong>Valor Cuota</strong></p>
               </div>
               <div className='datosRecibo__info--fila'>
-                <p className='descripcionRecibo'><strong>{'345.000,00 COP'}</strong></p>
+                <p className='descripcionRecibo'><strong>{total_cop}</strong></p>
               </div>
             </div>
           </section>

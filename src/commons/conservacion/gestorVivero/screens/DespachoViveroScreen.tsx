@@ -10,7 +10,7 @@ import type { AuthSlice } from '../../../../commons/auth/interfaces';
 import { useSelector } from 'react-redux';
 import { get_person_id_service } from '../../produccion/store/thunks/produccionThunks';
 import { reset_state, set_current_despacho } from '../store/slice/viveroSlice';
-import { type IDespacho } from '../interfaces/vivero';
+import { IObjDistribucion, type IDespacho } from '../interfaces/vivero';
 import SaveIcon from '@mui/icons-material/Save';
 import FormButton from '../../../../components/partials/form/FormButton';
 import CheckIcon from '@mui/icons-material/Check';
@@ -32,7 +32,7 @@ export function DespachoViveroScreen(): JSX.Element {
   } = useForm<IDespacho>();
 
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { current_despacho, items_distribuidos } = useAppSelector(
+  const { current_despacho, items_distribuidos, items_despacho, realizar_despacho_manual } = useAppSelector(
     (state) => state.nursery
   );
   const { changing_person } = useAppSelector((state) => state.produccion);
@@ -94,33 +94,54 @@ export function DespachoViveroScreen(): JSX.Element {
     }
   }, [changing_person]);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const on_submit_save = (data: IDespacho) => {
+    let items_distribuidos_local = (realizar_despacho_manual.realizar_despacho_manual || current_despacho.id_vivero_solicita === null) ? items_distribuidos : set_object_items_distribuidos();
     const id_despacho = current_despacho.id_despacho_entrante;
     if (id_despacho !== null && id_despacho !== undefined) {
-      console.log(items_distribuidos);
       void dispatch(
         save_items_distribuidos_service(
           id_despacho,
           data.observacion_distribucion ?? '',
-          items_distribuidos
+          items_distribuidos_local
         )
       );
     }
   };
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
   const on_submit_confirm = (data: IDespacho) => {
+    let items_distribuidos_local = (realizar_despacho_manual.realizar_despacho_manual || current_despacho.id_vivero_solicita === null) ? items_distribuidos : set_object_items_distribuidos();
     const id_despacho = current_despacho.id_despacho_entrante;
     if (id_despacho !== null && id_despacho !== undefined) {
       void dispatch(
         confirmar_items_distribuidos_service(
           id_despacho,
           data.observacion_distribucion ?? '',
-          items_distribuidos
+          items_distribuidos_local
         )
       );
     }
   };
+
+  const set_object_items_distribuidos: () => IObjDistribucion[] = () => {
+    let items_distribuidos: IObjDistribucion[]= [];
+    items_despacho.forEach((item: any) => {
+      const new_bien: IObjDistribucion = {
+        id_distribucion_item_despacho_entrante: item.id_distribucion_item_despacho_entrante ?? null,
+        id_vivero: current_despacho.id_vivero_solicita,
+        id_bien: item.id_bien,
+        cantidad_asignada: Number(item.cantidad_restante),
+        cod_etapa_lote_al_ingresar: item.cod_etapa_lote_al_ingresar ?? 'G',
+        id_item_despacho_entrante: item.id_item_despacho_entrante ?? null,
+        vivero_nombre: current_despacho?.nombre_vivero_solicita ?? '',
+        unidad_medida: item.unidad_medida ?? '',
+        codigo_bien: item.codigo_bien ?? '',
+        nombre_bien: item.nombre_bien ?? '',
+      };
+      items_distribuidos = [...items_distribuidos, new_bien];
+    });
+    return items_distribuidos;
+  }
+
 
   return (
     <>

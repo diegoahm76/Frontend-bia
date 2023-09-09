@@ -3,7 +3,9 @@ export const colGridAntANuevo = [
   {
     headerName: 'Nombre',
     field: 'nombre_completo',
+
     width: 300,
+
   },
   {
     headerName: 'Unidad organizacional actual',

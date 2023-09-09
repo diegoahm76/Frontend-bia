@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, Close, ManageAccounts, Help, Save, Article, Info } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -12,6 +11,7 @@ import { get_validacion_plan_pagos } from '../slices/PlanPagosSlice';
 import { get_validacion_resolucion } from '../slices/ResolucionSlice';
 import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
 import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
+import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 interface RootStateFacilidades {
@@ -37,11 +37,11 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const handle_open = () => { set_modal(true) };
-  const handle_close = () => { set_modal(false) };
+  const handle_open = (): void => { set_modal(true) };
+  const handle_close = (): void => { set_modal(false) };
 
-  const handle_open_sub = () => { set_sub_modal(true) };
-  const handle_close_sub = () => { set_sub_modal(false) };
+  const handle_open_sub = (): void => { set_sub_modal(true) };
+  const handle_close_sub = (): void => { set_sub_modal(false) };
 
   const get_lista_funcionarios = async (): Promise<void> => {
     try {
@@ -107,10 +107,14 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
-                  void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
-                  void dispatch(get_validacion_plan_pagos(params.row.id_facilidad));
-                  void dispatch(get_validacion_resolucion(params.row.id_facilidad));
-                  navigate('../solicitud');
+                  try {
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    void dispatch(get_validacion_plan_pagos(params.row.id_facilidad));
+                    void dispatch(get_validacion_resolucion(params.row.id_facilidad));
+                    navigate('../solicitud');
+                  } catch (error: any) {
+                    throw new Error(error)
+                  }
                 }}
               >
                 <Avatar
@@ -285,7 +289,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id_facilidad}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
                   />
                 </Box>
               </Grid>

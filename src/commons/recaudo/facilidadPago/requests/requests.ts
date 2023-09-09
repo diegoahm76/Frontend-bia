@@ -1,5 +1,5 @@
 import { api } from '../../../../api/axios';
-import { type RespuestaFacilidadPago, type RegistroFacilidadPago, type Bien } from '../interfaces/interfaces';
+import { type RespuestaFacilidadPago, type RegistroFacilidadPago, type Bien, type CrearResolucion, type CrearPlanPagos } from '../interfaces/interfaces';
 
 interface Funcionario {
   id_funcionario: number;
@@ -166,7 +166,11 @@ export const post_documentos_persona = async (archivo: any = {} ): Promise<any> 
 
 // Crear Bienes desde Pag. Usuario Externo
 export const post_registro_bienes = async (bien: Bien): Promise<any> => {
-  const data = await api.post(`recaudo/garantias/crear-bien/`, bien)
+  const data = await api.post(`recaudo/garantias/crear-bien/`, bien, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
   return data
 }
 
@@ -200,14 +204,43 @@ export const get_fac_pago_autorizadas = async (): Promise<any> => {
   return data
 }
 
-// Consultar facilidades pago desde Pag. Usuario Externo
-export const get_seguimiento_fac = async (id: number): Promise<any> => {
-  const data = await api.get(`recaudo/facilidades-pagos/respuesta-solicitud-funcionario/get/${id}/`)
+// Consultar facilidad pago desde Pag. Usuario Externo
+export const get_seguimiento_fac = async (id_facilidad: number): Promise<any> => {
+  const data = await api.get(`recaudo/facilidades-pagos/respuesta-solicitud-funcionario/get/${id_facilidad}/`)
   return data
 }
 
-// Datos para la amortización desde Pag. Usuario Interno
-export const get_datos_amortizacion = async (id: number): Promise<any> => {
+// Ver Datos para la amortización desde Pag. Usuario Interno
+export const get_datos_deudor_amortizacion = async (id: number): Promise<any> => {
   const data = await api.get(`recaudo/planes-pagos/datos-facilidad-pago/${id}/`)
+  return data
+}
+
+// Ver Datos para la amortización desde Pag. Usuario Interno
+export const get_datos_amortizacion = async (id_facilidad: number, fecha_final: string| Date | null, cuotas: number, periodicidad: number): Promise<any> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const data = await api.get(`recaudo/planes-pagos/plan-obligaciones-facilidad/${id_facilidad}/?fecha_final=${fecha_final}&cuotas=${cuotas}&periodicidad=${periodicidad}`)
+  return data
+}
+
+// Crear resolución desde Pag. Usuario Interno
+export const post_resolucion = async (resolucion: CrearResolucion): Promise<any> => {
+  const data = await api.post(`recaudo/planes-pagos/resolucion/create/`, resolucion, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
+  return data
+}
+
+// Crear plan de pagos desde Pag. Usuario Interno
+export const post_plan_pagos = async (plan_pagos: CrearPlanPagos): Promise<any> => {
+  const data = await api.post(`recaudo/planes-pagos/create/`, plan_pagos)
+  return data
+}
+
+// Consultar información cuota plan de pagos desde Pag. Usuario Externo
+export const get_cuota_recibo = async (id: number): Promise<any> => {
+  const data = await api.get(`recaudo/planes-pagos/cuota-by-id/get/${id}/`)
   return data
 }

@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import { reporte_estado_actividad, reporte_evolucion_lote, reporte_mortalidad, reporte_plantas_sd } from "../thunks/SubsistemaConservacion";
 import BuscarPlantas from "./BuscarPlantas";
+import ReportesXLS from "./reportesXLS";
 import { DialogNoticacionesComponent } from "../../../../components/DialogNotificaciones";
 
 const lista_reporte = [{ name: 'Mortalidad de Planta', value: 'MP' }, { name: 'Plantas Solicitadas vs Plantas Despachadas', value: 'PSPD' }, { name: 'Estado y Actividad de Planta', value: 'EAP' }, { name: 'Evolución por Lote', value: 'EL' }];
@@ -175,11 +176,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         set_mensaje_notificacion(mensaje)
         set_dialog_notificaciones_is_active(active);
         set_abrir_modal(active);
-    }
-
-    const descargar_pdf = () => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        doc.save(`${(titulo_reporte.reporte_seleccionado !== null && titulo_reporte.reporte_seleccionado !== undefined) ? titulo_reporte.reporte_seleccionado.name : ''}.pdf`);
     }
 
     const nueva_pagina: (doc: jsPDF, title: string, page_position: number) => void = (doc: jsPDF, title: string, page_position: number) => {
@@ -525,7 +521,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 }}
             >
                 <Grid item md={12} xs={12}>
-                    <Title title="Filtros de búsqueda" />
+                    <Title title="Compendios" />
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
@@ -785,34 +781,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             >
                 <Grid container justifyContent="flex-end">
                     <Grid item xs={12}>
-                        <Box
-                            component="form"
-                            sx={{ mb: '20px' }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <Grid item xs={12} sm={12}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-end"
-                                    spacing={2}>
-                                    <Button
-                                        color='success'
-                                        variant='outlined'
-                                        onClick={descargar_pdf}
-                                    >
-                                        Exportar PDF
-                                    </Button>
-                                    <Button
-                                        color='error'
-                                        variant='outlined'
-                                        onClick={descargar_pdf}
-                                    >
-                                        Exportar XLS
-                                    </Button>
-                                </Stack>
-                            </Grid>
-                        </Box>
+                        <ReportesXLS doc={doc} titulo_reporte={titulo_reporte} reporte={reporte} tipo_reporte={seleccion_reporte}></ReportesXLS>
                         <Box
                             component="form"
                             noValidate

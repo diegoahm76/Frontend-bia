@@ -26,6 +26,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
   //* states from redux
   const {
     controlModoTrasladoUnidadXEntidad,
+
     //* unidades seleccionadas traslado actual a nuevo
     unidadesSeleccionadas,
     //* unidades seleccionadas traslado anterior a actual
@@ -33,6 +34,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
     organigrama_current,
     gridAnteriorAActual
     /* controlFaseEntrada */
+
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
@@ -40,12 +42,15 @@ export const CleanData: FC<any> = (): JSX.Element => {
   const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
 
   const guardarRegistrosT026 = (): void => {
+
+
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
         .filter(
           // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
           ([key, value]) => {
+
             return value
               ? value?.idPersona && value?.label && value?.value
               : null;

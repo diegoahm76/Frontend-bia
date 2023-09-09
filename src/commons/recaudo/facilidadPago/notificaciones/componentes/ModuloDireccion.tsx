@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState } from 'react';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { type IList } from '../../../../../interfaces/globalModels';
@@ -19,8 +18,8 @@ export const ModuloDireccion: React.FC = () => {
   const [complemento, set_complemento] = useState('');
   const [modal, set_modal] = useState(false);
 
-  const handle_close = () => { set_modal(false) }
-  const handle_open = () => { set_modal(true) }
+  const handle_close = (): void => { set_modal(false) };
+  const handle_open = (): void => { set_modal(true) };
 
   const get_lista_paises = async (): Promise<void> => {
     try {

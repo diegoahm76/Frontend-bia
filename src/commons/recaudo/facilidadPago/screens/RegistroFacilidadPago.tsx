@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesRegistro } from '../componentes/TablaObligacionesRegistro';
@@ -36,8 +35,6 @@ interface RootStateSolicitud {
     solicitud_facilidad: Contacto;
   }
 }
-
-
 
 interface BienInput {
   id: number;
@@ -96,11 +93,11 @@ export const RegistroFacilidadPago: React.FC = () => {
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const { solicitud_facilidad } = useSelector((state: RootStateSolicitud) => state.solicitud_facilidad);
 
-  const handle_change_date_abono = (date: Date | null) => {
+  const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
   };
 
-  const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
@@ -123,11 +120,11 @@ export const RegistroFacilidadPago: React.FC = () => {
     set_obligaciones_ids(arr_ids);
   }, [obligaciones])
 
-  const handle_close = () => { set_modal(false) }
+  const handle_close = (): void => { set_modal(false) };
 
-  const capitalize = (str: string) => {
+  const capitalize = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  };
 
   const get_lista_bienes = async (): Promise<void> => {
     try {
@@ -136,7 +133,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     } catch (error: any) {
       throw new Error(error);
     }
-  }
+  };
 
   const get_lista_garantias = async (): Promise<void> => {
     try {
@@ -145,7 +142,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     } catch (error: any) {
       throw new Error(error);
     }
-  }
+  };
 
   useEffect(() => {
     void get_lista_bienes();
@@ -159,7 +156,7 @@ export const RegistroFacilidadPago: React.FC = () => {
       count = count + 1
       arr.push(count)
     }
-    set_arr_periodicidad(arr)
+    set_arr_periodicidad(arr);
   }, [limite])
 
   const columns_bienes: GridColDef[] = [
