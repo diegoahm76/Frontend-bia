@@ -115,8 +115,9 @@ const AdministrarCarpetasScreen = () => {
 
         set_selected_carpeta(initial_state_carpeta);
         set_action("Guardar");
-        void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
+
     };
+    void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
 
     const on_submit_elimnar = (data: IObjCarpeta): void => {
 
