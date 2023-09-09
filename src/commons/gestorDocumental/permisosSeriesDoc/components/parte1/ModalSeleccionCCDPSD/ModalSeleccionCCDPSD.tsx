@@ -44,10 +44,14 @@ import { columnnsSelCCDPSD } from './columns/columnsSelCCDPSD';
 import { usePSD } from '../../../hook/usePSD';
 //* select icon
 import ChecklistIcon from '@mui/icons-material/Checklist';
-import { get_busqueda_ccds_psd } from '../../../toolkit/thunks/psdThunks';
+import {
+  get_busqueda_ccds_psd,
+  get_unidad_organizacional_ccd_psd
+} from '../../../toolkit/thunks/psdThunks';
 import {
   set_busqueda_ccds_action,
-  set_ccd_current_busqueda_action
+  set_ccd_current_busqueda_action,
+  set_unidades_organizacionales_action
 } from '../../../toolkit/slice/PSDSlice';
 
 export const ModalSeleccionCCDPSD = (): JSX.Element => {
@@ -111,10 +115,18 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                console.log(' CCD seleccionado', params.row);
-
                 // ! se selecciona el ccd para establecerlo como "actual" dentro del funcionamiento de la app
                 dispatch(set_ccd_current_busqueda_action(params.row));
+
+                //* se traen las unidades disponibles y se asignan al estado
+                void get_unidad_organizacional_ccd_psd(
+                  params.row.id_organigrama,
+                  setLoadingButtonPSD
+                ).then((data: any) => {
+                  // ! se asignan las unidades organizacionales al estado
+                  dispatch(set_unidades_organizacionales_action(data));
+                });
+
                 handleSeleccionCCD_PSD(false);
               }}
             >

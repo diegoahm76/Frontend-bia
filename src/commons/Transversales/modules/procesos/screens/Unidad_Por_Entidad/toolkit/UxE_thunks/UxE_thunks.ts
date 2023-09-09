@@ -5,30 +5,31 @@ import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
 
 // ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
-export const consultarTablaTemporal = async (/* setLoading: any */): Promise<any> => {
-  // setLoading(true);
-  try {
-    const url = `transversal/organigrama/listado-registro-temporal/`;
-    const { data } = await api.get(url);
-    // console.log(data);
-    //* revisar ese data.data luego, ya que cuando si existen registros retorna una lista y otros valores muy útiles, pero cuando no, retorna un objeto con un mensaje
-    return {
-      data: data?.data,
-      success: data?.success,
-      detail: data?.detail
-    };
-  } catch (error: any) {
-    // control_warning('No hay datos para mostrar');
-    // setLoading(false);
-    return {
-      data: [],
-      success: false,
-      detail: error?.response?.data?.detail
-    };
-  } finally {
-    // setLoading(false);
-  }
-};
+export const consultarTablaTemporal =
+  async (/* setLoading: any */): Promise<any> => {
+    // setLoading(true);
+    try {
+      const url = `transversal/organigrama/listado-registro-temporal/`;
+      const { data } = await api.get(url);
+      // console.log(data);
+      //* revisar ese data.data luego, ya que cuando si existen registros retorna una lista y otros valores muy útiles, pero cuando no, retorna un objeto con un mensaje
+      return {
+        data: data?.data,
+        success: data?.success,
+        detail: data?.detail
+      };
+    } catch (error: any) {
+      // control_warning('No hay datos para mostrar');
+      // setLoading(false);
+      return {
+        data: [],
+        success: false,
+        detail: error?.response?.data?.detail
+      };
+    } finally {
+      // setLoading(false);
+    }
+  };
 
 // ? -- consulta del organigrama actual -- //
 export const get_organigrama_acual = async (navigate: any): Promise<any> => {
@@ -188,18 +189,18 @@ export const putCrearRegistrosTemporalesT026 = async (
   }
 };
 
-
 // ! get unidades organizacionales de organigrama actual
-export const getUnidadesOrganizacionalesOrganigramaActual = async (): Promise<any> => {
-  try {
-    const url = `transversal/organigrama/unidades/get-list/organigrama-actual/`;
-    const { data } = await api.get(url);
-    console.log('unidades organizacionales de organigrama actual', data)
-    return data;
-  } catch (error: any) {
-    console.log(error);
-  }
-};
+export const getUnidadesOrganizacionalesOrganigramaActual =
+  async (): Promise<any> => {
+    try {
+      const url = `transversal/organigrama/unidades/get-list/organigrama-actual/`;
+      const { data } = await api.get(url);
+      console.log('unidades organizacionales de organigrama actual', data);
+      return data;
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
 // ! proceder a realizar el traslado masivo de unidar por entidad
 export const putTrasladoMasivoUnidadesPorEntidad = async (
@@ -208,17 +209,13 @@ export const putTrasladoMasivoUnidadesPorEntidad = async (
 ): Promise<any> => {
   try {
     setLoadingButton(true);
-
-    console.log(data_traslado_masivo)
-   // const url = `transversal/organigrama/finalizar-actualizacion-unidad/`;
-   // const { data } = await api.put(url, data_traslado_masivo);
-   // console.log('data retorno creación de tabla temporal', data);
-   // return data;
+    const url = `transversal/organigrama/finalizar-actualizacion-unidad/`;
+    const { data } = await api.put(url, data_traslado_masivo);
+    console.log('data retorno creación de tabla temporal', data);
+    return data;
   } catch (error: any) {
     console.log(error);
   } finally {
     setLoadingButton(false);
   }
-}
-
-
+};

@@ -16,7 +16,7 @@ export const BusquedaCCDPSD: FC<any> = (): JSX.Element => {
 
   return (
     <>
-      <Grid item xs={12} sm={3} sx={stylesGrid}>
+      <Grid item xs={12} sm={2.8} sx={stylesGrid}>
         <TextField
           fullWidth
           label="Nombre del CCD seleccionado"
@@ -27,7 +27,7 @@ export const BusquedaCCDPSD: FC<any> = (): JSX.Element => {
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
-      <Grid item xs={12} sm={3} sx={stylesGrid}>
+      <Grid item xs={12} sm={2.8} sx={stylesGrid}>
         <TextField
           fullWidth
           label="Versión del CCD"
@@ -38,7 +38,7 @@ export const BusquedaCCDPSD: FC<any> = (): JSX.Element => {
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
-      <Grid item xs={12} sm={2} sx={stylesGrid}>
+      <Grid item xs={12} sm={1} sx={stylesGrid}>
         <Button
           color="primary"
           variant="contained"
@@ -46,7 +46,19 @@ export const BusquedaCCDPSD: FC<any> = (): JSX.Element => {
           onClick={() => {
             handleSeleccionCCD_PSD(true);
           }}
-        />
+        >
+          BUSCAR
+          </Button>
+          <Button
+          color="primary"
+          variant="contained"
+          startIcon={<SearchIcon />}
+          onClick={() => {
+            handleSeleccionCCD_PSD(true);
+          }}
+        >
+          BUSCAR
+          </Button>
       </Grid>
     </>
   );

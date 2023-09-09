@@ -1,18 +1,22 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
-import { type FC } from 'react';
+import { /* useContext, */ type FC } from 'react';
 import { stylesGrid } from '../../../../../utils/styles';
 import Select from 'react-select';
 import { Controller, useForm } from 'react-hook-form';
 import { useAppSelector } from '../../../../../../../../hooks';
+// import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
 
 export const SeleccionSeccion: FC<any> = (): JSX.Element => {
   // ! states from redux
-  const { ccd_current_busqueda } = useAppSelector((state) => state.PsdSlice);
+  const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
+    (state) => state.PsdSlice
+  );
 
   // ? context necesarios
-  // const { handleSeleccionCCD_PSD } = useContext(ModalContextPSD);
+  // const { loadingButtonPSD } = useContext(ModalContextPSD);
 
   //* useForm
   const {
@@ -31,6 +35,18 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
   const values_watch_seleccionar_seccion = seleccionar_seccion_watch();
 
   if (!ccd_current_busqueda) return <></>;
+
+  if (unidadesOrganizacionales.length === 0) {
+    return (
+      <div
+        style={{
+          marginTop: '3rem'
+        }}
+      >
+        <Loader altura={50} />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -64,7 +80,13 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                   onChange(selectedOption); */
                 }}
                 // isDisabled={tca_current != null}
-                options={[]}
+                options={unidadesOrganizacionales.map((item) => {
+                  return {
+                    item,
+                    value: item.id,
+                    label: item.nombre
+                  };
+                }) as any}
                 placeholder="Seleccionar"
               />
               <label>
