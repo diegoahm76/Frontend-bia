@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
+import { produce } from 'immer';
 import { type DataPersonas } from '../../../interfaces/globalModels';
 import type {
   ISeguridadInfo,
@@ -181,6 +181,7 @@ export const seguridad_slice = createSlice({
       state.action_admin_users = payload;
     },
     set_user_info: (state, { payload }) => {
+      // @ts-ignore
       return produce(state, (draftState) => {
         draftState.user_info = payload;
       });
@@ -189,6 +190,7 @@ export const seguridad_slice = createSlice({
       state.data_user_search = payload;
     },
     set_data_person_search: (state, { payload }) => {
+      // @ts-ignore
       return produce(state, (draftState) => {
         draftState.data_person_search = payload;
       });

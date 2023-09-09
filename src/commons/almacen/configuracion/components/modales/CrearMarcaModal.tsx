@@ -19,6 +19,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { add_marca_service, edit_marca_service } from '../../store/thunks/MarcaMedidaPorcentajeThunks';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
+import { Title } from '../../../../../components';
 
 
 interface IProps {
@@ -92,7 +93,10 @@ const CrearMarcaModal = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={action === "create" ? handle_submit(on_submit) : handle_submit(on_submit_edit)}
       >
-        <DialogTitle>{action === "create" ? "Crear marca" : action === "detail" ? "Detalle Marca" : "Editar Marca"}</DialogTitle>
+          <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`${action === "create" ? "Crear marca" : action === "detail" ? "Detalle Marca" : "Editar Marca"} `} />
+                </Grid> 
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container >
@@ -132,7 +136,8 @@ const CrearMarcaModal = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
+              color='error'
               onClick={handle_close_add_marca}
               startIcon={<CloseIcon />}
             >
@@ -146,7 +151,7 @@ const CrearMarcaModal = ({
                 EDITAR
               </Button>
             {action === "create" &&
-              <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+              <Button color='success' type="submit" variant="contained" startIcon={<SaveIcon />}>
                 GUARDAR
               </Button>
             }

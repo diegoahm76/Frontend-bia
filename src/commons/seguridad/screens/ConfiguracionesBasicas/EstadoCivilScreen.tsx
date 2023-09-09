@@ -177,7 +177,7 @@ export const CargosScreen: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="HISTORICO DE AUTORIZACIÓN DE NOTIFICACIONES" />
+                    <Title title="Historico de autorización de notificaciones" />
                 </DialogTitle>
                 <Divider />
                 <Grid

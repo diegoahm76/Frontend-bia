@@ -1,3 +1,4 @@
+
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -15,12 +16,13 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from './Title';
+import { useState } from 'react';
 import type { Direccion, keys_direccion } from '../interfaces/globalModels';
 
 interface Props {
 
   open: boolean;
-  openDialog: Dispatch<SetStateAction<boolean>>;
+  openDialog: React.Dispatch<React.SetStateAction<boolean>>;
   onChange: (value: string, type: string) => void;
   type: string;
 }

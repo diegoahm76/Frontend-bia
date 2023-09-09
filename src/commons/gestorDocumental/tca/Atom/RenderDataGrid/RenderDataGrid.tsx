@@ -40,7 +40,8 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                   autoHeight
                   rows={rows}
                   columns={columns}
-                  pageSize={10}
+
+                  pageSize={9}
                   rowHeight={75}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}

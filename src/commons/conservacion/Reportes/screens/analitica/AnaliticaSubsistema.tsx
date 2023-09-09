@@ -270,7 +270,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                 }}
             >
                 <Grid item md={12} xs={12}>
-                    <Title title="Filtros de búsqueda" />
+                    <Title title="Subsistema conservación" />
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
@@ -376,6 +376,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                                     {option[1]}
                                                 </li>
                                             )}
+                                            // @ts-ignore
                                             onChange={cambio_seleccion_tipo}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Tipo de bien" />
@@ -402,6 +403,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                                     {option.nombre}
                                                 </li>
                                             )}
+                                            // @ts-ignore
                                             onChange={handle_change_autocomplete}
                                             renderInput={(params) => (
                                                 <TextField required {...params} label="Viveros" error={error_vivero} />

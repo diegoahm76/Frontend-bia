@@ -15,10 +15,11 @@ interface IProps {
 export const AnaliticaChart: React.FC<IProps> = (props: IProps) => {
   const [valores, set_valores] = useState<any>([]);
   const [titulo, set_titulo] = useState<string>("");
-  // useEffect(() => {
-  //   if (props.axis.length > 0)
-  //     json_data_result();
-  // }, [props.axis]);
+
+  useEffect(() => {
+      json_data_result();
+  }, [props.axis]);
+
   useEffect(() => {
       json_data_result();
   }, []);

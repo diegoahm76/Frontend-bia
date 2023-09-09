@@ -16,6 +16,23 @@ import { ChartComponent } from '../chart/ChartComponent';
 export const RecaudoScreen: React.FC = () => {
   return (
     <>
+       <Grid
+        container
+        spacing={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          marginTop: '20px',
+          marginLeft: '-5px',
+        }}
+      >
+
+    <Title title="Conpendio de datos recaudo"></Title>
+      </Grid>
       {/* CUADRO DE INFORMACION */}
       <Grid container direction='row'>
 
@@ -112,8 +129,23 @@ export const RecaudoScreen: React.FC = () => {
       />
 
     </Grid>
+    <Grid
+        container
+        spacing={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          marginTop: '20px',
+          marginLeft: '-5px',
+        }}
+      >
 
     <Title title="Información General"></Title>
+      </Grid>
 
     <Grid container direction='row'>
 

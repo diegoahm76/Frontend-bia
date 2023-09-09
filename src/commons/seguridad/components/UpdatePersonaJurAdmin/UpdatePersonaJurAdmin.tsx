@@ -511,7 +511,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Autorización de notificación y tratamiento de datos */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
+                <Title title="Autorización de notificaciones" />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -596,6 +596,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                           />
                         )}
                         {...register('datos_clasificacion_persona')}
+                        // @ts-ignore
                         onChange={handle_change_autocomplete}
                       />
                     </Grid>

@@ -185,7 +185,7 @@ const AprobacionSolicitudScreen = () => {
       }}
     >
       <SeleccionarSolicitudAprobada
-        title={'APROBACIÓN DE SOLICITUDES'}
+        title={'Aprobación de solicitudes'}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values}
         function_search={get_solicitudes_filtro}

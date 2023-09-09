@@ -119,7 +119,7 @@ const DestinoSolicitud = ({
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud,
                             control_name: "con_municipio_destino",
                             default_value: "",
@@ -133,11 +133,10 @@ const DestinoSolicitud = ({
 
 
                         },
-
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud,
                             control_name: "nombre_predio_destino",
                             default_value: "",
@@ -155,8 +154,34 @@ const DestinoSolicitud = ({
                             control_name: "direccion_destino",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Requerido" } },
-                            label: "Dirección del predio:",
+                            label: "Dirección del predio",
                             type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_solicitud,
+                            control_name: "coordenadas_destino_lat",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
+                            label: "Latitud",
+                            type: "number",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_solicitud,
+                            control_name: "coordenadas_destino_lon",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
+                            label: "Lóngitud",
+                            type: "number",
                             disabled: false,
                             helper_text: ""
                         },

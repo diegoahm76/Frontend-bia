@@ -6,38 +6,43 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
-import type { IObjBandeja, IdEstanteDeposito } from "../../interfaces/deposito";
+import type { IObjCarpeta, } from "../../interfaces/deposito";
 import FormButton from "../../../../../components/partials/form/FormButton";
 import { useForm } from "react-hook-form";
 import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { LoadingButton } from '@mui/lab';
-import { initial_state_bandeja, } from "../../store/slice/indexDeposito";
-import { useAppSelector } from "../../../../../hooks";
+import { initial_state_bandeja, initial_state_carpeta, } from "../../store/slice/indexDeposito";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks";
 import FormInputController from "../../../../../components/partials/form/FormInputController";
 import FormSelectController from "../../../../../components/partials/form/FormSelectController";
-import MoverBandeja from "../../AdministracionBandeja/components/MoverBandeja";
-import ListadoBandejas from "../../AdministracionBandeja/components/bandejasExistentes";
+import type { IBuscarCaja } from "../../Cajas/types/types";
+import { editar_carpeta, crear_carpeta, eliminar_carpeta, get_carpeta_id, mover_carpeta_seleccionada } from "../../store/thunks/deposito";
+import ListadoCarpetas from "../components/CarpetasExistentes";
+import MoverCarpeta from "../components/MoverCarpeta";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarCarpetasScreen = () => {
-    const { control: control_bandeja, reset,
-        getValues: get_values } = useForm<IObjBandeja>();
-    const { control: control_estante } = useForm<IdEstanteDeposito>();
-    const [bandeja, set_bandeja] = useState(false);
-    const [mover_bandeja, set_mover_bandeja] = useState(false);
+    const { control: control_carpeta, reset,
+        handleSubmit: handle_submit } = useForm<IObjCarpeta>();
+    const { control: control_carpeta_destino, reset: reset_carpeta_destino,
+        getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
+    const { control: control_caja } = useForm<IBuscarCaja>();
+    const [carpeta, set_carpeta] = useState(false);
+    const [mover_carpeta, set_mover_carpeta] = useState(false);
     const [action, set_action] = useState<string>("Guardar");
-    const [selected_bandeja, set_selected_bandeja] = useState<IObjBandeja>(
-        initial_state_bandeja
+    const [selected_carpeta, set_selected_carpeta] = useState<IObjCarpeta>(
+        initial_state_carpeta
     );
 
 
-    const { cajas, bandejas } = useAppSelector(
+    const dispatch = useAppDispatch();
+    const { cajas, carpetas } = useAppSelector(
         (state: { deposito: any }) => state.deposito
     );
     const [select_orden, set_select_orden] = useState(false);
     const [open_modal, set_open_modal] = useState(false);
-
     const handle_orden = () => {
         set_select_orden(true);
     };
@@ -50,46 +55,101 @@ const AdministrarCarpetasScreen = () => {
     };
 
 
-    const handle_bandeja = () => {
-        set_selected_bandeja(initial_state_bandeja)
-        set_bandeja(true);
+    const handle_carpeta = () => {
+        set_selected_carpeta(initial_state_bandeja)
+        set_carpeta(true);
     };
 
-    // habilitar mover bandeja
-    const handle_boton_mover_bandeja = () => {
-        set_mover_bandeja(true);
+    // habilitar mover carpeta
+    const handle_boton_mover_carpeta = () => {
+        set_mover_carpeta(true);
     };
     const handle_cerrar_ventana = () => {
-        set_mover_bandeja(false);
+        set_mover_carpeta(false);
     };
 
 
 
 
     // editar desde la tabla
-    const handle_edit_click = (bandeja: IObjBandeja) => {
-        set_selected_bandeja(bandeja);
-        set_bandeja(true);
+    const handle_edit_click = (carpeta: IObjCarpeta) => {
+        set_selected_carpeta(carpeta);
+        set_carpeta(true);
         set_action("Editar");
     };
-    // pasar el modal mover bandeja
-    const handle_mover_bandeja = (bandeja_mover: IObjBandeja) => {
-        set_mover_bandeja(true);
-        console.log(bandeja_mover)
+    // pasar el modal mover carpeta
+    const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
+        set_mover_carpeta(true);
+        reset_carpeta_destino(carpeta_mover)
+        console.log(carpeta_mover)
 
     };
 
 
     useEffect(() => {
-        console.log(selected_bandeja)
-        reset(selected_bandeja);
-    }, [selected_bandeja]);
+        console.log(selected_carpeta)
+        reset(selected_carpeta);
+    }, [selected_carpeta]);
+
+    const on_submit = (data: IObjCarpeta): void => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        if (action === "Editar" && selected_carpeta) {
+            const data_edit = {
+                ...selected_carpeta,
+                ...data,
+
+            };
+            console.log(data_edit)
+            void dispatch(
+                editar_carpeta(selected_carpeta.id_carpeta_caja, data_edit)
+            );
+        } else {
+            const data_aux = {
+                ...data,
+                id_caja_bandeja: cajas.id_caja
+
+            };
+            console.log(cajas)
+            void dispatch(crear_carpeta(data_aux));
+        }
+
+        set_selected_carpeta(initial_state_carpeta);
+        set_action("Guardar");
+
+    };
+    void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
+
+    const on_submit_elimnar = (data: IObjCarpeta): void => {
+
+        if (
+            selected_carpeta.id_carpeta_caja !== null &&
+            selected_carpeta.id_carpeta_caja !== undefined
+        ) {
+            void dispatch(
+                eliminar_carpeta(
+                    selected_carpeta.id_carpeta_caja)
+            );
+        }
+
+    }
+
+
+    const on_submit_mover_carpeta = (data: IObjCarpeta): void => {
+        console.log(data)
+        const data_mover = {
+            identificacion_caja_destino: data.identificacion_caja,
+            identificacion_bandeja_destino: data.identificacion_bandeja,
+            identificacion_estante_destino: data.identificacion_estante,
+            identificacion_deposito_destino: data.identificacion_deposito,
 
 
 
+        };
 
+        void dispatch(mover_carpeta_seleccionada(selected_carpeta.id_carpeta_caja, data_mover));
+        console.log(selected_carpeta);
 
-
+    }
 
 
 
@@ -109,12 +169,12 @@ const AdministrarCarpetasScreen = () => {
         >
             <Title title="CARPETAS POR CAJAS" />
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={3}>
                 <FormInputController
                     xs={11}
                     md={12}
-                    margin={2}
-                    control_form={control_estante}
+                    margin={0}
+                    control_form={control_caja}
                     control_name=""
                     default_value={cajas.nombre_deposito}
                     rules={{}}
@@ -126,14 +186,14 @@ const AdministrarCarpetasScreen = () => {
                 />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={3}>
                 <FormInputController
                     xs={11}
                     md={12}
-                    margin={2}
-                    control_form={control_estante}
+                    margin={0}
+                    control_form={control_caja}
                     control_name=""
-                    default_value={cajas.identificacion_por_deposito}
+                    default_value={cajas.identificacion_estante}
                     rules={{}}
                     type="text"
                     disabled={true}
@@ -142,15 +202,48 @@ const AdministrarCarpetasScreen = () => {
                     label={"Estante"}
                 />
             </Grid>
+            <Grid item xs={12} sm={3}>
+                <FormInputController
+                    xs={11}
+                    md={12}
+                    margin={0}
+                    control_form={control_caja}
+                    control_name=""
+                    default_value={cajas.identificacion_bandeja}
+                    rules={{}}
+                    type="text"
+                    disabled={true}
+                    helper_text=""
+                    hidden_text={null}
+                    label={"Bandeja"}
+                />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+                <FormInputController
+                    xs={11}
+                    md={12}
+                    margin={0}
+                    control_form={control_caja}
+                    control_name=""
+                    default_value={cajas.identificacion_caja}
+                    rules={{}}
+                    type="text"
+                    disabled={true}
+                    helper_text=""
+                    hidden_text={null}
+                    label={"Caja"}
+                />
+            </Grid>
+
             <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
                 <Button variant="contained"
                     color="success"
-                    onClick={handle_bandeja}>
-                    Agregar Bandeja
+                    onClick={handle_carpeta}>
+                    Agregar Carpeta
                 </Button>
             </Grid>
 
-            {bandeja && (
+            {carpeta && (
                 <Grid
                     container
                     spacing={2}
@@ -164,15 +257,15 @@ const AdministrarCarpetasScreen = () => {
                         boxShadow: "0px 3px 6px #042F4A26",
                     }}
                 >
-                    <Title title="BANDEJA" />
+                    <Title title="CARPETA" />
 
 
                     <FormInputController
                         xs={12}
                         md={3}
                         margin={0}
-                        control_form={control_bandeja}
-                        control_name="identificacion_por_estante"
+                        control_form={control_carpeta}
+                        control_name="identificacion_por_caja"
                         default_value=''
                         rules={{}}
                         type="text"
@@ -185,8 +278,8 @@ const AdministrarCarpetasScreen = () => {
                         xs={12}
                         md={2}
                         margin={0}
-                        control_form={control_bandeja}
-                        control_name="orden_ubicacion_por_estante"
+                        control_form={control_carpeta}
+                        control_name="orden_ubicacion_por_caja"
                         default_value=''
                         rules={{}}
                         type="text"
@@ -196,7 +289,7 @@ const AdministrarCarpetasScreen = () => {
                         label={"Órden"}
                     />
 
-                    {selected_bandeja.id_bandeja_estante !== null &&
+                    {selected_carpeta.id_carpeta_caja !== null &&
                         <>
 
                             <Grid item xs={12} sm={4}>
@@ -212,16 +305,16 @@ const AdministrarCarpetasScreen = () => {
                                 <FormSelectController
                                     xs={12}
                                     md={4}
-                                    control_form={control_bandeja}
-                                    control_name={'orden_ubicacion_por_estante'}
+                                    control_form={control_carpeta}
+                                    control_name={'orden_ubicacion_por_caja'}
                                     default_value=''
                                     rules={{}}
                                     label='Nuevo órden'
                                     disabled={!select_orden}
                                     helper_text=''
-                                    select_options={bandejas}
-                                    option_label='orden_ubicacion_por_estante'
-                                    option_key='orden_ubicacion_por_estante'
+                                    select_options={carpetas}
+                                    option_label='orden_ubicacion_por_caja'
+                                    option_key='orden_ubicacion_por_caja'
                                     multiple={false}
                                     hidden_text={false}
                                     auto_focus={false}
@@ -231,8 +324,8 @@ const AdministrarCarpetasScreen = () => {
                             <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
                                 <Button variant="contained"
                                     color="success"
-                                    onClick={handle_boton_mover_bandeja}>
-                                    Mover Bandeja
+                                    onClick={handle_boton_mover_carpeta}>
+                                    Mover Carpeta
                                 </Button>
                             </Grid>
 
@@ -243,7 +336,7 @@ const AdministrarCarpetasScreen = () => {
 
                 </Grid>
             )}
-            {mover_bandeja && (
+            {mover_carpeta && (
                 <Grid
                     container
                     spacing={2}
@@ -257,15 +350,15 @@ const AdministrarCarpetasScreen = () => {
                         boxShadow: "0px 3px 6px #042F4A26",
                     }}
                 >
-                    <Title title="MOVER BANDEJA A OTRO ESTANTE" />
+                    <Title title="MOVER CARPETA A OTRA CAJA" />
 
 
                     <FormInputController
                         xs={12}
                         md={3}
                         margin={0}
-                        control_form={control_bandeja}
-                        control_name="nombre_deposito"
+                        control_form={control_carpeta_destino}
+                        control_name="identificacion_deposito"
                         default_value=''
                         rules={{}}
                         type="text"
@@ -278,8 +371,8 @@ const AdministrarCarpetasScreen = () => {
                         xs={12}
                         md={3}
                         margin={0}
-                        control_form={control_bandeja}
-                        control_name="identificacion_por_deposito"
+                        control_form={control_carpeta_destino}
+                        control_name="identificacion_estante"
                         default_value=''
                         rules={{}}
                         type="text"
@@ -287,6 +380,34 @@ const AdministrarCarpetasScreen = () => {
                         helper_text=""
                         hidden_text={null}
                         label={"Estante destino"}
+                    />
+                    <FormInputController
+                        xs={12}
+                        md={3}
+                        margin={0}
+                        control_form={control_carpeta_destino}
+                        control_name="identificacion_bandeja"
+                        default_value=''
+                        rules={{}}
+                        type="text"
+                        disabled={false}
+                        helper_text=""
+                        hidden_text={null}
+                        label={"Bandeja destino"}
+                    />
+                    <FormInputController
+                        xs={12}
+                        md={3}
+                        margin={0}
+                        control_form={control_carpeta_destino}
+                        control_name="identificacion_caja"
+                        default_value=''
+                        rules={{}}
+                        type="text"
+                        disabled={false}
+                        helper_text=""
+                        hidden_text={null}
+                        label={"Caja destino"}
                     />
 
                     <Grid item xs={12} sm={4}>
@@ -302,7 +423,8 @@ const AdministrarCarpetasScreen = () => {
                         <Grid item>
                             <Button variant="outlined"
                                 color="success"
-                                onClick={handle_cerrar_ventana}>
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                                onClick={handle_submit_carpeta_destino(on_submit_mover_carpeta)}>
                                 Aceptar
                             </Button>
                         </Grid>
@@ -319,19 +441,18 @@ const AdministrarCarpetasScreen = () => {
 
             {open_modal && (
                 <Grid item xs={12} marginY={1}>
-                    <MoverBandeja
-                        control_bandeja={control_bandeja}
+                    <MoverCarpeta
+                        control_carpeta_destino={control_carpeta_destino}
                         open={open_modal}
                         handle_close_buscar={handle_close_buscar}
-                        get_values={get_values}
-                        handle_mover_bandeja={handle_mover_bandeja}
-
+                        get_values={get_values_carpeta_destino}
+                        handle_mover_carpeta={handle_mover_carpeta}
                     />
                 </Grid>
             )}
 
             <Grid item xs={12} marginY={1}>
-                <ListadoBandejas
+                <ListadoCarpetas
 
                     handle_edit_click={handle_edit_click}
 
@@ -340,17 +461,18 @@ const AdministrarCarpetasScreen = () => {
             <Grid item xs={12} md={2}>
                 <FormButton
                     variant_button="contained"
-                    // on_click_function={handle_submit(on_submit)}
+                    on_click_function={handle_submit(on_submit)}
                     icon_class={<SaveIcon />}
                     label={action}
-                    type_button="button" on_click_function={undefined} />
+                    type_button="button" />
             </Grid>
-            {selected_bandeja.identificacion_por_estante !== null &&
+            {selected_carpeta.id_carpeta_caja !== null &&
                 <Grid item xs={12} md={2}>
                     <Button
-                        variant="contained"
-                        color="secondary"
-                    //   onClick={() => { on_submit_elimnar(selected_bandeja); }}
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={() => { on_submit_elimnar(selected_carpeta); }}
                     >
                         Eliminar
                     </Button>

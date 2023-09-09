@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
 
 // ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
+
 export const consultarTablaTemporal =
   async (/* setLoading: any */): Promise<any> => {
     // setLoading(true);
@@ -30,6 +31,7 @@ export const consultarTablaTemporal =
       // setLoading(false);
     }
   };
+
 
 // ? -- consulta del organigrama actual -- //
 export const get_organigrama_acual = async (navigate: any): Promise<any> => {

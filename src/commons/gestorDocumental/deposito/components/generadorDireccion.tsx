@@ -106,7 +106,7 @@ const SucursalDirecciones = ({ control_deposito, }: IProps) => {
     return (
         <>
             <Grid container spacing={2}>
-                <Title title={"DIRECCIÓN"}></Title>
+                <Title title={"Dirección"}></Title>
                 <FormSelectController
                     xs={12}
                     md={4}

@@ -107,9 +107,11 @@ export function BajaHerramientaScreen(): JSX.Element {
       if (vivero !== undefined) {
         dispatch(set_current_nursery(vivero));
       } else {
+        // @ts-ignore
         dispatch(set_current_nursery(initial_state_current_nursery));
       }
     } else {
+    // @ts-ignore
       dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero')]);
@@ -213,8 +215,10 @@ export function BajaHerramientaScreen(): JSX.Element {
                 variant_button="contained"
                 on_click_function={handle_submit(on_submit)}
                 icon_class={<SaveIcon />}
-                label={action}
+                // label={action}
+                label={'guardar' ?? action}
                 type_button="button"
+                
               />
             </Grid>
           )}

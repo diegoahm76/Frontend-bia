@@ -32,7 +32,7 @@ import FormInputController from '../../../../../components/partials/form/FormInp
 
 interface IProps {
 
-    control_bandeja: any;
+    control_bandeja_destino: any;
     open: any;
     handle_close_buscar: any;
     get_values: any;
@@ -42,7 +42,7 @@ interface IProps {
 
 
 
-const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values, handle_mover_bandeja }: IProps) => {
+const MoverBandeja = ({ control_bandeja_destino, open, handle_close_buscar, get_values, handle_mover_bandeja }: IProps) => {
     const { deposito, estantes } = useAppSelector((state) => state.deposito);
     console.log(deposito)
     const dispatch = useAppDispatch();
@@ -124,7 +124,7 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values, 
                             marginLeft: '-5px',
                         }}
                     >
-                        <Title title="Búsqueda avanzada estantes" />
+                        <Title title="Búsqueda avanzada de bandejas" />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
                             <Grid container spacing={2}>
@@ -132,7 +132,7 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values, 
                                 <FormSelectController
                                     xs={12}
                                     md={4}
-                                    control_form={control_bandeja}
+                                    control_form={control_bandeja_destino}
                                     control_name={'nombre_deposito'}
                                     default_value=''
                                     rules={{}}
@@ -150,7 +150,7 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values, 
                                     xs={12}
                                     md={3}
                                     margin={0}
-                                    control_form={control_bandeja}
+                                    control_form={control_bandeja_destino}
                                     control_name="identificacion_por_deposito"
                                     default_value=''
                                     rules={{}}
@@ -164,7 +164,7 @@ const MoverBandeja = ({ control_bandeja, open, handle_close_buscar, get_values, 
                                     xs={12}
                                     md={2}
                                     margin={0}
-                                    control_form={control_bandeja}
+                                    control_form={control_bandeja_destino}
                                     control_name="orden_estante"
                                     default_value=''
                                     rules={{}}

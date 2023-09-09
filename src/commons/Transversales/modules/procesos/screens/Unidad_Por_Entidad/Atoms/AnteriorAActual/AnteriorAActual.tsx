@@ -28,7 +28,6 @@ import { useAppDispatch } from '../../../../../../../../hooks';
 import { setGridAnteriorAActual } from '../../toolkit/UxE_slice/UxE_slice';
 import Swal from 'sweetalert2';
 
-
 export const AnteriorAActual: FC = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();

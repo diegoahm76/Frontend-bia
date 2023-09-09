@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Title } from '../../../../components/Title';
+// import { Title } from '../../../../components/Title';
 import { TablaDeudores } from '../componentes/TablaDeudores';
 import { get_deudores } from '../slices/DeudoresSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -19,7 +19,7 @@ export const ConsultaObligacionesFuncionario: React.FC = () => {
 
   return (
     <>
-      <Title title='Listado de Deudores - Usuario Interno Cormacarena'/>
+      {/* <Title title='Listado de Deudores - Usuario Interno Cormacarena'/> */}
       <TablaDeudores />
     </>
   )

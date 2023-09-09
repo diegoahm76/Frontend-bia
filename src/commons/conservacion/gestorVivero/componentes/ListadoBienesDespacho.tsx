@@ -1,6 +1,7 @@
-import { Box, ButtonGroup, Grid } from '@mui/material';
+
+import { Box, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { type IObjItem } from '../interfaces/vivero';
+import { IObjDespacho, type IObjItem } from '../interfaces/vivero';
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
@@ -10,6 +11,7 @@ import {
   set_bien_selected,
   set_current_bien,
   set_items_despacho_aux,
+  set_despacho_manual
 } from '../store/slice/viveroSlice';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
@@ -17,6 +19,8 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesDespacho = () => {
   const [selected_row, set_selected_row] = useState([]);
+  const [distribucion_manual, set_distribucion_manual] = useState<boolean>(false);
+  const [titulo, set_titulo] = useState<string>('Bienes Recibidos');
 
   // const [action, set_action] = useState<string>("agregar");
 
@@ -25,7 +29,12 @@ const ListadoBienesDespacho = () => {
     items_despacho_aux,
     items_distribuidos,
     current_despacho,
+    realizar_despacho_manual
   } = useAppSelector((state) => state.nursery);
+
+  useEffect(() => {
+    current_despacho.id_vivero_solicita !== null ? set_titulo('Bienes recibidos y solicitados por vivero ' + current_despacho.nombre_vivero_solicita) : set_titulo('Bienes recibidos');
+  }, [current_despacho])
 
   // const [item_solicitudes, set_item_solicitudes] = useState<ItemSolicitudConsumible[]>([]);
   const dispatch = useAppDispatch();
@@ -101,7 +110,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -111,23 +120,23 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cod_tipo_elemento_vivero',
       headerName: 'Tipo',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === 'P'
             ? 'Producción'
             : params.value === 'D'
-            ? 'Distribución'
-            : params.value === 'G'
-            ? 'Germinación'
-            : '-'}
+              ? 'Distribución'
+              : params.value === 'G'
+                ? 'Germinación'
+                : '-'}
         </div>
       ),
     },
     {
       field: 'cantidad_entrante',
       headerName: 'Cantidad entrante',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -140,7 +149,7 @@ const ListadoBienesDespacho = () => {
         current_despacho.distribucion_confirmada
           ? 'Cantidad distribuida'
           : 'Cantidad a distribuir',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? 0}
@@ -150,7 +159,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cantidad_restante',
       headerName: 'Cantidad restante',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? params.row.cantidad}
@@ -160,7 +169,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'tipo_documento',
       headerName: 'Tipo de documento',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? params.row.cantidad}
@@ -170,7 +179,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'observacion',
       headerName: 'Observación',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -190,6 +199,13 @@ const ListadoBienesDespacho = () => {
       dispatch(set_current_bien(model));
     }
   };
+
+  useEffect(() => {
+    const despacho_manual: IObjDespacho = {
+      realizar_despacho_manual: distribucion_manual
+    }
+    dispatch(set_despacho_manual(despacho_manual));
+  }, [distribucion_manual]);
 
   return (
     <>
@@ -232,7 +248,17 @@ const ListadoBienesDespacho = () => {
               getRowId={(row) => row.id_bien}
               selectionModel={selected_row}
             />
-            <Grid item xs={12} md={12}>
+            {current_despacho.id_vivero_solicita !== null && <Grid item xs={12} md={12}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                spacing={2}>
+                <FormGroup>
+                  <FormControlLabel label="Realizar districución manual" control={<Checkbox checked={distribucion_manual} onChange={() => { set_distribucion_manual(!distribucion_manual) }} inputProps={{ 'aria-label': 'controlled' }} />} />
+                </FormGroup>
+              </Stack>
+            </Grid>}
+            {(realizar_despacho_manual.realizar_despacho_manual || current_despacho.id_vivero_solicita === null) && <Grid item xs={12} md={12}>
               <FormButton
                 variant_button="contained"
                 on_click_function={select_model}
@@ -240,7 +266,7 @@ const ListadoBienesDespacho = () => {
                 label={'Distribuir bien seleccionado'}
                 type_button="button"
               />
-            </Grid>
+            </Grid>}
           </Box>
         </Grid>
       </Grid>

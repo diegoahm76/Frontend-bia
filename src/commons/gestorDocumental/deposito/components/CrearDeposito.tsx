@@ -27,7 +27,7 @@ const DepositoInfo = ({ control_deposito, get_values, open_modal, set_open_modal
     return (
         <>
             <Grid container spacing={2}>
-                <Title title="DEPOSITO" />
+                <Title title=" Deposito" />
 
                 <Grid item xs={12} sm={6}>
                     <Controller

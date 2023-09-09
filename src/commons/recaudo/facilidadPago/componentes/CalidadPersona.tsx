@@ -4,6 +4,7 @@ import { Grid, Box, TextField, Button } from "@mui/material";
 import { CloudDownload } from '@mui/icons-material';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { useSelector } from 'react-redux';
+import { Title } from "../../../../components";
 
 interface RootState {
   solicitud_facilidad: {
@@ -16,18 +17,21 @@ export const PersonaNatural: React.FC = () => {
 
   return (
     <>
-      <p><strong>Caso Persona Natural</strong></p>
-      <Grid item xs={12}>
+      <Grid item xs={12}  >
+        <Title title={`Caso Persona Natural `} />
+      </Grid>
+      {/* <p><strong></strong></p> */}
+      <Grid item marginTop={2} xs={12}>
         <Box
           component="form"
           noValidate
           autoComplete="off"
         >
           <Grid container spacing={2}>
-          {
+            {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 1){
-                  return(
+                if (obj.id_requisito_actuacion === 1) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -94,8 +98,8 @@ export const PersonaJuridica: React.FC = () => {
           <Grid container spacing={2}>
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 2){
-                  return(
+                if (obj.id_requisito_actuacion === 2) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -115,8 +119,8 @@ export const PersonaJuridica: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 3){
-                  return(
+                if (obj.id_requisito_actuacion === 3) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -136,8 +140,8 @@ export const PersonaJuridica: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 4){
-                  return(
+                if (obj.id_requisito_actuacion === 4) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -194,8 +198,12 @@ export const DeudorSolidarioNatural: React.FC = () => {
 
   return (
     <>
-      <p><strong>Caso Deudor Solidario Natural</strong></p>
-      <Grid item xs={12}>
+
+      <Grid item xs={12} >
+        <Title title={`Caso Deudor Solidario Natural `} />
+      </Grid>
+      {/* <p><strong></strong></p> */}
+      <Grid item marginTop={2} xs={12}>
         <Box
           component="form"
           noValidate
@@ -204,8 +212,8 @@ export const DeudorSolidarioNatural: React.FC = () => {
           <Grid container spacing={2}>
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 5){
-                  return(
+                if (obj.id_requisito_actuacion === 5) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -225,8 +233,8 @@ export const DeudorSolidarioNatural: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 6){
-                  return(
+                if (obj.id_requisito_actuacion === 6) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -293,8 +301,8 @@ export const DeudorSolidarioJuridico: React.FC = () => {
           <Grid container spacing={2}>
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 7){
-                  return(
+                if (obj.id_requisito_actuacion === 7) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -314,8 +322,8 @@ export const DeudorSolidarioJuridico: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 8){
-                  return(
+                if (obj.id_requisito_actuacion === 8) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
@@ -335,8 +343,8 @@ export const DeudorSolidarioJuridico: React.FC = () => {
             }
             {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
-                if(obj.id_requisito_actuacion === 9){
-                  return(
+                if (obj.id_requisito_actuacion === 9) {
+                  return (
                     <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
