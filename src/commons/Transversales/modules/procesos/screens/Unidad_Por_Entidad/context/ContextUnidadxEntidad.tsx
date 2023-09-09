@@ -10,7 +10,9 @@ const ContextUnidadxEntidad = createContext<ModalContextInterface>({
   modalHistoricos: false,
   handleModalHistoricos: () => {},
   loadingConsultaT026: false,
-  setloadingConsultaT026: (value: boolean) => {}
+  setloadingConsultaT026: (value: boolean) => {},
+  gridActualANuevo: false,
+  handleGridActualANuevo: (value: boolean) => {}
 });
 
 const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
@@ -22,12 +24,19 @@ const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
   // ! carga inicial consulta de tabla de datos temporales
   const [loadingConsultaT026, setLoadingConsultaT026] = useState(false);
 
+  //! muestra de la grid de datos segun la opcion elegida para realizar el traslado masivo de unidad por entidad
+  const [gridActualANuevo, setGridActuaANuevo] = useState<boolean>(false);
+
   const handleModalHistoricos = useCallback(() => {
     setmodalHistoricos((prevState) => !prevState);
   }, []);
 
   const setloadingConsultaT026 = useCallback((value: boolean) => {
     setLoadingConsultaT026(value);
+  }, []);
+
+  const handleGridActualANuevo = useCallback((value: boolean) => {
+    setGridActuaANuevo(value);
   }, []);
 
   const modalContextValues = {
@@ -37,7 +46,11 @@ const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
 
     //* --- carga inicial consulta tabla de datos temporales
     loadingConsultaT026,
-    setloadingConsultaT026
+    setloadingConsultaT026,
+
+    //* --- muestra de la grid de datos segun la opcion elegida para realizar el traslado masivo de unidad por entidad
+    gridActualANuevo,
+    handleGridActualANuevo
   };
 
   return (

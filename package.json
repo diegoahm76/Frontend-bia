@@ -109,6 +109,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@faker-js/faker": "^7.6.0",
     "@locator/babel-jsx": "^0.2.4",
     "@locator/runtime": "^0.2.4",

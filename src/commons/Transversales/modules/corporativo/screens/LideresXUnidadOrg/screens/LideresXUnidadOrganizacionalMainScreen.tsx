@@ -11,7 +11,7 @@ import {
   get_list_asignaciones_lideres,
   set_organigrama_lideres_current
 } from '../toolkit/LideresSlices/LideresSlice';
-import { useAppDispatch } from '../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { OrganigramaLideresScreen } from '../components/Organigrama/screen/OrganigramaLideresScreen';
 import { UnidadOrganizacionalScreen } from '../components/UnidadOrganizacional/screen/UnidadOrganizacionalScreen';
 import { AsignacionesDeLideresScreen } from '../components/Asignados/screen/AsignacionesLideresScreen';
@@ -20,16 +20,18 @@ import { AsignacionesDeLideresScreen } from '../components/Asignados/screen/Asig
 import Box from '@mui/material/Box'; */
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { containerStyles } from '../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
+import { Grid } from '@mui/material';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
 
 export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
   const navigate = useNavigate();
   //* dispatch declarations
   const dispatch = useAppDispatch();
 
-  /* const { organigrama_lideres_current } = useAppSelector(
+  const { organigrama_lideres_current } = useAppSelector(
     (state) => state.lideres_slice
   );
-*/
 
   // const [loaderLideresCarga, setLoaderLideresCarga] = useState<boolean>(false);
 
@@ -38,7 +40,7 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
     try {
       const resOrganigramaActual =
         await get_organigrama_actual_lideres_screen_service();
-
+      //* !resOrganigramaActual.id_organigrama
       if (resOrganigramaActual.id_organigrama) {
         const resAsignacionesLideresOrganigramaActual =
           await get_asignaciones_lideres_organigrama_actual_service();
@@ -76,6 +78,22 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
   useEffect(() => {
     void fetchCurrentOrganigrama();
   }, []);
+
+  if (!organigrama_lideres_current?.descripcion) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+    );
+  }
 
   return (
     <>

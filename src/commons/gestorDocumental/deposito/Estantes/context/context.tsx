@@ -234,7 +234,8 @@ export const UserProvider = ({
   const [identificacion_deposito, set_identificacion_deposito] =
     React.useState<string>('');
   const [identificacion_caja, set_identificacion_caja] = React.useState('');
-  const [orden_siguiente, set_orden_siguiente] = React.useState<ListarOrdenSiguiente>();
+  const [orden_siguiente, set_orden_siguiente] =
+    React.useState<ListarOrdenSiguiente>();
 
   // * fetch
   const fetch_data_sucursal = async (): Promise<void> => {
@@ -250,7 +251,9 @@ export const UserProvider = ({
         set_sucusal_selected(data_sucursal);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_depositos = async (): Promise<void> => {
@@ -277,7 +280,9 @@ export const UserProvider = ({
         set_depositos_selected_mover_estante(data_mover);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_estantes_depositos = async (): Promise<void> => {
@@ -301,7 +306,9 @@ export const UserProvider = ({
         set_nuevo_orden_estantes_selected(data_selected);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_bandejas_estantes = async (): Promise<void> => {
@@ -331,7 +338,9 @@ export const UserProvider = ({
         set_bandejas_selected_get(data_bandeja);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_caja_carpeta = async (): Promise<void> => {
@@ -339,15 +348,19 @@ export const UserProvider = ({
       const response = await get_caja_carpetas(id_caja as number);
       if (response?.length > 0) {
         const data_carpetas: ICarpetas[] = response.map((item: ICarpetas) => ({
+          id_carpeta_caja: item.id_caja_bandeja,
+          identificacion_por_caja: item.identificacion_por_caja,
+          orden_ubicacion_por_caja: item.orden_ubicacion_por_caja,
+          id_expediente: item.id_expediente,
           id_caja_bandeja: item.id_caja_bandeja,
-          identificacion_por_bandeja: item.identificacion_por_bandeja,
-          orden_ubicacion_por_bandeja: item.orden_ubicacion_por_bandeja,
-          id_bandeja_estante: item.id_bandeja_estante,
+          identificacion_caja: item.identificacion_caja,
         }));
         set_rows_carpetas(data_carpetas);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_caja_bandeja = async (): Promise<void> => {
@@ -372,10 +385,12 @@ export const UserProvider = ({
       }
     } catch (error: any) {
       control_error(
-        error.response.data.detail || 'Hubo un error, intente de nuevo'
+        error.response.data.detail ||
+          'Algo paso, intente de nuevo' ||
+          'Hubo un error, intente de nuevo'
       );
     }
-  }
+  };
 
   const fetch_data_orden_estante = async (): Promise<void> => {
     try {
@@ -383,7 +398,9 @@ export const UserProvider = ({
       set_orden_siguiente(response);
       // console.log('response', response);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_orden_cajas = async (): Promise<void> => {
@@ -392,10 +409,11 @@ export const UserProvider = ({
       set_orden_siguiente(response);
       // console.log('response', response);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
-
 
   // ? --------------------------------- Mover cajas ---------------------------------
   const fetch_data_depositos_mover_caja = async (): Promise<void> => {
@@ -418,7 +436,9 @@ export const UserProvider = ({
         control_warning('No hay depositos disponibles');
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 
@@ -450,7 +470,9 @@ export const UserProvider = ({
         set_estantes_selected([]);
         set_id_deposito(null);
       } else {
-        control_error(error.response.data.detail);
+        control_error(
+          error.response.data.detail || 'Algo paso, intente de nuevo'
+        );
       }
     }
   };
@@ -476,7 +498,9 @@ export const UserProvider = ({
         set_id_estante(null);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 

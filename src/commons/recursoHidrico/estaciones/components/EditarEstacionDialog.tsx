@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
@@ -57,8 +58,8 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
       control_success('La estación se actualizó correctamente')
       void estacion()
       reset();
-    } catch (error) {
-      control_error(error);
+    } catch (error: any) {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 

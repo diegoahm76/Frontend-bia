@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Button from '@mui/material/Button';
@@ -153,8 +154,8 @@ export const AdministradorDeEstaciones: React.FC = () => {
       }));
 
       set_estaciones(new_estacion);
-    } catch (err) {
-      control_error(err);
+    } catch (err: any) {
+      control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
@@ -193,18 +194,15 @@ export const AdministradorDeEstaciones: React.FC = () => {
       }
 
       set_dato(estacion); // guardar el valor en el estado
-    } catch (err: unknown) {
+    } catch (err: any) {
       const temp_error = err as AxiosError;
       console.log('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error('No se encontraron datos para esta estación');
-        console.log('No hay datos');
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
-        control_error(
-          'Ha ocurrido un error, por favor intente de nuevo más tarde.'
-        );
+        control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
       }
     }
   };

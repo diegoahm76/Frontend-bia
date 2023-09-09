@@ -9,7 +9,7 @@ import type {
   PostCajas,
 } from '../types/types';
 import { api } from '../../../../../api/axios';
-import type{ ListarOrdenSiguiente } from '../../Estantes/types/types';
+import type { ListarOrdenSiguiente } from '../../Estantes/types/types';
 
 // * ----------------------------------------------- [ GET ] -----------------------------------------------
 

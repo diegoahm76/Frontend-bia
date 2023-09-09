@@ -174,7 +174,7 @@ export const UserProvider = ({
         await get_data_id(id_proyecto, set_rows_avances, 'get/avances/por/proyectos');
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const fetch_data_actividades = async (): Promise<void> => {
@@ -184,7 +184,7 @@ export const UserProvider = ({
         await get_data_id(id_proyecto, set_rows_actividades, 'get/actividades/por/proyectos');
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
 
