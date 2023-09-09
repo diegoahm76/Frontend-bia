@@ -53,7 +53,7 @@ export interface ListarDepositos {
 }
 export interface GetEstantes {
   id_estante_deposito?: number | null;
-  orden_ubicacion_por_deposito?: number | null;
+  orden_ubicacion_por_deposito?: number | null | string;
   identificacion_por_deposito?: string;
 }
 export interface GetBandejas {
@@ -72,4 +72,9 @@ export interface PostEstantes {
 export interface PutMoverEstantes {
   identificacion_por_entidad_destino: string;
   nombre_deposito_destino: string;
+}
+
+export interface ListarOrdenSiguiente {
+  success:         boolean;
+  orden_siguiente: number;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Avatar, Button, ButtonGroup, Chip, Grid, IconButton, Stack } from '@mui/material';
@@ -123,7 +124,7 @@ export const CuencaScreen: React.FC = () => {
       }));
       set_rows(datos_cuenca);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   const confirmar_eliminar_cuenca = (id_cuenca: number): void => {
@@ -148,7 +149,7 @@ export const CuencaScreen: React.FC = () => {
           void get_traer_cuencas();
           control_success('La cuenca se eliminó correctamente');
         } catch (error: any) {
-          control_error(error.response.data.detail);
+          control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
         }
       }
     });

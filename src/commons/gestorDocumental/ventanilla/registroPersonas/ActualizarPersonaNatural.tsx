@@ -142,7 +142,7 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
     set_value('fecha_nacimiento', date);
     set_fecha_nacimiento(value);
   };
-  
+
   // trae todas las clase tercero
   const get_datos_clase_tercero = async (): Promise<void> => {
     try {
@@ -470,7 +470,7 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                     <TextField
                       size="small"
                       label="Direccion *"
-                      disabled={false}
+                      disabled={true}
                       fullWidth
                       error={errors.direccion_residencia?.type === 'required'}
                       helperText={
@@ -592,7 +592,7 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   size="small"
                   label="Direccion *"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   value={direccion_notificaciones}
                   error={errors.direccion_notificaciones?.type === 'required'}
@@ -636,16 +636,13 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="E-mail *"
-                  disabled={false}
-                  defaultValue={''}
-                  value={data?.email ?? ''}
+                  defaultValue={data?.email}
                   error={errors.email?.type === 'required'}
                   type="email"
                   helperText={
                     errors.email?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : ''
+                      : 'Email'
                   }
                   {...register('email', {
                     required: true,
@@ -656,17 +653,15 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="Celular"
                   disabled={false}
                   required={true}
-                  defaultValue={''}
-                  value={data?.telefono_celular ?? ''}
+                  defaultValue={data?.telefono_celular}
                   error={errors.telefono_celular?.type === 'required'}
                   type="text"
                   helperText={
                     errors.telefono_celular?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : ''
+                      : 'Celular'
                   }
                   {...register('telefono_celular')}
                 />
@@ -700,11 +695,11 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="Nombre comercial"
                   disabled={false}
                   required={false}
-                  defaultValue={''} // Valor predeterminado vacío, se usará si no hay datos en data.nombre_comercial
-                  value={data?.nombre_comercial ?? ''} // Usar el valor de data.nombre_comercial si está disponible
+                  defaultValue={data?.nombre_comercial}
+                  type="text"
+                  helperText="Nombre comercial"
                   {...register('nombre_comercial')}
                 />
               </Grid>
@@ -712,15 +707,13 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   fullWidth
                   size="small"
-                  label="Teléfono fijo personal"
-                  disabled={false}
                   required={false}
-                  defaultValue={''}
-                  value={data?.telefono_fijo_residencial ?? ''}
+                  defaultValue={data?.telefono_fijo_residencial}
+                  type="text"
+                  helperText="Telefono fijo residencial"
                   {...register('telefono_fijo_residencial')}
                 />
               </Grid>
-
               {/* Dirección laboral */}
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -771,7 +764,7 @@ export const ActualizarPersonaNatural: React.FC<PropsRegisterAdmin> = ({
                 <TextField
                   size="small"
                   label="Direccion"
-                  disabled={false}
+                  disabled={true}
                   fullWidth
                   {...register('direccion_laboral', {
                     required: false,

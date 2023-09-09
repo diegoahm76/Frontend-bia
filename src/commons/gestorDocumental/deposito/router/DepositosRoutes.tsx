@@ -6,6 +6,7 @@ import { EstantesScreen } from '../Estantes/screens/EstantesScreen';
 import { UserProvider } from '../Estantes/context/context';
 import AdministrarBandejaScreen from '../AdministracionBandeja/screens/administracionBandejaScreen';
 import { CajasScreen } from '../Cajas/screens/CajasScreen';
+import AdministrarCarpetasScreen from '../Carpetas/screens/AdministrarCarpetasScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DepositosRoutes = (): ReactElement => {
@@ -19,6 +20,7 @@ export const DepositosRoutes = (): ReactElement => {
           element={<AdministrarBandejaScreen />}
         />
         <Route path="cajas/*" element={<CajasScreen />} />
+        <Route path="carpetas/*" element={<AdministrarCarpetasScreen />} />
         <Route path="/*" element={<Page404 />} />
       </Routes>
     </UserProvider>

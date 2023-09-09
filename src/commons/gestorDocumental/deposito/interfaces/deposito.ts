@@ -1,3 +1,4 @@
+import type { IBuscarCaja } from "../Cajas/types/types";
 import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
 
 export interface IDeposito {
@@ -5,11 +6,14 @@ export interface IDeposito {
   current_deposito: IObjDeposito;
   sucursales: IObjSucursales[];
   mode_estante: IMode;
-  bandeja: IObjBandeja[];
+  bandejas: IObjBandeja[];
   current_bandeja: IObjBandeja;
   data_estantes: GetEstantes;
   data_depositos: InfoDepositos;
   deposito_estante: IdEstanteDeposito;
+  estantes: IObEstante[];
+  cajas: IBuscarCaja;
+  carpetas: IObjCarpeta[];
 }
 export interface IMode {
   ver: boolean;
@@ -61,6 +65,22 @@ export interface IObjSucursales {
 export interface IObjBandeja {
   id_estante_deposito?: number | null;
   id_bandeja_estante?: number | null;
+  identificacion_por_deposito?: number | null;
   orden_ubicacion_por_estante?: number | null;
   identificacion_por_estante?: string | number | null;
+}
+
+export interface IObEstante {
+  id_estante_deposito?: number | null;
+  orden_ubicacion_por_deposito?: number | null;
+  identificacion_por_deposito?: string | number | null;
+  id_deposito?: number | null;
+}
+
+export interface IObjCarpeta {
+  orden_ubicacion_por_bandeja?: number | null;
+  identificacion_por_bandeja?: number | null;
+  id_caja_bandeja?: number | null;
+  id_bandeja_estante?: number | null;
+  identificacion_bandeja?: string | number | null;
 }

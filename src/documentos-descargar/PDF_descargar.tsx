@@ -2,27 +2,24 @@ import JsPDF from 'jspdf';
 import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar la función autoTable
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const download_pdf = ({
-  nurseries,
-  columns,
-  title
-}: any): JSX.Element => {
-  const titulo: any = title;
-  console.log(titulo);
-  const button_style = {
-    color: 'white',
-    backgroundColor: 'red',
-    // border: '3px solid black',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: '10px'
-  };
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const handleClick = (): void => {
+export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element => {
+
+    const titulo:any = title;
+    // console.log(titulo);
+    const button_style = {
+        color: 'white',
+        backgroundColor: 'red',
+        // border: '3px solid black',
+        borderRadius: '50%',
+        width: '40px',
+        height: '40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: '10px'
+    };
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+    const handleClick = (): void => {
     const doc = new JsPDF();
 
     const header_img_data = '../image/imagenes/PDF3.png'; // Reemplaza con la ruta de la imagen que deseas utilizar
@@ -83,16 +80,14 @@ export const download_pdf = ({
     const file_id = Math.random();
     const file_name = `Resultados_de_la_busqueda_${file_id}.pdf`;
 
-    doc.save(file_name);
-  };
 
-  return (
-    <button style={button_style} onClick={handleClick}>
-      <img
-        style={{ width: 45 }}
-        src="../image/botones/PDF.png"
-        alt="XLS Button"
-      />
-    </button>
-  );
+ 
+        doc.save(file_name);
+    };
+
+    return (
+        <button style={button_style} onClick={handleClick}>
+            <img style={{ width: 45 }} src="../image/botones/PDF.png" alt="XLS Button" />
+        </button>
+    );
 };

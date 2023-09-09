@@ -35,7 +35,7 @@ export function CuarentenaViveroScreen(): JSX.Element {
   );
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const [action, set_action] = useState<string>('');
+  const [action,] = useState<string>('');
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
   const [nursery, set_nursery] = useState<IObjNursery>(current_nursery);
@@ -85,13 +85,13 @@ export function CuarentenaViveroScreen(): JSX.Element {
       persona: userinfo.nombre,
     });
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    set_action(
-      nursery.id_vivero === null
-        ? ''
-        : nursery.vivero_en_cuarentena !== true
-        ? 'Cerrar'
-        : 'Abrir'
-    );
+    // set_action(
+    //   nursery.id_vivero === null
+    //     ? ''
+    //     : nursery.vivero_en_cuarentena !== true
+    //     ? 'Cerrar'
+    //     : 'Abrir'
+    // );
   }, [nursery]);
 
   const nurseries_quarantine = {

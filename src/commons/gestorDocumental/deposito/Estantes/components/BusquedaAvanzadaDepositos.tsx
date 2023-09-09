@@ -7,6 +7,7 @@ import {
   Button,
   ButtonGroup,
   Dialog,
+  DialogActions,
   DialogContent,
   Divider,
   Grid,
@@ -33,6 +34,8 @@ import {
 import { useAppDispatch } from '../../../../../hooks';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaDepositos: React.FC = () => {
@@ -77,6 +80,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_deposito(params.row.id_deposito);
               dispatch(set_current_info_deposito(params.row));
               reset({
                 nombre_deposito: params.row.nombre_deposito,
@@ -91,7 +95,6 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                 })
               );
 
-              set_id_deposito(params.row.id_deposito);
               handle_close();
             }}
           >
@@ -269,11 +272,12 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<SearchIcon />}
             onClick={() => {
               handle_click_open();
             }}
           >
-            Búscar
+            Buscar
           </Button>
         </Grid>
         {id_deposito && (
@@ -317,7 +321,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada" />
+            <Title title="Búsqueda avanzada depositos" />
             {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);
@@ -402,6 +406,7 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
                   onClick={(e) => {
@@ -442,6 +447,20 @@ export const BusquedaAvanzadaDepositos: React.FC = () => {
             {/* </form> */}
           </Grid>
         </DialogContent>
+        <DialogActions>
+          <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            onClick={() => {
+              handle_close();
+              // reset();
+            }}
+          >
+            Cerrar
+          </Button>{' '}
+        </DialogActions>
+
       </Dialog>
     </>
   );
