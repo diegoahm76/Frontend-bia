@@ -11,8 +11,6 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
-// import { Suspense } from 'react';
-// import { Loader } from '../../../utils/Loader/Loader';
 
 const routes = [
   {
@@ -20,6 +18,7 @@ const routes = [
     name: 'organigrama',
     component: () => <OrganigramaRoutes />,
   },
+  //! dentro de ccd va a estar la ruta de permisos sobre series documentales
   {
     path: 'ccd/',
     name: 'ccd',
@@ -61,10 +60,8 @@ const routes = [
   {
     path: 'alertas_gestor/',
     name: 'alertas_gestor',
-    component: () => <Alertas_gestor_Routes />,
-  },
-];
-
+    component: () => <Alertas_gestor_Routes />
+  }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (

@@ -45,6 +45,7 @@ import { u_x_e_slice } from '../commons/Transversales/modules/procesos/screens/U
 import { deposito_slice } from '../commons/gestorDocumental/deposito/store/slice/indexDeposito';
 import { resolucion_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/ResolucionSlice';
 import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPagosSlice';
+import { PsdSlice } from '../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -104,8 +105,12 @@ const app_reducers = combineReducers({
   uni_a_uni_slice: uni_a_uni_slice.reducer,
 
   // ! traslados masivos unidad por entidad
-  u_x_e_slice: u_x_e_slice.reducer
+  u_x_e_slice: u_x_e_slice.reducer,
   // ! traslados masivos unidad por entidad
+
+  //* psd - permisos por serie documenta
+  PsdSlice: PsdSlice.reducer
+  // * psd - permisos por serie documenta
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
