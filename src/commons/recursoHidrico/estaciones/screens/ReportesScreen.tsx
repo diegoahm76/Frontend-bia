@@ -135,6 +135,8 @@ export const ReportesScreen: React.FC = () => {
           err.response.data.detail || 'Algo paso, intente de nuevo'
         );
       }
+    } finally {
+      set_loading_rango(false);
     }
   };
   const get_datos_estaciones_diario = async (): Promise<any> => {
@@ -149,6 +151,14 @@ export const ReportesScreen: React.FC = () => {
       const response = await api.get(
         `estaciones/datos/consultar-datos-diario/${selectdashboards.opc_dashboards}/${fecha_1}/`
       );
+
+      console.log(response, 'response');
+      if (!response) {
+        control_error('No se encontraron datos');
+        set_loading_dia(false);
+        return;
+      }
+
       if ('data' in response) {
         set_loading_dia(false);
       } else {
@@ -167,6 +177,8 @@ export const ReportesScreen: React.FC = () => {
           err.response.data.detail || 'Algo paso, intente de nuevo'
         );
       }
+    } finally {
+      set_loading_dia(false);
     }
   };
   const fetch_data = async (): Promise<any> => {
@@ -201,6 +213,8 @@ export const ReportesScreen: React.FC = () => {
           err.response.data.detail || 'Algo paso, intente de nuevo'
         );
       }
+    } finally {
+      set_loading(false);
     }
   };
   const fetch_data_migracion = async (): Promise<any> => {
@@ -758,7 +772,6 @@ export const ReportesScreen: React.FC = () => {
   };
 
   const generate_pdf = (data: any): void => {
-
     if (!data) {
       control_error('No se encontraron datos');
       return [] as any;
@@ -1047,6 +1060,10 @@ export const ReportesScreen: React.FC = () => {
     doc.save('reporte.pdf');
   };
   const generate_pdf_dia = (data: any): void => {
+    if (!data) {
+      return [] as any;
+    }
+
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
 
@@ -1332,6 +1349,10 @@ export const ReportesScreen: React.FC = () => {
     doc.save('reporte.pdf');
   };
   const generate_pdf_rango = (data: any): void => {
+    if (!data || data.data.length === 0) {
+      return [] as any;
+    }
+
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
 
@@ -1617,6 +1638,9 @@ export const ReportesScreen: React.FC = () => {
   };
 
   const generate_pdf_migracion = (data: any): void => {
+    if (!data) {
+      return [] as any;
+    }
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
 
@@ -1915,34 +1939,83 @@ export const ReportesScreen: React.FC = () => {
   };
 
   const handle_download_pdf = async (): Promise<void> => {
-    const data = await fetch_data();
-    console.log('data', data);
-    generate_pdf(data);
+    try {
+      const data = await fetch_data();
+      if (data) {
+        generate_pdf(data);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
   };
   const handle_download_pdf_rango = async (): Promise<void> => {
-    const data = await get_datos_estaciones();
-    console.log('data', data);
-    generate_pdf_rango(data);
+    try {
+      const data = await get_datos_estaciones();
+      console.log('data', data);
+      if (!data) {
+        return;
+      }
+      if (data?.length) {
+        // Utilizar el operador de encadenamiento opcional para controlar el error
+        generate_pdf_rango(data);
+      }
+    } catch (error: any) {
+      console.log(error, 'error');
+      console.log(error.response, 'error.response');
+      console.log(error.response?.data, 'error.response.data'); // Utilizar el operador de encadenamiento opcional para controlar el error
+      console.log(error.response?.data?.detail, 'error.response.data.detail'); // Utilizar el operador de encadenamiento opcional para controlar el error
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo' // Utilizar el operador de encadenamiento opcional para controlar el error
+      );
+    }
   };
   const handle_download_pdf_dia = async (): Promise<void> => {
-    const data = await get_datos_estaciones_diario();
-    console.log('data', data);
-    generate_pdf_dia(data);
+    try {
+      const data = await get_datos_estaciones_diario();
+      if (data) {
+        generate_pdf_dia(data);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
   };
   const handle_download_pdf_migracion = async (): Promise<void> => {
-    const data = await fetch_data_migracion();
-    console.log('data', data);
-    generate_pdf_migracion(data);
+    try {
+      const data = await fetch_data_migracion();
+      if (data) {
+        generate_pdf_migracion(data);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
   };
 
   const handle_download_pdf_2 = async (): Promise<void> => {
-    const { data, unique_days } = await fetch_data_2();
-    generate_pdf_2(data, unique_days);
+    try {
+      const { data, unique_days } = await fetch_data_2();
+      generate_pdf_2(data, unique_days);
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
   };
 
   const handle_download_pdf_2_migracion = async (): Promise<void> => {
-    const { data, unique_days } = await fetch_data_2_migracion();
-    generate_pdf_2_migracion(data, unique_days);
+    try {
+      const { data, unique_days } = await fetch_data_2_migracion();
+      generate_pdf_2_migracion(data, unique_days);
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
   };
 
   return (
