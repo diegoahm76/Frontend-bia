@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { Add, Close, Save, CloudUpload } from '@mui/icons-material';
 import { useState } from 'react';
@@ -15,7 +14,7 @@ export const ReposicionFuncionario: React.FC = () => {
   const [file_name, set_file_name] = useState('');
   const navigate = useNavigate();
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {

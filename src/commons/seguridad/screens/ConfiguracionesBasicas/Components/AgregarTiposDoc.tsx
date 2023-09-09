@@ -6,7 +6,9 @@ import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { crear_tipos_doc } from '../Request/request';
 import type { TiposDoc } from '../interfaces/interfaces';
 import { control_error, control_success } from '../../../../../helpers';
-
+import { Title } from '../../../../../components';
+import CancelIcon from '@mui/icons-material/Cancel';
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -51,7 +53,10 @@ export const AgregarTiposDoc: React.FC<IProps> = ({ is_modal_active, set_is_moda
             maxWidth="xl">
             <Box component="form"
                 onSubmit={handleSubmit(on_submit_cargo)}>
-                <DialogTitle>Crear Tipo de Documento</DialogTitle>
+                <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Crear Tipo de Documento `} />
+                </Grid>
+                <DialogTitle></DialogTitle>
                 <Divider />
                 <DialogContent>
                     <Grid container spacing={2}>
@@ -93,14 +98,18 @@ export const AgregarTiposDoc: React.FC<IProps> = ({ is_modal_active, set_is_moda
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => {
-                        handle_close();
-                        reset();
-                    }}>Cancelar</Button>
+                    <Button color="error"
+                        startIcon={<CancelIcon />}
+                        variant="outlined"
+                        onClick={() => {
+                            handle_close();
+                            reset();
+                        }}>Cancelar</Button>
                     <Button variant="contained"
                         disabled={is_loading}
                         color="success"
                         type='submit'
+                        startIcon={<SaveIcon />}
                     >Guardar</Button>
                 </DialogActions>
             </Box>

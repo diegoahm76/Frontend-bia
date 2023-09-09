@@ -26,8 +26,9 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
     const [loading, set_loading] = useState(false);
     const [persona, set_persona] = useState<Persona | undefined>();
     // const [selected_row, setselected_row] = useState<Alertas | null>(null);
-    const [data_entidad, setdata_entidad] = useState<Alertas[]>(initial_data);
     const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
+    
+    const [data_entidad, setdata_entidad] = useState<Alertas[]>(initial_data);
     const fetch_dataget = async (): Promise<void> => {
         try {
             const url = "/transversal/alertas/personas_alertar/get-by-configuracion/Gst_SlALid/";
@@ -39,6 +40,8 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             console.error(error);
         }
     };
+
+
     useEffect(() => {
         fetch_dataget().catch((error) => {
             console.error(error);
@@ -106,7 +109,9 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
         }
 
     };
+
     const [perfil, set_perfil] = useState<SelectItem[]>([]);
+
     useEffect(() => {
         const fetch_perfil = async (): Promise<void> => {
             try {
@@ -117,9 +122,11 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             } catch (error) {
                 console.error(error);
             }
-        };
+        }; 
         void fetch_perfil();
     }, []);
+
+    
     const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
     useEffect(() => {
         const fetch_perfil = async (): Promise<void> => {

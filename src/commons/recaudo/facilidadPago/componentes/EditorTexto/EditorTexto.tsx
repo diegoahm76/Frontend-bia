@@ -8,6 +8,7 @@ export const EditorTexto: React.FC = () => {
   return (
     <CKEditor
       // @ts-ignore
+      // @ts-ignore
       editor={ ClassicEditor }
       data="<p></p>"
       onChange={ ( event, editor ) => {

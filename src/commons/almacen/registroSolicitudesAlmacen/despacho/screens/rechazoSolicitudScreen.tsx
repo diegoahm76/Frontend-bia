@@ -97,7 +97,7 @@ const RechazoSolicitudScreen = () => {
 
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudRechazo
-                    title={"INFORMACIÓN DE LA SOLICITUD"}
+                    title={"Información de la solicitud"}
                     control_solicitud_despacho={control_solicitud_despacho}
                     get_values={get_values}
                     open_modal={open_search_modal}
@@ -119,6 +119,13 @@ const RechazoSolicitudScreen = () => {
 
 
             <>
+            <Grid    container
+            spacing={2}
+            marginTop={2}
+            direction="row" justifyContent="flex-end"
+            >
+
+          
                 <Grid item xs={6} md={2}>
                     <FormButton
                         variant_button="contained"
@@ -142,7 +149,7 @@ const RechazoSolicitudScreen = () => {
                     <ButtonSalir
                     />
                 </Grid>
-
+  </Grid>
             </>
 
 

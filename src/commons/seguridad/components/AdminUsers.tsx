@@ -12,7 +12,7 @@ import {
   // Chip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import SaveIcon from '@mui/icons-material/Save';
+// import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
@@ -20,7 +20,7 @@ import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstado
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { useEffect } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
+import EditIcon from '@mui/icons-material/Edit';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsers: React.FC = () => {
   const {
@@ -566,7 +566,7 @@ export const AdminUsers: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={<SaveIcon />}
+                startIcon={<EditIcon />}
               >
                 {action_admin_users === 'EDIT'
                   ? 'EDITAR'

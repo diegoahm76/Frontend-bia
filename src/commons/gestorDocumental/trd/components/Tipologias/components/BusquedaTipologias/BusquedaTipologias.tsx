@@ -288,7 +288,7 @@ export const BusquedaTipologias = (): JSX.Element => {
             >
               <Button
                 color="error"
-                variant="outlined"
+                variant="contained"
                 onClick={resetOnCloseModal}
                 startIcon={<CloseIcon />}
               >

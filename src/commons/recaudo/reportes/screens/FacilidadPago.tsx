@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Title } from '../../../../components/Title';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -81,21 +80,22 @@ export const FacilidadPago: React.FC = () => {
       });
   };
 
+
   const handle_export_pdf = () => {
-    const report = new JsPDF('l','pt','letter');
+    const report = new JsPDF('l', 'pt', 'letter');
     report.text("Reporte Facilidades de Pago con Detalle", 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     autoTable(report, {
       theme: 'grid',
       head: [['Tipo Cobro', 'NIT', 'Nombre Deudor', 'Concepto Deuda', 'Expediente', 'Resolución', '#Factura', 'Total']],
       body: values,
-      foot:[['', '', 'Total Cobro Coactivo:', `${total_coactivo_cop}`, 'Total Cobro Persuasivo:', `${total_persuasivo_cop}`, 'Total General:', `${total_cop}`]],
+      foot: [['', '', 'Total Cobro Coactivo:', `${total_coactivo_cop}`, 'Total Cobro Persuasivo:', `${total_persuasivo_cop}`, 'Total General:', `${total_cop}`]],
     })
     report.save('Reporte Facilidades de Pago con Detalle.pdf');
   }
 
   useEffect(() => {
-    if(visible_rows.length !== 0){
+    if (visible_rows.length !== 0) {
       set_values(visible_rows.map((obj) => Object.values(obj)) as any)
     }
   }, [visible_rows])
@@ -105,14 +105,14 @@ export const FacilidadPago: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if(visible_rows.length !== 0) {
+    if (visible_rows.length !== 0) {
       let total_coactivo = 0
       let total_persuasivo = 0
-      for(let i=0; i< visible_rows.length; i++){
-        if(visible_rows[i].tipo_cobro === 'coactivo') {
+      for (let i = 0; i < visible_rows.length; i++) {
+        if (visible_rows[i].tipo_cobro === 'coactivo') {
           total_coactivo = total_coactivo + parseFloat(visible_rows[i].valor_sancion)
         }
-        if(visible_rows[i].tipo_cobro === 'persuasivo') {
+        if (visible_rows[i].tipo_cobro === 'persuasivo') {
           total_persuasivo = total_persuasivo + parseFloat(visible_rows[i].valor_sancion)
         }
         set_total_coactivo(total_coactivo)
@@ -124,7 +124,7 @@ export const FacilidadPago: React.FC = () => {
 
   return (
     <>
-      <Title title='Reporte Facilidades de Pago con Detalle'/>
+      {/* <Title title=''/> */}
       <Grid
         container
         sx={{
@@ -137,7 +137,11 @@ export const FacilidadPago: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
+
+        <Grid item xs={12}  >
+          <Title title={` Reporte Facilidades de Pago con Detalle`} />
+        </Grid>
+        <Grid item marginTop={2} xs={12}>
           <Box
             component="form"
             noValidate
@@ -148,18 +152,18 @@ export const FacilidadPago: React.FC = () => {
               justifyContent="space-between"
               sx={{ mb: '20px' }}
             >
-            <Stack
-              direction="row"
-              justifyContent="left"
-              spacing={2}
-            >
-              <FormControl sx={{ minWidth: 200 }}>
-                <InputLabel>Seleccionar Estado del Cobro: </InputLabel>
+              <Stack
+                direction="row"
+                justifyContent="left"
+                spacing={2}
+              >
+                <FormControl sx={{ minWidth: 200 }}>
+                  <InputLabel>Seleccionar Estado del Cobro: </InputLabel>
                   <Select
                     required
                     label="Seleccionar Estado del Cobro: "
                     defaultValue={''}
-                    onChange={(event: event)=>{
+                    onChange={(event: event) => {
                       const { value } = event.target
                       set_type(value)
                     }}
@@ -167,14 +171,14 @@ export const FacilidadPago: React.FC = () => {
                     <MenuItem value='coactivo'>Coactivo</MenuItem>
                     <MenuItem value='persuasivo'>Persuasivo</MenuItem>
                   </Select>
-              </FormControl>
-              <FormControl sx={{ minWidth: 130 }}>
-                <InputLabel>Filtrar por: </InputLabel>
+                </FormControl>
+                <FormControl sx={{ minWidth: 130 }}>
+                  <InputLabel>Filtrar por: </InputLabel>
                   <Select
                     required
                     label="Filtrar por: "
                     defaultValue={''}
-                    onChange={(event: event)=>{
+                    onChange={(event: event) => {
                       const { value } = event.target
                       set_filter(value)
                     }}
@@ -185,73 +189,73 @@ export const FacilidadPago: React.FC = () => {
                     <MenuItem value='numero_resolucion'>Resolución</MenuItem>
                     <MenuItem value='numero_factura'># Factura</MenuItem>
                   </Select>
-              </FormControl>
-              <TextField
-                required
-                label="Búsqueda"
-                size="medium"
-                onChange={(event: event)=>{
-                  const { value } = event.target
-                  set_search(value)
-                }}
-              />
-              <Button
-                color='primary'
-                variant='contained'
-                startIcon={<SearchOutlined />}
-                onClick={() => {
-                  try {
-                    void dispatch(get_filtro_facilidad_detallada({tipo: type, parametro: filter, valor: search}));
-                    set_modal(true);
-                  } catch (error: any) {
-                    throw new Error(error);
-                  }
-                }}
-              >
-                Consultar
-              </Button>
-              <Button
-                color='primary'
-                variant='outlined'
-                startIcon={<FilterAltOffOutlined />}
-                onClick={() => {
-                  try {
-                    void dispatch(get_facilidad_detallada());
-                    set_modal(true);
-                  } catch (error: any) {
-                    throw new Error(error);
-                  }
-                }}
-              >
-                Mostrar Todo
-              </Button>
-            </Stack>
-            {
-              modal ? (
-                <Stack
-                  direction="row"
-                  justifyContent="right"
-                  spacing={2}
+                </FormControl>
+                <TextField
+                  required
+                  label="Búsqueda"
+                  size="medium"
+                  onChange={(event: event) => {
+                    const { value } = event.target
+                    set_search(value)
+                  }}
+                />
+                <Button
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SearchOutlined />}
+                  onClick={() => {
+                    try {
+                      void dispatch(get_filtro_facilidad_detallada({ tipo: type, parametro: filter, valor: search }));
+                      set_modal(true);
+                    } catch (error: any) {
+                      throw new Error(error);
+                    }
+                  }}
                 >
-                  <Button
-                    color='primary'
-                    variant='outlined'
-                    startIcon={<FileDownloadOutlined />}
-                    onClick={handle_export_excel}
+                  Consultar
+                </Button>
+                <Button
+                  color='primary'
+                  variant='outlined'
+                  startIcon={<FilterAltOffOutlined />}
+                  onClick={() => {
+                    try {
+                      void dispatch(get_facilidad_detallada());
+                      set_modal(true);
+                    } catch (error: any) {
+                      throw new Error(error);
+                    }
+                  }}
+                >
+                  Mostrar Todo
+                </Button>
+              </Stack>
+              {
+                modal ? (
+                  <Stack
+                    direction="row"
+                    justifyContent="right"
+                    spacing={2}
                   >
-                    Exportar Excel
-                  </Button>
-                  <Button
-                    color='primary'
-                    variant='outlined'
-                    startIcon={<FileDownloadOutlined />}
-                    onClick={handle_export_pdf}
-                  >
-                    Exportar PDF
-                  </Button>
-                </Stack>
-              ) : null
-            }
+                    <Button
+                      color='primary'
+                      variant='outlined'
+                      startIcon={<FileDownloadOutlined />}
+                      onClick={handle_export_excel}
+                    >
+                      Exportar Excel
+                    </Button>
+                    <Button
+                      color='primary'
+                      variant='outlined'
+                      startIcon={<FileDownloadOutlined />}
+                      onClick={handle_export_pdf}
+                    >
+                      Exportar PDF
+                    </Button>
+                  </Stack>
+                ) : null
+              }
             </Stack>
             {
               modal ? <TablaFacilidadPagoDetallada /> : (

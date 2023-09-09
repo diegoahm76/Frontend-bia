@@ -35,7 +35,7 @@ import { Link } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCcdActual = () => {
-  const fecha_actual = dayjs().format('YYYY-MM-DD');
+  const fecha_actual = dayjs().format('DD-MM-YYYY');
 
   const dispatch = useAppDispatch();
 

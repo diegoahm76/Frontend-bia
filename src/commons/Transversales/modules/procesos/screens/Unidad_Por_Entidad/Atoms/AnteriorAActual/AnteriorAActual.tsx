@@ -21,6 +21,7 @@ import {
 } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
+
 import { GridAnteriorAActual2 } from '../../components/GridAnteriorANuevo2/GridAnterioAActual2';
 import { eliminarObjetosDuplicadosPorId } from '../../functions/functions';
 import { useAppDispatch } from '../../../../../../../../hooks';

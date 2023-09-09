@@ -8,6 +8,8 @@ import { get_solicitud_service_vivero, get_solicitudes_id_persona_service_vivero
 import { set_current_solicitud_vivero, set_solicitudes_vivero } from '../../store/slices/indexSolicitudBienesConsumo';
 import type { AuthSlice } from '../../../../../../commons/auth/interfaces';
 import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { obtener_viveros } from '../../../../../conservacion/dashBoardViveros/thunks/DashBoardViveros';
 
 
 
@@ -29,10 +31,14 @@ const SeleccionarSolicitudVivero = ({
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
     const { unidad_organizacional, solicitudes_vivero } = useAppSelector((state) => state.solic_consumo);
-
+    const [lista_viveros, set_lista_viveros] = useState<any[]>([]);
 
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        obtener_viveros_fc();
+    }, []);
+    
     const columns_solicitudes_vivero: GridColDef[] = [
 
         {
@@ -77,6 +83,13 @@ const SeleccionarSolicitudVivero = ({
         void dispatch(get_solicitudes_id_persona_service_vivero(userinfo.id_persona))
     })
 
+    const obtener_viveros_fc: () => void = () => {
+        dispatch(obtener_viveros()).then((response: any) => {
+            const viveros_activos = response.data.filter((resp: { activo: boolean; }) => resp.activo);
+            set_lista_viveros(viveros_activos);
+        })
+    }
+
     const search_solicitud_vivero: any = (async () => {
         const solicitud_id = get_values("id_solicitud_consumibles")
         if (solicitud_id !== null) {
@@ -114,7 +127,7 @@ const SeleccionarSolicitudVivero = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 6,
+                            md: 3,
                             control_form: control_solicitud_vivero,
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
@@ -126,9 +139,23 @@ const SeleccionarSolicitudVivero = ({
                             on_blur_function: search_solicitud_vivero
                         },
                         {
-                            datum_type: 'date_picker_controller',
+                            datum_type: "select_controller",
                             xs: 12,
                             md: 6,
+                            control_form: control_solicitud_vivero,
+                            control_name: "id_vivero_solicita",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Solicitud realizada desde vivero",
+                            disabled: false,
+                            select_options: lista_viveros,
+                            option_label: "nombre",
+                            option_key: "id_vivero"
+                        },
+                        {
+                            datum_type: 'date_picker_controller',
+                            xs: 12,
+                            md: 3,
                             control_form: control_solicitud_vivero,
                             control_name: 'fecha_solicitud',
                             default_value: '',

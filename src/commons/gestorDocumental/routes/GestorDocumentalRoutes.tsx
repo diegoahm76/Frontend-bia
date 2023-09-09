@@ -11,7 +11,11 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
-
+// import { Suspense } from 'react';
+// import { Loader } from '../../../utils/Loader/Loader';
+import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
+import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
+import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 const routes = [
   {
     path: 'organigrama/',
@@ -60,8 +64,24 @@ const routes = [
   {
     path: 'alertas_gestor/',
     name: 'alertas_gestor',
-    component: () => <Alertas_gestor_Routes />
-  }
+    component: () => <Alertas_gestor_Routes />,
+  },
+  {
+    path: 'encuesta_configuracion/',
+    name: 'encuesta_configuracion',
+    component: () => <Confi_Encuasta_Routes />,
+  },
+  {
+    path: 'encuesta_datos/',
+    name: 'encuesta_datos',
+    component: () => <InfoEncuesta />,
+  },
+  {
+    path: 'encuesta/',
+    name: 'encuesta',
+    component: () => <Encuasta_Routes />,
+  },
+
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

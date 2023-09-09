@@ -24,28 +24,28 @@ const ListadoDeposito = ({ handle_edit_click }: IProps) => {
         {
             field: 'orden_ubicacion_por_entidad',
             headerName: 'ORDÉN',
-            width: 100,
+            width: 100,flex: 1,
             cellClassName: 'truncate-cell'
 
         },
         {
             field: 'nombre_deposito',
             headerName: 'NOMBRE DEL DEPÓSITO',
-            width: 250,
+            width: 250,flex: 1,
             cellClassName: 'truncate-cell'
 
         },
         {
             field: 'identificacion_por_entidad',
             headerName: 'IDENTIFICACIÓN',
-            width: 250,
+            width: 250,flex: 1,
             cellClassName: 'truncate-cell'
 
         },
         {
             field: 'direccion_deposito',
             headerName: 'DIRECCIÓN',
-            width: 250,
+            width: 250,flex: 1,
             cellClassName: 'truncate-cell'
 
         },
@@ -54,7 +54,7 @@ const ListadoDeposito = ({ handle_edit_click }: IProps) => {
         {
             field: 'ACCIÓN',
             headerName: 'ACCIÓN',
-            width: 100,
+            width: 100,flex: 1,
             renderCell: (params) => (
                 <Button
                     onClick={() => handle_edit_click(params.row)}

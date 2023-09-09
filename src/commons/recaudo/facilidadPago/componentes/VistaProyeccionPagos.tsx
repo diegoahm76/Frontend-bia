@@ -1,12 +1,28 @@
 import { Grid, Box, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { type CuotaPlanPagoValidacion } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
+import dayjs from 'dayjs';
+
+interface RootStateValidacionPlanPagos {
+  plan_pagos: {
+    plan_pagos: {
+      data: {
+        cuotas: CuotaPlanPagoValidacion[];
+      }
+    }
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VistaProyeccionPagos: React.FC = () => {
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
+  const [lista, set_lista] = useState(Array<CuotaPlanPagoValidacion>);
+  const { plan_pagos } = useSelector((state: RootStateValidacionPlanPagos) => state.plan_pagos);
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -23,33 +39,13 @@ export const VistaProyeccionPagos: React.FC = () => {
     currency: "COP",
   }).format(intereses)
 
-  const lista = [
-    {
-      cuota: '',
-      fecha_pago: 'Abono Inicial',
-      monto_inicial: '417000',
-      valor_intereses: '150000',
-      valor_total: '567000',
-    },
-    {
-      cuota: 1,
-      fecha_pago: '25 de febrero de 2023',
-      monto_inicial: '50000',
-      valor_intereses: '35000',
-      valor_total: '85000',
-    },
-    {
-      cuota: 2,
-      fecha_pago: '25 de marzo de 2023',
-      monto_inicial: '50000',
-      valor_intereses: '35000',
-      valor_total: '85000',
-    }
-  ]
+  useEffect(() => {
+    set_lista(plan_pagos.data.cuotas)
+  }, [plan_pagos])
 
   const columns: GridColDef[] = [
     {
-      field: 'cuota',
+      field: 'nro_cuota',
       headerName: 'No Cuota',
       width: 150,
       renderCell: (params) => (
@@ -59,17 +55,17 @@ export const VistaProyeccionPagos: React.FC = () => {
       ),
     },
     {
-      field: 'fecha_pago',
+      field: 'fecha_vencimiento',
       headerName: 'Fechas de Pago',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {dayjs(params.value).format('DD/MM/YYYY')}
         </div>
       ),
     },
     {
-      field: 'monto_inicial',
+      field: 'valor_capital',
       headerName: 'Capital',
       width: 150,
       renderCell: (params) => {
@@ -85,7 +81,7 @@ export const VistaProyeccionPagos: React.FC = () => {
       },
     },
     {
-      field: 'valor_intereses',
+      field: 'valor_interes',
       headerName: 'Intereses',
       width: 150,
       renderCell: (params) => {
@@ -101,7 +97,7 @@ export const VistaProyeccionPagos: React.FC = () => {
       },
     },
     {
-      field: 'valor_total',
+      field: 'monto_cuota',
       headerName: 'Cuota',
       width: 150,
       renderCell: (params) => {
@@ -122,14 +118,13 @@ export const VistaProyeccionPagos: React.FC = () => {
     let sub_capital = 0
     let sub_intereses = 0
     for(let i=0; i< lista.length; i++){
-      sub_capital = sub_capital + parseFloat(lista[i].monto_inicial)
-      sub_intereses = sub_intereses + parseFloat(lista[i].valor_intereses)
+      sub_capital = sub_capital + parseFloat(lista[i].valor_capital)
+      sub_intereses = sub_intereses + parseFloat(lista[i].valor_interes)
       set_capital(sub_capital)
       set_intereses(sub_intereses)
     }
-
     set_total(capital + intereses)
-  }, [capital, intereses])
+  }, [lista, capital, intereses])
 
   return (
     <>
@@ -147,7 +142,7 @@ export const VistaProyeccionPagos: React.FC = () => {
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
-              <h3>4. Proyección de Pagos</h3>
+              <h3>Proyección de Pagos</h3>
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
@@ -156,7 +151,7 @@ export const VistaProyeccionPagos: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.cuota}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>

@@ -23,6 +23,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DialogHistorialDatosRestringidos } from '../components/DialogHistorialDatosRestringidos';
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const [historico, set_historico] = useState<boolean>(false);
@@ -198,7 +199,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12} spacing={2}>
-          <Title title="ACTUALIZACIÓN DE DATOS RESTRINGIDOS" />
+          <Title title="Actualización de datos restringidos" />
           <BuscadorPersona onResult={on_result} />
           {persona?.tipo_persona === 'N' && (
             <Box component="form"
@@ -207,7 +208,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Title title="DATOS DE IDENTIFICACIÓN" />
+                  <Title title="Datos de identificación" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -276,7 +277,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Title title="DATOS PERSONALES" />
+                  <Title title="Datos persónale" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -397,7 +398,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     spacing={2}
                   >
                     <Button
-                      variant="outlined"
+                    color="error"
+                      variant="contained"
                       startIcon={<CancelIcon />}
                       onClick={() => {
                         cancelar();
@@ -409,7 +411,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     <Button
                       id="actualiza-natural"
                       variant="contained"
-                      color="primary"
+                      color="success"
                       type="submit"
                       startIcon={
                         loading_natural ? (
@@ -419,7 +421,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                             className="align-middle ml-1"
                           />
                         ) : (
-                          ''
+                          <SaveIcon />
                         )
                       }
                       aria-label="Actualizar"
@@ -449,7 +451,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Title title="DATOS DE IDENTIFICACIÓN" />
+                  <Title title="Datos de identificación" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField

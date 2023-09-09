@@ -1,38 +1,48 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import CloseIcon from '@mui/icons-material/Close';
+import type { FormDataCategoria } from "../../interfaces/proceso";
 import SaveIcon from '@mui/icons-material/Save';
 
-interface IProps {
-  open_categoria_modal: boolean;
-  set_open_categoria_modal: Dispatch<SetStateAction<boolean>>;
-  submit_new_categoria: (categoria: string) => void;
-}
+import { Title } from "../../../../components";
 
-interface FormData {
-  categoria: string;
+
+interface IProps {
+  form_data_categoria: FormDataCategoria;
+  open_categoria_modal: boolean;
+  actualizar_categoria: boolean;
+  set_form_data_categoria: Dispatch<SetStateAction<FormDataCategoria>>;
+  set_open_categoria_modal: Dispatch<SetStateAction<boolean>>;
+  submit_new_categoria: () => void;
+  submit_updated_categoria: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_modal, submit_new_categoria }: IProps): JSX.Element => {
-  const [form_data, set_form_data] = useState<FormData>({
-    categoria: '',
-  });
-
+export const CrearCategoriaModal = ({
+  form_data_categoria,
+  open_categoria_modal,
+  actualizar_categoria,
+  set_form_data_categoria,
+  set_open_categoria_modal,
+  submit_new_categoria,
+  submit_updated_categoria
+}: IProps): JSX.Element => {
   const handle_close = (): void => {
     set_open_categoria_modal(false);
   };
 
   const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
-    set_form_data((previousState) => ({ ...previousState, [name]: value }));
+    set_form_data_categoria((previousState) => ({ ...previousState, [name]: value }));
   };
 
   const handle_submit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const { categoria } = form_data;
-    submit_new_categoria(categoria);
-    set_form_data({ categoria: ''});
+    if (actualizar_categoria) {
+      submit_updated_categoria();
+    } else {
+      submit_new_categoria();
+    }
     handle_close();
   };
 
@@ -45,15 +55,33 @@ export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_m
       <Box component='form' onSubmit={handle_submit} sx={{
         width: '500px'
       }}>
-        <DialogTitle>Crear Nueva Categoria</DialogTitle>
+
+         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Crear Nueva Categoria `} />
+                </Grid>
+        <DialogTitle></DialogTitle>
+
         <DialogContent dividers>
-          <Grid container direction='column' spacing={2}>
+          <Grid container direction='column'>
             <Grid item xs={12} md={5} margin={1}>
               <TextField
                 name="categoria"
-                value={form_data.categoria}
+                value={form_data_categoria.categoria}
                 label='Categoria'
                 helperText='Ingrese un nombre para la categoria'
+                size="small"
+                fullWidth
+                onChange={handle_input_change}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={5} margin={1}>
+              <TextField
+                name="orden"
+                value={form_data_categoria.orden}
+                label='Orden'
+                type="number"
+                helperText='Ingrese el orden de la categoría'
                 size="small"
                 fullWidth
                 onChange={handle_input_change}
@@ -65,7 +93,8 @@ export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_m
         <DialogActions>
           <Button
             type="button"
-            variant='outlined'
+            color="error"
+            variant='contained'
             startIcon={<CloseIcon />}
             onClick={handle_close}
           >
@@ -74,10 +103,11 @@ export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_m
           <Button
             type="submit"
             variant='contained'
-            color="primary"
+
+            color="success"
             startIcon={<SaveIcon />}
           >
-            Crear
+            {actualizar_categoria ? 'Editar' : 'Crear'}
           </Button>
         </DialogActions>
       </Box>

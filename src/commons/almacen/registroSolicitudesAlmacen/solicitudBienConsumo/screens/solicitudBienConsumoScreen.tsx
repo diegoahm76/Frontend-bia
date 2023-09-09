@@ -144,7 +144,7 @@ const SolicitudConsumoScreen = () => {
                 p: '20px',
                 mb: '20px',
                 boxShadow: '0px 3px 6px #042F4A26',
-
+                marginTop: '20px',
             }}
         >
 
@@ -173,17 +173,9 @@ const SolicitudConsumoScreen = () => {
                 direction="row"
                 padding={2}
                 spacing={2}
+                justifyContent="flex-end"
             >
-                <Grid item xs={12} md={1}>
-                    <FormButton
-                        variant_button="contained"
-                        on_click_function={handle_submit(on_submit)}
-                        icon_class={<SaveIcon />}
-                        label={action}
-                        type_button="button"
-                    />
-                </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={2.5}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_open_select_model}
@@ -193,7 +185,17 @@ const SolicitudConsumoScreen = () => {
                         disabled={false}
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.5}>
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_submit(on_submit)}
+                        icon_class={<SaveIcon />}
+                        label={action}
+                        type_button="button"
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={1.5}>
                     <FormButton
 
                         variant_button='outlined'
@@ -203,10 +205,11 @@ const SolicitudConsumoScreen = () => {
                         type_button="button" />
 
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.5}>
 
                     <Button
                         variant="outlined"
+                        fullWidth
                         onClick={() => {
                             set_anular("Anular")
                             set_anular_solicitud(true);
@@ -216,15 +219,15 @@ const SolicitudConsumoScreen = () => {
                         ANULAR
                     </Button>
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={1.5}>
                     <Limpiar
                         dispatch={dispatch}
                         reset_state={reset_state}
                         set_initial_values={initial_values}
-                        variant_button={'contained'}
+                        variant_button={'outlined'}
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.3}>
                     <ButtonSalir
                     />
 

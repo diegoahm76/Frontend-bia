@@ -1,6 +1,6 @@
-// eslint-disable-next-line import/no-duplicates
+// @ts-ignore
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line import/no-duplicates
+// @ts-ignore
 import { type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -28,6 +28,7 @@ import { type IList, type IObjBien as FormValues } from "../interfaces/catalogod
 import { api } from "../../../../../api/axios";
 import { initial_state_current_nodo } from "../store/slices/indexCatalogodeBienes";
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
+import { Title } from '../../../../../components';
 
 interface IProps {
   action: string;
@@ -182,7 +183,10 @@ const CrearBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>Crear bien</DialogTitle>
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title={`Crear bien `} />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
@@ -615,13 +619,14 @@ const CrearBienDialogForm = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              color='error'
+              variant="contained"
               onClick={handle_close_add_bien}
               startIcon={<CloseIcon />}
             >
               CERRAR
             </Button>
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+            <Button type="submit" color='success' variant="contained" startIcon={<SaveIcon />}>
               GUARDAR
             </Button>
           </Stack>

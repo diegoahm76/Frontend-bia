@@ -19,6 +19,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { add_porcentaje_service, edit_porcentaje_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
  import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
+import { Title } from '../../../../../components';
 // import { type IList } from "../interfaces/marca";
 
 interface IProps {
@@ -92,7 +93,11 @@ const CrearPorcentajeModal = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
        onSubmit={action=== "create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
       >
-        <DialogTitle>{action==="create"? "Crear marca": action==="detail"? "Detalle Marca": "Editar Marca" }</DialogTitle>
+        
+   <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`${action==="create"? "Crear marca": action==="detail"? "Detalle Marca": "Editar Marca" } `} />
+                </Grid>
+        <DialogTitle> </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
          <Grid container >
@@ -154,14 +159,14 @@ const CrearPorcentajeModal = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained" color='error'
               onClick={handle_close_add_porcentaje}
               startIcon={<CloseIcon />}
             >
               CERRAR
             </Button>
             {action === "create"?
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+            <Button type="submit" variant="contained" color='success' startIcon={<SaveIcon />}>
               GUARDAR
             </Button>:
             action === "edit"?

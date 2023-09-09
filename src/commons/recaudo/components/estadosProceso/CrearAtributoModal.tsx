@@ -24,6 +24,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import type { CategoriaAtributo, TipoAtributo } from '../../interfaces/proceso';
 import { api } from "../../../../api/axios";
+import { Title } from "../../../../components";
 
 interface IProps {
   is_modal_active: boolean;
@@ -109,7 +110,10 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
           width: '500px'
         }}
       >
-        <DialogTitle>Crear Nuevo Atributo</DialogTitle>
+         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Crear Nuevo Atributo `} />
+                </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
 
         <DialogContent sx={{ mb: '0px' }}>
@@ -196,7 +200,8 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
           >
             <Button
               type="button"
-              variant="outlined"
+              variant="contained"
+              color="error"
               onClick={handle_close}
               startIcon={<CloseIcon />}
             >
@@ -204,7 +209,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
             </Button>
             <Button
               type="submit"
-              color="primary"
+              color="success"
               variant="contained"
               startIcon={<SaveIcon />}
               // disabled={form_data.descripcion === '' || form_data.id_tipo === ''}
