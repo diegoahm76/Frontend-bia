@@ -123,6 +123,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
                     <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    // @ts-ignore
                       selectionMode="single" selection={seleccion_articulo} onSelectionChange={(e) => { set_seleccion_articulo(e.value); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
