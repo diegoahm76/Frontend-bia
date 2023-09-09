@@ -62,6 +62,7 @@ const routes = [
     name: 'alertas_gestor',
     component: () => <Alertas_gestor_Routes />
   }
+];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
