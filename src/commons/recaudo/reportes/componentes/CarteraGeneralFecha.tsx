@@ -16,6 +16,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { get_cartera_fecha } from '../slices/ReportesSlice';
 import { type CarteraFecha } from '../interfaces/interfaces';
+import { Title } from '../../../../components';
 
 interface RootState {
   reportes_recaudo: {
@@ -181,7 +182,11 @@ export const CarteraGeneralFecha: React.FC = () => {
         boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
-      <Grid item xs={12}>
+      <Grid item xs={12} >
+        
+        <Title title={`Informe General de Cartera - Totalizado a fecha de corte seleccionada `} />
+      </Grid>
+      <Grid item  marginTop={2} xs={12}>
         <Box
           component="form"
           noValidate

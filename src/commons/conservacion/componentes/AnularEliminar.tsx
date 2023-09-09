@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import Grid from '@mui/material/Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import FormInputFileController from '../../../components/partials/form/FormInputFileController';
@@ -185,7 +186,10 @@ const UndoDelete = ({
         open={select_model_is_active}
         onClose={handle_close_select_model}
       >
-        <DialogTitle>{modal_title}</DialogTitle>
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title={`${modal_title} `} />
+        </Grid>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           {modal_inputs.length > 0 && (
@@ -204,7 +208,8 @@ const UndoDelete = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              color='error'
+              variant='contained'
               onClick={handle_close_select_model}
               startIcon={<CloseIcon />}
             >

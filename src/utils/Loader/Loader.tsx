@@ -14,7 +14,7 @@ export const Loader: FC<any> = (props: any): JSX.Element => {
         height: altura || '100vh'
       }}
     >
-      <CircularProgress size={80} />
+      <CircularProgress size={70} />
     </Box>
   );
 };

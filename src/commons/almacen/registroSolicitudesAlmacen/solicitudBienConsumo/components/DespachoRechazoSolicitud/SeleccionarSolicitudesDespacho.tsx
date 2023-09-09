@@ -79,10 +79,13 @@ const SeleccionarSolicitudDespacho = ({
     },
   ];
 
+  const fecha = new Date(get_values('fecha_despacho') ?? '').toISOString();
   const get_solicitudes_filtro: any = async () => {
-    const fecha_despacho = get_values('fecha_despacho') ?? '';
+    const fecha_despacho = fecha.slice(0, 10) + '' + fecha.slice(11, 19);
     void dispatch(get_solicitudes_despacho_fecha(fecha_despacho));
   };
+
+
 
   return (
     <>
@@ -185,12 +188,13 @@ const SeleccionarSolicitudDespacho = ({
               md: 2,
               control_form: control_solicitud_despacho,
               control_name: 'fecha_despacho',
-              default_value: new Date().toString(),
+              default_value: '',
               rules: { required_rule: { rule: true, message: 'requerido' } },
               label: 'Fecha del despacho',
               type: 'text',
               disabled: false,
               helper_text: '',
+              format: 'YYYY-MM-DD',
             },
           ]}
         />

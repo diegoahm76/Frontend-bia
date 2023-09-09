@@ -115,8 +115,11 @@ const AdministrarCarpetasScreen = () => {
 
         set_selected_carpeta(initial_state_carpeta);
         set_action("Guardar");
-        void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
+
+
     };
+    void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
+
 
     const on_submit_elimnar = (data: IObjCarpeta): void => {
 
@@ -130,6 +133,7 @@ const AdministrarCarpetasScreen = () => {
             );
         }
 
+
     }
 
 
@@ -142,6 +146,14 @@ const AdministrarCarpetasScreen = () => {
             identificacion_deposito_destino: data.identificacion_deposito,
 
 
+
+    const on_submit_mover_carpeta = (data: IObjCarpeta): void => {
+        console.log(data)
+        const data_mover = {
+            identificacion_caja_destino: data.identificacion_caja,
+            identificacion_bandeja_destino: data.identificacion_bandeja,
+            identificacion_estante_destino: data.identificacion_estante,
+            identificacion_deposito_destino: data.identificacion_deposito,
 
         };
 

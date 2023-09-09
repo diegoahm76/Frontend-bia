@@ -84,6 +84,8 @@ const AprobacionSolicitudViveroScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                marginTop: '20px',
+                marginLeft: '-5px',
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
@@ -108,6 +110,7 @@ const AprobacionSolicitudViveroScreen = () => {
                 direction="row"
                 padding={2}
                 spacing={2}
+                justifyContent="flex-end"
             >
 
                 <Grid item xs={12} md={2}>
@@ -120,7 +123,7 @@ const AprobacionSolicitudViveroScreen = () => {
                         type_button="button"
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={2.5} >
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_open_select_model}
@@ -130,7 +133,7 @@ const AprobacionSolicitudViveroScreen = () => {
                         disabled={false}
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.3}>
                     <ButtonSalir
                     />
 

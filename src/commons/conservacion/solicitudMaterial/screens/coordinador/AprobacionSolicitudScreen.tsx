@@ -203,7 +203,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
       }}
     >
       <SeleccionarSolicitudAprobada
-        title={'APROBACIÓN DE SOLICITUDES'}
+        title={'Aprobación de solicitudes'}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values}
         open_modal={open_search_modal}

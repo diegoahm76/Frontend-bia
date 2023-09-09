@@ -52,21 +52,21 @@ const SeleccionarBienDistribuir = () => {
   const dispatch = useAppDispatch();
 
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
-    {
-      field: 'codigo_bien',
-      headerName: 'Código',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
+    // {
+    //   field: 'codigo_bien',
+    //   headerName: 'Código',
+    //   width: 200,flex: 1,
+    //   renderCell: (params) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       {params.value}
+    //     </div>
+    //   ),
+    // },
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -76,7 +76,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'cantidad_entrante',
       headerName: 'Cantidad entrante',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -96,7 +96,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'cantidad_restante',
       headerName: 'Cantidad restante',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -106,7 +106,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'tipo_documento',
       headerName: 'Tipo de documento',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -116,11 +116,11 @@ const SeleccionarBienDistribuir = () => {
   ];
 
   const columns_bienes_distribuidos: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -130,7 +130,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -140,7 +140,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'cantidad_asignada',
       headerName: 'Cantidad asignada',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -150,7 +150,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'vivero_nombre',
       headerName: 'Vivero',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -160,7 +160,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 90,
+      width: 90,flex: 1,
       renderCell: (params) => (
         <>
           {current_despacho.distribucion_confirmada === false && (

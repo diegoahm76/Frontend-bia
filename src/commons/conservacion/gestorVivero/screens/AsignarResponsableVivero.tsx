@@ -296,7 +296,7 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
               variant_button="contained"
               on_click_function={handle_submit(on_submit)}
               icon_class={<SaveIcon />}
-              label={action}
+              label={'guardar' ?? action}
               type_button="button"
               disabled={
                 current_nursery.id_vivero === null ||

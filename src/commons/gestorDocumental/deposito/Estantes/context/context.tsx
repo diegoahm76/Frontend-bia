@@ -251,7 +251,9 @@ export const UserProvider = ({
         set_sucusal_selected(data_sucursal);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_depositos = async (): Promise<void> => {
@@ -278,7 +280,9 @@ export const UserProvider = ({
         set_depositos_selected_mover_estante(data_mover);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_estantes_depositos = async (): Promise<void> => {
@@ -302,7 +306,9 @@ export const UserProvider = ({
         set_nuevo_orden_estantes_selected(data_selected);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_bandejas_estantes = async (): Promise<void> => {
@@ -332,7 +338,9 @@ export const UserProvider = ({
         set_bandejas_selected_get(data_bandeja);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_caja_carpeta = async (): Promise<void> => {
@@ -351,7 +359,9 @@ export const UserProvider = ({
         set_rows_carpetas(data_carpetas);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_caja_bandeja = async (): Promise<void> => {
@@ -376,7 +386,9 @@ export const UserProvider = ({
       }
     } catch (error: any) {
       control_error(
-        error.response.data.detail || 'Hubo un error, intente de nuevo'
+        error.response.data.detail ||
+          'Algo paso, intente de nuevo' ||
+          'Hubo un error, intente de nuevo'
       );
     }
   };
@@ -387,7 +399,9 @@ export const UserProvider = ({
       set_orden_siguiente(response);
       // console.log('response', response);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const fetch_data_orden_cajas = async (): Promise<void> => {
@@ -396,7 +410,9 @@ export const UserProvider = ({
       set_orden_siguiente(response);
       // console.log('response', response);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 
@@ -421,7 +437,9 @@ export const UserProvider = ({
         control_warning('No hay depositos disponibles');
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 
@@ -453,7 +471,9 @@ export const UserProvider = ({
         set_estantes_selected([]);
         set_id_deposito(null);
       } else {
-        control_error(error.response.data.detail);
+        control_error(
+          error.response.data.detail || 'Algo paso, intente de nuevo'
+        );
       }
     }
   };
@@ -479,7 +499,9 @@ export const UserProvider = ({
         set_id_estante(null);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
 

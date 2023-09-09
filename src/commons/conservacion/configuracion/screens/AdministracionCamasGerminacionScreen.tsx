@@ -53,11 +53,11 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
 
   const [add_bed_is_active, set_add_bed_is_active] = useState<boolean>(false);
   const columns: GridColDef[] = [
-    { field: 'id_cama_germinacion_vivero', headerName: 'ID', width: 20 },
+    // { field: 'id_cama_germinacion_vivero', headerName: 'ID', width: 20 },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -67,7 +67,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
     {
       field: 'observacion',
       headerName: 'Observación',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -78,7 +78,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <>
           <Tooltip title="Detalle">
@@ -315,7 +315,8 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                           get_germination_beds_service(nursery?.id_vivero)
                         );
                       }}
-                      variant="outlined"
+                      variant="contained"
+                      color="error"
                       startIcon={<CloseIcon />}
                     >
                       CANCELAR
@@ -332,6 +333,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                       }}
                       type="button"
                       variant="contained"
+                      color='success'
                       startIcon={<SaveIcon />}
                     >
                       GUARDAR

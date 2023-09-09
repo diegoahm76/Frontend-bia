@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, FormLabel, ToggleButton, Stack } from "@mui/material"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,7 +8,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from "../../../../../components/Title";
 import CheckIcon from '@mui/icons-material/Check';
-
+import CancelIcon from '@mui/icons-material/Cancel';
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -409,12 +410,12 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
             </DialogContent>
             <DialogActions>
                 <Button
-                    color='inherit'
+                    color='error'
                     variant='contained'
-                    startIcon={<ClearIcon />}
+                    startIcon={<CancelIcon />}
                     onClick={() => { props.set_is_modal_active(false); }}>Cancelar</Button>
                 <Button
-                    color='primary'
+                    color='success'
                     variant='contained'
                     startIcon={<SaveIcon />}
                     onClick={guardar_car_uni_org}>Guardar</Button>

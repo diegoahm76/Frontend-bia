@@ -86,22 +86,12 @@ const EditarBienDialogForm = ({
         onSubmit={action === "create" ? handle_submit(on_submit) : handle_submit(on_submit_edit)}
 
       >
-
-        <Grid container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '2px',
-            mb: '10px',
-            boxShadow: '0px 3px 6px #042F4A26',
-            marginTop: '10px',
-            width: '460px',
-            height: '70px',
-            marginLeft: '20px', 
-          }} item xs={11.5}  margin={1} >
-             <Title title={action === "create" ? "Crear mezcla" : action === "detail" ? "Detalle mezcla" : "Editar mezcla"} ></Title>
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={2}>
+          <Title title={`${action === "create" ? "Crear mezcla" : action === "detail" ? "Detalle mezcla" : "Editar mezcla"} `} />
         </Grid>
+
+        {/* <Title title={action === "create" ? "Crear mezcla" : action === "detail" ? "Detalle mezcla" : "Editar mezcla"} ></Title> */}
+
 
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -189,14 +179,15 @@ const EditarBienDialogForm = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
+              color='error'
               onClick={handle_close_add_mixture}
               startIcon={<CloseIcon />}
             >
               CERRAR
             </Button>
             {action === "create" ?
-              <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+              <Button color='success' type="submit" variant="contained" startIcon={<SaveIcon />}>
                 GUARDAR
               </Button> :
               action === "edit" ?

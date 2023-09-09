@@ -815,9 +815,11 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     </Box>
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={10}>
                                 <Stack
                                     direction="row"
+                                    marginLeft={21}
+                                    
                                     justifyContent="center"
                                     spacing={2}>
                                     <Button
@@ -829,6 +831,19 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                     </Button>
                                 </Stack>
                             </Grid>
+                            <Grid item xs={1}>
+                   
+                        <Button
+                            color='error'
+
+                            variant='contained'
+                            startIcon={<ClearIcon />}
+                            onClick={salir_entrada}
+                        >
+                            Salir
+                        </Button>
+                   
+                </Grid>
                         </Grid>
                     </Box>
                 </Grid>
@@ -885,7 +900,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>}
-            <Grid container justifyContent="flex-end">
+            {/* <Grid container justifyContent="flex-end">
                 <Grid item xs={7}>
                     <Stack
                         direction="row"
@@ -903,15 +918,9 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                         </Button>
                     </Stack>
                 </Grid>
-            </Grid>
-            {dialog_notificaciones_is_active && (
-                <DialogNoticacionesComponent
-                    titulo_notificacion={titulo_notificacion}
-                    abrir_modal={abrir_modal}
-                    tipo_notificacion={tipo_notificacion}
-                    mensaje_notificacion={mensaje_notificacion}
-                    abrir_dialog={set_abrir_modal} />
-            )}
+
+            </Grid> */}
+
         </>
     );
 }

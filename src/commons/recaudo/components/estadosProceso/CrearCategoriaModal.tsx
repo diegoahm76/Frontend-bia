@@ -3,7 +3,9 @@ import { type Dispatch, type SetStateAction } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import type { FormDataCategoria } from "../../interfaces/proceso";
 import SaveIcon from '@mui/icons-material/Save';
-import EditIcon from '@mui/icons-material/Edit';
+
+import { Title } from "../../../../components";
+
 
 interface IProps {
   form_data_categoria: FormDataCategoria;
@@ -53,7 +55,12 @@ export const CrearCategoriaModal = ({
       <Box component='form' onSubmit={handle_submit} sx={{
         width: '500px'
       }}>
-        <DialogTitle>{actualizar_categoria ? 'Editar Categoría' : 'Crear Nueva Categoría'}</DialogTitle>
+
+         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Crear Nueva Categoria `} />
+                </Grid>
+        <DialogTitle></DialogTitle>
+
         <DialogContent dividers>
           <Grid container direction='column'>
             <Grid item xs={12} md={5} margin={1}>
@@ -86,7 +93,8 @@ export const CrearCategoriaModal = ({
         <DialogActions>
           <Button
             type="button"
-            variant='outlined'
+            color="error"
+            variant='contained'
             startIcon={<CloseIcon />}
             onClick={handle_close}
           >
@@ -95,8 +103,9 @@ export const CrearCategoriaModal = ({
           <Button
             type="submit"
             variant='contained'
-            color="primary"
-            startIcon={actualizar_categoria ? <EditIcon /> : <SaveIcon />}
+
+            color="success"
+            startIcon={<SaveIcon />}
           >
             {actualizar_categoria ? 'Editar' : 'Crear'}
           </Button>

@@ -167,15 +167,15 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                             sx={{ mt: '20px' }}
                         >
                             <Button
-                                color='inherit'
-                                variant="contained"
+                                // color='inherit'
+                                variant="outlined"
                                 startIcon={<CleanIcon />}
                                 onClick={limpiar}
                             >
                                 Limpiar
                             </Button>
                             <Button
-                                color='primary'
+                                color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
                                 onClick={() => {
@@ -185,7 +185,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                                 Guardar
                             </Button>
                             <Button
-                                color='inherit'
+                                color='error'
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={salir_mantenimiento}

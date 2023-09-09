@@ -24,19 +24,19 @@ export const ListarEstantes: React.FC = () => {
       field: 'orden_ubicacion_por_deposito',
       headerName: 'ORDEN',
       sortable: true,
-      width: 250,
+      width: 250,flex:1,
     },
     {
       field: 'identificacion_por_deposito',
       headerName: 'IDENTIFICACIÓN',
       sortable: true,
-      width: 250,
+      width: 250,flex:1,
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      width: 250,flex:1,
       renderCell: (params) => (
         <>
           <IconButton

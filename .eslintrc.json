@@ -16,7 +16,8 @@
   },
   "plugins": ["react", "@typescript-eslint", "babel"],
   "rules": {
-    "@typescript-eslint/strict-boolean-expressions": "warn",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/dot-notation": "error",
     "@typescript-eslint/naming-convention": [
       "error",

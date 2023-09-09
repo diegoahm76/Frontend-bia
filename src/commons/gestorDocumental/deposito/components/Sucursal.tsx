@@ -30,7 +30,7 @@ const Sucursales = ({ control_deposito, get_values, open_modal, set_open_modal }
     return (
         <>
             <Grid container spacing={2}>
-                <Title title="SUCURSALES" />
+                <Title title="Sucursales" />
 
                 <FormSelectController
                     xs={12}

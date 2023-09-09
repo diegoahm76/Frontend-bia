@@ -24,8 +24,8 @@ import { get_programmed_maintenance } from './thunks/maintenanceThunks';
 import { get_cv_vehicle_service } from '../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks';
 import { get_cv_computer_service } from '../../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { get_cv_others_service } from '../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks';
-import { download_xls_dos } from '../../../../../../../documentos-descargar/XLS_descargar';
-import { download_pdf_dos } from '../../../../../../../documentos-descargar/PDF_descargar';
+
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface IProps {
   is_modal_active: boolean;
@@ -164,7 +164,10 @@ const BuscarProgramacionComponent = ({
         set_is_modal_active(false);
       }}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+        <Title title={`${title} `} />
+      </Grid>
+      <DialogTitle> </DialogTitle>
       <DialogContent>
         <DialogContentText
           component={'span'}
@@ -294,21 +297,23 @@ const BuscarProgramacionComponent = ({
       </DialogContent>
       <DialogActions>
         <Button
-          color="primary"
+          color="error"
           variant="contained"
-          onClick={selected_product_grid}
-        >
-          Seleccionar
-        </Button>
-        <Button
-          color="inherit"
-          variant="contained"
+          startIcon={<ClearIcon />}
           onClick={() => {
             set_is_modal_active(false);
           }}
         >
           Salir
         </Button>
+         <Button
+          color="primary"
+          variant="contained"
+          onClick={selected_product_grid}
+        >
+          Seleccionar
+        </Button>
+       
       </DialogActions>
     </Dialog>
   );

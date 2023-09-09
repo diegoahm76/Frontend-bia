@@ -26,6 +26,7 @@ import {
 } from '../interfaces/configuracion';
 
 import { initial_state_current_germination_bed } from '../store/slice/configuracionSlice';
+import { Title } from '../../../../components';
 
 interface IProps {
   action: string;
@@ -109,13 +110,14 @@ const CrearCamaGerminacionDialogForm = ({
             : handle_submit(on_submit)
         }
       >
-        <DialogTitle>
-          {action === 'create'
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={` ${action === 'create'
             ? 'Crear cama de germinación'
             : action === 'detail'
             ? 'Detalle de la cama de germinación'
-            : 'Editar la cama de germinación'}
-        </DialogTitle>
+            : 'Editar la cama de germinación'}`} />
+                </Grid>
+        <DialogTitle>  </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
@@ -191,7 +193,8 @@ const CrearCamaGerminacionDialogForm = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
+              color='error'
               onClick={handle_close_add_bed}
               startIcon={<CloseIcon />}
             >
@@ -200,6 +203,7 @@ const CrearCamaGerminacionDialogForm = ({
             {action === 'create' ? (
               <Button
                 type="submit"
+                color='success'
                 variant="contained"
                 startIcon={<SaveIcon />}
               >
