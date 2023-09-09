@@ -36,7 +36,7 @@ export const SeleccionarArchivo: React.FC = () => {
       setFileExtension(null);
     }
   };
-  
+
 
   return (
     <>
@@ -61,7 +61,7 @@ export const SeleccionarArchivo: React.FC = () => {
             variant="outlined"
             size="small"
             label="Nombre de la Plantilla"
-            value={"tipos de documentos"}
+            value={'tipos de documentos'}
             fullWidth
             name="Numero identificación "
           />
@@ -71,14 +71,13 @@ export const SeleccionarArchivo: React.FC = () => {
             style={{ width: '100%', marginTop: 10 }}
             label={`Descripccion`}
             id="description"
-            value={"ninguna observacion aserca de esta plantilla en especial"}
+            value={'ninguna observacion aserca de esta plantilla en especial'}
 
             // error={emailMismatch}
             // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
           />
         </Grid>
         <Grid item xs={4}>
-   
           <Button
             style={{ marginTop: 10 }}
             component="label"
@@ -86,7 +85,7 @@ export const SeleccionarArchivo: React.FC = () => {
             startIcon={<CloudUploadIcon />}
             htmlFor="file-upload" // Usa htmlFor en lugar de href para relacionar con el input
           >
-          Seleccionar Documento
+            Seleccionar Documento
             <VisuallyHiddenInput
               type="file"
               id="file-upload" // Usa el mismo id que el atributo htmlFor
@@ -94,8 +93,6 @@ export const SeleccionarArchivo: React.FC = () => {
             />
           </Button>
         </Grid>
-    
-
 
         <Grid item sm={4}>
           <TextField
@@ -103,10 +100,10 @@ export const SeleccionarArchivo: React.FC = () => {
             variant="outlined"
             disabled
             size="small"
-            label="Extencion de la platilla "
-            value={fileExtension}
+            label="Extensión de la plantilla"
+            value={fileExtension ?? ''}
             fullWidth
-            name="Numero identificación "
+            name="Numero identificación"
           />
         </Grid>
       </Grid>
