@@ -23,14 +23,14 @@ const ListadoCarpetas = ({
     const columns: GridColDef[] = [
 
         {
-            field: 'orden_ubicacion_por_estante',
+            field: 'orden_ubicacion_por_caja',
             headerName: 'ÓRDEN',
             width: 300,
             cellClassName: 'truncate-cell'
 
         },
         {
-            field: 'identificacion_por_estante',
+            field: 'identificacion_por_caja',
             headerName: 'IDENTIFICACIÒN',
             width: 300,
             cellClassName: 'truncate-cell'
@@ -55,10 +55,10 @@ const ListadoCarpetas = ({
     ];
 
     useEffect(() => {
-        if (cajas?.id_caja !== null && cajas?.id_caja !== undefined) {
-            void dispatch(get_carpeta_id(cajas?.id_caja))
+        if (cajas.id_caja !== null && cajas.id_caja !== undefined) {
+            void dispatch(get_carpeta_id(cajas.id_caja))
         }
-    }, [cajas])
+    }, [])
 
 
 
@@ -78,7 +78,7 @@ const ListadoCarpetas = ({
                 }}>
 
                 <Box sx={{ width: '100%' }}>
-                    <Title title="Listado de bandejas por estante" />
+                    <Title title="Listado de carpetas por estante" />
 
 
 
@@ -89,7 +89,7 @@ const ListadoCarpetas = ({
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         experimentalFeatures={{ newEditingApi: true }}
-                        getRowId={(row) => row.id_bandeja_estante}
+                        getRowId={(row) => row.id_carpeta_caja}
                         rows={carpetas}
                     />
 
