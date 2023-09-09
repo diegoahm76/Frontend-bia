@@ -33,7 +33,7 @@ export const OrigenBienes: React.FC<IProps> = (props: IProps) => {
             position: 'bottom'
           }
         }
-      }]
+      }],
     };
 
     const state = {  

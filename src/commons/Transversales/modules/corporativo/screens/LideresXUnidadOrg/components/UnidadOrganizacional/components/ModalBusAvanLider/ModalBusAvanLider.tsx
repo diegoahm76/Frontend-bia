@@ -418,8 +418,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
-                variant="contained"
-                color="success"
+               
+                variant="outlined"
                 onClick={() => {
                   resetFunction();
                 }}
@@ -428,7 +428,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 LIMPIAR BÚSQUEDA
               </Button>
               <Button
-                variant="outlined"
+                 variant="contained"
+                color="error"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}
               >

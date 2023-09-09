@@ -413,7 +413,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               </Button>
               <Button
                 color="error"
-                variant="outlined"
+                variant="contained"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}
               >

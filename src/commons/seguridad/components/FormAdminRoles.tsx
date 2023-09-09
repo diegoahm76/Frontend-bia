@@ -358,7 +358,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color="success"
               disabled={is_saving || permisos_rol.length === 0}
               startIcon={<SaveIcon />}
             >

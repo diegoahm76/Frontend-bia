@@ -237,7 +237,8 @@ const EditarBienDialogForm = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
+              color="error"
               onClick={handle_close_add_bien}
               startIcon={<CloseIcon />}
             >

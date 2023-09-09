@@ -120,7 +120,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
 
         <Grid
           container
-          direction="row"
+          direction="row" justifyContent="flex-end"
           padding={2}
           spacing={2}
         >

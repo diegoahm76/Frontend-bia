@@ -262,7 +262,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                 variant="contained"
                 onClick={handleClick}
             >
-                Cambiar
+                Editar
             </Button>
             <Dialog header={title} visible={visible} style={{ width: '50%' }} closable={false} onHide={() => { setVisible(false) }} footer={footer_content}>
                 <Grid container sx={{

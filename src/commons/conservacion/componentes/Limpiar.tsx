@@ -45,7 +45,7 @@ const Clean = ({
           label={button_label ?? 'Limpiar'}
           type_button="button"
           disabled={button_disabled ?? false}
-          color_button="success"
+          // color_button="success"
         />
       )}
     </>

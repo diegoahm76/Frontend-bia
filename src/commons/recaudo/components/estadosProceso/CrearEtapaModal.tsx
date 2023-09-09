@@ -2,6 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, T
 import { useState, type Dispatch, type SetStateAction } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
+import { Title } from "../../../../components";
 
 interface IProps {
   open_etapa_modal: boolean;
@@ -44,7 +45,10 @@ export const CrearEtapaModal = ({ open_etapa_modal, set_open_etapa_modal, submit
       onClose={set_open_etapa_modal}
     >
       <Box component='form' onSubmit={handle_submit}>
-        <DialogTitle>Crear Nueva Etapa</DialogTitle>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Crear Nueva Etapa `} />
+                </Grid>
+        <DialogTitle></DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -76,7 +80,8 @@ export const CrearEtapaModal = ({ open_etapa_modal, set_open_etapa_modal, submit
         <DialogActions>
           <Button
             type="button"
-            variant='outlined'
+            variant='contained'
+            color="error"
             startIcon={<CloseIcon />}
             onClick={handle_close}
           >
@@ -85,7 +90,7 @@ export const CrearEtapaModal = ({ open_etapa_modal, set_open_etapa_modal, submit
           <Button
             type="submit"
             variant='contained'
-            color="primary"
+            color="success"
             startIcon={<SaveIcon />}
           >
             Crear

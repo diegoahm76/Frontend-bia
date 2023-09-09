@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_article_by_type } from "./thunks/maintenanceThunks";
-
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface IProps {
   is_modal_active: boolean;
@@ -69,7 +69,10 @@ const BuscarArticuloComponent = ({
       open={is_modal_active}
       onClose={() => { set_is_modal_active(false); }}
     >
-      <DialogTitle>Buscar {title}</DialogTitle>
+       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Buscar ${title}`}/>
+                </Grid>
+      <DialogTitle> </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box
@@ -148,12 +151,13 @@ const BuscarArticuloComponent = ({
       </DialogContent>
       <DialogActions>
         <Button
-          color='inherit'
+          color='error'
           variant='contained'
+          startIcon={<ClearIcon />}
           onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
         <Button
           color='primary'
-          variant='contained'
+          variant='contained' 
           onClick={selected_product_grid}>Seleccionar</Button>
       </DialogActions>
     </Dialog>

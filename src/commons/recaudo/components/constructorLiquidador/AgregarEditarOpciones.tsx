@@ -420,7 +420,7 @@ export const AgregarEditarOpciones = ({
           </Grid>
           <Grid item xs={3}>
             <Button
-              color='primary'
+              color='success'
               variant='contained'
               onClick={handle_post_opcion_liquidacion}
               startIcon={<Save />}

@@ -2,6 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, T
 import { useState, type Dispatch, type SetStateAction } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
+import { Title } from "../../../../components";
 
 interface IProps {
   open_categoria_modal: boolean;
@@ -45,7 +46,10 @@ export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_m
       <Box component='form' onSubmit={handle_submit} sx={{
         width: '500px'
       }}>
-        <DialogTitle>Crear Nueva Categoria</DialogTitle>
+         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`Crear Nueva Categoria `} />
+                </Grid>
+        <DialogTitle></DialogTitle>
         <DialogContent dividers>
           <Grid container direction='column' spacing={2}>
             <Grid item xs={12} md={5} margin={1}>
@@ -65,7 +69,8 @@ export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_m
         <DialogActions>
           <Button
             type="button"
-            variant='outlined'
+            color="error"
+            variant='contained'
             startIcon={<CloseIcon />}
             onClick={handle_close}
           >
@@ -74,7 +79,7 @@ export const CrearCategoriaModal = ({ open_categoria_modal, set_open_categoria_m
           <Button
             type="submit"
             variant='contained'
-            color="primary"
+            color="success"
             startIcon={<SaveIcon />}
           >
             Crear

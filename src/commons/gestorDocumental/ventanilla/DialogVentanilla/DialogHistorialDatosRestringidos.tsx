@@ -110,7 +110,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
         maxWidth={'lg'}
       >
         <DialogTitle>
-          <Title title="HISTORICO DE CAMBIOS" />
+          <Title title="Histórico de cambios" />
         </DialogTitle>
         <Divider />
         <Grid

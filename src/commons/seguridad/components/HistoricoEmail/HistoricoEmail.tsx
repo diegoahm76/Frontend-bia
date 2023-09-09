@@ -117,7 +117,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
         maxWidth={'md'}
       >
         <DialogTitle>
-          <Title title="HISTORICO DE CAMBIOS E-MAIL" />
+          <Title title="Histórico de cambios e-mail" />
         </DialogTitle>
         <Divider />
         <Grid
@@ -182,7 +182,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
               spacing={1}
             >
               <Button
-                variant="outlined"
+                variant="contained"
                 color="error"
                 // eslint-disable-next-line react/jsx-no-undef
                 startIcon={<CancelIcon />}

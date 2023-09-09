@@ -116,7 +116,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_vivero(e.target.value);
         set_error_vivero(e.target.value === "");
-        if(e.target.value === "Todos")
+        if (e.target.value === "Todos")
             set_reporte_consolidado(false);
     }
     const cambio_reporte: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -256,12 +256,12 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             set_error_numero_lote(numero_lote === "")
             set_error_año_lote(año_lote === "")
         }
-        if(seleccion_reporte !== ""){
-            if(fecha_desde !== null && fecha_hasta !== null && seleccion_planta !== 0)
+        if (seleccion_reporte !== "") {
+            if (fecha_desde !== null && fecha_hasta !== null && seleccion_planta !== 0)
                 handle_export_pdf();
-            if(seleccion_reporte === "EL" && fecha_desde !== null && fecha_hasta !== null && seleccion_vivero !== "" && numero_lote !== "" && año_lote !== "" && seleccion_planta !== 0)
+            if (seleccion_reporte === "EL" && fecha_desde !== null && fecha_hasta !== null && seleccion_vivero !== "" && numero_lote !== "" && año_lote !== "" && seleccion_planta !== 0)
                 handle_export_pdf();
-        } 
+        }
     }
 
     const salir_entrada: () => void = () => {
@@ -465,14 +465,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             doc.rect(24, 2 + coordenada_y, 150, 20, 'S');
             let break_line = 6;
             const resultado: any = [];
-            if(report.descripcion.length > 78){
+            if (report.descripcion.length > 78) {
                 break_line = 3;
                 for (let i = 0; i < report.descripcion.length; i += 78) {
                     resultado.push(report.descripcion.substr(i, 78));
-                    if(report.descripcion.substr(i, 78).length >= 78)
+                    if (report.descripcion.substr(i, 78).length >= 78)
                         break_line = break_line + 3;
                 }
-            }else{
+            } else {
                 resultado.push(report.descripcion);
             }
             doc.text(resultado, 25, break_line + coordenada_y);
@@ -734,16 +734,17 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                     direction="row"
                                     justifyContent="center"
                                     spacing={2}>
-                                    <span style={{ margin: '7px' }}>Reporte consolidado</span><Switch color="default" onChange={() => { set_reporte_consolidado(!reporte_consolidado); }} />
+                                    <span style={{ margin: '7px' }}>Reporte consolidado</span><Switch color="primary" onChange={() => { set_reporte_consolidado(!reporte_consolidado); }} />
                                 </Stack>
                             </Grid>
                         </Grid>
                     </Box>}
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={10}  >
                                 <Stack
                                     direction="row"
+                                    marginLeft={21}
                                     justifyContent="center"
                                     spacing={2}>
                                     <Button
@@ -755,6 +756,17 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         Generar reporte
                                     </Button>
                                 </Stack>
+                            </Grid>
+                            <Grid item xs={1}>
+                                <Button
+                                    color='error'
+                                    
+                                    variant='contained'
+                                    startIcon={<ClearIcon />}
+                                    onClick={salir_entrada}
+                                >
+                                    Salir
+                                </Button>
                             </Grid>
                         </Grid>
                     </Box>
@@ -811,7 +823,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>}
-            <Grid container justifyContent="flex-end">
+            {/* <Grid container justifyContent="flex-end">
                 <Grid item xs={7}>
                     <Stack
                         direction="row"
@@ -829,7 +841,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                         </Button>
                     </Stack>
                 </Grid>
-            </Grid>
+            </Grid> */}
             {dialog_notificaciones_is_active && (
                 <DialogNoticacionesComponent
                     titulo_notificacion={titulo_notificacion}

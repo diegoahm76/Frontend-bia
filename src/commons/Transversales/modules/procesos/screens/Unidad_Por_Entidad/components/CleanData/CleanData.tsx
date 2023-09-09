@@ -181,9 +181,10 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     REINICIAR CAMPOS
                   </Button>
 
+                  <Button
+                    color="success"
                   <LoadingButton
                     loading={loadingButton}
-                    color="primary"
                     variant="contained"
                     type="submit"
                     // DEBE HABILITARSE LA CONDICIONAL DE GUARDAR O PROCEDER DEPENDIENDO EL ESCENARIO (MODE)
@@ -212,7 +213,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   >
                     <Button
                       color="error"
-                      variant="outlined"
+                      variant="contained"
                       startIcon={<CloseIcon />}
                     >
                       SALIR DEL MÓDULO

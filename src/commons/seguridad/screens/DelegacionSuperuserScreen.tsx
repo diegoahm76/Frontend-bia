@@ -23,7 +23,7 @@ import { get_person_by_document } from '../../../request';
 import { control_error } from '../../../helpers';
 import { create_super_user } from '../store';
 import Swal from 'sweetalert2';
-
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DelegacionSuperuserScreen: React.FC = () => {
   const { watch, register } = useForm();
@@ -123,7 +123,7 @@ export const DelegacionSuperuserScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Delegacion de SuperUsuario"></Title>
+          <Title title="Delegación de Superusuario"></Title>
           <Box
             component="form"
             sx={{ mt: '20px' }}
@@ -224,7 +224,8 @@ export const DelegacionSuperuserScreen: React.FC = () => {
           >
             <Button
               color="success"
-              variant="outlined"
+              variant="contained"
+              startIcon={<SaveIcon />}
               onClick={() => {
                 handleSeleccionarNuevoSuperUsuario(
                   nuevoSuperUsuario.id_persona

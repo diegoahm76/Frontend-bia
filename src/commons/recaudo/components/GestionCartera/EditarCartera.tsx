@@ -297,7 +297,7 @@ export const EditarCartera: React.FC<IProps> = ({
             </>) :
             (<Grid item xs={12} sm={3}>
               <Button
-                color='primary'
+                color='success'
                 variant='contained'
                 startIcon={<SaveIcon />}
                 fullWidth

@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
 import { get_filtro_deudores, get_deudores } from '../slices/DeudoresSlice';
+import { Title } from '../../../../components';
 
 interface RootStateDeudores {
   deudores: {
@@ -110,6 +111,7 @@ export const TablaDeudores: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        <Title title='Listado de Deudores - Usuario Interno Cormacarena'/>
         <Grid item xs={12}>
           <Box
             component="form"

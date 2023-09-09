@@ -72,7 +72,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
 
   return (
     <>
-      <Title title='Gestionar Solicitud de Facilidad de Pago'/>
+      {/* <Title title='Gestionar Solicitud de Facilidad de Pago'/> */}
       {
         solicitud_facilidad.facilidad_pago !== undefined ? (
           <>
@@ -88,6 +88,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
+               <Title title='Gestionar Solicitud de Facilidad de Pago'/>
               <h3>Datos de la Solicitud</h3>
               <Grid item xs={12}>
                 <Box
@@ -112,8 +113,11 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-              <h3>Respuesta a la Solicitud</h3>
-              <Grid item xs={12}>
+                 <Grid item xs={12}  >
+                    <Title title={`Respuesta a la Solicitud `} />
+                </Grid>
+            
+              <Grid item marginTop={2} xs={12}>
                 <Box
                   component="form"
                   noValidate
@@ -396,7 +400,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                     sx={{ mb: '20px' }}
                   >
                     <Button
-                      color='primary'
+                      color='success'
                       variant='contained'
                       startIcon={<Save />}
                       sx={{ marginTop: '30px' }}

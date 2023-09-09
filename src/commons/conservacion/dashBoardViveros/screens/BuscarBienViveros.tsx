@@ -72,7 +72,10 @@ const BuscarBienViveros = (props: IProps) => {
       open={props.is_modal_active}
       onClose={() => { props.set_is_modal_active(false); }}
     >
-      <DialogTitle>{props.title}</DialogTitle>
+       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`${props.title} `} />
+                </Grid>
+      <DialogTitle> </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box
@@ -169,7 +172,7 @@ const BuscarBienViveros = (props: IProps) => {
       <DialogActions>
         <Button
           color='error'
-          variant='outlined'
+          variant='contained'
           startIcon={<ClearIcon />}
           onClick={() => { props.set_is_modal_active(false); }}>Cancelar</Button>
         <Button
