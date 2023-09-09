@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, TextField } from "@mui/material";
+import { Button, FormControl, Grid, TextField } from "@mui/material";
 import { Title } from "../../../../components";
 import { InputLabel, MenuItem, Select, } from "@mui/material";
 import type React from "react";
@@ -13,6 +13,7 @@ import {
     Radio,
     Typography,
 } from "@mui/material";
+import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Encuesta: React.FC = () => {
@@ -49,7 +50,7 @@ export const Encuesta: React.FC = () => {
 
 
 
-    
+
     return (
         <>
             <Grid container
@@ -238,6 +239,20 @@ export const Encuesta: React.FC = () => {
                     </Grid>
                 ))}
             </>
+            <Grid container
+                spacing={2} m={2} p={2}
+                sx={miEstilo}
+            >
+
+                <Grid item xs={12} sm={1.2}>
+                    <Button color='success' fullWidth variant="contained"    >
+                        guardar
+                    </Button>
+                </Grid>
+                <Grid item xs={12} sm={1}>
+                    <ButtonSalir />
+                </Grid>
+            </Grid>
 
         </>
     );
