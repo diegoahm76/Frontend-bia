@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 
-import { Box, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
+import { Box, ButtonGroup, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { IObjDespacho, type IObjItem } from '../interfaces/vivero';
+import { type IObjDespacho, type IObjItem } from '../interfaces/vivero';
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
@@ -20,6 +21,7 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 const ListadoBienesDespacho = () => {
   const [selected_row, set_selected_row] = useState([]);
   const [distribucion_manual, set_distribucion_manual] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [titulo, set_titulo] = useState<string>('Bienes Recibidos');
 
   // const [action, set_action] = useState<string>("agregar");

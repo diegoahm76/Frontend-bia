@@ -79,7 +79,7 @@ const routes = [
     name: 'plantilladocumentos',
     component: () => <AdministracionPlantillaDocumentos_Routes />,
   },
-];
+  {
     path: 'encuesta_configuracion/',
     name: 'encuesta_configuracion',
     component: () => <Confi_Encuasta_Routes />,
@@ -96,6 +96,7 @@ const routes = [
   },
 
 ];
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (

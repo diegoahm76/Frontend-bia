@@ -629,7 +629,6 @@ export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                         disabled // Deshabilita la interacción con el componente
                         open={false} // Mantén el listado cerrado
                         clearOnBlur={false} // Evita eliminar los datos al perder el foco
-                        // @ts-ignore
                         onChange={handle_change_autocomplete}
                       />
                     </Grid>

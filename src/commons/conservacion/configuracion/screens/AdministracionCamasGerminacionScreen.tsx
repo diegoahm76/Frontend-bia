@@ -252,9 +252,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
           <Grid item xs={11} md={12} margin={2} style={{ marginLeft: '1px' }}>
             <AutocompleteVivero
               id={id}
-              // @ts-ignore
               set_value={set_nursery}
-              // @ts-ignore
               value={nursery}
             />
           </Grid>

@@ -457,7 +457,6 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                       />
                     )}
                     {...register('id_cuencas')}
-                    // @ts-ignore
                     onChange={handle_change_autocomplete}
                   />
                 </Grid>
