@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
+import { control_error, control_success } from '../../../../../../../../helpers';
 
 // ! ----- Consulta de tabla temporal que es usada para manejar los datos de la tabla de la pantalla -- //
 
@@ -214,9 +215,11 @@ export const putTrasladoMasivoUnidadesPorEntidad = async (
     const url = `transversal/organigrama/finalizar-actualizacion-unidad/`;
     const { data } = await api.put(url, data_traslado_masivo);
     console.log('data retorno creación de tabla temporal', data);
+    control_success('Traslado masivo realizado con éxito');
     return data;
   } catch (error: any) {
     console.log(error);
+    control_error('Error al realizar el traslado masivo');
   } finally {
     setLoadingButton(false);
   }
