@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC, useContext } from 'react';
+import { type FC, useContext, useState } from 'react';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../../components';
@@ -13,12 +13,26 @@ import ForwardIcon from '@mui/icons-material/Forward';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
+import {
+  putCrearRegistrosTemporalesT026,
+  putTrasladoMasivoUnidadesPorEntidad
+} from '../../toolkit/UxE_thunks/UxE_thunks';
+import { LoadingButton } from '@mui/lab';
 
 export const CleanData: FC<any> = (): JSX.Element => {
+  // ? loading  para los botones guardar y proceder respectivamente
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
+
   //* states from redux
   const {
     controlModoTrasladoUnidadXEntidad,
-    unidadesSeleccionadas /* controlFaseEntrada */
+    //* unidades seleccionadas traslado actual a nuevo
+    unidadesSeleccionadas,
+    //* unidades seleccionadas traslado anterior a actual
+    unidadesSeleccionadasAnteriorAActual,
+    organigrama_current,
+    gridAnteriorAActual
+    /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
@@ -26,17 +40,15 @@ export const CleanData: FC<any> = (): JSX.Element => {
   const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
 
   const guardarRegistrosT026 = (): void => {
-    console.log('guardando registros T026');
-
-    // console.log('unidades seleccionadas', unidadesSeleccionadas);
-
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
         .filter(
           // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
           ([key, value]) => {
-            return value ? value?.idPersona && value?.label && value?.value : null;
+            return value
+              ? value?.idPersona && value?.label && value?.value
+              : null;
           }
         )
         .map(([key, value]) => ({
@@ -44,12 +56,63 @@ export const CleanData: FC<any> = (): JSX.Element => {
           // label: value.label,
           id_nueva_unidad_organizacional: value?.value
         }));
-    console.log(unidadesSeleccionadasArray);
+
+    console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
+    console.log(organigrama_current, 'organigrama_current');
+
+    // ? almacenamiento de datos en tabla temporal, lleva los parametros : (id_organigrama del cual al cual se va a realizar el traslado y una array de objetos en el cual va el id_person a trasladar y el id de la nueva unidad organizacional7)
+    void putCrearRegistrosTemporalesT026(
+      organigrama_current,
+      unidadesSeleccionadasArray,
+      setLoadingButton
+    );
   };
 
   const procederACambioMasivoUxE = (): void => {
-    console.log('procediendo a cambio masivo UxE');
+    const unidadesSeleccionadasArray =
+      unidadesSeleccionadasAnteriorAActual &&
+      Object?.entries(unidadesSeleccionadasAnteriorAActual)
+        .filter(
+          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+          ([key, value]) => {
+            return value
+              ? value?.idPersona && value?.label && value?.value && value?.data
+              : null;
+          }
+        )
+        .map(([key, value]) => ({
+          // data: value?.data,
+          id_persona: value?.idPersona,
+          nombre_nueva_unidad_organizacional: value?.label,
+          id_nueva_unidad_organizacional: value?.value
+        }));
+
+    const arraysComparados = unidadesSeleccionadasArray?.map((unidad) => {
+      const unidadEncontrada = gridAnteriorAActual?.filter(
+        (unidadGrid) => unidadGrid.id_persona === unidad.id_persona
+      );
+      return {
+        ...unidad,
+        nombre_completo: unidadEncontrada[0]?.nombre_completo,
+        id_unidad_organizacional_actual:
+          unidadEncontrada[0]?.id_unidad_organizacional_actual,
+        nombre_unidad_organizacional_actual:
+          unidadEncontrada[0]?.nombre_unidad_organizacional_actual,
+        es_unidad_organizacional_actual:
+          unidadEncontrada[0]?.es_unidad_organizacional_actual
+      };
+    });
+
+    console.log('newArray', arraysComparados);
+
+    // ? el servicio el cual se manda a llamar cuando se ejecuta la función está fallando en el backend, se debe revisar
+    void putTrasladoMasivoUnidadesPorEntidad(
+      arraysComparados,
+      setLoadingButton
+    );
   };
+
+  if (!controlModoTrasladoUnidadXEntidad) return <></>;
 
   return (
     <>
@@ -82,7 +145,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                 xs={12}
                 sm={12}
                 sx={{
-                  zIndex: 2,
+                  // zIndex: 2,
                   justifyContent: 'center'
                 }}
               >
@@ -118,7 +181,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     REINICIAR CAMPOS
                   </Button>
 
-                  <Button
+                  <LoadingButton
+                    loading={loadingButton}
                     color="primary"
                     variant="contained"
                     type="submit"
@@ -138,7 +202,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
                       ? 'GUARDAR'
                       : 'PROCEDER'}
-                  </Button>
+                  </LoadingButton>
 
                   <Link
                     to="/app/home"

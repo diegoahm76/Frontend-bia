@@ -13,8 +13,6 @@ import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/Di
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
-// import { Suspense } from 'react';
-// import { Loader } from '../../../utils/Loader/Loader';
 
 const routes = [
   {
@@ -22,6 +20,7 @@ const routes = [
     name: 'organigrama',
     component: () => <OrganigramaRoutes />,
   },
+  //! dentro de ccd va a estar la ruta de permisos sobre series documentales
   {
     path: 'ccd/',
     name: 'ccd',
@@ -76,7 +75,6 @@ const routes = [
     component: () => <AdministracionPlantillaDocumentos_Routes />,
   },
 ];
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

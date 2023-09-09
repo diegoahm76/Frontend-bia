@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button, Dialog, DialogActions, Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
@@ -54,8 +55,8 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
       control_success('La configuración se actualizó correctamente')
       void confi_alerta_persona()
       reset();
-    } catch (error) {
-      control_error(error);
+    } catch (error: any) {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }
   };
   return (

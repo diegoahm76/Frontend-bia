@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
@@ -88,8 +89,8 @@ export const crear_estacion = async (Estacion: IEstacionEstaciones): Promise<any
     .then(() => {
       control_success('La estación Se creo correctamente')
     })
-    .catch((error) => {
-      control_error(error)
+    .catch((error: any) => {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo')
     });
 };
 
@@ -100,8 +101,8 @@ export const crear_persona = async (Peronsa: PersonaEstacion): Promise<any> => {
     .then(() => {
       control_success('La persona se creo correctamente')
     })
-    .catch((error) => {
-      control_error(error)
+    .catch((error: any) => {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo')
     });
 };
 
@@ -111,8 +112,8 @@ export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<an
     .then(() => {
       control_success('La configuración alerta persona se creó correctamente')
     })
-    .catch((error) => {
-      control_error(error)
+    .catch((error: any) => {
+      control_error(error.response.data.detail || 'Algo paso, intente de nuevo')
     });
 };
 
