@@ -19,7 +19,7 @@ export const SeleccionarArchivo: React.FC = () => {
   `;
 
   const [fileExtension, setFileExtension] = useState<string | null>(null);
-
+console.log(fileExtension);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const fileInput = event.target;
     if (fileInput?.files?.length) {
