@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { type FC, useEffect, useContext, useState } from 'react';
+import { type FC, useEffect, useContext } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
 import { Button, Grid, Stack } from '@mui/material';
@@ -55,12 +55,10 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
   //* context necesario
 
-  const { gridActualANuevo, handleGridActualANuevo } = useContext(
+  const { gridActualANuevo, handleGridActualANuevo, handleMood, mood } = useContext(
     ContextUnidadxEntidad
   );
 
-  //! estados necesarios
-  const [mood, setMood] = useState(false);
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
@@ -84,7 +82,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
       if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
-          setMood(true);
+          handleMood(true);
           // console.log(resOrganigramas);
           // console.log(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
           const organigramaNecesario = resOrganigramas?.filter(
@@ -203,7 +201,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
         setOrganigramasDisponibles(
           filtrarOrganigramas(organigramasDisponibles)
         );
-        setMood(false);
+        handleMood(false);
       }
     };
 

@@ -15,6 +15,9 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   consultarTablaTemporal,
+  getListaUnidadesOrganigramaSeleccionado,
+  getListadoPersonasOrganigramaActual,
+  getOrganigramasDispobibles,
   getPersonasSinActualizarOrganigramaAnteriorAlActual,
   getUnidadesOrganizacionalesOrganigramaActual,
   get_organigrama_acual,
@@ -28,11 +31,14 @@ import { eliminarObjetosDuplicadosPorId } from '../../functions/functions';
 import Swal from 'sweetalert2';
 import {
   setAsignacionConsultaTablaTemporal,
+  setGridActualANuevo,
   setGridAnteriorAActual,
-  setUnidadesSeleccionadas,
-  setUnidadesSeleccionadasAnteriorAActual
+  // setUnidadesSeleccionadas,
+  setUnidadesSeleccionadasAnteriorAActual,
+  set_current_id_organigrama
 } from '../../toolkit/UxE_slice/UxE_slice';
 import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
+import { filtrarOrganigramas } from '../../Atoms/ActualANuevo/utils/function/filterOrganigramas';
 
 export const CleanData: FC<any> = (): JSX.Element => {
   //* navigate declaration
@@ -50,50 +56,146 @@ export const CleanData: FC<any> = (): JSX.Element => {
     //* unidades seleccionadas traslado anterior a actual
     unidadesSeleccionadasAnteriorAActual,
     organigrama_current,
-    gridAnteriorAActual
+    gridAnteriorAActual,
+    asignacionConsultaTablaTemporal
     /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
-  const { handleModalHistoricos } = useContext(ContextUnidadxEntidad);
+  const { handleModalHistoricos, handleGridActualANuevo, handleMood /* setOrganigramasDisponibles */ } = useContext(ContextUnidadxEntidad);
 
   //* hook elements
-  const { setOrganigramaActual } = use_u_x_entidad();
+  const { setOrganigramaActual, setOrganigramasDisponibles } = use_u_x_entidad();
 
   const guardarRegistrosT026 = (): void => {
     console.log(unidadesSeleccionadas);
+
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
-        .filter(
-          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-          ([key, value]) => {
-            return value
-              ? value?.idPersona && value?.label && value?.value
-              : null;
-          }
-        )
+        .filter(([key, value]) => {
+          return value
+            ? value?.idPersona && value?.label && value?.value
+            : null;
+        })
         .map(([key, value]) => ({
           id_persona: value?.idPersona,
-          // label: value.label,
           id_nueva_unidad_organizacional: value?.value
         }));
 
     console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
     console.log(organigrama_current, 'organigrama_current');
 
-    // ? almacenamiento de datos en tabla temporal, lleva los parametros : (id_organigrama del cual al cual se va a realizar el traslado y una array de objetos en el cual va el id_person a trasladar y el id de la nueva unidad organizacional7)
     void putCrearRegistrosTemporalesT026(
       organigrama_current,
       unidadesSeleccionadasArray,
       setLoadingButton
-    ).finally(() => {
-      dispatch(setUnidadesSeleccionadas([]));
-      dispatch(setAsignacionConsultaTablaTemporal(null));
+    ).then(() => {
+      const obtenerOrganigramas = async (): Promise<any> => {
+        const organigramasActuales = await get_organigrama_acual(navigate);
+        setOrganigramaActual(
+          organigramasActuales?.map((item: any) => ({
+            label: item?.nombre,
+            value: item?.id_organigrama
+          }))
+        );
+
+        if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
+          void getOrganigramasDispobibles().then((resOrganigramas: any) => {
+            handleMood(true);
+
+            const organigramaNecesario = resOrganigramas?.filter(
+              (item: any) =>
+                item?.id_organigrama ===
+                asignacionConsultaTablaTemporal?.id_organigrama_nuevo
+            );
+
+            setOrganigramasDisponibles(
+              organigramaNecesario?.map((item: any) => ({
+                label: item?.nombre,
+                value: item?.id_organigrama
+              }))
+            );
+          });
+
+          dispatch(
+            set_current_id_organigrama(
+              asignacionConsultaTablaTemporal?.id_organigrama_nuevo
+            )
+          );
+
+          handleGridActualANuevo(true);
+
+          void getListadoPersonasOrganigramaActual().then(
+            (resListaPersonas: any) => {
+              void getListaUnidadesOrganigramaSeleccionado(
+                asignacionConsultaTablaTemporal?.id_organigrama_nuevo
+              ).then((resListaUnidades) => {
+                const dataMixed = resListaPersonas?.data?.map((item: any) => {
+                  return {
+                    ...item,
+                    unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                  };
+                });
+
+                const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
+                  (item: any) => {
+                    return {
+                      ...item,
+                      unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                    };
+                  }
+                );
+
+                dispatch(setGridActualANuevo(dataMixed));
+                dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
+
+                const arraySinRepetidos = [...dataMixed2, ...dataMixed];
+
+                const elementosNoRepetidos =
+                  eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+
+                if (elementosNoRepetidos.length === 0) {
+                  void Swal.fire({
+                    icon: 'warning',
+                    title: 'NO HAY PERSONAS PARA TRASLADAR',
+                    text:
+                      'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
+                    showCloseButton: false,
+                    allowOutsideClick: false,
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    cancelButtonText: 'Reiniciar módulo',
+                    confirmButtonText: 'Ir a administrador de personas',
+                    confirmButtonColor: '#042F4A',
+                    allowEscapeKey: false
+                  }).then((result: any) => {
+                    if (result.isConfirmed) {
+                      navigate('/app/transversal/administracion_personas');
+                    } else {
+                      window.location.reload();
+                    }
+                  });
+                } else {
+                  dispatch(setGridActualANuevo(elementosNoRepetidos));
+                }
+              });
+            }
+          );
+        } else {
+          const organigramasDisponibles = await getOrganigramasDispobibles();
+          setOrganigramasDisponibles(
+            filtrarOrganigramas(organigramasDisponibles)
+          );
+          handleMood(false);
+        }
+      };
+
+      void obtenerOrganigramas();
     });
-    // ! el finally debe pasar al final de la función tal como paso con el proceder ya que los valores deben volverse a actualizar
   };
 
+  // ? ----- FUNCION PROCEDER CON LOS CAMBIOS ----
   const procederACambioMasivoUxE = (): void => {
     const unidadesSeleccionadasArray =
       unidadesSeleccionadasAnteriorAActual &&
@@ -239,6 +341,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                       }
                     })
                     .finally(() => {
+                      //! se deben revisar estas asginaciones ya que puede ser errado que se hagan de esta manera
                       dispatch(setAsignacionConsultaTablaTemporal(null));
                       dispatch(setUnidadesSeleccionadasAnteriorAActual([]));
                       setLoadingButton(false);
