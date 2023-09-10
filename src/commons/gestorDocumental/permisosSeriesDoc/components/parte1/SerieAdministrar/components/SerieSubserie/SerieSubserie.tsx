@@ -27,7 +27,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
   } = useForm({
     defaultValues: {
       //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
-      id_cdd_unidad_organizacional: ''
+      id_trd: ''
     }
   });
 
@@ -63,7 +63,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
       >
         {/* En esta seleccion quiero tomar la seccion o subseccion asociada al ccd para realizar la respectiva busqueda de la serie - subserie respectivamente asociada */}
         <Controller
-          name="id_cdd_unidad_organizacional"
+          name="id_trd"
           control={seleccionar_seccion_control}
           rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -105,7 +105,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                     marginLeft: '0.25rem'
                   }}
                 >
-                  Sección o subsección (unidad organizacional)
+                  Serie - subserie (unidad organizacional elegida)
                 </small>
               </label>
             </div>
