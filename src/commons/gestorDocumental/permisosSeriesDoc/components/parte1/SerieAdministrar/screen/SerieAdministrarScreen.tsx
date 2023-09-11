@@ -8,6 +8,7 @@ import { Title } from '../../../../../../../components';
 import { BusquedaCCDPSD } from '../components/BusquedaCCDPSD/BusquedaCCDPSD';
 import { SeleccionSeccion } from '../components/SeleccionSeccion/SeleccionSeccion';
 import { SeleccionSerieSubserie } from '../components/SerieSubserie/SerieSubserie';
+import { ViewSeccionSerie } from '../../viewSeccionSerie/ViewSeccionSerie';
 
 export const SerieAdministrar: FC<any> = (): JSX.Element => {
   return (
@@ -50,7 +51,24 @@ export const SerieAdministrar: FC<any> = (): JSX.Element => {
 
           <SeleccionSerieSubserie />
         </Grid>
+
+
+
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            justifyContent: 'center'
+          }}
+        >
+          {/* me permite ver la respectiva vista deshabilitada de la seleccion de unidad organizacional y serie - subserie respectivamente */}
+          <ViewSeccionSerie />
+        </Grid>
+
+
       </Grid>
+
+      
 
       {/* se define modal de búsqueda de los CCD para la administración de la serie */}
       <ModalSeleccionCCDPSD />

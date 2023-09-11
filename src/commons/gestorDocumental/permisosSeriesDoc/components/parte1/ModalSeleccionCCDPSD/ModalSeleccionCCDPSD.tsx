@@ -49,6 +49,7 @@ import {
   get_unidad_organizacional_ccd_psd
 } from '../../../toolkit/thunks/psdThunks';
 import {
+  setListaSeriesSubseries,
   set_busqueda_ccds_action,
   set_ccd_current_busqueda_action,
   set_unidades_organizacionales_action
@@ -62,7 +63,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
     loadingButtonPSD,
-    setLoadingButtonPSD,
+    setLoadingButtonPSD
   } = useContext(ModalContextPSD);
 
   const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);
@@ -115,6 +116,8 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
+                // ! se limpia la lista de series y subseries
+                dispatch(setListaSeriesSubseries([]));
                 // ! se selecciona el ccd para establecerlo como "actual" dentro del funcionamiento de la app
                 dispatch(set_ccd_current_busqueda_action(params.row));
 
