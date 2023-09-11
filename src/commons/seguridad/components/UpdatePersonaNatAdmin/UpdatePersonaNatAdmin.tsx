@@ -868,6 +868,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                           />
                         )}
                         {...register('datos_clasificacion_persona')}
+                        // @ts-ignore
                         onChange={handle_change_autocomplete}
                       />
                     </Grid>
