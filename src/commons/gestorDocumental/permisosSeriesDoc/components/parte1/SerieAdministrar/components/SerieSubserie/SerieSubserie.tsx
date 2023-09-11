@@ -2,32 +2,32 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
-import { /* useContext, */ type FC } from 'react';
+import { useContext, type FC } from 'react';
 import { stylesGrid } from '../../../../../utils/styles';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
 import { usePSD } from '../../../../../hook/usePSD';
-// import { useAppSelector } from '../../../../../../../../hooks';
-// import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
-// import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   // ! states from redux
-  /* const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
+ const { current_unidad_organizacional /* , unidadesOrganizacionales */} = useAppSelector(
     (state) => state.PsdSlice
   );
-*/
+
   // ? context necesarios
-  // const { loadingButtonPSD } = useContext(ModalContextPSD);
+  const { loadingSeriesSubseries } = useContext(ModalContextPSD);
 
   //* usePSD
   const { seleccionar_serie_subserie_control } = usePSD();
 
   //! se debe realizar la validación, si no hay series que mostrar el respecivo elemento no debe aparecer en la pantalla
 
-  /* if (!ccd_current_busqueda) return <></>; */
-  /*
-  if (unidadesOrganizacionales.length === 0) {
+  if (!current_unidad_organizacional) return <></>;
+
+  if (loadingSeriesSubseries /* unidadesOrganizacionales.length === 0 */) {
     return (
       <div
         style={{
@@ -38,7 +38,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
         <Loader altura={50} />
       </div>
     );
-  } */
+  }
 
   return (
     <>

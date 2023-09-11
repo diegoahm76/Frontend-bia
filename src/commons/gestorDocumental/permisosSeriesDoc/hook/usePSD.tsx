@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
 export const usePSD = (): any => {
   // ! ------- definicion de los respectivos useForm a usar ----------
@@ -19,29 +19,40 @@ export const usePSD = (): any => {
 
   const values_watch_search_ccd_psd = watch_search_ccd_psd();
 
+  // ? use form para el select de la seccion o subsección necesaria
 
+  //* useForm
+  const {
+    control: control_seleccionar_seccion_control,
+    watch: seleccionar_seccion_watch
+    // reset: seleccionar_seccion_reset
+  } = useForm({
+    defaultValues: {
+      //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
+      id_cdd_unidad_organizacional: ''
+    }
+  });
 
-
+  // ? ejecución del watch
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const values_watch_seleccionar_seccion = seleccionar_seccion_watch();
 
   // ? use form para el select de elección de series - subseries
-    //* useForm
-    const {
-      control: seleccionar_serie_subserie_control,
-      watch: seleccionar_serie_subseire_watch
-      // reset: seleccionar_seccion_reset
-    } = useForm({
-      defaultValues: {
-        //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
-        id_serie_subserie: ''
-      }
-    });
-  
-    // ? ejecución del watch
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const values_watch_seleccionar_seccion = seleccionar_serie_subseire_watch();
+  //* useForm
+  const {
+    control: seleccionar_serie_subserie_control,
+    watch: seleccionar_serie_subseire_watch
+    // reset: seleccionar_seccion_reset
+  } = useForm({
+    defaultValues: {
+      //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
+      id_serie_subserie: ''
+    }
+  });
 
-
-
+  // ? ejecución del watch
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const values_watch_seleccionar_serie_subserie = seleccionar_serie_subseire_watch();
 
   //! --------- funciones de reseteo de los useForm -------------
   const reset_all = (): void => {
@@ -58,13 +69,15 @@ export const usePSD = (): any => {
     values_watch_search_ccd_psd,
     reset_search_ccd_psd,
 
-    //* use form seleccionar serie subserie
-    seleccionar_serie_subserie_control,
+    //* use forma seleccionar seccion o subseccion
+    control_seleccionar_seccion_control,
     values_watch_seleccionar_seccion,
 
+    //* use form seleccionar serie subserie
+    seleccionar_serie_subserie_control,
+    values_watch_seleccionar_serie_subserie,
+
     //* funciones de reseteo de los useForm
-    reset_all,
+    reset_all
   };
-
-
-}
+};

@@ -55,3 +55,31 @@ export const get_unidad_organizacional_ccd_psd = async (
     setLoadingButtonPSD(false);
   }
 };
+
+// ! get series documentales relacionadas a la unidad organizacional seleccionada en el organigrama - ccd
+
+export const get_series_documentales_unidad_organizacional_psd = async (
+  id_unidad_organizacional: number,
+  id_ccd: number,
+  setLoadingSeriesSubseries: any,
+): Promise<any> => {
+  try {
+    setLoadingSeriesSubseries(true);
+    const url = `gestor/permisos/serie-subserie-unidad-ccd/get/?id_ccd=${id_ccd}&id_unidad_organizacional=${id_unidad_organizacional}`;
+    const { data } = await api.get(url);
+    if (data?.data?.length > 0) {
+      // control_success(`Se encontró la siguiente información`);
+      console.log(data?.data);
+      return data?.data;
+    } else {
+      // control_warning('No se encontraron unidades organizacionales');
+      console.log('no se encontraron series documentales');
+      return [];
+    }
+  } catch (error: any) {
+    control_error(error?.response?.data?.detail);
+    console.log(error);
+  } finally {
+    setLoadingSeriesSubseries(false);
+  }
+};
