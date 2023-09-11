@@ -11,10 +11,10 @@ import {
   type IObjGenerarBaja,
   type IObjBienBaja,
   type IObjBien,
-  IObjDespacho,
+  type IObjDespacho,
 } from '../../interfaces/vivero';
 import { type Persona } from '../../../../../interfaces/globalModels';
-import { boolean } from 'yargs';
+
 
 export const initial_state_current_nursery = {
   id_vivero: null,
@@ -163,7 +163,6 @@ export const despacho_manual_state: IObjDespacho = {
 
 const initial_state: INursery = {
   nurseries: [],
-  // @ts-ignore
   current_nursery: initial_state_current_nursery,
   items_despacho: [],
   items_despacho_aux: [],

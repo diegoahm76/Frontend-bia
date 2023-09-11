@@ -34,6 +34,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 import Limpiar from '../../componentes/Limpiar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -215,10 +216,10 @@ export function TipificacionBienesScreen(): JSX.Element {
               </Button>
             </Grid>
             <Grid item xs={2}>
-              <ButtonGroup style={{ margin: 7 }}>
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
               
                 {download_xls({ nurseries: filterednurseries, columns })}
-
+                {download_pdf({ nurseries: filterednurseries, columns ,title: 'Bienes de vivero', })}
               </ButtonGroup>
             </Grid>
           </Grid>

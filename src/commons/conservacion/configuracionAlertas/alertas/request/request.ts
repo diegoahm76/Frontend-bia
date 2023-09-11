@@ -1,9 +1,9 @@
 import type { AxiosError, AxiosResponse } from "axios";
-import type { AlertaProgramada, ConfiguracionAlerta, CrearAlerta, CrearPersonaAlerta, DataAlertaPersona, PutConfigutracionAlerta } from "../interfaces/types";
+import type { ConfiguracionAlerta, CrearPersonaAlerta, DataAlertaPersona, PutConfigutracionAlerta } from "../interfaces/types";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
 import { api } from "../../../../../api/axios";
 import { control_error } from "../../../../../helpers";
-import { ValueProps } from "../../../../recursoHidrico/Instrumentos/interfaces/interface";
+import { type ValueProps } from "../../../../recursoHidrico/Instrumentos/interfaces/interface";
 
 
 

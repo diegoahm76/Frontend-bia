@@ -66,14 +66,6 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
   obtenerDatos();
 }, []); */
 
-  /* const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-  const unidadesSeleccionadas = rowData.filter(row => row.seleccionado);
-  unidadesSeleccionadas.forEach(row => {
-    row.unidadOrganizacional = row.unidadesDisponiblesParaTraslado;
-  });
-  console.log(unidadesSeleccionadas);
-}; */
 
   const columnsModified = [
     ...colGridAntANuevo,
