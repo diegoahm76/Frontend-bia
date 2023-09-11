@@ -19,7 +19,7 @@ export const SeleccionarArchivo: React.FC = () => {
   `;
 
   const [fileExtension, setFileExtension] = useState<string | null>(null);
-console.log(fileExtension);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const fileInput = event.target;
     if (fileInput?.files?.length) {
@@ -55,7 +55,7 @@ console.log(fileExtension);
           <Title title="Seleccionar Archivos" />
         </Grid>
 
-        <Grid item sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
             style={{ marginTop: 20 }}
             variant="outlined"
@@ -77,7 +77,7 @@ console.log(fileExtension);
             // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4} md={4}>
           <Button
             style={{ marginTop: 10 }}
             component="label"
@@ -94,7 +94,7 @@ console.log(fileExtension);
           </Button>
         </Grid>
 
-        <Grid item sm={4}>
+        <Grid item xs={12} sm={4} md={3}>
           <TextField
             style={{ marginTop: 10 }}
             variant="outlined"

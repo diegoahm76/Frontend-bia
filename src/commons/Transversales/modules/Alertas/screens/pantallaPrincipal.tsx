@@ -83,11 +83,11 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       width: 55,
       renderCell: (params: any) => {
         let icon_color = '';
-        if (params.value === 1) {
+        if (params.value === "1") {
           icon_color = '#4CAF50'; // Color verde
-        } else if (params.value === 2) {
+        } else if (params.value === "2") {
           icon_color = '#FFC107'; // Color amarillo
-        } else if (params.value === 3) {
+        } else if (params.value === "3") {
           icon_color = '#F44336'; // Color rojo
         }
 
@@ -101,7 +101,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     },
     {
       field: 'tipo_alerta',
-      headerName: 'Tipo alerta',
+      headerName: 'Tipo Alerta',
       width: 150,
     },
     {
@@ -123,7 +123,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     },
     {
       field: 'responsable_directo',
-      headerName: 'Responsable directo',
+      headerName: 'Responsable Directo',
       headerAlign: 'center',
       minWidth: 120,
       maxWidth: 180,
@@ -131,7 +131,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     },
     {
       field: 'fecha_envio_email',
-      headerName: 'Fecha envio email',
+      headerName: 'Fecha Envio Email',
       width: 150,
       valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_envio_email),
     },
@@ -146,24 +146,6 @@ export const PantallaPrincipalAlertas: React.FC = () => {
         return firstPart;
       },
     },
-    // {
-    //   field: 'archivado',
-    //   headerName: 'Archivado',
-    //   width: 50,
-    //   valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
-    // },
-    // {
-    //   field: 'leido',
-    //   headerName: 'Leído',
-    //   width: 50,
-    //   renderCell: (params: any) => (params.row.leido === true ? "Sí" : "No"),
-    // },
-    // {
-    //   field: 'repeticiones_suspendidas',
-    //   headerName: 'Repeticiones Suspendidas',
-    //   width: 50,
-    //   renderCell: (params: any) => (params.row.repeticiones_suspendidas === true ? "Sí" : "No"),
-    // },
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -205,6 +187,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       ),
     },
   ];
+
 
   useEffect(() => {
     buscar_bandeja_alerta().catch((error) => {
