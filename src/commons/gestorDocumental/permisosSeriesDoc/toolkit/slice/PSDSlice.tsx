@@ -8,10 +8,8 @@ const initialState: Ipsd = {
   ccd_current_busqueda: null,
   unidadesOrganizacionales: [],
   current_unidad_organizacional: null,
-  seriesSubseriesActions: {
-    listSeriesSubseries: [],
-    currentSeriesSubseries: null
-  }
+  listSeriesSubseries: [],
+  currentSeriesSubseries: null
 };
 
 export const PsdSlice = createSlice({
@@ -42,13 +40,11 @@ export const PsdSlice = createSlice({
     },
 
     // ! actions sobre series y subseries
-    seriesSubseriesActions: {
-      setListaSeriesSubseries: (state: any, action: PayloadAction<any>) => {
-        state.listSeriesSubseries = action.payload;
-      },
-      setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) => {
-        state.currentSeriesSubseries = action.payload;
-      }
+    setListaSeriesSubseries: (state: any, action: PayloadAction<any>) => {
+      state.listSeriesSubseries = action.payload;
+    },
+    setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) => {
+      state.currentSeriesSubseries = action.payload;
     }
   }
 });
@@ -59,16 +55,11 @@ export const {
   set_ccd_current_busqueda_action,
   // ! acciones sobre las unidades organizacionales
   set_unidades_organizacionales_action,
-  set_current_unidad_organizacional_action
-} = PsdSlice.actions;
-
-export const {
+  set_current_unidad_organizacional_action,
   // ! acciones sobre las series y subseries
   setListaSeriesSubseries,
   setCurrentSerieSubserie
-} = PsdSlice.actions.seriesSubseriesActions;
-
-
+} = PsdSlice.actions;
 
 //* para el próximo slice que cree se debe tener en cuenta el siguiente ejemplo
 /*

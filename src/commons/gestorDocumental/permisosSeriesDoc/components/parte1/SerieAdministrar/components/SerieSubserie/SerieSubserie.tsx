@@ -13,7 +13,7 @@ import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   // ! states from redux
- const { current_unidad_organizacional /* , unidadesOrganizacionales */} = useAppSelector(
+  const { current_unidad_organizacional, listSeriesSubseries } = useAppSelector(
     (state) => state.PsdSlice
   );
 
@@ -27,7 +27,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
 
   if (!current_unidad_organizacional) return <></>;
 
-  if (loadingSeriesSubseries /* unidadesOrganizacionales.length === 0 */) {
+  if (loadingSeriesSubseries) {
     return (
       <div
         style={{
@@ -74,14 +74,22 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                   onChange(selectedOption); */
                 }}
                 options={
-                  []
-                  /* [...unidadesOrganizacionales] // la idea va a ser reemplazarlos por las series - subseries asociadas a la unidad organizacional del ccd
-                    .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                  [...listSeriesSubseries] // la idea va a ser reemplazarlos por las series - subseries asociadas a la unidad organizacional del ccd
+                    .sort((a, b) =>
+                      a.nombre_serie.localeCompare(b.nombre_serie)
+                    )
                     .map((item) => ({
                       item,
-                      value: item.id_unidad_organizacional,
-                      label: `${item.codigo} - ${item.nombre}`
-                    })) as any */
+                      /* analizar para seguir con el desarrollo de la aplicación
+                      id_cat_serie_und: 12 , id_catalogo_serie: 11 , id_serie_doc: 64 , id_subserie_doc: 8
+                      */
+                      value: item.id_cat_serie_und,
+                      label: `${item?.codigo_serie} - ${item?.nombre_serie} / ${
+                        item?.codigo_subserie ? item.codigo_subserie : ''
+                      }  - ${
+                        item?.nombre_subserie ? item?.nombre_subserie : ''
+                      } `
+                    })) as any
                 }
                 placeholder="Seleccionar"
               />
