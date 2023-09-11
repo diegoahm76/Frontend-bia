@@ -12,7 +12,9 @@ const ContextUnidadxEntidad = createContext<ModalContextInterface>({
   loadingConsultaT026: false,
   setloadingConsultaT026: (value: boolean) => {},
   gridActualANuevo: false,
-  handleGridActualANuevo: (value: boolean) => {}
+  handleGridActualANuevo: (value: boolean) => {},
+  mood: false,
+  handleMood: (value: boolean) => {},
 });
 
 const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
@@ -27,6 +29,9 @@ const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
   //! muestra de la grid de datos segun la opcion elegida para realizar el traslado masivo de unidad por entidad
   const [gridActualANuevo, setGridActuaANuevo] = useState<boolean>(false);
 
+  // ! mood
+  const [mood, setMood] = useState(false);
+
   const handleModalHistoricos = useCallback(() => {
     setmodalHistoricos((prevState) => !prevState);
   }, []);
@@ -37,6 +42,10 @@ const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
 
   const handleGridActualANuevo = useCallback((value: boolean) => {
     setGridActuaANuevo(value);
+  }, []);
+
+  const handleMood = useCallback((value: boolean) => {
+    setMood(value);
   }, []);
 
   const modalContextValues = {
@@ -50,7 +59,11 @@ const ContextUnidadxEntidadProvider: FC<ContextProps> = ({
 
     //* --- muestra de la grid de datos segun la opcion elegida para realizar el traslado masivo de unidad por entidad
     gridActualANuevo,
-    handleGridActualANuevo
+    handleGridActualANuevo,
+
+    //* --- mood
+    mood,
+    handleMood,
   };
 
   return (

@@ -2,7 +2,7 @@
 import { type Persona } from '../../../../interfaces/globalModels';
 export interface INursery {
   nurseries: IObjNursery[];
-  current_nursery: IObjNursery;
+  current_nursery: IObjNursery | any;
   items_despacho: IObjItem[];
   items_despacho_aux: IObjItem[];
   current_bien: IObjItem;

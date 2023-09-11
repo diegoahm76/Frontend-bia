@@ -8,9 +8,9 @@ interface DownloadXLSProps {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_xls: React.FC<DownloadXLSProps> = ({ nurseries, columns }) => {
-console.log(columns);
+/* console.log(columns);
 console.log("---------------------------------");
-console.log(nurseries);
+console.log(nurseries); */
   const handle_download = (): void => {
     const data: any[][] = [];
 

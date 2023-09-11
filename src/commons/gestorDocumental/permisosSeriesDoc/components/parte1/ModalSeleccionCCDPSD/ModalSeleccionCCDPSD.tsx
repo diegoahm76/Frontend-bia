@@ -62,7 +62,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
     loadingButtonPSD,
-    setLoadingButtonPSD
+    setLoadingButtonPSD,
   } = useContext(ModalContextPSD);
 
   const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);

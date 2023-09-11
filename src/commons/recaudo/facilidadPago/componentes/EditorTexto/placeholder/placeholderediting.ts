@@ -22,7 +22,6 @@ export class PlaceholderEditing extends Plugin {
 
         this.editor.editing.mapper.on(
           'viewToModelPosition',
-          // @ts-ignore 
           viewToModelPositionOutsideModelElement( this.editor.model, viewElement => viewElement.hasClass( 'placeholder' ) )
       );
 
@@ -67,7 +66,6 @@ export class PlaceholderEditing extends Plugin {
                 const widget_element = createPlaceholderView( modelItem, viewWriter );
 
                 // Enable widget handling on a placeholder element inside the editing view.
-                // @ts-ignore
                 return toWidget( widget_element, viewWriter );
             }
         } );

@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Box, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+
+import { Box, ButtonGroup, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { IObjDespacho, type IObjItem } from '../interfaces/vivero';
+import { type IObjDespacho, type IObjItem } from '../interfaces/vivero';
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
@@ -13,11 +14,14 @@ import {
   set_items_despacho_aux,
   set_despacho_manual
 } from '../store/slice/viveroSlice';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesDespacho = () => {
   const [selected_row, set_selected_row] = useState([]);
   const [distribucion_manual, set_distribucion_manual] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [titulo, set_titulo] = useState<string>('Bienes Recibidos');
 
   // const [action, set_action] = useState<string>("agregar");
@@ -144,7 +148,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cantidad_distribuida',
       headerName:
-        current_despacho.distribucion_confirmada === true
+        current_despacho.distribucion_confirmada
           ? 'Cantidad distribuida'
           : 'Cantidad a distribuir',
       width: 140,flex: 1,
@@ -216,7 +220,24 @@ const ListadoBienesDespacho = () => {
           marginTop={2}
         >
           <Box sx={{ width: '100%' }}>
-            <Title title={titulo}></Title>
+            <Title title="Bienes recibidos"></Title>
+            <ButtonGroup
+                    style={{
+                      margin: 7,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    {download_xls({
+                      nurseries: items_despacho_aux,
+                      columns: columns_items_despacho,
+                    })}
+                    {download_pdf({
+                      nurseries: items_despacho_aux,
+                      columns: columns_items_despacho,
+                      title: 'Resultados',
+                    })}
+                  </ButtonGroup>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"
