@@ -5,38 +5,28 @@ import { Grid } from '@mui/material';
 import { /* useContext, */ type FC } from 'react';
 import { stylesGrid } from '../../../../../utils/styles';
 import Select from 'react-select';
-import { Controller, useForm } from 'react-hook-form';
-import { useAppSelector } from '../../../../../../../../hooks';
+import { Controller } from 'react-hook-form';
+import { usePSD } from '../../../../../hook/usePSD';
+// import { useAppSelector } from '../../../../../../../../hooks';
 // import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
-import { Loader } from '../../../../../../../../utils/Loader/Loader';
+// import { Loader } from '../../../../../../../../utils/Loader/Loader';
 
-export const SeleccionSeccion: FC<any> = (): JSX.Element => {
+export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   // ! states from redux
-  const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
+  /* const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
     (state) => state.PsdSlice
   );
-
+*/
   // ? context necesarios
   // const { loadingButtonPSD } = useContext(ModalContextPSD);
 
-  //* useForm
-  const {
-    control: seleccionar_seccion_control,
-    watch: seleccionar_seccion_watch
-    // reset: seleccionar_seccion_reset
-  } = useForm({
-    defaultValues: {
-      //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
-      id_trd: ''
-    }
-  });
+  //* usePSD
+  const { seleccionar_serie_subserie_control } = usePSD();
 
-  // ? ejecución del watch
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const values_watch_seleccionar_seccion = seleccionar_seccion_watch();
+  //! se debe realizar la validación, si no hay series que mostrar el respecivo elemento no debe aparecer en la pantalla
 
-  if (!ccd_current_busqueda) return <></>;
-
+  /* if (!ccd_current_busqueda) return <></>; */
+  /*
   if (unidadesOrganizacionales.length === 0) {
     return (
       <div
@@ -48,7 +38,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
         <Loader altura={50} />
       </div>
     );
-  }
+  } */
 
   return (
     <>
@@ -61,10 +51,10 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
           zIndex: 2
         }}
       >
-        {/* En esta seleccion quiero tomar la seccion o subseccion asociada al ccd para realizar la respectiva busqueda de la serie - subserie respectivamente asociada */}
+        {/* En esta seleccion quiero tomar la serie o subserue asociada al  la respectiva unidad org del ccd para iniciar el proceso de asignación de permisos */}
         <Controller
-          name="id_trd"
-          control={seleccionar_seccion_control}
+          name="id_serie_subserie"
+          control={seleccionar_serie_subserie_control}
           rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <div>
@@ -83,15 +73,15 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
 
                   onChange(selectedOption); */
                 }}
-                // isDisabled={tca_current != null}
                 options={
-                  [...unidadesOrganizacionales]
+                  []
+                  /* [...unidadesOrganizacionales] // la idea va a ser reemplazarlos por las series - subseries asociadas a la unidad organizacional del ccd
                     .sort((a, b) => a.nombre.localeCompare(b.nombre))
                     .map((item) => ({
                       item,
                       value: item.id_unidad_organizacional,
                       label: `${item.codigo} - ${item.nombre}`
-                    })) as any
+                    })) as any */
                 }
                 placeholder="Seleccionar"
               />

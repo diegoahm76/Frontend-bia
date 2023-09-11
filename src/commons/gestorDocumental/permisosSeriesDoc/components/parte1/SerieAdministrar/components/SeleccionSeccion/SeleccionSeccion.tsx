@@ -58,7 +58,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
         sm={6}
         sx={{
           ...stylesGrid,
-          zIndex: 2
+          zIndex: 5
         }}
       >
         {/* En esta seleccion quiero tomar la seccion o subseccion asociada al ccd para realizar la respectiva busqueda de la serie - subserie respectivamente asociada */}
