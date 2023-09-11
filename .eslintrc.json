@@ -6,6 +6,7 @@
   "parser": "@typescript-eslint/parser",
   "extends": [
     "plugin:react/recommended",
+    "standard-with-typescript",
     "plugin:react/jsx-runtime",
     "eslint-config-prettier"
   ],
@@ -34,7 +35,6 @@
         "selector": "ExportDefaultDeclaration",
         "message": "Avoid using `export default` in ReactJS, use named exports instead."
       }
-    ]   
-    
+    ]
   }
 }
