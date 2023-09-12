@@ -197,7 +197,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Configuracion Tipos PQR" />
+          <Title title="Configuracion Tipos PQRSDF" />
         </Grid>
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
