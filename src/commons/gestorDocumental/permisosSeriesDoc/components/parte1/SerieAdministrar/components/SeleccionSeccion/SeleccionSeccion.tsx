@@ -10,7 +10,11 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 // import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { usePSD } from '../../../../../hook/usePSD';
-import { setListaSeriesSubseries, set_current_unidad_organizacional_action } from '../../../../../toolkit/slice/PSDSlice';
+import {
+  setCurrentSerieSubserie,
+  setListaSeriesSubseries,
+  set_current_unidad_organizacional_action
+} from '../../../../../toolkit/slice/PSDSlice';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { get_series_documentales_unidad_organizacional_psd } from '../../../../../toolkit/thunks/psdThunks';
 
@@ -58,7 +62,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
       >
         {/* En esta seleccion quiero tomar la seccion o subseccion asociada al ccd para realizar la respectiva busqueda de la serie - subserie respectivamente asociada */}
         <Controller
-          name="id_cdd_unidad_organizacional"
+          name="id_unidad_organizacional"
           control={control_seleccionar_seccion_control}
           rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -67,6 +71,9 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                 value={value}
                 onChange={(selectedOption) => {
                   console.log(selectedOption);
+                  // ! se limpia la lista de series y subseries
+                  // dispatch(setListaSeriesSubseries([]));
+                  dispatch(setCurrentSerieSubserie(null));
 
                   // ? seleccionando current unidad organizacional para el llamado de serie subserie
                   dispatch(
@@ -100,6 +107,12 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                 }}
                 // isDisabled={tca_current != null}
                 options={
+                  /* unidadesOrganizacionales.map(option => ({
+                    item: option,
+                    value: option.id_unidad_organizacional,
+                    label: `${option.codigo} - ${option.nombre}`
+                    })) as any
+*/
                   [...unidadesOrganizacionales]
                     .sort((a, b) => a.nombre.localeCompare(b.nombre))
                     .map((item) => ({

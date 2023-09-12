@@ -46,7 +46,7 @@ export const usePSD = (): any => {
   } = useForm({
     defaultValues: {
       //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
-      id_serie_subserie: ''
+      id_unidad_organizacional: ''
     }
   });
 

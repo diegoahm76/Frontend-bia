@@ -7,11 +7,14 @@ import { stylesGrid } from '../../../../../utils/styles';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
 import { usePSD } from '../../../../../hook/usePSD';
-import { useAppSelector } from '../../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
+import { setCurrentSerieSubserie } from '../../../../../toolkit/slice/PSDSlice';
 
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   // ! states from redux
   const { current_unidad_organizacional, listSeriesSubseries } = useAppSelector(
     (state) => state.PsdSlice
@@ -62,6 +65,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                 value={value}
                 onChange={(selectedOption) => {
                   console.log(selectedOption);
+                  dispatch(setCurrentSerieSubserie(selectedOption.item));
 
                   // ! se deben llamar las respectivas series - subseries que estan asociadas a la unidad organizacional seleccionada
                   /* void get_catalogo_TRD_service(selectedOption.value).then(

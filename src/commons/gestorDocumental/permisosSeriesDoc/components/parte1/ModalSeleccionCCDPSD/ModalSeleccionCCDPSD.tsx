@@ -52,9 +52,11 @@ import {
   setListaSeriesSubseries,
   set_busqueda_ccds_action,
   set_ccd_current_busqueda_action,
+  set_current_unidad_organizacional_action,
   set_unidades_organizacionales_action
 } from '../../../toolkit/slice/PSDSlice';
 
+// ! modal seleccion y busqueda de ccd
 export const ModalSeleccionCCDPSD = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -118,6 +120,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
               onClick={() => {
                 // ! se limpia la lista de series y subseries
                 dispatch(setListaSeriesSubseries([]));
+                dispatch(set_current_unidad_organizacional_action(null));
                 // ! se selecciona el ccd para establecerlo como "actual" dentro del funcionamiento de la app
                 dispatch(set_ccd_current_busqueda_action(params.row));
 
