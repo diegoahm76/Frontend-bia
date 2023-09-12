@@ -16,7 +16,7 @@ import SucursalDirecciones from '../components/generadorDireccion';
 import FormButton from '../../../../components/partials/form/FormButton';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import { initial_state_deposito, set_current_deposito } from '../store/slice/indexDeposito';
-
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DepositoScreen = () => {
@@ -176,20 +176,22 @@ const DepositoScreen = () => {
 
 
 
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.2}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
                         icon_class={<SaveIcon />}
                         label={action}
                         type_button="button"
+
                     />
                 </Grid>
                 {selected_deposito.id_deposito !== null &&
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={1.3}>
                         <Button
-                            variant="contained"
-                            color="secondary"
+                            variant="outlined"
+                            color="error"
+                            startIcon={<DeleteForeverIcon />}
                             onClick={() => { on_submit_eliminar(selected_deposito); }}
                         >
                             Eliminar

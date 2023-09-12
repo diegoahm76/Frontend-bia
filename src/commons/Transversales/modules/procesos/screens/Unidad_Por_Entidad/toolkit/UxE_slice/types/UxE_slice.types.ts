@@ -7,6 +7,5 @@ export interface SliceTypeInterface{
   gridAnteriorAActual: any[],
   unidadesSeleccionadasAnteriorAActual: any[],
   asignacionConsultaTablaTemporal: any,
-
   organigrama_current: any;
 }

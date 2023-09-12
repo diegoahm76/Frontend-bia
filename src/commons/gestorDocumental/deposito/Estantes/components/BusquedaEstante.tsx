@@ -31,6 +31,7 @@ import {
   set_current_info_deposito,
   set_current_mode_estantes,
 } from '../../store/slice/indexDeposito';
+
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 

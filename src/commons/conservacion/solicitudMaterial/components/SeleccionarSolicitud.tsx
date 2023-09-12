@@ -9,7 +9,7 @@ import {
   set_solicitudes,
 } from '../store/slices/indexSolicitud';
 import { useEffect, useState } from 'react';
-
+import { format } from 'date-fns';
 interface IProps {
   title?: string;
   control_solicitud: any;
@@ -36,21 +36,22 @@ const SeleccionarSolicitud = ({
   const dispatch = useAppDispatch();
 
   const columns_solicitudes: GridColDef[] = [
-    { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
+    // { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
       width: 400,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {format(new Date(params.value), 'dd-MM-yyyy')}
         </div>
       ),
     },
     {
       field: 'persona_solicita',
       headerName: 'Observación',
-      width: 350,
+      width: 350,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}

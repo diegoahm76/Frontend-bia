@@ -7,13 +7,16 @@
 
 // Importando todos los componentes y utilidades necesarias de 'primereact', 'api' y otras bibliotecas
 import type React from 'react';
-import { useState } from 'react';
+import {  useState } from 'react';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Tooltip } from 'primereact/tooltip';
 import { Button } from 'primereact/button';
 import { ModalAtom } from '../Modal/ModalAtom';
 import type { ActionTemplateProps, GeneralTableProps } from './types/types';
+import { ButtonGroup } from '@mui/material';
+import { download_xls_dos } from '../../documentos-descargar/XLS_descargar';
+import { download_pdf_dos } from '../../documentos-descargar/PDF_descargar';
 
 // Creando el componente TableGeneral
 export const TablaGeneral = ({
@@ -23,7 +26,9 @@ export const TablaGeneral = ({
   staticscroll,
   stylescroll
 }: GeneralTableProps): JSX.Element => {
-
+// console.log(columns);
+// console.log("____________________");
+// console.log(rowsData);
   // Estado para almacenar los valores de los filtros aplicados
   const [filters] = useState<Record<string, any>>({});
 
@@ -115,10 +120,18 @@ export const TablaGeneral = ({
     );
   };
 
+
+
   // Renderizando el componente TableGeneral
   return (
     <>
       <Tooltip target=".export-buttons>button" position="bottom" />
+      <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+      {download_xls_dos({ nurseries: filtered_data, columns:columns as any[]  })}
+      {download_pdf_dos({ nurseries: filtered_data, columns, title: tittle })}
+
+      </ButtonGroup>
       <DataTable
         size="small"
         value={filtered_data}

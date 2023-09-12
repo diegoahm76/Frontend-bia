@@ -125,3 +125,4 @@ export const AddParametroModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
     </Dialog>
   )
 }
+

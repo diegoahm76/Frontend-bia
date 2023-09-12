@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { logo_cormacarena_h } from "../logos/logos";
 import { reporte_estado_actividad, reporte_evolucion_lote, reporte_mortalidad, reporte_plantas_sd } from "../thunks/SubsistemaConservacion";
 import BuscarPlantas from "./BuscarPlantas";
+import ReportesXLS from "./reportesXLS";
 import { DialogNoticacionesComponent } from "../../../../components/DialogNotificaciones";
 
 const lista_reporte = [{ name: 'Mortalidad de Planta', value: 'MP' }, { name: 'Plantas Solicitadas vs Plantas Despachadas', value: 'PSPD' }, { name: 'Estado y Actividad de Planta', value: 'EAP' }, { name: 'Evolución por Lote', value: 'EL' }];
@@ -116,7 +117,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
     const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_seleccion_vivero(e.target.value);
         set_error_vivero(e.target.value === "");
-        if(e.target.value === "Todos")
+        if (e.target.value === "Todos")
             set_reporte_consolidado(false);
     }
     const cambio_reporte: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -175,11 +176,6 @@ export const SubsistemaConservacionScreen: React.FC = () => {
         set_mensaje_notificacion(mensaje)
         set_dialog_notificaciones_is_active(active);
         set_abrir_modal(active);
-    }
-
-    const descargar_pdf = () => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        doc.save(`${(titulo_reporte.reporte_seleccionado !== null && titulo_reporte.reporte_seleccionado !== undefined) ? titulo_reporte.reporte_seleccionado.name : ''}.pdf`);
     }
 
     const nueva_pagina: (doc: jsPDF, title: string, page_position: number) => void = (doc: jsPDF, title: string, page_position: number) => {
@@ -256,12 +252,12 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             set_error_numero_lote(numero_lote === "")
             set_error_año_lote(año_lote === "")
         }
-        if(seleccion_reporte !== ""){
-            if(fecha_desde !== null && fecha_hasta !== null && seleccion_planta !== 0)
+        if (seleccion_reporte !== "") {
+            if (fecha_desde !== null && fecha_hasta !== null && seleccion_planta !== 0)
                 handle_export_pdf();
-            if(seleccion_reporte === "EL" && fecha_desde !== null && fecha_hasta !== null && seleccion_vivero !== "" && numero_lote !== "" && año_lote !== "" && seleccion_planta !== 0)
+            if (seleccion_reporte === "EL" && fecha_desde !== null && fecha_hasta !== null && seleccion_vivero !== "" && numero_lote !== "" && año_lote !== "" && seleccion_planta !== 0)
                 handle_export_pdf();
-        } 
+        }
     }
 
     const salir_entrada: () => void = () => {
@@ -465,14 +461,14 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             doc.rect(24, 2 + coordenada_y, 150, 20, 'S');
             let break_line = 6;
             const resultado: any = [];
-            if(report.descripcion.length > 78){
+            if (report.descripcion.length > 78) {
                 break_line = 3;
                 for (let i = 0; i < report.descripcion.length; i += 78) {
                     resultado.push(report.descripcion.substr(i, 78));
-                    if(report.descripcion.substr(i, 78).length >= 78)
+                    if (report.descripcion.substr(i, 78).length >= 78)
                         break_line = break_line + 3;
                 }
-            }else{
+            } else {
                 resultado.push(report.descripcion);
             }
             doc.text(resultado, 25, break_line + coordenada_y);
@@ -525,7 +521,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                 }}
             >
                 <Grid item md={12} xs={12}>
-                    <Title title="Filtros de búsqueda" />
+                    <Title title="Compendios" />
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
@@ -734,16 +730,17 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                     direction="row"
                                     justifyContent="center"
                                     spacing={2}>
-                                    <span style={{ margin: '7px' }}>Reporte consolidado</span><Switch color="default" onChange={() => { set_reporte_consolidado(!reporte_consolidado); }} />
+                                    <span style={{ margin: '7px' }}>Reporte consolidado</span><Switch color="primary" onChange={() => { set_reporte_consolidado(!reporte_consolidado); }} />
                                 </Stack>
                             </Grid>
                         </Grid>
                     </Box>}
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={10}  >
                                 <Stack
                                     direction="row"
+                                    marginLeft={21}
                                     justifyContent="center"
                                     spacing={2}>
                                     <Button
@@ -755,6 +752,17 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                                         Generar reporte
                                     </Button>
                                 </Stack>
+                            </Grid>
+                            <Grid item xs={1}>
+                                <Button
+                                    color='error'
+                                    
+                                    variant='contained'
+                                    startIcon={<ClearIcon />}
+                                    onClick={salir_entrada}
+                                >
+                                    Salir
+                                </Button>
                             </Grid>
                         </Grid>
                     </Box>
@@ -773,34 +781,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
             >
                 <Grid container justifyContent="flex-end">
                     <Grid item xs={12}>
-                        <Box
-                            component="form"
-                            sx={{ mb: '20px' }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <Grid item xs={12} sm={12}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-end"
-                                    spacing={2}>
-                                    <Button
-                                        color='success'
-                                        variant='outlined'
-                                        onClick={descargar_pdf}
-                                    >
-                                        Exportar PDF
-                                    </Button>
-                                    <Button
-                                        color='error'
-                                        variant='outlined'
-                                        onClick={descargar_pdf}
-                                    >
-                                        Exportar XLS
-                                    </Button>
-                                </Stack>
-                            </Grid>
-                        </Box>
+                        <ReportesXLS doc={doc} titulo_reporte={titulo_reporte} reporte={reporte} tipo_reporte={seleccion_reporte}></ReportesXLS>
                         <Box
                             component="form"
                             noValidate
@@ -811,7 +792,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>}
-            <Grid container justifyContent="flex-end">
+            {/* <Grid container justifyContent="flex-end">
                 <Grid item xs={7}>
                     <Stack
                         direction="row"
@@ -829,7 +810,7 @@ export const SubsistemaConservacionScreen: React.FC = () => {
                         </Button>
                     </Stack>
                 </Grid>
-            </Grid>
+            </Grid> */}
             {dialog_notificaciones_is_active && (
                 <DialogNoticacionesComponent
                     titulo_notificacion={titulo_notificacion}

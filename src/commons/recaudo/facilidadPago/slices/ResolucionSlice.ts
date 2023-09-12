@@ -7,7 +7,7 @@ const initial_state = {
 
 // Validar resolución desde Pag. Usuario Interno
 export const get_validacion_resolucion = createAsyncThunk('facilidades_pago/validacion_resolucion', async (id: number) => {
-  const { data } = (await api.get(`recaudo/planes-pagos/validacion-resolucion/${id}/`))
+  const { data } = await api.get(`recaudo/planes-pagos/validacion-resolucion/${id}/`)
   return data
 })
 

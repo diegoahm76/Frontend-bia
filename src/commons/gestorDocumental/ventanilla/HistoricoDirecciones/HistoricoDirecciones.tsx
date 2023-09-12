@@ -140,7 +140,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="HISTORICO DE CAMBIOS DIRECCIONES" />
+                    <Title title="Histórico de cambios direcciones" />
                 </DialogTitle>
                 <Divider />
                 <Grid

@@ -7,6 +7,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type FacilidadPagoSolicitud, type ObligacionesUsuario } from "../interfaces/interfaces";
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
 import dayjs from 'dayjs';
+import { Title } from "../../../../components";
 
 interface RootStateFacilidad {
   solicitud_facilidad: {
@@ -29,7 +30,7 @@ export const EncabezadoSolicitud: React.FC = () => {
 
   return (
     <>
-        <h3>Encabezado</h3>
+        {/* <h3>Encabezado</h3> */}
         <Grid item xs={12}>
           <Box
             component="form"
@@ -107,7 +108,10 @@ export const EncabezadoSolicitud: React.FC = () => {
           </Box>
         </Grid>
         <>
-          <p><strong>Obligaciones objeto de la solicitud</strong></p>
+        <Grid item xs={12}   marginTop={3}>
+                    <Title title={`Obligaciones objeto de la solicitud `} />
+                </Grid>
+          <p><strong></strong></p>
           <TablaObligacionesSeleccionadasSolicitud />
         </>
         {

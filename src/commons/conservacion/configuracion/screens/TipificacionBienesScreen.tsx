@@ -34,6 +34,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 import Limpiar from '../../componentes/Limpiar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -49,11 +50,11 @@ export function TipificacionBienesScreen(): JSX.Element {
   const [filterednurseries, setfilterednurseries] = useState<any[]>(bienes);
 
   const columns: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -63,7 +64,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'nombre_cientifico',
       headerName: 'Nombre científico',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === null ? 'Sin definir' : params.value}
@@ -73,7 +74,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'cod_tipo_elemento_vivero',
       headerName: 'Tipo de elemento',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === null ? 'Sin definir' : params.value}
@@ -83,7 +84,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'es_semilla_vivero',
       headerName: '¿Semilla?',
-      width: 100,
+      width: 100,flex: 1,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.cod_tipo_elemento_vivero === 'MV' ? (
@@ -100,7 +101,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 100,
+      width: 100,flex: 1,
       renderCell: (params) => (
         <>
           <Tooltip title="Detalle">
@@ -177,6 +178,8 @@ export function TipificacionBienesScreen(): JSX.Element {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
+          marginTop:"20px",
+          marginLeft:"-2px",
           boxShadow: '0px 3px 6px #042F4A26',
         }}
         spacing={2}
@@ -213,10 +216,10 @@ export function TipificacionBienesScreen(): JSX.Element {
               </Button>
             </Grid>
             <Grid item xs={2}>
-              <ButtonGroup style={{ margin: 7 }}>
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
               
                 {download_xls({ nurseries: filterednurseries, columns })}
-
+                {download_pdf({ nurseries: filterednurseries, columns ,title: 'Bienes de vivero', })}
               </ButtonGroup>
             </Grid>
           </Grid>

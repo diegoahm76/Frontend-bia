@@ -296,7 +296,7 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
           </LoadingButton> 
         </Grid>
         <Grid item xs={12} sm={1.2}>
-          <Button startIcon={<CleanIcon />} fullWidth variant="contained" color="secondary"  onClick={handle_clear_fields}>
+          <Button startIcon={<CleanIcon />} fullWidth variant="outlined"   onClick={handle_clear_fields}>
             limpiar
           </Button>
         </Grid>

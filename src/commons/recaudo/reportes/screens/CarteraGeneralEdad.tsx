@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Title } from '../../../../components/Title';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack } from '@mui/material';
@@ -66,7 +65,7 @@ export const CarteraGeneralEdad: React.FC = () => {
       });
   };
 
-  const handle_export_pdf = () => {
+  const handle_export_pdf = (): void => {
     const report = new JsPDF('l','pt','letter');
     report.text("Reporte General de Cartera por Edades", 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression

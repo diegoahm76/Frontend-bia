@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Chip,
   Dialog,
   DialogActions,
@@ -44,6 +45,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { columnsBusquedaTca } from './columns/BusquedaTcaColums';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../../components';
+import { download_xls } from '../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../documentos-descargar/PDF_descargar';
 
 export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
   // ? useDispatch
@@ -295,14 +298,20 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                 </LoadingButton>
               </Grid>
             </Grid>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+              {download_xls({ nurseries: tcas, columns })}
+              {download_pdf({ nurseries: tcas, columns, title: 'TCA que coincidan ' })}
+
+            </ButtonGroup>
             <DataGrid
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
               rows={tcas /*  trds  */}
               columns={columns /* columns_trd_busqueda */}
-              pageSize={7}
-              rowsPerPageOptions={[7]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               experimentalFeatures={{ newEditingApi: true }}
               getRowId={(row) => uuidv4()}
             />
@@ -324,7 +333,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
               </Button>
               <Button
                 color="error"
-                variant="outlined"
+                variant="contained"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}
               >

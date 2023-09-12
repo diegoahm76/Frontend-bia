@@ -1,4 +1,5 @@
 /* eslint-disable spaced-comment */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
@@ -134,7 +135,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
             setshowSecondPart(false);
             cleanFormAndGrid();
             // console.log(res);
-            //? pendiente
+            // ? pendiente
             // dispatch(setListadoPersonasUnidades(res));
             // * from this event I have to manage the modal show and hide of the grid
           });

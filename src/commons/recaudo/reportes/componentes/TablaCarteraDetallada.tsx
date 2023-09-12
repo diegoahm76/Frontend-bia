@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -76,7 +75,7 @@ export const TablaCarteraDetallada: React.FC = () => {
       });
   };
 
-  const handle_export_pdf = () => {
+  const handle_export_pdf = (): void => {
     const report = new JsPDF('l','pt','letter');
     report.text("Reporte General de Cartera con Detalle", 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression

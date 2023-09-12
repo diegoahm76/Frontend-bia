@@ -347,7 +347,7 @@ export const UserProvider = ({
     try {
       const response = await get_caja_carpetas(id_caja as number);
       if (response?.length > 0) {
-        const data_carpetas: ICarpetas[] = response.map((item: ICarpetas) => ({
+        const data_carpetas: ICarpetas[] | any = response.map((item: ICarpetas) => ({
           id_carpeta_caja: item.id_caja_bandeja,
           identificacion_por_caja: item.identificacion_por_caja,
           orden_ubicacion_por_caja: item.orden_ubicacion_por_caja,
