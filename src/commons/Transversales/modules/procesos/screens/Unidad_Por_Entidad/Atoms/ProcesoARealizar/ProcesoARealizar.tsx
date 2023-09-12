@@ -33,7 +33,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
 
   //! use_u_x_entidad hooks
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { control_opciones_traslado, reset_opciones_traslado } =
+  const { control_opciones_traslado, reset_opciones_traslado, controlModoTrasladoUnidadXEntidad } =
     use_u_x_entidad();
 
   //* context necesario
@@ -125,7 +125,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
       console.log('finally');
       setCargaApp(false)
     });
-  }, []);
+  }, [dispatch, reset_opciones_traslado]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {

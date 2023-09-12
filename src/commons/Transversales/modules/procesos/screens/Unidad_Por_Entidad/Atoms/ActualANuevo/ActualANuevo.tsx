@@ -25,7 +25,7 @@ import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import {
   setAsignacionConsultaTablaTemporal,
-  //  setAsignacionConsultaTablaTemporal,
+  setMoodAction,
   setGridActualANuevo,
   setUnidadesSeleccionadas,
   set_current_id_organigrama
@@ -40,7 +40,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal /* organigrama_current */ } =
+  const { asignacionConsultaTablaTemporal, mood /* organigrama_current */ } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -55,8 +55,9 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
   //* context necesario
 
-  const { gridActualANuevo, handleGridActualANuevo, handleMood, mood } =
-    useContext(ContextUnidadxEntidad);
+  const { gridActualANuevo, handleGridActualANuevo } = useContext(
+    ContextUnidadxEntidad
+  );
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
@@ -78,9 +79,11 @@ export const ActualANuevo: FC = (): JSX.Element => {
       // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_nuevo está presente
 
       if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
+
+        console.log('assssignacion T026', asignacionConsultaTablaTemporal)
+        dispatch(setMoodAction(true));
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
-          handleMood(true);
           // console.log(resOrganigramas);
           // console.log(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
           console.log('resOrganigramas', resOrganigramas);
@@ -115,6 +118,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
         //! 1. se realiza la consuta del listado de personas del organigrama actual
         void getListadoPersonasOrganigramaActual().then(
           (resListaPersonas: any) => {
+            // dispatch(setMoodAction(true));
             void getListaUnidadesOrganigramaSeleccionado(
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
             ).then((resListaUnidades) => {
@@ -191,7 +195,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
           filtrarOrganigramas(organigramasDisponibles, navigate)
         );
         console.log('organigramasDisponibles', organigramasDisponibles);
-        handleMood(false);
+        dispatch(setMoodAction(false));
       }
     };
 

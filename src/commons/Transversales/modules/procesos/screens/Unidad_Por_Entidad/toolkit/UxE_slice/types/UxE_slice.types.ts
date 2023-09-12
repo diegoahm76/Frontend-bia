@@ -8,4 +8,5 @@ export interface SliceTypeInterface{
   unidadesSeleccionadasAnteriorAActual: any[],
   asignacionConsultaTablaTemporal: any,
   organigrama_current: any;
+  mood: boolean;
 }

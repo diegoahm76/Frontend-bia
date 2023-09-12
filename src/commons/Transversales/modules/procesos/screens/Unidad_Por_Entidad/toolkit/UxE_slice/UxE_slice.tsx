@@ -3,11 +3,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type SliceTypeInterface } from './types/UxE_slice.types';
 const initialState: SliceTypeInterface = {
-
-
   //* --- asignacion de consulta de tabla temporal cuando trae información --- *//
   asignacionConsultaTablaTemporal: null,
-
 
   //* --- control mode traslado unidad x entidad --- *//
 
@@ -29,7 +26,6 @@ const initialState: SliceTypeInterface = {
 
   unidadesSeleccionadasAnteriorAActual: [],
 
-
   // ! organigrama current
   organigrama_current: null,
 
@@ -37,6 +33,7 @@ const initialState: SliceTypeInterface = {
     data: [],
     dataSelectedUnidadNueva: []
   } */
+  mood: false
 };
 
 export const u_x_e_slice = createSlice({
@@ -97,15 +94,18 @@ export const u_x_e_slice = createSlice({
       payloadAction: PayloadAction<any>
     ) => {
       state.unidadesSeleccionadasAnteriorAActual = payloadAction.payload;
-
     },
 
-
-    set_current_id_organigrama: (state: any, payloadAction: PayloadAction<any>) => {
+    set_current_id_organigrama: (
+      state: any,
+      payloadAction: PayloadAction<any>
+    ) => {
       state.organigrama_current = payloadAction.payload;
+    },
 
+    setMoodAction: (state: any, payloadAction: PayloadAction<any>) => {
+      state.mood = payloadAction.payload;
     }
-
   }
 });
 
@@ -124,8 +124,8 @@ export const {
 
   setUnidadesSeleccionadasAnteriorAActual,
 
-
   //* asignar el id actual del organigrama para realizar el proceso de almacenamiento en la tabla temporal T026
   set_current_id_organigrama,
 
+  setMoodAction
 } = u_x_e_slice.actions;

@@ -152,6 +152,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
+                    required
                       fullWidth
                       label="Nombre del TCA"
                       size="small"
@@ -180,6 +181,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                   }) => (
                     <TextField
                       fullWidth
+                      required
                       label="Versión del TCA"
                       size="small"
                       inputProps={{
