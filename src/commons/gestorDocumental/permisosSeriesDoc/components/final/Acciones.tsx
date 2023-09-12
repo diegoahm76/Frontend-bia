@@ -10,6 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../components';
+import { usePSD } from '../../hook/usePSD';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
@@ -21,6 +22,9 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   // ! states from redux
   const { current_unidad_organizacional, currentSeriesSubseries } =
     useAppSelector((state) => state.PsdSlice);
+
+  //* usePSD
+  const { reset_all } = usePSD();
 
   // ! va a ser necesario el uso del useEffect para realizar algunas consultas que permitan traer cierta información
 
@@ -45,8 +49,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
               setLoadingButton(true);
               setTimeout(() => {
                 setLoadingButton(false);
-              }
-              , 2000);
+              }, 2000);
             }}
             style={{
               textAlign: 'center',
@@ -80,9 +83,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     color="primary"
                     variant="outlined"
                     startIcon={<CleanIcon />}
-                    onClick={() => {
-                      console.log('cleaning fields');
-                    }}
+                    onClick={reset_all}
                   >
                     LIMPIAR CAMPOS
                   </Button>
