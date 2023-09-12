@@ -2,17 +2,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Button, Chip, Grid, } from '@mui/material';
+import { Avatar, Button, Chip, Grid, IconButton, Tooltip, } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import FormSelectController from '../../../../components/partials/form/FormSelectController';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { v4 as uuidv4 } from 'uuid';
-import type { IObjConfiguracionAlerta, IObjDestinatario } from '../interfaces/alerta';
+import type { IObjDestinatario, } from '../interfaces/alerta';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { get_uni_organizacional } from '../../../almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { get_perfil_sistema, get_persona_alerta, get_tipo_doc } from '../store/thunks/alertas';
+import { crear_persona, eliminar_persona_alerta, get_busqueda_persona, get_perfil_sistema, get_persona_alerta, get_tipo_doc } from '../store/thunks/alertas';
 import FormInputController from '../../../../components/partials/form/FormInputController';
 import { LoadingButton } from '@mui/lab';
 import BusquedaAvanzada from './Busqueda';
@@ -23,14 +24,12 @@ const Destinatario = () => {
     const { control: control_destinatario, handleSubmit: handle_submit, getValues: get_values, reset: reset_destinario } = useForm<IObjDestinatario>();
 
     const { unidad_organizacional } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
-    const { current_configuracion, destinatario, perfil_sistema, tipo_documento } = useAppSelector((state) => state.alerta);
+    const { current_configuracion, destinatario, perfil_sistema, tipo_documento, current_destinatario } = useAppSelector((state) => state.alerta);
     const [lider, set_lider] = useState(false);
     const [open_modal, set_open_modal] = useState(false);
     const [profesional, set_profesional] = useState(false);
     const [persona, set_persona] = useState(false);
     const dispatch = useAppDispatch();
-
-
 
 
 
@@ -58,12 +57,49 @@ const Destinatario = () => {
             headerName: 'PRINCIPAL',
             width: 250,
             renderCell: (params) => {
+
                 return params.row.es_responsable_directo === true ? (
                     <Chip size="small" label="Si" color="success" variant="outlined" />
                 ) : (
                     <Chip size="small" label="No" color="error" variant="outlined" />
                 );
             },
+        },
+        {
+            field: 'acciones',
+            headerName: 'ACCIONES',
+            width: 250,
+            renderCell: (params) => (
+                <>
+
+
+                    <Tooltip title="Eliminar">
+                        <IconButton
+                            onClick={() => {
+                                dispatch(eliminar_persona_alerta(params.row.id_persona_alertar, current_configuracion.cod_clase_alerta ?? ''))
+                                console.log(params.row)
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
+                                }}
+                                variant="rounded"
+                            >
+                                <DeleteIcon
+                                    sx={{ color: 'error.main', width: '18px', height: '18px' }}
+                                />
+
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
+
+                </>
+            ),
+
         },
 
     ];
@@ -75,8 +111,20 @@ const Destinatario = () => {
 
     };
 
+    // const on_submit_eliminar = (data: IObjDestinatario): void => {
 
+    //     if (
+    //         current_destinatario.id_persona_alertar !== null &&
+    //         current_destinatario.id_persona_alertar !== undefined
+    //     ) {
+    //         void dispatch(
+    //             eliminar_persona_alerta(
+    //                 current_destinatario.id_persona_alertar)
+    //         );
+    //     }
+    // };
     console.log(destinatario)
+    console.log(current_destinatario)
 
     const handle_lider = () => {
         set_lider(true);
@@ -102,15 +150,6 @@ const Destinatario = () => {
         set_open_modal(false);
     };
 
-    const on_submit_programar = (data: IObjConfiguracionAlerta): void => {
-        console.log(data)
-        //  //   const data_programar = {
-        //         ...data
-        //     };
-
-        //  void dispatch(programar_repeticion(current_configuracion.cod_clase_alerta, data_programar));
-
-    }
 
     useEffect(() => {
         if (current_configuracion.cod_clase_alerta !== null && current_configuracion.cod_clase_alerta !== undefined) {
@@ -130,12 +169,30 @@ const Destinatario = () => {
     }, [])
 
 
-    const mostrar_busqueda: any = async () => {
-
+    const on_submit_mostrar_busqueda = (data: IObjDestinatario): void => {
+        console.log(data)
+        void dispatch(get_busqueda_persona(data.tipo_documento ?? '', data.numero_documento ?? ''));
 
 
     }
 
+    useEffect(() => {
+        reset_destinario(current_destinatario)
+    }, [current_destinatario])
+
+
+
+    const on_submit_programar = (data: IObjDestinatario): void => {
+        console.log(data)
+        const data_programar = {
+            ...data,
+            cod_clase_alerta: current_configuracion.cod_clase_alerta,
+        };
+
+        void dispatch(crear_persona(data_programar));
+        void dispatch(get_persona_alerta(current_configuracion.cod_clase_alerta ?? ''))
+
+    }
 
 
     return (
@@ -207,7 +264,7 @@ const Destinatario = () => {
                         xs={12}
                         md={6}
                         control_form={control_destinatario}
-                        control_name={'id_unidad_org_lider'}
+                        control_name={'perfil_sistema'}
                         default_value=''
                         rules={{}}
                         disabled={false}
@@ -231,7 +288,7 @@ const Destinatario = () => {
                         control_form={control_destinatario}
                         control_name={'tipo_documento'}
                         default_value=''
-                        rules={{}}
+                        rules={{ required_rule: { rule: true, message: 'Debe seleccionar tipo de documento' } }}
                         disabled={false}
                         helper_text=''
                         select_options={tipo_documento}
@@ -250,7 +307,7 @@ const Destinatario = () => {
                         control_form={control_destinatario}
                         control_name="numero_documento"
                         default_value=''
-                        rules={{}}
+                        rules={{ required_rule: { rule: true, message: 'Debe seleccionar número de documento' } }}
                         type="text"
                         disabled={false}
                         helper_text=""
@@ -275,13 +332,13 @@ const Destinatario = () => {
                     <Grid item xs={12} sm={2}>
                         <LoadingButton
                             variant="contained"
-                            onClick={mostrar_busqueda}
+                            onClick={handle_submit(on_submit_mostrar_busqueda)}
                             disabled={false}
                         >
                             Buscar
                         </LoadingButton>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={2}>
                         <LoadingButton
                             variant="outlined"
                             onClick={handle_buscar}

@@ -4,7 +4,7 @@ import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 import { type AxiosError } from 'axios';
 import { api } from '../../../../../api/axios';
-import { set_alerta, set_destinatario, set_perfil_sistema, set_persona, set_tipo_documento } from '../slice/indexAlertas';
+import { set_alerta, set_clase_alerta, set_current_destinatario, set_destinatario, set_fecha_programada, set_perfil_sistema, set_persona, set_tipo_documento } from '../slice/indexAlertas';
 
 export const control_error = (
     message: ToastContent = 'Algo pasó, intente de nuevo'
@@ -146,10 +146,68 @@ export const get_tipo_doc = (): any => {
 };
 
 
+// eliminar
+export const eliminar_persona_alerta = (
+    id: number,
+    cod_clase_alerta: string
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.delete(`transversal/alertas/personas_alertar/delete/${id}/`
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+                dispatch(get_persona_alerta(cod_clase_alerta))
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// eliminar
+export const eliminar_fecha_alerta = (
+    id: number,
+    cod_clase_alerta: string
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.delete(`transversal/alertas/fecha_clase_alert/delete/${id}/`
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+                dispatch(get_fecha(cod_clase_alerta))
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
 
 export const get_busqueda_persona = (
     tipo_documento: string | null,
-    numero_documento: number,
+    numero_documento: number | string,
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
@@ -157,7 +215,7 @@ export const get_busqueda_persona = (
 
             if (data.success === true) {
                 //   control_success(data.detail);
-                dispatch(set_persona(data.data));
+                dispatch(set_current_destinatario(data.data));
             }
             console.log(data)
             return data;
@@ -189,6 +247,95 @@ export const get_busqueda_avanzada_persona = (
         } catch (error: any) {
             control_error(error.response.data.detail);
 
+            return error as AxiosError;
+        }
+    };
+};
+
+// crear persona
+
+export const crear_persona: any = (
+    programacion: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            // console.log(despacho);
+            const { data } = await api.post('transversal/alertas/personas_alertar/create/', programacion);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// fechas programadas 
+
+export const get_fecha = (
+    cod: string,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`transversal/alertas/fecha_clase_alert/get-by-configuracion/${cod ?? ''}/`);
+
+            if (data.success === true) {
+                //   control_success(data.detail);
+                dispatch(set_fecha_programada(data.data));
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            //    control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+export const programar_fecha: any = (
+
+    programacion: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            // console.log(despacho);
+            const { data } = await api.post('transversal/alertas/fecha_clase_alert/create/', programacion);
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail);
+            }
+
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+
+export const get_clase_alerta = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('listas/niveles_prioridad_alerta/');
+            if (data.success === true) {
+                //   control_success(data.detail);
+                dispatch(set_clase_alerta(data.data));
+            }
+            return data;
+        } catch (error: any) {
+            //    control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };
