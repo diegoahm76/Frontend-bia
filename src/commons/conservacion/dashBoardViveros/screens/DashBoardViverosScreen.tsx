@@ -230,7 +230,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                   direction="row"
                   justifyContent="flex-end"
                   spacing={2}>
-                  <span style={{ margin: '7px' }}>Incluir viveros en cuarentena</span><Switch color="default" onChange={() => { set_viveros_cuarentena(!viveros_cuarentena); }} />
+                  <span style={{ margin: '7px' }}>Incluir viveros en cuarentena</span><Switch color="primary" onChange={() => { set_viveros_cuarentena(!viveros_cuarentena); }} />
                 </Stack>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -238,7 +238,7 @@ export const DashBoardViverosScreen: React.FC = () => {
                   direction="row"
                   justifyContent="flex-start"
                   spacing={2}>
-                  <span style={{ margin: '7px' }}>Incluir viveros cerrados</span><Switch color="default" onChange={() => { set_viveros_cerrados(!viveros_cerrados); }} />
+                  <span style={{ margin: '7px' }}>Incluir viveros cerrados</span><Switch color="primary" onChange={() => { set_viveros_cerrados(!viveros_cerrados); }} />
                 </Stack>
               </Grid>
             </Grid>

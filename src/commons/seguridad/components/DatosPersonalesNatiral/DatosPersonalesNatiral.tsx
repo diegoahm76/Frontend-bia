@@ -175,7 +175,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         {/* Datos personales */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="DATOS PERSONALES" />
+            <Title title="Datos persónale" />
           </Grid>
           <Grid item xs={12} sm={4}>
             <CustomSelect

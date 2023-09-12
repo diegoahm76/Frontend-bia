@@ -18,7 +18,7 @@ const AutocompleteVivero = ({
     set_value,
     value,
     id
-}: IProps) => {
+}: IProps | any) => {
     const { nurseries, current_nursery } = useAppSelector((state) => state.nursery);
     const dispatch = useAppDispatch();
     const default_props = {

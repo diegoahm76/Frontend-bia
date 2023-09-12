@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
 import { api } from '../../../../../api/axios';
 import type { IList } from '../../../../../interfaces/globalModels';
+import { Title } from '../../../../../components';
 
 interface IProps {
   action: string;
@@ -135,12 +136,19 @@ const CrearMedidaModal = ({
             : handle_submit(on_submit_edit)
         }
       >
-        <DialogTitle>
-          {action === 'create'
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={` ${action === 'create'
             ? 'Crear medida'
             : action === 'detail'
             ? 'Detalle Medida'
-            : 'Editar Medida'}
+            : 'Editar Medida'}`} />
+                </Grid>  
+        <DialogTitle>
+          {/* {action === 'create'
+            ? 'Crear medida'
+            : action === 'detail'
+            ? 'Detalle Medida'
+            : 'Editar Medida'} */}
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -243,7 +251,8 @@ const CrearMedidaModal = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
+              color='error'
               onClick={handle_close_add_medida}
               startIcon={<CloseIcon />}
             >
@@ -252,6 +261,7 @@ const CrearMedidaModal = ({
             {action === 'create' ? (
               <Button
                 type="submit"
+                color='success'
                 variant="contained"
                 startIcon={<SaveIcon />}
               >

@@ -33,19 +33,19 @@ export const TiposDocumentoScreen: React.FC = () => {
             field: 'cod_tipo_documento',
             headerName: 'CODIGO',
             sortable: true,
-            width: 100,
+            width: 100,flex:1,
         },
         {
             field: 'nombre',
             headerName: 'NOMBRE TIPO DOCUMENTO',
             sortable: true,
-            width: 200,
+            width: 200,flex:1,
         },
         {
             field: 'activo',
             headerName: 'ESTADO',
             sortable: true,
-            width: 120,
+            width: 120,flex:1,
             renderCell: (params) => {
                 return params.row.activo === true ? (
                     <Chip size="small" label="Activo" color="success" variant="outlined" />
@@ -58,7 +58,7 @@ export const TiposDocumentoScreen: React.FC = () => {
             field: 'precargado',
             headerName: 'PRECARGADO',
             sortable: true,
-            width: 120,
+            width: 120,flex:1,
             renderCell: (params) => {
                 return params.row.precargado === true ? (
                     <Chip size="small" label="Activo" color="success" variant="outlined" />
@@ -71,7 +71,7 @@ export const TiposDocumentoScreen: React.FC = () => {
             field: 'item_ya_usado',
             headerName: 'ITEM YA USADO',
             sortable: true,
-            width: 120,
+            width: 120,flex:1,
             renderCell: (params) => {
                 return params.row.item_ya_usado === true ? (
                     <Chip size="small" label="Activo" color="success" variant="outlined" />
@@ -83,7 +83,7 @@ export const TiposDocumentoScreen: React.FC = () => {
         {
             field: 'ACCIONES',
             headerName: 'ACCIONES',
-            width: 200,
+            width: 200,flex:1,
             renderCell: (params) => (
                 <>
                     <IconButton>
@@ -206,7 +206,7 @@ export const TiposDocumentoScreen: React.FC = () => {
                 }}
             >
                 <Grid item xs={12}>
-                    <Title title="CONFIGURACIONES TIPOS DE DOCUMENTO" />
+                    <Title title="Configuraciones tipos de documento" />
                 </Grid>
                 <Grid item xs={12}>
                     <Button

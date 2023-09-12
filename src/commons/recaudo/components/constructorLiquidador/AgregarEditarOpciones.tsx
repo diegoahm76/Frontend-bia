@@ -28,9 +28,12 @@ import { PruebasLiquidacionModal } from "./modal/PruebasLiquidacionModal";
 import type { OpcionLiquidacion } from "../../interfaces/liquidacion";
 import { api } from "../../../../api/axios";
 import { Add, Build, Save } from "@mui/icons-material";
-import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
+
 import { NotificationModal } from "../NotificationModal";
 import Blockly from 'blockly';
+import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+
 import './AgregarEditarOpciones.css';
 
 interface Rows {
@@ -42,6 +45,8 @@ interface IProps {
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
   form_data: { variable: string, nombre_opcion_liquidacion: string, estado: string };
+  edit_opcion: boolean;
+
   set_id_opcion_liquidacion: Dispatch<SetStateAction<string>>;
   set_refresh_page: Dispatch<SetStateAction<boolean>>;
   set_form_data: Dispatch<SetStateAction<{ variable: string, nombre_opcion_liquidacion: string, estado: string }>>
@@ -50,9 +55,13 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarEditarOpciones = ({
   opciones_liquidaciones,
-  id_opcion_liquidacion, form_data,
+  id_opcion_liquidacion,
+  form_data,
+  edit_opcion,
   set_id_opcion_liquidacion,
-  set_refresh_page, set_form_data
+  set_refresh_page,
+  set_form_data
+
 }: IProps): JSX.Element => {
   const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
@@ -221,25 +230,48 @@ export const AgregarEditarOpciones = ({
     }
 
     const json = Blockly.serialization.workspaces.save(primaryWorkspace.current);
-    api.post('recaudo/liquidaciones/opciones-liquidacion-base/', {
-      nombre: form_data.nombre_opcion_liquidacion,
-      funcion: generateCode(),
-      estado: form_data.estado,
-      variables: variables.reduce((acumulador, valor) => {
-        return { ...acumulador, [valor]: '' };
-      }, {}),
-      bloques: JSON.stringify(json),
-    })
-      .then((response) => {
-        set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
-        set_open_notification_modal(true);
-        set_refresh_page(true);
+    if (edit_opcion) {
+      api.put(`recaudo/liquidaciones/opciones-liquidacion-base/${id_opcion_liquidacion}/`, {
+        nombre: form_data.nombre_opcion_liquidacion,
+        funcion: generateCode(),
+        estado: form_data.estado,
+        variables: variables.reduce((acumulador, valor) => {
+          return { ...acumulador, [valor]: '' };
+        }, {}),
+        bloques: JSON.stringify(json),
       })
-      .catch((error) => {
-        console.log(error);
-        set_notification_info({ type: 'error', message: `Hubo un error.` });
-        set_open_notification_modal(true);
-      });
+        .then((response) => {
+          set_notification_info({ type: 'success', message: `Se editó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
+          set_open_notification_modal(true);
+          set_refresh_page(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          set_notification_info({ type: 'error', message: `Hubo un error.` });
+          set_open_notification_modal(true);
+        });
+    } else {
+      api.post('recaudo/liquidaciones/opciones-liquidacion-base/', {
+        nombre: form_data.nombre_opcion_liquidacion,
+        funcion: generateCode(),
+        estado: form_data.estado,
+        variables: variables.reduce((acumulador, valor) => {
+          return { ...acumulador, [valor]: '' };
+        }, {}),
+        bloques: JSON.stringify(json),
+      })
+        .then((response) => {
+          set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
+          set_open_notification_modal(true);
+          set_refresh_page(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          set_notification_info({ type: 'error', message: `Hubo un error.` });
+          set_open_notification_modal(true);
+        });
+    }
+
   }
 
   const column: GridColDef[] = [
@@ -420,13 +452,14 @@ export const AgregarEditarOpciones = ({
           </Grid>
           <Grid item xs={3}>
             <Button
-              color='primary'
+              color='success'
               variant='contained'
               onClick={handle_post_opcion_liquidacion}
-              startIcon={<Save />}
+              startIcon={edit_opcion ? <EditIcon /> : <Save />}
               fullWidth
             >
-              Guardar opción liquidación
+              {edit_opcion ? 'Editar ': 'Guardar '}opción liquidación
+
             </Button>
           </Grid>
         </Stack>

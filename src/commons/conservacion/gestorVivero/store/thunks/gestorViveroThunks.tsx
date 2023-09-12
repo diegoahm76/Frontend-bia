@@ -88,7 +88,7 @@ export const add_nursery_service: any = (
     try {
       const { data } = await api.post('conservacion/viveros/create/', nursery);
       dispatch(get_nurseries_service());
-      dispatch(current_nursery(initial_state_current_nursery));
+      dispatch(current_nursery(initial_state_current_nursery as any));
       control_success('El vivero se agrego correctamente');
       return data;
     } catch (error: any) {
@@ -113,7 +113,7 @@ export const edit_nursery_service: any = (
         nursery
       );
       dispatch(get_nurseries_service());
-      dispatch(current_nursery(initial_state_current_nursery));
+      dispatch(current_nursery(initial_state_current_nursery as any));
       control_success('El vivero se edito correctamente');
       return data;
     } catch (error: any) {

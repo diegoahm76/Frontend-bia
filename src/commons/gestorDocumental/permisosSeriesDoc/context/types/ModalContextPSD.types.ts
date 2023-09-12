@@ -6,4 +6,7 @@ export interface ModalContextPSDInterface {
   //* LOAD BUTTONS
   loadingButtonPSD: boolean;
   setLoadingButtonPSD: (value: boolean) => void;
+
+  loadingSeriesSubseries: boolean;
+  setloadingSeriesSubseries: (value: boolean) => void;
 }

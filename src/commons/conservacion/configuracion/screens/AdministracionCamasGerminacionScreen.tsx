@@ -9,6 +9,7 @@ import {
   IconButton,
   Avatar,
   Divider,
+  ButtonGroup,
 } from '@mui/material';
 import { Title } from '../../../../components';
 import {
@@ -38,6 +39,8 @@ import ArticleIcon from '@mui/icons-material/Article';
 import CrearCamaGerminacionDialogForm from '../componentes/CrearCamaGerminacionDialogForm';
 import AutocompleteVivero from '../../componentes/AutocompleteVivero';
 import Limpiar from '../../componentes/Limpiar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministracionCamasGerminacionScreen(): JSX.Element {
@@ -53,11 +56,11 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
 
   const [add_bed_is_active, set_add_bed_is_active] = useState<boolean>(false);
   const columns: GridColDef[] = [
-    { field: 'id_cama_germinacion_vivero', headerName: 'ID', width: 20 },
+    // { field: 'id_cama_germinacion_vivero', headerName: 'ID', width: 20 },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -67,7 +70,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
     {
       field: 'observacion',
       headerName: 'Observación',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -78,7 +81,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <>
           <Tooltip title="Detalle">
@@ -292,6 +295,11 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                 />
 
                 <Box sx={{ width: '100%' }}>
+                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              
+              {download_xls({ nurseries: aux_germination_beds, columns })}
+              {download_pdf({ nurseries: aux_germination_beds, columns ,title: 'Camas de germinacion', })}
+            </ButtonGroup>
                   <DataGrid
                     density="compact"
                     autoHeight
@@ -313,7 +321,8 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                           get_germination_beds_service(nursery?.id_vivero)
                         );
                       }}
-                      variant="outlined"
+                      variant="contained"
+                      color="error"
                       startIcon={<CloseIcon />}
                     >
                       CANCELAR
@@ -330,6 +339,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                       }}
                       type="button"
                       variant="contained"
+                      color='success'
                       startIcon={<SaveIcon />}
                     >
                       GUARDAR

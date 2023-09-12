@@ -6,7 +6,9 @@ import { useForm } from 'react-hook-form';
 import type { EditarEstadoCivil } from '../interfaces/interfaces';
 import { control_error, control_success } from '../../../../../helpers';
 import { editar_estado_civil } from '../Request/request';
-
+import CancelIcon from '@mui/icons-material/Cancel';
+import { Title } from '../../../../../components';
+import EditIcon from '@mui/icons-material/Edit';
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -77,7 +79,10 @@ export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_i
             onClose={handle_close}
             maxWidth="xl">
             <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-                <DialogTitle>Editar Estado civil</DialogTitle>
+                <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={` Editar Estado civil`} />
+                </Grid>
+                <DialogTitle></DialogTitle>
                 <Divider />
                 <DialogContent sx={{ mb: '0px' }}>
                     <Grid container spacing={2}>
@@ -138,15 +143,20 @@ export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_i
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => {
-                        handle_close();
-                        reset();
-                    }}>Cancelar</Button>
                     <Button
+                        color="error"
+                        startIcon={<CancelIcon />}
+                        variant="outlined"
+                        onClick={() => {
+                            handle_close();
+                            reset();
+                        }}>Cancelar</Button>
+                    <Button
+                         startIcon={<EditIcon />}
                         variant="contained"
                         disabled={is_loading}
-                        color="success"
-                        type='submit' >ACTUALIZAR</Button>
+                        // color="success"
+                        type='submit' >EDITAR</Button>
                 </DialogActions>
             </form>
         </Dialog>

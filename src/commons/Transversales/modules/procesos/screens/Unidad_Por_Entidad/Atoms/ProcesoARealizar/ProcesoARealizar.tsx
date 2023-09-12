@@ -28,7 +28,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { /* controlModoTrasladloadingConsultaT026oUnidadXEntidad, */ controlFaseEntrada } =
+  const {controlFaseEntrada } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -37,43 +37,35 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     use_u_x_entidad();
 
   //* context necesario
-  const { /* setloadingConsultaT026,  */ handleGridActualANuevo } = useContext(
+
+  const { handleGridActualANuevo } = useContext(
+
     ContextUnidadxEntidad
   );
 
   useEffect(() => {
     console.log('use_u_x_entidad');
+
     void consultarTablaTemporal().then(
+
       (resTablaTemporal: any) => {
         console.log(resTablaTemporal);
 
         //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
 
+
         //* el estado de esta variable para la validación siempre será === 0
         if (resTablaTemporal.data.length === 0) {
-          // ? se causa algún error el cambio, volver a poner el dispatch
-         /* dispatch(
-            setControlModoTrasladoUnidadXEntidad(
-              'modo_entrada_sin_validaciones'
-            )
-          ); */
-          console.log('jiji siuuu')
           dispatch(setControlFaseEntrada(1));
           //* se resetean resultados de la tabla temporal por si habian quedado rezagos
           dispatch(setAsignacionConsultaTablaTemporal(null));
         } else {
-          //* esta asignacion de dispatch se debe realizar dentro de las peticiones fetch, no en este lugar, (se debe verificar en cual de los dos estados específicos va a realizarse dicha validación)
-          /* dispatch(
-            setAsignacionConsultaTablaTemporal({
-              data: [],
-              id_organigrama_anterior: 71
-            })
-          ); */
-
           void getPersonasSinActualizarOrganigramaAnteriorAlActual().then(
             (resListadoPersonasSinActualizar: any) => {
               console.log(resListadoPersonasSinActualizar);
+
               //* el estado de esta variable para su validación siempre será !== 0
+
               if (resListadoPersonasSinActualizar.data.length !== 0) {
                 dispatch(setControlFaseEntrada(2));
                 dispatch(
@@ -90,12 +82,13 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                   }
                 });
               } else {
+
                 //! se realiza la asiganción de manera temporal a la tabla temporal (valga la redundancia), ya que esos valores se van a asignar cuando se realice la petición fetch de los datos dependiendo el id de los organigramas que traiga la T026 al realizar dicha solicitud, en cualquera de los dos escenarios de la tabla temporal
 
                 dispatch(
                   setAsignacionConsultaTablaTemporal({
-                    data: [],
-                    id_organigrama_anterior: 71
+                    data: resTablaTemporal?.data,
+                    id_organigrama_nuevo: resTablaTemporal?.totalData?.id_organigrama_nuevo
                   })
                 );
 
@@ -115,9 +108,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                 });
               }
             }
-          );
-          console.log(
-            'si hay datos en la tabla temporal, se debe manejar otro comportamiento'
           );
         }
 

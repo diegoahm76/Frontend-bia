@@ -66,12 +66,12 @@ export function TiposMezclaScreen(): JSX.Element {
   const [filterednurseries, setfilterednurseries] = useState<any[]>(mixtures);
 
   const columns: GridColDef[] = [
-    { field: 'id_mezcla', headerName: 'ID', width: 20 },
-    { field: 'id_unidad_medida', headerName: 'ID', width: 20 },
+    // { field: 'id_mezcla', headerName: 'ID', width: 20 },
+    // { field: 'id_unidad_medida', headerName: 'ID', width: 20,flex:1, },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -81,7 +81,7 @@ export function TiposMezclaScreen(): JSX.Element {
     {
       field: 'unidad_medida',
       headerName: 'Unidad de medida',
-      width: 200,
+      width: 200,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === null ? 'Sin definir' : params.value}
@@ -91,7 +91,7 @@ export function TiposMezclaScreen(): JSX.Element {
     {
       field: 'item_activo',
       headerName: '¿Activo?',
-      width: 100,
+      width: 100,flex:1,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.item_activo ? (
@@ -114,7 +114,7 @@ export function TiposMezclaScreen(): JSX.Element {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 200,
+      width: 200,flex:1,
       renderCell: (params) => (
         <>
           <Tooltip title="Detalle">

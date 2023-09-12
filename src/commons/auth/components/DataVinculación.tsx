@@ -50,7 +50,7 @@ export const DatosVinculacion: React.FC<Props> = ({
                 <>
 
                     <Grid item xs={12}>
-                        <Title title="DATOS DE VINCULACIÓN ACTUAL A CORMACARENA" />
+                        <Title title="Datos de vinculación actual a cormacarena" />
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField

@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Grid, type SelectChangeEvent, TextField } from '@mui/material';
+import { Box, Grid, type SelectChangeEvent, TextField, ButtonGroup } from '@mui/material';
 import { type AxiosError } from 'axios';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -15,6 +15,8 @@ import {
 import { get_tipo_documento, search_avanzada } from '../request';
 import { CustomSelect } from './CustomSelect';
 import { Title } from './Title';
+import { download_xls_dos } from '../documentos-descargar/XLS_descargar';
+import { download_pdf_dos } from '../documentos-descargar/PDF_descargar';
 
 interface IProps {
   set_persona: any;
@@ -90,6 +92,54 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
   const handle_change_select = (e: SelectChangeEvent<string>): void => {
     set_tipo_documento_av(e.target.value);
   };
+
+  const columnsss = [
+    {
+      field: "tipo_persona",
+      header: "Tipo persona",
+      style: { minWidth: '150px' },
+    },
+    {
+      field: "tipo_documento",
+      header: "Tipo documento",
+      style: { minWidth: '160px' },
+    },
+    {
+      field: "numero_documento",
+      header: "Numero documento",
+      style: { minWidth: '200px' },
+    },
+    {
+      field: "primer_nombre",
+      header: "Primer nombre",
+      style: { minWidth: '180px' },
+    },
+    {
+      field: "segundo_nombre",
+      header: "Segundo nombre",
+      style: { minWidth: '180px' },
+    },
+    {
+      field: "primer_apellido",
+      header: "Primer apellido",
+      style: { minWidth: '180px' },
+    },
+    {
+      field: "segundo_apellido",
+      header: "Segundo apellido",
+      style: { minWidth: '180px' },
+    },
+    {
+      field: "razon_social",
+      header: "Razón social",
+      style: { minWidth: '180px' },
+    },
+    {
+      field: "nombre_comercial",
+      header: "Nombre comercial",
+      style: { minWidth: '180px' },
+    },
+  ];
 
   return (
     <>
@@ -208,13 +258,17 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
           <Grid item xs={12} sm={12}>
             <Title title="Resultados" />
             <Box sx={{ width: '100%', mt: '20px' }}>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              {download_xls_dos({ nurseries: rows, columns:columnsss })}
+              {download_pdf_dos({ nurseries: rows, columns:columnsss, title: 'Resultados' })}
+            </ButtonGroup>
               <div className="card">
                 <DataTable
                   value={rows}
                   sortField="numero_documento"
                   size={'small'}
                   paginator
-                  rows={5}
+                  rows={10}
                   scrollable
                   scrollHeight="flex"
                   rowsPerPageOptions={[5, 10, 25, 50]}

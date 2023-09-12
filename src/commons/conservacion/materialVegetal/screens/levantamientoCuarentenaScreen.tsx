@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-boolean-literal-compare */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import SeleccionarLevantamientoCuarentena from '../componentes/SeleccionarLevantamientoCuarentena';
@@ -348,7 +349,8 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
                 variant_button="contained"
                 on_click_function={handle_submit(on_submit)}
                 icon_class={<SaveIcon />}
-                label={action}
+                // label={action}
+                label={'guardar' ?? action}
                 type_button="button"
               />
             </Grid>

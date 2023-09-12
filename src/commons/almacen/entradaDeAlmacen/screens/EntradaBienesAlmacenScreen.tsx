@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, FormHelperText } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, FormHelperText, ButtonGroup } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { type Dayjs } from "dayjs";
@@ -27,6 +27,8 @@ import { v4 as uuid } from "uuid";
 import BuscarEntradasComponent from "./BuscarEntradas";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
+import { download_xls_dos } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf_dos } from "../../../../documentos-descargar/PDF_descargar";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -454,6 +456,23 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_info_items(buscar_articulo.info_items_entrada);
     }
   }, [buscar_articulo]);
+  const columnsss = [
+    {
+      field: "codigo_bien",
+      header: "Código",
+      style: { width: '20%' },
+    },
+    {
+      field: "nombre_bien",
+      header: "Nombre",
+      style: { width: '40%' },
+    },
+    {
+      field: "cantidad",
+      header: "Cantidad",
+      style: { width: '10%' },
+    }
+  ];
 
   return (
     <>
@@ -929,13 +948,17 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={12}>
+              <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+              {download_xls_dos({ nurseries: info_items, columns:columnsss })}
+              {download_pdf_dos({ nurseries: info_items, columns:columnsss, title: 'Entradas' })}
+            </ButtonGroup>
                 <div className="card">
                   <DataTable
                     value={info_items}
                     sortField="nombre"
                     stripedRows
                     paginator
-                    rows={5}
+                    rows={10}
                     scrollable scrollHeight="flex"
                     tableStyle={{ minWidth: '85rem' }}
                     rowsPerPageOptions={[5, 10, 25, 50]}
@@ -987,7 +1010,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               sx={{ mt: '20px' }}
             >
               <Button
-                color='primary'
+                color='success'
                 variant='contained'
                 startIcon={<SaveIcon />}
                 onClick={guardar_entrada}
@@ -1007,15 +1030,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 set_is_modal_active={set_anular_entrada_is_active}
                 title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
               <Button
-                color='inherit'
-                variant="contained"
+                // color='inherit'
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={limpiar_formulario}
               >
                 Limpiar
               </Button>
               <Button
-                color='secondary'
+                color='primary'
                 variant='contained'
                 startIcon={<SearchIcon />}
                 onClick={() => { set_buscar_entrada_is_active(true) }}
@@ -1028,8 +1051,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 tipos_entrada={tipos_entrada}
                 set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
               <Button
-                color='secondary'
-                variant='contained'
+                // color='secondary'
+                variant='outlined'
                 startIcon={<PrintIcon />}
                 onClick={() => { window.print() }}
               >
