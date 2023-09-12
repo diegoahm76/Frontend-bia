@@ -7,6 +7,7 @@ import { AsignacionesPerExp } from '../components/parte2/asignacionPerExpNoPro/s
 import { DenegacionPerScreen } from '../components/parte3/screen/DenegacionPerScreen';
 import { Acciones } from '../components/final/Acciones';
 
+
 // commponente screen principal, contiene las 3 partes de la vista
 export const ScreenPerSerDoc: FC<any> = (): JSX.Element => {
   return (

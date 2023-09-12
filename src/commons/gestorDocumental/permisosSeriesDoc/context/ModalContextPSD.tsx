@@ -23,9 +23,9 @@ export const ModalContextPSD = createContext<ModalContextPSDInterface>({
 });
 
 export const ModalProviderPSD: FC<ModalProviderPSDProps> = ({ children }) => {
-  const [modalSeleccionCCD, setModalSeleccionCCD] = useState(false);
-  const [loadingButtonPSD, setLoadingButtonPSD] = useState(false);
-  const [loadingSeriesSubseries, setloadingSeriesSubseries] = useState(false);
+  const [modalSeleccionCCD, setModalSeleccionCCD] = useState<boolean>(false);
+  const [loadingButtonPSD, setLoadingButtonPSD] = useState<boolean>(false);
+  const [loadingSeriesSubseries, setloadingSeriesSubseries] = useState<boolean>(false);
 
   const handleSeleccionCCD_PSD = (value: boolean) => {
     setModalSeleccionCCD(value);

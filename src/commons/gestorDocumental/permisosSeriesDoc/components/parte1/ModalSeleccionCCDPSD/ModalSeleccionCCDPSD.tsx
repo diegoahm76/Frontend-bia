@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useContext, useEffect, useState } from 'react';
+
+//* libraries or main dependencies
+import { useContext } from 'react';
 import {
   Avatar,
-  Box,
   Button,
   ButtonGroup,
   Chip,
@@ -21,29 +22,29 @@ import {
   Tooltip
 } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import CloseIcon from '@mui/icons-material/Close';
-import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
-// import { get_ccds } from '../../store/slices/ccdSlice';
-// import type { IProps } from './types/types';
-// import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
-
-// import { columns } from './utils/columns';
-import { Title } from '../../../../../../components';
+import { v4 as uuidv4 } from 'uuid';
 import { Controller, useForm } from 'react-hook-form';
-import SearchIcon from '@mui/icons-material/Search';
-// import use_ccd from '../../hooks/useCCD';
 import { LoadingButton } from '@mui/lab';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import DoNotTouchIcon from '@mui/icons-material/DoNotTouch';
+
+//* hooks
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
+import { usePSD } from '../../../hook/usePSD';
+
+//* components
+import { Title } from '../../../../../../components';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { ModalContextPSD } from '../../../context/ModalContextPSD';
-import { v4 as uuidv4 } from 'uuid';
 import { columnnsSelCCDPSD } from './columns/columnsSelCCDPSD';
-import { usePSD } from '../../../hook/usePSD';
-//* select icon
+
+//* icons
+
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+
+//* services (redux (slice and thunks))
 import {
   get_busqueda_ccds_psd,
   get_unidad_organizacional_ccd_psd
@@ -56,11 +57,11 @@ import {
   set_unidades_organizacionales_action
 } from '../../../toolkit/slice/PSDSlice';
 
-// ! modal seleccion y busqueda de ccd
+// ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const ModalSeleccionCCDPSD = (): JSX.Element => {
-  //* dispatch declaration
+  //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
-  //* context declaration
+  //* ---- context declaration ----
   const {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
@@ -70,7 +71,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
 
   const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);
 
-  // ! Hooks
+  // ! ---- HOOKS -----
   const { control_search_ccd_psd, reset_search_ccd_psd } = usePSD();
 
   const columns_ccds: GridColDef[] = [
@@ -79,8 +80,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
       headerName: 'Usado',
       field: 'usado',
       width: 80,
-      renderCell: (params: any) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      renderCell: (params: { row: { usado: boolean } }) => {
         return params.row.usado ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
         ) : (
@@ -92,9 +92,8 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
       headerName: 'Actual',
       field: 'is_actual',
       width: 80,
-      renderCell: (params: { row: { actual: null } }) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.actual !== false ? (
+      renderCell: (params: { row: { actual: boolean } }) => {
+        return params.row.actual ? (
           <Chip size="small" label="Si" color="info" variant="outlined" />
         ) : (
           <Chip size="small" label="No" color="warning" variant="outlined" />
@@ -105,7 +104,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
       headerName: 'Fecha terminado',
       field: 'fecha_terminado',
       width: 150,
-      renderCell: (params: any) => {
+      renderCell: (params: { row: { fecha_terminado: string } }) => {
         const date = new Date(params.row.fecha_terminado);
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
       }
@@ -133,6 +132,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                   dispatch(set_unidades_organizacionales_action(data));
                 });
 
+                // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
               }}
             >
@@ -163,7 +163,6 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         handleSeleccionCCD_PSD(false);
-        console.log('cerrando modal');
         dispatch(set_busqueda_ccds_action([]));
         reset_search_ccd_psd({ nombre: '', version: '' });
       }}
@@ -171,7 +170,6 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
       <DialogTitle>
         <Title title="Consultar los CCD's que coincidan con el criterio de búsqueda" />
       </DialogTitle>
-      {/*    <Divider /> */}
       <DialogContent sx={{ mb: '0px' }}>
         <Grid item xs={12}>
           <form
@@ -180,7 +178,6 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
               marginBottom: '20px'
             }}
             onSubmit={(e: any) => {
-              console.log('onSubmit');
               e.preventDefault();
               void get_busqueda_ccds_psd(
                 control_search_ccd_psd._formValues.nombre,
@@ -188,17 +185,11 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                 setLoadingButtonPSD
               ).then((data: any) => {
                 const sortedData = data.slice().sort((a: any, b: any) => {
-                  // Si hay un elemento con la propiedad "actual" en true, mostrarlo primero
-                  if (a.actual && !b.actual) {
-                    return -1;
-                  } else if (!a.actual && b.actual) {
-                    return 1;
-                  }
-
-                  // Si no hay un elemento con la propiedad "actual" en true, ordenar por fecha_terminado
-                  const dateA: any = new Date(a.fecha_terminado);
-                  const dateB: any = new Date(b.fecha_terminado);
-                  return dateA - dateB;
+                  return a.actual
+                    ? -1
+                    : b.actual
+                    ? 1
+                    : Number(new Date(a.fecha_terminado)) - Number(new Date(b.fecha_terminado));
                 });
                 dispatch(set_busqueda_ccds_action(sortedData));
               });
@@ -224,7 +215,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
-                        error != null
+                        error
                           ? 'Es obligatorio ingresar un nombre'
                           : 'Ingrese nombre'
                       }
@@ -252,7 +243,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
-                        error != null
+                        error
                           ? 'Es obligatorio ingresar una versión'
                           : 'Ingrese versión'
                       }
@@ -279,7 +270,6 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
         <ButtonGroup
           style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
         >
-          {/* reemplazar los espaciois por las respectivas columnas y filas */}
           {download_xls({ nurseries: ccdsBusqueda, columns: columns_ccds })}
           {download_pdf({
             nurseries: ccdsBusqueda,
@@ -321,9 +311,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
             onClick={() => {
               console.log('cerrando modal');
               handleSeleccionCCD_PSD(false);
-              /*
-              dispatch(get_ccds([]));
-              reset_search_ccd_psd({ nombre: '', version: '' }); */
+              reset_search_ccd_psd({ nombre: '', version: '' });
             }}
             startIcon={<CloseIcon />}
           >
