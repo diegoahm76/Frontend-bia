@@ -41,7 +41,12 @@ export const control_success = (message: ToastContent) =>
 export const get_finished_ccd_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('gestor/ccd/get-terminados/');
+      const { data } = await api.get('gestor/ccd/get-terminados/', {
+        params: {
+          limit: 1500,
+          offset: 0
+        }
+      });
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

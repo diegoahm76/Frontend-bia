@@ -383,6 +383,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
+                  type="number"
                     fullWidth
                     size="small"
                     label="Tiempo de retención archivo gestión"
@@ -398,6 +399,7 @@ export const FormTRDAdmin = (): JSX.Element => {
             <Grid item xs={12} sm={3}>
               <Controller
                 name="tiempo_retencion_ac"
+                
                 control={control_administrar_trd}
                 defaultValue=""
                 rules={{ required: true }}
@@ -406,6 +408,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
+                  type="number"
                     fullWidth           
                     size="small"
                     label="Tiempo de retención archivo central"

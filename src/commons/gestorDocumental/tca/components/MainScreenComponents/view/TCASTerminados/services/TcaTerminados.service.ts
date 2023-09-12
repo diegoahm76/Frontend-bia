@@ -12,8 +12,15 @@ import { type TcaTerminados } from '../types/modalTcaTerminados.types';
 export const getTcaTerminados = async (): Promise<any> => {
   try {
     const url = 'gestor/tca/tca-list/get/';
-    const { data } = await api.get(url);
-    const res = data.filter((item: TcaTerminados) => item.fecha_terminado);
+    const { data } = await api.get(url, {
+      params: {
+        limit: 1000,
+        offset: 0
+      }
+    });
+    const res = data?.results?.filter(
+      (item: TcaTerminados) => item.fecha_terminado
+    );
     res.length === 0
       ? control_warning(
           'No hay TCA terminados, por favor cree o finalice uno para continuar'

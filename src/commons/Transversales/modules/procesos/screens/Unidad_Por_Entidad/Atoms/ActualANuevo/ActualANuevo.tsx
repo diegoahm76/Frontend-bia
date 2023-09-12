@@ -85,11 +85,13 @@ export const ActualANuevo: FC = (): JSX.Element => {
           handleMood(true);
           // console.log(resOrganigramas);
           // console.log(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
+          console.log('resOrganigramas', resOrganigramas);
           const organigramaNecesario = resOrganigramas?.filter(
             (item: any) =>
               item?.id_organigrama ===
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
           );
+          console.log('organigramaNecesario', organigramaNecesario);
 
           setOrganigramasDisponibles(
             organigramaNecesario?.map((item: any) => ({
@@ -178,13 +180,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
                   // dispatch(setGridAnteriorAActual(dataMixed));
                 }
 
-
-
-
-
-
-
-
               //* se limpian las unidades seleccionadas al realizar un cambio de organigrama - analizar que tan viable es esta opción al momento en el que se deben traer los datos
 
               // ! ya se limpian las unidades al momento de ejecutar el guardar y el proceder, sin embargo, se debe analizar si de todas maneras es necesario manejar el limpiado cuando se monte el componente
@@ -208,7 +203,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
     void obtenerOrganigramas();
   }, []);
 
-  if (!organigramaActual[0]?.label || organigramasDisponibles.length === 0)
+  if (!organigramaActual[0]?.label || organigramasDisponibles?.length === 0)
     return (
       <Grid
         container

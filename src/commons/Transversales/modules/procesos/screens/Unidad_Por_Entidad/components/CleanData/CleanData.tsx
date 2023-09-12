@@ -57,15 +57,20 @@ export const CleanData: FC<any> = (): JSX.Element => {
     unidadesSeleccionadasAnteriorAActual,
     organigrama_current,
     gridAnteriorAActual,
-    asignacionConsultaTablaTemporal
+    // asignacionConsultaTablaTemporal
     /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
-  const { handleModalHistoricos, handleGridActualANuevo, handleMood /* setOrganigramasDisponibles */ } = useContext(ContextUnidadxEntidad);
+  const {
+    handleModalHistoricos,
+    handleGridActualANuevo,
+    handleMood /* setOrganigramasDisponibles */
+  } = useContext(ContextUnidadxEntidad);
 
   //* hook elements
-  const { setOrganigramaActual, setOrganigramasDisponibles } = use_u_x_entidad();
+  const { setOrganigramaActual, setOrganigramasDisponibles } =
+    use_u_x_entidad();
 
   const guardarRegistrosT026 = (): void => {
     console.log(unidadesSeleccionadas);
@@ -91,107 +96,111 @@ export const CleanData: FC<any> = (): JSX.Element => {
       unidadesSeleccionadasArray,
       setLoadingButton
     ).then(() => {
-      const obtenerOrganigramas = async (): Promise<any> => {
-        const organigramasActuales = await get_organigrama_acual(navigate);
-        setOrganigramaActual(
-          organigramasActuales?.map((item: any) => ({
-            label: item?.nombre,
-            value: item?.id_organigrama
-          }))
-        );
-
-        if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
-          void getOrganigramasDispobibles().then((resOrganigramas: any) => {
-            handleMood(true);
-
-            const organigramaNecesario = resOrganigramas?.filter(
-              (item: any) =>
-                item?.id_organigrama ===
-                asignacionConsultaTablaTemporal?.id_organigrama_nuevo
-            );
-
-            setOrganigramasDisponibles(
-              organigramaNecesario?.map((item: any) => ({
-                label: item?.nombre,
-                value: item?.id_organigrama
-              }))
-            );
-          });
-
-          dispatch(
-            set_current_id_organigrama(
-              asignacionConsultaTablaTemporal?.id_organigrama_nuevo
-            )
+      void consultarTablaTemporal().then((asignacionConsultaTablaTemporal) => {
+        console.log('asignacionTemporal', asignacionConsultaTablaTemporal)
+        const obtenerOrganigramas = async (): Promise<any> => {
+          const organigramasActuales = await get_organigrama_acual(navigate);
+          setOrganigramaActual(
+            organigramasActuales?.map((item: any) => ({
+              label: item?.nombre,
+              value: item?.id_organigrama
+            }))
           );
+          console.log('organigramasActuales', organigramasActuales);
+          if (asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo) {
+            void getOrganigramasDispobibles().then((resOrganigramas: any) => {
+              handleMood(true);
 
-          handleGridActualANuevo(true);
+              const organigramaNecesario = resOrganigramas?.filter(
+                (item: any) =>
+                  item?.id_organigrama ===
+                  asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+              );
 
-          void getListadoPersonasOrganigramaActual().then(
-            (resListaPersonas: any) => {
-              void getListaUnidadesOrganigramaSeleccionado(
-                asignacionConsultaTablaTemporal?.id_organigrama_nuevo
-              ).then((resListaUnidades) => {
-                const dataMixed = resListaPersonas?.data?.map((item: any) => {
-                  return {
-                    ...item,
-                    unidadesDisponiblesParaTraslado: resListaUnidades?.data
-                  };
-                });
+              console.log(organigramaNecesario);
 
-                const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
-                  (item: any) => {
+              setOrganigramasDisponibles(
+                organigramaNecesario?.map((item: any) => ({
+                  label: item?.nombre,
+                  value: item?.id_organigrama
+                }))
+              );
+            });
+
+            dispatch(
+              set_current_id_organigrama(
+                asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+              )
+            );
+
+            handleGridActualANuevo(true);
+
+            void getListadoPersonasOrganigramaActual().then(
+              (resListaPersonas: any) => {
+                void getListaUnidadesOrganigramaSeleccionado(
+                  asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+                ).then((resListaUnidades) => {
+                  const dataMixed = resListaPersonas?.data?.map((item: any) => {
                     return {
                       ...item,
                       unidadesDisponiblesParaTraslado: resListaUnidades?.data
                     };
-                  }
-                );
-
-                dispatch(setGridActualANuevo(dataMixed));
-                dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
-
-                const arraySinRepetidos = [...dataMixed2, ...dataMixed];
-
-                const elementosNoRepetidos =
-                  eliminarObjetosDuplicadosPorId(arraySinRepetidos);
-
-                if (elementosNoRepetidos.length === 0) {
-                  void Swal.fire({
-                    icon: 'warning',
-                    title: 'NO HAY PERSONAS PARA TRASLADAR',
-                    text:
-                      'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
-                    showCloseButton: false,
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                    cancelButtonText: 'Reiniciar módulo',
-                    confirmButtonText: 'Ir a administrador de personas',
-                    confirmButtonColor: '#042F4A',
-                    allowEscapeKey: false
-                  }).then((result: any) => {
-                    if (result.isConfirmed) {
-                      navigate('/app/transversal/administracion_personas');
-                    } else {
-                      window.location.reload();
-                    }
                   });
-                } else {
-                  dispatch(setGridActualANuevo(elementosNoRepetidos));
-                }
-              });
-            }
-          );
-        } else {
-          const organigramasDisponibles = await getOrganigramasDispobibles();
-          setOrganigramasDisponibles(
-            filtrarOrganigramas(organigramasDisponibles)
-          );
-          handleMood(false);
-        }
-      };
 
-      void obtenerOrganigramas();
+                  const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
+                    (item: any) => {
+                      return {
+                        ...item,
+                        unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                      };
+                    }
+                  );
+
+                  dispatch(setGridActualANuevo(dataMixed));
+                  dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
+
+                  const arraySinRepetidos = [...dataMixed2, ...dataMixed];
+
+                  const elementosNoRepetidos =
+                    eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+
+                  if (elementosNoRepetidos.length === 0) {
+                    void Swal.fire({
+                      icon: 'warning',
+                      title: 'NO HAY PERSONAS PARA TRASLADAR',
+                      text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
+                      showCloseButton: false,
+                      allowOutsideClick: false,
+                      showCancelButton: true,
+                      showConfirmButton: true,
+                      cancelButtonText: 'Reiniciar módulo',
+                      confirmButtonText: 'Ir a administrador de personas',
+                      confirmButtonColor: '#042F4A',
+                      allowEscapeKey: false
+                    }).then((result: any) => {
+                      if (result.isConfirmed) {
+                        navigate('/app/transversal/administracion_personas');
+                      } else {
+                        window.location.reload();
+                      }
+                    });
+                  } else {
+                    dispatch(setGridActualANuevo(elementosNoRepetidos));
+                  }
+                });
+              }
+            );
+          } else {
+            const organigramasDisponibles = await getOrganigramasDispobibles();
+            setOrganigramasDisponibles(
+              filtrarOrganigramas(organigramasDisponibles)
+            );
+            handleMood(false);
+          }
+        };
+
+        void obtenerOrganigramas();
+      });
     });
   };
 
