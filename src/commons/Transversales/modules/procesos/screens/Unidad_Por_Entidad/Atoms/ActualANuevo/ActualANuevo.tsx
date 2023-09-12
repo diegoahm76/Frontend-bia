@@ -40,7 +40,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal, mood /* organigrama_current */ } =
+  const { asignacionConsultaTablaTemporal, mood, controlFaseEntrada /* organigrama_current */ } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -200,7 +200,13 @@ export const ActualANuevo: FC = (): JSX.Element => {
     };
 
     void obtenerOrganigramas();
-  }, []);
+  }, [
+    dispatch,
+    navigate,
+    setOrganigramaActual,
+    setOrganigramasDisponibles,
+    asignacionConsultaTablaTemporal,
+  ]);
 
   if (!organigramaActual[0]?.label || organigramasDisponibles?.length === 0)
     return (
@@ -298,7 +304,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                     <div>
                       <Select
                         value={
-                          mood
+                          controlFaseEntrada === 2
                             ? organigramasDisponibles?.length > 0
                               ? {
                                   label: organigramasDisponibles[0]?.label,
@@ -307,7 +313,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                               : value
                             : value
                         }
-                        isDisabled={mood}
+                        isDisabled={controlFaseEntrada === 2}
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
