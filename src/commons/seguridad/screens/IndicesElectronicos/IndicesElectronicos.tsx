@@ -60,7 +60,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         }
       });
       console.log('response', response);
-      const newData = response?.data?.results?.map((item: any) => {
+      const newData = response?.data?.map((item: any) => {
         const { id_ccd } = item;
         return {
           ...item,

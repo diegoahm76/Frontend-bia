@@ -79,9 +79,9 @@ export const get_organigrama_acual = async (navigate: any): Promise<any> => {
 export const getOrganigramasDispobibles = async (): Promise<any> => {
   try {
     const url = `transversal/organigrama/get-terminados/`;
-    const { data } = await api.get(url, { params: { limit: 1500 } });
+    const { data } = await api.get(url);
     console.log('dataaaaaaaaa', data);
-    const dataToReturn = data?.results?.filter(
+    const dataToReturn = data?.filter(
       (el: any) => el.fecha_terminado && !el.fecha_retiro_produccion
     );
     return dataToReturn;

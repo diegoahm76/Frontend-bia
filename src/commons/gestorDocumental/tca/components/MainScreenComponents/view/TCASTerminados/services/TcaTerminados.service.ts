@@ -18,7 +18,7 @@ export const getTcaTerminados = async (): Promise<any> => {
         offset: 0
       }
     });
-    const res = data?.results?.filter(
+    const res = data?.filter(
       (item: TcaTerminados) => item.fecha_terminado
     );
     res.length === 0

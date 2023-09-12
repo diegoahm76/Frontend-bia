@@ -21,7 +21,7 @@ export const get_finished_ccd_service = (): ((
         '🚀 ~ file: getFinishedCcdThunks.ts ~ line 31 ~ return ~ data ccd terminados',
         data
       ); */
-      dispatch(get_finished_ccds(data?.results));
+      dispatch(get_finished_ccds(data));
       return data;
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail);

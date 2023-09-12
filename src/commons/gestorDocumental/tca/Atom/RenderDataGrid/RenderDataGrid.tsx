@@ -41,11 +41,11 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                   rows={rows}
                   columns={columns}
 
-                  pageSize={9}
+                  pageSize={10}
                   rowHeight={75}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={(row: any) => uuidv4()}
                 />
               </Box>
             </Grid>

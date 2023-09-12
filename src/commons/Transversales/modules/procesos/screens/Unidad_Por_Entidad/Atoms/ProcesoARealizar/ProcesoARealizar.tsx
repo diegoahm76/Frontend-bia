@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { useEffect, type FC, useContext } from 'react';
+import { useEffect, type FC, useContext, useState } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
 import { Grid } from '@mui/material';
@@ -22,7 +22,7 @@ import {
   setUnidadesSeleccionadas
 } from '../../toolkit/UxE_slice/UxE_slice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-// import CleanIcon from '@mui/icons-material/CleaningServices';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
 
 export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -39,15 +39,18 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   //* context necesario
 
   const { handleGridActualANuevo } = useContext(
-
     ContextUnidadxEntidad
   );
+
+  //* estados necesarios para el manejo de la aplicación
+  const [cargaApp, setCargaApp] = useState<boolean>(false)
 
   useEffect(() => {
     console.log('use_u_x_entidad');
 
+    setCargaApp(true)
     void consultarTablaTemporal().then(
-
+      
       (resTablaTemporal: any) => {
         console.log(resTablaTemporal);
 
@@ -118,7 +121,10 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         // ! 2.1. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama actual se debe seleccionar la opción de "traslado de unidad organizacional de organigrama actual a nuevo"
         // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
       }
-    );
+    ).finally(() => {
+      console.log('finally');
+      setCargaApp(false)
+    });
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -145,6 +151,22 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
       }
     ];
   }
+
+
+  if (cargaApp) {
+    return <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+  }
+
 
   return (
     <>

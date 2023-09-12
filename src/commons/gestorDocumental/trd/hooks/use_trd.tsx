@@ -156,7 +156,7 @@ export const use_trd = (): any => {
   useEffect(() => {
     void dispatch(get_finished_ccd_service()).then((res: any) => {
       set_list_finished_ccd(
-        res?.results
+        res
           .filter((cdd: any) => cdd.usado === false)
           .map((item: any) => {
             return {

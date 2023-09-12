@@ -59,13 +59,12 @@ export const ActualANuevo: FC = (): JSX.Element => {
     ContextUnidadxEntidad
   );
 
-
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
     //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
-     // console.log('res', organigramasActuales);
+     console.log('res', organigramasActuales);
       setOrganigramaActual(
         organigramasActuales?.map((item: any) => ({
           label: item?.nombre,
@@ -194,8 +193,9 @@ export const ActualANuevo: FC = (): JSX.Element => {
       } else {
         const organigramasDisponibles = await getOrganigramasDispobibles();
         setOrganigramasDisponibles(
-          filtrarOrganigramas(organigramasDisponibles)
+          filtrarOrganigramas(organigramasDisponibles, navigate)
         );
+        console.log('organigramasDisponibles', organigramasDisponibles);
         handleMood(false);
       }
     };
@@ -203,7 +203,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
     void obtenerOrganigramas();
   }, []);
 
-  if (!organigramaActual[0]?.label || organigramasDisponibles?.length === 0)
+/*  if (!organigramaActual[0]?.value || organigramasDisponibles?.length === 0)
     return (
       <Grid
         container
@@ -217,7 +217,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
         <Loader altura={150} />
       </Grid>
     );
-
+*/
   return (
     <>
       <Grid container sx={containerStyles}>
