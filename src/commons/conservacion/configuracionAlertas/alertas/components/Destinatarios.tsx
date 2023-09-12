@@ -73,11 +73,12 @@ export const Destinatarios: React.FC = () => {
                   params.row.id_persona_alertar
                 );
               }}
+              disabled={params.row.perfil_sistema === 'CViv'}
             >
               <DeleteIcon
                 titleAccess="Eliminar elemento"
                 sx={{
-                  color: 'red',
+                  color: params.row.perfil_sistema === 'CViv' ? 'gray' : 'red',
                   width: '18px',
                   height: '18px',
                 }}
@@ -279,7 +280,7 @@ export const Destinatarios: React.FC = () => {
                           marginLeft: '0.25rem',
                         }}
                       >
-                        Perfiles del sistemas
+                        Perfiles del sistema
                       </small>
                     </label>
                   </div>

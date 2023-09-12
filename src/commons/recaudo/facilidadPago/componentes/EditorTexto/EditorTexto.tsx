@@ -7,10 +7,12 @@ export const EditorTexto: React.FC = () => {
 
   return (
     <CKEditor
+    // @ts-ignore
       editor={ ClassicEditor }
       data="<p></p>"
       onChange={ ( event, editor ) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // @ts-ignore
         const data = editor.getData();
       } }
       config={ {
