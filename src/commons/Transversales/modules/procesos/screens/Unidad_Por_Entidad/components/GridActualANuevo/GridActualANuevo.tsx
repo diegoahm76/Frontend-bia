@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC /* useState */ } from 'react';
+import { type FC, useEffect } from 'react';
 import { RenderDataGrid } from './../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { colOrgActANuevo } from './columns/collOrgActANuevo';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
@@ -18,9 +19,11 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* use states redux declaration
-  const { gridActualANuevo, unidadesSeleccionadas } = useAppSelector(
-    (state) => state.u_x_e_slice
-  );
+  const {
+    gridActualANuevo,
+    unidadesSeleccionadas,
+    asignacionConsultaTablaTemporal
+  } = useAppSelector((state) => state.u_x_e_slice);
 
   //* hook use_x_entidad
 
@@ -53,8 +56,8 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <>
           <div
-            style = {{
-              zIndex: 999999,
+            style={{
+              zIndex: 999999
             }}
           >
             <Select
@@ -63,7 +66,9 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
                   ...provided,
                   width: '200px',
                   height: '30px',
+
                   zIndex: 999999,
+
                   borderRadius: '5px'
                 })
               }}
@@ -111,6 +116,39 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       )
     }
   ];
+
+  useEffect(() => {
+    if (asignacionConsultaTablaTemporal) {
+      console.log(
+        'resultados consulta tabla temporal',
+        asignacionConsultaTablaTemporal
+      );
+    }
+
+    if (gridActualANuevo) {
+      console.log('gridActualANuevo', gridActualANuevo);
+
+      const unidadesSeleccionadasTemp = gridActualANuevo
+        ?.filter((persona: any) => {
+          return persona?.nombre_nueva_unidad_organizacional;
+        })
+        .reduce((unidadesSeleccionadasObj: any, persona: any) => {
+          const unidadSeleccionada = {
+            value: persona.id_nueva_unidad_organizacional,
+            label: persona.nombre_nueva_unidad_organizacional,
+            idPersona: persona.id_persona
+          };
+          return {
+            ...unidadesSeleccionadasObj,
+            [persona.id_persona]: unidadSeleccionada
+          };
+        }, {});
+
+      dispatch(setUnidadesSeleccionadas(unidadesSeleccionadasTemp));
+
+      console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
+    }
+  }, [gridActualANuevo]);
 
   if (gridActualANuevo.length === 0)
     return (

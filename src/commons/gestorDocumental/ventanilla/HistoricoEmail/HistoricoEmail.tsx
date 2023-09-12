@@ -112,7 +112,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
         maxWidth={'lg'}
       >
         <DialogTitle>
-          <Title title="HISTORICO DE CAMBIOS E-MAIL" />
+          <Title title="Histórico de cambios e-mail" />
         </DialogTitle>
         <Divider />
         <Grid

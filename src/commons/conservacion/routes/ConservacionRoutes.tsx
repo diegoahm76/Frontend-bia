@@ -10,6 +10,7 @@ import { ProduccionRoutes } from '../produccion/routes/ProduccionRoutes';
 import { SolicitudMaterialRoutes } from '../solicitudMaterial/routes/SolucitudMaterialRoutes';
 import { DashBoardViverosRoutes } from '../dashBoardViveros/routes/DashBoardViverosRoutes';
 import { ReportesRoutes } from '../Reportes/routes/ReportesRoutes';
+import { AlertasConservacionRoutes } from '../configuracionAlertas/alertas/router/AlertasRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConservacionRoutes: React.FC = () => {
@@ -27,6 +28,7 @@ export const ConservacionRoutes: React.FC = () => {
         element={<SolicitudMaterialRoutes />}
       />
       <Route path="tablero_control/*" element={<DashBoardViverosRoutes />} />
+      <Route path="alertas/*" element={<AlertasConservacionRoutes />} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>

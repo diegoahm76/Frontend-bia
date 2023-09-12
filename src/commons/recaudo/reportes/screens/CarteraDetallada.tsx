@@ -20,7 +20,7 @@ export const CarteraDetallada: React.FC = () => {
 
   return (
     <>
-      <Title title='Reporte General de Cartera con Detalle'/>
+      {/* <Title title=''/> */}
       <Grid
         container
         sx={{
@@ -34,6 +34,9 @@ export const CarteraDetallada: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
+          <Title title={`Reporte General de Cartera con Detalle `} />
+        </Grid>
+        <Grid item  marginTop={2} xs={12}>
           <Box
             component="form"
             noValidate

@@ -851,6 +851,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
                     onChange={(event, value, reason, details) => {
                       handle_change_autocomplete_edit(
                         event,
+                        // @ts-ignore
                         value,
                         reason,
                         details

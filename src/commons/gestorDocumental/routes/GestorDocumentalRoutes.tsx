@@ -15,6 +15,9 @@ import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasC
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 // import { Suspense } from 'react';
 // import { Loader } from '../../../utils/Loader/Loader';
+import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
+import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
+import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 
 const routes = [
   {
@@ -76,8 +79,23 @@ const routes = [
     name: 'plantilladocumentos',
     component: () => <AdministracionPlantillaDocumentos_Routes />,
   },
-];
+  {
+    path: 'encuesta_configuracion/',
+    name: 'encuesta_configuracion',
+    component: () => <Confi_Encuasta_Routes />,
+  },
+  {
+    path: 'encuesta_datos/',
+    name: 'encuesta_datos',
+    component: () => <InfoEncuesta />,
+  },
+  {
+    path: 'encuesta/',
+    name: 'encuesta',
+    component: () => <Encuasta_Routes />,
+  },
 
+];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

@@ -44,7 +44,7 @@ import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotif
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 import type { AxiosError } from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
-
+import SaveIcon from '@mui/icons-material/Save';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
   data,
@@ -783,7 +783,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
             {/* Autorización de notificación y tratamiento de datos */}
             <Grid container spacing={2} mt={0.1}>
               <Grid item xs={12}>
-                <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
+                <Title title="Autorización de notificaciones" />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
@@ -819,7 +819,8 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                   spacing={2}
                 >
                   <Button
-                    variant="outlined"
+                   variant="outlined"
+                    color='warning'
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_dialog_autorizacion();
@@ -867,6 +868,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                           />
                         )}
                         {...register('datos_clasificacion_persona')}
+                        // @ts-ignore
                         onChange={handle_change_autocomplete}
                       />
                     </Grid>
@@ -884,6 +886,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                     type="submit"
                     variant="contained"
                     fullWidth
+                    startIcon={<SaveIcon />}
                     color="success"
                     loading={loading}
                     disabled={loading}

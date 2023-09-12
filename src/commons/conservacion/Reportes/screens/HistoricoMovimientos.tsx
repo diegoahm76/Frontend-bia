@@ -18,6 +18,7 @@ import { logo_cormacarena_h } from "../logos/logos";
 import BuscarPlantas from "./BuscarPlantas";
 import { historico_bajas, historico_cambios_etapa, historico_distribuciones, historico_ingreso_cuarentena, historico_levantamiento_cuarentena, historico_siembras, historico_traslados } from "../thunks/HistoricoMovimientos";
 import { DialogNoticacionesComponent } from "../../../../components/DialogNotificaciones";
+import ReportesXLS from "./reportesXLS";
 
 const lista_reporte = [{ name: 'Movimientos de Bajas de Herramientas, Insumos y Semillas', value: 'MHIS' }, { name: 'Distribución de Despachos Entrantes a Viveros', value: 'DDEV' }, { name: 'Registros de Siembras', value: 'RES' }, { name: 'Cambio de Etapa de Material Vegetal', value: 'CEMV' }, { name: 'Ingreso a Cuarentena de Material Vegeta', value: 'ICMV' }, { name: 'Levantamiento de Cuarentena de Material Vegetal', value: 'LCMV' }, { name: 'Traslados Entre Viveros', value: 'TEV' }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -667,7 +668,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 }}
             >
                 <Grid item md={12} xs={12}>
-                    <Title title="Filtros de búsqueda" />
+                    <Title title="Histórico de movimientos por módulo" />
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={6}>
@@ -814,9 +815,11 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     </Box>
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={10}>
                                 <Stack
                                     direction="row"
+                                    marginLeft={21}
+                                    
                                     justifyContent="center"
                                     spacing={2}>
                                     <Button
@@ -828,6 +831,19 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                     </Button>
                                 </Stack>
                             </Grid>
+                            <Grid item xs={1}>
+                   
+                        <Button
+                            color='error'
+
+                            variant='contained'
+                            startIcon={<ClearIcon />}
+                            onClick={salir_entrada}
+                        >
+                            Salir
+                        </Button>
+                   
+                </Grid>
                         </Grid>
                     </Box>
                 </Grid>
@@ -845,7 +861,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
             >
                 <Grid container justifyContent="flex-end">
                     <Grid item xs={12}>
-                        <Box
+                        {/* <Box
                             component="form"
                             sx={{ mb: '20px' }}
                             noValidate
@@ -872,7 +888,8 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                                     </Button>
                                 </Stack>
                             </Grid>
-                        </Box>
+                        </Box> */}
+                        <ReportesXLS doc={doc} titulo_reporte={titulo_reporte} reporte={reporte} tipo_reporte={seleccion_reporte}></ReportesXLS>
                         <Box
                             component="form"
                             noValidate
@@ -883,7 +900,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>}
-            <Grid container justifyContent="flex-end">
+            {/* <Grid container justifyContent="flex-end">
                 <Grid item xs={7}>
                     <Stack
                         direction="row"
@@ -901,15 +918,9 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                         </Button>
                     </Stack>
                 </Grid>
-            </Grid>
-            {dialog_notificaciones_is_active && (
-                <DialogNoticacionesComponent
-                    titulo_notificacion={titulo_notificacion}
-                    abrir_modal={abrir_modal}
-                    tipo_notificacion={tipo_notificacion}
-                    mensaje_notificacion={mensaje_notificacion}
-                    abrir_dialog={set_abrir_modal} />
-            )}
+
+            </Grid> */}
+
         </>
     );
 }

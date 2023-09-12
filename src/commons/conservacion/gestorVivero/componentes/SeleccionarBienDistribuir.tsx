@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useForm } from 'react-hook-form';
 import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
@@ -46,25 +47,26 @@ const SeleccionarBienDistribuir = () => {
     items_distribuidos,
     nurseries,
     current_bien,
+    realizar_despacho_manual,
   } = useAppSelector((state) => state.nursery);
   const dispatch = useAppDispatch();
 
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
-    {
-      field: 'codigo_bien',
-      headerName: 'Código',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
+    // {
+    //   field: 'codigo_bien',
+    //   headerName: 'Código',
+    //   width: 200,flex: 1,
+    //   renderCell: (params) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       {params.value}
+    //     </div>
+    //   ),
+    // },
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -74,7 +76,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'cantidad_entrante',
       headerName: 'Cantidad entrante',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -94,7 +96,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'cantidad_restante',
       headerName: 'Cantidad restante',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -104,7 +106,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'tipo_documento',
       headerName: 'Tipo de documento',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -114,11 +116,11 @@ const SeleccionarBienDistribuir = () => {
   ];
 
   const columns_bienes_distribuidos: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -128,7 +130,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -138,7 +140,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'cantidad_asignada',
       headerName: 'Cantidad asignada',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -148,7 +150,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'vivero_nombre',
       headerName: 'Vivero',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -158,7 +160,7 @@ const SeleccionarBienDistribuir = () => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 90,
+      width: 90,flex: 1,
       renderCell: (params) => (
         <>
           {current_despacho.distribucion_confirmada === false && (
@@ -323,7 +325,7 @@ const SeleccionarBienDistribuir = () => {
         } else {
           control_error(
             'La cantidad asignada debe ser máximo ' +
-              String(current_bien.cantidad_restante)
+            String(current_bien.cantidad_restante)
           );
         }
       } else {
@@ -382,7 +384,7 @@ const SeleccionarBienDistribuir = () => {
 
   return (
     <>
-      <Grid container direction="row" padding={2} borderRadius={2}>
+      {(realizar_despacho_manual.realizar_despacho_manual || current_despacho.id_vivero_solicita === null) && <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_current_bien}
           row_id={'id_item_despacho_entrante'}
@@ -500,7 +502,7 @@ const SeleccionarBienDistribuir = () => {
           modal_form_filters={[]}
           title_table_modal="Lista de bienes en despacho"
         />
-      </Grid>
+      </Grid>}
     </>
   );
 };

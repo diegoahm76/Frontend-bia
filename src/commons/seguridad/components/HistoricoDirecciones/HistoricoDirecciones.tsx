@@ -146,7 +146,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="HISTORICO DE CAMBIOS DIRECCIONES" />
+                    <Title title="Histórico de cambios direcciones" />
                 </DialogTitle>
                 <Divider />
                 <Grid
@@ -211,7 +211,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                             spacing={1}
                         >
                             <Button
-                                variant="outlined"
+                                variant="contained"
                                 color="error"
                                 // eslint-disable-next-line react/jsx-no-undef
                                 startIcon={<CancelIcon />}

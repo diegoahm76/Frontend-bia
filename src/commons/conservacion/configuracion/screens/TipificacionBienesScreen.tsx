@@ -50,11 +50,11 @@ export function TipificacionBienesScreen(): JSX.Element {
   const [filterednurseries, setfilterednurseries] = useState<any[]>(bienes);
 
   const columns: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -64,7 +64,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'nombre_cientifico',
       headerName: 'Nombre científico',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === null ? 'Sin definir' : params.value}
@@ -74,7 +74,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'cod_tipo_elemento_vivero',
       headerName: 'Tipo de elemento',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value === null ? 'Sin definir' : params.value}
@@ -84,7 +84,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'es_semilla_vivero',
       headerName: '¿Semilla?',
-      width: 100,
+      width: 100,flex: 1,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.cod_tipo_elemento_vivero === 'MV' ? (
@@ -101,7 +101,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 100,
+      width: 100,flex: 1,
       renderCell: (params) => (
         <>
           <Tooltip title="Detalle">
@@ -178,6 +178,8 @@ export function TipificacionBienesScreen(): JSX.Element {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
+          marginTop:"20px",
+          marginLeft:"-2px",
           boxShadow: '0px 3px 6px #042F4A26',
         }}
         spacing={2}

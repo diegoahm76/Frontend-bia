@@ -236,7 +236,8 @@ export function TrasladoScreen(): JSX.Element {
                 variant_button="contained"
                 on_click_function={handle_submit(on_submit)}
                 icon_class={<SaveIcon />}
-                label={action}
+                // label={action}
+                label={'guardar' ?? action}
                 type_button="button"
               />
             </Grid>
@@ -256,7 +257,7 @@ export function TrasladoScreen(): JSX.Element {
               dispatch={dispatch}
               reset_state={reset_state}
               set_initial_values={initial_values}
-              variant_button={'contained'}
+              variant_button={'outlined'}
             />
           </Grid>
           {current_transfer.id_traslado !== null && (

@@ -354,7 +354,7 @@ const CrearSeriesCcdDialog = ({
         >
           <Button
             color="error"
-            variant="outlined"
+            variant="contained"
             onClick={() => {
               set_is_modal_active(false);
             }}

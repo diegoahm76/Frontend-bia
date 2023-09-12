@@ -6,7 +6,7 @@ import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 
 import { useAppDispatch } from '../../../../hooks';
-
+import { format } from 'date-fns';
 import {
   initial_state_despacho,
   set_current_despacho,
@@ -47,7 +47,7 @@ const SeleccionarDespacho = ({
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(params.value).toDateString()}
+          {format(new Date(params.value), 'dd-MM-yyyy')}
         </div>
       ),
     },
@@ -70,7 +70,7 @@ const SeleccionarDespacho = ({
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value === null ? '-' : new Date(params.value).toDateString()}
+          {params.value === null ? '-' : format(new Date(params.value), 'dd-MM-yyyy')}
         </div>
       ),
     },

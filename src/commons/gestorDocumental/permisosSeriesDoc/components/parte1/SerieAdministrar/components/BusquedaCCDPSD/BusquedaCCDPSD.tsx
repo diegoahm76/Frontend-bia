@@ -49,16 +49,6 @@ export const BusquedaCCDPSD: FC<any> = (): JSX.Element => {
         >
           BUSCAR
           </Button>
-          <Button
-          color="primary"
-          variant="contained"
-          startIcon={<SearchIcon />}
-          onClick={() => {
-            handleSeleccionCCD_PSD(true);
-          }}
-        >
-          BUSCAR
-          </Button>
       </Grid>
     </>
   );

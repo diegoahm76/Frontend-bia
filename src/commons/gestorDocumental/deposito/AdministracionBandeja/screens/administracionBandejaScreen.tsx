@@ -129,9 +129,9 @@ const AdministrarBandejaScreen = () => {
         set_selected_bandeja(initial_state_bandeja);
         set_action("Guardar");
         console.log(deposito_estante)
-        void dispatch(get_bandejas_id(deposito_estante.id_estante_deposito))
-    };
 
+    };
+    void dispatch(get_bandejas_id(deposito_estante.id_estante_deposito))
 
     const on_submit_elimnar = (data: IObjBandeja): void => {
 

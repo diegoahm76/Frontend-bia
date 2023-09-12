@@ -176,7 +176,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="HISTORICO DE AUTORIZACIÓN DE NOTIFICACIONES" />
+                    <Title title="Historico de autorización de notificaciones" />
                 </DialogTitle>
                 <Divider />
                 <Grid
@@ -242,7 +242,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                             spacing={1}
                         >
                             <Button
-                                variant="outlined"
+                                variant="contained"
                                 color="error"
                                 // eslint-disable-next-line react/jsx-no-undef
                                 startIcon={<CancelIcon />}

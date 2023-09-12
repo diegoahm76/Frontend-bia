@@ -159,7 +159,10 @@ const BuscarPlantas = (props: IProps) => {
         props.set_is_modal_active(false);
       }}
     >
-      <DialogTitle>{props.title}</DialogTitle>
+       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+                    <Title title={`${props.title}`} />
+                </Grid>
+      <DialogTitle> </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box

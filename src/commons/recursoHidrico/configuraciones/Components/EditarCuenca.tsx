@@ -96,12 +96,12 @@ export const ActualizarCuenca: React.FC<IProps> = ({
   return (
     <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-        
-  <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
           <Title title="Editar Cuenca" />
         </Grid>
 
-        <DialogTitle>Editar Cuenca</DialogTitle>
+        <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={1}>

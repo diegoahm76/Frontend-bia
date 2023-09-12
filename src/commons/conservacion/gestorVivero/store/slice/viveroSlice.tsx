@@ -11,8 +11,10 @@ import {
   type IObjGenerarBaja,
   type IObjBienBaja,
   type IObjBien,
+  type IObjDespacho,
 } from '../../interfaces/vivero';
 import { type Persona } from '../../../../../interfaces/globalModels';
+
 
 export const initial_state_current_nursery = {
   id_vivero: null,
@@ -155,6 +157,10 @@ const initial_state_person: Persona = {
   nombre_comercial: '',
 };
 
+export const despacho_manual_state: IObjDespacho = {
+  realizar_despacho_manual: false
+};
+
 const initial_state: INursery = {
   nurseries: [],
   current_nursery: initial_state_current_nursery,
@@ -178,6 +184,7 @@ const initial_state: INursery = {
   insumos_aux: [],
   current_insumo: initial_state_current_insumo,
   persona: initial_state_person,
+  realizar_despacho_manual: despacho_manual_state
 };
 
 export const nursery_slice = createSlice({
@@ -312,6 +319,9 @@ export const nursery_slice = createSlice({
     set_persona: (state: INursery, action: PayloadAction<Persona>) => {
       state.persona = action.payload;
     },
+    set_despacho_manual: (state: INursery, action: PayloadAction<IObjDespacho>) => {
+      state.realizar_despacho_manual = action.payload;
+    },
   },
 });
 export const {
@@ -341,4 +351,5 @@ export const {
   set_persona,
   reset_state,
   set_insumos_aux,
+  set_despacho_manual,
 } = nursery_slice.actions;

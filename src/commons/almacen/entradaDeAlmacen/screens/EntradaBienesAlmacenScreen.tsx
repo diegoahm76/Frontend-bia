@@ -1010,7 +1010,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               sx={{ mt: '20px' }}
             >
               <Button
-                color='primary'
+                color='success'
                 variant='contained'
                 startIcon={<SaveIcon />}
                 onClick={guardar_entrada}
@@ -1030,15 +1030,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 set_is_modal_active={set_anular_entrada_is_active}
                 title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
               <Button
-                color='inherit'
-                variant="contained"
+                // color='inherit'
+                variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={limpiar_formulario}
               >
                 Limpiar
               </Button>
               <Button
-                color='secondary'
+                color='primary'
                 variant='contained'
                 startIcon={<SearchIcon />}
                 onClick={() => { set_buscar_entrada_is_active(true) }}
@@ -1051,8 +1051,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 tipos_entrada={tipos_entrada}
                 set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
               <Button
-                color='secondary'
-                variant='contained'
+                // color='secondary'
+                variant='outlined'
                 startIcon={<PrintIcon />}
                 onClick={() => { window.print() }}
               >

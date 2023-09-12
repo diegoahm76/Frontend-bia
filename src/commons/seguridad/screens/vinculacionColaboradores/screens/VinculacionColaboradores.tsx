@@ -520,7 +520,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                             sx={{ mt: '20px' }}
                         >
                             <Button
-                                color='primary'
+                                color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
                                 onClick={guardar_vinculacion}
