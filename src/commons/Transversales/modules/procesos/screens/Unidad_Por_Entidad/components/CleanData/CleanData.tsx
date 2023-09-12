@@ -193,7 +193,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
           } else {
             const organigramasDisponibles = await getOrganigramasDispobibles();
             setOrganigramasDisponibles(
-              filtrarOrganigramas(organigramasDisponibles)
+              filtrarOrganigramas(organigramasDisponibles, navigate)
             );
             handleMood(false);
           }

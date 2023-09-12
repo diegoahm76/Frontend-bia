@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useContext, useEffect, useState } from 'react';
-// Components Material UI
+//* Components Material UI
 import {
   Grid,
   Box,
@@ -37,14 +37,12 @@ import {
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
-import { get_ccd_current } from '../store/slices/ccdSlice';
 import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 import { gridStyles } from './utils/constants';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalContext } from '../context/ModalContext';
 import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/CatalogoSeriesYSubseries';
 import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
-// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -55,9 +53,13 @@ import { control_warning } from '../../../almacen/configuracion/store/thunks/Bod
 import { FILEWEIGHT } from '../../../../fileWeight/fileWeight';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CcdScreen: React.FC = () => {
+export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
+  //* navigate declaration
+  const navigate = useNavigate();
+
   const {
     openModalModalSeriesAndSubseries,
     busquedaCreacionCCDModal,
@@ -247,6 +249,7 @@ export const CcdScreen: React.FC = () => {
                   }) => (
                     <TextField
                       // margin="dense"
+                      required
                       fullWidth
                       disabled={ccd_current?.actual}
                       size="small"
@@ -267,7 +270,7 @@ export const CcdScreen: React.FC = () => {
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
+                          : 'Ingrese nombre*'
                       }
                     />
                   )}
@@ -284,6 +287,7 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
+                      required
                       fullWidth
                       disabled={ccd_current?.actual}
                       size="small"
@@ -304,7 +308,7 @@ export const CcdScreen: React.FC = () => {
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar una versión'
-                          : 'Ingrese versión'
+                          : 'Ingrese versión*'
                       }
                     />
                   )}
@@ -322,6 +326,7 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
+                      required
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
@@ -343,7 +348,7 @@ export const CcdScreen: React.FC = () => {
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un valor de aumento de serie'
-                          : 'Ingrese valor aumento series'
+                          : 'Ingrese valor aumento series*'
                       }
                     />
                   )}
@@ -361,6 +366,7 @@ export const CcdScreen: React.FC = () => {
                     fieldState: { error }
                   }) => (
                     <TextField
+                      required
                       fullWidth
                       size="small"
                       label="valor aumento subseries CCD"
@@ -376,7 +382,7 @@ export const CcdScreen: React.FC = () => {
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un valor de aumento de subserie'
-                          : 'Ingrese valor aumento subseries'
+                          : 'Ingrese valor aumento subseries*'
                       }
                     />
                   )}
@@ -869,11 +875,22 @@ export const CcdScreen: React.FC = () => {
               <Grid item>
                 <Box sx={{ width: '100%' }}>
                   <ButtonGroup
-                    style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                    style={{
+                      margin: 7,
+                      display: 'flex',
+                      justifyContent: 'flex-end'
+                    }}
                   >
-                    {download_xls({ nurseries: assignments_ccd, columns: columns_asignacion })}
-                    {download_pdf({ nurseries: assignments_ccd, columns: columns_asignacion, title: 'Actividades' })}
-                  </ButtonGroup> 
+                    {download_xls({
+                      nurseries: assignments_ccd,
+                      columns: columns_asignacion
+                    })}
+                    {download_pdf({
+                      nurseries: assignments_ccd,
+                      columns: columns_asignacion,
+                      title: 'Actividades'
+                    })}
+                  </ButtonGroup>
                   <DataGrid
                     density="compact"
                     autoHeight

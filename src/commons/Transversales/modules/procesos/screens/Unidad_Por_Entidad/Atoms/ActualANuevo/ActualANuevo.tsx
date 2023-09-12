@@ -40,7 +40,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal, /* organigrama_current */ } =
+  const { asignacionConsultaTablaTemporal /* organigrama_current */ } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -55,16 +55,15 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
   //* context necesario
 
-  const { gridActualANuevo, handleGridActualANuevo, handleMood, mood } = useContext(
-    ContextUnidadxEntidad
-  );
+  const { gridActualANuevo, handleGridActualANuevo, handleMood, mood } =
+    useContext(ContextUnidadxEntidad);
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
     //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
-     console.log('res', organigramasActuales);
+      console.log('res', organigramasActuales);
       setOrganigramaActual(
         organigramasActuales?.map((item: any) => ({
           label: item?.nombre,
@@ -140,44 +139,40 @@ export const ActualANuevo: FC = (): JSX.Element => {
               // ! se realiza nueva asignacion a al data de la tabla tempora
               dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
 
-                // ? se realiza el mixing de los componentes para evitar los elementos repetidos y si los hay se sobreponene con el valor de aquellos que vienen en la tabla temporal t026
+              // ? se realiza el mixing de los componentes para evitar los elementos repetidos y si los hay se sobreponene con el valor de aquellos que vienen en la tabla temporal t026
 
+              const arraySinRepetidos = [...dataMixed2, ...dataMixed];
 
-                const arraySinRepetidos = [
-                  ...dataMixed2,
-                  ...dataMixed
-                ];
+              // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
 
-                // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
+              const elementosNoRepetidos =
+                eliminarObjetosDuplicadosPorId(arraySinRepetidos);
 
-                const elementosNoRepetidos =
-                  eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+              if (elementosNoRepetidos.length === 0) {
+                void Swal.fire({
+                  icon: 'warning',
+                  title: 'NO HAY PERSONAS PARA TRASLADAR',
+                  text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
+                  showCloseButton: false,
+                  allowOutsideClick: false,
+                  showCancelButton: true,
+                  showConfirmButton: true,
+                  cancelButtonText: 'Reiniciar módulo',
+                  confirmButtonText: 'Ir a administrador de personas',
+                  confirmButtonColor: '#042F4A',
 
-               if (elementosNoRepetidos.length === 0) {
-                  void Swal.fire({
-                    icon: 'warning',
-                    title: 'NO HAY PERSONAS PARA TRASLADAR',
-                    text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
-                    showCloseButton: false,
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                    cancelButtonText: 'Reiniciar módulo',
-                    confirmButtonText: 'Ir a administrador de personas',
-                    confirmButtonColor: '#042F4A',
-
-                    allowEscapeKey: false
-                  }).then((result: any) => {
-                    if (result.isConfirmed) {
-                      navigate('/app/transversal/administracion_personas');
-                    } else {
-                      window.location.reload();
-                    }
-                  });
-                } else {
-                  dispatch(setGridActualANuevo(elementosNoRepetidos));
-                  // dispatch(setGridAnteriorAActual(dataMixed));
-                }
+                  allowEscapeKey: false
+                }).then((result: any) => {
+                  if (result.isConfirmed) {
+                    navigate('/app/transversal/administracion_personas');
+                  } else {
+                    window.location.reload();
+                  }
+                });
+              } else {
+                dispatch(setGridActualANuevo(elementosNoRepetidos));
+                // dispatch(setGridAnteriorAActual(dataMixed));
+              }
 
               //* se limpian las unidades seleccionadas al realizar un cambio de organigrama - analizar que tan viable es esta opción al momento en el que se deben traer los datos
 
@@ -203,7 +198,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
     void obtenerOrganigramas();
   }, []);
 
-/*  if (!organigramaActual[0]?.value || organigramasDisponibles?.length === 0)
+  if (!organigramaActual[0]?.label || organigramasDisponibles?.length === 0)
     return (
       <Grid
         container
@@ -217,7 +212,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
         <Loader altura={150} />
       </Grid>
     );
-*/
+
   return (
     <>
       <Grid container sx={containerStyles}>
