@@ -376,6 +376,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                                     {option[1]}
                                                 </li>
                                             )}
+                                            // @ts-ignore
                                             onChange={cambio_seleccion_tipo}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Tipo de bien" />
@@ -402,6 +403,7 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                                     {option.nombre}
                                                 </li>
                                             )}
+                                            // @ts-ignore
                                             onChange={handle_change_autocomplete}
                                             renderInput={(params) => (
                                                 <TextField required {...params} label="Viveros" error={error_vivero} />
