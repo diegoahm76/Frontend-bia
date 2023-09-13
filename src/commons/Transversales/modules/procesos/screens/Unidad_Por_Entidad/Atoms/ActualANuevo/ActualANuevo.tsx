@@ -313,7 +313,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                               : value
                             : value
                         }
-                        isDisabled={controlFaseEntrada === 2 || unidadesSeleccionadas.length > 0}
+                        isDisabled={controlFaseEntrada === 2 || Boolean(unidadesSeleccionadas)}
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
