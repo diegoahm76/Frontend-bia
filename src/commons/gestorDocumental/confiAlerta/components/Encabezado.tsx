@@ -11,7 +11,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 import { Buscar } from "./Buscar";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from '@mui/icons-material/Search';
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
+import PrintIcon from '@mui/icons-material/Print';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import BarChartIcon from '@mui/icons-material/BarChart';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalEntidadd: React.FC = () => {
 
@@ -219,30 +223,32 @@ export const SucursalEntidadd: React.FC = () => {
 
 
         <Grid item xs={12} sm={1.2}>
-          <Button onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
+          <Button startIcon={<BarChartIcon />}  onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
             informe
           </Button>
         </Grid>
         <Grid item xs={12} sm={1.2}>
-          <Button color='success' fullWidth variant="contained"    >
+          <Button startIcon={<SaveIcon />} color='success' fullWidth variant="contained"    >
             guardar
           </Button>
         </Grid>
         <Grid item xs={12} sm={1.2}>
-          <Button color='error' fullWidth variant="outlined"    >
+          
+          <Button startIcon={<DeleteForeverIcon />}  color='error' fullWidth variant="outlined"    >
             borrar
           </Button>
         </Grid>
         <Grid item xs={12} sm={1.2}>
-          <Button fullWidth variant="outlined"    >
-            limpiar
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={1.2}>
-          <Button onClick={handle_open_buscar} fullWidth variant="contained"    >
+          <Button startIcon={<SearchIcon />} onClick={handle_open_buscar} fullWidth variant="contained"    >
             buscar
           </Button>
         </Grid>
+        <Grid item xs={12} sm={1.2}>
+          <Button startIcon={<PrintIcon />} fullWidth variant="outlined"    >
+            limpiar
+          </Button>
+        </Grid>
+       
         
         <Grid item xs={12} sm={1}>
           <ButtonSalir/> 

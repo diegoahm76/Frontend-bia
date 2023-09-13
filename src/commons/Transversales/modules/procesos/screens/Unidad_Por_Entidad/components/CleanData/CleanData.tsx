@@ -181,9 +181,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     REINICIAR CAMPOS
                   </Button>
 
-                  <Button
-                    color="success"
                   <LoadingButton
+                    color="success"
                     loading={loadingButton}
                     variant="contained"
                     type="submit"

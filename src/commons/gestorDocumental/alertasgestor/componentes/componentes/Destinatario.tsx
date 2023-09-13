@@ -135,6 +135,9 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                 const res_lider = await api.get(url);
                 const alertas_lider = res_lider.data.data;
                 set_lider(alertas_lider);
+                console.log("222222222222");
+                console.log(alertas_lider);
+                console.log("111111111111");
             } catch (error) {
                 console.error(error);
             }

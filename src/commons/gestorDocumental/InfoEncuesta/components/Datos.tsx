@@ -5,14 +5,13 @@ import { FormControl, Grid, Button } from "@mui/material";
 import { Title } from "../../../../components";
 import { InputLabel, MenuItem, Select, } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Line } from 'react-chartjs-2';
 import { GraficaBar } from "./GraficaBar";
 import { Graficapie } from "./Graficapie";
 import { GraficaArea } from "./GraficaArea";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
-
+import PrintIcon from '@mui/icons-material/Print';
+import DownloadIcon from '@mui/icons-material/Download';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Datos: React.FC = () => {
 
@@ -61,10 +60,10 @@ export const Datos: React.FC = () => {
     m: '10px 0 20px 0',
     mb: '20px',
     boxShadow: '0px 3px 6px #042F4A26',
-};
+  };
   return (
     <>
- 
+
       <Grid container
         spacing={2} m={2} p={2}
         sx={miEstilo}
@@ -98,7 +97,7 @@ export const Datos: React.FC = () => {
         <Grid item xs={12}  >
           <Title title="Datos generales  " />
         </Grid>
- 
+
         <Grid item xs={12}  >
           <DataGrid
             density="compact"
@@ -114,7 +113,7 @@ export const Datos: React.FC = () => {
       <Grid container
         spacing={2} m={2} p={2}
         sx={miEstilo}
-      > 
+      >
         <Grid item xs={12} marginTop={2} sm={6}>
           <Line data={chartData} /> {/* Renderiza la gráfica liena */}
         </Grid>
@@ -127,7 +126,7 @@ export const Datos: React.FC = () => {
         <Grid item xs={12} marginTop={4} sm={6}>
           <GraficaArea />           {/* Renderiza la gráfica area */}
         </Grid>
- 
+
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
@@ -141,19 +140,21 @@ export const Datos: React.FC = () => {
       >
 
         <Grid item xs={12} sm={1.2}>
-          <Button fullWidth variant="outlined"    >
+          <Button startIcon={<PrintIcon />} fullWidth variant="outlined"    >
             imprimir
           </Button>
         </Grid>
-        <Grid item xs={12} sm={1.2}>
-          <Button fullWidth variant="contained"    >
+        <Grid item xs={12} sm={1.3}>
+          <Button startIcon={<DownloadIcon />} fullWidth variant="contained"    >
             descargar
           </Button>
         </Grid>
 
 
+
+
         <Grid item xs={12} sm={1}>
-          <ButtonSalir/> 
+          <ButtonSalir />
         </Grid>
 
 
