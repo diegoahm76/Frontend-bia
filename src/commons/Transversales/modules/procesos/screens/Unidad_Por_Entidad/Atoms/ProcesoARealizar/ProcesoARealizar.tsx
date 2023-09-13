@@ -32,7 +32,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const { controlFaseEntrada } = useAppSelector((state) => state.u_x_e_slice);
+  const { controlFaseEntrada, asignacionConsultaTablaTemporal } = useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -73,8 +73,12 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
               void get_organigrama_acual(navigate).then(
                 (resOrganigramaActual: any) => {
                   console.log(' orgggg actual', resOrganigramaActual);
-                  console.log('orggg tabla temporal', resTablaTemporal)
-                  if (resListadoPersonasSinActualizar.data.length !== 0 || resOrganigramaActual[0]?.id_organigrama === resTablaTemporal?.totalData?.id_organigrama_nuevo ) {
+                  console.log('orggg tabla temporal', resTablaTemporal);
+                  if (
+                    resListadoPersonasSinActualizar.data.length !== 0 ||
+                    resOrganigramaActual[0]?.id_organigrama ===
+                      resTablaTemporal?.totalData?.id_organigrama_nuevo
+                  ) {
                     dispatch(setControlFaseEntrada(2));
                     dispatch(
                       setControlModoTrasladoUnidadXEntidad(
@@ -233,7 +237,10 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                           handleGridActualANuevo(false);
                           dispatch(setUnidadesSeleccionadas([]));
                         }}
-                        isDisabled={controlFaseEntrada !== 1}
+                        isDisabled={
+                          controlFaseEntrada !== 1 ||
+                          asignacionConsultaTablaTemporal
+                        }
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
                         options={resetOpcionesTraslado()}
                         placeholder="Seleccionar"
