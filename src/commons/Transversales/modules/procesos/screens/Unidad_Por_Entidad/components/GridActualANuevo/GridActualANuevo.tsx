@@ -150,7 +150,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
     }
   }, [gridActualANuevo]);
 
-  if (gridActualANuevo.length === 0)
+ /* if (gridActualANuevo.length === 0)
     return (
       <Grid
         container
@@ -163,7 +163,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       >
         <Loader altura={150} />
       </Grid>
-    );
+    ); */
 
   return (
     //* renderiza los datos necesarios para el traslado unidades organizacionales actuales a nuevas

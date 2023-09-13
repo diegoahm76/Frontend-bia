@@ -139,7 +139,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
         .reduce((unidadesSeleccionadasObj: any, persona: any) => {
           const unidadSeleccionada = {
             value: persona.id_nueva_unidad_organizacional,
-            label: persona.nombre_unidad_organizacional_actual,
+            label: persona.nombre_nueva_unidad_organizacional,
             data: persona,
             idPersona: persona.id_persona
           };
@@ -158,7 +158,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
   }, [gridAnteriorAActual, dispatch]);
 
   //* -------------------------------------------------------------------------- */
-
+/*
   if (gridAnteriorAActual.length === 0)
     return (
       <Grid
@@ -173,7 +173,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
         <Loader altura={150} />
       </Grid>
     );
-
+*/
   return (
     //* renderiza los datos necesarios para el traslado unidades organizacionales actuales a nuevas
     <>

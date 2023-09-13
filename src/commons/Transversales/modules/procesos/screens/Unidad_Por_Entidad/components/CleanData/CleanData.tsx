@@ -145,7 +145,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                       ...item,
                       unidadesDisponiblesParaTraslado: resListaUnidades?.data
                     };
-                  });
+                  }) || [];
 
                   const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
                     (item: any) => {
@@ -154,15 +154,15 @@ export const CleanData: FC<any> = (): JSX.Element => {
                         unidadesDisponiblesParaTraslado: resListaUnidades?.data
                       };
                     }
-                  );
+                  ) || [];
 
-                  dispatch(setGridActualANuevo(dataMixed));
-                  dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
+                  dispatch(setGridActualANuevo(dataMixed ? dataMixed : []));
+                  dispatch(setAsignacionConsultaTablaTemporal(dataMixed2 ? dataMixed2 : []));
 
-                  const arraySinRepetidos = [...dataMixed2, ...dataMixed];
+                  const arraySinRepetidos = [...dataMixed2, ...dataMixed] || [];
 
                   const elementosNoRepetidos =
-                    eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+                    eliminarObjetosDuplicadosPorId(arraySinRepetidos || []);
 
                   if (elementosNoRepetidos.length === 0) {
                     void Swal.fire({

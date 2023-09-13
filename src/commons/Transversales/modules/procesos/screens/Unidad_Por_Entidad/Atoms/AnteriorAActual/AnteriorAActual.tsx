@@ -121,10 +121,9 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   const arraySinRepetidos = [
                     ...informacionTablaTemporal?.data,
                     ...personasSinActualizar?.data
-                  ];
-
+                  ] || [];
                   const elementosNoRepetidos =
-                    eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+                    eliminarObjetosDuplicadosPorId(arraySinRepetidos || []);
 
                   console.log('noooo repetidossss0', elementosNoRepetidos)
 
@@ -156,7 +155,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                         unidadesDisponiblesParaTraslado:
                           unidadesOrganizacionalesOrgActual?.data
                       };
-                    });
+                    }) || [];
                     console.log(dataMixed);
 
                     dispatch(setGridAnteriorAActual(dataMixed));

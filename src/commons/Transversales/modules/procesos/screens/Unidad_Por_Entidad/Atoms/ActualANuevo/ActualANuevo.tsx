@@ -40,7 +40,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal, mood, controlFaseEntrada /* organigrama_current */ } =
+  const { asignacionConsultaTablaTemporal, mood, controlFaseEntrada, unidadesSeleccionadas /* organigrama_current */ } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -127,7 +127,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                   ...item,
                   unidadesDisponiblesParaTraslado: resListaUnidades?.data
                 };
-              });
+              }) || [];
 
               const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
                 (item: any) => {
@@ -136,12 +136,12 @@ export const ActualANuevo: FC = (): JSX.Element => {
                     unidadesDisponiblesParaTraslado: resListaUnidades?.data
                   };
                 }
-              );
+              ) || [];
 
               // ! realizo la asignaciónde la dataMixed
-              dispatch(setGridActualANuevo(dataMixed));
+              dispatch(setGridActualANuevo(dataMixed ? dataMixed : []));
               // ! se realiza nueva asignacion a al data de la tabla tempora
-              dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
+              dispatch(setAsignacionConsultaTablaTemporal(dataMixed2 ? dataMixed2 : []));
 
               // ? se realiza el mixing de los componentes para evitar los elementos repetidos y si los hay se sobreponene con el valor de aquellos que vienen en la tabla temporal t026
 
@@ -150,7 +150,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
               // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
 
               const elementosNoRepetidos =
-                eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+                eliminarObjetosDuplicadosPorId(arraySinRepetidos || []);
 
               if (elementosNoRepetidos.length === 0) {
                 void Swal.fire({
@@ -174,7 +174,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                   }
                 });
               } else {
-                dispatch(setGridActualANuevo(elementosNoRepetidos));
+                dispatch(setGridActualANuevo(elementosNoRepetidos || []));
                 // dispatch(setGridAnteriorAActual(dataMixed));
               }
 
@@ -313,7 +313,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                               : value
                             : value
                         }
-                        isDisabled={controlFaseEntrada === 2}
+                        isDisabled={controlFaseEntrada === 2 || unidadesSeleccionadas.length > 0}
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
