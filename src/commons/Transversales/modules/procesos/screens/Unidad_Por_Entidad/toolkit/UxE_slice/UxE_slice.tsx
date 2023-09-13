@@ -23,17 +23,9 @@ const initialState: SliceTypeInterface = {
   unidadesSeleccionadas: [],
 
   gridAnteriorAActual: [],
-
   unidadesSeleccionadasAnteriorAActual: [],
-
   // ! organigrama current
   organigrama_current: null,
-
-  /*  gridActualANuevo: {
-    data: [],
-    dataSelectedUnidadNueva: []
-  } */
-  mood: false
 };
 
 export const u_x_e_slice = createSlice({
@@ -102,10 +94,6 @@ export const u_x_e_slice = createSlice({
     ) => {
       state.organigrama_current = payloadAction.payload;
     },
-
-    setMoodAction: (state: any, payloadAction: PayloadAction<any>) => {
-      state.mood = payloadAction.payload;
-    }
   }
 });
 
@@ -126,6 +114,4 @@ export const {
 
   //* asignar el id actual del organigrama para realizar el proceso de almacenamiento en la tabla temporal T026
   set_current_id_organigrama,
-
-  setMoodAction
 } = u_x_e_slice.actions;

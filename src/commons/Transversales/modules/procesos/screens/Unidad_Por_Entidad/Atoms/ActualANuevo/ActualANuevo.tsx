@@ -25,7 +25,6 @@ import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import {
   setAsignacionConsultaTablaTemporal,
-  setMoodAction,
   setGridActualANuevo,
   setUnidadesSeleccionadas,
   set_current_id_organigrama
@@ -40,7 +39,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal, mood, controlFaseEntrada, unidadesSeleccionadas /* organigrama_current */ } =
+  const { asignacionConsultaTablaTemporal, controlFaseEntrada, unidadesSeleccionadas /* organigrama_current */ } =
     useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
