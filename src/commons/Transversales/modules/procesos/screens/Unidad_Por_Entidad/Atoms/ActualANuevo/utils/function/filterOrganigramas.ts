@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import Swal from 'sweetalert2';
+import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const filtrarOrganigramas = (
@@ -24,21 +25,9 @@ export const filtrarOrganigramas = (
     }));
 
   if (organigramasDisponiblesParaRetornar.length === 0) {
-    void Swal.fire({
-      icon: 'warning',
-      title: 'NO HAY ORGANIGRAMAS DISPONIBLES',
-      text: 'No hay organigramas nuevos disponibles para hacer el traslado de datos, por favor cree uno nuevo',
-     // showCloseButton: false,
-     // allowOutsideClick: false,
-      showConfirmButton: true,
-      confirmButtonText: 'Ir al módulo de organigramas',
-      confirmButtonColor: '#042F4A',
-     // allowEscapeKey: false
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate('/app/gestor_documental/organigrama/crear');
-      }
-    });
+    control_warning(
+      'si vas a hacer un cambio de organigrama actual a nuevo, ten presente que no hay organigramas disponibles para hacer el cambio en este momento , crea uno para poder hacer el respectivo traslado'
+    );
     return [{ label: '' }];
   } else {
     return organigramasDisponiblesParaRetornar;

@@ -126,6 +126,8 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   const elementosNoRepetidos =
                     eliminarObjetosDuplicadosPorId(arraySinRepetidos);
 
+                  console.log('noooo repetidossss0', elementosNoRepetidos)
+
                   if (elementosNoRepetidos.length === 0) {
                     void Swal.fire({
                       icon: 'warning',
