@@ -49,6 +49,10 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
     };
 
 
+
+
+
+    
     return (
         <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
             <Grid container
