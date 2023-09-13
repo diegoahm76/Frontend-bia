@@ -21,7 +21,6 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* use states redux declaration
-  // eslint-disable-next-line no-empty-pattern, @typescript-eslint/no-unused-vars
   const {
     gridAnteriorAActual,
     unidadesSeleccionadasAnteriorAActual,
@@ -71,10 +70,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
               value={
                 unidadesSeleccionadasAnteriorAActual[params.row.id_persona]
               }
-              // value={unidadesSeleccionadas}
               onChange={(selectedOption) => {
-                // console.log(params.row.id_persona, 'selectedOption');
-                console.log(selectedOption, 'selectedOption');
                 onChange(params.row.id_persona, selectedOption);
               }}
               menuPortalTarget={document.body}
@@ -110,7 +106,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
               }}
               startIcon={<CleaningServicesIcon />}
               onClick={() => {
-                console.log('limpiando select');
+                // console.log('limpiando select');
                 handleLimpiarSelect(params.row.id_persona);
               }}
             />
@@ -123,14 +119,14 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
   // ? cambios para realizar el proceder de traslado de unidades organizacionales
   useEffect(() => {
     if (asignacionConsultaTablaTemporal) {
-      console.log(
+     /* console.log(
         'resultados consulta tabla temporal',
         asignacionConsultaTablaTemporal
-      );
+      ); */
     }
 
     if (gridAnteriorAActual) {
-      console.log('gridActualANuevo', gridAnteriorAActual);
+      // console.log('gridActualANuevo', gridAnteriorAActual);
 
       const unidadesSeleccionadasTemp = gridAnteriorAActual
         ?.filter((persona: any) => {
@@ -153,7 +149,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
         setUnidadesSeleccionadasAnteriorAActual(unidadesSeleccionadasTemp)
       );
 
-      console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
+      // console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
     }
   }, [gridAnteriorAActual, dispatch]);
 

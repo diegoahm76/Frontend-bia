@@ -63,7 +63,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
     //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
-      console.log('res', organigramasActuales);
+      // console.log('res', organigramasActuales);
       setOrganigramaActual(
         organigramasActuales?.map((item: any) => ({
           label: item?.nombre,
@@ -84,13 +84,13 @@ export const ActualANuevo: FC = (): JSX.Element => {
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
           // console.log(resOrganigramas);
           // console.log(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
-          console.log('resOrganigramas', resOrganigramas);
+          // console.log('resOrganigramas', resOrganigramas);
           const organigramaNecesario = resOrganigramas?.filter(
             (item: any) =>
               item?.id_organigrama ===
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
           );
-          console.log('organigramaNecesario', organigramaNecesario);
+          // console.log('organigramaNecesario', organigramaNecesario);
 
           setOrganigramasDisponibles(
             organigramaNecesario?.map((item: any) => ({
@@ -192,7 +192,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
         setOrganigramasDisponibles(
           filtrarOrganigramas(organigramasDisponibles, navigate)
         );
-        console.log('organigramasDisponibles', organigramasDisponibles);
+        // console.log('organigramasDisponibles', organigramasDisponibles);
       }
     };
 

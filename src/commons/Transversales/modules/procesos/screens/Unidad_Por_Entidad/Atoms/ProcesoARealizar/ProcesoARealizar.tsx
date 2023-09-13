@@ -50,12 +50,12 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
   const [cargaApp, setCargaApp] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('use_u_x_entidad');
+    // console.log('use_u_x_entidad');
 
     setCargaApp(true);
     void consultarTablaTemporal()
       .then((resTablaTemporal: any) => {
-        console.log(resTablaTemporal);
+        // console.log(resTablaTemporal);
 
         //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
 
@@ -67,13 +67,13 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         } else {
           void getPersonasSinActualizarOrganigramaAnteriorAlActual().then(
             (resListadoPersonasSinActualizar: any) => {
-              console.log(resListadoPersonasSinActualizar);
+              // console.log(resListadoPersonasSinActualizar);
 
               //* el estado de esta variable para su validación siempre será !== 0
               void get_organigrama_acual(navigate).then(
                 (resOrganigramaActual: any) => {
-                  console.log(' orgggg actual', resOrganigramaActual);
-                  console.log('orggg tabla temporal', resTablaTemporal);
+                  // console.log(' orgggg actual', resOrganigramaActual);
+                  // console.log('orggg tabla temporal', resTablaTemporal);
                   if (
                     resListadoPersonasSinActualizar.data.length !== 0 ||
                     resOrganigramaActual[0]?.id_organigrama ===
@@ -137,7 +137,7 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
       })
       .finally(() => {
-        console.log('finally');
+        // console.log('finally');
         setCargaApp(false);
       });
   }, [
@@ -147,11 +147,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     controlFaseEntrada,
     setCargaApp
   ]);
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const onSubmit = () => {
-    console.log('hello from submit');
-  };
 
   function resetOpcionesTraslado(): Array<{
     value: string;
@@ -197,7 +192,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              onSubmit();
             }}
             style={{
               marginTop: '20px'
