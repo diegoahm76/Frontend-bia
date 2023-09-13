@@ -80,7 +80,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
       if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
 
         console.log('assssignacion T026', asignacionConsultaTablaTemporal)
-        dispatch(setMoodAction(true));
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
           // console.log(resOrganigramas);
@@ -194,7 +193,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
           filtrarOrganigramas(organigramasDisponibles, navigate)
         );
         console.log('organigramasDisponibles', organigramasDisponibles);
-        dispatch(setMoodAction(false));
       }
     };
 
