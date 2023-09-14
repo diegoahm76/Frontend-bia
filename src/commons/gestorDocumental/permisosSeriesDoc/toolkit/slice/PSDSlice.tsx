@@ -1,15 +1,26 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Ipsd } from './types/slice.types';
+import { type InterfaceSlice } from './types/slice.types';
 
-const initialState: Ipsd = {
+const initialState: InterfaceSlice = {
   //! TCA necesarios para el funcionamiento de la aplicación
   ccdsBusqueda: [],
   ccd_current_busqueda: null,
   unidadesOrganizacionales: [],
   current_unidad_organizacional: null,
   listSeriesSubseries: [],
-  currentSeriesSubseries: null
+  currentSeriesSubseries: null,
+  restricciones: {
+    paraTodasLasUnidadesOrganizacionales: null,
+    paraUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: null,
+  },
+
+
+
+  //* acciones
+  objeto: {
+    setRestriccionTodasUnidadesOrganizacionales: (state: any, action: PayloadAction<any>) => {}
+  }
 };
 
 export const PsdSlice = createSlice({
@@ -45,6 +56,16 @@ export const PsdSlice = createSlice({
     },
     setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) => {
       state.currentSeriesSubseries = action.payload;
+    },
+
+    objeto: {
+      //* restricción para todas las unidades organizacionales
+      setRestriccionTodasUnidadesOrganizacionales:  (
+        state: any,
+        action: PayloadAction<any>
+      ): any => state.restricciones.paraTodasLasUnidadesOrganizacionales =
+      action.payload
+
     }
   }
 });
