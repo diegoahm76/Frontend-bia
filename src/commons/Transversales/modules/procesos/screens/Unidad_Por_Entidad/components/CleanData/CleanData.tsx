@@ -33,6 +33,7 @@ import {
   setAsignacionConsultaTablaTemporal,
   setGridActualANuevo,
   setGridAnteriorAActual,
+  setUnidadesSeleccionadas,
   // setUnidadesSeleccionadas,
   setUnidadesSeleccionadasAnteriorAActual,
   set_current_id_organigrama
@@ -56,7 +57,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
     //* unidades seleccionadas traslado anterior a actual
     unidadesSeleccionadasAnteriorAActual,
     organigrama_current,
-    gridAnteriorAActual,
+    gridAnteriorAActual
     // asignacionConsultaTablaTemporal
     /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
@@ -106,15 +107,18 @@ export const CleanData: FC<any> = (): JSX.Element => {
               value: item?.id_organigrama
             }))
           );
-         // console.log('organigramasActuales', organigramasActuales);
-          if (asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo) {
+          // console.log('organigramasActuales', organigramasActuales);
+          if (
+            asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+          ) {
             void getOrganigramasDispobibles().then((resOrganigramas: any) => {
               handleMood(true);
 
               const organigramaNecesario = resOrganigramas?.filter(
                 (item: any) =>
                   item?.id_organigrama ===
-                  asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+                  asignacionConsultaTablaTemporal?.totalData
+                    ?.id_organigrama_nuevo
               );
 
               // console.log(organigramaNecesario);
@@ -138,31 +142,37 @@ export const CleanData: FC<any> = (): JSX.Element => {
             void getListadoPersonasOrganigramaActual().then(
               (resListaPersonas: any) => {
                 void getListaUnidadesOrganigramaSeleccionado(
-                  asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+                  asignacionConsultaTablaTemporal?.totalData
+                    ?.id_organigrama_nuevo
                 ).then((resListaUnidades) => {
-                  const dataMixed = resListaPersonas?.data?.map((item: any) => {
-                    return {
-                      ...item,
-                      unidadesDisponiblesParaTraslado: resListaUnidades?.data
-                    };
-                  }) || [];
-
-                  const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
-                    (item: any) => {
+                  const dataMixed =
+                    resListaPersonas?.data?.map((item: any) => {
                       return {
                         ...item,
                         unidadesDisponiblesParaTraslado: resListaUnidades?.data
                       };
-                    }
-                  ) || [];
+                    }) || [];
+
+                  const dataMixed2 =
+                    asignacionConsultaTablaTemporal?.data?.map((item: any) => {
+                      return {
+                        ...item,
+                        unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                      };
+                    }) || [];
 
                   dispatch(setGridActualANuevo(dataMixed ? dataMixed : []));
-                  dispatch(setAsignacionConsultaTablaTemporal(dataMixed2 ? dataMixed2 : []));
+                  dispatch(
+                    setAsignacionConsultaTablaTemporal(
+                      dataMixed2 ? dataMixed2 : []
+                    )
+                  );
 
                   const arraySinRepetidos = [...dataMixed2, ...dataMixed] || [];
 
-                  const elementosNoRepetidos =
-                    eliminarObjetosDuplicadosPorId(arraySinRepetidos || []);
+                  const elementosNoRepetidos = eliminarObjetosDuplicadosPorId(
+                    arraySinRepetidos || []
+                  );
 
                   if (elementosNoRepetidos.length === 0) {
                     void Swal.fire({
@@ -424,17 +434,23 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     </Button>
                   )}
 
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    startIcon={<CleanIcon />}
-                    onClick={() => {
-                      console.log('cleaning fields');
-                    }}
-                  >
-                    REINICIAR CAMPOS
-                  </Button>
-
+                  {/*  solo en el modo 1 debe aparecer  */}
+{/*
+                  {controlModoTrasladoUnidadXEntidad !==
+                    'modo_entrada_con_validacion_organigrama_anterior_a_actual' && (
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={() => {
+                        console.log('cleaning fields');
+                        dispatch(setUnidadesSeleccionadas(null));
+                      }}
+                    >
+                      REINICIAR CAMPOS
+                    </Button>
+                  )}
+*/}
                   <LoadingButton
                     loading={loadingButton}
                     color="success"
@@ -458,9 +474,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                       : 'PROCEDER'}
                   </LoadingButton>
 
-                  <Link
-                    to="/app/home"
-                  >
+                  <Link to="/app/home">
                     <Button
                       color="error"
                       variant="contained"
