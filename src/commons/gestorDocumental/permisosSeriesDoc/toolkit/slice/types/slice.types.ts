@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-interface Ipsd {
+export interface Ipsd {
   //* fase ccd
   ccdsBusqueda: any[];
   ccd_current_busqueda: any;
@@ -10,16 +10,8 @@ interface Ipsd {
   //* fase series - subseries documentales
   listSeriesSubseries: any[];
   currentSeriesSubseries: any;
+  //* restricciones
+  restriccionesParaTodasLasUnidadesOrganizacionales: any;
+  restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: any;
 }
 
-interface Restricciones {
-  paraTodasLasUnidadesOrganizacionales: any;
-  paraUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: any;
-}
-
-export interface InterfaceSlice extends Ipsd {
-  restricciones: Restricciones;
-  objeto: {
-    setRestriccionTodasUnidadesOrganizacionales: (state: any, action: PayloadAction<any>) => any;
-  };
-}

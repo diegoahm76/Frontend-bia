@@ -67,7 +67,10 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                   console.log(selectedOption);
                   dispatch(setCurrentSerieSubserie(selectedOption.item));
 
-                  // ! se deben llamar las respectivas series - subseries que estan asociadas a la unidad organizacional seleccionada
+                  // ! se deben llamar los servicios de permisos y restricciones
+                  // ? permisos para una unidad organizacional
+                  // ? permisos para una unidad organizacional externa
+                  // ? restricciones (para todas las unidades organizacionales, para una unidad organizacional, para una unidad organizacional externa)
                   /* void get_catalogo_TRD_service(selectedOption.value).then(
                     (res) => {
                       console.log(res);

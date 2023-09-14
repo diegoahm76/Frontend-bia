@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type InterfaceSlice } from './types/slice.types';
+import { type Ipsd } from './types/slice.types';
 
-const initialState: InterfaceSlice = {
+const initialState: Ipsd = {
   //! TCA necesarios para el funcionamiento de la aplicación
   ccdsBusqueda: [],
   ccd_current_busqueda: null,
@@ -10,17 +10,9 @@ const initialState: InterfaceSlice = {
   current_unidad_organizacional: null,
   listSeriesSubseries: [],
   currentSeriesSubseries: null,
-  restricciones: {
-    paraTodasLasUnidadesOrganizacionales: null,
-    paraUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: null,
-  },
-
-
-
-  //* acciones
-  objeto: {
-    setRestriccionTodasUnidadesOrganizacionales: (state: any, action: PayloadAction<any>) => {}
-  }
+  restriccionesParaTodasLasUnidadesOrganizacionales: null,
+  restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable:
+    null
 };
 
 export const PsdSlice = createSlice({
@@ -54,19 +46,22 @@ export const PsdSlice = createSlice({
     setListaSeriesSubseries: (state: any, action: PayloadAction<any>) => {
       state.listSeriesSubseries = action.payload;
     },
-    setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) => {
-      state.currentSeriesSubseries = action.payload;
-    },
+    setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) =>
+      (state.currentSeriesSubseries = action.payload),
 
-    objeto: {
-      //* restricción para todas las unidades organizacionales
-      setRestriccionTodasUnidadesOrganizacionales:  (
-        state: any,
-        action: PayloadAction<any>
-      ): any => state.restricciones.paraTodasLasUnidadesOrganizacionales =
-      action.payload
+    setRestriccionTodasUnidadesOrganizacionales: (
+      state: any,
+      action: PayloadAction<any>
+    ): any =>
+      (state.restriccionesParaTodasLasUnidadesOrganizacionales =
+        action.payload),
 
-    }
+    setRestriccionUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: (
+      state: any,
+      action: PayloadAction<any>
+    ) =>
+      (state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
+        action.payload)
   }
 });
 
