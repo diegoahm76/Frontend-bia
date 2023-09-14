@@ -39,8 +39,11 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal, controlFaseEntrada, unidadesSeleccionadas /* organigrama_current */ } =
-    useAppSelector((state) => state.u_x_e_slice);
+  const {
+    asignacionConsultaTablaTemporal,
+    controlFaseEntrada,
+    unidadesSeleccionadas /* organigrama_current */
+  } = useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
 
@@ -78,8 +81,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
       // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_nuevo está presente
 
       if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
-
-        console.log('assssignacion T026', asignacionConsultaTablaTemporal)
+        console.log('assssignacion T026', asignacionConsultaTablaTemporal);
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
           // console.log(resOrganigramas);
@@ -120,26 +122,28 @@ export const ActualANuevo: FC = (): JSX.Element => {
             void getListaUnidadesOrganigramaSeleccionado(
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
             ).then((resListaUnidades) => {
-              const dataMixed = resListaPersonas?.data?.map((item: any) => {
-                return {
-                  ...item,
-                  unidadesDisponiblesParaTraslado: resListaUnidades?.data
-                };
-              }) || [];
-
-              const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
-                (item: any) => {
+              const dataMixed =
+                resListaPersonas?.data?.map((item: any) => {
                   return {
                     ...item,
                     unidadesDisponiblesParaTraslado: resListaUnidades?.data
                   };
-                }
-              ) || [];
+                }) || [];
+
+              const dataMixed2 =
+                asignacionConsultaTablaTemporal?.data?.map((item: any) => {
+                  return {
+                    ...item,
+                    unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                  };
+                }) || [];
 
               // ! realizo la asignaciónde la dataMixed
               dispatch(setGridActualANuevo(dataMixed ? dataMixed : []));
               // ! se realiza nueva asignacion a al data de la tabla tempora
-              dispatch(setAsignacionConsultaTablaTemporal(dataMixed2 ? dataMixed2 : []));
+              dispatch(
+                setAsignacionConsultaTablaTemporal(dataMixed2 ? dataMixed2 : [])
+              );
 
               // ? se realiza el mixing de los componentes para evitar los elementos repetidos y si los hay se sobreponene con el valor de aquellos que vienen en la tabla temporal t026
 
@@ -147,8 +151,9 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
               // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
 
-              const elementosNoRepetidos =
-                eliminarObjetosDuplicadosPorId(arraySinRepetidos || []);
+              const elementosNoRepetidos = eliminarObjetosDuplicadosPorId(
+                arraySinRepetidos || []
+              );
 
               if (elementosNoRepetidos.length === 0) {
                 void Swal.fire({
@@ -202,7 +207,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
     navigate,
     setOrganigramaActual,
     setOrganigramasDisponibles,
-    asignacionConsultaTablaTemporal,
+    asignacionConsultaTablaTemporal
   ]);
 
   if (!organigramaActual[0]?.label || organigramasDisponibles?.length === 0)
@@ -378,10 +383,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
               </Grid>
             </Grid>
           </form>
-          {
-            // ! se debe tener en cuenta que en este button tambien se deben limpiar todos los datos de la tabla para comodidad del usuario y para buen funcionamiento del módulo
-
-            gridActualANuevo ? (
+  
               <Stack
                 direction="row"
                 justifyContent="center"
@@ -390,21 +392,17 @@ export const ActualANuevo: FC = (): JSX.Element => {
               >
                 <Button
                   startIcon={<CloseFullscreenIcon />}
-                  // endIcon={<CloseFullscreenIcon />}
+                  endIcon={<CloseFullscreenIcon />}
                   variant="contained"
                   color="warning"
                   onClick={() => {
-                    // se debe tener en cuenta que en este button tambien se deben limpiar todos los datos de la tabla para comodidad del usuario y para buen funcionamiento del módulo
-                    handleGridActualANuevo(false);
+                    handleGridActualANuevo(!gridActualANuevo);
                   }}
                 >
-                  Contraer tabla
+                  {gridActualANuevo ? 'Contrer tabla' : 'Expandir tabla'}
                 </Button>
               </Stack>
-            ) : (
-              <></>
-            )
-          }
+          
         </Grid>
       </Grid>
 

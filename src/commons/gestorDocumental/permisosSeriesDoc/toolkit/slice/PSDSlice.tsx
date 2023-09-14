@@ -46,22 +46,24 @@ export const PsdSlice = createSlice({
     setListaSeriesSubseries: (state: any, action: PayloadAction<any>) => {
       state.listSeriesSubseries = action.payload;
     },
-    setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) =>
-      (state.currentSeriesSubseries = action.payload),
 
-    setRestriccionTodasUnidadesOrganizacionales: (
-      state: any,
-      action: PayloadAction<any>
-    ): any =>
-      (state.restriccionesParaTodasLasUnidadesOrganizacionales =
-        action.payload),
+    setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) => {
+      state.currentSeriesSubseries = action.payload;
+    },
 
-    setRestriccionUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: (
-      state: any,
+    // ! acciones sobre las restricciones
+    set_restricciones_para_todas_las_unidades_organizacionales_action: (
+      state,
       action: PayloadAction<any>
-    ) =>
-      (state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
-        action.payload)
+    ) => {
+      state.restriccionesParaTodasLasUnidadesOrganizacionales = action.payload;
+    },
+
+    set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action:
+      (state, action: PayloadAction<any>) => {
+        state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
+          action.payload;
+      }
   }
 });
 
@@ -74,7 +76,11 @@ export const {
   set_current_unidad_organizacional_action,
   // ! acciones sobre las series y subseries
   setListaSeriesSubseries,
-  setCurrentSerieSubserie
+  setCurrentSerieSubserie,
+
+  // ! acciones sobre las restricciones
+  set_restricciones_para_todas_las_unidades_organizacionales_action,
+  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
 } = PsdSlice.actions;
 
 //* para el próximo slice que cree se debe tener en cuenta el siguiente ejemplo

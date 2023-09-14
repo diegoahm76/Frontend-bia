@@ -70,6 +70,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
+                  onChange(selectedOption);
                   console.log(selectedOption);
                   // ! se limpia la lista de series y subseries
                   // dispatch(setListaSeriesSubseries([]));
@@ -78,14 +79,14 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                   // ? seleccionando current unidad organizacional para el llamado de serie subserie
                   dispatch(
                     set_current_unidad_organizacional_action(
-                      selectedOption.item
+                      selectedOption?.item
                     )
                   );
                   // ! se deben llamar las respectivas series - subseries que estan asociadas a la unidad organizacional seleccionada y respectivo ccd seleccionado
 
                   void get_series_documentales_unidad_organizacional_psd(
-                    selectedOption.item.id_unidad_organizacional,
-                    ccd_current_busqueda.id_ccd,
+                    selectedOption?.item?.id_unidad_organizacional,
+                    ccd_current_busqueda?.id_ccd,
                     setloadingSeriesSubseries
                   ).then((res) => {
                     console.log(res);

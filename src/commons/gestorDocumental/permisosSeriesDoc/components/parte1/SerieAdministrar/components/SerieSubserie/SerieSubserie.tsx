@@ -10,7 +10,12 @@ import { usePSD } from '../../../../../hook/usePSD';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
-import { setCurrentSerieSubserie } from '../../../../../toolkit/slice/PSDSlice';
+import {
+  setCurrentSerieSubserie,
+  set_restricciones_para_todas_las_unidades_organizacionales_action,
+  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
+} from '../../../../../toolkit/slice/PSDSlice';
+import { get_restricciones_series_documentales } from '../../../../../toolkit/thunks/thunksPartThree';
 
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   //* dispatch declaration
@@ -21,7 +26,8 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   );
 
   // ? context necesarios
-  const { loadingSeriesSubseries } = useContext(ModalContextPSD);
+  const { loadingSeriesSubseries, setLoadingRestricciones } =
+    useContext(ModalContextPSD);
 
   //* usePSD
   const { seleccionar_serie_subserie_control } = usePSD();
@@ -71,14 +77,22 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                   // ? permisos para una unidad organizacional
                   // ? permisos para una unidad organizacional externa
                   // ? restricciones (para todas las unidades organizacionales, para una unidad organizacional, para una unidad organizacional externa)
-                  /* void get_catalogo_TRD_service(selectedOption.value).then(
-                    (res) => {
-                      console.log(res);
-                      dispatch(set_catalog_trd_action(res));
-                    }
-                  );
-
-                  onChange(selectedOption); */
+                  void get_restricciones_series_documentales(
+                    selectedOption.item.id_cat_serie_und,
+                    setLoadingRestricciones
+                  ).then((_res) => {
+                    dispatch(
+                      set_restricciones_para_todas_las_unidades_organizacionales_action(
+                        _res.arrayRestriccionesParaTodasLasUnidades
+                      )
+                    );
+                    dispatch(
+                      set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(
+                        _res.arrayRestriccionesOtros
+                      )
+                    );
+                  });
+                  onChange(selectedOption);
                 }}
                 options={
                   [...listSeriesSubseries] // la idea va a ser reemplazarlos por las series - subseries asociadas a la unidad organizacional del ccd

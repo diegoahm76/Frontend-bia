@@ -19,13 +19,17 @@ export const ModalContextPSD = createContext<ModalContextPSDInterface>({
   loadingButtonPSD: false,
   setLoadingButtonPSD: () => {},
   loadingSeriesSubseries: false,
-  setloadingSeriesSubseries: () => {}
+  setloadingSeriesSubseries: () => {},
+  loadingRestricciones: false,
+  setLoadingRestricciones: () => {}
 });
 
 export const ModalProviderPSD: FC<ModalProviderPSDProps> = ({ children }) => {
   const [modalSeleccionCCD, setModalSeleccionCCD] = useState<boolean>(false);
   const [loadingButtonPSD, setLoadingButtonPSD] = useState<boolean>(false);
   const [loadingSeriesSubseries, setloadingSeriesSubseries] = useState<boolean>(false);
+  const [loadingRestricciones, setLoadingRestricciones] = useState<boolean>(false)
+
 
   const handleSeleccionCCD_PSD = (value: boolean) => {
     setModalSeleccionCCD(value);
@@ -37,7 +41,9 @@ export const ModalProviderPSD: FC<ModalProviderPSDProps> = ({ children }) => {
     loadingButtonPSD,
     setLoadingButtonPSD,
     loadingSeriesSubseries,
-    setloadingSeriesSubseries
+    setloadingSeriesSubseries,
+    loadingRestricciones,
+    setLoadingRestricciones,
   };
 
   return (
