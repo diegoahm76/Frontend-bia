@@ -1,11 +1,23 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Dialog, Grid, } from '@mui/material';
 import type React from 'react';
-import { type Dispatch, type SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction, useEffect } from 'react';
 import { Title } from '../../../../components';
 import IconButton from '@mui/material/IconButton';
 import { DataGrid } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { api } from '../../../../api/axios';
+
+
+
+interface IEncuesta {
+    id_encabezado_encuesta: number;
+    nombre_encuesta: string;
+    fecha_creacion: string;
+}
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -13,23 +25,35 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, }) => {
+    const [encuestas, setEncuestas] = useState<IEncuesta[]>([]);
 
+    useEffect(() => {
+        const fetchEncuestas = async () => {
+            try {
+                const res = await api.get("/gestor/encuestas/encabezado_encuesta/get/");
+                if (res.data.success) {
+                    setEncuestas(res.data.data);
+                    console.log(setEncuestas)
+                    console.log("1111111111")
 
-    const rows = [
-        { id: 1,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"30-04-2023", opciones: 'Opción 1', acciones:  ""},
-        { id: 2,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"04-08-2023", opciones: 'Opción 2', acciones:  ""},
-        { id: 3,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"03-09-2023", opciones: 'Opción 3', acciones:  ""},
-        { id: 4,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"02-11-2023", opciones: 'Opción 4', acciones:  ""},
-        { id: 5,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"020-3-2023", opciones: 'Opción 5', acciones: "" },
-        { id: 6,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"01-01-2023", opciones: 'Opción 6', acciones: "" },
-        // Agrega más filas según tus datos
-    ];
-        
-        // Columnas de la datagrid
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+       void fetchEncuestas();
+    }, []);
+
+    const handle_close = (): void => {
+        set_is_modal_active(false);
+    };
+
     const columns = [
-        { field: 'Nombre_encuesta', headerName: 'Nombre encuesta', width: 200, flex: 1, },
-        { field: 'Fecha', headerName: 'Fecha creación', width: 200, flex: 1, },
-        {
+        // { field: "id_encabezado_encuesta", headerName: "ID", width: 100 },
+        { field: "nombre_encuesta", headerName: "Nombre de Encuesta", width: 300,flex:1, },
+        { field: "fecha_creacion", headerName: "Fecha de Creación", width: 250 ,flex:1,},
+          {
             field: 'acciones', headerName: 'Acciones', width: 200, flex: 1, renderCell: (params: any) => (
                 <>
 
@@ -44,15 +68,6 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
         },
     ];
 
-    const handle_close = (): void => {
-        set_is_modal_active(false);
-    };
-
-
-
-
-
-    
     return (
         <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
             <Grid container
@@ -71,17 +86,16 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
 
 
 
-                <Grid item xs={12} marginTop={2}  >
+                <Grid item xs={12} marginTop={2}>
                     <DataGrid
                         density="compact"
                         autoHeight
-                        rows={rows}
                         columns={columns}
-                        rowsPerPageOptions={[5]}
-                        pageSize={5} // Cantidad de filas por página
-                        disableSelectionOnClick // Desactiva la selección al hacer clic en una fila
+                        rows={encuestas}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        getRowId={(row) => row.id_encabezado_encuesta}
                     />
-                    {/* </div> */}
                 </Grid>
 
 

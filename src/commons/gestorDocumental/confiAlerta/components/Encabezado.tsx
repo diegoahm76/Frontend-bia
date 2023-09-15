@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/promise-function-async */
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/consistent-type-imports */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormControl, Grid, Button, TextField } from "@mui/material";
-import { Title } from "../../../../components";
 import { InputLabel, MenuItem, Select, } from "@mui/material";
 import SaveIcon from '@mui/icons-material/Save';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from "react";
 import { Buscar } from "./Buscar";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
@@ -16,9 +19,29 @@ import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import PrintIcon from '@mui/icons-material/Print';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BarChartIcon from '@mui/icons-material/BarChart';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalEntidadd: React.FC = () => {
+import React, { useState } from 'react';
+import { api } from "../../../../api/axios";
+import { Title } from "../../../../components";
+import axios from "axios";
 
+
+
+
+
+
+export const SucursalEntidadd: React.FC = () => {
+const initialFormData = {
+  nombre_encuesta: "Encuenta  123",
+  descripcion: "",
+  activo: true,
+
+  preguntas: [
+    {
+      redaccion_pregunta: "",
+      opciones_rta: [{ opcion_rta: "" }, { opcion_rta: "" }]
+    }
+  ]
+};
   const rows = [
     { id: 1, opciones: 'Opción 1', acciones: <IconButton><DeleteIcon /></IconButton> },
     { id: 2, opciones: 'Opción 2', acciones: <IconButton><DeleteIcon /></IconButton> },
@@ -76,13 +99,173 @@ export const SucursalEntidadd: React.FC = () => {
     m: '10px 0 20px 0',
     mb: '20px',
     boxShadow: '0px 3px 6px #042F4A26',
-};
+  };
+
+
+
+
+
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
+    const { name, value } = event.target;
+  
+    if (name.startsWith("preguntas")) {
+      const match = name.match(/^preguntas\[(\d+)\](?:\.opciones_rta\[(\d+)\])?\.(\w+)$/);
+      if (match) {
+        const qIndex = parseInt(match[1]);
+        const opIndex = match[2] !== undefined ? parseInt(match[2]) : null;
+        const field = match[3];
+  
+        setFormData(prevData => {
+          const newFormData = { ...prevData };
+          if (opIndex !== null) {
+
+            // newFormData.preguntas[qIndex].opciones_rta[opIndex][field] = value;
+              (newFormData.preguntas[qIndex] as any).opciones_rta[opIndex][field] = value;
+          } else {
+            // newFormData.preguntas[qIndex][field] = value;
+            (newFormData.preguntas[qIndex] as any)[field] = value;
+          }
+          return newFormData;
+        });
+        return;
+      }
+    }
+  
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  
+
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await api.post('/gestor/encuestas/encabezado_encuesta/create/', formData);
+
+      console.log('Encuesta creada exitosamente:', response.data);
+      // Resto de tu lógica después de la creación exitosa
+    } catch (error) {
+      console.error('Error al crear la encuesta:', error);
+      // Manejo de errores
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+
   return (
     <>
       <Grid container
         spacing={2} m={2} p={2}
         sx={miEstilo}
       >
+
+        <>
+          <Grid container spacing={2} m={2} p={2}>
+            <Title title="Encabezado" />
+            <form onSubmit={handleSubmit}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label="Nombre de encuesta"
+                  fullWidth
+                  name="nombre_encuesta"
+                  value={formData.nombre_encuesta}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label="Descripción"
+                  fullWidth
+                  name="descripcion"
+                  value={formData.descripcion}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              {/* Campos de preguntas */}
+              {formData.preguntas.map((pregunta, index) => (
+                <div key={index}>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      label={`Pregunta ${index + 1}`}
+                      fullWidth
+                      name={`preguntas[${index}].redaccion_pregunta`}
+                      value={pregunta.redaccion_pregunta}
+                      onChange={(event) =>
+                        handleInputChange({
+                          target: {
+                            name: `preguntas[${index}].redaccion_pregunta`,
+                            value: event.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </Grid>
+                  {/* Campos de opciones de respuesta */}
+                  {pregunta.opciones_rta.map((opcion, opIndex) => (
+                    <Grid item xs={12}  key={opIndex}>
+                      <TextField
+                        variant="outlined"
+                        size="small"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        label={`Opción ${opIndex + 1}`}
+                        fullWidth
+                        name={`preguntas[${index}].opciones_rta[${opIndex}].opcion_rta`}
+                        value={opcion.opcion_rta}
+                        onChange={(event) =>
+                          handleInputChange({
+                            target: {
+                              name: `preguntas[${index}].opciones_rta[${opIndex}].opcion_rta`,
+                              value: event.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </div>
+              ))}
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={loading}
+                >
+                  Crear Encuesta
+                </Button>
+              </Grid>
+            </form>
+          </Grid>
+        </>
+
+  
         <Title title="Encabezado" />
 
         <Grid item xs={12} sm={4}>
@@ -223,7 +406,7 @@ export const SucursalEntidadd: React.FC = () => {
 
 
         <Grid item xs={12} sm={1.2}>
-          <Button startIcon={<BarChartIcon />}  onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
+          <Button startIcon={<BarChartIcon />} onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
             informe
           </Button>
         </Grid>
@@ -233,8 +416,8 @@ export const SucursalEntidadd: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={1.2}>
-          
-          <Button startIcon={<DeleteForeverIcon />}  color='error' fullWidth variant="outlined"    >
+
+          <Button startIcon={<DeleteForeverIcon />} color='error' fullWidth variant="outlined"    >
             borrar
           </Button>
         </Grid>
@@ -248,11 +431,11 @@ export const SucursalEntidadd: React.FC = () => {
             limpiar
           </Button>
         </Grid>
-       
-        
+
+
         <Grid item xs={12} sm={1}>
-          <ButtonSalir/> 
-        </Grid> 
+          <ButtonSalir />
+        </Grid>
       </Grid>
 
       <Buscar is_modal_active={is_buscar} set_is_modal_active={set_is_buscar} />

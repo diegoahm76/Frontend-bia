@@ -25,9 +25,8 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
     const initial_data: Alertas[] = [];
     const [loading, set_loading] = useState(false);
     const [persona, set_persona] = useState<Persona | undefined>();
-    // const [selected_row, setselected_row] = useState<Alertas | null>(null);
     const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
-    
+
     const [data_entidad, setdata_entidad] = useState<Alertas[]>(initial_data);
     const fetch_dataget = async (): Promise<void> => {
         try {
@@ -122,11 +121,11 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             } catch (error) {
                 console.error(error);
             }
-        }; 
+        };
         void fetch_perfil();
     }, []);
 
-    
+
     const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
     useEffect(() => {
         const fetch_perfil = async (): Promise<void> => {
@@ -313,30 +312,30 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                 
             )} */}
 
-{selected_button === 'buscador' && (
-    <>
-        <Grid item xs={12}>
-            <BuscadorPersona
-                onResult={(data) => {
-                    void on_result(data);
-                }}
-            />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-            <TextField
-                label="Primer Nombre"
-                variant="outlined"
-                fullWidth
-                size="small"
-                disabled
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                value={persona?.primer_nombre}
-            />
-        </Grid>
-    </>
-)}
+            {selected_button === 'buscador' && (
+                <>
+                    <Grid item xs={12}>
+                        <BuscadorPersona
+                            onResult={(data) => {
+                                void on_result(data);
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Primer Nombre"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            disabled
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            value={persona?.primer_nombre}
+                        />
+                    </Grid>
+                </>
+            )}
             {/* <Grid item xs={12}  sm={3}> 
             <TextField
                 label="Primer Nombre"
@@ -350,7 +349,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                 value={persona?.primer_nombre}
             /> </Grid> */}
 
-                {/* <>{persona?.primer_nombre}</> */}
+            {/* <>{persona?.primer_nombre}</> */}
             {/* <>{persona?.id_persona}</> */}
             <Grid item xs={12}  >
                 <DataGrid
