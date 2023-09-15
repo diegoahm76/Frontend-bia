@@ -13,8 +13,6 @@ export const get_restricciones_series_documentales = async (
     const { data } = await api.get(url);
     if (data?.succes) {
       control_success('Se encontraron restricciones');
-      // console.log(data);
-
       const datas = {
         restriccionParaTodasLasUnidades: {
           denegar_borrado_docs: data?.data?.denegar_borrado_docs,
@@ -37,8 +35,7 @@ export const get_restricciones_series_documentales = async (
         return {
           id: key,
           value: value,
-          checked: data?.data[key],
-          che: key
+          checked: data?.data[key]
         };
       });
 
@@ -47,7 +44,8 @@ export const get_restricciones_series_documentales = async (
       ).map(([key, value]) => {
         return {
           id: key,
-          value: value
+          value: value,
+          checked: data?.data[key]
         };
       });
 

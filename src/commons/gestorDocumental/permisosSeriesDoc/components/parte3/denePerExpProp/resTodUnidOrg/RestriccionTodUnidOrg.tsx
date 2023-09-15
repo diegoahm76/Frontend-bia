@@ -1,20 +1,46 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useAppSelector } from '../../../../../../../hooks';
-import { Chip } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import { Checkbox, Chip, Tooltip } from '@mui/material';
+import { set_restricciones_para_todas_las_unidades_organizacionales_action } from '../../../../toolkit/slice/PSDSlice';
 // componente restricción para todas las unidades organizacionales (dentro de denegación de permisos sobre expedientes propios)
 export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
   //* redux states
   const { restriccionesParaTodasLasUnidadesOrganizacionales } = useAppSelector(
     (state) => state.PsdSlice
   );
 
+  //* función de chequeo
+  const handleCheckboxChange = (
+    event: any,
+    id_restriccion: number,
+    // params: any
+  ): void => {
+    console.log(restriccionesParaTodasLasUnidadesOrganizacionales);
+    const RESTRICCIONES_ACTUALIZADAS =
+      restriccionesParaTodasLasUnidadesOrganizacionales.map(
+        (restriccion: any) =>
+          restriccion.id === id_restriccion
+            ? { ...restriccion, checked: event.target.checked }
+            : restriccion
+      );
+    // dispatch(get_unitys(newUnidadesActualizaciónActivo));
+    dispatch(
+      set_restricciones_para_todas_las_unidades_organizacionales_action(
+        RESTRICCIONES_ACTUALIZADAS
+      )
+    );
+  };
+
   const columns = [
     {
       field: 'id',
       headerName: 'Configuración de restricciones',
-      width: 380,
+      width: 480,
 
       renderCell: (params: any) => (
         <div
@@ -52,13 +78,31 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
     {
       field: 'checked',
       headerName: 'Marcado',
-      width: 100,
+      width: 130,
       renderCell: (params: any) =>
         params.row.checked ? (
-          <Chip label="SI" color="primary" variant="outlined" />
+          <Chip label="SI" color="success" variant="outlined" />
         ) : (
           <Chip label="NO" color="error" variant="outlined" />
         )
+    },
+    {
+      headerName: 'Marcar',
+      headerAlign: 'center',
+      field: 'acciones',
+      width: 130,
+      // hide: organigram_current.fecha_terminado !== null,
+      renderCell: (params: any) => (
+        <Tooltip title="Marcar / desmarcar restricción">
+          <Checkbox
+            checked={params.row.checked}
+            onChange={(event) =>
+              handleCheckboxChange(event, params.row.id)
+            }
+            inputProps={{ 'aria-label': 'Seleccionar item' }}
+          />
+        </Tooltip>
+      )
     }
   ];
 
@@ -71,9 +115,34 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
   );
 };
 
-
-
 /*
+
+  ----- funcion de cambio de estado
+    const handleCheckboxChange = (
+    event: any,
+    id_unidad_organizacional: number,
+    params: any
+  ): void => {
+    console.log(params.row, 'params.row');
+    const newUnidadesActualizaciónActivo = unity_organigram.map((unidad: any) =>
+      unidad.id_unidad_organizacional === id_unidad_organizacional
+        ? { ...unidad, activo: event.target.checked }
+        : unidad
+    );
+    dispatch(get_unitys(newUnidadesActualizaciónActivo));
+  };
+  -----------------------------------
+
+
+  -----------------
+
+
+
+
+
+
+
+
   const edit_prop_activo_unidad_org = (newObject: any) => {
     console.log(newObject, 'newObject');
 
