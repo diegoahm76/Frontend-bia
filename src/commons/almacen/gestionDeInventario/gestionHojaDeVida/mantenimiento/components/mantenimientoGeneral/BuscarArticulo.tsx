@@ -27,7 +27,7 @@ const BuscarArticuloComponent = ({
   const [nombre, set_nombre] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState(null);
+  const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +131,6 @@ const BuscarArticuloComponent = ({
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
                     <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                      // @ts-ignore
                       selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
