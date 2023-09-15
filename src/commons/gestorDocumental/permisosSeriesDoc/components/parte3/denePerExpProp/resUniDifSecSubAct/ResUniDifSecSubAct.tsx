@@ -43,38 +43,19 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
     {
       field: 'id',
       headerName: 'Configuración de restricciones',
-      width: 480,
-
+      width: 420,
       renderCell: (params: any) => (
         <div
           onClick={() => {
             console.log('se hace click');
             console.log(params.row);
           }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            wordWrap: 'break-word'
-          }}
         >
           {params.row.id === 'denegar_conceder_acceso_doc_na_resp_series' ? (
             'Denegar conceder acceso a documentos'
-          ) : params.row.id === 'denegar_anulacion_docs' ? (
-            'Denegar la anulación de documentos'
-          ) : params.row.id ===
-            'excluir_und_actual_respon_series_doc_restriccion' ? (
-            <div
-              style={{
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-all'
-              }}
-            >
-              Excluir a sección o subsección actual responsable de la serie
-              documental, de las restricción de anulacion y borrado
-            </div>
-          ) : (
-            ''
-          )}
+          ) : params.row.id === 'denegar_conceder_acceso_exp_na_resp_series' ? (
+            'Denegar conceder acceso a expedientes'
+          ) : ''}
         </div>
       )
     },
@@ -109,9 +90,10 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
 
   return (
     <RenderDataGrid
-      columns={columns}
+      columns={columns || []}
       rows={
-        restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
+        restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable ||
+        []
       }
       title="Restricción a unidades diferentes a la sección o subsección actual responsable de la serie documental"
     />

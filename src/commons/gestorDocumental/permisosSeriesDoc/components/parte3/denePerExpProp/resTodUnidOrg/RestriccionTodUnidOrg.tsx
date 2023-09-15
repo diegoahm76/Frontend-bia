@@ -108,8 +108,8 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
 
   return (
     <RenderDataGrid
-      columns={columns ?? []}
-      rows={restriccionesParaTodasLasUnidadesOrganizacionales ?? []}
+      columns={columns || []}
+      rows={restriccionesParaTodasLasUnidadesOrganizacionales || []}
       title="Restricción para todas las unidades organizacionales"
     />
   );
