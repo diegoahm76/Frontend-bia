@@ -37,6 +37,17 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   // ? validaciones de renderizado
   if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
 
+  const handleSubmit = () => {
+    try {
+      setLoadingButton(true);
+      console.log('se hace submit');
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingButton(false);
+    }
+  };
+
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -45,11 +56,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log('submitting form');
-              setLoadingButton(true);
-              setTimeout(() => {
-                setLoadingButton(false);
-              }, 2000);
+              handleSubmit()
             }}
             style={{
               textAlign: 'center',
