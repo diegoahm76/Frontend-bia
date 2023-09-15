@@ -1,4 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction } from '@reduxjs/toolkit';
 
 export interface Ipsd {
   //* fase ccd
@@ -13,5 +13,8 @@ export interface Ipsd {
   //* restricciones
   restriccionesParaTodasLasUnidadesOrganizacionales: any;
   restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: any;
-}
 
+  //* fase permisos
+  unidadActuales: any[];
+  unidadesActualesExternas: any[];
+}

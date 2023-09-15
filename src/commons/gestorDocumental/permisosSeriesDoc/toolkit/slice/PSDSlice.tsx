@@ -12,7 +12,10 @@ const initialState: Ipsd = {
   currentSeriesSubseries: null,
   restriccionesParaTodasLasUnidadesOrganizacionales: null,
   restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable:
-    null
+    null,
+
+  unidadActuales: [],
+  unidadesActualesExternas: []
 };
 
 export const PsdSlice = createSlice({
@@ -63,7 +66,22 @@ export const PsdSlice = createSlice({
       (state, action: PayloadAction<any>) => {
         state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
           action.payload;
-      }
+      },
+
+    // ! acciones sobre los permisos
+    set_permisos_unidades_actuales_action: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.unidadActuales = action.payload;
+    },
+
+    set_permisos_unidades_actuales_externas_action: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.unidadesActualesExternas = action.payload;
+    }
   }
 });
 
@@ -80,7 +98,11 @@ export const {
 
   // ! acciones sobre las restricciones
   set_restricciones_para_todas_las_unidades_organizacionales_action,
-  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
+  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action,
+
+  // ! acciones sobre los permisos
+  set_permisos_unidades_actuales_action,
+  set_permisos_unidades_actuales_externas_action
 } = PsdSlice.actions;
 
 //* para el próximo slice que cree se debe tener en cuenta el siguiente ejemplo

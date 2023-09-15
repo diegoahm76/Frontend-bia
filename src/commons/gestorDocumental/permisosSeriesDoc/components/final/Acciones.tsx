@@ -20,8 +20,14 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-  const { current_unidad_organizacional, currentSeriesSubseries } =
-    useAppSelector((state) => state.PsdSlice);
+  const {
+    current_unidad_organizacional,
+    currentSeriesSubseries,
+
+    //* info necesaria,
+    restriccionesParaTodasLasUnidadesOrganizacionales,
+    restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
+  } = useAppSelector((state) => state.PsdSlice);
 
   //* usePSD
   const { reset_all } = usePSD();
@@ -40,14 +46,24 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const handleSubmit = () => {
     try {
       setLoadingButton(true);
-      console.log('se hace submit');
+      const restricciones = restriccionesParaTodasLasUnidadesOrganizacionales
+        .concat(
+          restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
+        )
+        .reduce(
+          (obj: any, item: any) => {
+            obj[item.id] = item.checked;
+            return obj;
+          },
+          { id_cat_serie_und_org_ccd: currentSeriesSubseries.id_cat_serie_und }
+        );
+      console.log(restricciones);
     } catch (error) {
       console.log(error);
     } finally {
       setLoadingButton(false);
     }
   };
-
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -56,7 +72,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleSubmit()
+              handleSubmit();
             }}
             style={{
               textAlign: 'center',

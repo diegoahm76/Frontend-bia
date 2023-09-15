@@ -5,11 +5,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { Button, Grid } from '@mui/material';
 
 export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
+  //* get states from redux store
+  const { unidadesActualesExternas } = useAppSelector(
+    (state) => state.PsdSlice
+  );
   return (
     <RenderDataGrid
       columns={[]}
-      rows={[]}
-      title="Unidades organizacionales actuales de la sección responsable"
+      rows={unidadesActualesExternas || []}
+      title="Unidades organizacionales actuales externas a la sección responsable"
       aditionalElement={
         <Grid
           item

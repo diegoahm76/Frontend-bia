@@ -6,10 +6,12 @@ import AddIcon from '@mui/icons-material/Add';
 
 // componente unidades organizacionales actuales de la sección responsable
 export const UnidadActSecResp: FC<any> = (): JSX.Element => {
+  //* get states from redux store
+  const { unidadActuales } = useAppSelector((state) => state.PsdSlice);
   return (
     <RenderDataGrid
       columns={[]}
-      rows={[]}
+      rows={unidadActuales || []}
       title="Unidades organizacionales actuales de la sección responsable"
       aditionalElement={
         <Grid

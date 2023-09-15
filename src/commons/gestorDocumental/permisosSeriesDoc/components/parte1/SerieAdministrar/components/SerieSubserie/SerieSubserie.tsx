@@ -12,10 +12,16 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import {
   setCurrentSerieSubserie,
+  set_permisos_unidades_actuales_action,
+  set_permisos_unidades_actuales_externas_action,
   set_restricciones_para_todas_las_unidades_organizacionales_action,
   set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
 } from '../../../../../toolkit/slice/PSDSlice';
 import { get_restricciones_series_documentales } from '../../../../../toolkit/thunks/thunksPartThree';
+import {
+  GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE,
+  GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE
+} from '../../../../../toolkit/thunks/psdThunks';
 
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   //* dispatch declaration
@@ -70,7 +76,6 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption);
                   dispatch(setCurrentSerieSubserie(selectedOption.item));
 
                   // ! se deben llamar los servicios de permisos y restricciones
@@ -92,6 +97,26 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                       )
                     );
                   });
+
+                  // ? de igual manera al seleccionar la respectiva serie se debe buscar los permisos de las unidades para poder configurarlos
+                  void GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE(
+                    selectedOption.item.id_cat_serie_und,
+                    setLoadingRestricciones
+                  ).then((_res) => {
+                    dispatch(set_permisos_unidades_actuales_action(_res));
+                  });
+
+                  // ! Unidades organizacionales actuales de la sección responsable
+
+                  void GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE(
+                    selectedOption.item.id_cat_serie_und,
+                    setLoadingRestricciones
+                  ).then((_res) => {
+                    dispatch(
+                      set_permisos_unidades_actuales_externas_action(_res)
+                    );
+                  });
+
                   onChange(selectedOption);
                 }}
                 options={
@@ -101,9 +126,6 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                     )
                     .map((item) => ({
                       item,
-                      /* analizar para seguir con el desarrollo de la aplicación
-                      id_cat_serie_und: 12 , id_catalogo_serie: 11 , id_serie_doc: 64 , id_subserie_doc: 8
-                      */
                       value: item.id_cat_serie_und,
                       label: `${item?.codigo_serie} - ${item?.nombre_serie} / ${
                         item?.codigo_subserie ? item.codigo_subserie : ''

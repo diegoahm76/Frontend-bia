@@ -51,11 +51,11 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
             console.log(params.row);
           }}
         >
-          {params.row.id === 'denegar_conceder_acceso_doc_na_resp_series' ? (
-            'Denegar conceder acceso a documentos'
-          ) : params.row.id === 'denegar_conceder_acceso_exp_na_resp_series' ? (
-            'Denegar conceder acceso a expedientes'
-          ) : ''}
+          {params.row.id === 'denegar_conceder_acceso_doc_na_resp_series'
+            ? 'Denegar conceder acceso a documentos'
+            : params.row.id === 'denegar_conceder_acceso_exp_na_resp_series'
+            ? 'Denegar conceder acceso a expedientes'
+            : ''}
         </div>
       )
     },
@@ -80,7 +80,10 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
         <Tooltip title="Marcar / desmarcar restricción">
           <Checkbox
             checked={params.row.checked}
-            onChange={(event) => handleCheckboxChange(event, params.row.id)}
+            onChange={(event) => {
+              handleCheckboxChange(event, params.row.id);
+              console.log(event);
+            }}
             inputProps={{ 'aria-label': 'Seleccionar item' }}
           />
         </Tooltip>

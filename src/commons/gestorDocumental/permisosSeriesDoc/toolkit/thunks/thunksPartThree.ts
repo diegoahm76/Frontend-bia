@@ -13,7 +13,7 @@ export const get_restricciones_series_documentales = async (
     const { data } = await api.get(url);
     if (data?.succes) {
       control_success('Se encontraron restricciones');
-      const datas = {
+      const dataRestricciones = {
         restriccionParaTodasLasUnidades: {
           denegar_borrado_docs: data?.data?.denegar_borrado_docs,
           denegar_anulacion_docs: data?.data?.denegar_anulacion_docs,
@@ -30,30 +30,22 @@ export const get_restricciones_series_documentales = async (
       };
 
       const arrayRestriccionesParaTodasLasUnidades = Object.entries(
-        datas.restriccionParaTodasLasUnidades
+        dataRestricciones.restriccionParaTodasLasUnidades
       ).map(([key, value]) => {
         return {
           id: key,
-          value: value,
           checked: data?.data[key]
         };
       });
 
       const arrayRestriccionesOtros = Object.entries(
-        datas.restriccionesOtros
+        dataRestricciones.restriccionesOtros
       ).map(([key, value]) => {
         return {
           id: key,
-          value: value,
           checked: data?.data[key]
         };
       });
-
-      console.log(
-        'arrayRestriccionesParaTodasLasUnidades',
-        arrayRestriccionesParaTodasLasUnidades
-      );
-      console.log('arrayRestriccionesOtros', arrayRestriccionesOtros);
 
       return {
         arrayRestriccionesParaTodasLasUnidades,
@@ -65,7 +57,6 @@ export const get_restricciones_series_documentales = async (
         arrayRestriccionesParaTodasLasUnidades: [],
         arrayRestriccionesOtros: []
       };
-      // return [];
     }
   } catch (error: any) {
     control_error(
