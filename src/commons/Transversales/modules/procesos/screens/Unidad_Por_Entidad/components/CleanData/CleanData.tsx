@@ -427,7 +427,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   </Button>
 
                   <LoadingButton
-                    color="success"
+                    // color="success"
                     loading={loadingButton}
                     color="success"
                     variant="contained"
