@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-duplicates */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormControl, Grid, Button, TextField } from "@mui/material";
 import { InputLabel, MenuItem, Select, } from "@mui/material";

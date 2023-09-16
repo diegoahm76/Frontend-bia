@@ -2,7 +2,7 @@
 import { type Persona } from '../../../../interfaces/globalModels';
 export interface INursery {
   nurseries: IObjNursery[];
-  current_nursery: IObjNursery;
+  current_nursery: IObjNursery | any;
   items_despacho: IObjItem[];
   items_despacho_aux: IObjItem[];
   current_bien: IObjItem;
@@ -24,6 +24,7 @@ export interface INursery {
   bienes_bajas: IObjBienBaja[];
   current_bien_baja: IObjBienBaja;
   persona: Persona;
+  realizar_despacho_manual: IObjDespacho;
 }
 
 export interface IList {
@@ -75,6 +76,8 @@ export interface IDespacho {
   id_despacho_consumo_alm?: number | null;
   id_persona_distribuye?: number | null;
   persona_distribuye?: string | null;
+  id_vivero_solicita?: number | null;
+  nombre_vivero_solicita?: string | null;
 }
 
 export interface IObjNursery {
@@ -83,6 +86,8 @@ export interface IObjNursery {
   cod_municipio: string | null;
   direccion: string | null;
   area_mt2: number | null;
+  coordenadas_lat: number | null;
+  coordenadas_lon: number | null;
   area_propagacion_mt2: number | null;
   tiene_area_produccion: boolean | null;
   tiene_areas_pep_sustrato: boolean | null;
@@ -197,4 +202,7 @@ export interface IObjBien {
   unidad_medida: string | null;
   tipo_bien?: string | null;
 
+}
+export interface IObjDespacho {
+  realizar_despacho_manual?: boolean | null;
 }

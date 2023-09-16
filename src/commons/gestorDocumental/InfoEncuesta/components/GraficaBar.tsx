@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-duplicates */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';

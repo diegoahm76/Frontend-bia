@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_article_by_type } from "./thunks/maintenanceThunks";
-import ClearIcon from '@mui/icons-material/Clear';
+
 
 interface IProps {
   is_modal_active: boolean;
@@ -27,7 +27,7 @@ const BuscarArticuloComponent = ({
   const [nombre, set_nombre] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState(null);
+  const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,10 +69,7 @@ const BuscarArticuloComponent = ({
       open={is_modal_active}
       onClose={() => { set_is_modal_active(false); }}
     >
-       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-                    <Title title={`Buscar ${title}`}/>
-                </Grid>
-      <DialogTitle> </DialogTitle>
+      <DialogTitle>Buscar {title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box
@@ -151,13 +148,12 @@ const BuscarArticuloComponent = ({
       </DialogContent>
       <DialogActions>
         <Button
-          color='error'
+          color='inherit'
           variant='contained'
-          startIcon={<ClearIcon />}
           onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
         <Button
           color='primary'
-          variant='contained' 
+          variant='contained'
           onClick={selected_product_grid}>Seleccionar</Button>
       </DialogActions>
     </Dialog>

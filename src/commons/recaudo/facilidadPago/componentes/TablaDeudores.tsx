@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, Article } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';

@@ -574,7 +574,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
                         placeholder="Clasificacion Cormacarena"
                       />
                     )}
-                    {...register('datos_clasificacion_persona')}
+                    {...register('datos_clasificacion_persona')}                
                     onChange={handle_change_autocomplete}
                   />
                 </Grid>

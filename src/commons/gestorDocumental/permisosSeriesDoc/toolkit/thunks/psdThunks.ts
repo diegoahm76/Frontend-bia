@@ -38,14 +38,18 @@ export const get_unidad_organizacional_ccd_psd = async (
 ): Promise<any> => {
   try {
     setLoadingButtonPSD(true);
-    const url = `gestor/permisos/unidades-ccd/get/${id_organigrama}/?nombre=${nombre ?? ''}`;
+    const url = `gestor/permisos/unidades-ccd/get/${id_organigrama}/?nombre=${
+      nombre ?? ''
+    }`;
     const { data } = await api.get(url);
     if (data?.data?.length > 0) {
-      // control_success(`Se encontró la siguiente información`);
+      control_success(
+        `Se encontró la siguiente información de seccion / subseccion`
+      );
       console.log(data?.data);
       return data?.data;
     } else {
-      // control_warning('No se encontraron unidades organizacionales');
+      control_warning('No se encontraron unidades organizacionales');
       return [];
     }
   } catch (error: any) {
@@ -53,5 +57,33 @@ export const get_unidad_organizacional_ccd_psd = async (
     console.log(error);
   } finally {
     setLoadingButtonPSD(false);
+  }
+};
+
+// ! get series documentales relacionadas a la unidad organizacional seleccionada en el organigrama - ccd
+
+export const get_series_documentales_unidad_organizacional_psd = async (
+  id_unidad_organizacional: number,
+  id_ccd: number,
+  setLoadingSeriesSubseries: any
+): Promise<any> => {
+  try {
+    setLoadingSeriesSubseries(true);
+    const url = `gestor/permisos/serie-subserie-unidad-ccd/get/?id_ccd=${id_ccd}&id_unidad_organizacional=${id_unidad_organizacional}`;
+    const { data } = await api.get(url);
+    if (data?.data?.length > 0) {
+      control_success('Se encontraron series/subseries documentales');
+      console.log(data?.data);
+      return data?.data;
+    } else {
+      control_warning('No se encontraron series/subseries documentales');
+      console.log('no se encontraron series documentales');
+      return [];
+    }
+  } catch (error: any) {
+    control_error(error?.response?.data?.detail);
+    console.log(error);
+  } finally {
+    setLoadingSeriesSubseries(false);
   }
 };

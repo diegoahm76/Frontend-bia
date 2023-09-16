@@ -11,11 +11,14 @@ import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBa
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
 
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
+import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
+import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 // import { Suspense } from 'react';
 // import { Loader } from '../../../utils/Loader/Loader';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+
 const routes = [
   {
     path: 'organigrama/',
@@ -67,6 +70,16 @@ const routes = [
     component: () => <Alertas_gestor_Routes />,
   },
   {
+    path: 'configuracion_pqr/',
+    name: 'configuracion_pqr',
+    component: () => <PQR_Configuracion_Routes />,
+  },
+  {
+    path: 'plantilladocumentos/',
+    name: 'plantilladocumentos',
+    component: () => <AdministracionPlantillaDocumentos_Routes />,
+  },
+  {
     path: 'encuesta_configuracion/',
     name: 'encuesta_configuracion',
     component: () => <Confi_Encuasta_Routes />,
@@ -83,6 +96,7 @@ const routes = [
   },
 
 ];
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (

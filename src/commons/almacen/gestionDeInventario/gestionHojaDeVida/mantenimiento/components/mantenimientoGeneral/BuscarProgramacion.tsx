@@ -23,7 +23,7 @@ import { get_programmed_maintenance } from './thunks/maintenanceThunks';
 import { get_cv_vehicle_service } from '../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks';
 import { get_cv_computer_service } from '../../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { get_cv_others_service } from '../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks';
-import ClearIcon from '@mui/icons-material/Clear';
+
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -143,10 +143,7 @@ const BuscarProgramacionComponent = ({
         set_is_modal_active(false);
       }}
     >
-      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-        <Title title={`${title} `} />
-      </Grid>
-      <DialogTitle> </DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText
           component={'span'}
@@ -272,23 +269,21 @@ const BuscarProgramacionComponent = ({
       </DialogContent>
       <DialogActions>
         <Button
-          color="error"
-          variant="contained"
-          startIcon={<ClearIcon />}
-          onClick={() => {
-            set_is_modal_active(false);
-          }}
-        >
-          Salir
-        </Button>
-         <Button
           color="primary"
           variant="contained"
           onClick={selected_product_grid}
         >
           Seleccionar
         </Button>
-       
+        <Button
+          color="inherit"
+          variant="contained"
+          onClick={() => {
+            set_is_modal_active(false);
+          }}
+        >
+          Salir
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -105,12 +105,12 @@ export function BajaHerramientaScreen(): JSX.Element {
         (p: IObjNursery) => p.id_vivero === watch('id_vivero')
       );
       if (vivero !== undefined) {
-        dispatch(set_current_nursery(vivero));
+        dispatch(set_current_nursery(vivero as any));
       } else {
-        dispatch(set_current_nursery(initial_state_current_nursery));
+        dispatch(set_current_nursery(initial_state_current_nursery as any));
       }
     } else {
-      dispatch(set_current_nursery(initial_state_current_nursery));
+      dispatch(set_current_nursery(initial_state_current_nursery as any));
     }
   }, [watch('id_vivero')]);
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Title } from '../../../../components/Title';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -80,6 +79,7 @@ export const FacilidadPago: React.FC = () => {
         throw new Error(error);
       });
   };
+
 
   const handle_export_pdf = () => {
     const report = new JsPDF('l', 'pt', 'letter');

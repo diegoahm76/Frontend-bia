@@ -147,7 +147,7 @@ const AdministrarCarpetasScreen = () => {
         };
 
         void dispatch(mover_carpeta_seleccionada(selected_carpeta.id_carpeta_caja, data_mover));
-        console.log(selected_carpeta)
+        console.log(selected_carpeta);
 
     }
 

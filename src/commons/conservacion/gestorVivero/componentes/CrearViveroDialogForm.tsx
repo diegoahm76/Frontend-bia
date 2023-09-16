@@ -113,7 +113,8 @@ const CrearViveroDialogForm = ({
             cod_municipio: get_values('cod_municipio'),
             direccion: get_values('direccion'),
             area_mt2: get_values('area_mt2'),
-            area_propagacion_mt2: get_values('area_propagacion_mt2'),
+            coordenadas_lat: get_values('coordenadas_lat'),
+            coordenadas_lon: get_values('coordenadas_lon'),
             tiene_area_produccion: get_values('tiene_area_produccion'),
             tiene_areas_pep_sustrato: get_values('tiene_areas_pep_sustrato'),
             tiene_area_embolsado: get_values('tiene_area_embolsado'),
@@ -136,6 +137,8 @@ const CrearViveroDialogForm = ({
     form_data.append('cod_municipio', data.cod_municipio);
     form_data.append('direccion', data.direccion);
     form_data.append('area_mt2', data.area_mt2);
+    form_data.append('coordenadas_lat', data.coordenadas_lat);
+    form_data.append('coordenadas_lon', data.coordenadas_lon);
     form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
     form_data.append('tiene_area_produccion', data.tiene_area_produccion);
     form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
@@ -153,6 +156,8 @@ const CrearViveroDialogForm = ({
     const form_data: any = new FormData();
 
     form_data.append('area_mt2', data.area_mt2);
+    form_data.append('coordenadas_lat', data.coordenadas_lat);
+    form_data.append('coordenadas_lon', data.coordenadas_lon);
     form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
     form_data.append('tiene_area_produccion', data.tiene_area_produccion);
     form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
@@ -423,6 +428,66 @@ const CrearViveroDialogForm = ({
                         </MenuItem>
                       ))}
                     </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="coordenadas_lat"
+                  control={control_vivero}
+                  rules={{
+                    required: true
+                  }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Latitud"
+                      variant="outlined"
+                      type="number"
+                      disabled={action === 'detail'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null ? error.type === 'required' ? 'La latitud es requerida' : '' : 'Ingrese latitud'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="coordenadas_lon"
+                  control={control_vivero}
+                  rules={{
+                    required: true
+                  }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Lóngitud"
+                      variant="outlined"
+                      type="number"
+                      disabled={action === 'detail'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null ? error.type === 'required' ? 'La lóngitud es requerida' : '' : 'Ingrese lóngitud'
+                      }
+                    />
                   )}
                 />
               </Grid>

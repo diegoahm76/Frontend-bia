@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-duplicates */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { type ApexOptions } from "apexcharts";

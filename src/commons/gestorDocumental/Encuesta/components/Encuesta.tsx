@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-duplicates */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, FormControl, Grid, TextField } from "@mui/material";
 import { Title } from "../../../../components";

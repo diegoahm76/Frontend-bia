@@ -7,6 +7,7 @@ import { ModalSeleccionCCDPSD } from '../../ModalSeleccionCCDPSD/ModalSeleccionC
 import { Title } from '../../../../../../../components';
 import { BusquedaCCDPSD } from '../components/BusquedaCCDPSD/BusquedaCCDPSD';
 import { SeleccionSeccion } from '../components/SeleccionSeccion/SeleccionSeccion';
+import { SeleccionSerieSubserie } from '../components/SerieSubserie/SerieSubserie';
 
 export const SerieAdministrar: FC<any> = (): JSX.Element => {
   return (
@@ -36,6 +37,18 @@ export const SerieAdministrar: FC<any> = (): JSX.Element => {
           {/* aqui me encargo de elegir la respectiva sección o subsección sobre la cual voy a realizar la búsqueda de las series y subseries asociadas */}
 
           <SeleccionSeccion />
+        </Grid>
+
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            justifyContent: 'center'
+          }}
+        >
+          {/* aqui aparece la respectiva lista desplegable para elegir una de la relación serie subserie asociada a la unidad organizacional que he elegido previamente */}
+
+          <SeleccionSerieSubserie />
         </Grid>
       </Grid>
 

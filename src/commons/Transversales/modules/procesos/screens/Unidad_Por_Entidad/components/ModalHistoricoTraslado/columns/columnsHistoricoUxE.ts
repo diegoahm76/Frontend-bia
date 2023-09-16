@@ -15,7 +15,7 @@ export const historicoTrasladosMasivosUxE: any[] = [
   {
     headerName: 'Justificación',
     field: 'justificacion',
-    width: 400,
+    width: 250,
     headerAlign: 'center'
   }
 ];

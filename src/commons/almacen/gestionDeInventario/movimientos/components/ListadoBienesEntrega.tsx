@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -11,6 +11,8 @@ import {
 import FormButton from '../../../../../components/partials/form/FormButton';
 import type { IObjBienesEntrada } from '../interfaces/entregas';
 import SearchIcon from '@mui/icons-material/Search';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesEntrega = () => {
@@ -179,6 +181,12 @@ const ListadoBienesEntrega = () => {
         >
           <Box sx={{ width: '100%' }}>
             <Title title="Bienes de Entrada Seleccionada" />
+               <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+
+              {download_xls({ nurseries: bienes_entrada_aux, columns: columns_bienes_entrega })}
+              {download_pdf({ nurseries: bienes_entrada_aux, columns: columns_bienes_entrega, title: "Bienes de Entrada" })}
+
+            </ButtonGroup>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"

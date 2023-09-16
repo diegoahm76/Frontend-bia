@@ -27,7 +27,8 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom'; // Importa createRoot
+// import ReactDOM from 'react-dom';
 import * as Blockly from 'blockly/core';
 
 
@@ -43,11 +44,19 @@ class BlocklyReactField extends Blockly.Field {
 
   showEditor_() {
     this.div_ = Blockly.DropDownDiv.getContentDiv();
-    ReactDOM.render(this.render(),
-      this.div_);
+
+    const root = createRoot(this.div_); // Crea un root usando createRoot
+    root.render(<FieldRenderComponent />); // Renderiza el componente en el root
 
     var border = this.sourceBlock_.style.colourTertiary;
     border = border.colourBorder || border.colourLight;
+
+    // ReactDOM.render(this.render(),
+    //   this.div_);
+
+    // var border = this.sourceBlock_.style.colourTertiary;
+    // border = border.colourBorder || border.colourLight;
+
     Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), border);
 
     Blockly.DropDownDiv.showPositionedByField(
@@ -55,12 +64,12 @@ class BlocklyReactField extends Blockly.Field {
   }
 
   dropdownDispose_() {
-    ReactDOM.unmountComponentAtNode(this.div_);
+    // ReactDOM.unmountComponentAtNode(this.div_);
   }
 
-  render() {
-    return <FieldRenderComponent />
-  }
+  // render() {
+  //   return <FieldRenderComponent />
+  // }
 }
 
 class FieldRenderComponent extends React.Component {
@@ -75,3 +84,4 @@ class FieldRenderComponent extends React.Component {
 Blockly.fieldRegistry.register('field_react_component', BlocklyReactField);
 
 export default BlocklyReactField;
+

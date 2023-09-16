@@ -68,9 +68,9 @@ const DepositoScreen = () => {
 
         set_selected_deposito(initial_state_deposito);
         set_action("Guardar");
-
+        void dispatch(get_depositos())
     };
-    void dispatch(get_depositos())
+
 
     const on_submit_eliminar = (data: IObjDeposito): void => {
 

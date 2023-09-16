@@ -1,6 +1,8 @@
-import { Box, Grid } from '@mui/material';
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+
+import { Box, ButtonGroup, Checkbox, FormControlLabel, FormGroup, Grid, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { type IObjItem } from '../interfaces/vivero';
+import { type IObjDespacho, type IObjItem } from '../interfaces/vivero';
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
@@ -10,11 +12,17 @@ import {
   set_bien_selected,
   set_current_bien,
   set_items_despacho_aux,
+  set_despacho_manual
 } from '../store/slice/viveroSlice';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesDespacho = () => {
   const [selected_row, set_selected_row] = useState([]);
+  const [distribucion_manual, set_distribucion_manual] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [titulo, set_titulo] = useState<string>('Bienes Recibidos');
 
   // const [action, set_action] = useState<string>("agregar");
 
@@ -23,7 +31,12 @@ const ListadoBienesDespacho = () => {
     items_despacho_aux,
     items_distribuidos,
     current_despacho,
+    realizar_despacho_manual
   } = useAppSelector((state) => state.nursery);
+
+  useEffect(() => {
+    current_despacho.id_vivero_solicita !== null ? set_titulo('Bienes recibidos y solicitados por vivero ' + current_despacho.nombre_vivero_solicita) : set_titulo('Bienes recibidos');
+  }, [current_despacho])
 
   // const [item_solicitudes, set_item_solicitudes] = useState<ItemSolicitudConsumible[]>([]);
   const dispatch = useAppDispatch();
@@ -115,10 +128,10 @@ const ListadoBienesDespacho = () => {
           {params.value === 'P'
             ? 'Producción'
             : params.value === 'D'
-            ? 'Distribución'
-            : params.value === 'G'
-            ? 'Germinación'
-            : '-'}
+              ? 'Distribución'
+              : params.value === 'G'
+                ? 'Germinación'
+                : '-'}
         </div>
       ),
     },
@@ -135,7 +148,7 @@ const ListadoBienesDespacho = () => {
     {
       field: 'cantidad_distribuida',
       headerName:
-        current_despacho.distribucion_confirmada === true
+        current_despacho.distribucion_confirmada
           ? 'Cantidad distribuida'
           : 'Cantidad a distribuir',
       width: 140,flex: 1,
@@ -189,6 +202,13 @@ const ListadoBienesDespacho = () => {
     }
   };
 
+  useEffect(() => {
+    const despacho_manual: IObjDespacho = {
+      realizar_despacho_manual: distribucion_manual
+    }
+    dispatch(set_despacho_manual(despacho_manual));
+  }, [distribucion_manual]);
+
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
@@ -201,6 +221,23 @@ const ListadoBienesDespacho = () => {
         >
           <Box sx={{ width: '100%' }}>
             <Title title="Bienes recibidos"></Title>
+            <ButtonGroup
+                    style={{
+                      margin: 7,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    {download_xls({
+                      nurseries: items_despacho_aux,
+                      columns: columns_items_despacho,
+                    })}
+                    {download_pdf({
+                      nurseries: items_despacho_aux,
+                      columns: columns_items_despacho,
+                      title: 'Resultados',
+                    })}
+                  </ButtonGroup>
             <DataGrid
               onSelectionModelChange={handle_selection_change}
               density="compact"
@@ -213,7 +250,17 @@ const ListadoBienesDespacho = () => {
               getRowId={(row) => row.id_bien}
               selectionModel={selected_row}
             />
-            <Grid item xs={12} md={12}>
+            {current_despacho.id_vivero_solicita !== null && <Grid item xs={12} md={12}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                spacing={2}>
+                <FormGroup>
+                  <FormControlLabel label="Realizar districución manual" control={<Checkbox checked={distribucion_manual} onChange={() => { set_distribucion_manual(!distribucion_manual) }} inputProps={{ 'aria-label': 'controlled' }} />} />
+                </FormGroup>
+              </Stack>
+            </Grid>}
+            {(realizar_despacho_manual.realizar_despacho_manual || current_despacho.id_vivero_solicita === null) && <Grid item xs={12} md={12}>
               <FormButton
                 variant_button="contained"
                 on_click_function={select_model}
@@ -221,7 +268,7 @@ const ListadoBienesDespacho = () => {
                 label={'Distribuir bien seleccionado'}
                 type_button="button"
               />
-            </Grid>
+            </Grid>}
           </Box>
         </Grid>
       </Grid>
