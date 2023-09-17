@@ -13,12 +13,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
-import { columnsAsignacionPer } from '../../utils/columnsAsignacionPer/columnsAsignacionPer';
+
 import { ModalContextPSD } from '../../../../context/ModalContextPSD';
 import { set_permisos_unidades_actuales_action } from '../../../../toolkit/slice/PSDSlice';
 import InfoIcon from '@mui/icons-material/Info';
+import { columnsAsignacionPer } from '../../utils/columnsAsignacionPer/columnsAsignacionPer';
 import { ModalActSecResp } from './ModalUnidadActSecResp/ModalActSecResp';
-
 //! componente unidades organizacionales actuales de la sección responsable
 export const UnidadActSecResp: FC<any> = (): JSX.Element => {
   //* dispatch declaration
@@ -174,27 +174,39 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     <>
       <RenderDataGrid
         columns={columns || []}
-        rows={unidadActuales || []}
+        rows={unidadActuales.filter((el) => el.mostrar) || []}
         title="Unidades organizacionales actuales de la sección responsable"
         aditionalElement={
-          <Grid
-            item
-            sx={{
-              width: '100%',
-              marginTop: '1rem'
-            }}
+          <Tooltip
+            title={
+              unidadActuales.filter((el) => !el.mostrar).length === 0
+                ? 'No hay unidades disponibles para agregar'
+                : 'Agregar unidades propias'
+            }
           >
-            <Button
-              color="success"
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setmodalUniProp(true);
+            <Grid
+              item
+              sx={{
+                width: '100%',
+                marginTop: '1rem'
               }}
             >
-              AGREGAR UNIDADES PROPIAS
-            </Button>
-          </Grid>
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<AddIcon />}
+                // se debe luego habilitar el disabled
+                /* disabled={
+                  unidadActuales.filter((el) => !el.mostrar).length === 0
+                } */
+                onClick={() => {
+                  setmodalUniProp(true);
+                }}
+              >
+                AGREGAR UNIDADES PROPIAS
+              </Button>
+            </Grid>
+          </Tooltip>
         }
       />
 

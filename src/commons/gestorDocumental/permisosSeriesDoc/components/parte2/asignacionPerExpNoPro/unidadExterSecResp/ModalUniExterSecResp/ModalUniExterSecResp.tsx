@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Button,
-  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,9 +12,16 @@ import {
 import { Title } from '../../../../../../../../components';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import CloseIcon from '@mui/icons-material/Close';
+import { useAppSelector } from '../../../../../../../../hooks';
 
 export const ModalUniExterSecResp = (params: any): JSX.Element => {
   const { modalUniExt, setmodalUniExt } = params;
+
+  //* redux states
+  const { unidadesActualesExternas } = useAppSelector(
+    (state) => state.PsdSlice
+  );
+
   return (
     <Dialog
       fullWidth
@@ -33,7 +39,11 @@ export const ModalUniExterSecResp = (params: any): JSX.Element => {
         <Grid item xs={12}>
           <Grid container spacing={2}></Grid>
         </Grid>
-        <RenderDataGrid columns={[]} rows={[]} title="Unidades externas" />
+        <RenderDataGrid
+          columns={[]}
+          rows={unidadesActualesExternas.filter((el) => !el.mostrar) || []}
+          title="Unidades externas"
+        />
       </DialogContent>
       <Divider />
       <DialogActions>

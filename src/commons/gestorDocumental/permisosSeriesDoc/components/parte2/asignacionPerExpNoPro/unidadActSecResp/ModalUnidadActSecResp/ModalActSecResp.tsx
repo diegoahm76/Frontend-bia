@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import React, { useEffect } from 'react';
 import {
   Button,
-  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,9 +13,15 @@ import {
 import { Title } from '../../../../../../../../components';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import CloseIcon from '@mui/icons-material/Close';
+import { useAppSelector } from '../../../../../../../../hooks';
 
 export const ModalActSecResp = (params: any): JSX.Element => {
   const { modalUniProp, setmodalUniProp } = params;
+
+  //* redux states
+  const { unidadActuales } = useAppSelector((state) => state.PsdSlice);
+
+
   return (
     <Dialog
       fullWidth
@@ -33,7 +39,7 @@ export const ModalActSecResp = (params: any): JSX.Element => {
         <Grid item xs={12}>
           <Grid container spacing={2}></Grid>
         </Grid>
-        <RenderDataGrid columns={[]} rows={[]} title="Unidades propias" />
+        <RenderDataGrid columns={[]} rows={unidadActuales.filter((el) => !el.mostrar)} title="Unidades propias" />
       </DialogContent>
       <Divider />
       <DialogActions>

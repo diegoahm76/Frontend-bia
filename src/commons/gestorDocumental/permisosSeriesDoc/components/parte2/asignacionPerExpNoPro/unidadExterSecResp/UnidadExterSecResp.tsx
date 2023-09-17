@@ -2,7 +2,7 @@
 import { useContext, type FC, useState } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Tooltip } from '@mui/material';
 import { useAppSelector } from '../../../../../../../hooks';
 import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
@@ -21,7 +21,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
   const { loadingRestricciones } = useContext(ModalContextPSD);
 
   // ? useState necesarios
-  const [modalUniExt, setmodalUniExt] = useState<boolean>(false)
+  const [modalUniExt, setmodalUniExt] = useState<boolean>(false);
 
   // ? este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en FALSE para este caso
 
@@ -94,30 +94,43 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
 
   return (
     <>
-    <RenderDataGrid
-      columns={columns || []}
-      rows={unidadesActualesExternas || []}
-      title="Unidades organizacionales actuales externas a la sección responsable"
-      aditionalElement={
-        <Grid
-          item
-          sx={{
-            width: '100%',
-            marginTop: '1rem'
-          }}
-        >
-          <Button
-            color="success"
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setmodalUniExt(true)}
+      <RenderDataGrid
+        columns={columns || []}
+        rows={unidadesActualesExternas.filter((el) => el.mostrar) || []}
+        title="Unidades organizacionales actuales externas a la sección responsable"
+        aditionalElement={
+          <Tooltip
+            title={
+              unidadesActualesExternas.filter((el) => !el.mostrar).length === 0
+                ? 'No hay unidades disponibles para agregar'
+                : 'Agregar unidades propias'
+            }
           >
-            AGREGAR UNIDADES EXTERNAS
-          </Button>
-        </Grid>
-      }
-    />
-    
+            <Grid
+              item
+              sx={{
+                width: '100%',
+                marginTop: '1rem'
+              }}
+            >
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<AddIcon />}
+                // se debe luego habilitar el disabled
+                /* disabled={
+              unidadesActualesExternas.filter((el) => !el.mostrar).length === 0
+            } */
+                onClick={() => {
+                  setmodalUniExt(true);
+                }}
+              >
+                AGREGAR UNIDADES EXTERNAS
+              </Button>
+            </Grid>
+          </Tooltip>
+        }
+      />
 
       {/*modal agregar unidades externas*/}
       <ModalUniExterSecResp
@@ -125,7 +138,6 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         setmodalUniExt={setmodalUniExt}
       />
       {/*modal agregar unidades externas*/}
-
     </>
   );
 };
