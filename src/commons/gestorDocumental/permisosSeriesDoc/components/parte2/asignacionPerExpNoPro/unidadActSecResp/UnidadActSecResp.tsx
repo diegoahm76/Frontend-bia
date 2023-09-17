@@ -188,7 +188,9 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
               color="success"
               variant="contained"
               startIcon={<AddIcon />}
-              // disabled={!tca_current}
+              onClick={() => {
+                setmodalUniProp(true);
+              }}
             >
               AGREGAR UNIDADES PROPIAS
             </Button>
