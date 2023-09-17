@@ -13,7 +13,11 @@ import { usePSD } from '../../../../../hook/usePSD';
 import {
   setCurrentSerieSubserie,
   setListaSeriesSubseries,
-  set_current_unidad_organizacional_action
+  set_current_unidad_organizacional_action,
+  set_permisos_unidades_actuales_action,
+  set_permisos_unidades_actuales_externas_action,
+  set_restricciones_para_todas_las_unidades_organizacionales_action,
+  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
 } from '../../../../../toolkit/slice/PSDSlice';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { get_series_documentales_unidad_organizacional_psd } from '../../../../../toolkit/thunks/psdThunks';
@@ -70,11 +74,16 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  onChange(selectedOption);
-                  console.log(selectedOption);
                   // ! se limpia la lista de series y subseries
-                  // dispatch(setListaSeriesSubseries([]));
+                  dispatch(setListaSeriesSubseries([]));
                   dispatch(setCurrentSerieSubserie(null));
+
+                  //  ! se limpian las listas de los permisos y de las restricciones
+                  dispatch(set_restricciones_para_todas_las_unidades_organizacionales_action(null));
+                  dispatch(set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(null));
+                  dispatch(set_permisos_unidades_actuales_action([]));
+                  dispatch(set_permisos_unidades_actuales_externas_action([]));
+
 
                   // ? seleccionando current unidad organizacional para el llamado de serie subserie
                   dispatch(
@@ -93,27 +102,13 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                     dispatch(setListaSeriesSubseries(res));
                   });
 
-                  /* void get_catalogo_TRD_service(selectedOption.value).then(
-                    (res) => {
-                      console.log(res);
-                      dispatch(set_catalog_trd_action(res));
-                    }
-                  );
-
                   //* tambien debo seleccionar alguna sección o subsección (unidad organizacional) con la que se va a trabajar, esta es consecuencia servirá para mostrar el respectivo select de las series - subseries necesarias
 
                   
 
-                  onChange(selectedOption); */
+                  onChange(selectedOption);
                 }}
-                // isDisabled={tca_current != null}
                 options={
-                  /* unidadesOrganizacionales.map(option => ({
-                    item: option,
-                    value: option.id_unidad_organizacional,
-                    label: `${option.codigo} - ${option.nombre}`
-                    })) as any
-*/
                   [...unidadesOrganizacionales]
                     .sort((a, b) => a.nombre.localeCompare(b.nombre))
                     .map((item) => ({

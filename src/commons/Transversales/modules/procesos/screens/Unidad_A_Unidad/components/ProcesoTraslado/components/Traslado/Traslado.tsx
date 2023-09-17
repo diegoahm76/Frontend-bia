@@ -87,17 +87,6 @@ export const Traslado: FC<any> = (): JSX.Element => {
     dispatch(setUnidadActualCurrent(null));
     setSelectedItems([]);
   };
-  /*
-  const cleanAfterCreate = (): void => {
-     console.log('clean');
-    reset_traslado_unidad_a_unidad({
-      id_antigua_unidad_organizacional: '',
-      id_nueva_unidad_organizacional: ''
-    });
-    dispatch(setUnidadAnteriorCurrent(null));
-    dispatch(setListadoPersonasUnidades([]));
-    dispatch(setUnidadActualCurrent(null));
-  }; */
 
   const onSubmit = async (): Promise<any> => {
     const result = await Swal.fire({

@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC } from 'react';
+import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { Checkbox, Chip, Tooltip } from '@mui/material';
+import { Checkbox, Chip, Grid, Tooltip } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action } from '../../../../toolkit/slice/PSDSlice';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
+import { ModalContextPSD } from '../../../../context/ModalContextPSD';
 
 // componente restricción para todas las unidades organizacionales (dentro de denegación de permisos sobre expedientes propios)
 export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
@@ -15,11 +18,14 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
     restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
   } = useAppSelector((state) => state.PsdSlice);
 
+   // ? context necesarios
+   const { loadingRestricciones } =
+   useContext(ModalContextPSD);
+
   //* función de chequeo
   const handleCheckboxChange = (
     event: any,
     id_restriccion: number
-    // params: any
   ): void => {
     console.log(
       restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
@@ -31,7 +37,6 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
             ? { ...restriccion, checked: event.target.checked }
             : restriccion
       );
-    // dispatch(get_unitys(newUnidadesActualizaciónActivo));
     dispatch(
       set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(
         RESTRICCIONES_ACTUALIZADAS
@@ -90,6 +95,22 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
       )
     }
   ];
+
+  if (loadingRestricciones)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={270} />
+      </Grid>
+    );
+
 
   return (
     <RenderDataGrid

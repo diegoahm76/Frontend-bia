@@ -7,11 +7,12 @@ import { containerStyles } from '../../../../../tca/screens/utils/constants/cons
 import { useAppSelector } from '../../../../../../../hooks';
 import { UnidadActSecResp } from '../unidadActSecResp/UnidadActSecResp';
 import { UnidadExterSecResp } from '../unidadExterSecResp/UnidadExterSecResp';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
 
 // componenete padre Asignación de permisos sobre expedientes no propios
 export const AsignacionesPerExp: FC<any> = (): JSX.Element | null => {
   // ! states from redux
-  const { current_unidad_organizacional, currentSeriesSubseries } =
+  const { current_unidad_organizacional, currentSeriesSubseries, unidadActuales, unidadesActualesExternas } =
     useAppSelector((state) => state.PsdSlice);
 
   // ! va a ser necesario el uso del useEffect para realizar algunas consultas que permitan traer cierta información

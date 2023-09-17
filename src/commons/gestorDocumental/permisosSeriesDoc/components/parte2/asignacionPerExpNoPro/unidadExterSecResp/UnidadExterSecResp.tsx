@@ -1,36 +1,92 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC } from 'react';
+import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Grid } from '@mui/material';
 import { useAppSelector } from '../../../../../../../hooks';
+import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { columnsAsignacionPer } from '../../utils/columnsAsignacionPer/columnsAsignacionPer';
+import { ModalContextPSD } from '../../../../context/ModalContextPSD';
 
+// ! Unidades organizacionales actuales EXTERNAS a la sección responsable
 export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
   //* get states from redux store
   const { unidadesActualesExternas } = useAppSelector(
     (state) => state.PsdSlice
   );
 
+  // ? context necesarios
+  const { loadingRestricciones } = useContext(ModalContextPSD);
+
+  // ? este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en FALSE para este caso
+
   const columns = [
-    { field: 'id_cat_serie_und_org_ccd', headerName: 'ID' },
-    { field: 'nombre_und_organizacional_actual', headerName: 'Nombre' },
-    { field: 'activo', headerName: 'Activo' },
-    { field: 'anular_documentos_exps_no_propios', headerName: 'Anular documentos' },
-    { field: 'borrar_documentos_exps_no_propios', headerName: 'Borrar documentos' },
-    { field: 'cod_agrupacion_documental', headerName: 'Código de agrupación' },
-    { field: 'codigo_und_organizacional_actual', headerName: 'Código de unidad' },
-    { field: 'conceder_acceso_documentos_exps_no_propios', headerName: 'Conceder acceso a documentos' },
-    { field: 'conceder_acceso_expedientes_no_propios', headerName: 'Conceder acceso a expedientes' },
-    { field: 'consultar_expedientes_no_propios', headerName: 'Consultar expedientes' },
-    { field: 'crear_documentos_exps_no_propios', headerName: 'Crear documentos' },
-    { field: 'crear_expedientes', headerName: 'Crear expedientes' },
-    { field: 'descargar_expedientes_no_propios', headerName: 'Descargar expedientes' },
-    { field: 'id_permisos_und_org_actual_serie_exp_ccd', headerName: 'ID de permisos' },
-    { field: 'id_und_organizacional_actual', headerName: 'ID de unidad' },
-    { field: 'mostrar', headerName: 'Mostrar' },
-    { field: 'pertenece_seccion_actual_admin_serie', headerName: 'Pertenece a la sección actual' }
+    ...columnsAsignacionPer,
+
+    // ?  ---- PERMISOS ---
+    //* --- dentro de cada fila de permisos van a coexsistir dos elementos renderizados (una guía de lo que marque en el checkbox y el respectivo checkbox )
+    // ? CONSTRUIR UN COMPONENTE PARA RENDERIZAR ESTOS CAMPOS
+    { field: 'crear_expedientes', headerName: 'Crear expediente', width: 150 },
+    {
+      field: 'crear_documentos_exps_no_propios',
+      headerName: 'Crear documento',
+      width: 150
+    },
+    {
+      field: 'anular_documentos_exps_no_propios',
+      headerName: 'Anular documento',
+      width: 150
+    },
+    {
+      field: 'borrar_documentos_exps_no_propios',
+      headerName: 'Borrar documento',
+      width: 150
+    },
+    {
+      field: 'conceder_acceso_documentos_exps_no_propios',
+      headerName: 'Conceder acceso a docs',
+      width: 180
+    },
+    {
+      field: 'conceder_acceso_expedientes_no_propios',
+      headerName: 'Conceder acceso a exps',
+      width: 180
+    },
+    {
+      field: 'consultar_expedientes_no_propios',
+      headerName: 'Consultar expedientes',
+      width: 180
+    },
+    {
+      field: 'descargar_expedientes_no_propios',
+      headerName: 'Descargar expedientes',
+      width: 180
+    }
+
+    //* revisar para que puede ser útil esta opción
+    // { field: 'id_permisos_und_org_actual_serie_exp_ccd', headerName: 'ID de permisos' },
+
+    // ! este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en FALSE para este caso
+    // { field: 'pertenece_seccion_actual_admin_serie', headerName: 'Pertenece a la sección actual' }
   ];
 
+  if (loadingRestricciones)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={270} />
+      </Grid>
+    );
+
+  // ! solo se renderizaran en este componente aquellos objetos con la propiedad mostrar en TRUE, los demas irán en el modal
 
   return (
     <RenderDataGrid

@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC } from 'react';
+import { useContext, type FC } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { Checkbox, Chip, Tooltip } from '@mui/material';
+import { Checkbox, Chip, Grid, Tooltip } from '@mui/material';
 import { set_restricciones_para_todas_las_unidades_organizacionales_action } from '../../../../toolkit/slice/PSDSlice';
+import { ModalContextPSD } from '../../../../context/ModalContextPSD';
+import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
 // componente restricción para todas las unidades organizacionales (dentro de denegación de permisos sobre expedientes propios)
 export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
   //* dispatch declaration
@@ -14,10 +17,13 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
     (state) => state.PsdSlice
   );
 
+  // ? context necesarios
+  const { loadingRestricciones } = useContext(ModalContextPSD);
+
   //* función de chequeo
   const handleCheckboxChange = (
     event: any,
-    id_restriccion: number,
+    id_restriccion: number
     // params: any
   ): void => {
     console.log(restriccionesParaTodasLasUnidadesOrganizacionales);
@@ -96,15 +102,28 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
         <Tooltip title="Marcar / desmarcar restricción">
           <Checkbox
             checked={params.row.checked}
-            onChange={(event) =>
-              handleCheckboxChange(event, params.row.id)
-            }
+            onChange={(event) => handleCheckboxChange(event, params.row.id)}
             inputProps={{ 'aria-label': 'Seleccionar item' }}
           />
         </Tooltip>
       )
     }
   ];
+
+  if (loadingRestricciones)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={270} />
+      </Grid>
+    );
 
   return (
     <RenderDataGrid
@@ -114,78 +133,3 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
     />
   );
 };
-
-/*
-
-  ----- funcion de cambio de estado
-    const handleCheckboxChange = (
-    event: any,
-    id_unidad_organizacional: number,
-    params: any
-  ): void => {
-    console.log(params.row, 'params.row');
-    const newUnidadesActualizaciónActivo = unity_organigram.map((unidad: any) =>
-      unidad.id_unidad_organizacional === id_unidad_organizacional
-        ? { ...unidad, activo: event.target.checked }
-        : unidad
-    );
-    dispatch(get_unitys(newUnidadesActualizaciónActivo));
-  };
-  -----------------------------------
-
-
-  -----------------
-
-
-
-
-
-
-
-
-  const edit_prop_activo_unidad_org = (newObject: any) => {
-    console.log(newObject, 'newObject');
-
-    dispatch(
-      update_unitys_service(
-        organigram_current?.id_organigrama,
-        newObject,
-        clean_unitys,
-        setloadingLevels,
-        setDataloading
-      )
-    );
-  };
-
------------------
-
-  export const update_unitys_service: any = (
-  id: string | number,
-  new_unitys: any,
-  clean_unitys: any,
-  setloadingLevels: Dispatch<SetStateAction<boolean>>,
-  setDataloading: Dispatch<SetStateAction<boolean>>
-) => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      setloadingLevels(true);
-      const { data } = await api.put(
-        `transversal/organigrama/unidades/update/${id}/`,
-        new_unitys
-      );
-      dispatch(get_unitys_service(id, setDataloading));
-      control_success('Proceso Exitoso');
-      clean_unitys();
-      return data;
-    } catch (error: any) {
-      // console.log('update_unitys_service fail');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    } finally {
-      clean_unitys();
-      setloadingLevels(false);
-    }
-  };
-};
-
-*/
