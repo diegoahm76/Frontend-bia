@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
-import type { ResponseServer } from "../../../../interfaces/globalModels";
-import { api } from "../../../../api/axios";
+import type { ResponseServer } from "../../../../../interfaces/globalModels";
+import { api } from "../../../../../api/axios";
 
 export const search_expediente = async ({
     trd_nombre,
@@ -10,7 +10,7 @@ export const search_expediente = async ({
     palabras_clave_expediente,
     titulo_expediente,
     codigos_uni_serie_subserie,
-}: any): Promise<AxiosResponse<ResponseServer<any[]>>> => {
+}: any): Promise<AxiosResponse<ResponseServer<ExpedienteDocumental[]>>> => {
 
     const url = `gestor/depositos-archivos/bandejaEstante/buscar-estante/?trd_nombre=${String(
         trd_nombre ?? ''
@@ -23,5 +23,5 @@ export const search_expediente = async ({
     )}&titulo_expediente=${String(titulo_expediente ?? '')}&codigos_uni_serie_subserie=${String(
         codigos_uni_serie_subserie ?? ''
     )}`;
-    return await api.get<ResponseServer<any[]>>(url);
+    return await api.get<ResponseServer<ExpedienteDocumental[]>>(url);
 };

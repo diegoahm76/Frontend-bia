@@ -22,8 +22,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Select from 'react-select';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import { Title } from '../../../../components/Title';
-import { control_error } from '../../../../helpers';
+import { Title } from '../../../../../components/Title';
+import { control_error } from '../../../../../helpers';
 import { search_expediente } from '../services/services';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -81,7 +81,7 @@ export const BusquedaExpedientes: React.FC = () => {
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<any[]>([]);
+  const [rows, set_rows] = useState<ExpedienteDocumental[]>([]);
 
 
   const handle_click_open = (): void => {
