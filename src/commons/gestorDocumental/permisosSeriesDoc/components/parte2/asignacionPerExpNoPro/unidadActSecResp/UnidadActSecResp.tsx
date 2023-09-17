@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, type FC } from 'react';
+import { useContext, type FC, useState } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   Button,
@@ -17,6 +17,7 @@ import { columnsAsignacionPer } from '../../utils/columnsAsignacionPer/columnsAs
 import { ModalContextPSD } from '../../../../context/ModalContextPSD';
 import { set_permisos_unidades_actuales_action } from '../../../../toolkit/slice/PSDSlice';
 import InfoIcon from '@mui/icons-material/Info';
+import { ModalActSecResp } from './ModalUnidadActSecResp/ModalActSecResp';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const UnidadActSecResp: FC<any> = (): JSX.Element => {
@@ -27,6 +28,9 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
 
   // ? context necesarios
   const { loadingRestricciones } = useContext(ModalContextPSD);
+
+  // ? useStates necesarios
+  const [modalUniProp, setmodalUniProp] = useState<boolean>(false);
 
   // ! functions
 
@@ -108,20 +112,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
               }
             />
           </FormControl>
-          {/* ---------  */}
-         {/* <Tooltip title={`Marcar / desmarcar crear documento`}>
-            <Checkbox
-              checked={params.row.crear_documentos_exps_no_propios} 
-              onChange={(event) => {
-                handleCheckboxChange(
-                  event,
-                  params.row.id_und_organizacional_actual
-                );
-                console.log(event);
-              }}
-              inputProps={{ 'aria-label': 'Seleccionar item' }}
-            />
-          </Tooltip> */}
         </>
       )
     },
@@ -181,29 +171,38 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
   // ! solo se renderizaran en este componente aquellos objetos con la propiedad mostrar en TRUE, los demas irán en el modal
 
   return (
-    <RenderDataGrid
-      columns={columns || []}
-      rows={unidadActuales || []}
-      title="Unidades organizacionales actuales de la sección responsable"
-      aditionalElement={
-        <Grid
-          item
-          sx={{
-            width: '100%',
-            marginTop: '1rem'
-          }}
-        >
-          <Button
-            color="success"
-            variant="contained"
-            startIcon={<AddIcon />}
-            // disabled={!tca_current}
+    <>
+      <RenderDataGrid
+        columns={columns || []}
+        rows={unidadActuales || []}
+        title="Unidades organizacionales actuales de la sección responsable"
+        aditionalElement={
+          <Grid
+            item
+            sx={{
+              width: '100%',
+              marginTop: '1rem'
+            }}
           >
-            AGREGAR UNIDADES PROPIAS
-          </Button>
-        </Grid>
-      }
-    />
+            <Button
+              color="success"
+              variant="contained"
+              startIcon={<AddIcon />}
+              // disabled={!tca_current}
+            >
+              AGREGAR UNIDADES PROPIAS
+            </Button>
+          </Grid>
+        }
+      />
+
+      {/*modal agregar unidades propias*/}
+      <ModalActSecResp
+        modalUniProp={modalUniProp}
+        setmodalUniProp={setmodalUniProp}
+      />
+      {/*modal agregar unidades propias*/}
+    </>
   );
 };
 

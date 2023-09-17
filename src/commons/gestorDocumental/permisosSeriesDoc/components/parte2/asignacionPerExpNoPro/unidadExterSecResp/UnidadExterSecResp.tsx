@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, type FC } from 'react';
+import { useContext, type FC, useState } from 'react';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Grid } from '@mui/material';
@@ -8,6 +8,7 @@ import { containerStyles } from './../../../../../tca/screens/utils/constants/co
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { columnsAsignacionPer } from '../../utils/columnsAsignacionPer/columnsAsignacionPer';
 import { ModalContextPSD } from '../../../../context/ModalContextPSD';
+import { ModalUniExterSecResp } from './ModalUniExterSecResp/ModalUniExterSecResp';
 
 // ! Unidades organizacionales actuales EXTERNAS a la sección responsable
 export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
@@ -18,6 +19,9 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
 
   // ? context necesarios
   const { loadingRestricciones } = useContext(ModalContextPSD);
+
+  // ? useState necesarios
+  const [modalUniExt, setmodalUniExt] = useState<boolean>(false)
 
   // ? este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en FALSE para este caso
 
@@ -89,6 +93,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
   // ! solo se renderizaran en este componente aquellos objetos con la propiedad mostrar en TRUE, los demas irán en el modal
 
   return (
+    <>
     <RenderDataGrid
       columns={columns || []}
       rows={unidadesActualesExternas || []}
@@ -105,12 +110,22 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
             color="success"
             variant="contained"
             startIcon={<AddIcon />}
-            // disabled={!tca_current}
+            onClick={() => setmodalUniExt(true)}
           >
             AGREGAR UNIDADES EXTERNAS
           </Button>
         </Grid>
       }
     />
+    
+
+      {/*modal agregar unidades externas*/}
+      <ModalUniExterSecResp
+        modalUniExt={modalUniExt}
+        setmodalUniExt={setmodalUniExt}
+      />
+      {/*modal agregar unidades externas*/}
+
+    </>
   );
 };
