@@ -10,6 +10,12 @@ import type { dataGridTypesWithAdditionalElement } from '../../types/tca.types';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
+/**
+ * Renders a data grid and provides options to download the data as an XLS or PDF file.
+ * @param rows - The data to be rendered in the data grid.
+ * @param columns - The columns to be displayed in the data grid.
+ * @param title - The title of the data grid.
+ */
 export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
   rows,
   columns,
