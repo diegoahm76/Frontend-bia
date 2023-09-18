@@ -25,35 +25,28 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
     event: any,
     id_restriccion: string
   ): void => {
-    const restriccionesParaTodasLasUnidadesOrganizacionales = [
-      { id: 'denegar_borrado_docs', checked: false },
-      { id: 'denegar_anulacion_docs', checked: false },
-      { id: 'excluir_und_actual_respon_series_doc_restriccion', checked: false }
-    ];
-
-    let RESTRICCIONES_ACTUALIZADAS : any[] = [];
-
-    RESTRICCIONES_ACTUALIZADAS = restriccionesParaTodasLasUnidadesOrganizacionales.map(
+   
+   const  RESTRICCIONES_ACTUALIZADAS = restriccionesParaTodasLasUnidadesOrganizacionales.map(
       (restriccion: any) => {
-        if (restriccion.id === id_restriccion) {
+        const primeraOpcion = restriccionesParaTodasLasUnidadesOrganizacionales.find((item: any) => item.id === 'denegar_borrado_docs');
+        const segundaOpcion = restriccionesParaTodasLasUnidadesOrganizacionales.find((item:any) => item.id === 'denegar_anulacion_docs');
+
+      if(!primeraOpcion.checked && !segundaOpcion.checked && id_restriccion === 'excluir_und_actual_respon_series_doc_restriccion'){
+        return {
+          ...restriccion,
+        };
+      }else if(restriccion.id === id_restriccion){
+        return { ...restriccion, checked: event.target.checked };
+      }else if(id_restriccion === 'excluir_und_actual_respon_series_doc_restriccion'){
+        if(!primeraOpcion.checked && !segundaOpcion.checked){
           return { ...restriccion, checked: event.target.checked };
-        } else if (id_restriccion === 'excluir_und_actual_respon_series_doc_restriccion') {
-          // Si se marca la tercera opción, verifica si alguna de las dos primeras opciones está marcada.
-          const primeraOpcion = RESTRICCIONES_ACTUALIZADAS.find(item => item.id === 'denegar_borrado_docs');
-          const segundaOpcion = RESTRICCIONES_ACTUALIZADAS.find(item => item.id === 'denegar_anulacion_docs');
-    
-          if (!primeraOpcion || !segundaOpcion) {
-            // Si ninguna de las dos primeras opciones está marcada, desmarca la tercera opción.
-            return { ...restriccion, checked: false };
-          }
-        } else if (restriccion.id === 'excluir_und_actual_respon_series_doc_restriccion') {
-          // Si se desmarca la tercera opción, desmarca también las dos primeras opciones.
-          if (!event.target.checked) {
-            return { ...restriccion, checked: false };
-          }
         }
-    
-        return restriccion;
+      }else if(restriccion.id === 'excluir_und_actual_respon_series_doc_restriccion'){
+        if(!event.target.checked){
+          return { ...restriccion, checked: event.target.checked };
+        }
+      }
+      return restriccion;
       }
     );
     
@@ -160,5 +153,54 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
 /*
 
 const handleCheckboxChange = ( event: any, id_restriccion: number ): void => { const RESTRICCIONES_ACTUALIZADAS = restriccionesParaTodasLasUnidadesOrganizacionales.map( (restriccion: any) => { console.log('restriccion.id', restriccion), restriccion.id === id_restriccion ? { ...restriccion, checked: event.target.checked } : restriccion; } ); console.log(RESTRICCIONES_ACTUALIZADAS); dispatch( set_restricciones_para_todas_las_unidades_organizacionales_action( RESTRICCIONES_ACTUALIZADAS ) ); };
+
+
+
+
+----------------- funciona al 80%
+
+  const handleCheckboxChange = (
+    event: any,
+    id_restriccion: string
+  ): void => {
+   
+   const  RESTRICCIONES_ACTUALIZADAS = restriccionesParaTodasLasUnidadesOrganizacionales.map(
+      (restriccion: any) => {
+        const primeraOpcion = restriccionesParaTodasLasUnidadesOrganizacionales.find((item: any) => item.id === 'denegar_borrado_docs');
+        const segundaOpcion = restriccionesParaTodasLasUnidadesOrganizacionales.find((item:any) => item.id === 'denegar_anulacion_docs');
+
+      console.log('primeraOpcion', primeraOpcion);
+      console.log('segundaOpcion', segundaOpcion);
+
+      if(!primeraOpcion.checked && !segundaOpcion.checked && restriccion.id === 'excluir_und_actual_respon_series_doc_restriccion'){
+        return restriccion;
+      }else if(restriccion.id === id_restriccion){
+        return { ...restriccion, checked: event.target.checked };
+      }else if(id_restriccion === 'excluir_und_actual_respon_series_doc_restriccion'){
+        if(!primeraOpcion.checked && !segundaOpcion.checked){
+          return { ...restriccion, checked: false };
+        }
+      }else if(restriccion.id === 'excluir_und_actual_respon_series_doc_restriccion'){
+        if(!event.target.checked){
+          return { ...restriccion, checked: event.target.checked };
+        }
+      }
+      return restriccion;
+
+
+
+
+
+
+      }
+    );
+    
+    console.log(RESTRICCIONES_ACTUALIZADAS);
+    dispatch(
+      set_restricciones_para_todas_las_unidades_organizacionales_action(
+        RESTRICCIONES_ACTUALIZADAS
+      )
+    );
+  };
 
 */
