@@ -43,8 +43,7 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     {
       field: 'crear_expedientes',
       headerName: 'Crear expediente',
-      width: 140,
-      //* se debe renderizar un componente que permita mostrar una guía de lo que se va a marcar en el checkbox
+      width: 135,
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.crear_expedientes}
@@ -66,8 +65,7 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     {
       field: 'crear_documentos_exps_no_propios',
       headerName: 'Crear documento',
-      width: 140,
-      //* se debe renderizar un componente que permita mostrar una guía de lo que se va a marcar en el checkbox
+      width: 135,
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.crear_documentos_exps_no_propios}
@@ -89,32 +87,134 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     {
       field: 'anular_documentos_exps_no_propios',
       headerName: 'Anular documento',
-      width: 140
+      width: 135,
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.anular_documentos_exps_no_propios}
+          condition={params.row.anular_documentos_exps_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['anular_documentos_exps_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
     },
     {
       field: 'borrar_documentos_exps_no_propios',
       headerName: 'Borrar documento',
-      width: 140
+      width: 135,
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.borrar_documentos_exps_no_propios}
+          condition={params.row.borrar_documentos_exps_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['borrar_documentos_exps_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
     },
     {
       field: 'conceder_acceso_documentos_exps_no_propios',
       headerName: 'Conceder acceso a docs',
-      width: 170
+      width: 165,
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.conceder_acceso_documentos_exps_no_propios}
+          condition={params.row.conceder_acceso_documentos_exps_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['conceder_acceso_documentos_exps_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
     },
     {
       field: 'conceder_acceso_expedientes_no_propios',
       headerName: 'Conceder acceso a exps',
-      width: 170
+      width: 165,
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.conceder_acceso_expedientes_no_propios}
+          condition={params.row.conceder_acceso_expedientes_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['conceder_acceso_expedientes_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
     },
     {
       field: 'consultar_expedientes_no_propios',
       headerName: 'Consultar expedientes',
-      width: 170
+      width: 165,
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.consultar_expedientes_no_propios}
+          condition={params.row.consultar_expedientes_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['consultar_expedientes_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
     },
     {
       field: 'descargar_expedientes_no_propios',
       headerName: 'Descargar expedientes',
-      width: 170
+      width: 165,
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.descargar_expedientes_no_propios}
+          condition={params.row.descargar_expedientes_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['descargar_expedientes_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
     }
 
     //* revisar para que puede ser útil esta opción

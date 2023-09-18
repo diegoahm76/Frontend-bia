@@ -31,41 +31,41 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
     // ?  ---- PERMISOS ---
     //* --- dentro de cada fila de permisos van a coexsistir dos elementos renderizados (una guía de lo que marque en el checkbox y el respectivo checkbox )
     // ? CONSTRUIR UN COMPONENTE PARA RENDERIZAR ESTOS CAMPOS
-    { field: 'crear_expedientes', headerName: 'Crear expediente', width: 150 },
+    { field: 'crear_expedientes', headerName: 'Crear expediente', width: 135 },
     {
       field: 'crear_documentos_exps_no_propios',
       headerName: 'Crear documento',
-      width: 150
+      width: 135
     },
     {
       field: 'anular_documentos_exps_no_propios',
       headerName: 'Anular documento',
-      width: 150
+      width: 135
     },
     {
       field: 'borrar_documentos_exps_no_propios',
       headerName: 'Borrar documento',
-      width: 150
+      width: 135
     },
     {
       field: 'conceder_acceso_documentos_exps_no_propios',
       headerName: 'Conceder acceso a docs',
-      width: 180
+      width: 165
     },
     {
       field: 'conceder_acceso_expedientes_no_propios',
       headerName: 'Conceder acceso a exps',
-      width: 180
+      width: 165
     },
     {
       field: 'consultar_expedientes_no_propios',
       headerName: 'Consultar expedientes',
-      width: 180
+      width: 165
     },
     {
       field: 'descargar_expedientes_no_propios',
       headerName: 'Descargar expedientes',
-      width: 180
+      width: 165
     }
 
     //* revisar para que puede ser útil esta opción

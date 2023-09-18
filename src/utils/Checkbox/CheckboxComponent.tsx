@@ -36,6 +36,7 @@ export const CheckboxComponent = ({
           control={
             <Checkbox
               checked={checked}
+              value={checked}
               onChange={(event) => {
                 handleChange(event);
                 console.log(event);

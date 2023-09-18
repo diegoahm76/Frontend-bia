@@ -8,7 +8,7 @@ export const columnsAsignacionPer = [
   {
     field: 'nombre_und_organizacional_actual',
     headerName: 'Unidad Organizacional Actual',
-    width: 215
+    width: 200
   },
   {
     field: 'cod_agrupacion_documental',
