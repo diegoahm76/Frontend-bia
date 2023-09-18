@@ -181,17 +181,13 @@ export const seguridad_slice = createSlice({
       state.action_admin_users = payload;
     },
     set_user_info: (state, { payload }) => {
-      return produce(state, (draftState) => {
-        draftState.user_info = payload;
-      });
+      state.user_info = payload;
     },
     set_data_user_search: (state, { payload }) => {
       state.data_user_search = payload;
     },
     set_data_person_search: (state, { payload }) => {
-      return produce(state, (draftState) => {
-        draftState.data_person_search = payload;
-      });
+      state.data_person_search = payload;
     },
     set_data_legal_person: (state, { payload }) => {
       state.legal_person = payload;
