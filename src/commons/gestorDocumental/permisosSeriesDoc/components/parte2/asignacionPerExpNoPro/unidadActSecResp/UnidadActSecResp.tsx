@@ -200,7 +200,7 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadActuales,
-              ['descargar_expedientes_no_propios'],
+              ['descargar_expedientes_no_propios','consultar_expedientes_no_propios'],
               dispatch,
               set_permisos_unidades_actuales_action
             );
