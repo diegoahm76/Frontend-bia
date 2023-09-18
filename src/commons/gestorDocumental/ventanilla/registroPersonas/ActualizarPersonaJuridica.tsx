@@ -95,7 +95,7 @@ export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
 
   const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: any,
     value: ClaseTercero[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<ClaseTercero>
@@ -629,7 +629,7 @@ export const ActualizarPersonaJuridica: React.FC<PropsRegisterAdmin> = ({
                         disabled // Deshabilita la interacción con el componente
                         open={false} // Mantén el listado cerrado
                         clearOnBlur={false} // Evita eliminar los datos al perder el foco
-                        onChange={handle_change_autocomplete}
+                        onChange={handle_change_autocomplete as any}
                       />
                     </Grid>
                   </>
