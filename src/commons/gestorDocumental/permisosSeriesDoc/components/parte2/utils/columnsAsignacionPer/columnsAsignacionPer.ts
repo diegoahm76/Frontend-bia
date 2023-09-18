@@ -3,16 +3,16 @@ export const columnsAsignacionPer = [
   {
     field: 'codigo_und_organizacional_actual',
     headerName: 'Cód. Unidad Actual',
-    width: 150
+    width: 140
   },
   {
     field: 'nombre_und_organizacional_actual',
     headerName: 'Unidad Organizacional Actual',
-    width: 230
+    width: 215
   },
   {
     field: 'cod_agrupacion_documental',
     headerName: 'Cód. Agrup. Documental',
-    width: 180
+    width: 170
   }
 ];

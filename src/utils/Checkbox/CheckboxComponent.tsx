@@ -18,15 +18,15 @@ import {
   Tooltip
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { stylesCheckbox } from './styles/constanst';
+import { stylesCheckboxTitle1, stylesCheckboxTitle2 } from './styles/constanst';
 import { CheckBoxTypes } from './types/CheckboxComponent.types';
 
-// This creates an Atom-type component for handling checkboxes.
+//! This creates an Atom-type component for handling checkboxes.
 export const CheckboxComponent = ({
   checked,
   condition,
-  title1,
-  title2,
+  title1 = "marcado",
+  title2 = "desmarcado",
   handleChange
 }: CheckBoxTypes): JSX.Element => {
   return (
@@ -46,11 +46,11 @@ export const CheckboxComponent = ({
           label={
             condition ? (
               <Tooltip title={title1} placement="right">
-                <InfoIcon sx={stylesCheckbox} />
+                <InfoIcon sx={stylesCheckboxTitle1} />
               </Tooltip>
             ) : (
               <Tooltip title={title2} placement="right">
-                <InfoIcon sx={stylesCheckbox} />
+                <InfoIcon sx={stylesCheckboxTitle2} />
               </Tooltip>
             )
           }

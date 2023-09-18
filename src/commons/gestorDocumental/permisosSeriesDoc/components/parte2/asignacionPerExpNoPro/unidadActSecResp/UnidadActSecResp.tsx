@@ -19,6 +19,8 @@ import { set_permisos_unidades_actuales_action } from '../../../../toolkit/slice
 import InfoIcon from '@mui/icons-material/Info';
 import { columnsAsignacionPer } from '../../utils/columnsAsignacionPer/columnsAsignacionPer';
 import { ModalActSecResp } from './ModalUnidadActSecResp/ModalActSecResp';
+import { CheckboxComponent } from '../../../../../../../utils/Checkbox/CheckboxComponent';
+import { handleCheckboxChange } from '../../../../../../../utils/Checkbox/functions/handleCheckbox';
 //! componente unidades organizacionales actuales de la sección responsable
 export const UnidadActSecResp: FC<any> = (): JSX.Element => {
   //* dispatch declaration
@@ -32,118 +34,87 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
   // ? useStates necesarios
   const [modalUniProp, setmodalUniProp] = useState<boolean>(false);
 
-  // ! functions
-
-  const handleCheckboxChange = (
-    event: any,
-    id_und_organizacional_actual: number
-    // params: any
-  ): void => {
-    console.log(unidadActuales);
-    const RESTRICCIONES_ACTUALIZADAS = unidadActuales.map((restriccion: any) =>
-      restriccion.id_und_organizacional_actual === id_und_organizacional_actual
-        ? {
-            ...restriccion,
-            crear_documentos_exps_no_propios: event.target.checked
-          }
-        : restriccion
-    );
-    // dispatch(get_unitys(newUnidadesActualizaciónActivo));
-    dispatch(set_permisos_unidades_actuales_action(RESTRICCIONES_ACTUALIZADAS));
-  };
-
   // ? este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en TRUE para este caso
 
   const columns = [
     ...columnsAsignacionPer,
-
     // ? permisos --- LUEGO SE DEBE SEPARAR LA LÓGICA NECESARIA - SE DEJA ASÍ POR AHORA PARA VER COMO FUNCIONA
     //* --- dentro de cada fila de permisos van a coexsistir dos elementos renderizados (una guía de lo que marque en el checkbox y el respectivo checkbox )
-    { field: 'crear_expedientes', headerName: 'Crear expediente', width: 150 },
+    {
+      field: 'crear_expedientes',
+      headerName: 'Crear expediente',
+      width: 140,
+      //* se debe renderizar un componente que permita mostrar una guía de lo que se va a marcar en el checkbox
+      renderCell: (params: any) => (
+        <CheckboxComponent
+          checked={params.row.crear_expedientes}
+          condition={params.row.crear_expedientes}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['crear_expedientes'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
+      )
+    },
     {
       field: 'crear_documentos_exps_no_propios',
       headerName: 'Crear documento',
-      width: 150,
+      width: 140,
+      //* se debe renderizar un componente que permita mostrar una guía de lo que se va a marcar en el checkbox
       renderCell: (params: any) => (
-        <>
-          <FormControl fullWidth>
-            <FormControlLabel
-              control={
-                <Checkbox //* el title debe ir como un parametro que reciba el componente
-                  checked={params.row.crear_documentos_exps_no_propios} //* debe ir como un parametro que reciba el componente
-                  onChange={(event) => {
-                    handleCheckboxChange(
-                      event,
-                      params.row.id_und_organizacional_actual
-                    );
-                    // ? la funcion onchange tambien debe ser un paramatro que reciba el componente con la lógica
-                    console.log(event);
-                  }}
-                  inputProps={{ 'aria-label': 'Seleccionar item' }}
-                />
-              }
-              label={
-                params.row.crear_documentos_exps_no_propios ? (
-                  <Tooltip title={`crear documento marcado`} placement="right">
-                    <InfoIcon
-                      sx={{
-                        width: '1.2rem',
-                        height: '1.2rem',
-                        ml: '0.5rem',
-                        color: 'green'
-                      }}
-                    />
-                  </Tooltip>
-                ) : (
-                  <Tooltip
-                    title={`crear documento desmarcado`}
-                    placement="right"
-                  >
-                    <InfoIcon
-                      sx={{
-                        width: '1.2rem',
-                        height: '1.2rem',
-                        ml: '0.5rem',
-                        color: 'orange'
-                      }}
-                    />
-                  </Tooltip>
-                )
-              }
-            />
-          </FormControl>
-        </>
+        <CheckboxComponent
+          checked={params.row.crear_documentos_exps_no_propios}
+          condition={params.row.crear_documentos_exps_no_propios}
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleCheckboxChange(
+              event,
+              'id_und_organizacional_actual',
+              params.row.id_und_organizacional_actual,
+              unidadActuales,
+              ['crear_documentos_exps_no_propios'],
+              dispatch,
+              set_permisos_unidades_actuales_action
+            );
+          }}
+        />
       )
     },
     {
       field: 'anular_documentos_exps_no_propios',
       headerName: 'Anular documento',
-      width: 150
+      width: 140
     },
     {
       field: 'borrar_documentos_exps_no_propios',
       headerName: 'Borrar documento',
-      width: 150
+      width: 140
     },
     {
       field: 'conceder_acceso_documentos_exps_no_propios',
       headerName: 'Conceder acceso a docs',
-      width: 180
+      width: 170
     },
     {
       field: 'conceder_acceso_expedientes_no_propios',
       headerName: 'Conceder acceso a exps',
-      width: 180
+      width: 170
     },
     {
       field: 'consultar_expedientes_no_propios',
       headerName: 'Consultar expedientes',
-      width: 180
+      width: 170
     },
     {
       field: 'descargar_expedientes_no_propios',
       headerName: 'Descargar expedientes',
-      width: 180
+      width: 170
     }
 
     //* revisar para que puede ser útil esta opción
