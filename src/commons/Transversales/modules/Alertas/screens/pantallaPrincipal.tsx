@@ -104,7 +104,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     {
       field: 'tipo_alerta',
       headerName: 'Tipo Alerta',
-      width: 130,
+      width: 100,
     },
     {
       field: 'fecha_hora',
@@ -148,7 +148,8 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       valueGetter: (params: any) => {
         const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
         const firstPart = ruta.split('/')[0]; // Obtener la primera palabra después de eliminar '/#/app/'
-        return firstPart;
+        const valorModificado = firstPart.replace(/_/g, ' '); // Reemplazar las barras bajas (_) por espacios
+        return valorModificado;
       },
     },
     {
