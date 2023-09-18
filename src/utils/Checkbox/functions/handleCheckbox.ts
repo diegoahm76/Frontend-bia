@@ -9,6 +9,37 @@
  * @param dispatch - The dispatch function to update the state.
  * @param callback - The callback function to execute after updating the state.
  */
+
+/* export const handleCheckboxChange = (
+  { target: { checked } }: React.ChangeEvent<HTMLInputElement>,
+  compararPor: string,
+  valorComparar: any,
+  arrayComparacion: any[],
+  propiedades: string[],
+  dispatch: React.Dispatch<any>,
+  callback: Function
+): void => {
+  const DATOS_ACTUALIZADOS = arrayComparacion.map((elementos: any) => {
+    if (
+      elementos.hasOwnProperty(compararPor) &&
+      elementos[compararPor] === valorComparar
+    ) {
+      const DATA_ACTUALIZADA = { ...elementos };
+      for (let i = 0; i < propiedades.length; i++) {
+        const propiedad = propiedades[i];
+        if (i === 0 || DATA_ACTUALIZADA[propiedades[i - 1]]) {
+          DATA_ACTUALIZADA[propiedad] = checked;
+        }
+      }
+      return DATA_ACTUALIZADA;
+    } else {
+      return elementos;
+    }
+  });
+  console.log(DATOS_ACTUALIZADOS);
+  dispatch(callback(DATOS_ACTUALIZADOS));
+}; */
+
 export const handleCheckboxChange = (
   { target: { checked } }: React.ChangeEvent<HTMLInputElement>,
   compararPor: string,
