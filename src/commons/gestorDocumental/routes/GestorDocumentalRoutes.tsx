@@ -18,6 +18,7 @@ import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlant
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 
 const routes = [
   {
@@ -78,6 +79,11 @@ const routes = [
     path: 'plantilladocumentos/',
     name: 'plantilladocumentos',
     component: () => <AdministracionPlantillaDocumentos_Routes />,
+  },
+  {
+    path: 'configuracionnnnnn/',
+    name: 'configuracionnnnnn',
+    component: () => <ConfiguracionMediosSolicitud_routes />,
   },
   {
     path: 'encuesta_configuracion/',
