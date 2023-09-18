@@ -1,8 +1,10 @@
 import type { DataTableProps, DataTableValue } from "primereact/datatable";
 
+interface MyDataTableProps<T> {
+  value?: T[];
+}
 // Creando la interfaz de propiedades para la tabla general
-// @ts-ignore
-export interface GeneralTableProps extends DataTableProps<any> {
+export interface GeneralTableProps extends MyDataTableProps<DataTableValue> {
   showButtonExport: boolean;
   columns: Record<string, any>;
   rowsData: DataTableValue[];

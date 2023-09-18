@@ -9,6 +9,7 @@ import {
     Dialog,
     DialogContent,
     Grid,
+    Typography,
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -39,7 +40,7 @@ const BusquedaAvanzada = ({ control_destinatario, open, handle_close_buscar, get
     const columns: GridColDef[] = [
         {
             field: 'tipo_documento',
-            headerName: 'Tipo de documento',
+            headerName: 'TIPO DE DOCUMENTO',
             sortable: true,
             width: 150,
         },
@@ -61,12 +62,16 @@ const BusquedaAvanzada = ({ control_destinatario, open, handle_close_buscar, get
             headerName: 'ACCIONES',
             width: 250,
             renderCell: (params) => (
-                <Button
-                    onClick={() => handle_busqueda(params.row)}
-                    startIcon={<EditIcon />}
-                >
+                <>
+                    <Button
+                        onClick={() => handle_busqueda(params.row)}
+                        startIcon={<EditIcon />}
+                    >
+                    </Button>
 
-                </Button>
+
+
+                </>
             ),
 
         },
@@ -197,9 +202,9 @@ const BusquedaAvanzada = ({ control_destinatario, open, handle_close_buscar, get
 
 
                             <>
-                                <Grid item xs={12}>
-                                    <Title title="Resultados de la búsqueda" />
-                                    {/* <Typography>Resultados de la búsqueda</Typography> */}
+                                <Grid item xs={12} spacing={2}>
+
+                                    <Typography>Resultados de la búsqueda</Typography>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Box sx={{ width: '100%' }}>
@@ -216,7 +221,17 @@ const BusquedaAvanzada = ({ control_destinatario, open, handle_close_buscar, get
                                     </Box>
                                 </Grid>
                             </>
+                            <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
+                                <LoadingButton
+                                    type="submit"
+                                    variant="outlined"
+                                    color="error"
+                                    onClick={handle_close_buscar}
 
+                                >
+                                    Cerrar
+                                </LoadingButton>
+                            </Grid>
 
 
                         </Grid>

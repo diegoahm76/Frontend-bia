@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 // import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { usePSD } from '../../../../../hook/usePSD';
-import { set_current_unidad_organizacional_action } from '../../../../../toolkit/slice/PSDSlice';
+import { setListaSeriesSubseries, set_current_unidad_organizacional_action } from '../../../../../toolkit/slice/PSDSlice';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { get_series_documentales_unidad_organizacional_psd } from '../../../../../toolkit/thunks/psdThunks';
 
@@ -82,7 +82,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                     setloadingSeriesSubseries
                   ).then((res) => {
                     console.log(res);
-                    // dispatch(set_catalog_trd_action(res));
+                    dispatch(setListaSeriesSubseries(res));
                   });
 
                   /* void get_catalogo_TRD_service(selectedOption.value).then(

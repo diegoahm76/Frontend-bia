@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Alerta, IList, IObjConfiguracionAlerta, IObjDestinatario, IPersona, } from '../../interfaces/alerta';
+import type { Alerta, IFechaProgramada, IList, IObjConfiguracionAlerta, IObjDestinatario, IPersona, } from '../../interfaces/alerta';
 
 
 export const initial_state_configuracion: IObjConfiguracionAlerta = {
@@ -21,7 +21,21 @@ export const initial_state_configuracion: IObjConfiguracionAlerta = {
     asignar_responsable: false,
     id_modulo_destino: null,
     id_modulo_generador: null,
-
+    perfil_sistema: null,
+    id_unidad_org_lider: null
+}
+export const initial_state_destinatario: IObjDestinatario = {
+    id_persona_alertar: null,
+    nombre_completo: null,
+    nombre_unidad: null,
+    numero_documento: null,
+    perfil_sistema: null,
+    es_responsable_directo: false,
+    registro_editable: false,
+    cod_clase_alerta: null,
+    id_persona: null,
+    id_unidad_org_lider: null,
+    tiene_usuario: false
 }
 
 export const initial_state: Alerta = {
@@ -31,6 +45,9 @@ export const initial_state: Alerta = {
     perfil_sistema: [],
     tipo_documento: [],
     persona: [],
+    current_destinatario: initial_state_destinatario,
+    fecha_alerta: [],
+    clase_alerta: []
 
 }
 
@@ -59,11 +76,23 @@ export const alerta_slice = createSlice({
         ) => {
             state.destinatario = action.payload;
         },
+        set_current_destinatario: (
+            state: Alerta,
+            action: PayloadAction<IObjDestinatario>
+        ) => {
+            state.current_destinatario = action.payload;
+        },
         set_perfil_sistema: (
             state: Alerta,
             action: PayloadAction<IList[]>
         ) => {
             state.perfil_sistema = action.payload;
+        },
+        set_clase_alerta: (
+            state: Alerta,
+            action: PayloadAction<IList[]>
+        ) => {
+            state.clase_alerta = action.payload;
         },
         set_tipo_documento: (
             state: Alerta,
@@ -77,7 +106,12 @@ export const alerta_slice = createSlice({
         ) => {
             state.persona = action.payload;
         },
-
+        set_fecha_programada: (
+            state: Alerta,
+            action: PayloadAction<IFechaProgramada[]>
+        ) => {
+            state.fecha_alerta = action.payload;
+        },
 
 
 
@@ -91,6 +125,9 @@ export const {
     set_current_alerta,
     set_destinatario,
     set_perfil_sistema,
+    set_clase_alerta,
     set_tipo_documento,
     set_persona,
+    set_current_destinatario,
+    set_fecha_programada,
 } = alerta_slice.actions;

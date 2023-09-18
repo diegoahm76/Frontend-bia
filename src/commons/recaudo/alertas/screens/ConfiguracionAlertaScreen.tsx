@@ -12,6 +12,8 @@ import FormInputController from '../../../../components/partials/form/FormInputC
 import { set_current_alerta } from '../store/slice/indexAlertas';
 import ProgramacionRepeticiones from '../components/ProgramacionRepeticiones';
 import Destinatario from '../components/Destinatario';
+import Programacion_fechas from '../components/ProgramacionFecha';
+import Configuracion from '../components/Configuracion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ConfiguracionAlertasScreen = () => {
@@ -22,6 +24,7 @@ const ConfiguracionAlertasScreen = () => {
 
     useEffect(() => {
         void dispatch(get_configuracion_alerta());
+
 
     }, []);
 
@@ -140,6 +143,8 @@ const ConfiguracionAlertasScreen = () => {
                 />
             )}
             <Destinatario />
+            <Programacion_fechas />
+            <Configuracion />
 
         </>
     );
