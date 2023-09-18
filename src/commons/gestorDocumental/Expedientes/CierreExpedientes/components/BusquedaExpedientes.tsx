@@ -25,26 +25,51 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Title } from '../../../../../components/Title';
 import { control_error } from '../../../../../helpers';
 import { search_expediente } from '../services/services';
+import { ExpedienteDocumental } from '../types/types';
+import { useAppDispatch } from '../../../../../hooks';
+import { set_cierre_expediente } from '../../store/slice/indexExpedientes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaExpedientes: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'orden_ubicacion_por_deposito',
-      headerName: 'ORDEN DEL ESTANTE',
+      field: 'codigo_exp_und_serie_subserie',
+      headerName: 'CÓDIGO EXPEDIENTE',
       sortable: true,
       width: 100,
     },
     {
-      field: 'identificacion_por_deposito',
-      headerName: 'IDENTIFICACIÓN DEL ESTANTE',
+      field: 'nombre_trd_origen',
+      headerName: 'NOMBRE TRD',
       sortable: true,
       width: 250,
     },
     {
-      field: 'nombre_deposito',
-      headerName: 'DEPÓSITO DE ARCHIVO',
+      field: 'titulo_expediente',
+      headerName: 'TITULO EXPEDIENTE',
+      sortable: true,
+      width: 250,
+    }, {
+      field: 'nombre_unidad_org',
+      headerName: 'UNIDAD ORGANIZACIONAL',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_serie_origen',
+      headerName: 'SERIE',
+      sortable: true,
+      width: 250,
+    }, {
+      field: 'nombre_subserie_origen',
+      headerName: 'SUBSERIE',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'fecha_apertura_expediente',
+      headerName: 'AÑO',
       sortable: true,
       width: 250,
     },
@@ -55,6 +80,43 @@ export const BusquedaExpedientes: React.FC = () => {
       width: 250,
       renderCell: (params) => (
         <>
+          <IconButton
+            size="small"
+            onClick={() => {
+              reset({
+                codigos_uni_serie_subserie: params.row.codigo_exp_und_serie_subserie,
+                trd_nombre: params.row.nombre_trd_origen,
+                fecha_apertura_expediente: params.row.fecha_apertura_expediente,
+                id_serie_origen: params.row.nombre_serie_origen,
+                id_subserie_origen: params.row.nombre_subserie_origen,
+                palabras_clave_expediente: params.row.palabras_clave_expediente,
+                titulo_expediente: params.row.titulo_expediente,
+
+              });
+              dispatch(set_cierre_expediente(params.row));
+              handle_close();
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar expediente"
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+
         </>
       ),
     },
@@ -68,6 +130,7 @@ export const BusquedaExpedientes: React.FC = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      codigos_uni_serie_subserie: '',
       trd_nombre: '',
       fecha_apertura_expediente: '',
       id_serie_origen: '',
@@ -83,6 +146,7 @@ export const BusquedaExpedientes: React.FC = () => {
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<ExpedienteDocumental[]>([]);
 
+  const dispatch = useAppDispatch();
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -94,12 +158,14 @@ export const BusquedaExpedientes: React.FC = () => {
   };
 
   const on_submit_advance = async (): Promise<any> => {
-    const { trd_nombre,
+    const { codigos_uni_serie_subserie,
+      trd_nombre,
       fecha_apertura_expediente,
       id_serie_origen,
       id_subserie_origen,
       palabras_clave_expediente,
-      titulo_expediente, } =
+      titulo_expediente,
+    } =
       data_watch;
 
     try {
@@ -109,6 +175,7 @@ export const BusquedaExpedientes: React.FC = () => {
       const {
         data: { data },
       } = await search_expediente({
+        codigos_uni_serie_subserie,
         trd_nombre,
         fecha_apertura_expediente,
         id_serie_origen,
@@ -156,7 +223,7 @@ export const BusquedaExpedientes: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6}>
           <Controller
             name="titulo_expediente"
             control={control}
@@ -165,7 +232,7 @@ export const BusquedaExpedientes: React.FC = () => {
             ) => (
               <TextField
                 fullWidth
-                label="titulo del expediente"
+                label="Titulo del expediente"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -187,7 +254,7 @@ export const BusquedaExpedientes: React.FC = () => {
             Buscar
           </Button>
         </Grid>
-
+        <Grid item xs={12} sm={6} md={3}></Grid>
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
@@ -223,7 +290,7 @@ export const BusquedaExpedientes: React.FC = () => {
                     ) => (
                       <TextField
                         fullWidth
-                        label="titulo del expediente"
+                        label="Titulo del expediente"
                         value={value}
                         onChange={onChange}
                         size="small"
@@ -233,6 +300,121 @@ export const BusquedaExpedientes: React.FC = () => {
                     )}
                   />
                 </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Controller
+                    name="codigos_uni_serie_subserie"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <TextField
+                        fullWidth
+                        label="Código expediente"
+                        value={value}
+                        onChange={onChange}
+                        size="small"
+                        margin="dense"
+                        disabled={false}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Controller
+                    name="trd_nombre"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <TextField
+                        fullWidth
+                        label="Nombre TRD"
+                        value={value}
+                        onChange={onChange}
+                        size="small"
+                        margin="dense"
+                        disabled={false}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Controller
+                    name="fecha_apertura_expediente"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <TextField
+                        fullWidth
+                        label="Año apertura"
+                        value={value}
+                        onChange={onChange}
+                        size="small"
+                        margin="dense"
+                        disabled={false}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Controller
+                    name="id_serie_origen"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <TextField
+                        fullWidth
+                        label="Serie"
+                        value={value}
+                        onChange={onChange}
+                        size="small"
+                        margin="dense"
+                        disabled={false}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Controller
+                    name="id_subserie_origen"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <TextField
+                        fullWidth
+                        label="Subserie"
+                        value={value}
+                        onChange={onChange}
+                        size="small"
+                        margin="dense"
+                        disabled={false}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Controller
+                    name="palabras_clave_expediente"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <TextField
+                        fullWidth
+                        label="Palabras clave"
+                        value={value}
+                        onChange={onChange}
+                        size="small"
+                        margin="dense"
+                        disabled={false}
+                      />
+                    )}
+                  />
+                </Grid>
+
                 <Grid item xs={12} sm={6} md={3} container justifyContent="end">
                   <LoadingButton
                     type="submit"
