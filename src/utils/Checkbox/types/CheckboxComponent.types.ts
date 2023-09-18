@@ -5,11 +5,7 @@ export interface CheckBoxTypes {
   /**
    * Whether the checkbox is checked or not.
    */
-  checked: boolean
-  /**
-   * The condition that determines whether the checkbox is disabled or not.
-   */
-  condition: boolean,
+  checked: boolean,
   /**
    * The function to be called when the checkbox is clicked.
    */

@@ -47,7 +47,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.crear_expedientes}
-          condition={params.row.crear_expedientes}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -69,7 +68,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.crear_documentos_exps_no_propios}
-          condition={params.row.crear_documentos_exps_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -91,7 +89,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.anular_documentos_exps_no_propios}
-          condition={params.row.anular_documentos_exps_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -113,7 +110,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.borrar_documentos_exps_no_propios}
-          condition={params.row.borrar_documentos_exps_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -135,7 +131,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.conceder_acceso_documentos_exps_no_propios}
-          condition={params.row.conceder_acceso_documentos_exps_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -157,7 +152,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.conceder_acceso_expedientes_no_propios}
-          condition={params.row.conceder_acceso_expedientes_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -179,7 +173,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.consultar_expedientes_no_propios}
-          condition={params.row.consultar_expedientes_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -201,7 +194,6 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.descargar_expedientes_no_propios}
-          condition={params.row.descargar_expedientes_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             handleCheckboxChange(
               event,
@@ -290,33 +282,3 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     </>
   );
 };
-
-/*
-
-
-esta funcion --- actualizar varios valores al tiempo, se debe analizar como integrar la respectiva funcion en el codigo del componente que se va a crear
-
-const handleCheckboxChange = (
-  event: any,
-  id_und_organizacional_actual: number,
-  propiedades: string[]
-): void => {
-  console.log(unidadActuales);
-  const RESTRICCIONES_ACTUALIZADAS = unidadActuales.map((restriccion: any) => {
-    if (restriccion.id_und_organizacional_actual === id_und_organizacional_actual) {
-      const restriccionActualizada = { ...restriccion };
-      for (const propiedad of propiedades) {
-        restriccionActualizada[propiedad] = event.target.checked;
-      }
-      return restriccionActualizada;
-    } else {
-      return restriccion;
-    }
-  });
-  dispatch(set_permisos_unidades_actuales_action(RESTRICCIONES_ACTUALIZADAS));
-};
-
-
-handleCheckboxChange(event, id_und_organizacional_actual, ['crear_documentos_exps_no_propios', 'editar_documentos_exps_no_propios']);
-
-*/

@@ -24,9 +24,8 @@ import { CheckBoxTypes } from './types/CheckboxComponent.types';
 //! This creates an Atom-type component for handling checkboxes.
 export const CheckboxComponent = ({
   checked,
-  condition,
-  title1 = "marcado",
-  title2 = "desmarcado",
+  title1 = 'marcado',
+  title2 = 'desmarcado',
   handleChange
 }: CheckBoxTypes): JSX.Element => {
   return (
@@ -37,15 +36,12 @@ export const CheckboxComponent = ({
             <Checkbox
               checked={checked}
               value={checked}
-              onChange={(event) => {
-                handleChange(event);
-                console.log(event);
-              }}
+              onChange={(event) => handleChange(event)}
               inputProps={{ 'aria-label': 'Seleccionar item' }}
             />
           }
           label={
-            condition ? (
+            checked ? (
               <Tooltip title={title1} placement="right">
                 <InfoIcon sx={stylesCheckboxTitle1} />
               </Tooltip>

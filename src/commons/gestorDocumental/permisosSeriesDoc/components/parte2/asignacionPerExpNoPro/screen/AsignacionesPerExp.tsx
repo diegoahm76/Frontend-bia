@@ -15,14 +15,6 @@ export const AsignacionesPerExp: FC<any> = (): JSX.Element | null => {
   const { current_unidad_organizacional, currentSeriesSubseries, unidadActuales, unidadesActualesExternas } =
     useAppSelector((state) => state.PsdSlice);
 
-  // ! va a ser necesario el uso del useEffect para realizar algunas consultas que permitan traer cierta información
-
-  useEffect(() => {
-    console.log(
-      'se renderiza los componentes para el manejo de los permisos sobre expedientes'
-    );
-  }, []);
-
   // ? validaciones de renderizado
   if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
 
