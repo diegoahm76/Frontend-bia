@@ -54,8 +54,10 @@ export const ArchivosSoporte: React.FC<IProps> = ({
     tiene_consecutivo_documento,
     set_tiene_consecutivo_documento,
     // *año
-    agno_archivo,
     set_agno_archivo,
+    // * palabras clave
+    palabrasClave,
+    handlePalabrasClaveChange,
   } = useCierreExpedientes();
 
   const { tipos_tipoligia_selected, fetch_data_tipos_tipoligia_selected } =
@@ -527,6 +529,29 @@ export const ArchivosSoporte: React.FC<IProps> = ({
                     required={false}
                     value={value}
                     onChange={onChange}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="palabras_clave_documento"
+                control={control_archivo_soporte}
+                rules={{ required: false }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    label="Palabras clave del documento"
+                    size="small"
+                    margin="dense"
+                    disabled={false}
+                    multiline={true}
+                    fullWidth
+                    required={false}
+                    value={palabrasClave || value} // Usar el estado de "palabrasClave" si está definido, de lo contrario usar el valor de "value"
+                    onChange={(event) => {
+                      handlePalabrasClaveChange(event as any); // Llamar a la función "handlePalabrasClaveChange" para actualizar el estado de "palabrasClave"
+                      onChange(event); // Llamar a la función "onChange" para actualizar el valor del campo de texto
+                    }}
                   />
                 )}
               />
