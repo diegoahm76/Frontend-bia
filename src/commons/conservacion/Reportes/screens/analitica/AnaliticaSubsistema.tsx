@@ -376,7 +376,6 @@ export const AnaliticaSubsistemaScreen: React.FC = () => {
                                                     {option[1]}
                                                 </li>
                                             )}
-                                      
                                             onChange={cambio_seleccion_tipo}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Tipo de bien" />

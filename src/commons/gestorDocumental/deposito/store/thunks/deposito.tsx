@@ -159,7 +159,6 @@ export const editar_deposito: any = (
 export const eliminar_deposito = (
     id: number,
 
-
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {

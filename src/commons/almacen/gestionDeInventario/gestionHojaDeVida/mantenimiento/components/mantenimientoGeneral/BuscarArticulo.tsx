@@ -27,7 +27,7 @@ const BuscarArticuloComponent = ({
   const [nombre, set_nombre] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState(null);
+  const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {

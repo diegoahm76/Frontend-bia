@@ -33,7 +33,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   const [nombre, set_nombre] = useState<string>('');
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [seleccion_articulo, set_seleccion_articulo] = useState(null);
+  const [seleccion_articulo, set_seleccion_articulo] = useState<Record<string, any> | null>(null);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
