@@ -37,6 +37,7 @@ import {
   tipo_archivo,
 } from '../utils/choices';
 import { LoadingButton } from '@mui/lab';
+import { control_error } from '../../../../../helpers';
 
 dayjs.locale('es');
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -52,12 +53,14 @@ export const ArchivosSoporte: React.FC<IProps> = ({
   const {
     errors_archivo_soporte,
     control_archivo_soporte,
+    reset_archivo_soporte,
     // select
     tiene_consecutivo_documento,
     set_tiene_consecutivo_documento,
     // *año
     set_agno_archivo,
     // * palabras clave
+    setPalabrasClave,
     palabrasClave,
     handlePalabrasClaveChange,
 
@@ -82,11 +85,20 @@ export const ArchivosSoporte: React.FC<IProps> = ({
     <>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <form
-          onSubmit={(e) => {
-            onSubmit_archivo_soporte(e);
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('submit');
+          onSubmit={async (e) => {
+            try {
+              await onSubmit_archivo_soporte(e);
+              e.preventDefault();
+              e.stopPropagation();
+              reset_archivo_soporte();
+              setPalabrasClave(''); // Limpiar el estado de "palabrasClave"
+              handle_close();
+            } catch (error: any) {
+              control_error(
+                error.response.data.detail ||
+                  'Error al crear el archivo de soporte, intente nuevamente'
+              );
+            }
           }}
         >
           {/* Contenido del formulario */}
@@ -107,7 +119,7 @@ export const ArchivosSoporte: React.FC<IProps> = ({
               }}
             >
               <Grid item xs={12}>
-                <Title title="Consulta de años cerrados" />
+                <Title title="Agregar archivo de soporte" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
@@ -190,9 +202,7 @@ export const ArchivosSoporte: React.FC<IProps> = ({
                       onChange={(e) => {
                         onChange(e.target.value);
                       }}
-                      error={
-                        !!errors_archivo_soporte.tipologia_documental
-                      }
+                      error={!!errors_archivo_soporte.tipologia_documental}
                       helperText={
                         errors_archivo_soporte.tipologia_documental
                           ? 'Este campo es requerido'

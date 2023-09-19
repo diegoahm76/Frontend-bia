@@ -12,14 +12,20 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { useCierreExpedientes } from '../hook/useCierreExpedientes';
 import { Controller } from 'react-hook-form';
 import { ArchivosSoporte } from '../components/ArchivosSoporte';
-import { useState } from 'react';
-import { useAppSelector } from '../../../../../hooks';
+import { useContext, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { set_cierre_expediente } from '../../store/slice/indexExpedientes';
+import { DataContext } from '../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CierreExpedientesScreen: React.FC = () => {
   const [open_dialog, set_open_dialog] = useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
+
   const { control_cierre_exp, formattedDate } = useCierreExpedientes();
+
+  const { set_is_limpiar_formulario } = useContext(DataContext);
 
   const {
     cierre_expediente: { id_expediente_documental },
@@ -166,9 +172,27 @@ export const CierreExpedientesScreen: React.FC = () => {
                 variant="outlined"
                 color="primary"
                 loading={false}
-                disabled={true}
+                disabled={false}
                 startIcon={<CleaningServicesIcon />}
-                onClick={() => {}}
+                onClick={() => {
+                  dispatch(
+                    set_cierre_expediente({
+                      codigo_exp_und_serie_subserie: '',
+                      id_expediente_documental: null,
+                      titulo_expediente: '',
+                      id_und_seccion_propietaria_serie: null,
+                      nombre_unidad_org: '',
+                      id_serie_origen: null,
+                      nombre_serie_origen: '',
+                      id_subserie_origen: null,
+                      nombre_subserie_origen: '',
+                      id_trd_origen: null,
+                      nombre_trd_origen: '',
+                      fecha_apertura_expediente: '',
+                    })
+                  );
+                  set_is_limpiar_formulario(true);
+                }}
               >
                 Limpiar
               </LoadingButton>

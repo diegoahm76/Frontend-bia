@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -28,10 +29,12 @@ import { search_expediente } from '../services/services';
 import { ExpedienteDocumental } from '../types/types';
 import { useAppDispatch } from '../../../../../hooks';
 import { set_cierre_expediente } from '../../store/slice/indexExpedientes';
+import { DataContext } from '../context/context';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaExpedientes: React.FC = () => {
-
   const columns: GridColDef[] = [
     {
       field: 'codigo_exp_und_serie_subserie',
@@ -50,7 +53,8 @@ export const BusquedaExpedientes: React.FC = () => {
       headerName: 'TITULO EXPEDIENTE',
       sortable: true,
       width: 250,
-    }, {
+    },
+    {
       field: 'nombre_unidad_org',
       headerName: 'UNIDAD ORGANIZACIONAL',
       sortable: true,
@@ -61,7 +65,8 @@ export const BusquedaExpedientes: React.FC = () => {
       headerName: 'SERIE',
       sortable: true,
       width: 250,
-    }, {
+    },
+    {
       field: 'nombre_subserie_origen',
       headerName: 'SUBSERIE',
       sortable: true,
@@ -84,14 +89,14 @@ export const BusquedaExpedientes: React.FC = () => {
             size="small"
             onClick={() => {
               reset({
-                codigos_uni_serie_subserie: params.row.codigo_exp_und_serie_subserie,
+                codigos_uni_serie_subserie:
+                  params.row.codigo_exp_und_serie_subserie,
                 trd_nombre: params.row.nombre_trd_origen,
                 fecha_apertura_expediente: params.row.fecha_apertura_expediente,
                 id_serie_origen: params.row.nombre_serie_origen,
                 id_subserie_origen: params.row.nombre_subserie_origen,
                 palabras_clave_expediente: params.row.palabras_clave_expediente,
                 titulo_expediente: params.row.titulo_expediente,
-
               });
               dispatch(set_cierre_expediente(params.row));
               handle_close();
@@ -116,7 +121,6 @@ export const BusquedaExpedientes: React.FC = () => {
               />
             </Avatar>
           </IconButton>
-
         </>
       ),
     },
@@ -146,6 +150,8 @@ export const BusquedaExpedientes: React.FC = () => {
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<ExpedienteDocumental[]>([]);
 
+  const { is_limpiar_formulario } = useContext(DataContext);
+
   const dispatch = useAppDispatch();
 
   const handle_click_open = (): void => {
@@ -158,15 +164,15 @@ export const BusquedaExpedientes: React.FC = () => {
   };
 
   const on_submit_advance = async (): Promise<any> => {
-    const { codigos_uni_serie_subserie,
+    const {
+      codigos_uni_serie_subserie,
       trd_nombre,
       fecha_apertura_expediente,
       id_serie_origen,
       id_subserie_origen,
       palabras_clave_expediente,
       titulo_expediente,
-    } =
-      data_watch;
+    } = data_watch;
 
     try {
       set_is_search(true);
@@ -194,11 +200,19 @@ export const BusquedaExpedientes: React.FC = () => {
     }
   };
   useEffect(() => {
-
-    console.log('Hola Mundo')
-
-  }, []);
-
+    if (open_dialog || is_limpiar_formulario) {
+      reset({
+        codigos_uni_serie_subserie: '',
+        trd_nombre: '',
+        fecha_apertura_expediente: '',
+        id_serie_origen: '',
+        id_subserie_origen: '',
+        palabras_clave_expediente: '',
+        titulo_expediente: '',
+      });
+      set_rows([]);
+    }
+  }, [open_dialog, is_limpiar_formulario]);
 
   return (
     <>
@@ -423,9 +437,9 @@ export const BusquedaExpedientes: React.FC = () => {
                     startIcon={<SearchIcon />}
                     loading={is_search}
                     disabled={is_search}
-                  // onClick={(e) => {
-                  //   void on_submit_advance(e);
-                  // }}
+                    // onClick={(e) => {
+                    //   void on_submit_advance(e);
+                    // }}
                   >
                     Buscar
                   </LoadingButton>
@@ -438,6 +452,21 @@ export const BusquedaExpedientes: React.FC = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <Box sx={{ width: '100%' }}>
+                        <ButtonGroup
+                          style={{
+                            margin: 7,
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                          }}
+                        >
+                          {download_xls({ nurseries: rows, columns })}
+                          {download_pdf({
+                            nurseries: rows,
+                            columns,
+                            title: 'Resultados de la búsqueda',
+                          })}
+                        </ButtonGroup>
+
                         <>
                           <DataGrid
                             density="compact"

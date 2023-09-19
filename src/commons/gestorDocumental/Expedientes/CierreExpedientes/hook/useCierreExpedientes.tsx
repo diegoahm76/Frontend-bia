@@ -88,8 +88,8 @@ export const useCierreExpedientes = () => {
           id_expediente_documental: id_expediente_documental,
           nombre_asignado_documento: data.nombre_asignado_documento,
 
-          fecha_creacion_doc: dayjs(data.fecha_creacion_doc).format(
-            'DD/MM/YYYY'
+          fecha_creacion_doc: dayjs(data.fecha_creacion_doc, 'DD/MM/YYYY').format(
+            'YYYY-MM-DDTHH:mm:ss.SSSZ'
           ),
           nro_folios_del_doc: data.nro_folios_del_doc,
           cod_origen_archivo: data.cod_origen_archivo,
@@ -104,7 +104,7 @@ export const useCierreExpedientes = () => {
           palabras_clave_documento: palabrasClave,
         };
         await post_archivo_soporte(data_archivo);
-
+        
         control_success('Se ha creado el archivo de soporte exitosamente');
       } catch (error: any) {
         control_error(
@@ -152,6 +152,7 @@ export const useCierreExpedientes = () => {
 
     // * palabras clave
     palabrasClave,
+    setPalabrasClave,
     handlePalabrasClaveChange,
   };
 };
