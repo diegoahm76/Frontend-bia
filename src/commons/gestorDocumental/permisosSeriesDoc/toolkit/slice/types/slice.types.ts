@@ -1,3 +1,5 @@
+import { PayloadAction } from '@reduxjs/toolkit';
+
 export interface Ipsd {
   //* fase ccd
   ccdsBusqueda: any[];
@@ -8,4 +10,11 @@ export interface Ipsd {
   //* fase series - subseries documentales
   listSeriesSubseries: any[];
   currentSeriesSubseries: any;
+  //* restricciones
+  restriccionesParaTodasLasUnidadesOrganizacionales: any;
+  restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable: any;
+
+  //* fase permisos
+  unidadActuales: any[];
+  unidadesActualesExternas: any[];
 }

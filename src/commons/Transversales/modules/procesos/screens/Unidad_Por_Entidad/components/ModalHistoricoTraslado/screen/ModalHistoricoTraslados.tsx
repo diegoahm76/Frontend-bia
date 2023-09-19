@@ -99,8 +99,8 @@ export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
             autoHeight
             rows={historicoTrasladosMasivos || []}
             columns={columns || []}
-            pageSize={5}
-            rowsPerPageOptions={[7]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={() => uuidv4()}
           />

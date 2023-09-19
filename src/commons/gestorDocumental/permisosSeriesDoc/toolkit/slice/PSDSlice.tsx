@@ -9,7 +9,13 @@ const initialState: Ipsd = {
   unidadesOrganizacionales: [],
   current_unidad_organizacional: null,
   listSeriesSubseries: [],
-  currentSeriesSubseries: null
+  currentSeriesSubseries: null,
+  restriccionesParaTodasLasUnidadesOrganizacionales: null,
+  restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable:
+    null,
+
+  unidadActuales: [],
+  unidadesActualesExternas: []
 };
 
 export const PsdSlice = createSlice({
@@ -43,8 +49,53 @@ export const PsdSlice = createSlice({
     setListaSeriesSubseries: (state: any, action: PayloadAction<any>) => {
       state.listSeriesSubseries = action.payload;
     },
+
     setCurrentSerieSubserie: (state: any, action: PayloadAction<any>) => {
       state.currentSeriesSubseries = action.payload;
+    },
+
+    // ! acciones sobre las restricciones
+    set_restricciones_para_todas_las_unidades_organizacionales_action: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.restriccionesParaTodasLasUnidadesOrganizacionales = action.payload;
+    },
+
+    set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action:
+      (state, action: PayloadAction<any>) => {
+        state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
+          action.payload;
+      },
+
+    // ! acciones sobre los permisos
+    set_permisos_unidades_actuales_action: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.unidadActuales = action.payload;
+    },
+
+    set_permisos_unidades_actuales_externas_action: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.unidadesActualesExternas = action.payload;
+    },
+
+
+    reset_states: (state) => {
+      state.ccdsBusqueda = [];
+      state.ccd_current_busqueda = null;
+      state.unidadesOrganizacionales = [];
+      state.current_unidad_organizacional = null;
+      state.listSeriesSubseries = [];
+      state.currentSeriesSubseries = null;
+      state.restriccionesParaTodasLasUnidadesOrganizacionales = null;
+      state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
+        null;
+      state.unidadActuales = [];
+      state.unidadesActualesExternas = [];
     }
   }
 });
@@ -58,7 +109,16 @@ export const {
   set_current_unidad_organizacional_action,
   // ! acciones sobre las series y subseries
   setListaSeriesSubseries,
-  setCurrentSerieSubserie
+  setCurrentSerieSubserie,
+
+  // ! acciones sobre las restricciones
+  set_restricciones_para_todas_las_unidades_organizacionales_action,
+  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action,
+
+  // ! acciones sobre los permisos
+  set_permisos_unidades_actuales_action,
+  set_permisos_unidades_actuales_externas_action,
+  reset_states,
 } = PsdSlice.actions;
 
 //* para el próximo slice que cree se debe tener en cuenta el siguiente ejemplo
