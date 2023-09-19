@@ -42,7 +42,7 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
             }
         };
 
-       void fetchEncuestas();
+        void fetchEncuestas();
     }, []);
 
     const handle_close = (): void => {
@@ -51,9 +51,9 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
 
     const columns = [
         // { field: "id_encabezado_encuesta", headerName: "ID", width: 100 },
-        { field: "nombre_encuesta", headerName: "Nombre de Encuesta", width: 300,flex:1, },
-        { field: "fecha_creacion", headerName: "Fecha de Creación", width: 250 ,flex:1,},
-          {
+        { field: "nombre_encuesta", headerName: "Nombre de Encuesta", width: 300, flex: 1, },
+        { field: "fecha_creacion", headerName: "Fecha de Creación", width: 250, flex: 1, },
+        {
             field: 'acciones', headerName: 'Acciones', width: 200, flex: 1, renderCell: (params: any) => (
                 <>
 
