@@ -282,6 +282,7 @@ export const finish_tca_service = async (
     }
     const url = `gestor/tca/finish/${id_tca}/`;
     const { data } = await api.put(url);
+    control_warning('No olvides limpiar los campos antes de salir del módulo');
     control_success(data.detail);
     // console.log('TCA finalizado');
     setFlag(true);

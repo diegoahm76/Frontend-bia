@@ -1,8 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useForm } from 'react-hook-form';
+import { reset_states, setCurrentSerieSubserie, setListaSeriesSubseries, set_busqueda_ccds_action, set_ccd_current_busqueda_action, set_current_unidad_organizacional_action, set_permisos_unidades_actuales_action, set_permisos_unidades_actuales_externas_action, set_restricciones_para_todas_las_unidades_organizacionales_action, set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action, set_unidades_organizacionales_action } from '../toolkit/slice/PSDSlice';
+import { useAppDispatch } from '../../../../hooks';
+import Swal from 'sweetalert2';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export const usePSD = (): any => {
+
+  //* const navigate declaration
+  const navigate = useNavigate();
+
+  // ! dispatch declaration
+  const dispatch = useAppDispatch();
+
   // ! ------- definicion de los respectivos useForm a usar ----------
   const {
     control: control_search_ccd_psd,
@@ -24,8 +35,8 @@ export const usePSD = (): any => {
   //* useForm
   const {
     control: control_seleccionar_seccion_control,
-    watch: seleccionar_seccion_watch
-    // reset: seleccionar_seccion_reset
+    watch: seleccionar_seccion_watch,
+    reset: seleccionar_seccion_reset
   } = useForm({
     defaultValues: {
       //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
@@ -41,12 +52,12 @@ export const usePSD = (): any => {
   //* useForm
   const {
     control: seleccionar_serie_subserie_control,
-    watch: seleccionar_serie_subseire_watch
-    // reset: seleccionar_seccion_reset
+    watch: seleccionar_serie_subseire_watch,
+    reset: seleccionar_serie_subserie_reset
   } = useForm({
     defaultValues: {
       //* se debe revisar porque valor se hace la busqueda de la respectiva serie o subserie asociadas a la unidad organizacional del ccd
-      id_serie_subserie: ''
+      id_unidad_organizacional: ''
     }
   });
 
@@ -56,11 +67,85 @@ export const usePSD = (): any => {
 
   //! --------- funciones de reseteo de los useForm -------------
   const reset_all = (): void => {
+    void Swal.fire({
+      title: '¿Está seguro de limpiar todos los campos?, la información no se guardará.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, limpiar',
+      cancelButtonText: 'No, cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Limpiado!',
+          'Todos los campos han sido limpiados.',
+          'success',
+        );
     reset_search_ccd_psd({
       nombre: '',
       version: ''
     });
+    seleccionar_seccion_reset({
+      id_cdd_unidad_organizacional: ''
+    });
+    seleccionar_serie_subserie_reset({
+      id_unidad_organizacional: ''
+    });
+    dispatch(reset_states());
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Cancelado',
+          'Información conservada.',
+          'info'
+        );
+      }
+    });
   };
+
+
+  const getOutModule = () => {
+
+    void Swal.fire({
+      title: '¿Está seguro de salir del módulo?, la información no se guardará.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, salir',
+      cancelButtonText: 'No, cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Salida!',
+          'Ha salido del módulo.',
+          'success',
+        );
+        reset_search_ccd_psd({
+          nombre: '',
+          version: ''
+        });
+        seleccionar_seccion_reset({
+          id_cdd_unidad_organizacional: ''
+        });
+        seleccionar_serie_subserie_reset({
+          id_unidad_organizacional: ''
+        });
+        dispatch(reset_states());
+
+      navigate("/app/home", { replace: true });
+  }
+
+  else if (result.dismiss === Swal.DismissReason.cancel) {
+    Swal.fire(
+      'Cancelado',
+      'Información conservada, puede continuar.',
+      'info'
+    );
+  }
+});
+  };
+
 
   //* retorno
   return {
@@ -78,6 +163,9 @@ export const usePSD = (): any => {
     values_watch_seleccionar_serie_subserie,
 
     //* funciones de reseteo de los useForm
-    reset_all
+    reset_all,
+
+    //* funcion de salida del modulo
+    getOutModule
   };
 };
