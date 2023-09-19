@@ -35,3 +35,8 @@ export const get_tipos_tipologias = async (): Promise<SelectTipologias[]> => {
     return data ?? [];
 };
 
+// ? post
+export const post_archivo_soporte = async (data: any): Promise<any> => {
+    const response = await api.post(`gestor/expedientes-archivos/expedientes/agregar-archivo-soporte/`, data);
+    return response.data;
+};

@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { control_error, control_success } from '../../../../../helpers';
+import { post_archivo_soporte } from '../services/services';
+import { useAppSelector } from '../../../../../hooks';
 
 export const useCierreExpedientes = () => {
   // useForm
@@ -31,6 +33,7 @@ export const useCierreExpedientes = () => {
       descripcion: '',
       palabras_clave_documento: '',
 
+      tipologia_documental: '',
       tiene_consecutivo: '',
     },
   });
@@ -71,17 +74,42 @@ export const useCierreExpedientes = () => {
     setPalabrasClave(palabras);
   };
 
+  const {
+    cierre_expediente: { id_expediente_documental },
+  } = useAppSelector((state) => state.expedientes);
+
   // * onSubmit
   const onSubmit_archivo_soporte = handleSubmit_archivo_soporte(
     async (data) => {
       try {
         set_is_saving(true);
         console.log(data);
-        control_success('Se ha creado el tipo de radicado exitosamente');
+        const data_archivo = {
+          id_expediente_documental: id_expediente_documental,
+          nombre_asignado_documento: data.nombre_asignado_documento,
+
+          fecha_creacion_doc: dayjs(data.fecha_creacion_doc).format(
+            'DD/MM/YYYY'
+          ),
+          nro_folios_del_doc: data.nro_folios_del_doc,
+          cod_origen_archivo: data.cod_origen_archivo,
+          codigo_tipologia_doc_prefijo: data.codigo_tipologia_doc_prefijo,
+          codigo_tipologia_doc_agno: agno_archivo,
+          codigo_tipologia_doc_consecutivo:
+            data.codigo_tipologia_doc_consecutivo,
+          cod_categoria_archivo: data.cod_categoria_archivo,
+          tiene_replica_fisica: data.tiene_replica_fisica,
+          asunto: data.asunto,
+          descripcion: data.descripcion,
+          palabras_clave_documento: palabrasClave,
+        };
+        await post_archivo_soporte(data_archivo);
+
+        control_success('Se ha creado el archivo de soporte exitosamente');
       } catch (error: any) {
         control_error(
           error.response.data.detail ||
-            'Error al crear el tipo de radicado, intente nuevamente'
+            'Error al crear el archivo de soporte, intente nuevamente'
         );
       } finally {
         set_is_saving(false);
