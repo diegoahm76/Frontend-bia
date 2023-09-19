@@ -4,18 +4,14 @@ import { type FC, useState, useEffect } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppSelector } from '../../../../../hooks';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../components';
 import { usePSD } from '../../hook/usePSD';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
-  //* dispatch declaration
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const dispatch = useAppDispatch();
   // ? loading  para los botones guardar y proceder respectivamente
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
@@ -30,7 +26,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.PsdSlice);
 
   //* usePSD
-  const { reset_all } = usePSD();
+  const { reset_all, getOutModule } = usePSD();
 
   // ? validaciones de renderizado
   if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
@@ -113,15 +109,14 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     GUARDAR
                   </LoadingButton>
 
-                  <Link to="/app/home">
                     <Button
                       color="error"
                       variant="contained"
                       startIcon={<CloseIcon />}
+                      onClick={getOutModule}
                     >
                       SALIR DEL MÓDULO
                     </Button>
-                  </Link>
                 </Stack>
               </Grid>
             </Grid>

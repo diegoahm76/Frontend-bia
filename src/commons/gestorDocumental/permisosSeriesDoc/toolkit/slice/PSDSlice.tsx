@@ -81,6 +81,21 @@ export const PsdSlice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.unidadesActualesExternas = action.payload;
+    },
+
+
+    reset_states: (state) => {
+      state.ccdsBusqueda = [];
+      state.ccd_current_busqueda = null;
+      state.unidadesOrganizacionales = [];
+      state.current_unidad_organizacional = null;
+      state.listSeriesSubseries = [];
+      state.currentSeriesSubseries = null;
+      state.restriccionesParaTodasLasUnidadesOrganizacionales = null;
+      state.restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable =
+        null;
+      state.unidadActuales = [];
+      state.unidadesActualesExternas = [];
     }
   }
 });
@@ -102,7 +117,8 @@ export const {
 
   // ! acciones sobre los permisos
   set_permisos_unidades_actuales_action,
-  set_permisos_unidades_actuales_externas_action
+  set_permisos_unidades_actuales_externas_action,
+  reset_states,
 } = PsdSlice.actions;
 
 //* para el próximo slice que cree se debe tener en cuenta el siguiente ejemplo
