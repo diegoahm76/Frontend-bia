@@ -30,12 +30,72 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
 
   // ? este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en FALSE para este caso
 
+  const handleCheckboxChangePRUEBA = (
+    { target: { checked } }: React.ChangeEvent<HTMLInputElement>,
+    compararPor: string,
+    valorComparar: any,
+    arrayComparacion: any[],
+    propiedades: string[],
+    dispatch: React.Dispatch<any>,
+    callback: Function
+  ): void => {
+    const DATOS_ACTUALIZADOS = arrayComparacion.map((elementos: any) => {
+      if (
+        elementos.hasOwnProperty(compararPor) &&
+        elementos[compararPor] === valorComparar
+      ) {
+        const DATA_ACTUALIZADA = { ...elementos };
+        for (const propiedad of propiedades) {
+          if (propiedad === 'consultar_expedientes_no_propios' && DATA_ACTUALIZADA[propiedad]) {
+            DATA_ACTUALIZADA[propiedad] = true;
+          } else {
+            DATA_ACTUALIZADA[propiedad] = checked;
+          }
+        }
+        return DATA_ACTUALIZADA;
+      } else {
+        return elementos;
+      }
+    });
+    console.log(DATOS_ACTUALIZADOS);
+    dispatch(callback(DATOS_ACTUALIZADOS));
+  };
+
+
+  const handleCheckboxChangeConsulta = (
+    { target: { checked } }: React.ChangeEvent<HTMLInputElement>,
+    compararPor: string,
+    valorComparar: any,
+    arrayComparacion: any[],
+    propiedades: string[],
+    dispatch: React.Dispatch<any>,
+    callback: Function
+  ): void => {
+    const DATOS_ACTUALIZADOS = arrayComparacion.map((elementos: any) => {
+      if (
+        elementos.hasOwnProperty(compararPor) &&
+        elementos[compararPor] === valorComparar
+      ) {
+        const DATA_ACTUALIZADA = { ...elementos };
+        for (const propiedad of propiedades) {
+          if (propiedad === 'consultar_expedientes_no_propios') {
+            DATA_ACTUALIZADA[propiedad] = checked;
+          } else {
+            DATA_ACTUALIZADA[propiedad] = false;
+          }
+        }
+        return DATA_ACTUALIZADA;
+      } else {
+        return elementos;
+      }
+    });
+    console.log(DATOS_ACTUALIZADOS);
+    dispatch(callback(DATOS_ACTUALIZADOS));
+  };
+
+
   const columns = [
     ...columnsAsignacionPer,
-
-    // ?  ---- PERMISOS ---
-    //* --- dentro de cada fila de permisos van a coexsistir dos elementos renderizados (una guía de lo que marque en el checkbox y el respectivo checkbox )
-    // ? CONSTRUIR UN COMPONENTE PARA RENDERIZAR ESTOS CAMPOS
     {
       field: 'crear_expedientes',
       headerName: 'Crear expediente',
@@ -79,19 +139,22 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
       )
     },
     {
+      // ! ------- ANULAR ----
       field: 'anular_documentos_exps_no_propios',
       headerName: 'Anular documento',
       width: 135,
       renderCell: (params: any) => (
         <CheckboxComponent
           checked={params.row.anular_documentos_exps_no_propios}
-          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleCheckboxChange(
+
+
+         handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          handleCheckboxChangePRUEBA(
               event,
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadesActualesExternas,
-              ['anular_documentos_exps_no_propios'],
+              ['anular_documentos_exps_no_propios', 'consultar_expedientes_no_propios'],
               dispatch,
               set_permisos_unidades_actuales_externas_action
             );
@@ -100,6 +163,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
       )
     },
     {
+      // ! ------- BORRAR DOCUMENTO ----
       field: 'borrar_documentos_exps_no_propios',
       headerName: 'Borrar documento',
       width: 135,
@@ -107,12 +171,12 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         <CheckboxComponent
           checked={params.row.borrar_documentos_exps_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleCheckboxChange(
+            handleCheckboxChangePRUEBA(
               event,
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadesActualesExternas,
-              ['borrar_documentos_exps_no_propios'],
+              ['borrar_documentos_exps_no_propios','consultar_expedientes_no_propios'],
               dispatch,
               set_permisos_unidades_actuales_externas_action
             );
@@ -121,6 +185,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
       )
     },
     {
+      // ! ------- CONCEDER ACCESO A EXPEDIENTE ----
       field: 'conceder_acceso_documentos_exps_no_propios',
       headerName: 'Conceder acceso a docs',
       width: 165,
@@ -128,12 +193,12 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         <CheckboxComponent
           checked={params.row.conceder_acceso_documentos_exps_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleCheckboxChange(
+            handleCheckboxChangePRUEBA(
               event,
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadesActualesExternas,
-              ['conceder_acceso_documentos_exps_no_propios'],
+              ['conceder_acceso_documentos_exps_no_propios', 'consultar_expedientes_no_propios'],
               dispatch,
               set_permisos_unidades_actuales_externas_action
             );
@@ -142,6 +207,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
       )
     },
     {
+      // ! ------- CONCEDER ACCESO A EXPEDIENTES ----
       field: 'conceder_acceso_expedientes_no_propios',
       headerName: 'Conceder acceso a exps',
       width: 165,
@@ -149,12 +215,12 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         <CheckboxComponent
           checked={params.row.conceder_acceso_expedientes_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleCheckboxChange(
+            handleCheckboxChangePRUEBA(
               event,
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadesActualesExternas,
-              ['conceder_acceso_expedientes_no_propios'],
+              ['conceder_acceso_expedientes_no_propios','consultar_expedientes_no_propios'],
               dispatch,
               set_permisos_unidades_actuales_externas_action
             );
@@ -170,12 +236,18 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         <CheckboxComponent
           checked={params.row.consultar_expedientes_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleCheckboxChange(
+            handleCheckboxChangeConsulta(
               event,
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadesActualesExternas,
-              ['consultar_expedientes_no_propios'],
+              ['consultar_expedientes_no_propios',
+              'descargar_expedientes_no_propios',
+              'anular_documentos_exps_no_propios',
+              'borrar_documentos_exps_no_propios',
+              'conceder_acceso_documentos_exps_no_propios',
+              'conceder_acceso_expedientes_no_propios',
+            ],
               dispatch,
               set_permisos_unidades_actuales_externas_action
             );
@@ -191,12 +263,12 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         <CheckboxComponent
           checked={params.row.descargar_expedientes_no_propios}
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleCheckboxChange(
+            handleCheckboxChangePRUEBA(
               event,
               'id_und_organizacional_actual',
               params.row.id_und_organizacional_actual,
               unidadesActualesExternas,
-              ['descargar_expedientes_no_propios'],
+              ['descargar_expedientes_no_propios','consultar_expedientes_no_propios'],
               dispatch,
               set_permisos_unidades_actuales_externas_action
             );
@@ -204,13 +276,14 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
         />
       )
     }
+  ];
+
 
     //* revisar para que puede ser útil esta opción
     // { field: 'id_permisos_und_org_actual_serie_exp_ccd', headerName: 'ID de permisos' },
 
     // ! este campo ""pertenece_seccion_actual_admin_serie": false,"    --- debe mandarse en FALSE para este caso
     // { field: 'pertenece_seccion_actual_admin_serie', headerName: 'Pertenece a la sección actual' }
-  ];
 
   if (loadingRestricciones)
     return (
