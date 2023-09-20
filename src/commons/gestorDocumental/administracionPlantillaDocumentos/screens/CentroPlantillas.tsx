@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import { Dialog } from 'primereact/dialog';
 import { Box, Button, Checkbox, FormControl, Grid, InputLabel, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { v4 as uuidv4 } from 'uuid';
-import ClearIcon from '@mui/icons-material/Clear';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components/Title';
+import { InformacionPlantillasPersonas } from '../components/informacionPlantillas/InformacionPlantillasPersonas';
+import SaveIcon from '@mui/icons-material/Save';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 export const MostrarCentroPlantillas: React.FC = () => {
+
 
   const [nombre_plantilla, set_nombre_plantilla] = useState<string>(''); // Nuevo estado para el filtro
   const [Descripccion, set_Descripccion] = useState<string>(''); // Nuevo estado para el filtro
@@ -24,12 +25,14 @@ export const MostrarCentroPlantillas: React.FC = () => {
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
   const [activador, set_activaador] = useState<boolean>(false);
-  const descripcion = '';
+
+
+
+  const descripcionn = '';
   const disponibilidad = '';
   const tipologia = '';
 
   
-
   const columns: GridColDef[] = [
     {
       field: 'id_plantilla_doc',
@@ -60,10 +63,27 @@ export const MostrarCentroPlantillas: React.FC = () => {
       headerName: 'Extensión',
       width: 120,
       flex:1
+    }, {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 200,
+      renderCell: (params: any) => (
+      
+          <InformacionPlantillasPersonas  /> 
+
+      ),
     },
-  ];
+  ]
+  
 
+  const limpiar = () => {
+    set_nombre_plantilla("");
+    set_Descripccion("");
+    set_Extension("");
+    set_choise_seleccionado_tipologia("");
+    set_choise_seleccionado_disponivilidad("")
 
+  };
 
   const fetch_data_busqueda_avanzada = async (): Promise<void> => {
     try {
@@ -72,9 +92,9 @@ export const MostrarCentroPlantillas: React.FC = () => {
      // Construye dinámicamente la URL de consulta
      let queryURL = url;
 
-     if (descripcion || nombre_plantilla || Extension || disponibilidad || tipologia) {
+     if (descripcionn || nombre_plantilla || Extension || disponibilidad || tipologia) {
        queryURL += '?';
-       if (descripcion) {   queryURL += `descripcion=${descripcion}&`; }
+       if (descripcionn) {   queryURL += `descripcion=${descripcionn}&`; }
  
        if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`;  }
  
@@ -158,7 +178,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
         <Title title="Seleccionar Archivos" />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={5}>
       <TextField
           style={{ width: '80%', marginTop: 20 }}
           label={`Buscar por Nombre de Plantilla`}
@@ -244,6 +264,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
             color="success"
             fullWidth
             variant="contained"
+            startIcon={<SaveIcon />}
             style={{ width: '80%' }}
             onClick={() => {set_activaador(!activador)}}
           >
@@ -251,7 +272,10 @@ export const MostrarCentroPlantillas: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <Button fullWidth variant="outlined" style={{ width: '80%' }}>
+          <Button fullWidth variant="outlined"
+              startIcon={<CleanIcon />}
+
+style={{ width: '80%' }}  onClick={limpiar} >
             limpiar
           </Button>
         </Grid>
@@ -275,7 +299,11 @@ export const MostrarCentroPlantillas: React.FC = () => {
           />
         </Box>
       </Grid>
-    </Grid>
+    
+
+   
+  <InformacionPlantillasPersonas  />
+  </Grid>
 
   );
 };
