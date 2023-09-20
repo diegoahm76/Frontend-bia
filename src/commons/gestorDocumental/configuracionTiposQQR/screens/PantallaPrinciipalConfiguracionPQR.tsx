@@ -120,9 +120,9 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       control_success('Tiempo de respuesta actualizado correctamente');
 
       set_loading(false);
-    } catch (error: any) {
+    } catch (error:any) {
       control_error(error.response.data.detail);
-    } finally {
+    }finally{
       set_loading(false);
     }
     set_loading(false);
