@@ -89,51 +89,51 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
       if (tiempoRespuesta === null || tiempoRespuesta <= 0) {
         // tiempoRespuesta no cumple con las condiciones, mostrar un mensaje de error o manejarlo según tus necesidades 
-        
+
         set_loading(false);
         control_error('El valor de tiempo de respuesta no es válido');
-        
+
 
         return; // Salir de la función sin hacer la solicitud PUT
       }
-  
+
       const updatedDataEntidad: TipoPQR = {
         ...primerElementoConsulta,
         tiempo_respuesta_en_dias: tiempoRespuesta,
       };
-  
+
       const payload = {
         ...updatedDataEntidad,
       };
-  
+
       const response = await api.put(
         `gestor/pqr/tipos_pqr/update/${PQR_seleccionado}/`,
         payload
       );
-  
-        const updatedEmail = response.data.tiempo_respuesta_en_dias;
-        const updatedDataEntidadWithUpdatedEmail: TipoPQR = {
-          ...updatedDataEntidad,
-          tiempo_respuesta_en_dias: updatedEmail,
-        };
-        set_tipos_pqer(updatedDataEntidadWithUpdatedEmail);
-        control_success('Tiempo de respuesta actualizado correctamente');
-       
-        set_loading(false);
-    } catch (error:any) {
+
+      const updatedEmail = response.data.tiempo_respuesta_en_dias;
+      const updatedDataEntidadWithUpdatedEmail: TipoPQR = {
+        ...updatedDataEntidad,
+        tiempo_respuesta_en_dias: updatedEmail,
+      };
+      set_tipos_pqer(updatedDataEntidadWithUpdatedEmail);
+      control_success('Tiempo de respuesta actualizado correctamente');
+
+      set_loading(false);
+    } catch (error: any) {
       control_error(error.response.data.detail);
-    }finally{
+    } finally {
       set_loading(false);
     }
     set_loading(false);
     set_activador(true);
   };
-  
+
 
   const handleTiempoRespuestaChange = (event: any): void => {
     setTiempoRespuesta(event.target.value); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
- 
+
   const handleChange_guardar = (): void => {
     fetch_data_get_buscar_letraaaa().catch((error) => {
       console.error(error);
@@ -149,7 +149,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   };
 
   const handleLimpiarCamposss = (): void => {
-  
+
     setTiempoRespuesta(0); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
 
