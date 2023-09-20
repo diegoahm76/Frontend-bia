@@ -40,25 +40,30 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const handleSubmit = () => {
     try {
       const restricciones = restriccionesParaTodasLasUnidadesOrganizacionales
-        .concat(
-          restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
-        )
-        .reduce(
-          (obj: any, item: any) => {
-            obj[item.id] = item.checked;
-            return obj;
-          },
-          { id_cat_serie_und_org_ccd: currentSeriesSubseries.id_cat_serie_und }
-        );
+        .concat(restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable)
+        .reduce((obj: any, item: any) => {
+          obj[item.id] = item.checked;
+          return obj;
+        }, {});
 
+      if (Object.values(restricciones).some((checked) => checked)) {
+        restricciones.id_cat_serie_und_org_ccd = currentSeriesSubseries.id_cat_serie_und;
+      } else {
+        restricciones.id_cat_serie_und_org_ccd = null;
+      }
           //* se recibe la información de ambos arrays de permisos para mandar un único objeto de información
 
          const unidades_permisos = [
           ...unidadActuales.map((unidad) => ({
             ...unidad,
             pertenece_seccion_actual_admin_serie: true,
+            id_cat_serie_und_org_ccd: +unidad.id_cat_serie_und_org_ccd
           })),
-          ...unidadesActualesExternas
+          ...unidadesActualesExternas.map((unidad) => ({
+            ...unidad,
+            pertenece_seccion_actual_admin_serie: false,
+            id_cat_serie_und_org_ccd: +unidad.id_cat_serie_und_org_ccd
+          }))
          ]
 
      const objetoToSend ={
@@ -72,6 +77,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       setLoadingButton,
      ).then((res) => {
       console.log(res);
+      // reset_all()
       });
 
       console.log('objetoToSend', objetoToSend);
