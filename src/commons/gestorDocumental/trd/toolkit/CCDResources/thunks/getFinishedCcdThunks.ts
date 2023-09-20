@@ -11,7 +11,12 @@ export const get_finished_ccd_service = (): ((
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse<any> | AxiosError> => {
     try {
-      const { data } = await api.get('gestor/ccd/get-terminados/');
+      const { data } = await api.get('gestor/ccd/get-terminados/', {
+        params: {
+          limit: 10000,
+          offset: 0
+        }
+      });
       /* console.log(
         '🚀 ~ file: getFinishedCcdThunks.ts ~ line 31 ~ return ~ data ccd terminados',
         data

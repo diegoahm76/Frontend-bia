@@ -197,7 +197,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                       selectionMode="single"
                       selection={seleccion_articulo}
                       onSelectionChange={(e) => {
-                        set_seleccion_articulo(e.value);
+                        set_seleccion_articulo(e.value as any);
                       }}
                       dataKey="id_bien"
                     >

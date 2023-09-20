@@ -719,6 +719,9 @@ export const EditarOrganigrama = ({
                       variant="outlined"
                       value={value}
                       onChange={onChange}
+                      inputProps={{
+                        maxLength: 10
+                      }}
                       error={!(error == null)}
                       helperText={
                         error != null
@@ -747,6 +750,9 @@ export const EditarOrganigrama = ({
                       // disabled={organigram_current.fecha_terminado !== null}
                       value={value}
                       onChange={onChange}
+                      inputProps={{
+                        maxLength: 255
+                      }}
                       error={!(error == null)}
                       helperText={
                         error != null

@@ -3,7 +3,7 @@ export const containerStyles = {
   position: 'relative',
   background: '#FAFAFA',
   borderRadius: '15px',
-  p: '20px',
-  mb: '20px',
+  p: '25px',
+  mb: '25px',
   boxShadow: '0px 3px 6px #042F4A26',
 }

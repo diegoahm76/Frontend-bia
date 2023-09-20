@@ -201,6 +201,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
+                    required
                       // margin="dense"
                       fullWidth
                       // name="nombre"
@@ -242,7 +243,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     fieldState: { error }
                   }) => (
                     <TextField
-                      // margin="dense"
+                      required
                       fullWidth
                       // name="version"
                       label="Versión del TRD"

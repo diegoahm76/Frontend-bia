@@ -23,7 +23,7 @@ export const consultarTablaTemporal =
         data: data?.data,
         success: data?.success,
         detail: data?.detail,
-        totalData: data,
+        totalData: data
       };
     } catch (error: any) {
       // control_warning('No hay datos para mostrar');
@@ -32,7 +32,7 @@ export const consultarTablaTemporal =
         data: [],
         success: false,
         detail: error?.response?.data?.detail,
-        totalData: {},
+        totalData: {}
       };
     } finally {
       // setLoading(false);
@@ -80,7 +80,8 @@ export const getOrganigramasDispobibles = async (): Promise<any> => {
   try {
     const url = `transversal/organigrama/get-terminados/`;
     const { data } = await api.get(url);
-    const dataToReturn = data.filter(
+    console.log('dataaaaaaaaa', data);
+    const dataToReturn = data?.filter(
       (el: any) => el.fecha_terminado && !el.fecha_retiro_produccion
     );
     return dataToReturn;

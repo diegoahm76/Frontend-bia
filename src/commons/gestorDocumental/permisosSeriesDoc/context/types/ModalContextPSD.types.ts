@@ -9,4 +9,7 @@ export interface ModalContextPSDInterface {
 
   loadingSeriesSubseries: boolean;
   setloadingSeriesSubseries: (value: boolean) => void;
+
+  loadingRestricciones: boolean;
+  setLoadingRestricciones: React.Dispatch<React.SetStateAction<boolean>>;
 }
