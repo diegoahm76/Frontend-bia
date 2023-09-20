@@ -283,7 +283,7 @@ export const ModalActSecResp = (params: any): JSX.Element => {
         <Grid item xs={12}>
           <Grid container spacing={2}></Grid>
         </Grid>
-        <RenderDataGrid columns={[]} rows={unidadActuales.filter((el) => !el.mostrar)} title="Unidades propias" />
+        <RenderDataGrid columns={columns} rows={unidadActuales.filter((el) => !el.mostrar)} title="Unidades propias" />
       </DialogContent>
       <Divider />
       <DialogActions>
