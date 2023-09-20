@@ -99,8 +99,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                       startIcon={<CloseIcon />}
                       onClick={() => {
                         getOutModule(
-                          () => {},
                           navigate,
+                          () => {},
                         );
                       }}
                     >
