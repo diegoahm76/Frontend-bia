@@ -77,7 +77,7 @@ export const SeleccionarArchivo: React.FC = () => {
             // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={4}>
+        <Grid item xs={12} sm={4.5} md={3}>
           <Button
             style={{ marginTop: 10 }}
             component="label"

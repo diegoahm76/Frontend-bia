@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {  useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
-import { Box, Button, Checkbox, Grid, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, Grid, InputLabel, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
@@ -10,16 +10,26 @@ import ClearIcon from '@mui/icons-material/Clear';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Title } from '../../../../../components/Title';
+import { api } from '../../../../../api/axios';
+
 
 export const MostrarModalBuscarPlantilla: React.FC = () => {
+
+
   const [visible, setVisible] = useState<boolean>(false);
   const [nombre_plantilla, set_nombre_plantilla] = useState<string>(''); // Nuevo estado para el filtro
   const [Descripccion, set_Descripccion] = useState<string>(''); // Nuevo estado para el filtro
   const [Extension, set_Extension] = useState<string>(''); // Nuevo estado para el filtro
-
-  const [tipoligia_documental, set_tipoligia_documental] = useState('Seleccionar');
-  const [Columna_Disponivilidad, set_Columna_Disponivilidad] = useState('Seleccionar');
+  const [data_choise, set_data_choise] = useState<any>(null);
+  const [choise_seleccionado_tipologia, set_choise_seleccionado_tipologia] = useState<string>('');
+//  console.log(choise_seleccionado_tipologia);
   const [checked, setChecked] = useState(false);
+  const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
+  const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
+
+
+  const titulo = <Title title={`Busqueda`} />;
+
   const footerContent = (
     <div>
       <Button
@@ -36,7 +46,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
     </div>
   );
 
-  const titulo = <Title title={`Busqueda`} />;
+
 
   const data = [
     {
@@ -158,6 +168,63 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
 
 
 
+  const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+  console.log(data_busqueda_Avanazda);
+   const fetch_data_busqueda_avanzada = async (): Promise<void> => {
+    try {
+      const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada/`;
+      const res: any = await api.get(url);
+      let numero_consulta: any = res.data.data;
+      set_data_busqueda_Avanazda(numero_consulta);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetch_data_busqueda_avanzada().catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
+  const fetch_choise_tipologia_documental = async (): Promise<void> => {
+    try {
+      const url = `/gestor/plantillas/tipos_tipologia/get/`;
+      const res: any = await api.get(url);
+      let numero_consulta: any = res.data.data;
+      set_data_choise(numero_consulta);
+      // console.log(numero_consulta); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetch_choise_Disponivilidad = async (): Promise<void> => {
+    try {
+      const url = `/gestor/choices/tipo-acceso/`;
+      const res: any = await api.get(url);
+      let numero_consulta_Disponivilidad: any = res.data;
+      set_data_choise_disponivilidad(numero_consulta_Disponivilidad);
+      // console.log(numreo_consulta_Disponivilidad);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  useEffect(() => {
+    fetch_choise_tipologia_documental().catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetch_choise_Disponivilidad().catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
+
   return (
     <div className="card flex justify-content-center">
       <Button
@@ -167,12 +234,12 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
           setVisible(true);
         }}
       >
-        buscarr
+        buscar
       </Button>
       <Dialog
         header={titulo}
         visible={visible}
-        style={{ width: '55%' }}
+        style={{ width: '90%' }}
         closable={false}
         onHide={(): void => {
           setVisible(false);
@@ -235,41 +302,41 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
             </Grid>
           </Grid>
           <Grid item xs={5}>
-            <Select
-              style={{ width: '100%', marginTop: 7 }}
-              value={tipoligia_documental}
-              onChange={(e) => {
-                set_tipoligia_documental(e.target.value);
-              }}
-              fullWidth
-              variant="outlined"
-            >
-              <MenuItem value="nombre_modulo">Nombre Módulo</MenuItem>
-              <MenuItem value="responsable_directo">
-                Responsable Directo
-              </MenuItem>
-              <MenuItem value="nombre_clase_alerta">
-                Nombre Clase Alerta
-              </MenuItem>
-            </Select>
+            <FormControl fullWidth style={{ margin: 5 }}>
+              <InputLabel id="choise-label">Tipologia Documental</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="choise-seleccionado-tipologia"
+                value={choise_seleccionado_tipologia}
+                label="Tipologia Documental"
+                onChange={(event):any => {set_choise_seleccionado_tipologia(event.target.value)}}
+              >
+                {data_choise?.map((item: any, index: number) => (
+                  <MenuItem key={index} value={item.nombre}>
+                    {item.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-            <Select
-              style={{ width: '100%', marginTop: 7 }}
-              value={Columna_Disponivilidad}
-              onChange={(e) => {
-                set_Columna_Disponivilidad(e.target.value);
-              }}
-              fullWidth
-              variant="outlined"
-            >
-              <MenuItem value="nombre_modulo">Nombre Módulo</MenuItem>
-              <MenuItem value="responsable_directo">
-                Responsable Directo
-              </MenuItem>
-              <MenuItem value="nombre_clase_alerta">
-                Nombre Clase Alerta
-              </MenuItem>
-            </Select>
+
+            <FormControl fullWidth style={{ margin: 5 }}>
+            <InputLabel id="choise-label">Disponibilidad</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                value={choise_seleccionado_disponivilidad}
+                label="Disponibilidad"
+                onChange={(event): any => {
+                  set_choise_seleccionado_disponivilidad(event.target.value);
+                }}
+              >
+                {data_choise_disponivilidad?.map((item: any, index: number) => (
+                  <MenuItem key={index} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid container>
             <Grid item xs={6}>

@@ -202,15 +202,12 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
-            <h5>Registrado desde:</h5>
+            <h5>Registrado Desde:</h5>
           </Grid>
           <Grid item xs={12} sm={5}>
             <FormControl fullWidth>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
                 value={PQR_seleccionado}
-                label="PQR_seleccionado"
                 onChange={(event): any => {
                   set_PQR_seleccionado(event.target.value);
                 }} >
@@ -226,7 +223,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
-            <h5>Codigo de PQR:</h5>
+            <h5>Codigo de PQRSDF:</h5>
           </Grid>
           <Grid item xs={12} sm={3}>
             <TextField
@@ -242,7 +239,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
-            <h5>Tiempo de respuesta:</h5>
+            <h5>Tiempo de Respuesta:</h5>
           </Grid>
           <Grid item xs={12} sm={3}>
             <TextField
