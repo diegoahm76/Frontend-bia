@@ -119,14 +119,14 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
 
   useEffect(() => {
     if (asignacionConsultaTablaTemporal) {
-      console.log(
+     /* console.log(
         'resultados consulta tabla temporal',
         asignacionConsultaTablaTemporal
-      );
+      ); */
     }
 
     if (gridActualANuevo) {
-      console.log('gridActualANuevo', gridActualANuevo);
+     // console.log('gridActualANuevo', gridActualANuevo);
 
       const unidadesSeleccionadasTemp = gridActualANuevo
         ?.filter((persona: any) => {
@@ -146,11 +146,11 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
 
       dispatch(setUnidadesSeleccionadas(unidadesSeleccionadasTemp));
 
-      console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
+      // console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
     }
   }, [gridActualANuevo]);
 
-  if (gridActualANuevo.length === 0)
+ /* if (gridActualANuevo.length === 0)
     return (
       <Grid
         container
@@ -163,7 +163,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
       >
         <Loader altura={150} />
       </Grid>
-    );
+    ); */
 
   return (
     //* renderiza los datos necesarios para el traslado unidades organizacionales actuales a nuevas

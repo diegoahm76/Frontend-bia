@@ -335,7 +335,6 @@ export const AdminUsers: React.FC = () => {
                             />
                           )}
                           {...register_admin_user('roles')}
-                          // @ts-ignore
                           onChange={handle_change_autocomplete}
                         />
                       )}

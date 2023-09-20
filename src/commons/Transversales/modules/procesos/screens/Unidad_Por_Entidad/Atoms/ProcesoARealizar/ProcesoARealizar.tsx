@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { useEffect, type FC, useContext } from 'react';
+import { useEffect, type FC, useContext, useState } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
 import { Grid } from '@mui/material';
@@ -12,7 +12,8 @@ import { use_u_x_entidad } from '../../hooks/use_u_x_entidad';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import {
   consultarTablaTemporal,
-  getPersonasSinActualizarOrganigramaAnteriorAlActual
+  getPersonasSinActualizarOrganigramaAnteriorAlActual,
+  get_organigrama_acual
 } from '../../toolkit/UxE_thunks/UxE_thunks';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import {
@@ -22,37 +23,41 @@ import {
   setUnidadesSeleccionadas
 } from '../../toolkit/UxE_slice/UxE_slice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-// import CleanIcon from '@mui/icons-material/CleaningServices';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { useNavigate } from 'react-router-dom';
 
 export const ProcesoARealizar: FC = (): JSX.Element => {
+  //* navigate
+  const navigate = useNavigate();
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
-  const {controlFaseEntrada } =
-    useAppSelector((state) => state.u_x_e_slice);
+  const { controlFaseEntrada, asignacionConsultaTablaTemporal } = useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { control_opciones_traslado, reset_opciones_traslado } =
-    use_u_x_entidad();
+  const {
+    control_opciones_traslado,
+    reset_opciones_traslado,
+    controlModoTrasladoUnidadXEntidad
+  } = use_u_x_entidad();
 
   //* context necesario
 
-  const { handleGridActualANuevo } = useContext(
+  const { handleGridActualANuevo } = useContext(ContextUnidadxEntidad);
 
-    ContextUnidadxEntidad
-  );
+  //* estados necesarios para el manejo de la aplicación
+  const [cargaApp, setCargaApp] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('use_u_x_entidad');
+    // console.log('use_u_x_entidad');
 
-    void consultarTablaTemporal().then(
-
-      (resTablaTemporal: any) => {
-        console.log(resTablaTemporal);
+    setCargaApp(true);
+    void consultarTablaTemporal()
+      .then((resTablaTemporal: any) => {
+        // console.log(resTablaTemporal);
 
         //* por otro lado, cuando hayan resultados de la T026 se deben almacenar en un estado para realizar las comparaciones necesarias para el manejo de la aplicación
-
 
         //* el estado de esta variable para la validación siempre será === 0
         if (resTablaTemporal.data.length === 0) {
@@ -62,51 +67,64 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         } else {
           void getPersonasSinActualizarOrganigramaAnteriorAlActual().then(
             (resListadoPersonasSinActualizar: any) => {
-              console.log(resListadoPersonasSinActualizar);
+              // console.log(resListadoPersonasSinActualizar);
 
               //* el estado de esta variable para su validación siempre será !== 0
+              void get_organigrama_acual(navigate).then(
+                (resOrganigramaActual: any) => {
+                  // console.log(' orgggg actual', resOrganigramaActual);
+                  // console.log('orggg tabla temporal', resTablaTemporal);
+                  if (
+                    resListadoPersonasSinActualizar.data.length !== 0 ||
+                    resOrganigramaActual[0]?.id_organigrama ===
+                      resTablaTemporal?.totalData?.id_organigrama_nuevo
+                  ) {
+                    dispatch(setControlFaseEntrada(2));
+                    dispatch(
+                      setControlModoTrasladoUnidadXEntidad(
+                        'modo_entrada_con_validacion_organigrama_anterior_a_actual'
+                      )
+                    );
+                    reset_opciones_traslado({
+                      opciones_traslado: {
+                        value:
+                          'modo_entrada_con_validacion_organigrama_anterior_a_actual',
+                        label:
+                          'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+                      }
+                    });
+                  } else {
+                    //! se realiza la asiganción de manera temporal a la tabla temporal (valga la redundancia), ya que esos valores se van a asignar cuando se realice la petición fetch de los datos dependiendo el id de los organigramas que traiga la T026 al realizar dicha solicitud, en cualquera de los dos escenarios de la tabla temporal
 
-              if (resListadoPersonasSinActualizar.data.length !== 0) {
-                dispatch(setControlFaseEntrada(2));
-                dispatch(
-                  setControlModoTrasladoUnidadXEntidad(
-                    'modo_entrada_con_validacion_organigrama_anterior_a_actual'
-                  )
-                );
-                reset_opciones_traslado({
-                  opciones_traslado: {
-                    value:
-                      'modo_entrada_con_validacion_organigrama_anterior_a_actual',
-                    label:
-                      'Traslado de unidad organizanizacionales de organigrama anterior a actual'
+                    dispatch(
+                      setAsignacionConsultaTablaTemporal({
+                        data: resTablaTemporal?.data,
+                        id_organigrama_nuevo:
+                          resTablaTemporal?.totalData?.id_organigrama_nuevo
+                      })
+                    );
+
+                    dispatch(setControlFaseEntrada(2));
+                    dispatch(
+                      setControlModoTrasladoUnidadXEntidad(
+                        'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
+                      )
+                    );
+                    reset_opciones_traslado({
+                      opciones_traslado: {
+                        value:
+                          'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
+                        label:
+                          'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
+                      }
+                    });
                   }
-                });
-              } else {
+                }
+              );
 
-                //! se realiza la asiganción de manera temporal a la tabla temporal (valga la redundancia), ya que esos valores se van a asignar cuando se realice la petición fetch de los datos dependiendo el id de los organigramas que traiga la T026 al realizar dicha solicitud, en cualquera de los dos escenarios de la tabla temporal
+              //* --------------------------
 
-                dispatch(
-                  setAsignacionConsultaTablaTemporal({
-                    data: resTablaTemporal?.data,
-                    id_organigrama_nuevo: resTablaTemporal?.totalData?.id_organigrama_nuevo
-                  })
-                );
-
-                dispatch(setControlFaseEntrada(2));
-                dispatch(
-                  setControlModoTrasladoUnidadXEntidad(
-                    'modo_entrada_con_validacion_organigrama_actual_a_nuevo'
-                  )
-                );
-                reset_opciones_traslado({
-                  opciones_traslado: {
-                    value:
-                      'modo_entrada_con_validacion_organigrama_actual_a_nuevo',
-                    label:
-                      'Traslado de unidad organizanizacionales de organigrama actual a nuevo'
-                  }
-                });
-              }
+              ///* ----------------
             }
           );
         }
@@ -117,14 +135,18 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
         // ? 2. si la tabla temporal trae datos, hay dos posibles escenarios:
         // ! 2.1. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama actual se debe seleccionar la opción de "traslado de unidad organizacional de organigrama actual a nuevo"
         // * 2.2. si la tabla temporal trae datos (T026), y al menos unas de las unidades organizaciones de la tabla coinciden con el organigrama anterior se debe seleccionar la opción de "traslado de unidad organizacional de organigrama anterior a actual"
-      }
-    );
-  }, []);
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const onSubmit = () => {
-    console.log('hello from submit');
-  };
+      })
+      .finally(() => {
+        // console.log('finally');
+        setCargaApp(false);
+      });
+  }, [
+    dispatch,
+    reset_opciones_traslado,
+    controlModoTrasladoUnidadXEntidad,
+    controlFaseEntrada,
+    setCargaApp
+  ]);
 
   function resetOpcionesTraslado(): Array<{
     value: string;
@@ -146,6 +168,22 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
     ];
   }
 
+  if (cargaApp) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura="100vh" />
+      </Grid>
+    );
+  }
+
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -154,7 +192,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              onSubmit();
             }}
             style={{
               marginTop: '20px'
@@ -194,7 +231,10 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                           handleGridActualANuevo(false);
                           dispatch(setUnidadesSeleccionadas([]));
                         }}
-                        isDisabled={controlFaseEntrada !== 1}
+                        isDisabled={
+                          controlFaseEntrada !== 1 ||
+                          asignacionConsultaTablaTemporal
+                        }
                         // se debe llegar a deshabilitar dependiendo la circunstancia en base a los resultados de la T026
                         options={resetOpcionesTraslado()}
                         placeholder="Seleccionar"

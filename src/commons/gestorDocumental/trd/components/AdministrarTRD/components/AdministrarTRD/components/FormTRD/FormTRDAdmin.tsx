@@ -383,6 +383,8 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
+                    required
+                    type="number"
                     fullWidth
                     size="small"
                     label="Tiempo de retención archivo gestión"
@@ -390,7 +392,11 @@ export const FormTRDAdmin = (): JSX.Element => {
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'archivo gestión - años'}
+                    helperText={
+                      error != null
+                        ? 'campo obligatorio'
+                        : 'archivo gestión - años'
+                    }
                   />
                 )}
               />
@@ -406,14 +412,20 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
-                    fullWidth           
+                    required
+                    type="number"
+                    fullWidth
                     size="small"
                     label="Tiempo de retención archivo central"
                     variant="outlined"
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText={error != null ? 'campo obligatorio' : 'archivo central - años'}
+                    helperText={
+                      error != null
+                        ? 'campo obligatorio'
+                        : 'archivo central - años'
+                    }
                   />
                 )}
               />
@@ -430,6 +442,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   fieldState: { error }
                 }) => (
                   <TextField
+                    required
                     // margin="dense"
                     fullWidth
                     //  disabled={ccd_current?.actual}

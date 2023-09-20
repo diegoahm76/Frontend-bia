@@ -10,6 +10,7 @@ import { get_ccd_current, get_ccds } from '../slices/ccdSlice';
 import { get_series_service } from './seriesThunks';
 // import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (message: ToastContent) =>
@@ -41,7 +42,12 @@ export const control_success = (message: ToastContent) =>
 export const get_finished_ccd_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('gestor/ccd/get-terminados/');
+      const { data } = await api.get('gestor/ccd/get-terminados/', {
+        params: {
+          limit: 1500,
+          offset: 0
+        }
+      });
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -141,6 +147,7 @@ export const to_finished_ccds_service: any = (
       const { data } = await api.put(`gestor/ccd/finish/${id_ccd}/`);
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
+      control_warning('No olvides limpiar los campos antes de salir del módulo');
       control_success(data.detail);
       set_flag_btn_finish(true);
       return data;
