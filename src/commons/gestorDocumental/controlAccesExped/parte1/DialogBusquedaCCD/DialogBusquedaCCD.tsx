@@ -19,7 +19,7 @@ import {
   IconButton,
   Stack,
   TextField,
-  Tooltip
+  Tooltip,
 } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,15 +27,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 
 //* hooks
-import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
-import { usePSD } from '../../../hook/usePSD';
 
 //* components
-import { Title } from '../../../../../../components';
-import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
-import { ModalContextPSD } from '../../../context/ModalContextPSD';
 import { columnnsSelCCDPSD } from './columns/columnsSelCCDPSD';
+import { ModalContextPSD } from '../../../permisosSeriesDoc/context/ModalContextPSD';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { Title } from '../../../../../components/Title';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 //* icons
 
@@ -45,20 +44,20 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 
 //* services (redux (slice and thunks))
+import { usePSD } from '../../../permisosSeriesDoc/hook/usePSD';
 import {
   get_busqueda_ccds_psd,
-  get_unidad_organizacional_ccd_psd
-} from '../../../toolkit/thunks/psdThunks';
+  get_unidad_organizacional_ccd_psd,
+} from '../../../permisosSeriesDoc/toolkit/thunks/psdThunks';
 import {
+  set_unidades_organizacionales_action,
   setListaSeriesSubseries,
   set_busqueda_ccds_action,
   set_ccd_current_busqueda_action,
   set_current_unidad_organizacional_action,
-  set_unidades_organizacionales_action
-} from '../../../toolkit/slice/PSDSlice';
-
+} from '../../../permisosSeriesDoc/toolkit/slice/PSDSlice';
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
-export const ModalSeleccionCCDPSD = (): JSX.Element => {
+export const DialogBusqueda = (): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   //* ---- context declaration ----
@@ -66,7 +65,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
     loadingButtonPSD,
-    setLoadingButtonPSD
+    setLoadingButtonPSD,
   } = useContext(ModalContextPSD);
 
   const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);
@@ -79,35 +78,35 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     {
       headerName: 'Usado',
       field: 'usado',
-      width: 100,
+      width: 80,
       renderCell: (params: { row: { usado: boolean } }) => {
         return params.row.usado ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
         ) : (
           <Chip size="small" label="NO" color="info" variant="outlined" />
         );
-      }
+      },
     },
     {
       headerName: 'Actual',
       field: 'is_actual',
-      width: 100,
+      width: 80,
       renderCell: (params: { row: { actual: boolean } }) => {
         return params.row.actual ? (
           <Chip size="small" label="Si" color="info" variant="outlined" />
         ) : (
           <Chip size="small" label="No" color="warning" variant="outlined" />
         );
-      }
+      },
     },
     {
       headerName: 'Fecha terminado',
       field: 'fecha_terminado',
-      width: 170,
+      width: 150,
       renderCell: (params: { row: { fecha_terminado: string } }) => {
         const date = new Date(params.row.fecha_terminado);
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-      }
+      },
     },
     {
       headerName: 'Seleccionar',
@@ -141,7 +140,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                   width: 24,
                   height: 24,
                   background: '#fff',
-                  border: '2px solid'
+                  border: '2px solid',
                 }}
                 variant="rounded"
               >
@@ -152,14 +151,14 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
             </IconButton>
           </Tooltip>
         </>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         handleSeleccionCCD_PSD(false);
@@ -175,7 +174,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
           <form
             style={{
               marginTop: '20px',
-              marginBottom: '20px'
+              marginBottom: '20px',
             }}
             onSubmit={(e: any) => {
               e.preventDefault();
@@ -189,7 +188,8 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                     ? -1
                     : b.actual
                     ? 1
-                    : Number(new Date(a.fecha_terminado)) - Number(new Date(b.fecha_terminado));
+                    : Number(new Date(a.fecha_terminado)) -
+                      Number(new Date(b.fecha_terminado));
                 });
                 dispatch(set_busqueda_ccds_action(sortedData));
               });
@@ -204,7 +204,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -231,7 +231,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       type="text"
@@ -274,7 +274,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
           {download_pdf({
             nurseries: ccdsBusqueda,
             columns: columns_ccds,
-            title: 'Selección de CCD persmisos sobre series documentales'
+            title: 'Selección de CCD persmisos sobre series documentales',
           })}
         </ButtonGroup>
         <DataGrid

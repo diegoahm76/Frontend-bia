@@ -10,6 +10,7 @@ import { useAppSelector } from '../../../../../hooks';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../components';
 import { usePSD } from '../../hook/usePSD';
+import { putPSD } from '../../toolkit/thunks/thunksPartThree';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   // ? loading  para los botones guardar y proceder respectivamente
@@ -22,7 +23,12 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
     //* info necesaria,
     restriccionesParaTodasLasUnidadesOrganizacionales,
-    restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
+    restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable,
+
+
+    //* arrays de permisos
+    unidadActuales,
+    unidadesActualesExternas
   } = useAppSelector((state) => state.PsdSlice);
 
   //* usePSD
@@ -33,23 +39,51 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
   const handleSubmit = () => {
     try {
-      setLoadingButton(true);
       const restricciones = restriccionesParaTodasLasUnidadesOrganizacionales
-        .concat(
-          restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
-        )
-        .reduce(
-          (obj: any, item: any) => {
-            obj[item.id] = item.checked;
-            return obj;
-          },
-          { id_cat_serie_und_org_ccd: currentSeriesSubseries.id_cat_serie_und }
-        );
+        .concat(restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable)
+        .reduce((obj: any, item: any) => {
+          obj[item.id] = item.checked;
+          return obj;
+        }, {});
+
+      if (Object.values(restricciones).some((checked) => checked)) {
+        restricciones.id_cat_serie_und_org_ccd = currentSeriesSubseries.id_cat_serie_und;
+      } else {
+        restricciones.id_cat_serie_und_org_ccd = null;
+      }
+          //* se recibe la información de ambos arrays de permisos para mandar un único objeto de información
+
+         const unidades_permisos = [
+          ...unidadActuales.map((unidad) => ({
+            ...unidad,
+            pertenece_seccion_actual_admin_serie: true,
+            id_cat_serie_und_org_ccd: +unidad.id_cat_serie_und_org_ccd
+          })),
+          ...unidadesActualesExternas.map((unidad) => ({
+            ...unidad,
+            pertenece_seccion_actual_admin_serie: false,
+            id_cat_serie_und_org_ccd: +unidad.id_cat_serie_und_org_ccd
+          }))
+         ]
+
+     const objetoToSend ={
+        unidades_permisos,
+        restricciones
+     }
+
+     void putPSD(
+      currentSeriesSubseries.id_cat_serie_und,
+      objetoToSend,
+      setLoadingButton,
+     ).then((res) => {
+      console.log(res);
+      // reset_all()
+      });
+
+      console.log('objetoToSend', objetoToSend);
       console.log(restricciones);
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoadingButton(false);
     }
   };
   return (
