@@ -2,6 +2,8 @@
 import React from 'react'
 import { Page404 } from '../../../../screens/404';
 import { Route, Routes } from 'react-router-dom';
+import { AsignacionUnidadesResponsables as AsignacionUnidadesResponsablesMainScreen } from '../modules/asignacionUnidadesResponsables/screen/AsignacionUnidadesResponsables';
+import { HomologacionDeSeccionesPersistentes as HomologacionDeSeccionesPersistentesMainScreen} from '../modules/homologacionDeSeccionesPersistentes/screen/HomologacionDeSeccionesPersistentes';
 
 interface RouteType {
   path: string;
@@ -12,13 +14,13 @@ export const ActividadesPreviasCambioCCDRoutes = () => {
     {
       path: '/homologacion_secciones_persistentes',
       element: () => <>
-        <div>homologacion_secciones_persistentes</div>
+        <HomologacionDeSeccionesPersistentesMainScreen/>
       </>
     },
     {
       path: '/asignaciones_unidades_responsables',
       element: () => <>
-        <div>asignaciones_unidades_responsables_ccd</div>
+        <AsignacionUnidadesResponsablesMainScreen/>
       </>
     },
     {
