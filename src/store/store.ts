@@ -20,33 +20,34 @@ import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/
 import {
   marcas_slice,
   porcentajes_slice,
-  medida_slice
-} from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
-import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
-import { despacho_slice } from '../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho';
-import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
-import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
-import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
-import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
-import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
-import { facilidades_slice } from '../commons/recaudo/facilidadPago/slices/FacilidadesSlice';
-import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/SolicitudSlice';
-import { reportes_recaudo_slice } from '../commons/recaudo/reportes/slices/ReportesSlice';
-import { seriesAndSubseriesSlice } from '../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice';
-import { solicitud_vivero_slice } from '../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud';
-import { finished_ccd_slice } from '../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice';
-import { trd_slice } from './../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice';
-import { entrega_slice } from '../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega';
-import { instrumentos_slice } from '../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice';
-import { TCASlice } from '../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice';
-import { lideres_slice } from '../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice';
-import { uni_a_uni_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice';
-import { u_x_e_slice } from '../commons/Transversales/modules/procesos/screens/Unidad_Por_Entidad/toolkit/UxE_slice/UxE_slice';
-import { deposito_slice } from '../commons/gestorDocumental/deposito/store/slice/indexDeposito';
-import { resolucion_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/ResolucionSlice';
-import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPagosSlice';
-import { alerta_slice } from '../commons/recaudo/alertas/store/slice/indexAlertas';
-import { PsdSlice } from '../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice';
+  medida_slice,
+} from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
+import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
+import { despacho_slice } from "../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho";
+import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos";
+import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
+import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
+import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
+import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
+import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
+import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
+import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
+import { seriesAndSubseriesSlice } from "../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice";
+import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud";
+import { finished_ccd_slice } from "../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice";
+import { trd_slice } from "./../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice";
+import { entrega_slice } from "../commons/almacen/gestionDeInventario/movimientos/store/slice/indexEntrega";
+import { instrumentos_slice } from "../commons/recursoHidrico/Instrumentos/toolkit/slice/instrumentosSlice";
+import { TCASlice } from "../commons/gestorDocumental/tca/toolkit/TCAResources/slice/TcaSlice";
+import { lideres_slice } from "../commons/Transversales/modules/corporativo/screens/LideresXUnidadOrg/toolkit/LideresSlices/LideresSlice";
+import { uni_a_uni_slice } from "../commons/Transversales/modules/procesos/screens/Unidad_A_Unidad/toolkit/slice/Uni_A_UniSlice";
+import { u_x_e_slice } from "../commons/Transversales/modules/procesos/screens/Unidad_Por_Entidad/toolkit/UxE_slice/UxE_slice";
+import { deposito_slice } from "../commons/gestorDocumental/deposito/store/slice/indexDeposito";
+import { resolucion_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/ResolucionSlice";
+import { plan_pagos_slice } from "../commons/recaudo/facilidadPago/slices/PlanPagosSlice";
+import { alerta_slice } from "../commons/recaudo/alertas/store/slice/indexAlertas";
+import { PsdSlice } from "../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice";
+import { metadatos_slice } from "../commons/gestorDocumental/configuracionMetadatos/store/slice/indexMetadatos";
 const persist_config = {
   key: "macarenia_app",
   storage,
@@ -111,6 +112,7 @@ const app_reducers = combineReducers({
   //* psd - permisos por serie documenta
   PsdSlice: PsdSlice.reducer,
   // * psd - permisos por serie documenta
+  metadatos: metadatos_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

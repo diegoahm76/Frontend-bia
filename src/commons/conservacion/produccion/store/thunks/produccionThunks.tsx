@@ -84,8 +84,7 @@ export const get_vegetal_materials_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/etapas/filtro-material-vegetal/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote=${
-          cod_etapa ?? ''
+        `conservacion/etapas/filtro-material-vegetal/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote=${cod_etapa ?? ''
         }&agno_lote=${anio ?? ''}`
       );
       dispatch(set_vegetal_materials(data.data));
@@ -117,8 +116,7 @@ export const get_stage_changes_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/etapas/filtro-cambio-etapa/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote_origen=${
-          cod_etapa ?? ''
+        `conservacion/etapas/filtro-cambio-etapa/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote_origen=${cod_etapa ?? ''
         }&agno_lote=${anio ?? ''}`
       );
       console.log(data);
@@ -149,12 +147,9 @@ export const get_persons_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `personas/get-personas-filters/?tipo_documento=${
-          type ?? ''
-        }&numero_documento=${document ?? ''}&primer_nombre=${
-          primer_nombre ?? ''
-        }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
-          razon_social ?? ''
+        `personas/get-personas-filters/?tipo_documento=${type ?? ''
+        }&numero_documento=${document ?? ''}&primer_nombre=${primer_nombre ?? ''
+        }&primer_apellido=${primer_apellido ?? ''}&razon_social=${razon_social ?? ''
         }&nombre_comercial=${comercial_name ?? ''}`
       );
       dispatch(set_persons(data.data));
@@ -406,8 +401,7 @@ export const get_preparaciones_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/mezclas/filtro-preparacion-mezclas/?id_mezcla=${
-          mezcla ?? ''
+        `conservacion/mezclas/filtro-preparacion-mezclas/?id_mezcla=${mezcla ?? ''
         }&id_vivero=${vivero ?? ''}&nombre_mezcla=${name ?? ''}`
       );
       dispatch(set_preparaciones(data.data));
@@ -514,14 +508,12 @@ export const get_bienes_incidencia_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(
-        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${
-          tipo ?? 'IN'
+        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${tipo ?? 'IN'
         }=&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
       );
       // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
       const { data } = await api.get(
-        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${
-          tipo ?? 'IN'
+        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${tipo ?? 'IN'
         }&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
       );
       console.log(data);
@@ -544,8 +536,7 @@ export const get_bienes_service = (
     try {
       // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
       const { data } = await api.get(
-        `conservacion/mezclas/get-insumo-por-codigo-y-nombre/?id_vivero=${id_vivero}&codigo_bien=${
-          codigo_bien ?? ''
+        `conservacion/mezclas/get-insumo-por-codigo-y-nombre/?id_vivero=${id_vivero}&codigo_bien=${codigo_bien ?? ''
         }&nombre=${nombre ?? ''}`
       );
       dispatch(set_bienes(data.data));
@@ -618,8 +609,7 @@ export const get_lots_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/mortalidad/material-vegetal/filtro/${id_vivero}/?codigo_bien=${
-          code ?? ''
+        `conservacion/mortalidad/material-vegetal/filtro/${id_vivero}/?codigo_bien=${code ?? ''
         }&nombre=${name ?? ''}&cod_etapa_lote=${cod_etapa ?? ''}`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -661,15 +651,14 @@ export const get_mortalidades_service = (nro: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${
-          nro ?? ''
+        `conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${nro ?? ''
         }`
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data);
       if (data.success === true) {
-        dispatch(set_mortalidades(data.data));
+        dispatch(set_mortalidades(data?.data?.items_mortalidad));
         control_success(data.detail);
       } else {
         control_error(data.detail);
@@ -688,8 +677,7 @@ export const get_mortalidad_nro_service = (nro: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${
-          nro ?? ''
+        `conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${nro ?? ''
         }`
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');

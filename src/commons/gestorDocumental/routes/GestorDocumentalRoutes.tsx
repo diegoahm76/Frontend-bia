@@ -18,6 +18,7 @@ import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlant
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 
 const routes = [
   {
@@ -55,9 +56,14 @@ const routes = [
 
   //! rutas de configuracion y datos básicos
   {
-    path: 'configuracion_datos_basicos/',
+    path: 'configuracion_datos_basicos',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />,
+  },
+  {
+    path: 'metadatos/',
+    name: 'metadatos',
+    component: () => <ConfiguracionMetadatosRoutes />,
   },
   {
     path: 'activacion_instrumentos_archivisticos',
@@ -101,16 +107,16 @@ const routes = [
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
     // <Suspense fallback={<Loader />}>
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-            element={route.component()}
-          />
-        ))}
-        <Route path="/*" element={<Page404 />} />
-      </Routes>
+    <Routes>
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+          element={route.component()}
+        />
+      ))}
+      <Route path="/*" element={<Page404 />} />
+    </Routes>
     // </Suspense>
   );
 };

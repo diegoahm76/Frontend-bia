@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SearchIcon from '@mui/icons-material/Search';
 import {
   get_num_solicitud_vivero, get_uni_organizacional, get_medida_service, anular_solicitud_service,
-  crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service, get_bienes_solicitud, editar_solicitud,
+  crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service, get_bienes_solicitud, editar_solicitud, get_coordinador_actual,
 } from '../store/solicitudBienConsumoThunks';
 import PrintIcon from '@mui/icons-material/Print';
 
@@ -26,11 +26,13 @@ import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsa
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import Limpiar from '../../../../conservacion/componentes/Limpiar';
+import FormInputController from '../../../../../components/partials/form/FormInputController';
+import { Title } from '../../../../../components/Title';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoViveroScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_solicitud_vivero, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values, } = useForm<IObjSolicitudVivero>();
-  const { nro_solicitud_vivero, current_solicitud_vivero, persona_solicita, bienes_solicitud, current_funcionario, } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
+  const { nro_solicitud_vivero, current_solicitud_vivero, persona_solicita, bienes_solicitud, current_funcionario, coordinador_vivero } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
   const [action, set_action] = useState<string>('Guardar');
   const [anular, set_anular] = useState<string>('Anular');
   const [anular_solicitud, set_anular_solicitud] = useState<boolean>(false);
@@ -56,12 +58,14 @@ const SolicitudConsumoViveroScreen = () => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_num_solicitud_vivero());
     void dispatch(get_medida_service());
+    void dispatch(get_coordinador_actual());
     dispatch(set_persona_solicita({
       nombre: userinfo.nombre,
       id_persona: userinfo.id_persona,
       unidad_organizacional: userinfo.nombre_unidad_organizacional,
     }))
   }, []);
+  console.log(coordinador_vivero)
 
 
   useEffect(() => {
@@ -212,9 +216,10 @@ const SolicitudConsumoViveroScreen = () => {
 
         <>
           <PersonaResponsable
-            title={'Funcionario responsable'}
-            get_values_solicitud={get_values}
-          />
+            title={"Funcionario responsable"}
+            get_values_solicitud={get_values} />
+
+
 
           <SeleccionarBienConsumoVivero />
         </>
