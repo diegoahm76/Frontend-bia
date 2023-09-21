@@ -30,11 +30,11 @@ import { LoadingButton } from '@mui/lab';
 
 //* components
 import { columnnsSelCCDPSD } from './columns/columnsSelCCDPSD';
-import { ModalContextPSD } from '../../../permisosSeriesDoc/context/ModalContextPSD';
-import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
-import { Title } from '../../../../../components/Title';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { ModalContextPSD } from '../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
+import { Title } from '../../../../../../components/Title';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 
 //* icons
 
@@ -44,18 +44,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 
 //* services (redux (slice and thunks))
-import { usePSD } from '../../../permisosSeriesDoc/hook/usePSD';
+import { usePSD } from '../../../../permisosSeriesDoc/hook/usePSD';
 import {
   get_busqueda_ccds_psd,
   get_unidad_organizacional_ccd_psd,
-} from '../../../permisosSeriesDoc/toolkit/thunks/psdThunks';
+} from '../../../../permisosSeriesDoc/toolkit/thunks/psdThunks';
 import {
   set_unidades_organizacionales_action,
   setListaSeriesSubseries,
   set_busqueda_ccds_action,
   set_ccd_current_busqueda_action,
   set_current_unidad_organizacional_action,
-} from '../../../permisosSeriesDoc/toolkit/slice/PSDSlice';
+} from '../../../../permisosSeriesDoc/toolkit/slice/PSDSlice';
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   //* --- dispatch declaration ----
