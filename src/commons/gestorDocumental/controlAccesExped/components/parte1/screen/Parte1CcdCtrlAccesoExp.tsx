@@ -6,6 +6,7 @@ import { DialogBusquedaCcdControlAccesoExp } from '../DialogBusquedaCCD/DialogBu
 export const Parte1CcdCtrlAccesoExp = (): JSX.Element => {
   return (
     <>
+    {/* input text de nombre y versión de ccd y botón de búsqueda para abrir el componente de modal declarado abajo */}
     <BusquedaCcdControlAccesoExpedientes/>
 
 
