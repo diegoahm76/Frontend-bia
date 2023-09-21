@@ -4,6 +4,7 @@ import { Parte1CcdCtrlAccesoExp } from '../components/parte1/screen/Parte1CcdCtr
 import { AutorizacionesGeneralesScreen } from '../components/parte3/screen/AutorizacionesGeneralesScreen';
 import { BloqueAutorizacionCcdScreen } from '../components/parte4/screen/BloqueAutorizacionCcdScreen';
 import { Acciones } from '../components/final/Acciones';
+import { PermisosPorClasificacionScreen } from '../components/parte2/screen/PermisosPorClasificacionScreen';
 
 
 
@@ -21,7 +22,7 @@ export const ScreenControlAccExp: FC<any> = (): JSX.Element => {
     {/* parte # 1*/}
     <Parte1CcdCtrlAccesoExp />
     {/* parte # 2*/}
-
+    <PermisosPorClasificacionScreen/>
     {/* parte # 3*/}
     <AutorizacionesGeneralesScreen/>
     {/* parte # 4*/}
