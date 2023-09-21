@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {type FC} from 'react'
 import { Parte1CcdCtrlAccesoExp } from '../components/parte1/screen/Parte1CcdCtrlAccesoExp';
-import { Acciones } from '../components/final/Acciones';
 import { AutorizacionesGeneralesScreen } from '../components/parte3/screen/AutorizacionesGeneralesScreen';
 import { BloqueAutorizacionCcdScreen } from '../components/parte4/screen/BloqueAutorizacionCcdScreen';
+import { Acciones } from '../components/final/Acciones';
+
 
 
 /**
