@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 //* libraries or main dependencies
 import { useContext } from 'react';
@@ -44,18 +43,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 
 //* services (redux (slice and thunks))
-import { usePSD } from '../../../../permisosSeriesDoc/hook/usePSD';
 import {
   get_busqueda_ccds_psd,
-  get_unidad_organizacional_ccd_psd,
 } from '../../../../permisosSeriesDoc/toolkit/thunks/psdThunks';
 import {
-  set_unidades_organizacionales_action,
-  setListaSeriesSubseries,
   set_busqueda_ccds_action,
-  set_ccd_current_busqueda_action,
-  set_current_unidad_organizacional_action,
 } from '../../../../permisosSeriesDoc/toolkit/slice/PSDSlice';
+import { useControlClasificacionExp } from '../../../hook/useControlClasificacionExp';
+import { setCcdCurrentBusquedaCtrlAccesoExp, setCcdsBusquedaCtrlAccesoExp } from '../../../toolkit/slice/CtrlAccesoExpSlice';
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   //* --- dispatch declaration ----
@@ -71,7 +66,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   const { ccdsBusquedaCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ! ---- HOOKS -----
-  const { control_search_ccd_psd, reset_search_ccd_psd } = usePSD();
+  const {   control_busqueda_ccd, reset_busqueda_ccd, } = useControlClasificacionExp();
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
@@ -116,21 +111,23 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
+
+                // ? verificar si estos llamados a servicios deben ser usados para algo
                 // ! se limpia la lista de series y subseries
-                dispatch(setListaSeriesSubseries([]));
-                dispatch(set_current_unidad_organizacional_action(null));
-                // ! se selecciona el ccd para establecerlo como "actual" dentro del funcionamiento de la app
-                dispatch(set_ccd_current_busqueda_action(params.row));
-
+                // dispatch(setListaSeriesSubseries([]));
+                // dispatch(set_current_unidad_organizacional_action(null));
                 //* se traen las unidades disponibles y se asignan al estado
-                void get_unidad_organizacional_ccd_psd(
-                  params.row.id_organigrama,
-                  setLoadingButtonPSD
-                ).then((data: any) => {
-                  // ! se asignan las unidades organizacionales al estado
-                  dispatch(set_unidades_organizacionales_action(data));
-                });
+                // void get_unidad_organizacional_ccd_psd(
+                //   params.row.id_organigrama,
+                //   setLoadingButtonPSD
+                // ).then((data: any) => {
+                //   // ! se asignan las unidades organizacionales al estado
+                //   dispatch(set_unidades_organizacionales_action(data));
+                // });
 
+
+                // ! se selecciona el ccd para establecerlo como "actual" dentro del funcionamiento de la app
+                dispatch(setCcdCurrentBusquedaCtrlAccesoExp(params.row));
                 // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
               }}
@@ -163,11 +160,11 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
       onClose={() => {
         handleSeleccionCCD_PSD(false);
         dispatch(set_busqueda_ccds_action([]));
-        reset_search_ccd_psd({ nombre: '', version: '' });
+        reset_busqueda_ccd({ nombre: '', version: '' });
       }}
     >
       <DialogTitle>
-        <Title title="Consultar los CCD's que coincidan con el criterio de búsqueda" />
+        <Title title="Consultar los CCD control de acceso de expedientes" />
       </DialogTitle>
       <DialogContent sx={{ mb: '0px' }}>
         <Grid item xs={12}>
@@ -179,8 +176,8 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
             onSubmit={(e: any) => {
               e.preventDefault();
               void get_busqueda_ccds_psd(
-                control_search_ccd_psd._formValues.nombre,
-                control_search_ccd_psd._formValues.version,
+                control_busqueda_ccd._formValues.nombre,
+                control_busqueda_ccd._formValues.version,
                 setLoadingButtonPSD
               ).then((data: any) => {
                 const sortedData = data.slice().sort((a: any, b: any) => {
@@ -191,7 +188,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
                     : Number(new Date(a.fecha_terminado)) -
                       Number(new Date(b.fecha_terminado));
                 });
-                dispatch(set_busqueda_ccds_action(sortedData));
+                dispatch(setCcdsBusquedaCtrlAccesoExp(sortedData));
               });
             }}
           >
@@ -199,7 +196,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
               <Grid item xs={12} sm={4}>
                 <Controller
                   name="nombre"
-                  control={control_search_ccd_psd}
+                  control={control_busqueda_ccd}
                   defaultValue=""
                   rules={{ required: true }}
                   render={({
@@ -226,7 +223,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
               <Grid item xs={12} sm={4}>
                 <Controller
                   name="version"
-                  control={control_search_ccd_psd}
+                  control={control_busqueda_ccd}
                   defaultValue=""
                   rules={{ required: true }}
                   render={({
@@ -299,7 +296,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
             variant="outlined"
             color="primary"
             onClick={() => {
-              reset_search_ccd_psd({ nombre: '', version: '' });
+              reset_busqueda_ccd({ nombre: '', version: '' });
             }}
             startIcon={<CleanIcon />}
           >
@@ -311,7 +308,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
             onClick={() => {
               console.log('cerrando modal');
               handleSeleccionCCD_PSD(false);
-              reset_search_ccd_psd({ nombre: '', version: '' });
+              reset_busqueda_ccd({ nombre: '', version: '' });
             }}
             startIcon={<CloseIcon />}
           >

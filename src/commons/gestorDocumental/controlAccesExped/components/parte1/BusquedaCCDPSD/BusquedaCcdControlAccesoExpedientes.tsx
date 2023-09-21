@@ -6,24 +6,36 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ModalContextPSD } from '../../../../permisosSeriesDoc/context/ModalContextPSD';
 import { stylesGrid } from '../../../../permisosSeriesDoc/utils/styles';
 import { useAppSelector } from '../../../../../../hooks';
+import { gridStyles } from '../../../../ccd/screens/utils/constants';
+import { Title } from '../../../../../../components';
+import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
 
 export const BusquedaCcdControlAccesoExpedientes: FC<any> = (): JSX.Element => {
   // ! states from redux
-  const { ccd_current_busqueda } = useAppSelector((state) => state.PsdSlice);
-
+  const { currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   // ? context necesarios
   const { handleSeleccionCCD_PSD } = useContext(ModalContextPSD);
 
   return (
-    <>
-      <Grid item xs={12} sm={2.8} sx={stylesGrid}>
+    <Grid container sx={containerStyles}>
+        <Title title="Control de acceso de clasificación de expedientes del CCD" />
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            justifyContent: 'center'
+          }}
+        >
+          {/* cajas de texto en las que se asignan los valores de la búsqueda de los ccd (nombre y versión CCD) */}
+
+          <Grid item xs={12} sm={2.8} sx={stylesGrid}>
         <TextField
           fullWidth
           label="Nombre del CCD seleccionado"
           size="small"
           variant="outlined"
           disabled={true}
-          value={ccd_current_busqueda?.nombre || ''}
+          value={currentCcdCtrlAccesoExp?.nombre || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -34,7 +46,7 @@ export const BusquedaCcdControlAccesoExpedientes: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={ccd_current_busqueda?.version || ''}
+          value={currentCcdCtrlAccesoExp?.version || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -47,9 +59,10 @@ export const BusquedaCcdControlAccesoExpedientes: FC<any> = (): JSX.Element => {
             handleSeleccionCCD_PSD(true);
           }}
         >
-          BUSCAR CCD
+          BUSCAR
           </Button>
       </Grid>
-    </>
+        </Grid>
+    </Grid>
   );
 };
