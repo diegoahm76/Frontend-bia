@@ -3,9 +3,9 @@
 import { Button, Grid, TextField } from '@mui/material';
 import { useContext, type FC } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { ModalContextPSD } from '../../../../../permisosSeriesDoc/context/ModalContextPSD';
-import { stylesGrid } from '../../../../../permisosSeriesDoc/utils/styles';
-import { useAppSelector } from '../../../../../../../hooks';
+import { ModalContextPSD } from '../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { stylesGrid } from '../../../../permisosSeriesDoc/utils/styles';
+import { useAppSelector } from '../../../../../../hooks';
 
 export const BusquedaCcdControlAccesoExpedientes: FC<any> = (): JSX.Element => {
   // ! states from redux

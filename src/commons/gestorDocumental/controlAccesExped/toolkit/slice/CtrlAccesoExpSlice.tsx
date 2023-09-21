@@ -3,10 +3,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { InitialState } from './types/ctrlAccesoExp.types';
 
 const initialState: InitialState = {
-  ccdActions: {
     ccdsBusquedaCtrlAccesoExp: [],
     currentCcdCtrlAccesoExp: null,
-  },
 };
 
 export const ctrlAccesoExpSlice = createSlice({
@@ -15,15 +13,15 @@ export const ctrlAccesoExpSlice = createSlice({
   reducers: {
       // ? CCD ACTIONS
     setCcdsBusquedaCtrlAccesoExp: (state, action: PayloadAction<any[]>): any => {
-        state.ccdActions.ccdsBusquedaCtrlAccesoExp = action.payload as any;
+        state.ccdsBusquedaCtrlAccesoExp = action.payload as any;
     },
     setCcdCurrentBusquedaCtrlAccesoExp: (state, action: PayloadAction<any>): any => {
-        state.ccdActions.currentCcdCtrlAccesoExp = action.payload as any;
+        state.currentCcdCtrlAccesoExp = action.payload as any;
     },
     // ? ---- RESET ALL THE STATES IN THIS SLICE -----
     resetStatesCtrlAccesoExp: (state) => {
-      state.ccdActions.ccdsBusquedaCtrlAccesoExp = [];
-      state.ccdActions.currentCcdCtrlAccesoExp = null;
+      state.ccdsBusquedaCtrlAccesoExp = [];
+      state.currentCcdCtrlAccesoExp = null;
       // y los que se vayan añadiendo ...
     },
   },

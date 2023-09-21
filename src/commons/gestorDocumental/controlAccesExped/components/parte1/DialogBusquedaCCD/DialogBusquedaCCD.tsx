@@ -60,7 +60,7 @@ import {
 export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
-  //* ---- context declaration ----
+  //* ---- context declaration, se usa los del context de psd para reutilizar esa parte del código ----
   const {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
@@ -68,7 +68,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
     setLoadingButtonPSD,
   } = useContext(ModalContextPSD);
 
-  const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);
+  const { ccdsBusquedaCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ! ---- HOOKS -----
   const { control_search_ccd_psd, reset_search_ccd_psd } = usePSD();
@@ -270,9 +270,9 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
         <ButtonGroup
           style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
         >
-          {download_xls({ nurseries: ccdsBusqueda, columns: columns_ccds })}
+          {download_xls({ nurseries: ccdsBusquedaCtrlAccesoExp, columns: columns_ccds })}
           {download_pdf({
-            nurseries: ccdsBusqueda,
+            nurseries: ccdsBusquedaCtrlAccesoExp,
             columns: columns_ccds,
             title: 'Selección de CCD persmisos sobre series documentales',
           })}
@@ -280,7 +280,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
         <DataGrid
           density="compact"
           autoHeight
-          rows={ccdsBusqueda ?? []}
+          rows={ccdsBusquedaCtrlAccesoExp ?? []}
           columns={columns_ccds ?? []}
           pageSize={10}
           rowsPerPageOptions={[10]}
