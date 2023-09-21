@@ -112,6 +112,9 @@ const app_reducers = combineReducers({
   //* psd - permisos por serie documenta
   PsdSlice: PsdSlice.reducer,
   // * psd - permisos por serie documenta
+  // ! control acceso expedientes
+  ctrlAccesoExpSlice: ctrlAccesoExpSlice.reducer,
+  // ! control acceso expedientes
   expedientes: expedientes_slice.reducer,
 });
 

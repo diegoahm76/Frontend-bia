@@ -57,7 +57,7 @@ import {
   set_current_unidad_organizacional_action,
 } from '../../../permisosSeriesDoc/toolkit/slice/PSDSlice';
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
-export const DialogBusqueda = (): JSX.Element => {
+export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   //* ---- context declaration ----
@@ -158,7 +158,7 @@ export const DialogBusqueda = (): JSX.Element => {
   return (
     <Dialog
       fullWidth
-      maxWidth="lg"
+      maxWidth="md"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         handleSeleccionCCD_PSD(false);

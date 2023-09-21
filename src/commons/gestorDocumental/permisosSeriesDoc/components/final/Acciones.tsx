@@ -87,9 +87,6 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       setLoadingButton,
      ).then((res) => {
       console.log(res);
-
-      //* reset de los estados o hacer las peticiones de nuevo?
-      reset_all()
       void get_restricciones_series_documentales(
         currentSeriesSubseries.id_cat_serie_und,
         setLoadingRestricciones

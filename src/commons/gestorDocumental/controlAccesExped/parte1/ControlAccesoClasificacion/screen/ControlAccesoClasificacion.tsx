@@ -2,16 +2,15 @@
 import { type FC } from 'react';
 /* import ModalSeleccionCCDPSD from '../ModalSeleccionCCDPSD/ModalSeleccionCCDPSD'; */
 import { Grid } from '@mui/material';
-import { DialogBusqueda } from '../../DialogBusquedaCCD/DialogBusquedaCCD';
-import { BusquedaCCDPSD } from '../components/BusquedaCCDPSD/BusquedaCCDPSD';
+import { DialogBusquedaCcdControlAccesoExp } from '../../DialogBusquedaCCD/DialogBusquedaCCD';
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../components/Title';
+import { BusquedaCcdControlAccesoExpedientes } from '../components/BusquedaCCDPSD/BusquedaCcdControlAccesoExpedientes';
 
 export const ControlAccesoClasificacion: FC<any> = (): JSX.Element => {
   return (
     <>
       <Grid container sx={containerStyles}>
-        {/*    <Grid item xs={12} sm={12}> */}
         <Title title="Control de acceso de clasificación de expedientes del CCD" />
         <Grid
           container
@@ -22,12 +21,12 @@ export const ControlAccesoClasificacion: FC<any> = (): JSX.Element => {
         >
           {/* cajas de texto en las que se asignan los valores de la búsqueda de los ccd (nombre y versión CCD) */}
 
-          <BusquedaCCDPSD />
+          <BusquedaCcdControlAccesoExpedientes />
         </Grid>
       </Grid>
 
       {/* se define modal de búsqueda de los CCD para la administración de la serie */}
-      <DialogBusqueda />
+      <DialogBusquedaCcdControlAccesoExp />
       {/* se define modal de búsqueda de los CCD para la administración de la serie */}
     </>
   );

@@ -7,7 +7,7 @@ import { ModalContextPSD } from '../../../../../permisosSeriesDoc/context/ModalC
 import { stylesGrid } from '../../../../../permisosSeriesDoc/utils/styles';
 import { useAppSelector } from '../../../../../../../hooks';
 
-export const BusquedaCCDPSD: FC<any> = (): JSX.Element => {
+export const BusquedaCcdControlAccesoExpedientes: FC<any> = (): JSX.Element => {
   // ! states from redux
   const { ccd_current_busqueda } = useAppSelector((state) => state.PsdSlice);
 
