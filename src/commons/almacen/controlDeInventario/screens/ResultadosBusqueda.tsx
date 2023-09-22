@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { Grid, Box, Button, Stack } from "@mui/material";
-import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { Grid, Box} from "@mui/material";
 import { Title } from "../../../../components";
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from "react";
