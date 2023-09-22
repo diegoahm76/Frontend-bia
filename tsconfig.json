@@ -5,7 +5,7 @@
       "dom",
       "dom.iterable",
       "esnext"
-    ],    
+    ],
     "strictNullChecks": true,
     "allowJs": true,
     "skipLibCheck": true,

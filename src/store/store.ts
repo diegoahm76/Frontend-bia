@@ -48,6 +48,7 @@ import { plan_pagos_slice } from '../commons/recaudo/facilidadPago/slices/PlanPa
 import { alerta_slice } from '../commons/recaudo/alertas/store/slice/indexAlertas';
 import { PsdSlice } from '../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice';
 import { expedientes_slice } from "../commons/gestorDocumental/Expedientes/store/slice/indexExpedientes";
+import { ctrlAccesoExpSlice } from "../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice";
 const persist_config = {
   key: "macarenia_app",
   storage,
@@ -112,6 +113,9 @@ const app_reducers = combineReducers({
   //* psd - permisos por serie documenta
   PsdSlice: PsdSlice.reducer,
   // * psd - permisos por serie documenta
+  // ! control acceso expedientes
+  ctrlAccesoExpSlice: ctrlAccesoExpSlice.reducer,
+  // ! control acceso expedientes
   expedientes: expedientes_slice.reducer,
 });
 

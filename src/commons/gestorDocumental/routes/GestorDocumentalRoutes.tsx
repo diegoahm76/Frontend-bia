@@ -100,7 +100,6 @@ const routes = [
     name: 'expedientes',
     component: () => <ExpedientesRoutes />,
   },
-
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
