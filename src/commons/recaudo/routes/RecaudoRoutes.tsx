@@ -28,13 +28,11 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />
       <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} />
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
-      <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="visor_procesos/*" element={<VisorProcesosScreen />} />
       <Route path="historial_proceso/*" element={<HistorialProceso />} />
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
-      <Route path="liquidacion/" element={<LiquidacionScreen />} />
-      <Route path="alertas/" element={<ConfiguracionAlertasScreen />} />
+      <Route path="alertas/*" element={<ConfiguracionAlertasScreen />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

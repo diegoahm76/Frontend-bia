@@ -19,6 +19,7 @@ import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
+import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
   {
@@ -100,7 +101,11 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuasta_Routes />,
   },
-
+  {
+    path: 'expedientes/',
+    name: 'expedientes',
+    component: () => <ExpedientesRoutes />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

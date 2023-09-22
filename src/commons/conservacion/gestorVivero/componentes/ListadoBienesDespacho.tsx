@@ -220,7 +220,7 @@ const ListadoBienesDespacho = () => {
           marginTop={2}
         >
           <Box sx={{ width: '100%' }}>
-            <Title title="Bienes recibidos"></Title>
+            <Title title={titulo}></Title>
             <ButtonGroup
                     style={{
                       margin: 7,

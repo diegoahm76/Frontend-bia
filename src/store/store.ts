@@ -22,13 +22,12 @@ import {
   porcentajes_slice,
   medida_slice,
 } from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
-import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
 import { despacho_slice } from "../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho";
 import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos";
-import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
-import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
-import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
-import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
+import {
+  solicitud_consumo_slice,
+  solicitud_consumo_slice,
+} from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
 import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
 import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
@@ -48,6 +47,12 @@ import { plan_pagos_slice } from "../commons/recaudo/facilidadPago/slices/PlanPa
 import { alerta_slice } from "../commons/recaudo/alertas/store/slice/indexAlertas";
 import { PsdSlice } from "../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice";
 import { metadatos_slice } from "../commons/gestorDocumental/configuracionMetadatos/store/slice/indexMetadatos";
+
+import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
+import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
+import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
+import { ctrlAccesoExpSlice } from "../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice";
+import { expedientes_slice } from "../commons/gestorDocumental/Expedientes/store/slice/indexExpedientes";
 const persist_config = {
   key: "macarenia_app",
   storage,
@@ -113,6 +118,10 @@ const app_reducers = combineReducers({
   PsdSlice: PsdSlice.reducer,
   // * psd - permisos por serie documenta
   metadatos: metadatos_slice.reducer,
+  // ! control acceso expedientes
+  ctrlAccesoExpSlice: ctrlAccesoExpSlice.reducer,
+  // ! control acceso expedientes
+  expedientes: expedientes_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
