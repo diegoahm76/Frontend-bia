@@ -12,12 +12,17 @@ import { Title } from '../../../../../components';
 import { usePSD } from '../../hook/usePSD';
 import { get_restricciones_series_documentales, putPSD } from '../../toolkit/thunks/thunksPartThree';
 import { ModalContextPSD } from '../../context/ModalContextPSD';
-import { set_permisos_unidades_actuales_action, set_permisos_unidades_actuales_externas_action, set_restricciones_para_todas_las_unidades_organizacionales_action, set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action } from '../../toolkit/slice/PSDSlice';
+import { reset_states, set_permisos_unidades_actuales_action, set_permisos_unidades_actuales_externas_action, set_restricciones_para_todas_las_unidades_organizacionales_action, set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action } from '../../toolkit/slice/PSDSlice';
 import { GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE, GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE } from '../../toolkit/thunks/psdThunks';
+
+import { useNavigate } from 'react-router-dom';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+
+  //* navigate declaration
+  const navigate = useNavigate();
 
   // ? loading  para los botones guardar y proceder respectivamente
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
@@ -38,11 +43,14 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
     //* arrays de permisos
     unidadActuales,
-    unidadesActualesExternas
+    unidadesActualesExternas,
   } = useAppSelector((state) => state.PsdSlice);
 
   //* usePSD
-  const { reset_all, getOutModule } = usePSD();
+  const { reset_all,
+    seleccionar_serie_subserie_reset,
+     seleccionar_seccion_reset,
+      reset_search_ccd_psd,getOutModule } = usePSD();
 
   // ? validaciones de renderizado
   if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
@@ -195,7 +203,11 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                       color="error"
                       variant="contained"
                       startIcon={<CloseIcon />}
-                      onClick={getOutModule}
+                      onClick={() => {
+                        getOutModule(
+                        
+                        );
+                      }}
                     >
                       SALIR DEL MÓDULO
                     </Button>
