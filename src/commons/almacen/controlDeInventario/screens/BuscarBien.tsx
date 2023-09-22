@@ -32,12 +32,13 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const BuscarBienViveros = (props: IProps) => {
+const BuscarBien = (props: IProps) => {
   const dispatch = useAppDispatch();
   const [seleccion_bien, set_seleccion_bien] = useState<any | null>(null);
   const [data_bienes, set_data_bienes] = useState<any[]>([]);
   const [data_filtrada, set_data_filtrada] = useState<any[]>([]);
   const [nombre, set_nombre] = useState<string>('');
+  const [serial, set_serial] = useState<string>('');
   const [codigo_bien, set_codigo_bien] = useState<string>('');
 
   useEffect(() => {
@@ -54,6 +55,9 @@ const BuscarBienViveros = (props: IProps) => {
 
   const cambio_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_nombre(e.target.value);
+  };
+  const cambio_serial: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_serial(e.target.value);
   };
   const cambio_codigo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo_bien(e.target.value);
@@ -124,6 +128,26 @@ const BuscarBienViveros = (props: IProps) => {
               }}
             >
               <Grid container spacing={2}>
+              <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="Código"
+                    helperText=" "
+                    size="small"
+                    fullWidth
+                    value={codigo_bien}
+                    onChange={cambio_codigo_bien}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="serial"
+                    helperText=" "
+                    size="small"
+                    fullWidth
+                    value={serial}
+                    onChange={cambio_serial}
+                  />
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
                     label="Nombre"
@@ -136,12 +160,22 @@ const BuscarBienViveros = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    label="Código bien"
+                    label="Categoría"
                     helperText=" "
                     size="small"
                     fullWidth
-                    value={codigo_bien}
-                    onChange={cambio_codigo_bien}
+                    value={nombre}
+                    onChange={cambio_nombre}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="Marca"
+                    helperText=" "
+                    size="small"
+                    fullWidth
+                    value={nombre}
+                    onChange={cambio_nombre}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -240,4 +274,4 @@ const BuscarBienViveros = (props: IProps) => {
   );
 };
 // eslint-disable-next-line no-restricted-syntax
-export default BuscarBienViveros;
+export default BuscarBien;

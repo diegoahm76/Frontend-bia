@@ -163,12 +163,5 @@ export const usePSD = (): any => {
     seleccionar_serie_subserie_control,
     values_watch_seleccionar_serie_subserie,
     seleccionar_serie_subserie_reset,
-
-    //* funciones de reseteo de los useForm
-    reset_all,
-
-
-    //* funcion de salida del modulo
-   getOutModule
   };
 };

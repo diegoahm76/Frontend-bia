@@ -100,7 +100,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                       onClick={() => {
                         getOutModule(
                           navigate,
-                          () => {},
+                          [() => {},]
                         );
                       }}
                     >
