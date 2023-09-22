@@ -44,7 +44,7 @@ export const control_success = (message: ToastContent) =>
 export const control_info = (message: ToastContent): any =>
   toast.info(message, {
     position: 'top-right',
-    autoClose: 1000,
+    autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

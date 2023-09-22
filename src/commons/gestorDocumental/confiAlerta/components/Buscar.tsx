@@ -20,11 +20,13 @@ interface IEncuesta {
 }
 interface IProps {
     is_modal_active: boolean;
+    setSelectedEncuestaId:any;
+    handleClear:any;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, }) => {
+export const Buscar: React.FC<IProps> = ({handleClear ,setSelectedEncuestaId, is_modal_active, set_is_modal_active, }) => {
     const [encuestas, setEncuestas] = useState<IEncuesta[]>([]);
 
     useEffect(() => {
@@ -48,24 +50,35 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
     const handle_close = (): void => {
         set_is_modal_active(false);
     };
-
+ 
+    // const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null); // Estado para almacenar el ID seleccionado
+  
     const columns = [
         // { field: "id_encabezado_encuesta", headerName: "ID", width: 100 },
         { field: "nombre_encuesta", headerName: "Nombre de Encuesta", width: 300, flex: 1, },
-        { field: "fecha_creacion", headerName: "Fecha de Creación", width: 250, flex: 1, },
-        {
-            field: 'acciones', headerName: 'Acciones', width: 200, flex: 1, renderCell: (params: any) => (
-                <>
+        { field: "fecha_creacion", headerName: "Fecha creacion", width: 300, flex: 1, },
 
-                    <IconButton
-                        color="primary"
-                        aria-label="Eliminar"
-                    >
-                        <PlaylistAddCheckIcon />
-                    </IconButton>
-                </>
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            width: 200,
+            flex: 2,
+            renderCell: (params: any) => (
+              <>
+                <IconButton
+                  color="primary"
+                  aria-label="Ver"
+                  onClick={() => {
+                    handleClear();
+                    const id = params.row.id_encabezado_encuesta; // Obtener el ID de la fila seleccionada
+                    setSelectedEncuestaId(id); // Almacenar el ID en el estado
+                  }}
+                >
+                  <PlaylistAddCheckIcon />
+                </IconButton>
+              </>
             ),
-        },
+          },
     ];
 
     return (
@@ -83,7 +96,7 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
                 <Grid item xs={12}  >
                     <Title title="Selecione encuensta para ver los detalles de configuracion  " />
                 </Grid>
-
+                {/* <h1>{selectedEncuestaId !== null ? `ID seleccionado: ${selectedEncuestaId}` : ''}</h1> Mostrar el ID seleccionado en el h1 */}
 
 
                 <Grid item xs={12} marginTop={2}>
