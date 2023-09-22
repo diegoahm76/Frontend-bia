@@ -2,15 +2,18 @@ import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Menu
 import { Title } from '../../../../components/Title';
 import FormInputController from '../../../../components/partials/form/FormInputController';
 import AddIcon from '@mui/icons-material/Add';
-import type { IMetadatos, } from '../interfaces/Metadatos';
+import type { IMetadatos, IObjValoresMetadatos, } from '../interfaces/Metadatos';
 import { Controller, useForm } from 'react-hook-form';
 import FormSelectController from '../../../../components/partials/form/FormSelectController';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
 import InfoIcon from '@mui/icons-material/Info';
 import { IList } from '../../../../interfaces/globalModels';
-import { crear_metadato, get_valores_metadato } from '../store/thunks/metadatos';
+import { crear_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato } from '../store/thunks/metadatos';
+import { initial_state_metadato, set_current_valor_metadato } from '../store/slice/indexMetadatos';
+import ListadoMetadatos from './ListarMetadatos';
 
 
 
@@ -19,10 +22,17 @@ import { crear_metadato, get_valores_metadato } from '../store/thunks/metadatos'
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ConfiguracionMetadatos = () => {
     const { control: control_metadatos, reset, handleSubmit: handle_submit, watch } = useForm<IMetadatos>();
+
+    const { control: control_valores, watch: watch_valor, reset: reset_valores } = useForm<IObjValoresMetadatos>();
+
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const { valores_metadatos } = useAppSelector((state) => state.metadatos);
+    const { valores_metadatos, current_valor_metadato } = useAppSelector((state) => state.metadatos);
     const [tipos_datos, set_tipos_datos] = useState<IList[]>([]);
     const [agregar_valor, set_agregar_valor] = useState(false);
+    const [action, set_action] = useState<string>("Guardar");
+    const [valores_metadatos_loaded, set_valores_metadatos_loaded] = useState(false);
+    const [selected_metadato, set_selected_metadato] = useState<IMetadatos>(initial_state_metadato);
+
     const dispatch = useAppDispatch();
     const text_choise_adapter: any = (dataArray: string[]) => {
         const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -32,6 +42,55 @@ const ConfiguracionMetadatos = () => {
         return data_new_format;
     };
     const selected_tipo_dato = watch('cod_tipo_dato_alojar');
+
+
+
+    // editar desde la tabla
+    const handle_edit_click = (metadato: IMetadatos) => {
+        set_selected_metadato(metadato);
+        set_action("Editar");
+    };
+
+    // asignar metadatos de la tabla al formulario
+    useEffect(() => {
+        console.log(selected_metadato)
+        reset(selected_metadato);
+    }, [selected_metadato]);
+
+    useEffect(() => {
+        if (!valores_metadatos_loaded) {
+            void dispatch(get_valores_metadato()).then(() => {
+                set_valores_metadatos_loaded(true);
+            });
+        }
+    }, [valores_metadatos_loaded, dispatch]);
+    console.log(valores_metadatos)
+
+
+    useEffect(() => {
+        void dispatch(get_metadatos());
+
+    }, [])
+
+
+
+    useEffect(() => {
+        reset_valores(current_valor_metadato);
+        console.log(current_valor_metadato)
+    }, [current_valor_metadato]);
+
+
+    useEffect(() => {
+
+
+        const primera_configuracion = valores_metadatos.find(elemento => elemento.valor_a_mostrar === watch_valor('valor_a_mostrar'));
+
+        if (primera_configuracion !== undefined) {
+            dispatch(set_current_valor_metadato(primera_configuracion));
+        }
+        console.log(primera_configuracion)
+    }, [watch_valor('valor_a_mostrar')]);
+
 
     useEffect(() => {
         const get_selects_options: any = async () => {
@@ -51,33 +110,56 @@ const ConfiguracionMetadatos = () => {
         };
 
         void get_selects_options();
-        void dispatch(get_valores_metadato())
     }, []);
+
 
     const handle_valor = () => {
         set_agregar_valor(true)
     }
 
 
+
     const on_submit = (data: IMetadatos): void => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 
 
-        const data_aux = {
-            ...data,
-            longitud_dato_alojar: data.longitud_dato_alojar ? Number(data.longitud_dato_alojar) : undefined,
-            valor_minimo: data.valor_minimo ? Number(data.valor_minimo) : undefined,
-            valor_maximo: data.valor_maximo ? Number(data.valor_maximo) : undefined,
-            orden_aparicion: data.orden_aparicion ? Number(data.orden_aparicion) : undefined,
-        };
+        if (action === "Editar" && selected_metadato) {
+            const data_edit = {
+                ...selected_metadato,
+                ...data,
+            }
+            console.log(data_edit)
+            void dispatch(editar_metadato(selected_metadato.id_metadato_personalizado, data_edit))
 
+        } else {
 
-        void dispatch(crear_metadato(data_aux))
+            const data_aux = {
+                ...data,
+                longitud_dato_alojar: data.longitud_dato_alojar ? Number(data.longitud_dato_alojar) : undefined,
+                valor_minimo: data.valor_minimo ? Number(data.valor_minimo) : undefined,
+                valor_maximo: data.valor_maximo ? Number(data.valor_maximo) : undefined,
+                orden_aparicion: data.orden_aparicion ? Number(data.orden_aparicion) : undefined,
+            };
 
+            dispatch(crear_metadato(data_aux));
 
+        }
     }
 
 
+    const on_submit_elimnar = (data: IMetadatos): void => {
+
+        if (
+            selected_metadato.id_metadato_personalizado !== null &&
+            selected_metadato.id_metadato_personalizado !== undefined
+
+        ) {
+            void dispatch(
+                eliminar_metadato(selected_metadato.id_metadato_personalizado)
+            );
+        }
+        console.log(selected_metadato)
+
+    }
 
     return (
         <>
@@ -138,7 +220,7 @@ const ConfiguracionMetadatos = () => {
                     md={2}
                     control_form={control_metadatos}
                     control_name={'cod_tipo_dato_alojar'}
-                    default_value={0}
+                    default_value=''
                     rules={{}}
                     label='Tipo de dato'
                     disabled={false}
@@ -309,72 +391,45 @@ const ConfiguracionMetadatos = () => {
                         )}
                     />
                 </Grid>
+                {selected_metadato.id_metadato_personalizado !== null &&
+                    <Grid item xs={12} sm={2} marginTop={2} container alignItems="center" justifyContent="flex-end">
+                        <Controller
+                            name="activo"
+                            control={control_metadatos}
+                            defaultValue={true}
+                            rules={{ required: true }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    fullWidth
+                                    select
+                                    size="small"
+                                    label="Estado"
+                                    variant="outlined"
+                                    disabled={false}
+                                    defaultValue={value}
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!(error == null)}
+                                >
+                                    <MenuItem value="true">ACTIVO</MenuItem>
+                                    <MenuItem value="false">INACTIVO</MenuItem>
+                                </TextField>
+                            )}
+                        />
+                    </Grid>
+                }
 
 
-                <Grid item xs={12} sm={2} marginTop={2} spacing={4}>
-                    <InputLabel htmlFor="activo" >Estado</InputLabel>
-                    <Controller
-                        name="activo"
-                        control={control_metadatos}
-                        // defaultValue=""
-                        // rules={{ required: false }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                            <FormControl>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={value}
-                                            onChange={(e) => {
-                                                onChange(e.target.checked);
-                                            }}
-                                            // name="checkedB"
-                                            color="primary"
-                                        />
-                                    }
-                                    label={
-                                        value ? (
-                                            <Typography variant="body2">
-                                                <strong>Activar</strong>
-                                                <Tooltip title="Activar" placement="right">
-                                                    <InfoIcon
-                                                        sx={{
-                                                            width: '1.2rem',
-                                                            height: '1.2rem',
-                                                            ml: '0.5rem',
-                                                            color: 'green',
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            </Typography>
-                                        ) : (
-                                            <Typography variant="body2">
-                                                <strong>Desactivar</strong>
-                                                <Tooltip title="Desactivar" placement="right">
-                                                    <InfoIcon
-                                                        sx={{
-                                                            width: '1.2rem',
-                                                            height: '1.2rem',
-                                                            ml: '0.5rem',
-                                                            color: 'orange',
-                                                        }}
-                                                    />
-                                                </Tooltip>
-                                            </Typography>
-                                        )
-                                    }
-                                />
-                            </FormControl>
-                        )}
-                    />
-                </Grid>
 
 
 
             </Grid>
-            <Grid container spacing={2} alignItems="center">
+            <Grid container spacing={4} alignItems="center" marginTop={4}>
 
                 <Grid item xs={12} sm={4} marginTop={2}>
                     <Button variant="contained"
@@ -392,7 +447,7 @@ const ConfiguracionMetadatos = () => {
                     <FormSelectController
                         xs={12}
                         md={2}
-                        control_form={control_metadatos}
+                        control_form={control_valores}
                         control_name={'valor_a_mostrar'}
                         default_value=''
                         rules={{}}
@@ -407,14 +462,15 @@ const ConfiguracionMetadatos = () => {
 
                 </Grid>
             )}
-
+            <ListadoMetadatos
+                handle_edit_click={handle_edit_click} />
             <Grid
                 container
                 direction="row"
                 padding={2}
                 spacing={2}
             >
-                <Grid container justifyContent="flex-end">
+                <Grid container justifyContent="flex-end" marginTop={2} spacing={2}>
                     <Grid item>
                         <Button variant="contained"
                             color="success"
@@ -422,7 +478,21 @@ const ConfiguracionMetadatos = () => {
                             Guardar
                         </Button>
                     </Grid>
+                    {(selected_metadato && selected_metadato.id_metadato_personalizado) !== null && (
+                        <Grid item xs={12} md={2} >
+                            <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                                color="error"
+                                onClick={() => { on_submit_elimnar(selected_metadato); }}
+                            >
+                                Eliminar
+                            </Button>
+                        </Grid>
+                    )}
                 </Grid>
+
+
 
             </Grid>
 

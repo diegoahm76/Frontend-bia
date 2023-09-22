@@ -46,15 +46,15 @@ export const crear_metadato: any = (
             const { data } = await api.post('gestor/metadatos/metadatos-personalizados/crear/', metadato);
             console.log(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            if (data.success === true) {
-                dispatch(set_metadatos(data.data));
-                control_success(data.detail);
+            if (data) {
+                //  dispatch(set_metadatos(data.data));
+                control_success('Se creo correctamente el Metadato');
             }
 
             return data;
         } catch (error: any) {
             console.log(error);
-            control_error(error.response.data.detail);
+            control_error(error?.response?.data?.non_field_errors[0]);
 
             return error as AxiosError;
         }
@@ -98,8 +98,86 @@ export const get_valores_metadato = (): any => {
             console.log(data)
             return data;
         } catch (error: any) {
+            //   control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+// LISTAR METADATOS
+
+export const get_metadatos = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('gestor/metadatos/metadatos-personalizados/listar/');
+
+            if (data) {
+                dispatch(set_metadatos(data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
             control_error(error.response.data.detail);
 
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// eliminar
+export const eliminar_metadato = (
+    id: number,
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.delete(`gestor/metadatos/metadatos-personalizados/eliminar/${id}/`
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success === true) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+
+// editar metadato
+export const editar_metadato: any = (
+    id: number,
+    metadato: any,
+
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.put(`gestor/metadatos/metadatos-personalizados/editar/${id}/`, metadato
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success === true) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };

@@ -1,9 +1,11 @@
 export interface IConfiguracionMetadatos {
   metadatos: IMetadatos[];
   valores_metadatos: IObjValoresMetadatos[];
+  current_valor_metadato: IObjValoresMetadatos;
 }
 
 export interface IMetadatos {
+  id_metadato_personalizado?: number | null;
   nombre_metadato?: string | null;
   nombre_a_mostrar?: string | null;
   descripcion?: string | null;
