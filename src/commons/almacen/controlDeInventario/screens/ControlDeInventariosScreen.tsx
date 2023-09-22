@@ -6,10 +6,10 @@ import { Title } from "../../../../components";
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
-import BuscarBienViveros from "./BuscarBienViveros";
 import { ResultadosBusqueda } from "./ResultadosBusqueda";
 import { obtener_bodegas, obtener_categorias, obtener_estados, obtener_inventario_af } from "../thunks/ControlDeInventarios";
 import dayjs from "dayjs";
+import BuscarBien from "./BuscarBien";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ControlDeInventariosScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -66,6 +66,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const [bienes_baja, set_bienes_baja] = useState<boolean>(false);
   const [bienes_salida, set_bienes_salida] = useState<boolean>(false);
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
+  const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
 
   const cambio_tipo_consulta: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_tipo_consulta(e.target.value);
@@ -173,7 +174,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item md={12} xs={12}>
+      {  <Grid item md={12} xs={12}>
           <Title title="Filtros de búsqueda" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             {seleccion_tipo_consulta === 'TI' && <Grid item container spacing={2}>
@@ -298,8 +299,64 @@ export const ControlDeInventariosScreen: React.FC = () => {
                 </Stack>
               </Grid>
             </Grid>}
+            {seleccion_tipo_consulta === 'BE' && <Grid item container spacing={2}>
+              <Grid item xs={12} sm={12}>
+                <Stack direction="row" justifyContent="center">
+                  <Grid item xs={12} sm={6}>
+                  <TextField
+                  label="Bien"
+                  type={'text'}
+                  size="small"
+                  fullWidth
+                  value={seleccion_bien.nombre ?? ""}
+                  InputProps={{
+                    readOnly: true
+                  }}
+                />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                  <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={2}
+                >
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<SearchIcon />}
+                    onClick={() => { set_abrir_modal_bien(true); }}
+                  >
+                    Buscar bien
+                  </Button>
+                  {abrir_modal_bien && (
+                    <BuscarBien
+                      is_modal_active={abrir_modal_bien}
+                      set_is_modal_active={set_abrir_modal_bien}
+                      title={"Búsqueda de bienes"}
+                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
+                  )}
+                </Stack>
+                  </Grid>
+                </Stack>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={2}>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<SearchIcon />}
+                    onClick={busqueda_control}
+                  >
+                    Buscar
+                  </Button>
+                </Stack>
+              </Grid>
+            </Grid>}
           </Box>
-        </Grid>
+        </Grid>}
       </Grid>}
       {(resultado_busqueda.length > 0)  && (<Grid
         container
