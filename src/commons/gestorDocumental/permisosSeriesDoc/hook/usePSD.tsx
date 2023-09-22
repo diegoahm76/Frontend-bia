@@ -104,7 +104,7 @@ export const usePSD = (): any => {
   };
 
 
-  const getOutModule = () => {
+ const getOutModule = () => {
 
     void Swal.fire({
       title: '¿Está seguro de salir del módulo?, la información no se guardará.',
@@ -157,15 +157,18 @@ export const usePSD = (): any => {
     //* use forma seleccionar seccion o subseccion
     control_seleccionar_seccion_control,
     values_watch_seleccionar_seccion,
+    seleccionar_seccion_reset,
 
     //* use form seleccionar serie subserie
     seleccionar_serie_subserie_control,
     values_watch_seleccionar_serie_subserie,
+    seleccionar_serie_subserie_reset,
 
     //* funciones de reseteo de los useForm
     reset_all,
 
+
     //* funcion de salida del modulo
-    getOutModule
+   getOutModule
   };
 };
