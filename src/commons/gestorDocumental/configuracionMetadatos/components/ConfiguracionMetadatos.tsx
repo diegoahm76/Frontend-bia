@@ -14,6 +14,7 @@ import { IList } from '../../../../interfaces/globalModels';
 import { crear_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato } from '../store/thunks/metadatos';
 import { initial_state_metadato, set_current_valor_metadato } from '../store/slice/indexMetadatos';
 import ListadoMetadatos from './ListarMetadatos';
+import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 
 
@@ -490,6 +491,9 @@ const ConfiguracionMetadatos = () => {
                             </Button>
                         </Grid>
                     )}
+                    <Grid item xs={12} md={2}>
+                        <ButtonSalir />
+                    </Grid>
                 </Grid>
 
 
