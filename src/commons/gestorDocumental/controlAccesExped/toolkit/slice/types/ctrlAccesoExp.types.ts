@@ -10,4 +10,8 @@ export interface InitialState {
    * The current CCD related to the control of access to expedients, or null if there is none.
    */
   currentCcdCtrlAccesoExp: any | null;
+
+  moodConfig: any;
+
+  tipoDeClasificacion: any;
 }

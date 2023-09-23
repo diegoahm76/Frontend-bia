@@ -5,6 +5,10 @@ import { InitialState } from './types/ctrlAccesoExp.types';
 const initialState: InitialState = {
     ccdsBusquedaCtrlAccesoExp: [],
     currentCcdCtrlAccesoExp: null,
+    //! modo de configuracion, parte inicial del modulo
+    moodConfig: null,
+    // ? se configura el tipo de clasificacion (publico, reservada, clasificado)
+    tipoDeClasificacion: null,
 };
 
 export const ctrlAccesoExpSlice = createSlice({
@@ -18,10 +22,25 @@ export const ctrlAccesoExpSlice = createSlice({
     setCcdCurrentBusquedaCtrlAccesoExp: (state, action: PayloadAction<any>): any => {
         state.currentCcdCtrlAccesoExp = action.payload as any;
     },
+
+    //! modo configuración, parte inicial de decisión del módulo
+    set_mood_module : (state, action: PayloadAction<any>): any => {
+      state.moodConfig = action.payload as any;
+    },
+
+    // ? ----------------- actions del caso # 1 --------------------
+setTipoDeClasificacion: (state, action: PayloadAction<any>): any => {
+  state.tipoDeClasificacion = action.payload as any;
+},
+
+    // ? ----------------- actions del caso # 2 --------------------
+
     // ? ---- RESET ALL THE STATES IN THIS SLICE -----
     resetStatesCtrlAccesoExp: (state) => {
       state.ccdsBusquedaCtrlAccesoExp = [];
       state.currentCcdCtrlAccesoExp = null;
+      state.moodConfig = null;
+      state.tipoDeClasificacion = null;
       // y los que se vayan añadiendo ...
     },
   },
@@ -31,6 +50,12 @@ export const {
   // ! ----- ACCIONES SOBRE LOS CCD'S -----
   setCcdsBusquedaCtrlAccesoExp,
   setCcdCurrentBusquedaCtrlAccesoExp,
+
+  // ? configuracion inicial del módulo que permite tomar decisión sobre que se va a realizar dentro del módulo respectivamente
+  set_mood_module,
+
+  // ? ----------------- actions del caso # 1 --------------------
+  setTipoDeClasificacion,
 
   // ? ---- RESET ALL THE STATES IN THIS SLICE -----
   resetStatesCtrlAccesoExp,

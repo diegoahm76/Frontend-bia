@@ -5,12 +5,12 @@ import { Grid } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
-import { optionsSelectConfiguracion } from '../utils/choices';
+import { setTipoDeClasificacion, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { optionsSelect } from './utils/choices';
 
-export const ConfiguracionInicial = (): JSX.Element | null => {
+export const Clasificacion = (): JSX.Element | null => {
   //* get states from the redux store
-  const { moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { tipoDeClasificacion, moodConfig } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
 
@@ -22,21 +22,20 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
 */
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
-    dispatch(set_mood_module(selectedOption));
+    dispatch(setTipoDeClasificacion(selectedOption));
   };
 
-  
-
+  if(moodConfig?.value !== 1) return null;
 
   return (
     <>
     <Grid
       item
       xs={12}
-      sm={8}
+      sm={6.5}
       sx={{
         ...stylesGrid,
-        zIndex: 6
+        zIndex: 5
       }}
     >
    {/*   <Controller
@@ -46,7 +45,7 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
         render={({ field: { onChange, value }, fieldState: { error } }) => ( */}
           <div>
             <Select
-              value={moodConfig}
+              value={tipoDeClasificacion}
               onChange={(selectedOption: any) => {
              /*  dispatch(setListaSeriesSubseries([]));
                 dispatch(setCurrentSerieSubserie(null));
@@ -54,6 +53,11 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
                 dispatch(set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(null));
                 dispatch(set_permisos_unidades_actuales_action([]));
                 dispatch(set_permisos_unidades_actuales_externas_action([]));
+                dispatch(
+                  set_current_unidad_organizacional_action(
+                    selectedOption?.item
+                  )
+                );
                 void get_series_documentales_unidad_organizacional_psd(
                   selectedOption?.item?.id_unidad_organizacional,
                   ccd_current_busqueda?.id_ccd,
@@ -64,7 +68,7 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
                 }); */
                 handleChange(selectedOption);
               }}
-              options={optionsSelectConfiguracion as any}
+              options={optionsSelect as any}
               placeholder="Seleccionar"
             />
             <label>
@@ -77,7 +81,7 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
                   marginLeft: '0.25rem'
                 }}
               >
-                Configuración
+                Tipo de clasificación
               </small>
             </label>
           </div>

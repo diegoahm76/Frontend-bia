@@ -8,11 +8,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { Title } from '../../../../../components';
-import { getOutModule } from '../../../../../utils/functions/getOutOfModule';
+import { getOutModule, reset_all } from '../../../../../utils/functions/getOutOfModule';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
+import { resetStatesCtrlAccesoExp } from '../../toolkit/slice/CtrlAccesoExpSlice';
+import { useAppDispatch } from '../../../../../hooks';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
-
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* navigate declaration
   const navigate = useNavigate();
   // ? loading  para los botones guardar y proceder respectivamente
@@ -76,9 +79,13 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     color="primary"
                     variant="outlined"
                     startIcon={<CleanIcon />}
-                    onClick={()=>{
-                      console.log('Limpiando todos los campos');
-                    }}
+                    onClick={
+                      () => {
+                        reset_all(
+                          [() => dispatch(resetStatesCtrlAccesoExp())]
+                        );
+                      }
+                    }
                   >
                     LIMPIAR CAMPOS
                   </Button>
