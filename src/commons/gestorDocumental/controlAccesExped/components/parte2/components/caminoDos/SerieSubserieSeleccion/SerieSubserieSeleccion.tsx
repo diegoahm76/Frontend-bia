@@ -60,7 +60,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
       <Grid
         item
         xs={12}
-        sm={6}
+        sm={8}
         sx={{
           ...stylesGrid,
           mt: '10px',

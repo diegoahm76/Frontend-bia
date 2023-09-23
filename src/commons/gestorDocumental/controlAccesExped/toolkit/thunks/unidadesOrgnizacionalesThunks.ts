@@ -3,13 +3,13 @@ import React from "react";
 import { api } from "../../../../../api/axios";
 import { control_error, control_success } from "../../../../../helpers";
 import { control_warning } from "../../../../almacen/configuracion/store/thunks/BodegaThunks";
-import { getUnidadesOrgInterface } from "./types/thunks";
+import { getUnidadesOrganizacionalesInterface } from "./types/thunks";
 
 export const getUnidadesOrganizacionalesSeccionSubseccion = async ({
   idOrganigrama,
   setLoadingUnidadesOrg,
   nombre = ''
-}: getUnidadesOrgInterface ): Promise<Array<any>> => {
+}: getUnidadesOrganizacionalesInterface ): Promise<Array<any>> => {
   try {
     setLoadingUnidadesOrg(true);
     const url = `gestor/permisos/unidades-ccd/get/${idOrganigrama}/?nombre=${nombre}`;

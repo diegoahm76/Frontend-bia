@@ -6,57 +6,49 @@ import { useContext, type FC } from 'react';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-// import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-/* import { usePSD } from '../../../../../hook/usePSD';
-import {
-  setCurrentSerieSubserie,
-  setListaSeriesSubseries,
-  set_current_unidad_organizacional_action,
-  set_permisos_unidades_actuales_action,
-  set_permisos_unidades_actuales_externas_action,
-  set_restricciones_para_todas_las_unidades_organizacionales_action,
-  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
-} from '../../../../../toolkit/slice/PSDSlice';
-import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
-import { get_series_documentales_unidad_organizacional_psd } from '../../../../../toolkit/thunks/psdThunks'; */
 import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
 
 export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* get states from the redux store
-  const { moodConfig } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { moodConfig, unidadesOrganizacionales } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   // ? context necesarios
-/*  const { loadingButtonPSD, setloadingSeriesSubseries } =
-    useContext(ModalContextPSD);
-*/
+  const { isLoadingSeccionSub } = useContext(ModalAndLoadingContext);
   // * use control clasificacion exp
   const { seleccionar_serie_subserie_control } = useControlClasificacionExp();
 
   if(moodConfig?.value !== 2) return null;
 
- /* if (loadingButtonPSD) {
+ if (isLoadingSeccionSub) {
     return (
-      <div
-        style={{
-          marginTop: '3rem',
-          marginBottom: '3rem'
-        }}
-      >
-        <Loader altura={50} />
-      </div>
+      <Grid
+      container
+      sx={{
+        ...containerStyles,
+        boxShadow: 'none',
+        background: 'none',
+        position: 'static',
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <Loader altura={50} />
+    </Grid>
     );
-  } */
+  }
 
   return (
     <>
       <Grid
         item
         xs={12}
-        sm={6}
+        sm={8}
         sx={{
           ...stylesGrid,
           mt: '10px',
@@ -75,7 +67,7 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
                 value={value}
                 onChange={(selectedOption) => {
 
-                  // ! se deberán traer las series y subseries asociadas a la unidad organizacional seleccionada
+                  // ! se deberán traer las series y subseries asociadas a la unidad organizacional seleccionada y tamnbién se debe seleccionar la unidad organizacional current
 
 
               /*    dispatch(setListaSeriesSubseries([]));
@@ -103,20 +95,16 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
                   }); */
 
                   //* tambien debo seleccionar alguna sección o subsección (unidad organizacional) con la que se va a trabajar, esta es consecuencia servirá para mostrar el respectivo select de las series - subseries necesarias
-
-                  
-
                   onChange(selectedOption);
                 }}
                 options={
-                  []
-               /*   [...unidadesOrganizacionales]
+                 [...unidadesOrganizacionales]
                     .sort((a, b) => a.nombre.localeCompare(b.nombre))
                     .map((item) => ({
                       item,
                       value: item.id_unidad_organizacional,
                       label: `${item.codigo} - ${item.nombre}`
-                    })) as any */
+                    })) as any
                 }
                 placeholder="Seleccionar"
               />

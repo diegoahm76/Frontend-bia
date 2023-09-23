@@ -1,19 +1,24 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useState } from 'react'
+import { useContext } from 'react'
 import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { Grid } from '@mui/material';
-import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { setUnidadesOrganizacionales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { optionsSelectConfiguracion } from '../utils/choices';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { getUnidadesOrganizacionalesSeccionSubseccion } from '../../../../../toolkit/thunks/unidadesOrgnizacionalesThunks';
 
 {/* bajo la decisión que se tome en este componente se procede a realizar el proceso necesario, dependiendo si se elige la opción # 1 o la opción # 2 */}
 export const ConfiguracionInicial = (): JSX.Element | null => {
+
+
   //* get states from the redux store
-  const { moodConfig } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
+    //* context declarations
+    const { handleModalSecSub } = useContext(ModalAndLoadingContext);
 
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
@@ -22,10 +27,19 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
     //* if selected option . value = 2, se debe hacer la petición http al servidor para obtener las unidades organizacionales asociadas a ese organigrama y en consecuencia las series documentales asociadas a esa unidad organizacional luego de seleccionar la respectiva unidad organizacional
     if(selectedOption?.value === 1){
       console.log('getting directly control de acceso de expedientes')
+      dispatch(setUnidadesOrganizacionales([]));
     }
 
     if(selectedOption?.value === 2){
       console.log('getting unidades organizacionales, then get series documentales, then get control de acceso de expedientes')
+      void getUnidadesOrganizacionalesSeccionSubseccion({
+        idOrganigrama: currentCcdCtrlAccesoExp.id_organigrama,
+        setLoadingUnidadesOrg: handleModalSecSub,
+      }
+      ).then((resUnidadesOrganizacionales: any) => {
+        console.log(resUnidadesOrganizacionales)
+        dispatch(setUnidadesOrganizacionales(resUnidadesOrganizacionales));
+      })
     }
   };
 

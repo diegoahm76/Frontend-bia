@@ -5,6 +5,9 @@ import { InitialState } from './types/ctrlAccesoExp.types';
 const initialState: InitialState = {
     ccdsBusquedaCtrlAccesoExp: [],
     currentCcdCtrlAccesoExp: null,
+    // ! --- unidades organizacionales ---
+    unidadesOrganizacionales: [],
+    currentUnidadOrganizacional: null,
     //! modo de configuracion, parte inicial del modulo
     moodConfig: null,
     // ? se configura el tipo de clasificacion (publico, reservada, clasificado)
@@ -23,6 +26,15 @@ export const ctrlAccesoExpSlice = createSlice({
         state.currentCcdCtrlAccesoExp = action.payload as any;
     },
 
+    // ? UNIDADES ORGANIZACIONALES ACTIONS
+    setUnidadesOrganizacionales: (state, action: PayloadAction<any[]>): any => {
+      state.unidadesOrganizacionales = action.payload as any;
+    }
+    ,
+    setCurrentUnidadOrganizacional: (state, action: PayloadAction<any>): any => {
+      state.currentUnidadOrganizacional = action.payload as any;
+    },
+
     //! modo configuración, parte inicial de decisión del módulo
     set_mood_module : (state, action: PayloadAction<any>): any => {
       state.moodConfig = action.payload as any;
@@ -39,6 +51,8 @@ setTipoDeClasificacion: (state, action: PayloadAction<any>): any => {
     resetStatesCtrlAccesoExp: (state) => {
       state.ccdsBusquedaCtrlAccesoExp = [];
       state.currentCcdCtrlAccesoExp = null;
+      state.unidadesOrganizacionales = [];
+      state.currentUnidadOrganizacional = null;
       state.moodConfig = null;
       state.tipoDeClasificacion = null;
       // y los que se vayan añadiendo ...
@@ -50,6 +64,10 @@ export const {
   // ! ----- ACCIONES SOBRE LOS CCD'S -----
   setCcdsBusquedaCtrlAccesoExp,
   setCcdCurrentBusquedaCtrlAccesoExp,
+
+  // ! ACCIONES SOBRE LAS UNIDADES ORGANIZACIONALES ---
+  setUnidadesOrganizacionales,
+  setCurrentUnidadOrganizacional,
 
   // ? configuracion inicial del módulo que permite tomar decisión sobre que se va a realizar dentro del módulo respectivamente
   set_mood_module,

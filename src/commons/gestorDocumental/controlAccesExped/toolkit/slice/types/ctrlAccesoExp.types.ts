@@ -11,6 +11,9 @@ export interface InitialState {
    */
   currentCcdCtrlAccesoExp: any | null;
 
+  unidadesOrganizacionales: any[];
+  currentUnidadOrganizacional: any | null;
+
   moodConfig: any;
 
   tipoDeClasificacion: any;

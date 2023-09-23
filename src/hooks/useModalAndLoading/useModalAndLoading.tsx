@@ -20,34 +20,26 @@ import { useState, useCallback } from 'react';
  * }
  */
 export const useModalAndLoading = (modalName: string, loadingButtonName: string) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // ! I could add more states here if needed
 
-  const openModal = useCallback(() => {
-    setIsModalOpen(true);
+ const handleModal = useCallback((value: boolean) => {
+    setIsModalOpen(value);
   }, []);
 
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
+
+  const handleLoading = useCallback((value: boolean) => {
+    setIsLoading(value);
   }, []);
 
-  const startLoading = useCallback(() => {
-    setIsLoading(true);
-  }, []);
-
-  const stopLoading = useCallback(() => {
-    setIsLoading(false);
-  }, []);
 
   return {
     [modalName]: isModalOpen,
     [loadingButtonName]: isLoading,
-    openModal,
-    closeModal,
-    startLoading,
-    stopLoading,
+    handleModal,
+    handleLoading,
 
     // ! I could add more states and functions here if needed
   };
@@ -57,6 +49,7 @@ export const useModalAndLoading = (modalName: string, loadingButtonName: string)
 // ! How can I use this hook?
 // ? Example 1
 /*
+ const { isModalOpen, openModal, closeModal, isLoading, startLoading, stopLoading } = useModalAndLoading('myModal', 'myLoadingButton');
 1. Import the hook
 import { useModalAndLoading } from 'path/to/useModalAndLoading';
 2. Call the hook
