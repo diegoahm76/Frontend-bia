@@ -6,7 +6,7 @@ import { Encabezado } from '../components/Encabezado';
 export const Confi_Encuasta_Routes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/nueva_encuesta" element={< Encabezado />} />
+            <Route path="/encuesta" element={< Encabezado />} />
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
     );
