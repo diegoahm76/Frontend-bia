@@ -8,24 +8,26 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { optionsSelectConfiguracion } from '../utils/choices';
 
+{/* bajo la decisión que se tome en este componente se procede a realizar el proceso necesario, dependiendo si se elige la opción # 1 o la opción # 2 */}
 export const ConfiguracionInicial = (): JSX.Element | null => {
   //* get states from the redux store
-  const { moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { moodConfig } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
 
-    //! necesary states for the component
- /* const [selectConfig, setselectConfig] = useState<null | {
-    value: string;
-    label: string;
-  }>(null)
-*/
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
     dispatch(set_mood_module(selectedOption));
-  };
 
-  
+    //* if selected option . value = 2, se debe hacer la petición http al servidor para obtener las unidades organizacionales asociadas a ese organigrama y en consecuencia las series documentales asociadas a esa unidad organizacional luego de seleccionar la respectiva unidad organizacional
+    if(selectedOption?.value === 1){
+      console.log('getting directly control de acceso de expedientes')
+    }
+
+    if(selectedOption?.value === 2){
+      console.log('getting unidades organizacionales, then get series documentales, then get control de acceso de expedientes')
+    }
+  };
 
 
   return (
@@ -39,29 +41,10 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
         zIndex: 6
       }}
     >
-   {/*   <Controller
-        name="id_unidad_organizacional"
-        control={control_seleccionar_seccion_control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value }, fieldState: { error } }) => ( */}
           <div>
             <Select
               value={moodConfig}
               onChange={(selectedOption: any) => {
-             /*  dispatch(setListaSeriesSubseries([]));
-                dispatch(setCurrentSerieSubserie(null));
-                dispatch(set_restricciones_para_todas_las_unidades_organizacionales_action(null));
-                dispatch(set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(null));
-                dispatch(set_permisos_unidades_actuales_action([]));
-                dispatch(set_permisos_unidades_actuales_externas_action([]));
-                void get_series_documentales_unidad_organizacional_psd(
-                  selectedOption?.item?.id_unidad_organizacional,
-                  ccd_current_busqueda?.id_ccd,
-                  setloadingSeriesSubseries
-                ).then((res) => {
-                  console.log(res);
-                  dispatch(setListaSeriesSubseries(res));
-                }); */
                 handleChange(selectedOption);
               }}
               options={optionsSelectConfiguracion as any}
@@ -81,8 +64,6 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
               </small>
             </label>
           </div>
-      {/*  )}
-      /> */}
     </Grid>
   </>
   )

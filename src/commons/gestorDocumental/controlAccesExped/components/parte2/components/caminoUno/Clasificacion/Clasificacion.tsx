@@ -35,6 +35,8 @@ export const Clasificacion = (): JSX.Element | null => {
       sm={6.5}
       sx={{
         ...stylesGrid,
+        mt: '10px',
+        mb: '10px',
         zIndex: 5
       }}
     >

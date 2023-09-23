@@ -23,15 +23,12 @@ import { get_series_documentales_unidad_organizacional_psd } from '../../../../.
 import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
 
-export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element => {
+export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
-  // ! states from redux
-/*  const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
-    (state) => state.PsdSlice
-  );
-*/
+  //* get states from the redux store
+  const { moodConfig } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   // ? context necesarios
 /*  const { loadingButtonPSD, setloadingSeriesSubseries } =
     useContext(ModalContextPSD);
@@ -39,7 +36,7 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element => {
   // * use control clasificacion exp
   const { seleccionar_serie_subserie_control } = useControlClasificacionExp();
 
- // if (!ccd_current_busqueda) return <></>;
+  if(moodConfig?.value !== 2) return null;
 
  /* if (loadingButtonPSD) {
     return (
@@ -62,10 +59,11 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element => {
         sm={6}
         sx={{
           ...stylesGrid,
+          mt: '10px',
+  mb: '10px',
           zIndex: 5
         }}
       >
-        <h1>Hello from seleccion de seccion y subseccion</h1>
         {/* En esta seleccion quiero tomar la seccion o subseccion asociada al ccd para realizar la respectiva busqueda de la serie - subserie respectivamente asociada */}
         <Controller
           name="id_unidad_organizacional"
@@ -76,6 +74,10 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
+
+                  // ! se deberán traer las series y subseries asociadas a la unidad organizacional seleccionada
+
+
               /*    dispatch(setListaSeriesSubseries([]));
                   dispatch(setCurrentSerieSubserie(null));
 

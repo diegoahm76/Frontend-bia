@@ -63,6 +63,8 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
         sm={6}
         sx={{
           ...stylesGrid,
+          mt: '10px',
+          mb: '10px',
           zIndex: 2
         }}
       >
