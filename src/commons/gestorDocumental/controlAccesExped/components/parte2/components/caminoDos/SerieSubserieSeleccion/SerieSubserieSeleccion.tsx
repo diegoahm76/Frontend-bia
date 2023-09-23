@@ -9,6 +9,7 @@ import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
+import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
 /* import {
   setCurrentSerieSubserie,
   set_permisos_unidades_actuales_action,
@@ -35,7 +36,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
     useContext(ModalContextPSD); */
 
   //* usePSD
-  // const { seleccionar_serie_subserie_control } = usePSD();
+  const { control_seleccionar_seccion_control } = useControlClasificacionExp();
 
   //! se debe realizar la validación, si no hay series que mostrar el respecivo elemento no debe aparecer en la pantalla
 
@@ -65,10 +66,11 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
           zIndex: 2
         }}
       >
+         <h1>Hello from seleccion de serie y subserie</h1>
         {/* En esta seleccion quiero tomar la serie o subserue asociada al  la respectiva unidad org del ccd para iniciar el proceso de asignación de permisos */}
         <Controller
           name="id_serie_subserie"
-          control={seleccionar_serie_subserie_control}
+          control={control_seleccionar_seccion_control}
           rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <div>
