@@ -6,6 +6,7 @@ import { ConfiguracionInicial } from '../components/base/Config/Configuracion'
 import { Clasificacion } from '../components/caminoUno/Clasificacion/Clasificacion'
 import { useAppSelector } from '../../../../../../hooks'
 import { SeleccionSeccionSubseccion } from '../components/caminoDos/SeleccionSeccionSubseccion/SeleccionSeccionSubseccion'
+import { SeleccionSerieSubserie } from '../components/caminoDos/SerieSubserieSeleccion/SerieSubserieSeleccion'
 
 export const PermisosPorClasificacionScreen = (): JSX.Element | null=> {
 
@@ -36,6 +37,8 @@ export const PermisosPorClasificacionScreen = (): JSX.Element | null=> {
           {/* si el modo seleccionado en la configuración inicial es "DOS" se renderiza los siguientes componente */}
                   {/*  -- pendientes de creación los componentes necesarios dentro del módulo ---- */}
                   <SeleccionSeccionSubseccion/> {/*  en consecuencia también se rendereiza el componente de elección de serie / subserie pero ese componente va a estar ligado a la elección de una seccion / subsección */}
+
+                  <SeleccionSerieSubserie/>
           {/* si el modo seleccionado en la configuración inicial es "DOS" se renderiza los siguientes componente */}
 
 

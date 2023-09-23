@@ -5,62 +5,55 @@ import { Grid } from '@mui/material';
 import { useContext, type FC } from 'react';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
-// import { usePSD } from '../../../../../hook/usePSD';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
-/* import {
-  setCurrentSerieSubserie,
-  set_permisos_unidades_actuales_action,
-  set_permisos_unidades_actuales_externas_action,
-  set_restricciones_para_todas_las_unidades_organizacionales_action,
-  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
-} from '../../../../../toolkit/slice/PSDSlice';
-import { get_restricciones_series_documentales } from '../../../../../toolkit/thunks/thunksPartThree';
-import {
-  GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE,
-  GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE
-} from '../../../../../toolkit/thunks/psdThunks';
-*/
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
+
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ! states from redux
-  const { current_unidad_organizacional, listSeriesSubseries } = useAppSelector(
-    (state) => state.PsdSlice
+  const { currentUnidadOrganizacional } = useAppSelector(
+    (state) => state.ctrlAccesoExpSlice
   );
 
   // ? context necesarios
-  /* const { loadingSeriesSubseries, setLoadingRestricciones } =
-    useContext(ModalContextPSD); */
+  const { isLoadingSerieSubserie } = useContext(ModalAndLoadingContext);
 
   //* usePSD
   const { control_seleccionar_seccion_control } = useControlClasificacionExp();
 
   //! se debe realizar la validación, si no hay series que mostrar el respecivo elemento no debe aparecer en la pantalla
 
-  // if (!current_unidad_organizacional) return <></>;
-/*
-  if (loadingSeriesSubseries) {
+  if (!currentUnidadOrganizacional) return <></>;
+
+  if (isLoadingSerieSubserie) {
     return (
-      <div
-        style={{
-          marginTop: '3rem',
-          marginBottom: '3rem'
-        }}
-      >
-        <Loader altura={50} />
-      </div>
+      <Grid
+      container
+      sx={{
+        ...containerStyles,
+        boxShadow: 'none',
+        background: 'none',
+        position: 'static',
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <Loader altura={50} />
+    </Grid>
     );
-  } */
+  }
 
   return (
     <>
       <Grid
         item
         xs={12}
-        sm={8}
+        sm={7}
         sx={{
           ...stylesGrid,
           mt: '10px',
@@ -68,8 +61,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
           zIndex: 2
         }}
       >
-         <h1>Hello from seleccion de serie y subserie</h1>
-        {/* En esta seleccion quiero tomar la serie o subserue asociada al  la respectiva unidad org del ccd para iniciar el proceso de asignación de permisos */}
+        {/* Se realiza la seleccion de la serie subserie respectiva para poder trabajar con ella */}
         <Controller
           name="id_serie_subserie"
           control={control_seleccionar_seccion_control}
@@ -97,22 +89,6 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                     );
                   });
 */
-                /*  void GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE(
-                    selectedOption.item.id_cat_serie_und,
-                    setLoadingRestricciones
-                  ).then((_res) => {
-                    dispatch(set_permisos_unidades_actuales_action(_res));
-                  }); */
-
-/*
-                  void GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE(
-                    selectedOption.item.id_cat_serie_und,
-                    setLoadingRestricciones
-                  ).then((_res) => {
-                    dispatch(
-                      set_permisos_unidades_actuales_externas_action(_res)
-                    );
-                  }); */
 
                   onChange(selectedOption);
                 }}

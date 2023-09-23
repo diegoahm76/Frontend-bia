@@ -11,6 +11,7 @@ import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
+import { setCurrentUnidadOrganizacional } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 
 export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
@@ -48,7 +49,7 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
       <Grid
         item
         xs={12}
-        sm={8}
+        sm={7}
         sx={{
           ...stylesGrid,
           mt: '10px',
@@ -66,7 +67,7 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-
+                  dispatch(setCurrentUnidadOrganizacional(selectedOption?.item));
                   // ! se deberán traer las series y subseries asociadas a la unidad organizacional seleccionada y tamnbién se debe seleccionar la unidad organizacional current
 
 
