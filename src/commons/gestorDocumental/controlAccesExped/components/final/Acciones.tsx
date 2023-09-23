@@ -11,15 +11,18 @@ import { Title } from '../../../../../components';
 import { getOutModule, reset_all } from '../../../../../utils/functions/getOutOfModule';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
 import { resetStatesCtrlAccesoExp } from '../../toolkit/slice/CtrlAccesoExpSlice';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
+  
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* navigate declaration
   const navigate = useNavigate();
   // ? loading  para los botones guardar y proceder respectivamente
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
+
+  const { currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ! states from redux
 /*  const {
@@ -36,6 +39,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const handleSubmit = () => {
     console.log('hello from submit');
   };
+
+  if(!currentCcdCtrlAccesoExp) return null;
 
   return (
     <>

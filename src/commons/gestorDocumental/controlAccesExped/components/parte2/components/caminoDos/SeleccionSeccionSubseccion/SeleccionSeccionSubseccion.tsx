@@ -28,10 +28,10 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   // ! states from redux
-  const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
+/*  const { ccd_current_busqueda, unidadesOrganizacionales } = useAppSelector(
     (state) => state.PsdSlice
   );
-
+*/
   // ? context necesarios
 /*  const { loadingButtonPSD, setloadingSeriesSubseries } =
     useContext(ModalContextPSD);
