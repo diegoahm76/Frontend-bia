@@ -251,6 +251,7 @@ export const InformacionPlantillasPersonas: React.FC = () => {
               value={version_formato_calidad_asociado}
             />
           </Grid>
+          
   
           <Grid item xs={12} sm={3}>
             <TextField
@@ -263,7 +264,6 @@ export const InformacionPlantillasPersonas: React.FC = () => {
               value={cod_tipo_acceso}
             />
           </Grid>
-
       
           <Grid item xs={12} sm={4}>
             <TextField
