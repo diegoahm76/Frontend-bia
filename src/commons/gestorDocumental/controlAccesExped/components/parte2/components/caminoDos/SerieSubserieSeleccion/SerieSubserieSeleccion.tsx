@@ -3,14 +3,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
 import { useContext, type FC } from 'react';
-import { stylesGrid } from '../../../../../utils/styles';
 import Select from 'react-select';
 import { Controller } from 'react-hook-form';
-import { usePSD } from '../../../../../hook/usePSD';
+// import { usePSD } from '../../../../../hook/usePSD';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
-import {
+import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
+/* import {
   setCurrentSerieSubserie,
   set_permisos_unidades_actuales_action,
   set_permisos_unidades_actuales_externas_action,
@@ -22,7 +21,7 @@ import {
   GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE,
   GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE
 } from '../../../../../toolkit/thunks/psdThunks';
-
+*/
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -32,16 +31,16 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   );
 
   // ? context necesarios
-  const { loadingSeriesSubseries, setLoadingRestricciones } =
-    useContext(ModalContextPSD);
+  /* const { loadingSeriesSubseries, setLoadingRestricciones } =
+    useContext(ModalContextPSD); */
 
   //* usePSD
-  const { seleccionar_serie_subserie_control } = usePSD();
+  // const { seleccionar_serie_subserie_control } = usePSD();
 
   //! se debe realizar la validación, si no hay series que mostrar el respecivo elemento no debe aparecer en la pantalla
 
-  if (!current_unidad_organizacional) return <></>;
-
+  // if (!current_unidad_organizacional) return <></>;
+/*
   if (loadingSeriesSubseries) {
     return (
       <div
@@ -53,7 +52,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
         <Loader altura={50} />
       </div>
     );
-  }
+  } */
 
   return (
     <>
