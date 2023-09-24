@@ -11,12 +11,13 @@ import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
+import { setCurrentSerieSubserie } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 
 export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ! states from redux
-  const { currentUnidadOrganizacional } = useAppSelector(
+  const { currentUnidadOrganizacional, seriesSubseriesList } = useAppSelector(
     (state) => state.ctrlAccesoExpSlice
   );
 
@@ -72,29 +73,16 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                 value={value}
                 onChange={(selectedOption) => {
                   //* se debe modificar el nombre del estado, ya que se debe almacenar la series o subserie que se haya seleccionado
-                  // dispatch(setCurrentSerieSubserie(selectedOption.item));
-                /*  void get_restricciones_series_documentales(
-                    selectedOption.item.id_cat_serie_und,
-                    setLoadingRestricciones
-                  ).then((_res) => {
-                    dispatch(
-                      set_restricciones_para_todas_las_unidades_organizacionales_action(
-                        _res.arrayRestriccionesParaTodasLasUnidades
-                      )
-                    );
-                    dispatch(
-                      set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(
-                        _res.arrayRestriccionesOtros
-                      )
-                    );
-                  });
-*/
+                  console.log(selectedOption);
+                  dispatch(setCurrentSerieSubserie(selectedOption?.item));
+ 
+
+                  // ? se debe entrar a realizar la validación sobre si mostrar las autorizaciones generales o si por el contrario no se debe mostrar dependiendo si el servicio de control de acceso de expedientes trae datos o no!
 
                   onChange(selectedOption);
                 }}
                 options={
-                  []
-                 /* [...listSeriesSubseries] // la idea va a ser reemplazarlos por las series - subseries asociadas a la unidad organizacional del ccd
+                 [...seriesSubseriesList]
                     .sort((a, b) =>
                       a.nombre_serie.localeCompare(b.nombre_serie)
                     )
@@ -106,7 +94,7 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                       }  - ${
                         item?.nombre_subserie ? item?.nombre_subserie : ''
                       } `
-                    })) as any */
+                    })) as any 
                 }
                 placeholder="Seleccionar"
               />

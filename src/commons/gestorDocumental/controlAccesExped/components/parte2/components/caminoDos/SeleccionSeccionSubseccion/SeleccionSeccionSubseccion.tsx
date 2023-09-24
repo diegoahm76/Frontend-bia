@@ -11,16 +11,18 @@ import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { useControlClasificacionExp } from '../../../../../hook/useControlClasificacionExp';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
-import { setCurrentUnidadOrganizacional } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { setCurrentUnidadOrganizacional, setSeriesSubseriesList } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { getSeriesSubseries } from '../../../../../toolkit/thunks/serieSubserieThunks';
 
 export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* get states from the redux store
-  const { moodConfig, unidadesOrganizacionales } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { moodConfig, unidadesOrganizacionales, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   // ? context necesarios
-  const { isLoadingSeccionSub } = useContext(ModalAndLoadingContext);
+  const { isLoadingSeccionSub,
+    handleSerieSubserie, } = useContext(ModalAndLoadingContext);
   // * use control clasificacion exp
   const { seleccionar_serie_subserie_control } = useControlClasificacionExp();
 
@@ -68,10 +70,17 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
                 value={value}
                 onChange={(selectedOption) => {
                   dispatch(setCurrentUnidadOrganizacional(selectedOption?.item));
+
                   // ! se deberán traer las series y subseries asociadas a la unidad organizacional seleccionada y tamnbién se debe seleccionar la unidad organizacional current
-
-
-              /*    dispatch(setListaSeriesSubseries([]));
+                  void getSeriesSubseries({
+                    idUnidadOrganizacional: selectedOption?.item?.id_unidad_organizacional,
+                    idCcd: currentCcdCtrlAccesoExp?.id_ccd,
+                    setLoadingSeriesSubseries: handleSerieSubserie
+                  }).then((_res) => {
+                    dispatch(setSeriesSubseriesList(_res));
+                  });
+              /*
+              dispatch(setListaSeriesSubseries([]));
                   dispatch(setCurrentSerieSubserie(null));
 
                   dispatch(set_restricciones_para_todas_las_unidades_organizacionales_action(null));
@@ -79,21 +88,7 @@ export const SeleccionSeccionSubseccion: FC<any> = (): JSX.Element | null => {
                   dispatch(set_permisos_unidades_actuales_action([]));
                   dispatch(set_permisos_unidades_actuales_externas_action([]));
 
-
-                  dispatch(
-                    set_current_unidad_organizacional_action(
-                      selectedOption?.item
-                    )
-                  );
-
-                  void get_series_documentales_unidad_organizacional_psd(
-                    selectedOption?.item?.id_unidad_organizacional,
-                    ccd_current_busqueda?.id_ccd,
-                    setloadingSeriesSubseries
-                  ).then((res) => {
-                    console.log(res);
-                    dispatch(setListaSeriesSubseries(res));
-                  }); */
+                   */
 
                   //* tambien debo seleccionar alguna sección o subsección (unidad organizacional) con la que se va a trabajar, esta es consecuencia servirá para mostrar el respectivo select de las series - subseries necesarias
                   onChange(selectedOption);

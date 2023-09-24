@@ -14,6 +14,9 @@ export interface InitialState {
   unidadesOrganizacionales: any[];
   currentUnidadOrganizacional: any | null;
 
+  seriesSubseriesList: any[];
+  currentSerieSubserie: any | null;
+
   moodConfig: any;
 
   tipoDeClasificacion: any;

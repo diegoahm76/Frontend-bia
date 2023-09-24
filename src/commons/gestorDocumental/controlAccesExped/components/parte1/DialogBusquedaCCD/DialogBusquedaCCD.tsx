@@ -71,21 +71,9 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
     {
-      headerName: 'Usado',
-      field: 'usado',
-      width: 80,
-      renderCell: (params: { row: { usado: boolean } }) => {
-        return params.row.usado ? (
-          <Chip size="small" label="SI" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="NO" color="info" variant="outlined" />
-        );
-      },
-    },
-    {
       headerName: 'Actual',
       field: 'is_actual',
-      width: 80,
+      width: 60,
       renderCell: (params: { row: { actual: boolean } }) => {
         return params.row.actual ? (
           <Chip size="small" label="Si" color="info" variant="outlined" />
@@ -97,10 +85,10 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
     {
       headerName: 'Fecha terminado',
       field: 'fecha_terminado',
-      width: 150,
+      width: 120,
       renderCell: (params: { row: { fecha_terminado: string } }) => {
         const date = new Date(params.row.fecha_terminado);
-        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        return <Chip size="medium" label={`${date.toLocaleDateString()}`} color="info" variant="outlined" />;
       },
     },
     {
@@ -155,7 +143,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth="sm"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         handleSeleccionCCD_PSD(false);

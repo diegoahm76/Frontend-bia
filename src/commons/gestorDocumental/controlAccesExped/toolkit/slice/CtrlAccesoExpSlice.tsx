@@ -8,6 +8,9 @@ const initialState: InitialState = {
     // ! --- unidades organizacionales ---
     unidadesOrganizacionales: [],
     currentUnidadOrganizacional: null,
+    //! series and subseries
+    seriesSubseriesList: [],
+    currentSerieSubserie: null,
     //! modo de configuracion, parte inicial del modulo
     moodConfig: null,
     // ? se configura el tipo de clasificacion (publico, reservada, clasificado)
@@ -35,6 +38,14 @@ export const ctrlAccesoExpSlice = createSlice({
       state.currentUnidadOrganizacional = action.payload as any;
     },
 
+    // ? SERIES AND SUBSERIES ACTIONS
+    setSeriesSubseriesList: (state, action: PayloadAction<any[]>): any => {
+      state.seriesSubseriesList = action.payload as any;
+    },
+    setCurrentSerieSubserie: (state, action: PayloadAction<any>): any => {
+      state.currentSerieSubserie = action.payload as any;
+    },
+
     //! modo configuración, parte inicial de decisión del módulo
     set_mood_module : (state, action: PayloadAction<any>): any => {
       state.moodConfig = action.payload as any;
@@ -49,10 +60,12 @@ setTipoDeClasificacion: (state, action: PayloadAction<any>): any => {
 
     // ? ---- RESET ALL THE STATES IN THIS SLICE -----
     resetStatesCtrlAccesoExp: (state) => {
-      state.ccdsBusquedaCtrlAccesoExp = [];
+       state.ccdsBusquedaCtrlAccesoExp = [];
       state.currentCcdCtrlAccesoExp = null;
       state.unidadesOrganizacionales = [];
       state.currentUnidadOrganizacional = null;
+      state.seriesSubseriesList = [];
+      state.currentSerieSubserie = null;
       state.moodConfig = null;
       state.tipoDeClasificacion = null;
       // y los que se vayan añadiendo ...
@@ -68,6 +81,10 @@ export const {
   // ! ACCIONES SOBRE LAS UNIDADES ORGANIZACIONALES ---
   setUnidadesOrganizacionales,
   setCurrentUnidadOrganizacional,
+
+  // ! ACCIONES SOBRE LAS SERIES Y SUBSERIES ---
+  setSeriesSubseriesList,
+  setCurrentSerieSubserie,
 
   // ? configuracion inicial del módulo que permite tomar decisión sobre que se va a realizar dentro del módulo respectivamente
   set_mood_module,

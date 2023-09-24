@@ -14,15 +14,11 @@ export const Clasificacion = (): JSX.Element | null => {
   //*dispatch declarations
     const dispatch = useAppDispatch();
 
-    //! necesary states for the component
- /* const [selectConfig, setselectConfig] = useState<null | {
-    value: string;
-    label: string;
-  }>(null)
-*/
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
     dispatch(setTipoDeClasificacion(selectedOption));
+
+    //* se debe realizar la petición al servicio de control de acceso de expedientes
   };
 
   if(moodConfig?.value !== 1) return null;
@@ -40,11 +36,6 @@ export const Clasificacion = (): JSX.Element | null => {
         zIndex: 5
       }}
     >
-   {/*   <Controller
-        name="id_unidad_organizacional"
-        control={control_seleccionar_seccion_control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value }, fieldState: { error } }) => ( */}
           <div>
             <Select
               value={tipoDeClasificacion}

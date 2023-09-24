@@ -4,7 +4,7 @@ import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { Grid } from '@mui/material';
 import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { setCurrentUnidadOrganizacional, setUnidadesOrganizacionales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { setCurrentSerieSubserie, setCurrentUnidadOrganizacional, setSeriesSubseriesList, setUnidadesOrganizacionales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { optionsSelectConfiguracion } from '../utils/choices';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { getUnidadesOrganizacionalesSeccionSubseccion } from '../../../../../toolkit/thunks/unidadesOrgnizacionalesThunks';
@@ -29,6 +29,8 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
       console.log('getting directly control de acceso de expedientes')
       dispatch(setUnidadesOrganizacionales([]));
       dispatch(setCurrentUnidadOrganizacional(null));
+      dispatch(setSeriesSubseriesList([]));
+      dispatch(setCurrentSerieSubserie(null));
     }
 
     if(selectedOption?.value === 2){
@@ -38,9 +40,8 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
         idOrganigrama: currentCcdCtrlAccesoExp.id_organigrama,
         setLoadingUnidadesOrg: handleModalSecSub,
       }
-      ).then((resUnidadesOrganizacionales: any) => {
-        console.log(resUnidadesOrganizacionales)
-        dispatch(setUnidadesOrganizacionales(resUnidadesOrganizacionales));
+      ).then((_resUnidadesOrganizacionales: any) => {
+        dispatch(setUnidadesOrganizacionales(_resUnidadesOrganizacionales));
       })
     }
   };
