@@ -5,14 +5,19 @@ import { useContext, type FC } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { stylesGrid } from '../../../../../../../../permisosSeriesDoc/utils/styles';
 import { ModalContextPSD } from '../../../../../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { functionGetCcdHomologacionSeries } from '../../../../../toolkit/thunks/ccdOrganigrama.service';
+import { useAppSelector } from '../../../../../../../../../../hooks';
 // import { useAppSelector } from '../../../../../../../../../../hooks';
 
-export const VistaCcd: FC<any> = (): JSX.Element => {
+export const VistaCcd: FC<any> = (params:any): JSX.Element => {
+  const {
+    setccdList,
+  } = params
   // ! states from redux
- // const { ccd_current_busqueda } = useAppSelector((state) => state.PsdSlice);
+ const { ccdOrganigramaCurrentBusqueda } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? context necesarios
-  const { handleSeleccionCCD_PSD } = useContext(ModalContextPSD);
+  const { handleSeleccionCCD_PSD, setLoadingButtonPSD: setLoadingRequest, } = useContext(ModalContextPSD);
 
   return (
     <>
@@ -23,7 +28,7 @@ export const VistaCcd: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={/* ccd_current_busqueda?.nombre || */ 'Nombre ccd seleccionado'}
+          value={ccdOrganigramaCurrentBusqueda?.nombre ?? 'CCD'}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -34,7 +39,7 @@ export const VistaCcd: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={/* ccd_current_busqueda?.version || */ 'versión del ccd seleccionado'}
+          value={ccdOrganigramaCurrentBusqueda?.version || 'VERSIÓN'}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -45,6 +50,9 @@ export const VistaCcd: FC<any> = (): JSX.Element => {
           startIcon={<SearchIcon />}
           onClick={() => {
             handleSeleccionCCD_PSD(true);
+            void functionGetCcdHomologacionSeries(setLoadingRequest).then((data: any) => {
+              setccdList(data)
+            })
           }}
         >
           BUSCAR

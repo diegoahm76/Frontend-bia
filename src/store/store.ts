@@ -49,6 +49,7 @@ import { alerta_slice } from '../commons/recaudo/alertas/store/slice/indexAlerta
 import { PsdSlice } from '../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice';
 import { expedientes_slice } from "../commons/gestorDocumental/Expedientes/store/slice/indexExpedientes";
 import { ctrlAccesoExpSlice } from "../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice";
+import { HomologacionesSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/homologacionDeSeccionesPersistentes/toolkit/slice/HomologacionesSeriesSlice";
 const persist_config = {
   key: "macarenia_app",
   storage,
@@ -116,6 +117,9 @@ const app_reducers = combineReducers({
   // ! control acceso expedientes
   ctrlAccesoExpSlice: ctrlAccesoExpSlice.reducer,
   // ! control acceso expedientes
+  // ? homologación de series del ccd
+  HomologacionesSlice: HomologacionesSlice.reducer,
+  // ? homologación de series del ccd
   expedientes: expedientes_slice.reducer,
 });
 

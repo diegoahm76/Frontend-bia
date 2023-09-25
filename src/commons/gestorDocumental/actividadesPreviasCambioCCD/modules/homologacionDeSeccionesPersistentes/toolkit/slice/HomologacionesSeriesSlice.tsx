@@ -16,14 +16,17 @@ export const HomologacionesSlice = createSlice({
       state.ccdOrganigramaCurrentBusqueda = action.payload;
     },
 
+    // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     reset_states: (state) => {
       state.ccdOrganigramaCurrentBusqueda = [];
-      // state.ccd_current_busqueda = null;
     }
   }
 });
 
 export const {
   // ! acciones sobre los ccd's y organigramas
-  setCcdOrganigramaCurrent
+  setCcdOrganigramaCurrent,
+
+
+  // ? reset states
 } = HomologacionesSlice.actions;
