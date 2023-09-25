@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import { ResultadosBusqueda } from "./ResultadosBusqueda";
-import { obtener_bodegas, obtener_categorias, obtener_estados, obtener_inventario_af } from "../thunks/ControlDeInventarios";
+import { obtener_bien_especifico_af, obtener_bodegas, obtener_categorias, obtener_estados, obtener_inventario_af, obtener_inventario_categoria } from "../thunks/ControlDeInventarios";
 import dayjs from "dayjs";
 import BuscarBien from "./BuscarBien";
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -70,6 +70,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
 
   const cambio_tipo_consulta: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_tipo_consulta(e.target.value);
+    set_resultado_busqueda([]);
   }
   const cambio_tipo_bien: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_tipo_bien(e.target.value);
@@ -91,22 +92,41 @@ export const ControlDeInventariosScreen: React.FC = () => {
     set_seleccion_categoria(e.target.value);
   }
 
-  useEffect(() => {
-    // set_seleccion_bien_id(seleccion_bien.id_bien);
-  }, [seleccion_bien]);
-
   const salir_entrada: () => void = () => {
     navigate('/home');
   }
 
   const busqueda_control: () => void = () => {
-    dispatch(obtener_inventario_af({ seleccion_bodega, seleccion_estado, seleccion_ubicacion, seleccion_propiedad, seleccion_categoria, bienes_baja, bienes_salida })).then((response: any) => {
-      response.data.forEach((data: any) => {
-        data.fecha_ingreso = dayjs(data.fecha_ingreso).format('DD/MM/YYYY');
-        data.fecha_ultimo_movimiento = dayjs(data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
-      });
-      set_resultado_busqueda(response.data);
-    })
+    switch (seleccion_tipo_consulta) {
+      case 'TI':
+        dispatch(obtener_inventario_af({ seleccion_bodega, seleccion_estado, seleccion_ubicacion, seleccion_propiedad, seleccion_categoria, bienes_baja, bienes_salida })).then((response: any) => {
+          response.data.forEach((data: any) => {
+            data.fecha_ingreso = dayjs(data.fecha_ingreso).format('DD/MM/YYYY');
+            data.fecha_ultimo_movimiento = dayjs(data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
+          });
+          set_resultado_busqueda(response.data);
+        });
+        break;
+      case 'BE':
+        dispatch(obtener_bien_especifico_af(seleccion_bien.id_bien)).then((response: any) => {
+          response.data.fecha_ingreso = dayjs(response.data.fecha_ingreso).format('DD/MM/YYYY');
+          response.data.fecha_ultimo_movimiento = dayjs(response.data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
+          set_resultado_busqueda([response.data]);
+        });
+        break;
+      case 'IPC':
+        dispatch(obtener_inventario_categoria({ seleccion_bodega, seleccion_categoria})).then((response: any) => {
+          response.data.forEach((data: any) => {
+            data.fecha_ingreso = dayjs(data.fecha_ingreso).format('DD/MM/YYYY');
+            data.fecha_ultimo_movimiento = dayjs(data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
+          });
+          set_resultado_busqueda(response.data);
+        });
+        break;
+    
+      default:
+        break;
+    }
   }
 
   return (
@@ -283,21 +303,6 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   <span style={{ margin: '7px' }}>Incluir a los que seles dión salida</span><Switch color="primary" onChange={() => { set_bienes_salida(!bienes_salida); }} />
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12}>
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  spacing={2}>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    startIcon={<SearchIcon />}
-                    onClick={busqueda_control}
-                  >
-                    Buscar
-                  </Button>
-                </Stack>
-              </Grid>
             </Grid>}
             {seleccion_tipo_consulta === 'BE' && <Grid item container spacing={2}>
               <Grid item xs={12} sm={12}>
@@ -308,7 +313,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   type={'text'}
                   size="small"
                   fullWidth
-                  value={seleccion_bien.nombre ?? ""}
+                  value={seleccion_bien.nombre_bien ?? ""}
                   InputProps={{
                     readOnly: true
                   }}
@@ -339,7 +344,44 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   </Grid>
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12}>
+            </Grid>}
+            {seleccion_tipo_consulta === 'IPC' && <Grid item container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <FormControl size='small' fullWidth>
+                      <InputLabel>Categoría</InputLabel>
+                      <Select
+                        value={seleccion_categoria}
+                        label="Categoría"
+                        onChange={cambio_categoria}
+                      >
+                        <MenuItem value={"Todos"}>Todos</MenuItem>
+                        {lt_categorias.map((lt: any) => (
+                          <MenuItem key={lt[0]} value={lt[0]}>
+                            {lt[1]}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl size='small' fullWidth>
+                  <InputLabel>Bodega</InputLabel>
+                  <Select
+                    value={seleccion_bodega}
+                    label="Bodega"
+                    onChange={cambio_bodega}
+                  >
+                    <MenuItem value={"Todos"}>Todos</MenuItem>
+                    {lt_bodegas.map((lt: any) => (
+                      <MenuItem key={lt.id_bodega} value={lt.id_bodega}>
+                        {lt.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>}
+            <Grid item xs={12} sm={12} sx={{ p: '10px'}}>
                 <Stack
                   direction="row"
                   justifyContent="center"
@@ -354,7 +396,6 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   </Button>
                 </Stack>
               </Grid>
-            </Grid>}
           </Box>
         </Grid>}
       </Grid>}
@@ -370,7 +411,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} titulo={"Activos fijos"}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
     </>

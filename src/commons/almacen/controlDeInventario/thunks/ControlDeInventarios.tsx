@@ -79,3 +79,27 @@ export const obtener_bien_especifico_af: any = (seleccion_bien: string) => {
     }
   };
 };
+// Obtiene inventario según categoría
+export const obtener_inventario_categoria: any = (filtros: {seleccion_bodega: string, seleccion_categoria: string}) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/inventario/control/activos-fijos/get-by-categoria/?id_bodega=${filtros.seleccion_bodega === 'Todos' ? '': filtros.seleccion_bodega}&cod_tipo_activo=${filtros.seleccion_categoria === 'Todos' ? '': filtros.seleccion_categoria}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtiene bienes
+export const obtener_bienes: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/inventario/control/activos-fijos/get-bienes/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
