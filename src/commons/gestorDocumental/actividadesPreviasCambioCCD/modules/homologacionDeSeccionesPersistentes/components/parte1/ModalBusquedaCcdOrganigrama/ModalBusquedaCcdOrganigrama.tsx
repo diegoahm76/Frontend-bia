@@ -26,15 +26,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 
 //* hooks
-import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
 // import { usePSD } from '../../../hook/usePSD';
 
 //* components
-import { Title } from '../../../../../../components';
-import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
-import { ModalContextPSD } from '../../../context/ModalContextPSD';
-import { columnnsSelCCDPSD } from './columns/columnsSelCCDPSD';
+
 
 //* icons
 
@@ -42,6 +37,12 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { columnnsSelCCDPSD } from '../../../../../../permisosSeriesDoc/components/parte1/ModalSeleccionCCDPSD/columns/columnsSelCCDPSD';
+import { Title } from '../../../../../../../../components';
+import { download_xls } from '../../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../../documentos-descargar/PDF_descargar';
+import { useAppDispatch } from '../../../../../../../../hooks';
 
 //* services (redux (slice and thunks))
 /* import {
@@ -196,7 +197,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+            {/*  <Grid item xs={12} sm={4}>
                 <Controller
                   name="nombre"
                   control={control_search_ccd_psd}
@@ -222,8 +223,8 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4}>
+              </Grid> */}
+             {/* <Grid item xs={12} sm={4}>
                 <Controller
                   name="version"
                   control={control_search_ccd_psd}
@@ -250,7 +251,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid>*/}
               <Grid item xs={12} sm={4}>
                 <Stack direction="row" spacing={2}>
                   <LoadingButton
@@ -270,9 +271,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
         <ButtonGroup
           style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
         >
-          {download_xls({ nurseries: ccdsBusqueda, columns: columns_ccds })}
+          {download_xls({ nurseries: [], columns: columns_ccds })}
           {download_pdf({
-            nurseries: ccdsBusqueda,
+            nurseries: [],
             columns: columns_ccds,
             title: 'Selección de CCD persmisos sobre series documentales'
           })}
@@ -280,7 +281,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
         <DataGrid
           density="compact"
           autoHeight
-          rows={ccdsBusqueda ?? []}
+          rows={[] ?? []}
           columns={columns_ccds ?? []}
           pageSize={10}
           rowsPerPageOptions={[10]}
@@ -299,7 +300,8 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             variant="outlined"
             color="primary"
             onClick={() => {
-              reset_search_ccd_psd({ nombre: '', version: '' });
+              console.log('limpiando campos');
+              // reset_search_ccd_psd({ nombre: '', version: '' });
             }}
             startIcon={<CleanIcon />}
           >
@@ -311,7 +313,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             onClick={() => {
               console.log('cerrando modal');
               handleSeleccionCCD_PSD(false);
-              reset_search_ccd_psd({ nombre: '', version: '' });
+              // reset_search_ccd_psd({ nombre: '', version: '' });
             }}
             startIcon={<CloseIcon />}
           >
