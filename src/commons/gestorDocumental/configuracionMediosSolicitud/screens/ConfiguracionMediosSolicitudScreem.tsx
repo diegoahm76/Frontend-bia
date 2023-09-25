@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { MostrarModalBuscarMediosSolicitud } from '../components/ModalBusquedaMediosSolicitud/ModalBusquedaMedios';
 import { api } from '../../../../api/axios';
-import { BasicRating } from '../utils/checkboxMediosConfiguracion';
-import { control_error } from '../../../conservacion/gestorVivero/store/thunks/gestorViveroThunks';
+import { control_error, control_success } from '../../../conservacion/gestorVivero/store/thunks/gestorViveroThunks';
 import { useNavigate } from 'react-router-dom';
 import { confirmarAccion } from '../../deposito/utils/function';
+import InfoIcon from '@mui/icons-material/Info';
+
 
 export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
   const [checkedOtros, set_checkedOtros] = useState<boolean>(false);
   const [activo, set_activo] = useState(false);
   const [dataChoise, setDataChoise] = useState(null);
-  console.log(dataChoise);
   const [inputValue, setInputValue] = useState('');
+
 
   const fetch_crear_medio_solicitud = async () => {
     try {
@@ -38,21 +39,21 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
       const res = await api.post(url, postData);
       const numeroConsulta = res.data.data;
       setDataChoise(numeroConsulta);
+      control_success("se creo correctamente");
     } catch (error: any) {
       console.error(error);
-      control_error('No se ha seleccionado una encuesta para eliminar');
+      control_error('No se ha creado el medio de solicitud');
     }
   };
 
-  const limpiar_datos=()=>{
+  const limpiar_datos = () => {
     setChecked(false);
     setInputValue("");
     set_checkedOtros(false);
-    set_checkedOtros(false);
     set_activo(false);
+    set_checkedtramites(false);
 
-  }
-
+  };
 
   const handleInputChange = (e: any): void => {
     setInputValue(e.target.value);
@@ -61,10 +62,7 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
 
 
 
-
   return (
-
-
 
     <Grid
       container
@@ -80,9 +78,6 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
       <Grid item xs={12}>
         <Title title="Tipos de Medios de Solicitud" />
       </Grid>
-
-
-
 
       <Grid item container spacing={1} style={{ margin: 1 }}>
         <Grid item xs={12} sm={4} md={3}>
@@ -103,53 +98,143 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
 
 
 
-      <Grid item xs={12} sm={6} md={3} style={{marginTop:10}}>
+      <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
         <label htmlFor="ingredient4" className="ml-2">
           Aplica para PQRSDF :
         </label>
       </Grid>
-      <Grid item xs={12} sm={4} md={3}   style={{marginTop:10}}>
-        <BasicRating
-          isChecked={checked}
-          setIsChecked={setChecked}
-        />
-
+      <Grid item xs={12} sm={4} md={3} style={{ marginTop: 10 }}>
+        <Grid
+          container
+          style={{ width: 70 }}
+        >
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={(e) => setChecked(e.target.checked)}
+          /> {checked ? (
+            <Typography variant="body2">
+              Si
+              <Tooltip
+                title="Formato tipo de medio activo"
+                placement="right"
+              >
+                <InfoIcon
+                  sx={{ width: '1.2rem', height: '1.2rem', ml: '0.5rem', color: 'green' }}
+                />
+              </Tooltip>
+            </Typography>
+          ) : (
+            <Typography variant="body2">
+              No
+              <Tooltip
+                title="Formato tipo de medio inactivo"
+                placement="right"
+              >
+                <InfoIcon
+                  sx={{ width: '1.2rem', height: '1.2rem', ml: '0.5rem', color: 'red' }}
+                />
+              </Tooltip>
+            </Typography>
+          )}
+        </Grid>
       </Grid>
 
 
 
-      <Grid item xs={12} sm={6} md={3}   style={{marginTop:10}}>
+      <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
         <label htmlFor="ingredient4" className="ml-2">
           Aplica para Tramites :
         </label>
       </Grid>
-      <Grid item xs={12} sm={4} md={3}  style={{marginTop:10}}>
-        <BasicRating
-          isChecked={checkedtramites}
-          setIsChecked={set_checkedtramites}
-        />
+      <Grid item xs={12} sm={4} md={3} style={{ marginTop: 10 }}>
+        <Grid
+          container
+          style={{ width: 70 }}
+        >
+          <input
+            type="checkbox"
+            checked={checkedtramites}
+            onChange={(e) => set_checkedtramites(e.target.checked)}
+          /> {checkedtramites ? (
+            <Typography variant="body2">
+              Si
+              <Tooltip
+                title="Formato tipo de medio activo"
+                placement="right"
+              >
+                <InfoIcon
+                  sx={{ width: '1.2rem', height: '1.2rem', ml: '0.5rem', color: 'green' }}
+                />
+              </Tooltip>
+            </Typography>
+          ) : (
+            <Typography variant="body2">
+              No
+              <Tooltip
+                title="Formato tipo de medio inactivo"
+                placement="right"
+              >
+                <InfoIcon
+                  sx={{ width: '1.2rem', height: '1.2rem', ml: '0.5rem', color: 'red' }}
+                />
+              </Tooltip>
+            </Typography>
+          )}
+        </Grid>
 
       </Grid>
 
 
 
-      <Grid item xs={12} sm={6} md={3}  style={{marginTop:10}}>
+      <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
         <label htmlFor="ingredient4" className="ml-2">
           Aplica para Otros:
         </label>
       </Grid>
-      <Grid item xs={12} sm={4} md={3}  style={{marginTop:10}}>
-        <BasicRating
-          isChecked={checkedOtros}
-          setIsChecked={set_checkedOtros}
-        />
+      <Grid item xs={12} sm={4} md={3} style={{ marginTop: 10 }}>
 
+
+        <Grid
+          container
+          style={{ width: 70 }}
+        >
+          <input
+            type="checkbox"
+            checked={checkedOtros}
+            onChange={(e) => set_checkedOtros(e.target.checked)}
+          /> {checkedOtros ? (
+            <Typography variant="body2">
+              Si
+              <Tooltip
+                title="Formato tipo de medio activo"
+                placement="right"
+              >
+                <InfoIcon
+                  sx={{ width: '1.2rem', height: '1.2rem', ml: '0.5rem', color: 'green' }}
+                />
+              </Tooltip>
+            </Typography>
+          ) : (
+            <Typography variant="body2">
+              No
+              <Tooltip
+                title="Formato tipo de medio inactivo"
+                placement="right"
+              >
+                <InfoIcon
+                  sx={{ width: '1.2rem', height: '1.2rem', ml: '0.5rem', color: 'red' }}
+                />
+              </Tooltip>
+            </Typography>
+          )}
+        </Grid>
       </Grid>
 
 
 
 
-      <Grid item xs={6} sm={6}  style={{marginTop:10}}>
+      <Grid item xs={6} sm={6} style={{ marginTop: 10 }}>
         <FormControl fullWidth size="small" style={{ width: "70%" }} >
           <InputLabel id="activo">activo</InputLabel>
           <Select
@@ -173,12 +258,12 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
 
       <Grid container spacing={2} justifyContent="flex-end" style={{ marginTop: 20 }}>
         <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-          <Button startIcon={<SaveIcon />}    onClick={() => {
-                            void confirmarAccion(
-                              fetch_crear_medio_solicitud,
-                                '¿Estás seguro de crear  este campo?'
-                            );
-                        }} color='success' fullWidth variant="contained">
+          <Button startIcon={<SaveIcon />} onClick={() => {
+            void confirmarAccion(
+              fetch_crear_medio_solicitud,
+              '¿Estás seguro de crear  este campo?'
+            );
+          }} color='success' fullWidth variant="contained">
             Guardar
           </Button>
         </Grid>
@@ -186,7 +271,7 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
           <MostrarModalBuscarMediosSolicitud />
         </Grid>
         <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-          <Button color='primary' variant="outlined" onClick={limpiar_datos}  fullWidth startIcon={<CleanIcon />}>
+          <Button color='primary' variant="outlined" onClick={limpiar_datos} fullWidth startIcon={<CleanIcon />}>
             Limpiar
           </Button>
         </Grid>

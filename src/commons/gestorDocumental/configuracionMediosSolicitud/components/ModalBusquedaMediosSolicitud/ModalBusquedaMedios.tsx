@@ -1,20 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import {
     Box,
     Button,
-
     FormControl,
-
-    FormControlLabel,
     Grid,
     InputLabel,
     MenuItem,
-    Radio,
     Select,
     TextField,
-    Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from '@mui/x-data-grid';
@@ -26,20 +21,49 @@ import { control_error, control_success } from '../../../../seguridad/components
 import { confirmarAccion } from '../../../deposito/utils/function';
 import { BasicRating } from '../../utils/checkboxMediosConfiguracion';
 import SearchIcon from '@mui/icons-material/Search';
+import { ModalBusquedaMediosSolicitudContext } from '../../context/pasarDatosEditar';
+import { MedioSolicitud } from '../../interfaces/inerfacesMediosSolicitud';
 
 
 export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
-    const [visible, setVisible] = useState<boolean>(false);
 
+
+    const { datos_Editar, set_datos_editar } = useContext(ModalBusquedaMediosSolicitudContext);
+    const nuevosDatos = [
+        { id: 1, nombre: "Ejemplo 1" },
+        { id: 2, nombre: "Ejemplo 2" },
+        { id: 3, nombre: "Ejemplo 3" },
+    ];
+
+  
+
+    const [visible, setVisible] = useState<boolean>(false);
     const [checked, setChecked] = useState(false);
     const [checkedtramites, set_checkedtramites] = useState(false);
     const [checkedOtros, set_checkedOtros] = useState<boolean>(false);
     const [activo, set_activo] = useState(false);
     const [inputValue, setInputValue] = useState('');
+    const [data_tabla, set_data_tabla] = useState<MedioSolicitud[]>([]);
+    const [filteredData, setFilteredData] = useState(data_tabla); // Inicialmente, mostrar todos los datos
+const [activador_busqueda,set_activador_busqueda]=useState(false);
+    const titulo = <Title title={`Busqueda`} />;
 
+    const footerContent = (
+        <div>
+            <Button
+                style={{ margin: 3 }}
+                variant="contained"
+                startIcon={<ClearIcon />}
+                color="error"
+                onClick={() => {
+                    setVisible(false);
+                }}
+            >
+                Salir
+            </Button>
+        </div>
+    );
 
-    const [data_tabla, set_data_tabla] = useState([]);
-    console.log(data_tabla);
     const fetch_get_tabla = async (): Promise<void> => {
         try {
             const url = `/gestor/pqr/tipos_pqr/buscar-medio-solicitud/`;
@@ -58,56 +82,30 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
         try {
             // Define la URL del servidor junto con el ID del registro que deseas eliminar
             const url = `/gestor/pqr/tipos_pqr/eliminar-medio-solicitud/${idRegistro}/`;
-
+    
             // Realiza una solicitud HTTP DELETE al servidor
             const response = await api.delete(url);
-
+    
             // Verifica si la eliminación se realizó con éxito
-
-
             control_success(`Se ha eliminado el campo ${idRegistro} con éxito`);
-
-
+    
             // Realiza una nueva consulta para actualizar la tabla después de la eliminación
-            await fetch_get_tabla();
+          
         } catch (error: any) {
             control_error(error.response.data.detail);
+        } finally {
+            // Estas acciones se ejecutarán al finalizar, ya sea después de un éxito o un error
+            fetch_get_tabla();
+          
         }
     };
+    
 
 
     const handleInputChange = (e: any): void => {
         setInputValue(e.target.value);
     };
-
-
-
-
-    useEffect(() => {
-        fetch_get_tabla().catch((error) => {
-            console.error(error);
-        });
-    }, []);
-
-    const footerContent = (
-        <div>
-            <Button
-                style={{ margin: 3 }}
-                variant="contained"
-                startIcon={<ClearIcon />}
-                color="error"
-                onClick={() => {
-                    setVisible(false);
-                }}
-            >
-                Salir
-            </Button>
-        </div>
-    );
-
-    const titulo = <Title title={`Busqueda`} />;
-
-
+  
 
     const columns = [
         {
@@ -186,6 +184,53 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
         },
 
     ];
+
+
+    const applyFilter = () => {
+        const filteredItems = data_tabla.filter((item) => {
+            // Aplicar filtro por nombre
+            const nombreMatch = item.nombre.toLowerCase().includes(inputValue.toLowerCase());
+
+            // Aplicar filtro por checkedtramites
+            const tramitesMatch = !checkedtramites || item.aplica_para_tramites;
+
+            //Aplica filtro para pqrs
+            const pqrsMatch = !checked || item.aplica_para_pqrsdf;
+            // Aplicar filtro por checkedOtros
+            const otrosMatch = !checkedOtros || item.aplica_para_otros;
+
+            // Aplicar filtro por activo
+            const activoMatch = !activo || item.activo;
+
+            // Combinar todas las condiciones
+            return nombreMatch && tramitesMatch && otrosMatch && activoMatch && pqrsMatch;
+        });
+
+        setFilteredData(filteredItems);
+    };
+
+
+    const handleAplicarFiltro = () => {
+        set_activador_busqueda(!activador_busqueda);
+        applyFilter();
+    };
+
+    useEffect(() => {
+        handleAplicarFiltro();
+      }, [data_tabla]);
+
+    useEffect(() => {
+        fetch_get_tabla().catch((error) => {
+          console.error(error);
+        });
+      }, []);
+
+
+    useEffect(() => {
+        fetch_get_tabla().catch((error) => {
+          console.error(error);
+        });
+      }, [activador_busqueda]);
 
     return (
         <div className="card flex justify-content-center">
@@ -317,6 +362,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
                             variant='contained'
                             startIcon={<SearchIcon />}
                             fullWidth
+                            onClick={handleAplicarFiltro}
 
                             style={{ width: '80%', margin: 5 }}
                         >
@@ -335,11 +381,12 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
                                 density="compact"
                                 autoHeight
                                 columns={columns}
-                                rows={data_tabla}
-                                pageSize={10}
+                                rows={filteredData}
+                                pageSize={15}
                                 rowsPerPageOptions={[10]}
                                 getRowId={(row) => uuidv4()}
                             />
+
                         </Box>
                     </Grid>
                 </Grid>
