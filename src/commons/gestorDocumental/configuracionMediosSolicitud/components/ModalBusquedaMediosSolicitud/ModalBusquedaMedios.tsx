@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
+import EditIcon from '@mui/icons-material/Edit';
 import {
     Box,
     Button,
     FormControl,
     Grid,
+    IconButton,
     InputLabel,
     MenuItem,
     Select,
@@ -28,12 +30,7 @@ import { MedioSolicitud } from '../../interfaces/inerfacesMediosSolicitud';
 export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
 
-    const { datos_Editar, set_datos_editar } = useContext(ModalBusquedaMediosSolicitudContext);
-    const nuevosDatos = [
-        { id: 1, nombre: "Ejemplo 1" },
-        { id: 2, nombre: "Ejemplo 2" },
-        { id: 3, nombre: "Ejemplo 3" },
-    ];
+    const { set_datos_editar } = useContext(ModalBusquedaMediosSolicitudContext);
 
   
 
@@ -44,8 +41,8 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
     const [activo, set_activo] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [data_tabla, set_data_tabla] = useState<MedioSolicitud[]>([]);
-    const [filteredData, setFilteredData] = useState(data_tabla); // Inicialmente, mostrar todos los datos
-const [activador_busqueda,set_activador_busqueda]=useState(false);
+    const [filteredData, setFilteredData] = useState<MedioSolicitud[]>([]); // Inicialmente, mostrar todos los datos
+    const [activador_busqueda, set_activador_busqueda] = useState(false);
     const titulo = <Title title={`Busqueda`} />;
 
     const footerContent = (
@@ -69,10 +66,19 @@ const [activador_busqueda,set_activador_busqueda]=useState(false);
             const url = `/gestor/pqr/tipos_pqr/buscar-medio-solicitud/`;
             const res: any = await api.get(url);
             let numero_consulta: any = res.data.data;
-            set_data_tabla(numero_consulta);
-            console.log(numero_consulta);
+
+            if (numero_consulta.length > 0) {
+                set_data_tabla(numero_consulta);
+                return numero_consulta;
+            } else {
+                set_data_tabla([]);
+                return [] as any;
+            }
+
         } catch (error) {
             console.error(error);
+            set_data_tabla([]);
+            return [] as any;
         }
     };
 
@@ -80,32 +86,29 @@ const [activador_busqueda,set_activador_busqueda]=useState(false);
 
     const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
         try {
+
+            console.log(idRegistro)
             // Define la URL del servidor junto con el ID del registro que deseas eliminar
             const url = `/gestor/pqr/tipos_pqr/eliminar-medio-solicitud/${idRegistro}/`;
-    
+
             // Realiza una solicitud HTTP DELETE al servidor
-            const response = await api.delete(url);
-    
+            const { data } = await api.delete(url);
+
             // Verifica si la eliminación se realizó con éxito
-            control_success(`Se ha eliminado el campo ${idRegistro} con éxito`);
-    
+            control_success(data?.detail);
+
             // Realiza una nueva consulta para actualizar la tabla después de la eliminación
-          
+            return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-        } finally {
-            // Estas acciones se ejecutarán al finalizar, ya sea después de un éxito o un error
-            fetch_get_tabla();
-          
         }
     };
-    
-
 
     const handleInputChange = (e: any): void => {
         setInputValue(e.target.value);
     };
-  
+ 
+
 
     const columns = [
         {
@@ -161,24 +164,46 @@ const [activador_busqueda,set_activador_busqueda]=useState(false);
             sortable: false,
             renderCell: (params: any) => {
                 const idMedioSolicitud = params.row.id_medio_solicitud;
+                const valor_actualizar= params.row;
 
                 const handleDeleteClick = () => {
                     // Llama a la función de eliminación pasando el idMedioSolicitud como parámetro
-                    fetch_delete_registro(idMedioSolicitud);
+                    fetch_delete_registro(idMedioSolicitud).then(() => {
+                        fetch_get_tabla().then((data) => {
+                            applyFilter(data);
+                        })
+
+                    })
                 };
+                
 
                 return (
-                    <Button
+                    <>
+                        <IconButton
 
-                        onClick={() => {
-                            void confirmarAccion(
-                                handleDeleteClick,
-                                '¿Estás seguro de eliminar  este campo?'
-                            );
-                        }}
-                    >
-                        <DeleteIcon />
-                    </Button>
+                            onClick={() => {
+                                void confirmarAccion(
+                                    handleDeleteClick,
+                                    '¿Estás seguro de eliminar  este campo?'
+                                );
+                            }}
+                        >
+                            <DeleteIcon style={{ color: "red" }} />
+                        </IconButton>
+
+                        <IconButton
+                            color="primary"
+                            aria-label="Editar"
+                          
+                              onClick={() => {
+                                void confirmarAccion(
+                                   ()=> {set_datos_editar(valor_actualizar);setVisible(false)} ,
+                                    '¿Estás seguro de editar este campo?'
+                                );
+                            }}>
+                            <EditIcon />
+                        </IconButton>
+                    </>
                 );
             },
         },
@@ -186,8 +211,8 @@ const [activador_busqueda,set_activador_busqueda]=useState(false);
     ];
 
 
-    const applyFilter = () => {
-        const filteredItems = data_tabla.filter((item) => {
+    const applyFilter = (data: any = data_tabla) => {
+        const filteredItems = data.filter((item: any) => {
             // Aplicar filtro por nombre
             const nombreMatch = item.nombre.toLowerCase().includes(inputValue.toLowerCase());
 
@@ -209,28 +234,28 @@ const [activador_busqueda,set_activador_busqueda]=useState(false);
         setFilteredData(filteredItems);
     };
 
-
-    const handleAplicarFiltro = () => {
+    const handleAplicarFiltro = async () => {
         set_activador_busqueda(!activador_busqueda);
-        applyFilter();
+        fetch_get_tabla().then((data) => {
+            applyFilter(data);
+        })
+        // La acción que quieras realizar después de aplicar el filtro.
     };
 
-    useEffect(() => {
-        handleAplicarFiltro();
-      }, [data_tabla]);
-
-    useEffect(() => {
-        fetch_get_tabla().catch((error) => {
-          console.error(error);
-        });
-      }, []);
 
 
     useEffect(() => {
         fetch_get_tabla().catch((error) => {
-          console.error(error);
+            console.error(error);
         });
-      }, [activador_busqueda]);
+    }, []);
+
+
+    useEffect(() => {
+        fetch_get_tabla().catch((error) => {
+            console.error(error);
+        });
+    }, [activador_busqueda]);
 
     return (
         <div className="card flex justify-content-center">
@@ -368,8 +393,8 @@ const [activador_busqueda,set_activador_busqueda]=useState(false);
                         >
                             Buscar
                         </Button>
-                    </Grid>
-
+                    </Grid>   
+            
                     <Grid item xs={12}>
                         <Box
                             component="form"

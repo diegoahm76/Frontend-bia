@@ -4,13 +4,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import ClearIcon from '@mui/icons-material/Clear';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MostrarModalBuscarMediosSolicitud } from '../components/ModalBusquedaMediosSolicitud/ModalBusquedaMedios';
 import { api } from '../../../../api/axios';
 import { control_error, control_success } from '../../../conservacion/gestorVivero/store/thunks/gestorViveroThunks';
 import { useNavigate } from 'react-router-dom';
 import { confirmarAccion } from '../../deposito/utils/function';
 import InfoIcon from '@mui/icons-material/Info';
+import { ModalBusquedaMediosSolicitudContext } from '../context/pasarDatosEditar';
 
 
 export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
@@ -21,6 +22,8 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
   const [activo, set_activo] = useState(false);
   const [dataChoise, setDataChoise] = useState(null);
   const [inputValue, setInputValue] = useState('');
+
+  const { datos_Editar } = useContext(ModalBusquedaMediosSolicitudContext);
 
 
   const fetch_crear_medio_solicitud = async () => {
@@ -59,7 +62,26 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
     setInputValue(e.target.value);
   };
 
+/* const [form, setForm] = useState<any>({
+  nombre: '',
+  activo: '',
+})
+  const handleChange = (e: any) => {
+    setForm({
+      [e.target.name]: e.target.value,
+    })
+  }
+ */
 
+  useEffect(() => {
+    if (datos_Editar) {
+      setInputValue(datos_Editar.nombre)
+      set_checkedtramites(datos_Editar.aplica_para_tramites);
+      set_checkedOtros(datos_Editar.aplica_para_otros);
+      setChecked(datos_Editar.aplica_para_pqrsdf);
+      set_activo(datos_Editar.activo === true ? true : false);
+    }
+  }, [datos_Editar])
 
 
   return (
