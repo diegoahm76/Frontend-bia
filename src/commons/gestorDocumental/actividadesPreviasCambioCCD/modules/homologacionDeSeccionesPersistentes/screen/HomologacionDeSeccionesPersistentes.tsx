@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react'
-import { AccionesLoad } from '../components/parte3/screen/Acciones.load'
+import { AccionesLoad } from '../components/final/screen/Acciones.load'
 /**
  * Componente principal módulo de homologación de secciones persistentes
  * @returns JSX.Element,
