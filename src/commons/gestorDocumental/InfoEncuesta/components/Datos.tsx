@@ -26,10 +26,10 @@ export const Datos: React.FC = () => {
 
   // Columnas de la datagrid
   const columns = [
-    { field: 'pregunta_Nro', headerName: 'pregunta_Nro', width: 200, flex: 1, },
-    { field: 'texto_pregunta', headerName: 'texto_pregunta', width: 200, flex: 1, },
-    { field: 'opcion_respuesta', headerName: 'opcion_respuesta', width: 200, flex: 1, },
-    { field: 'cantidad_respuestas', headerName: 'cantidad_respuestas', width: 200, flex: 1, },
+    { field: 'pregunta_Nro', headerName: 'No. pregunta ', width: 200, flex: 1, },
+    { field: 'texto_pregunta', headerName: 'Texto de pregunta', width: 200, flex: 1, },
+    { field: 'opcion_respuesta', headerName: 'Opción respuesta', width: 200, flex: 1, },
+    { field: 'cantidad_respuestas', headerName: 'Cantidad respuestas', width: 200, flex: 1, },
 
   ];
 

@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import SaveIcon from '@mui/icons-material/Save';
-// import { Opcion_Genero } from "../interfaces/types";
 import { api, baseURL } from "../../../../api/axios";
 import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Paises, PaisesResponse } from "../interfaces/types";
 export interface Opcion_Genero {
@@ -143,7 +142,7 @@ export const Encuesta: React.FC = () => {
             >
 
 
-                <Title title="Encuesta satisfaccion al usuario" />
+                <Title title="Encuesta satisfacción al usuario" />
             </Grid>
             <Grid container
                 spacing={2} m={2} p={2}
@@ -189,7 +188,7 @@ export const Encuesta: React.FC = () => {
 
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
-                        <InputLabel  >sexo</InputLabel>
+                        <InputLabel  >Sexo</InputLabel>
                         <Select
 
                             required
@@ -203,7 +202,7 @@ export const Encuesta: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
-                        <InputLabel  >rango de edad </InputLabel>
+                        <InputLabel  >Rango de edad </InputLabel>
                         <Select
 
                             required
@@ -233,7 +232,7 @@ export const Encuesta: React.FC = () => {
                         // InputLabelProps={{
                         //     shrink: true,
                         // }}
-                        label="telefono  "
+                        label="Telefono  "
                         fullWidth
                         name="telefono  "
                     />
