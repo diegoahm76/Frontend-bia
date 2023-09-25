@@ -37,12 +37,12 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
-import { columnnsSelCCDPSD } from '../../../../../../permisosSeriesDoc/components/parte1/ModalSeleccionCCDPSD/columns/columnsSelCCDPSD';
-import { Title } from '../../../../../../../../components';
-import { download_xls } from '../../../../../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch } from '../../../../../../../../hooks';
+import { ModalContextPSD } from '../../../../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { columnnsSelCCDPSD } from '../../../../../../../permisosSeriesDoc/components/parte1/ModalSeleccionCCDPSD/columns/columnsSelCCDPSD';
+import { Title } from '../../../../../../../../../components';
+import { download_xls } from '../../../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../../../documentos-descargar/PDF_descargar';
+import { useAppDispatch } from '../../../../../../../../../hooks';
 
 //* services (redux (slice and thunks))
 /* import {
