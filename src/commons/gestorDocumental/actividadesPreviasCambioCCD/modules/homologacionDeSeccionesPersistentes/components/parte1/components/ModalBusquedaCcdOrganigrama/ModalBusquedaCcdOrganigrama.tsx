@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 //* libraries or main dependencies
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -43,6 +43,7 @@ import { Title } from '../../../../../../../../../components';
 import { download_xls } from '../../../../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../../../../documentos-descargar/PDF_descargar';
 import { useAppDispatch } from '../../../../../../../../../hooks';
+import { functionGetCcdHomologacionSeries } from '../../../../toolkit/thunks/ccdOrganigrama.service';
 
 //* services (redux (slice and thunks))
 /* import {
@@ -69,10 +70,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
     setLoadingButtonPSD
   } = useContext(ModalContextPSD);
 
-  // const { ccdsBusqueda } = useAppSelector((state) => state.PsdSlice);
+  // ! use States busqueda de ccds homologaciones
+  const [ccdList, setccdList] = useState<any[]>([])
 
-  // ! ---- HOOKS -----
- // const { control_search_ccd_psd, reset_search_ccd_psd } = usePSD();
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
@@ -163,8 +163,6 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         handleSeleccionCCD_PSD(false);
-       // dispatch(set_busqueda_ccds_action([]));
-       // reset_search_ccd_psd({ nombre: '', version: '' });
       }}
     >
       <DialogTitle>
@@ -179,7 +177,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             }}
             onSubmit={(e: any) => {
               e.preventDefault();
-              console.log('submit buscando ccd')
+              void functionGetCcdHomologacionSeries().then((data: any) => {
+                setccdList(data)
+              })
              /* void get_busqueda_ccds_psd(
                 control_search_ccd_psd._formValues.nombre,
                 control_search_ccd_psd._formValues.version,
@@ -197,61 +197,6 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-            {/*  <Grid item xs={12} sm={4}>
-                <Controller
-                  name="nombre"
-                  control={control_search_ccd_psd}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      fullWidth
-                      size="small"
-                      label="Nombre CCD"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    />
-                  )}
-                />
-              </Grid> */}
-             {/* <Grid item xs={12} sm={4}>
-                <Controller
-                  name="version"
-                  control={control_search_ccd_psd}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <TextField
-                      type="text"
-                      fullWidth
-                      size="small"
-                      label="Versión CCD"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error
-                          ? 'Es obligatorio ingresar una versión'
-                          : 'Ingrese versión'
-                      }
-                    />
-                  )}
-                />
-              </Grid>*/}
               <Grid item xs={12} sm={4}>
                 <Stack direction="row" spacing={2}>
                   <LoadingButton
@@ -281,7 +226,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
         <DataGrid
           density="compact"
           autoHeight
-          rows={[] ?? []}
+          rows={ccdList ?? []}
           columns={columns_ccds ?? []}
           pageSize={10}
           rowsPerPageOptions={[10]}
@@ -298,22 +243,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
         >
           <Button
             variant="outlined"
-            color="primary"
-            onClick={() => {
-              console.log('limpiando campos');
-              // reset_search_ccd_psd({ nombre: '', version: '' });
-            }}
-            startIcon={<CleanIcon />}
-          >
-            LIMPIAR CAMPOS
-          </Button>
-          <Button
-            variant="outlined"
             color="error"
             onClick={() => {
-              console.log('cerrando modal');
               handleSeleccionCCD_PSD(false);
-              // reset_search_ccd_psd({ nombre: '', version: '' });
             }}
             startIcon={<CloseIcon />}
           >
