@@ -8,7 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
-import { getOutModule } from '../../../../../../../../utils/functions/getOutOfModule';
+import { getOutModule, reset_all } from '../../../../../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
@@ -77,7 +77,9 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     variant="outlined"
                     startIcon={<CleanIcon />}
                     onClick={()=>{
-                      console.log('Limpiando todos los campos');
+                      reset_all(
+                        [() => {}]
+                      )
                     }}
                   >
                     LIMPIAR CAMPOS

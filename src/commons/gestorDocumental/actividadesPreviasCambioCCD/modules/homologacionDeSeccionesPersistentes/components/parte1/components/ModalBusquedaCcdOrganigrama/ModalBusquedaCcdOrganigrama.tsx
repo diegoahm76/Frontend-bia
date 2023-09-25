@@ -67,7 +67,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
     modalSeleccionCCD_PSD,
     handleSeleccionCCD_PSD,
     loadingButtonPSD,
-    setLoadingButtonPSD
+    setLoadingButtonPSD: setLoadingRequest,
   } = useContext(ModalContextPSD);
 
   // ! use States busqueda de ccds homologaciones
@@ -117,6 +117,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
+                
+
+
                 // ! se limpia la lista de series y subseries
                 // dispatch(setListaSeriesSubseries([]));
                 // dispatch(set_current_unidad_organizacional_action(null));
@@ -162,6 +165,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
       maxWidth="md"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
+        setccdList([]);
         handleSeleccionCCD_PSD(false);
       }}
     >
@@ -177,23 +181,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             }}
             onSubmit={(e: any) => {
               e.preventDefault();
-              void functionGetCcdHomologacionSeries().then((data: any) => {
+              void functionGetCcdHomologacionSeries(setLoadingRequest).then((data: any) => {
                 setccdList(data)
               })
-             /* void get_busqueda_ccds_psd(
-                control_search_ccd_psd._formValues.nombre,
-                control_search_ccd_psd._formValues.version,
-                setLoadingButtonPSD
-              ).then((data: any) => {
-                const sortedData = data.slice().sort((a: any, b: any) => {
-                  return a.actual
-                    ? -1
-                    : b.actual
-                    ? 1
-                    : Number(new Date(a.fecha_terminado)) - Number(new Date(b.fecha_terminado));
-                });
-                dispatch(set_busqueda_ccds_action(sortedData));
-              }); */
             }}
           >
             <Grid container spacing={2}>
@@ -216,9 +206,9 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
         <ButtonGroup
           style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
         >
-          {download_xls({ nurseries: [], columns: columns_ccds })}
+          {download_xls({ nurseries: ccdList ?? [], columns: columns_ccds })}
           {download_pdf({
-            nurseries: [],
+            nurseries: ccdList ?? [],
             columns: columns_ccds,
             title: 'Selección de CCD persmisos sobre series documentales'
           })}
@@ -246,6 +236,7 @@ export const ModalBusquedaCcdOrganigrama = (): JSX.Element => {
             color="error"
             onClick={() => {
               handleSeleccionCCD_PSD(false);
+              setccdList([]);
             }}
             startIcon={<CloseIcon />}
           >
