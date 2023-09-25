@@ -59,7 +59,7 @@ export const EditarCartera: React.FC<IProps> = ({
               sx={{ my: '10px' }}
             >
               <Grid item xs={3}>
-                <Typography>Fecha facturación</Typography>
+                <Typography>Fecha inicio de mora</Typography>
               </Grid>
               <Grid item xs={8}>
                 <TextField
@@ -161,11 +161,11 @@ export const EditarCartera: React.FC<IProps> = ({
               sx={{ my: '10px' }}
             >
               <Grid item xs={3}>
-                <Typography>Monto inicial</Typography>
+                <Typography>Días de mora</Typography>
               </Grid>
               <Grid item xs={8}>
                 <TextField
-                  value={selected_proceso.monto_inicial}
+                  value={selected_proceso.dias_mora}
                   size="small"
                   fullWidth
                   sx={{
@@ -186,11 +186,11 @@ export const EditarCartera: React.FC<IProps> = ({
               sx={{ my: '10px' }}
             >
               <Grid item xs={3}>
-                <Typography>Días de mora</Typography>
+                <Typography>Monto inicial</Typography>
               </Grid>
               <Grid item xs={8}>
                 <TextField
-                  value={selected_proceso.dias_mora}
+                  value={selected_proceso.monto_inicial}
                   size="small"
                   fullWidth
                   sx={{
