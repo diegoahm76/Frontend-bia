@@ -21,7 +21,7 @@ export const VistaOrganigrama: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-         value={ccdOrganigramaCurrentBusqueda?.nombre_organigrama || 'ORGANIGRAMA'}
+         value={ccdOrganigramaCurrentBusqueda?.nombre_organigrama || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -32,7 +32,7 @@ export const VistaOrganigrama: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={ccdOrganigramaCurrentBusqueda?.version_organigrama || 'VERSIÓN'}
+          value={ccdOrganigramaCurrentBusqueda?.version_organigrama || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>

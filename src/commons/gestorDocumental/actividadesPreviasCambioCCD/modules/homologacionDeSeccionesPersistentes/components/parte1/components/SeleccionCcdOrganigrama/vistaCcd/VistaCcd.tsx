@@ -28,7 +28,7 @@ export const VistaCcd: FC<any> = (params:any): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={ccdOrganigramaCurrentBusqueda?.nombre ?? 'CCD'}
+          value={ccdOrganigramaCurrentBusqueda?.nombre ?? ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -39,7 +39,7 @@ export const VistaCcd: FC<any> = (params:any): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={ccdOrganigramaCurrentBusqueda?.version || 'VERSIÓN'}
+          value={ccdOrganigramaCurrentBusqueda?.version || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
