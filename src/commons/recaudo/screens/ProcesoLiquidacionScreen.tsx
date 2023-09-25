@@ -18,6 +18,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
     id_expediente: '',
+    ciclo_liquidacion: '',
     periodo_liquidacion: '',
     valor: 0,
   });
@@ -155,6 +156,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
     const { name, value } = event.target;
     set_form_liquidacion((prevDetalles) => ({ ...prevDetalles, [name]: value }));
+    if (name === 'ciclo_liquidacion') {
+      set_form_liquidacion((previousState) => ({ ...previousState, periodo_liquidacion: '' }));
+    }
   }
 
   const handle_submit_detalles_liquidacion = (id_liquidacion: number): void => {
@@ -170,6 +174,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_form_liquidacion({
             id_deudor: '',
             id_expediente: '',
+            ciclo_liquidacion: '',
             periodo_liquidacion: '',
             valor: 0,
           });
