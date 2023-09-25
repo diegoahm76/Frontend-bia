@@ -19,7 +19,8 @@ import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
-import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
+// import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
   {
@@ -104,7 +105,8 @@ const routes = [
   {
     path: 'expedientes/',
     name: 'expedientes',
-    component: () => <ExpedientesRoutes />,
+    // component: () => <ExpedientesRoutes />,
+    component: () => <CierreExpedientesRoutes />,
   },
 ];
 

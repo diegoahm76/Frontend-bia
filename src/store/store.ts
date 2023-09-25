@@ -51,6 +51,7 @@ import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestio
 import { ctrlAccesoExpSlice } from "../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice";
 import { expedientes_slice } from "../commons/gestorDocumental/Expedientes/store/slice/indexExpedientes";
 import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
+import { cierre_expedientes_slice } from "../commons/gestorDocumental/Expedientes/cierreExpediente/store/slice/indexCierreExpedientes";
 const persist_config = {
   key: "macarenia_app",
   storage,
@@ -120,6 +121,7 @@ const app_reducers = combineReducers({
   ctrlAccesoExpSlice: ctrlAccesoExpSlice.reducer,
   // ! control acceso expedientes
   expedientes: expedientes_slice.reducer,
+  cierre_expedientes: cierre_expedientes_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

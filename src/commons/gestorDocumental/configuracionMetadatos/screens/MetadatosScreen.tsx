@@ -14,17 +14,6 @@ import ConfiguracionMetadatos from '../components/ConfiguracionMetadatos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const MetadatosScreen = () => {
-
-
-
-
-
-
-
-
-
-
-
     return (
 
         <Grid
@@ -41,14 +30,7 @@ const MetadatosScreen = () => {
 
             }}
         >
-
-
             <ConfiguracionMetadatos />
-
-
-
-
-
         </Grid>
 
     )

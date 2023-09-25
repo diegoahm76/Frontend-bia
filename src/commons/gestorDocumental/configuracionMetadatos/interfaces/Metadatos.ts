@@ -18,6 +18,7 @@ export interface IMetadatos {
   aplica_para_documento?: boolean;
   aplica_para_expediente?: boolean;
   activo?: boolean;
+  valor_a_mostrar?: string | null;
   item_ya_usado?: boolean;
 }
 

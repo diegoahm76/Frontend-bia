@@ -182,3 +182,28 @@ export const editar_metadato: any = (
         }
     };
 };
+
+//crear valor metadato
+export const crear_valor_metadato: any = (
+    valor: any,
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.post('gestor/metadatos/valores-metadatos/crear/', valor
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success === true) {
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};

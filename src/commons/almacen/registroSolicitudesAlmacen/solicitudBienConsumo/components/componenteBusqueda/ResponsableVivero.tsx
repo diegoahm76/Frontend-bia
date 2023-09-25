@@ -46,16 +46,8 @@ const FuncionarioResponsableCoordinador = ({
 
 
     useEffect(() => {
-
-
-        const coordinador = coordinador_vivero.find((elemento: { nombre_completo: string | null | undefined; }) => elemento.nombre_completo === watch('nombre_completo'));
-
-        if (coordinador !== undefined) {
-            dispatch(set_coordinador_vivero(coordinador));
-        }
-        console.log(coordinador)
-
-    }, [watch('nombre_completo')]);
+        reset_persona(coordinador_vivero)
+    }, [coordinador_vivero]);
 
 
 
@@ -70,30 +62,45 @@ const FuncionarioResponsableCoordinador = ({
 
 
 
+
                 <Title title="FUNCIONARIO RESPONSABLE" />
 
 
 
-                <Grid item xs={12} sm={6}>
+                <Grid container spacing={2} marginTop={2}>
                     <FormInputController
-                        xs={11}
-                        md={12}
-                        margin={2}
+                        xs={12}
+                        md={6}
+                        margin={0}
                         control_form={control_coordinador}
                         control_name="nombre_completo"
-                        default_value={coordinador_vivero.nombre_completo}
+                        default_value={''}
                         rules={{}}
                         type="text"
                         disabled={true}
                         helper_text=""
                         hidden_text={null}
-                        label={"Nombre Coordinador "}
+                        label={"Nombre del coordinador del vivero"}
+                    />
+                    <FormInputController
+                        xs={12}
+                        md={6}
+                        margin={0}
+                        control_form={control_coordinador}
+                        control_name="nombre_unidad_organizacional_actual"
+                        default_value={''}
+                        rules={{}}
+                        type="text"
+                        disabled={true}
+                        helper_text=""
+                        hidden_text={null}
+                        label={"Unidad a la que pertenece:"}
                     />
                 </Grid>
 
+
+
             </Grid>
-
-
 
         </>
     );

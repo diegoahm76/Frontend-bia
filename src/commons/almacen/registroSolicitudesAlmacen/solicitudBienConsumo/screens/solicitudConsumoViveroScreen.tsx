@@ -28,6 +28,7 @@ import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import Limpiar from '../../../../conservacion/componentes/Limpiar';
 import FormInputController from '../../../../../components/partials/form/FormInputController';
 import { Title } from '../../../../../components/Title';
+import FuncionarioResponsableCoordinador from '../components/componenteBusqueda/ResponsableVivero';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudConsumoViveroScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -63,9 +64,9 @@ const SolicitudConsumoViveroScreen = () => {
       nombre: userinfo.nombre,
       id_persona: userinfo.id_persona,
       unidad_organizacional: userinfo.nombre_unidad_organizacional,
+      id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
     }))
   }, []);
-  console.log(coordinador_vivero)
 
 
   useEffect(() => {
@@ -79,6 +80,7 @@ const SolicitudConsumoViveroScreen = () => {
       })
     );
   }, [nro_solicitud_vivero]);
+
 
   useEffect(() => {
     console.log(current_solicitud_vivero);
@@ -112,7 +114,6 @@ const SolicitudConsumoViveroScreen = () => {
             current_solicitud_vivero.id_funcionario_responsable_unidad
           )
         );
-        console.log('ok');
       }
     }
   }, [current_solicitud_vivero]);
@@ -124,6 +125,7 @@ const SolicitudConsumoViveroScreen = () => {
         id_persona_solicita: persona_solicita.id_persona,
         persona_solicita: persona_solicita.nombre,
         nombre_unidad_organizacional: persona_solicita.unidad_organizacional,
+        id_unidad_para_la_que_solicita: persona_solicita.id_unidad_organizacional_actual
       })
     );
   }, [persona_solicita]);
@@ -135,20 +137,21 @@ const SolicitudConsumoViveroScreen = () => {
       'id_unidad_para_la_que_solicita'
     );
     if (
-      current_funcionario.id_persona !==
+      coordinador_vivero.id_persona !==
       current_solicitud_vivero.id_funcionario_responsable_unidad
     ) {
       dispatch(
         set_current_solicitud_vivero({
           ...current_solicitud_vivero,
-          id_funcionario_responsable_unidad: current_funcionario.id_persona,
+          id_funcionario_responsable_unidad: coordinador_vivero.id_persona,
           observacion,
           motivo,
-          id_unidad_para_la_que_solicita,
+
         })
       );
     }
-  }, [current_funcionario]);
+  }, [coordinador_vivero]);
+  console.log(coordinador_vivero)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
   const on_submit = (data: IObjSolicitudVivero) => {
@@ -215,11 +218,11 @@ const SolicitudConsumoViveroScreen = () => {
         />
 
         <>
-          <PersonaResponsable
+          {/* <PersonaResponsable
             title={"Funcionario responsable"}
-            get_values_solicitud={get_values} />
+            get_values_solicitud={get_values} /> */}
 
-
+          <FuncionarioResponsableCoordinador get_values_solicitud={get_values} />
 
           <SeleccionarBienConsumoVivero />
         </>

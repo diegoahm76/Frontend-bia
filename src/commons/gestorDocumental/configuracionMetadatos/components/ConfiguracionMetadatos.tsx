@@ -1,6 +1,7 @@
 import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import FormInputController from '../../../../components/partials/form/FormInputController';
+import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from '@mui/icons-material/Add';
 import type { IMetadatos, IObjValoresMetadatos, } from '../interfaces/Metadatos';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,10 +12,11 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
 import InfoIcon from '@mui/icons-material/Info';
 import { IList } from '../../../../interfaces/globalModels';
-import { crear_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato } from '../store/thunks/metadatos';
+import { crear_metadato, crear_valor_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato } from '../store/thunks/metadatos';
 import { initial_state_metadato, set_current_valor_metadato } from '../store/slice/indexMetadatos';
 import ListadoMetadatos from './ListarMetadatos';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import FormButton from '../../../../components/partials/form/FormButton';
 
 
 
@@ -140,10 +142,12 @@ const ConfiguracionMetadatos = () => {
                 valor_maximo: data.valor_maximo ? Number(data.valor_maximo) : undefined,
                 orden_aparicion: data.orden_aparicion ? Number(data.orden_aparicion) : undefined,
             };
-
-            dispatch(crear_metadato(data_aux));
-
+            void dispatch(crear_metadato(data_aux));
         }
+        set_action("Guardar");
+        set_selected_metadato(initial_state_metadato);
+
+        void dispatch(get_metadatos());
     }
 
 
@@ -158,14 +162,31 @@ const ConfiguracionMetadatos = () => {
                 eliminar_metadato(selected_metadato.id_metadato_personalizado)
             );
         }
+        void dispatch(get_metadatos());
         console.log(selected_metadato)
+
+    }
+    const on_submit_agregar_valor = (data: IMetadatos): void => {
+
+        if (
+            selected_metadato.id_metadato_personalizado !== null &&
+            selected_metadato.id_metadato_personalizado !== undefined
+
+        ) {
+            const data_valor = {
+                ...data,
+                id_metadato_personalizado: selected_metadato.id_metadato_personalizado
+
+            }
+            void dispatch(crear_valor_metadato(data_valor))
+        }
 
     }
 
     return (
         <>
             <Grid container spacing={2}>
-                <Title title=" Configuración de Metadatos" />
+                <Title title="CONFIGURACIÓN DE METADATOS" />
 
                 <FormInputController
                     xs={12}
@@ -445,21 +466,29 @@ const ConfiguracionMetadatos = () => {
                 <Grid container spacing={2} marginTop={2}>
 
 
-                    <FormSelectController
+                    <FormInputController
                         xs={12}
                         md={2}
-                        control_form={control_valores}
-                        control_name={'valor_a_mostrar'}
+                        margin={0}
+                        control_form={control_metadatos}
+                        control_name="valor_a_mostrar"
                         default_value=''
                         rules={{}}
-                        label='Valor'
+                        type='text'
                         disabled={false}
-                        helper_text=''
-                        select_options={valores_metadatos}
-                        multiple={false}
-                        hidden_text={false}
-                        auto_focus={false}
-                        option_key={''} option_label={''} />
+                        hidden_text={null}
+                        label={"Valor"}
+                        helper_text={''}
+                    />
+                    <Grid item>
+                        <Button variant="contained"
+                            color="success"
+                            onClick={handle_submit(on_submit_agregar_valor)}>
+                            Guardar valor
+                        </Button>
+                    </Grid>
+
+
 
                 </Grid>
             )}
@@ -472,13 +501,17 @@ const ConfiguracionMetadatos = () => {
                 spacing={2}
             >
                 <Grid container justifyContent="flex-end" marginTop={2} spacing={2}>
-                    <Grid item>
-                        <Button variant="contained"
-                            color="success"
-                            onClick={handle_submit(on_submit)}>
-                            Guardar
-                        </Button>
+
+                    <Grid item xs={12} md={1}>
+                        <FormButton
+                            variant_button="contained"
+                            on_click_function={handle_submit(on_submit)}
+                            icon_class={<SaveIcon />}
+                            label={action}
+                            type_button="button"
+                        />
                     </Grid>
+
                     {(selected_metadato && selected_metadato.id_metadato_personalizado) !== null && (
                         <Grid item xs={12} md={2} >
                             <Button

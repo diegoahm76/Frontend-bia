@@ -23,6 +23,7 @@ export interface IObjPersonaSolicita {
   id_persona?: number | null;
   nombre?: string;
   unidad_organizacional?: string | null;
+  id_unidad_organizacional_actual?: number | null;
 }
 
 export interface IObjBienesSolicitud {

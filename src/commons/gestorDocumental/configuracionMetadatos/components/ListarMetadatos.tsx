@@ -88,7 +88,7 @@ const ListadoMetadatos = ({
             }}
         >
             <Grid item xs={12}>
-                <Title title="Listado de Metadatos" />
+                <Title title="LISTADO DE METADATOS" />
             </Grid>
 
 
