@@ -89,7 +89,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           </Tooltip>
         }
         {node.data.eliminar &&
-          <Tooltip title="Editar">
+          <Tooltip title="Eliminar">
             <IconButton
               onClick={() => {
                 dispatch(delete_nodo_service(node.data.id_nodo));

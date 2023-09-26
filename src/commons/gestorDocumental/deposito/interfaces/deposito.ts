@@ -98,3 +98,5 @@ export interface IObjCarpeta {
   identificacion_estante?: string | number | null;
   identificacion_deposito?: string | number | null;
 }
+
+export interface IObjRotuloCarpeta {}
