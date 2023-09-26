@@ -228,7 +228,7 @@ const CrearBienDialogForm = ({
                     rules: { required_rule: { rule: true, message: "requerida" } },
                     label: "Codigo",
                     type: "number",
-                    disabled: true,
+                    disabled: false,
                     helper_text: ""
                   },
                   {
@@ -454,7 +454,7 @@ const CrearBienDialogForm = ({
                     rules: { required_rule: { rule: true, message: "requerida" } },
                     label: "Codigo",
                     type: "number",
-                    disabled: true,
+                    disabled: false,
                     helper_text: ""
                   },
                   {

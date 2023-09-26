@@ -28,13 +28,9 @@ const ConfiguracionAlertasScreen = () => {
 
     }, []);
 
-    useEffect(() => {
-        reset(current_configuracion);
-        console.log(current_configuracion)
-    }, [current_configuracion]);
+
 
     useEffect(() => {
-
 
         const primera_configuracion = configuraciones.find(elemento => elemento.nombre_clase_alerta === watch('nombre_clase_alerta'));
 
@@ -43,6 +39,11 @@ const ConfiguracionAlertasScreen = () => {
         }
 
     }, [watch('nombre_clase_alerta')]);
+
+    useEffect(() => {
+        reset(current_configuracion);
+        console.log(current_configuracion)
+    }, [current_configuracion]);
 
     return (
         <>
