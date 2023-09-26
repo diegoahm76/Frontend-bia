@@ -26,7 +26,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* get states from redux store
-  const { verModuloAutorizacioneGenerales } = useAppSelector(
+  const { verModuloAutorizacioneGenerales, controlAccesoExpedientesList } = useAppSelector(
     (state) => state.ctrlAccesoExpSlice
   );
 
@@ -42,6 +42,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     valorComparar: any,
     arrayComparacion: any[],
     propiedades: string[],
+    guiaConsultar: string, // con eso  se guia para el nuevo consultar al desmarcar
     dispatch: React.Dispatch<any>,
     callback: Function
   ): void => {
@@ -53,7 +54,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             ...Object.fromEntries(
               propiedades.map((propiedad) => [
                 propiedad,
-                propiedad === 'consultar_expedientes_no_propios' &&
+                propiedad === guiaConsultar &&
                 elemento[propiedad]
                   ? true
                   : checked,
@@ -85,7 +86,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
               propiedades.map((propiedad) => [
                 propiedad,
                 // guia consultar debe reemplazar el string
-                propiedad === 'consultar_expedientes_no_propios'
+                propiedad === guiaConsultar
                   ? checked
                   : false,
               ])
@@ -142,17 +143,23 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             checked={params.row.entidad_entera_consultar}
             title1="Entidad Entera - CONSULTAR"
             title2="Entidad Entera - CONSULTAR"
-            handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange={
+              () => {}
+           /*
+              (event: React.ChangeEvent<HTMLInputElement>) => {
               handleCheckboxChangePRUEBA(
                 event,
                 'id_und_organizacional_actual',
                 params.row.id_und_organizacional_actual,
                 [],
-                ['entidad_entera_consultar'],
+                [
+                  'seccion_actual_respon_serie_doc_consultar',
+                  'consultar_expedientes_no_propios',
+                ],
                 dispatch,
                 () => {}
               );
-            }}
+            } */}
           />
         </>
       ),
@@ -167,17 +174,23 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             checked={params.row.entidad_entera_descargar}
             title1="Entidad Entera - DESCARGAR"
             title2="Entidad Entera - DESCARGAR"
-            handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange={
+              () => {}
+           /*
+              (event: React.ChangeEvent<HTMLInputElement>) => {
               handleCheckboxChangePRUEBA(
                 event,
                 'id_und_organizacional_actual',
                 params.row.id_und_organizacional_actual,
                 [],
-                ['entidad_entera_descargar', 'entidad_entera_consultar'],
+                [
+                  'seccion_actual_respon_serie_doc_consultar',
+                  'consultar_expedientes_no_propios',
+                ],
                 dispatch,
                 () => {}
               );
-            }}
+            } */}
           />
         </>
       ),
@@ -194,7 +207,10 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             checked={params.row.seccion_actual_respon_serie_doc_consultar}
             title1="Sección Actual Responsable de la serie documental - CONSULTAR"
             title2="Sección Actual Responsable de la serie documental - CONSULTAR"
-            handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange={
+              () => {}
+           /*   
+              (event: React.ChangeEvent<HTMLInputElement>) => {
               handleCheckboxChangePRUEBA(
                 event,
                 'id_und_organizacional_actual',
@@ -207,7 +223,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
                 dispatch,
                 () => {}
               );
-            }}
+            } */}
           />
         </>
       ),
@@ -223,20 +239,23 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             checked={params.row.seccion_actual_respon_serie_doc_descargar}
             title1="Sección Actual Responsable de la serie documental - DESCARGAR"
             title2="Sección Actual Responsable de la serie documental - DESCARGAR"
-            handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleChange={
+              () => {}
+           /*   
+              (event: React.ChangeEvent<HTMLInputElement>) => {
               handleCheckboxChangePRUEBA(
                 event,
                 'id_und_organizacional_actual',
                 params.row.id_und_organizacional_actual,
                 [],
                 [
-                  'seccion_actual_respon_serie_doc_descargar',
+                  'seccion_actual_respon_serie_doc_consultar',
                   'consultar_expedientes_no_propios',
                 ],
                 dispatch,
                 () => {}
               );
-            }}
+            } */}
           />
         </>
       ),
@@ -332,8 +351,8 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        columns={columns}
-        rows={rows}
+        columns={columns ?? []}
+        rows={controlAccesoExpedientesList.length > 0 ? controlAccesoExpedientesList : rows ?? []}
         title="Autorizaciones generales"
         /*aditionalElement={
           <Tooltip
