@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { Grid } from '@mui/material';
 import { Controller } from 'react-hook-form';
@@ -8,17 +8,24 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { setControlAccesoExpedientesList, setTipoDeClasificacion, setVerModuloAutorizacioneGenerales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { optionsSelect } from './utils/choices';
 import { getControlAccesoExpedientes } from '../../../../../toolkit/thunks/controlAccesoThunks';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const Clasificacion = (): JSX.Element | null => {
   //* get states from the redux store
   const { tipoDeClasificacion, moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
+      // ? context necesarios
+  const { handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
+
 
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
     dispatch(setTipoDeClasificacion(selectedOption));
     void getControlAccesoExpedientes({
+      setLoading: handleGeneralLoading,
       idCcd: currentCcdCtrlAccesoExp?.id_ccd,
       codClasificacionExp: selectedOption?.value,
     }).then((res) => {
