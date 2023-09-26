@@ -324,7 +324,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
           justifyContent: 'center',
         }}
       >
-        <Loader altura={200} />
+        <Loader altura={270} />
       </Grid>
     );
   }
