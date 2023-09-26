@@ -29,7 +29,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* get states from redux store
-  const { verModuloAutorizacioneGenerales, controlAccesoExpedientesList } =
+  const { verModuloAutorizacioneGenerales, controlAccesoExpedientesList, currentCcdCtrlAccesoExp } =
     useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ? context necesarios
@@ -38,7 +38,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   );
 
   // ? use states necesarios para el manejo inicial del control de expedientes cuando aún no se ha creado una respectiva configuración inicial
-  const [rowsControlInicial, setRowsControlInicial] = useState(rowsDataGrid);
+  const [rowsControlInicial, setRowsControlInicial] = useState(rowsDataGrid.map((row) => ({ ...row, id_ccd: currentCcdCtrlAccesoExp?.id_ccd })));
 
   // ! --- PRUEBA ANULAR ----
   const handleCheckboxChangePRUEBA = (
@@ -119,8 +119,8 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleCheckboxChangePRUEBA(
                 event,
-                'id_und_organizacional_actual',
-                params.row.id_und_organizacional_actual,
+                'id_ccd',
+                params.row.id_ccd,
                 controlAccesoExpedientesList.length > 0
                   ? controlAccesoExpedientesList
                   : rowsControlInicial,
@@ -139,8 +139,8 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleCheckboxChangeConsulta(
                 event,
-                'id_und_organizacional_actual',
-                params.row.id_und_organizacional_actual,
+                'id_ccd',
+                params.row.id_ccd,
                 controlAccesoExpedientesList.length > 0
                   ? controlAccesoExpedientesList
                   : rowsControlInicial,
