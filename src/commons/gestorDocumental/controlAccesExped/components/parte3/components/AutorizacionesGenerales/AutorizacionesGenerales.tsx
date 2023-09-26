@@ -99,17 +99,19 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   };
 
   const data = {
-    id_ctrl_acceso_clasif_exp_ccd: 1,
-    id_serie_doc: null,
-    nombre_serie: null,
-    codigo_serie: null,
-    id_subserie_doc: null,
-    nombre_subserie: null,
-    codigo_subserie: null,
-    nombre_unidad_organizacional: null,
-    codigo_unidad_organizacional: null,
-    entidad_entera_consultar: true,
-    entidad_entera_descargar: true,
+    id_ctrl_acceso_clasif_exp_ccd: null, // se debe configurar el id del control de acceso respectivamente en la edición de los checkbox, pero si es la primer creación no debe llevar ningún valor así que no debe ser editables
+    id_serie_doc: null, // ?  camino 2 ? lleva valor : no lleva valor
+    nombre_serie: null, // ?  camino 2 ? lleva valor : no lleva valor
+    codigo_serie: null, // ?  camino 2 ? lleva valor : no lleva valor
+    id_subserie_doc: null, // ?  camino 2 y id_subserie_doc existe ? lleva valor : no lleva valor
+    nombre_subserie: null, // ?  camino 2 y  subserie existe ? lleva valor : no lleva valor
+    codigo_subserie: null, // ?  camino 2 codigo subserie existe ? lleva valor : no lleva valor
+    nombre_unidad_organizacional: null, // ? camino 2 ? lleva valor : no lleva valor
+    codigo_unidad_organizacional: null, // ? camino 2 ? lleva valor : no lleva valor
+
+    //! este es el paquete de restricciones que inicialmente se debe enviar y plantear todo en false si es apenas la creación del control de acceso de expedientes
+    entidad_entera_consultar: false,
+    entidad_entera_descargar: false,
     seccion_actual_respon_serie_doc_consultar: false,
     seccion_actual_respon_serie_doc_descargar: false,
     seccion_raiz_organi_actual_consultar: false,
@@ -122,8 +124,12 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar: false,
     unds_org_sec_respon_inf_nivel_resp_exp_consultar: false,
     unds_org_sec_respon_inf_nivel_resp_exp_descargar: false,
-    id_ccd: 174,
-    cod_clasificacion_exp: 'C',
+
+    //! este es el paquete de restricciones que inicialmente se debe enviar y plantear todo en false si es apenas la creación del control de acceso de expedientes
+
+
+    id_ccd: null, // se debe poner el id del ccd respectivamente
+    cod_clasificacion_exp: '', // se debe de igual manera configurar el cod. clasificacion de expediente en la edición de los checkbox
     id_cat_serie_und_org_ccd: null,
   };
 
@@ -354,35 +360,6 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
         columns={columns ?? []}
         rows={controlAccesoExpedientesList.length > 0 ? controlAccesoExpedientesList : rows ?? []}
         title="Autorizaciones generales"
-        /*aditionalElement={
-          <Tooltip
-            title={
-              unidadActuales.filter((el) => !el.mostrar).length === 0
-                ? 'No hay unidades disponibles para agregar'
-                : 'Agregar unidades propias'
-            }
-          >
-            <Grid
-              item
-              sx={{
-                width: '100%',
-                marginTop: '1rem'
-              }}
-            >
-              <Button
-                color="success"
-                variant="contained"
-                startIcon={<AddIcon />}
-                // se debe luego habilitar el disabled
-                onClick={() => {
-                  setmodalUniProp(true);
-                }}
-              >
-                AGREGAR UNIDADES PROPIAS
-              </Button>
-            </Grid>
-          </Tooltip>
-        }*/
       />
     </>
   );
