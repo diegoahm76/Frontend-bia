@@ -6,14 +6,11 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
-// // Hooks
-// import { useAppDispatch, useAppSelector } from '../../../../hooks';
-// Thunks
-
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import Button from "@mui/material/Button";
 import { Grid, Stack, Box, Tooltip, IconButton, Avatar } from "@mui/material";
+import { v4 as uuidv4 } from 'uuid';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
@@ -133,16 +130,16 @@ export const ArchivoFisicoScreen: React.FC = () => {
 
                     <Grid item>
                         <Box sx={{ width: "100%" }}>
-                            {/* <TreeTable value={depositos} filterMode="strict">
+                            <TreeTable filterMode="strict">
                                 <Column
                                     expander
-                                    body={(row) => (row.data.bien.nivel_jerarquico === 5 ? <InsertDriveFileIcon /> : <FolderIcon />)}
+                                    body={(row) => uuidv4()}
                                     style={{ width: "250px" }}
                                 ></Column>
 
 
 
-                            </TreeTable> */}
+                            </TreeTable>
                         </Box>
                     </Grid>
                 </Grid>
