@@ -21,6 +21,8 @@ import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { columnsControlAcceso } from './columns/columns';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import { rowsDataGrid } from './utils/initialState';
+import { control } from 'leaflet';
+import { setControlAccesoExpedientesList } from '../../../../toolkit/slice/CtrlAccesoExpSlice';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
@@ -48,7 +50,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     guiaConsultar: string, // con eso  se guia para el nuevo consultar al desmarcar
     dispatch: React.Dispatch<any>,
     callback: Function
-  ): void => {
+  ): any => {
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
       elemento.hasOwnProperty(compararPor) &&
       elemento[compararPor] === valorComparar
@@ -66,7 +68,9 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
         : elemento
     );
     console.log(DATOS_ACTUALIZADOS);
-    dispatch(callback(DATOS_ACTUALIZADOS));
+    controlAccesoExpedientesList.length > 0 ?
+    dispatch(callback(DATOS_ACTUALIZADOS)):
+    (callback(DATOS_ACTUALIZADOS))
   };
 
   const handleCheckboxChangeConsulta = (
@@ -78,7 +82,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     guiaConsultar: string, // con eso  se guia para el nuevo consultar al desmarcar
     dispatch: React.Dispatch<any>,
     callback: Function
-  ): void => {
+  ): any => {
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
       elemento.hasOwnProperty(compararPor) &&
       elemento[compararPor] === valorComparar
@@ -95,7 +99,9 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
         : elemento
     );
     console.log(DATOS_ACTUALIZADOS);
-    dispatch(callback(DATOS_ACTUALIZADOS));
+    controlAccesoExpedientesList.length > 0 ?
+    dispatch(callback(DATOS_ACTUALIZADOS)):
+    (callback(DATOS_ACTUALIZADOS))
   };
 
   const columns = [
@@ -110,18 +116,40 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             checked={params.row.entidad_entera_consultar}
             title1="CONSULTAR"
             title2="CONSULTAR"
-            handleChange={
-              () => {}
-            }
+            handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              handleCheckboxChangePRUEBA(
+                event,
+                'id_und_organizacional_actual',
+                params.row.id_und_organizacional_actual,
+                controlAccesoExpedientesList.length > 0
+                  ? controlAccesoExpedientesList
+                  : rowsControlInicial,
+                ['entidad_entera_consultar', 'entidad_entera_descargar'],
+                'entidad_entera_consultar',
+                dispatch,
+                controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+              );
+            }}
           />
 
 <CheckboxComponent
             checked={params.row.entidad_entera_descargar}
             title1=" DESCARGAR"
             title2="DESCARGAR"
-            handleChange={
-              () => {}
-            }
+            handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              handleCheckboxChangeConsulta(
+                event,
+                'id_und_organizacional_actual',
+                params.row.id_und_organizacional_actual,
+                controlAccesoExpedientesList.length > 0
+                  ? controlAccesoExpedientesList
+                  : rowsControlInicial,
+                ['entidad_entera_consultar', 'entidad_entera_descargar'],
+                'entidad_entera_consultar',
+                dispatch,
+                controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+              );
+            }}
           />
 
 
