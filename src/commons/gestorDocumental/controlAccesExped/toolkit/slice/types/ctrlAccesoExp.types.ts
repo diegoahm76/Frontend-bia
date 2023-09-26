@@ -17,6 +17,11 @@ export interface InitialState {
   seriesSubseriesList: any[];
   currentSerieSubserie: any | null;
 
+  controlAccesoExpedientesList: any[]; //
+  currentControlAccesoExpedientes:any;
+
+  verModuloAutorizacioneGenerales: boolean;
+
   moodConfig: any;
 
   tipoDeClasificacion: any;

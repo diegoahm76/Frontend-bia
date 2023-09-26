@@ -10,6 +10,7 @@ import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
 import { getOutModule, reset_all } from '../../../../../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../../../../../../hooks';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
 
@@ -19,20 +20,19 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-/*  const {
-    current_unidad_organizacional,
-    currentSeriesSubseries,
-  } = useAppSelector((state) => state.PsdSlice); */
-
-  //* usePSD
- // const { reset_all } = usePSD();
-
-  // ? validaciones de renderizado
-  // if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
+const {
+    ccdOrganigramaCurrentBusqueda
+  } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
+    setLoadingButton(true);
     console.log('hello from submit');
+    setLoadingButton(false);
+
   };
+
+
+  if(!ccdOrganigramaCurrentBusqueda) return null;
 
   return (
     <>

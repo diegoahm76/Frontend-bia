@@ -5,11 +5,11 @@ import { control_warning } from "../../../../almacen/configuracion/store/thunks/
 
 export const getControlAccesoExpedientes =  async ({
   idCcd = '',
-  idUnidadOrganizacional = '',
-  idSerieSubserie = '',
+  codClasificacionExp = '',
+  idCatSerieUnidad = '',
 }) => {
     try {
-      const url = `gestor/ctrl-acceso/get/?id_ccd=${idCcd}&cod_clasificacion_exp=&id_cat_serie_und=${idSerieSubserie}`;
+      const url = `gestor/ctrl-acceso/get/?id_ccd=${idCcd}&cod_clasificacion_exp=${codClasificacionExp}&id_cat_serie_und=${idCatSerieUnidad}`;
       const { data } = await api.get(url);
       if (data?.data?.length > 0) {
         control_success(
@@ -17,7 +17,7 @@ export const getControlAccesoExpedientes =  async ({
         );
         return data?.data;
       } else {
-        control_warning('No se encontraron expedientes');
+        control_warning('No se encontró control de acceso configurado');
         return [];
       }
     } catch (error: any) {

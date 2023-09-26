@@ -25,7 +25,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* get states from redux store
-  const { unidadActuales } = useAppSelector((state) => state.PsdSlice);
+  const { verModuloAutorizacioneGenerales } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ? context necesarios
   // const { loadingRestricciones } = useContext(ModalContextPSD);
@@ -138,7 +138,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             event,
             'id_und_organizacional_actual',
             params.row.id_und_organizacional_actual,
-            unidadActuales,
+            [],
             [ 'entidad_entera_consultar'],
             dispatch,
             () => {},
@@ -161,7 +161,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             event,
             'id_und_organizacional_actual',
             params.row.id_und_organizacional_actual,
-            unidadActuales,
+            [],
             [ 'entidad_entera_descargar', 'entidad_entera_consultar'],
             dispatch,
             () => {},
@@ -185,7 +185,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             event,
             'id_und_organizacional_actual',
             params.row.id_und_organizacional_actual,
-            unidadActuales,
+            [],
             ['seccion_actual_respon_serie_doc_consultar', 'consultar_expedientes_no_propios'],
             dispatch,
             () => {},
@@ -208,7 +208,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             event,
             'id_und_organizacional_actual',
             params.row.id_und_organizacional_actual,
-            unidadActuales,
+            [],
             ['seccion_actual_respon_serie_doc_descargar', 'consultar_expedientes_no_propios'],
             dispatch,
             () => {},
@@ -272,22 +272,12 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   //* se debe entrar a validar porque cuando el servicios de control de acceso expedientes no trae datos, este se debe mostrar vacío para marcar sus valores iniciales, si es por el contrario y se desea editar - este componente no se debe mostrar hasta que se seleccione el editar, desde el bloque de autorización de ccd se traeran los respectivos valores a la vista maestro de la autorización general para su edición
 
 
-/*
-  if (loadingRestricciones)
+
+  if (!verModuloAutorizacioneGenerales)
     return (
-      <Grid
-        container
-        sx={{
-          ...containerStyles,
-          position: 'static',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <Loader altura={270} />
-      </Grid>
+      <></>
     );
-*/
+
   // ! solo se renderizaran en este componente aquellos objetos con la propiedad mostrar en TRUE, los demas irán en el modal
 
   return (

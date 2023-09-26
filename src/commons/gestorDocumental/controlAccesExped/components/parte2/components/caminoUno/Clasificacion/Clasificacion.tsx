@@ -5,19 +5,31 @@ import { Grid } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { setTipoDeClasificacion, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { setControlAccesoExpedientesList, setTipoDeClasificacion, setVerModuloAutorizacioneGenerales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { optionsSelect } from './utils/choices';
+import { getControlAccesoExpedientes } from '../../../../../toolkit/thunks/controlAccesoThunks';
 
 export const Clasificacion = (): JSX.Element | null => {
   //* get states from the redux store
-  const { tipoDeClasificacion, moodConfig } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { tipoDeClasificacion, moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
 
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
     dispatch(setTipoDeClasificacion(selectedOption));
-
+    void getControlAccesoExpedientes({
+      idCcd: currentCcdCtrlAccesoExp?.id_ccd,
+      codClasificacionExp: selectedOption?.value,
+    }).then((res) => {
+      console.log(res);
+      if(res?.length > 0){
+        // dispatch(setVerModuloAutorizacioneGenerales(false));
+        dispatch(setControlAccesoExpedientesList(res));
+    }else{
+      dispatch(setVerModuloAutorizacioneGenerales(true));
+    }
+    });
     //* se debe realizar la petición al servicio de control de acceso de expedientes
   };
 

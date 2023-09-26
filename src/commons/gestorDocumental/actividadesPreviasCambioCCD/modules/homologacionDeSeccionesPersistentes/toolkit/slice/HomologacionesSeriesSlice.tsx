@@ -4,7 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: any | any = {
   //! TCA necesarios para el funcionamiento de la aplicación
-  ccd_current_busqueda: null,
+  ccdOrganigramaCurrentBusqueda: null,
 };
 
 export const HomologacionesSlice = createSlice({
@@ -18,7 +18,7 @@ export const HomologacionesSlice = createSlice({
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     reset_states: (state) => {
-      state.ccdOrganigramaCurrentBusqueda = [];
+      state.ccdOrganigramaCurrentBusqueda = null;
     }
   }
 });

@@ -13,9 +13,12 @@ import AddIcon from '@mui/icons-material/Add';
 
 import InfoIcon from '@mui/icons-material/Info';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { useAppSelector } from '../../../../../../hooks';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
+
+  const {controlAccesoExpedientesList} = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
 /* const columns = [
     ...columnsAsignacionPer,
@@ -41,6 +44,9 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
       )
     },
   ]; */
+
+
+  if(controlAccesoExpedientesList?.length === 0) return <></>;
 
 /*
   if (loadingRestricciones)

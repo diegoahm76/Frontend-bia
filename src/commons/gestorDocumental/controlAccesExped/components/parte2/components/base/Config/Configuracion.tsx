@@ -4,7 +4,7 @@ import { stylesGrid } from './../../../../../../permisosSeriesDoc/utils/styles';
 import { Grid } from '@mui/material';
 import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { setCurrentSerieSubserie, setCurrentUnidadOrganizacional, setSeriesSubseriesList, setUnidadesOrganizacionales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { setControlAccesoExpedientesList, setCurrentControlAccesoExpedientes, setCurrentSerieSubserie, setCurrentUnidadOrganizacional, setSeriesSubseriesList, setUnidadesOrganizacionales, setVerModuloAutorizacioneGenerales, set_mood_module } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { optionsSelectConfiguracion } from '../utils/choices';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { getUnidadesOrganizacionalesSeccionSubseccion } from '../../../../../toolkit/thunks/unidadesOrgnizacionalesThunks';
@@ -22,6 +22,9 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
 
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
+    dispatch(setVerModuloAutorizacioneGenerales(false));
+    dispatch(setControlAccesoExpedientesList([]));
+    dispatch(setCurrentControlAccesoExpedientes(null));
     dispatch(set_mood_module(selectedOption));
 
     //* if selected option . value = 2, se debe hacer la petición http al servidor para obtener las unidades organizacionales asociadas a ese organigrama y en consecuencia las series documentales asociadas a esa unidad organizacional luego de seleccionar la respectiva unidad organizacional

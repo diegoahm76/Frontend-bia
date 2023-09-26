@@ -11,6 +11,12 @@ const initialState: InitialState = {
     //! series and subseries
     seriesSubseriesList: [],
     currentSerieSubserie: null,
+
+    // !control acceso expedientes
+    controlAccesoExpedientesList: [],
+    currentControlAccesoExpedientes: null,
+
+    verModuloAutorizacioneGenerales: false,
     //! modo de configuracion, parte inicial del modulo
     moodConfig: null,
     // ? se configura el tipo de clasificacion (publico, reservada, clasificado)
@@ -46,6 +52,22 @@ export const ctrlAccesoExpSlice = createSlice({
       state.currentSerieSubserie = action.payload as any;
     },
 
+    // ? CONTROL ACCESO EXPEDIENTES ACTIONS
+    setControlAccesoExpedientesList: (state, action: PayloadAction<any[]>): any => {
+      state.controlAccesoExpedientesList = action.payload as any;
+    }
+    ,
+    setCurrentControlAccesoExpedientes: (state, action: PayloadAction<any>): any => {
+      state.currentControlAccesoExpedientes = action.payload as any;
+    }
+    ,
+
+
+    // ? modulo autorizaciones generales
+    setVerModuloAutorizacioneGenerales: (state, action: PayloadAction<boolean>): any => {
+      state.verModuloAutorizacioneGenerales = action.payload as any;
+    },
+
     //! modo configuración, parte inicial de decisión del módulo
     set_mood_module : (state, action: PayloadAction<any>): any => {
       state.moodConfig = action.payload as any;
@@ -68,6 +90,9 @@ setTipoDeClasificacion: (state, action: PayloadAction<any>): any => {
       state.currentSerieSubserie = null;
       state.moodConfig = null;
       state.tipoDeClasificacion = null;
+      state.verModuloAutorizacioneGenerales = false;
+      state.controlAccesoExpedientesList = [];
+      state.currentControlAccesoExpedientes = null;
       // y los que se vayan añadiendo ...
     },
   },
@@ -85,6 +110,13 @@ export const {
   // ! ACCIONES SOBRE LAS SERIES Y SUBSERIES ---
   setSeriesSubseriesList,
   setCurrentSerieSubserie,
+
+  // ! ACCIONES SOBRE EL CONTROL DE ACCESO EXPEDIENTES
+  setControlAccesoExpedientesList,
+  setCurrentControlAccesoExpedientes,
+
+  // ! ACCIONES SOBRE EL MODULO DE AUTORIZACIONES GENERALES
+  setVerModuloAutorizacioneGenerales,
 
   // ? configuracion inicial del módulo que permite tomar decisión sobre que se va a realizar dentro del módulo respectivamente
   set_mood_module,
