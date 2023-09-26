@@ -15,7 +15,7 @@ const ExportDocs = (props: IProps) => {
     return (
         <Box
             component="form"
-            sx={{ mb: '20px' }}
+            sx={{ mb: '10px' }}
             noValidate
             autoComplete="off"
         >
