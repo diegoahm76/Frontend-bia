@@ -15,6 +15,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { Title } from "../../../../components";
+import { estante_deposito, get_depositos } from "../store/thunks/thunksArchivoFisico";
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const ArchivoFisicoScreen: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -106,11 +107,13 @@ export const ArchivoFisicoScreen: React.FC = () => {
             </>
         );
     };
-    //   useEffect(() => {
-    //     void dispatch(get_bienes_service());
+    useEffect(() => {
+        void dispatch(get_depositos());
+        //  void dispatch(estante_deposito(depositos.id_deposito))
+    }, []);
 
+    console.log(depositos)
 
-    //   }, []);
 
     return (
         <>

@@ -1,9 +1,10 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { IArchivoFisico, IObjDepositos } from '../../interface/archivoFisico';
+import { IArchivoFisico, IObjDepositos, IObjEstantes } from '../../interface/archivoFisico';
 
 
 const initial_state: IArchivoFisico = {
     depositos: [],
+    estantes: [],
 
 
 };
@@ -19,6 +20,12 @@ export const archivo_fisico_slice = createSlice({
             action: PayloadAction<IObjDepositos[]>
         ) => {
             state.depositos = action.payload;
+        },
+        set_estantes: (
+            state: IArchivoFisico,
+            action: PayloadAction<IObjEstantes[]>
+        ) => {
+            state.estantes = action.payload;
         },
 
     },

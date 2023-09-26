@@ -5,6 +5,7 @@ import { toast, type ToastContent } from 'react-toastify';
 import { type AxiosError } from 'axios';
 import { api } from '../../../../../api/axios';
 import { set_depositos } from '../slice/indexArchivoFisico';
+import { set_estantes } from '../../../deposito/store/slice/indexDeposito';
 
 export const control_error = (
     message: ToastContent = 'Algo pasó, intente de nuevo'
@@ -44,6 +45,34 @@ export const get_depositos = (): any => {
             return data;
         } catch (error: any) {
             //    control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+export const estante_deposito = (
+    id: number,
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/depositos-archivos/archivoFisico/listar-estante-id/${id}/`
+
+            );
+            console.log(data);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success === true) {
+                dispatch(set_estantes(data.data));
+                control_success(data.detail);
+            } else {
+                control_error(data.detail);
+            }
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };
