@@ -20,20 +20,23 @@ import { handleCheckboxChange } from '../../../../../../../utils/Checkbox/functi
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { columnsControlAcceso } from './columns/columns';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import { rowsDataGrid } from './utils/initialState';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* get states from redux store
-  const { verModuloAutorizacioneGenerales, controlAccesoExpedientesList } = useAppSelector(
-    (state) => state.ctrlAccesoExpSlice
-  );
+  const { verModuloAutorizacioneGenerales, controlAccesoExpedientesList } =
+    useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ? context necesarios
   const { generalLoading, handleGeneralLoading } = useContext(
     ModalAndLoadingContext
   );
+
+  // ? use states necesarios para el manejo inicial del control de expedientes cuando aún no se ha creado una respectiva configuración inicial
+  const [rowsControlInicial, setRowsControlInicial] = useState(rowsDataGrid);
 
   // ! --- PRUEBA ANULAR ----
   const handleCheckboxChangePRUEBA = (
@@ -54,8 +57,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             ...Object.fromEntries(
               propiedades.map((propiedad) => [
                 propiedad,
-                propiedad === guiaConsultar &&
-                elemento[propiedad]
+                propiedad === guiaConsultar && elemento[propiedad]
                   ? true
                   : checked,
               ])
@@ -86,9 +88,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
               propiedades.map((propiedad) => [
                 propiedad,
                 // guia consultar debe reemplazar el string
-                propiedad === guiaConsultar
-                  ? checked
-                  : false,
+                propiedad === guiaConsultar ? checked : false,
               ])
             ),
           }
@@ -98,82 +98,42 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     dispatch(callback(DATOS_ACTUALIZADOS));
   };
 
-  const data = {
-    id_ctrl_acceso_clasif_exp_ccd: null, // se debe configurar el id del control de acceso respectivamente en la edición de los checkbox, pero si es la primer creación no debe llevar ningún valor así que no debe ser editables
-    id_serie_doc: null, // ?  camino 2 ? lleva valor : no lleva valor
-    nombre_serie: null, // ?  camino 2 ? lleva valor : no lleva valor
-    codigo_serie: null, // ?  camino 2 ? lleva valor : no lleva valor
-    id_subserie_doc: null, // ?  camino 2 y id_subserie_doc existe ? lleva valor : no lleva valor
-    nombre_subserie: null, // ?  camino 2 y  subserie existe ? lleva valor : no lleva valor
-    codigo_subserie: null, // ?  camino 2 codigo subserie existe ? lleva valor : no lleva valor
-    nombre_unidad_organizacional: null, // ? camino 2 ? lleva valor : no lleva valor
-    codigo_unidad_organizacional: null, // ? camino 2 ? lleva valor : no lleva valor
-
-    //! este es el paquete de restricciones que inicialmente se debe enviar y plantear todo en false si es apenas la creación del control de acceso de expedientes
-    entidad_entera_consultar: false,
-    entidad_entera_descargar: false,
-    seccion_actual_respon_serie_doc_consultar: false,
-    seccion_actual_respon_serie_doc_descargar: false,
-    seccion_raiz_organi_actual_consultar: false,
-    seccion_raiz_organi_actual_descargar: false,
-    secciones_actuales_mismo_o_sup_nivel_respon_consulta: false,
-    secciones_actuales_mismo_o_sup_nivel_respon_descargar: false,
-    secciones_actuales_inf_nivel_respon_consultar: false,
-    secciones_actuales_inf_nivel_respon_descargar: false,
-    unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar: false,
-    unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar: false,
-    unds_org_sec_respon_inf_nivel_resp_exp_consultar: false,
-    unds_org_sec_respon_inf_nivel_resp_exp_descargar: false,
-
-    //! este es el paquete de restricciones que inicialmente se debe enviar y plantear todo en false si es apenas la creación del control de acceso de expedientes
-
-
-    id_ccd: null, // se debe poner el id del ccd respectivamente
-    cod_clasificacion_exp: '', // se debe de igual manera configurar el cod. clasificacion de expediente en la edición de los checkbox
-    id_cat_serie_und_org_ccd: null,
-  };
-
   const columns = [
-    // ! datos iniciales
-    ...columnsControlAcceso,
-    // ! datos iniciales
-
-    // ? datos a los cuales se les debe configurar el respectivo checkbox para realizar las validaciones
+    // ? ------------- ENTIDAD ENTERA ------------
     {
       field: 'entidad_entera_consultar',
-      headerName: 'Entidad Entera Consultar',
-      width: 200,
+      headerName: 'Entidad Entera',
+      width: 210,
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
             checked={params.row.entidad_entera_consultar}
-            title1="Entidad Entera - CONSULTAR"
-            title2="Entidad Entera - CONSULTAR"
+            title1="CONSULTAR"
+            title2="CONSULTAR"
             handleChange={
               () => {}
-           /*
-              (event: React.ChangeEvent<HTMLInputElement>) => {
-              handleCheckboxChangePRUEBA(
-                event,
-                'id_und_organizacional_actual',
-                params.row.id_und_organizacional_actual,
-                [],
-                [
-                  'seccion_actual_respon_serie_doc_consultar',
-                  'consultar_expedientes_no_propios',
-                ],
-                dispatch,
-                () => {}
-              );
-            } */}
+            }
           />
+
+<CheckboxComponent
+            checked={params.row.entidad_entera_descargar}
+            title1=" DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              () => {}
+            }
+          />
+
+
         </>
       ),
     },
-    {
+    // ? ------------- ENTIDAD ENTERA ------------
+
+   /* {
       field: 'entidad_entera_descargar',
-      headerName: 'Entidad Entera Descargar',
-      width: 200,
+      headerName: 'Entidad Entera - DESCARGAR',
+      width: 210,
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
@@ -182,31 +142,22 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             title2="Entidad Entera - DESCARGAR"
             handleChange={
               () => {}
-           /*
-              (event: React.ChangeEvent<HTMLInputElement>) => {
-              handleCheckboxChangePRUEBA(
-                event,
-                'id_und_organizacional_actual',
-                params.row.id_und_organizacional_actual,
-                [],
-                [
-                  'seccion_actual_respon_serie_doc_consultar',
-                  'consultar_expedientes_no_propios',
-                ],
-                dispatch,
-                () => {}
-              );
-            } */}
+            }
           />
         </>
       ),
-    },
+    }, */
+
+
+
+
+
+
 
     {
       field: 'seccion_actual_respon_serie_doc_consultar',
-      headerName: 'Sección Actual Responsable de la serie documental',
-      width: 350,
-
+      headerName: 'Sección Actual Responsable de la serie documental - CONSULTAR',
+      width: 450,
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
@@ -215,21 +166,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             title2="Sección Actual Responsable de la serie documental - CONSULTAR"
             handleChange={
               () => {}
-           /*   
-              (event: React.ChangeEvent<HTMLInputElement>) => {
-              handleCheckboxChangePRUEBA(
-                event,
-                'id_und_organizacional_actual',
-                params.row.id_und_organizacional_actual,
-                [],
-                [
-                  'seccion_actual_respon_serie_doc_consultar',
-                  'consultar_expedientes_no_propios',
-                ],
-                dispatch,
-                () => {}
-              );
-            } */}
+            }
           />
         </>
       ),
@@ -237,8 +174,8 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
 
     {
       field: 'seccion_actual_respon_serie_doc_descargar',
-      headerName: 'Sección Actual Responsable de la serie documental',
-      width: 350,
+      headerName: 'Sección Actual Responsable de la serie documental - DESCARGAR',
+      width: 450,
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
@@ -247,65 +184,60 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             title2="Sección Actual Responsable de la serie documental - DESCARGAR"
             handleChange={
               () => {}
-           /*   
-              (event: React.ChangeEvent<HTMLInputElement>) => {
-              handleCheckboxChangePRUEBA(
-                event,
-                'id_und_organizacional_actual',
-                params.row.id_und_organizacional_actual,
-                [],
-                [
-                  'seccion_actual_respon_serie_doc_consultar',
-                  'consultar_expedientes_no_propios',
-                ],
-                dispatch,
-                () => {}
-              );
-            } */}
+            }
           />
         </>
       ),
     },
+    // ? seccion raiz del organigrama actual
     {
       field: 'seccion_raiz_organi_actual_consultar',
-      headerName: 'Sección Raíz Consultar',
-      width: 150,
+      headerName: 'Sección Raíz de organigrama actual - CONSULTAR',
+      width: 350,
     },
     {
       field: 'seccion_raiz_organi_actual_descargar',
-      headerName: 'Sección Raíz Descargar',
-      width: 150,
+      headerName: 'Sección Raíz del organigrama actual - DESCARGAR',
+      width: 350,
     },
+    // ? seccion raiz del organigrama actual FIN
+    // ! secciones que son del mismo nivel o uno superior al de la unidad responsable de la serie documental
     {
       field: 'secciones_actuales_mismo_o_sup_nivel_respon_consulta',
-      headerName: 'Secciones Actuales Consultar',
-      width: 150,
+      headerName: 'Secciones de nivel igual o superior a la unidad responsable de la serie - CONSULTAR',
+      width: 550,
     },
     {
       field: 'secciones_actuales_mismo_o_sup_nivel_respon_descargar',
-      headerName: 'Secciones Actuales Descargar',
-      width: 150,
+      headerName: 'Secciones de nivel igual o superior a la unidad responsable de la serie - DESCARGAR',
+      width: 550,
     },
+    // ! secciones que son del mismo nivel o uno superior al de la unidad responsable de la serie documental
+    //* secciones que son de niveles inferiores al de la unidad responsable de la serie documental
     {
       field: 'secciones_actuales_inf_nivel_respon_consultar',
-      headerName: 'Secciones Actuales Inf Consultar',
-      width: 150,
+      headerName: 'Secciones de niveles inferiores a la unidad responsable de la serie - CONSULTAR',
+      width: 550,
     },
     {
       field: 'secciones_actuales_inf_nivel_respon_descargar',
-      headerName: 'Secciones Actuales Inf Descargar',
-      width: 150,
+      headerName: 'Secciones de niveles inferiores a la unidad responsable de la serie - DESCARGAR',
+      width: 550,
     },
+    //* secciones que son de niveles inferiores al de la unidad responsable de la serie documental
+    //! unidades organizacionales dentro de la unidad responsable de la serie documental del mismo nivel o SUPERIOR al de la unidad responsable del expediente.
     {
       field: 'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar',
-      headerName: 'Unidades Org Consultar',
-      width: 150,
+      headerName: 'Unidades dentro de la responsable de la serie del mismo nivel o superior al de la unidad responsable del expediente - CONSULTAR',
+      width: 720,
     },
     {
       field: 'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar',
-      headerName: 'Unidades Org Descargar',
-      width: 150,
+      headerName: 'Unidades dentro de la responsable de la serie del mismo nivel o superior al de la unidad responsable del expediente - DESCARGAR',
+      width: 720,
     },
+    //! unidades organizacionales dentro de la unidad responsable de la serie documental del mismo nivel o SUPERIOR al de la unidad responsable del expediente.
+    // ? unidades organizacionales dentro de la unidad responsable de la serie documental de niveles INFERIORES al de la unidad responsable del expediente.
     {
       field: 'unds_org_sec_respon_inf_nivel_resp_exp_consultar',
       headerName: 'Unidades Org Inf Consultar',
@@ -316,24 +248,11 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
       headerName: 'Unidades Org Inf Descargar',
       width: 150,
     },
-    { field: 'id_ccd', headerName: 'ID CCD', width: 150 },
-    {
-      field: 'cod_clasificacion_exp',
-      headerName: 'Código Clasificación',
-      width: 150,
-    },
-    {
-      field: 'id_cat_serie_und_org_ccd',
-      headerName: 'ID Cat Serie',
-      width: 150,
-    },
-  ];
+    // ? unidades organizacionales dentro de la unidad responsable de la serie documental de niveles INFERIORES al de la unidad responsable del expediente.
 
-  const rows = [
-    {
-      id: 1,
-      ...data,
-    },
+    // ! datos iniciales
+    ...columnsControlAcceso,
+    // ! datos iniciales
   ];
 
   if (!verModuloAutorizacioneGenerales) return <></>;
@@ -358,7 +277,11 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     <>
       <RenderDataGrid
         columns={columns ?? []}
-        rows={controlAccesoExpedientesList.length > 0 ? controlAccesoExpedientesList : rows ?? []}
+        rows={
+          controlAccesoExpedientesList.length > 0
+            ? controlAccesoExpedientesList
+            : rowsControlInicial ?? []
+        }
         title="Autorizaciones generales"
       />
     </>

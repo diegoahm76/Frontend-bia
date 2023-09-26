@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 const initialStateCreacionControlDeAccesoExp = {
-  id_ctrl_acceso_clasif_exp_ccd: null, // se debe configurar el id del control de acceso respectivamente en la edición de los checkbox, pero si es la primer creación no debe llevar ningún valor así que no debe ser editables
+  id_ctrl_acceso_clasif_exp_ccd: null, // ! debe ir en nulo al ser la primera creación que se está realizando
   id_serie_doc: null, // ?  camino 2 ? lleva valor : no lleva valor
   nombre_serie: null, // ?  camino 2 ? lleva valor : no lleva valor
   codigo_serie: null, // ?  camino 2 ? lleva valor : no lleva valor
@@ -34,7 +34,7 @@ const initialStateCreacionControlDeAccesoExp = {
   id_cat_serie_und_org_ccd: null,
 };
 
-const rows = [
+export const rowsDataGrid = [
   {
     ...initialStateCreacionControlDeAccesoExp,
   },

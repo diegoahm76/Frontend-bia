@@ -3,11 +3,11 @@ export const columnnsSelCCDPSD = [
   {
     headerName: 'Nombre CCD',
     field: 'nombre',
-    width: 180
+    width: 220
   },
   {
     headerName: 'Versión',
     field: 'version',
-    width: 95
+    width: 110
   },
 ];

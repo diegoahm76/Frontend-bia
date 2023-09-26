@@ -73,7 +73,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
     {
       headerName: 'Actual',
       field: 'is_actual',
-      width: 60,
+      width: 80,
       renderCell: (params: { row: { actual: boolean } }) => {
         return params.row.actual ? (
           <Chip size="small" label="Si" color="info" variant="outlined" />
@@ -85,7 +85,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
     {
       headerName: 'Fecha terminado',
       field: 'fecha_terminado',
-      width: 120,
+      width: 130,
       renderCell: (params: { row: { fecha_terminado: string } }) => {
         const date = new Date(params.row.fecha_terminado);
         return <Chip size="medium" label={`${date.toLocaleDateString()}`} color="info" variant="outlined" />;
@@ -143,7 +143,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         handleSeleccionCCD_PSD(false);
