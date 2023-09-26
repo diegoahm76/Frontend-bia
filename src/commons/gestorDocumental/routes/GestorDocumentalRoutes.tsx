@@ -20,6 +20,7 @@ import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
+import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
@@ -107,6 +108,11 @@ const routes = [
     name: 'expedientes',
     // component: () => <ExpedientesRoutes />,
     component: () => <CierreExpedientesRoutes />,
+  },
+  {
+    path: 'archivo_fisico/',
+    name: 'archivo_fisico',
+    component: () => <ArchivoFisicoRoutes />,
   },
 ];
 
