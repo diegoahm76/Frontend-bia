@@ -32,7 +32,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
     const { set_datos_editar } = useContext(ModalBusquedaMediosSolicitudContext);
 
-  
+
 
     const [visible, setVisible] = useState<boolean>(false);
     const [checked, setChecked] = useState(false);
@@ -83,7 +83,6 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
     };
 
 
-
     const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
         try {
 
@@ -107,7 +106,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
     const handleInputChange = (e: any): void => {
         setInputValue(e.target.value);
     };
- 
+
 
 
     const columns = [
@@ -164,7 +163,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
             sortable: false,
             renderCell: (params: any) => {
                 const idMedioSolicitud = params.row.id_medio_solicitud;
-                const valor_actualizar= params.row;
+                const valor_actualizar = params.row;
 
                 const handleDeleteClick = () => {
                     // Llama a la función de eliminación pasando el idMedioSolicitud como parámetro
@@ -175,7 +174,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
                     })
                 };
-                
+
 
                 return (
                     <>
@@ -194,10 +193,10 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
                         <IconButton
                             color="primary"
                             aria-label="Editar"
-                          
-                              onClick={() => {
+
+                            onClick={() => {
                                 void confirmarAccion(
-                                   ()=> {set_datos_editar(valor_actualizar);setVisible(false)} ,
+                                    () => { set_datos_editar(valor_actualizar); setVisible(false) },
                                     '¿Estás seguro de editar este campo?'
                                 );
                             }}>
@@ -379,8 +378,6 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
                         </FormControl>
                     </Grid>
 
-
-
                     <Grid item xs={4}>
                         <Button
                             color='primary'
@@ -393,8 +390,8 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
                         >
                             Buscar
                         </Button>
-                    </Grid>   
-            
+                    </Grid>
+
                     <Grid item xs={12}>
                         <Box
                             component="form"

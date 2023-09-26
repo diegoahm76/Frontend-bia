@@ -26,8 +26,13 @@ interface InfoPorId {
   id_tipologia_doc_trd: number;
   id_persona_crea_plantilla: number;
 }
+interface InformacionPlantillasPersonasProps {
+  data: any; // Aquí debes especificar el tipo correcto de "data" si es posible
+}
+export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPersonasProps> = ( data ) => {
+  console.log(data);
+  console.log(data.data);
 
-export const InformacionPlantillasPersonas: React.FC = () => {
   const mi_info: InfoPorId = {
     id_plantilla_doc: 0,
     nombre_creador: null,
@@ -53,7 +58,7 @@ export const InformacionPlantillasPersonas: React.FC = () => {
 
   const Fetch_buscar_info_porId = async (): Promise<void> => {
     try {
-      const url = `/gestor/plantillas/plantilla_documento/get_id/1/`;
+      const url = `/gestor/plantillas/plantilla_documento/get_id/16/`;
       const res: any = await api.get(url);
       const [numero_consulta]: any = res.data.data;
       set_info_por_id(numero_consulta);
