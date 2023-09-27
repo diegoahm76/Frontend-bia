@@ -32,6 +32,9 @@ export const CheckboxComponent = ({
     <>
       <FormControl fullWidth>
         <FormControlLabel
+          sx={{
+            justifyContent: 'center',
+          }}
           control={
             <Checkbox
               checked={checked}

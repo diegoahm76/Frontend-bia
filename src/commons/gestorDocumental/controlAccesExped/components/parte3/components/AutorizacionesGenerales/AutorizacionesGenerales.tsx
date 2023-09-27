@@ -23,6 +23,8 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { rowsDataGrid } from './utils/initialState';
 import { control } from 'leaflet';
 import { setControlAccesoExpedientesList } from '../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { render } from '@testing-library/react';
+import { event } from './../../../../../../recaudo/facilidadPago/interfaces/interfaces';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
@@ -47,21 +49,18 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     valorComparar: any,
     arrayComparacion: any[],
     propiedades: string[],
-    guiaConsultar: string, // con eso  se guia para el nuevo consultar al desmarcar
+    valorConsulta: string,
     dispatch: React.Dispatch<any>,
     callback: Function
-  ): any => {
+  ): void => {
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
-      elemento.hasOwnProperty(compararPor) &&
-      elemento[compararPor] === valorComparar
+      elemento.hasOwnProperty(compararPor) && elemento[compararPor] === valorComparar
         ? {
             ...elemento,
             ...Object.fromEntries(
               propiedades.map((propiedad) => [
                 propiedad,
-                propiedad === guiaConsultar && elemento[propiedad]
-                  ? true
-                  : checked,
+                propiedad === valorConsulta && elemento[propiedad] ? true : checked,
               ])
             ),
           }
@@ -72,6 +71,8 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     dispatch(callback(DATOS_ACTUALIZADOS)):
     (callback(DATOS_ACTUALIZADOS))
   };
+
+
 
   const handleCheckboxChangeConsulta = (
     { target: { checked } }: React.ChangeEvent<HTMLInputElement>,
@@ -79,20 +80,18 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     valorComparar: any,
     arrayComparacion: any[],
     propiedades: string[],
-    guiaConsultar: string, // con eso  se guia para el nuevo consultar al desmarcar
+    valorConsulta: string,
     dispatch: React.Dispatch<any>,
     callback: Function
-  ): any => {
+  ): void => {
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
-      elemento.hasOwnProperty(compararPor) &&
-      elemento[compararPor] === valorComparar
+      elemento.hasOwnProperty(compararPor) && elemento[compararPor] === valorComparar
         ? {
             ...elemento,
             ...Object.fromEntries(
               propiedades.map((propiedad) => [
                 propiedad,
-                // guia consultar debe reemplazar el string
-                propiedad === guiaConsultar ? checked : false,
+                propiedad === valorConsulta ? checked : false,
               ])
             ),
           }
@@ -104,12 +103,14 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     (callback(DATOS_ACTUALIZADOS))
   };
 
+
   const columns = [
     // ? ------------- ENTIDAD ENTERA ------------
     {
       field: 'entidad_entera_consultar',
       headerName: 'Entidad Entera',
       width: 210,
+      headerAlign: 'center',
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
@@ -117,7 +118,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             title1="CONSULTAR"
             title2="CONSULTAR"
             handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleCheckboxChangePRUEBA(
+              handleCheckboxChangeConsulta(
                 event,
                 'id_ccd',
                 params.row.id_ccd,
@@ -137,7 +138,7 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
             title1=" DESCARGAR"
             title2="DESCARGAR"
             handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleCheckboxChangeConsulta(
+              handleCheckboxChangePRUEBA(
                 event,
                 'id_ccd',
                 params.row.id_ccd,
@@ -158,24 +159,6 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
     },
     // ? ------------- ENTIDAD ENTERA ------------
 
-   /* {
-      field: 'entidad_entera_descargar',
-      headerName: 'Entidad Entera - DESCARGAR',
-      width: 210,
-      renderCell: (params: GridValueGetterParams) => (
-        <>
-          <CheckboxComponent
-            checked={params.row.entidad_entera_descargar}
-            title1="Entidad Entera - DESCARGAR"
-            title2="Entidad Entera - DESCARGAR"
-            handleChange={
-              () => {}
-            }
-          />
-        </>
-      ),
-    }, */
-
 
 
 
@@ -184,98 +167,374 @@ export const AutorizacionesGenerales: FC<any> = (): JSX.Element => {
 
     {
       field: 'seccion_actual_respon_serie_doc_consultar',
-      headerName: 'Sección Actual Responsable de la serie documental - CONSULTAR',
+      headerName: 'Sección Actual Responsable de la serie documental',
       width: 450,
+      headerAlign: 'center',
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
             checked={params.row.seccion_actual_respon_serie_doc_consultar}
-            title1="Sección Actual Responsable de la serie documental - CONSULTAR"
-            title2="Sección Actual Responsable de la serie documental - CONSULTAR"
+            title1="CONSULTAR"
+            title2="CONSULTAR"
             handleChange={
-              () => {}
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangeConsulta(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'seccion_actual_respon_serie_doc_consultar',
+                    'seccion_actual_respon_serie_doc_descargar',
+                  ],
+                  'seccion_actual_respon_serie_doc_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+          <CheckboxComponent
+            checked={params.row.seccion_actual_respon_serie_doc_descargar}
+            title1="DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangePRUEBA(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'seccion_actual_respon_serie_doc_consultar',
+                    'seccion_actual_respon_serie_doc_descargar',
+                  ],
+                  'seccion_actual_respon_serie_doc_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
             }
           />
         </>
       ),
     },
 
+
+    // ? seccion raiz del organigrama actual
     {
-      field: 'seccion_actual_respon_serie_doc_descargar',
-      headerName: 'Sección Actual Responsable de la serie documental - DESCARGAR',
-      width: 450,
+      field: 'seccion_raiz_organi_actual_consultar',
+      headerName: 'Sección Raíz de organigrama actual',
+      width: 350,
+      headerAlign: 'center',
       renderCell: (params: GridValueGetterParams) => (
         <>
           <CheckboxComponent
-            checked={params.row.seccion_actual_respon_serie_doc_descargar}
-            title1="Sección Actual Responsable de la serie documental - DESCARGAR"
-            title2="Sección Actual Responsable de la serie documental - DESCARGAR"
+            checked={params.row.seccion_raiz_organi_actual_consultar}
+            title1="CONSULTAR"
+            title2="CONSULTAR"
             handleChange={
-              () => {}
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangeConsulta(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'seccion_raiz_organi_actual_consultar',
+                    'seccion_raiz_organi_actual_descargar',
+                  ],
+                  'seccion_raiz_organi_actual_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+          <CheckboxComponent
+            checked={params.row.seccion_raiz_organi_actual_descargar}
+            title1="DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangePRUEBA(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'seccion_raiz_organi_actual_consultar',
+                    'seccion_raiz_organi_actual_descargar',
+                  ],
+                  'seccion_raiz_organi_actual_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
             }
           />
         </>
       ),
     },
-    // ? seccion raiz del organigrama actual
-    {
-      field: 'seccion_raiz_organi_actual_consultar',
-      headerName: 'Sección Raíz de organigrama actual - CONSULTAR',
-      width: 350,
-    },
-    {
-      field: 'seccion_raiz_organi_actual_descargar',
-      headerName: 'Sección Raíz del organigrama actual - DESCARGAR',
-      width: 350,
-    },
+
     // ? seccion raiz del organigrama actual FIN
     // ! secciones que son del mismo nivel o uno superior al de la unidad responsable de la serie documental
     {
       field: 'secciones_actuales_mismo_o_sup_nivel_respon_consulta',
-      headerName: 'Secciones de nivel igual o superior a la unidad responsable de la serie - CONSULTAR',
+      headerName: 'Secciones de nivel igual o superior a la unidad responsable de la serie',
       width: 550,
+      headerAlign: 'center',
+      renderCell: (params: GridValueGetterParams) => (
+        <>
+          <CheckboxComponent
+            checked={params.row.secciones_actuales_mismo_o_sup_nivel_respon_consulta}
+            title1="CONSULTAR"
+            title2="CONSULTAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangeConsulta(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'secciones_actuales_mismo_o_sup_nivel_respon_consulta',
+                    'secciones_actuales_mismo_o_sup_nivel_respon_descargar',
+                  ],
+                  'secciones_actuales_mismo_o_sup_nivel_respon_consulta',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+          <CheckboxComponent
+            checked={params.row.secciones_actuales_mismo_o_sup_nivel_respon_descargar}
+            title1="DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangePRUEBA(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'secciones_actuales_mismo_o_sup_nivel_respon_consulta',
+                    'secciones_actuales_mismo_o_sup_nivel_respon_descargar',
+                  ],
+                  'secciones_actuales_mismo_o_sup_nivel_respon_consulta',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+        </>
+      ),
     },
-    {
-      field: 'secciones_actuales_mismo_o_sup_nivel_respon_descargar',
-      headerName: 'Secciones de nivel igual o superior a la unidad responsable de la serie - DESCARGAR',
-      width: 550,
-    },
+
     // ! secciones que son del mismo nivel o uno superior al de la unidad responsable de la serie documental
     //* secciones que son de niveles inferiores al de la unidad responsable de la serie documental
     {
       field: 'secciones_actuales_inf_nivel_respon_consultar',
-      headerName: 'Secciones de niveles inferiores a la unidad responsable de la serie - CONSULTAR',
+      headerName: 'Secciones de niveles inferiores a la unidad responsable de la serie',
       width: 550,
+      headerAlign: 'center',
+      renderCell: (params: GridValueGetterParams) => (
+        <>
+          <CheckboxComponent
+            checked={params.row.secciones_actuales_inf_nivel_respon_consultar}
+            title1="CONSULTAR"
+            title2="CONSULTAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangeConsulta(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'secciones_actuales_inf_nivel_respon_consultar',
+                    'secciones_actuales_inf_nivel_respon_descargar',
+                  ],
+                  'secciones_actuales_inf_nivel_respon_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+          <CheckboxComponent
+            checked={params.row.secciones_actuales_inf_nivel_respon_descargar}
+            title1="DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangePRUEBA(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'secciones_actuales_inf_nivel_respon_consultar',
+                    'secciones_actuales_inf_nivel_respon_descargar',
+                  ],
+                  'secciones_actuales_inf_nivel_respon_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+        </>
+      ),
     },
-    {
-      field: 'secciones_actuales_inf_nivel_respon_descargar',
-      headerName: 'Secciones de niveles inferiores a la unidad responsable de la serie - DESCARGAR',
-      width: 550,
-    },
+
     //* secciones que son de niveles inferiores al de la unidad responsable de la serie documental
     //! unidades organizacionales dentro de la unidad responsable de la serie documental del mismo nivel o SUPERIOR al de la unidad responsable del expediente.
     {
       field: 'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar',
-      headerName: 'Unidades dentro de la responsable de la serie del mismo nivel o superior al de la unidad responsable del expediente - CONSULTAR',
-      width: 720,
+      headerName: 'Unidades dentro de la responsable de la serie del mismo nivel o superior al de la unidad responsable del expediente',
+      width: 750,
+      headerAlign: 'center',
+      renderCell: (params: GridValueGetterParams) => (
+        <>
+          <CheckboxComponent
+            checked={params.row.unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar}
+            title1="CONSULTAR"
+            title2="CONSULTAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangeConsulta(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar',
+                    'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar',
+                  ],
+                  'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+          <CheckboxComponent
+            checked={params.row.unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar}
+            title1="DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangePRUEBA(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar',
+                    'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar',
+                  ],
+                  'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+        </>
+      ),
     },
-    {
-      field: 'unds_org_sec_respon_mismo_o_sup_nivel_resp_exp_descargar',
-      headerName: 'Unidades dentro de la responsable de la serie del mismo nivel o superior al de la unidad responsable del expediente - DESCARGAR',
-      width: 720,
-    },
+
     //! unidades organizacionales dentro de la unidad responsable de la serie documental del mismo nivel o SUPERIOR al de la unidad responsable del expediente.
     // ? unidades organizacionales dentro de la unidad responsable de la serie documental de niveles INFERIORES al de la unidad responsable del expediente.
     {
       field: 'unds_org_sec_respon_inf_nivel_resp_exp_consultar',
-      headerName: 'Unidades Org Inf Consultar',
-      width: 150,
+      headerName: 'Unidades dentro de la unidad responsable de la serie de niveles inferiores al de la unidad responsable del expediente',
+      width: 750,
+      headerAlign: 'center',
+      renderCell: (params: GridValueGetterParams) => (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
+          <CheckboxComponent
+            checked={params.row.unds_org_sec_respon_inf_nivel_resp_exp_consultar}
+            title1="CONSULTAR"
+            title2="CONSULTAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangeConsulta(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'unds_org_sec_respon_inf_nivel_resp_exp_consultar',
+                    'unds_org_sec_respon_inf_nivel_resp_exp_descargar',
+                  ],
+                  'unds_org_sec_respon_inf_nivel_resp_exp_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+          <CheckboxComponent
+            checked={params.row.unds_org_sec_respon_inf_nivel_resp_exp_descargar}
+            title1="DESCARGAR"
+            title2="DESCARGAR"
+            handleChange={
+              (event: React.ChangeEvent<HTMLInputElement>) => {
+                handleCheckboxChangePRUEBA(
+                  event,
+                  'id_ccd',
+                  params.row.id_ccd,
+                  controlAccesoExpedientesList.length > 0
+                    ? controlAccesoExpedientesList
+                    : rowsControlInicial,
+                  [
+                    'unds_org_sec_respon_inf_nivel_resp_exp_consultar',
+                    'unds_org_sec_respon_inf_nivel_resp_exp_descargar',
+                  ],
+                  'unds_org_sec_respon_inf_nivel_resp_exp_consultar',
+                  dispatch,
+                  controlAccesoExpedientesList.length > 0 ? setControlAccesoExpedientesList : setRowsControlInicial
+                );
+              }
+            }
+          />
+        </div>
+      ),
     },
-    {
-      field: 'unds_org_sec_respon_inf_nivel_resp_exp_descargar',
-      headerName: 'Unidades Org Inf Descargar',
-      width: 150,
-    },
+
     // ? unidades organizacionales dentro de la unidad responsable de la serie documental de niveles INFERIORES al de la unidad responsable del expediente.
 
     // ! datos iniciales
