@@ -13,8 +13,10 @@ import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralC
 import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
 import { setControlAccesoExpedientesList, setCurrentSerieSubserie, setVerModuloAutorizacioneGenerales } from '../../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { getControlAccesoExpedientes } from '../../../../../toolkit/thunks/controlAccesoThunks';
+import { rowsDataGrid } from '../../../../parte3/components/AutorizacionesGenerales/utils/initialState';
 
-export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
+export const SeleccionSerieSubserie: FC<any> = (params: any): JSX.Element => {
+  const { rowsControlInicial, setRowsControlInicial } = params;
   //* dispatch declaration
   const dispatch = useAppDispatch();
   // ! states from redux
@@ -76,6 +78,14 @@ export const SeleccionSerieSubserie: FC<any> = (): JSX.Element => {
                   //* se debe modificar el nombre del estado, ya que se debe almacenar la series o subserie que se haya seleccionado
                   console.log(selectedOption);
                   dispatch(setCurrentSerieSubserie(selectedOption?.item));
+
+                  //
+                  setRowsControlInicial(
+                    rowsDataGrid.map((row: any) => ({
+                      ...row,
+                      id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+                    }))
+                  );
 
                   void getControlAccesoExpedientes({
                     setLoading: handleGeneralLoading,

@@ -9,8 +9,10 @@ import { setControlAccesoExpedientesList, setTipoDeClasificacion, setVerModuloAu
 import { optionsSelect } from './utils/choices';
 import { getControlAccesoExpedientes } from '../../../../../toolkit/thunks/controlAccesoThunks';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { rowsDataGrid } from '../../../../parte3/components/AutorizacionesGenerales/utils/initialState';
 
-export const Clasificacion = (): JSX.Element | null => {
+export const Clasificacion = (params: any): JSX.Element | null => {
+  const { setRowsControlInicial, rowsControlInicial } = params;
   //* get states from the redux store
   const { tipoDeClasificacion, moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
@@ -24,6 +26,11 @@ export const Clasificacion = (): JSX.Element | null => {
   const handleChange = (selectedOption: any) => {
     console.log(selectedOption)
     dispatch(setTipoDeClasificacion(selectedOption));
+    setRowsControlInicial(rowsDataGrid.map((row: any) => ({
+      ...row,
+      id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+    })))
+
     void getControlAccesoExpedientes({
       setLoading: handleGeneralLoading,
       idCcd: currentCcdCtrlAccesoExp?.id_ccd,

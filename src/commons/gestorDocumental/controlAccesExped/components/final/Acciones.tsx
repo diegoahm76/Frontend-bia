@@ -8,13 +8,18 @@ import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { Title } from '../../../../../components';
-import { getOutModule, reset_all } from '../../../../../utils/functions/getOutOfModule';
+import {
+  getOutModule,
+  reset_all,
+} from '../../../../../utils/functions/getOutOfModule';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
 import { resetStatesCtrlAccesoExp } from '../../toolkit/slice/CtrlAccesoExpSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { rowsDataGrid } from './../parte3/components/AutorizacionesGenerales/utils/initialState';
 
-export const Acciones: FC<any> = (): JSX.Element | null => {
-  
+export const Acciones: FC<any> = (params: any): JSX.Element | null => {
+  const { setRowsControlInicial, rowsControlInicial } = params;
+
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* navigate declaration
@@ -22,16 +27,18 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   // ? loading  para los botones guardar y proceder respectivamente
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
-  const { currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { currentCcdCtrlAccesoExp } = useAppSelector(
+    (state) => state.ctrlAccesoExpSlice
+  );
 
   // ! states from redux
-/*  const {
+  /*  const {
     current_unidad_organizacional,
     currentSeriesSubseries,
   } = useAppSelector((state) => state.PsdSlice); */
 
   //* usePSD
- // const { reset_all } = usePSD();
+  // const { reset_all } = usePSD();
 
   // ? validaciones de renderizado
   // if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
@@ -40,7 +47,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
     console.log('hello from submit');
   };
 
-  if(!currentCcdCtrlAccesoExp) return null;
+  if (!currentCcdCtrlAccesoExp) return null;
 
   return (
     <>
@@ -55,13 +62,13 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
             style={{
               textAlign: 'center',
               justifyContent: 'center',
-              marginTop: '20px'
+              marginTop: '20px',
             }}
           >
             <Grid
               container
               sx={{
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
               spacing={2}
             >
@@ -71,7 +78,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                 sm={12}
                 sx={{
                   // zIndex: 2,
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}
               >
                 <Stack
@@ -84,13 +91,12 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     color="primary"
                     variant="outlined"
                     startIcon={<CleanIcon />}
-                    onClick={
-                      () => {
-                        reset_all(
-                          [() => dispatch(resetStatesCtrlAccesoExp())]
-                        );
-                      }
-                    }
+                    onClick={() => {
+                      reset_all([
+                        () => dispatch(resetStatesCtrlAccesoExp()),
+                        () => setRowsControlInicial(rowsDataGrid.map((row: any) => ({ ...row, id_ccd: currentCcdCtrlAccesoExp?.id_ccd }))),
+                      ]);
+                    }}
                   >
                     LIMPIAR CAMPOS
                   </Button>
@@ -105,19 +111,19 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     GUARDAR
                   </LoadingButton>
 
-                    <Button
-                      color="error"
-                      variant="contained"
-                      startIcon={<CloseIcon />}
-                      onClick={() => {
-                        getOutModule(
-                          navigate,
-                          [() => {},]
-                        );
-                      }}
-                    >
-                      SALIR DEL MÓDULO
-                    </Button>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    startIcon={<CloseIcon />}
+                    onClick={() => {
+                      getOutModule(navigate, [
+                        () => dispatch(resetStatesCtrlAccesoExp()),
+                        () => setRowsControlInicial([]),
+                      ]);
+                    }}
+                  >
+                    SALIR DEL MÓDULO
+                  </Button>
                 </Stack>
               </Grid>
             </Grid>

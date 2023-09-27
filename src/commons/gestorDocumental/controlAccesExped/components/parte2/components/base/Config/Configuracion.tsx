@@ -8,9 +8,11 @@ import { setControlAccesoExpedientesList, setCurrentControlAccesoExpedientes, se
 import { optionsSelectConfiguracion } from '../utils/choices';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { getUnidadesOrganizacionalesSeccionSubseccion } from '../../../../../toolkit/thunks/unidadesOrgnizacionalesThunks';
+import { rowsDataGrid } from '../../../../parte3/components/AutorizacionesGenerales/utils/initialState';
 
 {/* bajo la decisión que se tome en este componente se procede a realizar el proceso necesario, dependiendo si se elige la opción # 1 o la opción # 2 */}
-export const ConfiguracionInicial = (): JSX.Element | null => {
+export const ConfiguracionInicial = (params: any): JSX.Element | null => {
+  const { setRowsControlInicial, rowsControlInicial } = params;
 
 
   //* get states from the redux store
@@ -26,6 +28,10 @@ export const ConfiguracionInicial = (): JSX.Element | null => {
     dispatch(setControlAccesoExpedientesList([]));
     dispatch(setCurrentControlAccesoExpedientes(null));
     dispatch(set_mood_module(selectedOption));
+    setRowsControlInicial(rowsDataGrid.map((row: any) => ({
+      ...row,
+      id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+    })))
 
     //* if selected option . value = 2, se debe hacer la petición http al servidor para obtener las unidades organizacionales asociadas a ese organigrama y en consecuencia las series documentales asociadas a esa unidad organizacional luego de seleccionar la respectiva unidad organizacional
     if(selectedOption?.value === 1){
