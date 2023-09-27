@@ -11,6 +11,9 @@ import { obtener_bien_especifico_af, obtener_bodegas, obtener_categorias, obtene
 import dayjs from "dayjs";
 import BuscarBien from "./BuscarBien";
 import BuscarBienConsumo from "./BuscarBienConsumo";
+import ClearIcon from '@mui/icons-material/Clear';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ControlDeInventariosScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -134,6 +137,12 @@ export const ControlDeInventariosScreen: React.FC = () => {
     set_agrupar_bodega(false);
     set_resultado_busqueda([]);
     set_inventarios([]);
+  }
+
+  const limpiar_todo: () => void = () => {
+    set_seleccion_tipo_bien('');
+    set_seleccion_tipo_consulta('');
+    limpiar_filtros();
   }
 
   const salir_entrada: () => void = () => {
@@ -777,6 +786,40 @@ export const ControlDeInventariosScreen: React.FC = () => {
           <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
+      <Grid container justifyContent="flex-end">
+          <Grid item xs={7}>
+            <Box
+              component="form"
+              sx={{ mt: '20px', mb: '20px' }}
+              noValidate
+              autoComplete="off"
+            >
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={2}
+                sx={{ mt: '20px' }}
+              >
+                <Button
+                  color='inherit'
+                  variant='contained'
+                  startIcon={<CleanIcon />}
+                  onClick={limpiar_todo}
+                >
+                  Limpiar
+                </Button>
+                <Button
+                  color='error'
+                  variant='contained'
+                  startIcon={<ClearIcon />}
+                  onClick={salir_entrada}
+                >
+                  Salir
+                </Button>
+              </Stack>
+            </Box>
+          </Grid>
+        </Grid>
     </>
   );
 }
