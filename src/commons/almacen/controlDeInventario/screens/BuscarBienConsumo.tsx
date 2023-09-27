@@ -8,8 +8,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Stack,
+  Switch,
   TextField,
 } from '@mui/material';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
@@ -22,7 +28,7 @@ import { Title } from '../../../../components/Title';
 import { useAppDispatch } from '../../../../hooks';
 import { download_pdf_dos } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls_dos } from '../../../../documentos-descargar/XLS_descargar';
-import { obtener_bienes } from '../thunks/ControlDeInventarios';
+import { obtener_bienes_consumo, obtener_lista_tipo } from '../thunks/ControlDeInventarios';
 
 interface IProps {
   is_modal_active: boolean;
@@ -33,85 +39,66 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const BuscarBien = (props: IProps) => {
+const BuscarBienConsumo = (props: IProps) => {
   const dispatch = useAppDispatch();
   const [seleccion_bien, set_seleccion_bien] = useState<any | null>(null);
+  const [lt_tipos, set_lt_tipos] = useState<any[]>([]);
   const [data_bienes, set_data_bienes] = useState<any[]>([]);
   const [data_filtrada, set_data_filtrada] = useState<any[]>([]);
   const [nombre, set_nombre] = useState<string>('');
-  const [serial, set_serial] = useState<string>('');
-  const [categoria, set_categoria] = useState<string>('');
-  const [marca, set_marca] = useState<string>('');
   const [codigo_bien, set_codigo_bien] = useState<string>('');
+  const [seleccion_tipo, set_seleccion_tipo] = useState<string>('');
+  const [solicitable, set_solicitable] = useState<boolean>(false);
 
   useEffect(() => {
-    dispatch(obtener_bienes()).then((response: any) => {
+    obtener_tipos_fc();
+    dispatch(obtener_bienes_consumo()).then((response: any) => {
       response.data.map((resp: any, index: number) => {
         resp.id = index;
         if (resp.codigo_bien === null || resp.codigo_bien === undefined)
           resp.codigo_bien = 'N/A';
-        if (resp.nombre_marca === null || resp.nombre_marca === undefined)
-          resp.nombre_marca = 'N/A';
-        if (resp.serial === null || resp.serial === undefined)
-          resp.serial = 'N/A';
+        if (resp.tipo_consumo_vivero === null || resp.tipo_consumo_vivero === undefined)
+          resp.tipo_consumo_vivero = 'N/A';
       });
       set_data_bienes(response.data);
       set_data_filtrada(response.data);
     });
   }, []);
 
+  const obtener_tipos_fc: () => void = () => {
+    dispatch(obtener_lista_tipo()).then((response: any) => {
+      set_lt_tipos(response);
+    })
+  }
+
   const cambio_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_nombre(e.target.value);
-  };
-  const cambio_categoria: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_categoria(e.target.value);
-  };
-  const cambio_marca: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_marca(e.target.value);
-  };
-  const cambio_serial: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_serial(e.target.value);
   };
   const cambio_codigo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo_bien(e.target.value);
   };
+  const cambio_tipo_elemento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    if (e.target.value === 'STE') {
+      set_seleccion_tipo("");
+      return
+    }
+    set_seleccion_tipo(e.target.value);
+  }
 
   const buscar_bien = (): void => {
     let data_filter: any = [...data_bienes];
-    if (nombre === '' && codigo_bien === '' && serial === '' && categoria === '' && marca === '') {
+    if (nombre === '' && codigo_bien === '' && seleccion_tipo === '') {
       set_data_filtrada(data_bienes);
       return;
     }
     if (codigo_bien !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.codigo_bien.includes(codigo_bien)
-        ),
-      ];
-    if (serial !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.serial.toLowerCase().includes(serial.toLowerCase())
-        ),
-      ];
+      data_filter = [...data_filter.filter((da: any) => da.codigo_bien.includes(codigo_bien))];
     if (nombre !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.nombre_bien.toLowerCase().includes(nombre.toLowerCase())
-        ),
-      ];
-    if (categoria !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.categoria.toLowerCase().includes(categoria.toLowerCase())
-        ),
-      ];
-    if (marca !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.nombre_marca.toLowerCase().includes(marca.toLowerCase())
-        ),
-      ];
+      data_filter = [...data_filter.filter((da: any) => da.nombre_bien.toLowerCase().includes(nombre.toLowerCase()))];
+    if (seleccion_tipo !== '')
+      data_filter = [...data_filter.filter((da: any) => da.cod_tipo_elemento_vivero === seleccion_tipo)];
+
+    data_filter = [...data_filter.filter((da: any) => da.solicitable_vivero === solicitable)];
     set_data_filtrada(data_filter);
   };
 
@@ -161,7 +148,7 @@ const BuscarBien = (props: IProps) => {
               }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     label="Código"
                     helperText=" "
@@ -171,17 +158,7 @@ const BuscarBien = (props: IProps) => {
                     onChange={cambio_codigo_bien}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    label="serial"
-                    helperText=" "
-                    size="small"
-                    fullWidth
-                    value={serial}
-                    onChange={cambio_serial}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     label="Nombre"
                     helperText=" "
@@ -191,27 +168,39 @@ const BuscarBien = (props: IProps) => {
                     onChange={cambio_nombre}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    label="Categoría"
-                    helperText=" "
-                    size="small"
-                    fullWidth
-                    value={categoria}
-                    onChange={cambio_categoria}
-                  />
+                <Grid item xs={12} sm={12}>
+                  <Stack
+                    direction="row"
+                    justifyContent="center"
+                    spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl size='small' fullWidth>
+                        <InputLabel>Tipo elemento</InputLabel>
+                        <Select
+                          value={seleccion_tipo}
+                          label="Tipo elemento"
+                          onChange={cambio_tipo_elemento}
+                        >
+                          <MenuItem value={"STE"}>Seleccionar tipo elemento</MenuItem>
+                          {lt_tipos.map((lt: any) => (
+                            <MenuItem key={lt[0]} value={lt[0]}>
+                              {lt[1]}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Stack>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    label="Marca"
-                    helperText=" "
-                    size="small"
-                    fullWidth
-                    value={marca}
-                    onChange={cambio_marca}
-                  />
+                <Grid item xs={12} sm={12}>
+                  <Stack
+                    direction="row"
+                    justifyContent="center"
+                    spacing={2}>
+                    <span style={{ margin: '7px' }}>Solicitable </span><Switch color="primary" onChange={() => { set_solicitable(!solicitable) }} />
+                  </Stack>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={12}>
                   <Stack direction="row" justifyContent="center">
                     <Button
                       color="primary"
@@ -271,18 +260,13 @@ const BuscarBien = (props: IProps) => {
                         style={{ width: '8%' }}
                       ></Column>
                       <Column
-                        field="nombre_marca"
-                        header="Marca"
+                        field="tipo_consumo_vivero"
+                        header="Tipo elemento"
                         style={{ width: '8%' }}
                       ></Column>
                       <Column
-                        field="serial"
-                        header="Serial"
-                        style={{ width: '8%' }}
-                      ></Column>
-                      <Column
-                        field="categoria"
-                        header="Categoría"
+                        field="solicitable_vivero"
+                        header="Solicitable"
                         style={{ width: '8%' }}
                       ></Column>
                     </DataTable>
@@ -317,4 +301,4 @@ const BuscarBien = (props: IProps) => {
   );
 };
 // eslint-disable-next-line no-restricted-syntax
-export default BuscarBien;
+export default BuscarBienConsumo;

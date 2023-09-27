@@ -7,9 +7,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import { ResultadosBusqueda } from "./ResultadosBusqueda";
-import { obtener_bien_especifico_af, obtener_bodegas, obtener_categorias, obtener_estados, obtener_inventario_af, obtener_inventario_categoria, obtener_inventario_propio, obtener_inventario_tipo, obtener_lista_origenes } from "../thunks/ControlDeInventarios";
+import { obtener_bien_especifico_af, obtener_bodegas, obtener_categorias, obtener_estados, obtener_inventario_af, obtener_inventario_categoria, obtener_inventario_consumo, obtener_inventario_propio, obtener_inventario_tipo, obtener_lista_origenes } from "../thunks/ControlDeInventarios";
 import dayjs from "dayjs";
 import BuscarBien from "./BuscarBien";
+import BuscarBienConsumo from "./BuscarBienConsumo";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ControlDeInventariosScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   { value: 'Inventario por categoría', id: 'IPC' },
   { value: 'Ver inventario propio', id: 'IP' },
   { value: 'Inventario por tipo por bodega', id: 'ITB' }];
-  const lt_bienes_consumo = [{ value: 'Todo el inventario', id: 'TI' },
+  const lt_bienes_consumo = [{ value: 'Todo el inventario', id: 'TIC' },
   { value: 'Bienes solicitables por vivero', id: 'BSV' }];
   const lt_ubicaciones = [{ id: "Asignado", value: "Asignado" }, { id: "Prestado", value: "Prestado" }, { id: "En Bodega", value: "En Bodega" }];
   const lt_propiedad = [{ id: "Propio", value: "Propio" }, { id: "No propio", value: "No propio" }];
@@ -63,10 +64,12 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const [lt_categorias, set_lt_categorias] = useState<any[]>([]);
   const [lt_origenes, set_lt_origenes] = useState<any[]>([]);
   const [lt_estados_bien, set_lt_estados_bien] = useState<any[]>([]);
+  const [inventarios, set_inventarios] = useState<any[]>([]);
   const [seleccion_tipo_bien, set_seleccion_tipo_bien] = useState<string>("");
   const [seleccion_tipo_consulta, set_seleccion_tipo_consulta] = useState<string>("");
   const [seleccion_bodega, set_seleccion_bodega] = useState<string>("");
   const [seleccion_estado, set_seleccion_estado] = useState<string>("");
+  const [seleccion_consulta, set_seleccion_consulta] = useState<string>("");
   const [seleccion_ubicacion, set_seleccion_ubicacion] = useState<string>("");
   const [seleccion_propiedad, set_seleccion_propiedad] = useState<string>("");
   const [seleccion_categoria, set_seleccion_categoria] = useState<string>("");
@@ -74,6 +77,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const [bienes_baja, set_bienes_baja] = useState<boolean>(false);
   const [bienes_salida, set_bienes_salida] = useState<boolean>(false);
   const [agrupar, set_agrupar] = useState<boolean>(false);
+  const [agrupar_bodega, set_agrupar_bodega] = useState<boolean>(false);
   const [mostrar, set_mostrar] = useState<boolean>(false);
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
@@ -90,6 +94,13 @@ export const ControlDeInventariosScreen: React.FC = () => {
   }
   const cambio_bodega: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_bodega(e.target.value);
+  }
+  const cambio_consulta: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    set_seleccion_consulta(e.target.value);
+    if (e.target.value === 'E') {
+      set_agrupar_bodega(false);
+      set_inventarios([]);
+    }
   }
   const cambio_estado: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_estado(e.target.value);
@@ -116,10 +127,13 @@ export const ControlDeInventariosScreen: React.FC = () => {
     set_seleccion_categoria('');
     set_seleccion_origen('');
     set_seleccion_bien('');
+    set_seleccion_consulta('');
     set_bienes_baja(false);
     set_bienes_salida(false);
     set_agrupar(false);
+    set_agrupar_bodega(false);
     set_resultado_busqueda([]);
+    set_inventarios([]);
   }
 
   const salir_entrada: () => void = () => {
@@ -135,6 +149,30 @@ export const ControlDeInventariosScreen: React.FC = () => {
       set_resultado_busqueda(response.data);
     });
   }
+  const obtener_inventario_consumo_fc: () => void = () => {
+    let solicitable_vivero: any = null;
+    solicitable_vivero = seleccion_tipo_consulta === 'TIC' ? '' : true;
+    dispatch(obtener_inventario_consumo({ seleccion_bodega, seleccion_bien, solicitable: solicitable_vivero, agrupar_bodega })).then((response: any) => {
+      if (agrupar_bodega) {
+        response.data.forEach((data: any) => {
+          data.inventario.forEach((inv: any) => { inv.nombre_bodega = data.nombre_bodega; });
+        });
+      }
+      set_resultado_busqueda(response.data);
+    });
+  }
+
+  useEffect(() => {
+    if (resultado_busqueda.length > 0 && (agrupar || agrupar_bodega || mostrar || seleccion_tipo_consulta === 'IPC')) {
+      let agrupamiento: any = [];
+      resultado_busqueda.forEach(rb => {
+        rb.inventario.forEach((inv: any) => {
+          agrupamiento.push(inv);
+        });
+      });
+      set_inventarios(agrupamiento);
+    }
+  }, [resultado_busqueda]);
 
   const busqueda_control: () => void = () => {
     switch (seleccion_tipo_consulta) {
@@ -184,6 +222,12 @@ export const ControlDeInventariosScreen: React.FC = () => {
         dispatch(obtener_inventario_tipo({ seleccion_bodega, mostrar })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
+        break;
+      case 'TIC':
+        obtener_inventario_consumo_fc();
+        break;
+      case 'BSV':
+        obtener_inventario_consumo_fc();
         break;
       default:
         break;
@@ -255,7 +299,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        {<Grid item md={12} xs={12}>
+        <Grid item md={12} xs={12}>
           <Title title="Filtros de búsqueda" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             {seleccion_tipo_consulta === 'TI' && <Grid item container spacing={2}>
@@ -518,7 +562,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   direction="row"
                   justifyContent="center"
                   spacing={2}>
-                  <span style={{ margin: '7px' }}>Agrupar resultados por categoría</span><Switch color="primary" onChange={() => { set_agrupar(!agrupar); set_resultado_busqueda([]) }} />
+                  <span style={{ margin: '7px' }}>Agrupar resultados por categoría</span><Switch color="primary" onChange={() => { set_agrupar(!agrupar); set_resultado_busqueda([]); set_inventarios([]); }} />
                 </Stack>
               </Grid>}
             </Grid>}
@@ -553,7 +597,150 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   direction="row"
                   justifyContent="center"
                   spacing={2}>
-                  <span style={{ margin: '7px' }}>Mostrar resultados para toda la entidad</span><Switch color="primary" onChange={() => { set_mostrar(!mostrar); set_resultado_busqueda([]) }} />
+                  <span style={{ margin: '7px' }}>Mostrar resultados para toda la entidad</span><Switch color="primary" onChange={() => { set_mostrar(!mostrar); set_resultado_busqueda([]); set_inventarios([]); }} />
+                </Stack>
+              </Grid>}
+            </Grid>}
+            {seleccion_tipo_consulta === 'TIC' && <Grid item container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <FormControl size='small' fullWidth>
+                  <InputLabel>Consulta</InputLabel>
+                  <Select
+                    value={seleccion_consulta}
+                    label="Consulta"
+                    onChange={cambio_consulta}
+                  >
+                    <MenuItem value={"B"}>Por bodega</MenuItem>
+                    <MenuItem value={"E"}>por entidad</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl size='small' fullWidth>
+                  <InputLabel>Bodega</InputLabel>
+                  <Select
+                    value={seleccion_bodega}
+                    label="Bodega"
+                    onChange={cambio_bodega}
+                    disabled={seleccion_consulta === 'E' || seleccion_consulta === ''}
+                  >
+                    <MenuItem value={"Todos"}>Todos</MenuItem>
+                    {lt_bodegas.map((lt: any) => (
+                      <MenuItem key={lt.id_bodega} value={lt.id_bodega}>
+                        {lt.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
+                <Stack direction="row" justifyContent="center">
+                  <Grid item xs={12} sm={5}>
+                    <TextField
+                      label="Bien"
+                      type={'text'}
+                      size="small"
+                      fullWidth
+                      value={seleccion_bien.nombre_bien ?? ""}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <Stack
+                      direction="row"
+                      justifyContent="center"
+                      spacing={2}
+                    >
+                      <Button
+                        color='primary'
+                        variant='contained'
+                        startIcon={<SearchIcon />}
+                        onClick={() => { set_abrir_modal_bien(true); }}
+                      >
+                        Buscar bien de consumo
+                      </Button>
+                      {abrir_modal_bien && (
+                        <BuscarBienConsumo
+                          is_modal_active={abrir_modal_bien}
+                          set_is_modal_active={set_abrir_modal_bien}
+                          title={"Búsqueda de bienes de consumo"}
+                          seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
+                      )}
+                    </Stack>
+                  </Grid>
+                </Stack>
+              </Grid>
+              {seleccion_bodega === 'Todos' && <Grid item xs={12} sm={12}>
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={2}>
+                  <span style={{ margin: '7px' }}>Agrupar resultados por bodega </span><Switch color="primary" onChange={() => { set_agrupar_bodega(!agrupar_bodega); set_resultado_busqueda([]); set_inventarios([]); }} />
+                </Stack>
+              </Grid>}
+            </Grid>}
+            {seleccion_tipo_consulta === 'BSV' && <Grid item container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <FormControl size='small' fullWidth>
+                  <InputLabel>Bodega</InputLabel>
+                  <Select
+                    value={seleccion_bodega}
+                    label="Bodega"
+                    onChange={cambio_bodega}
+                  >
+                    <MenuItem value={"Todos"}>Todos</MenuItem>
+                    {lt_bodegas.map((lt: any) => (
+                      <MenuItem key={lt.id_bodega} value={lt.id_bodega}>
+                        {lt.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  label="Bien"
+                  type={'text'}
+                  size="small"
+                  fullWidth
+                  value={seleccion_bien.nombre_bien ?? ""}
+                  InputProps={{
+                    readOnly: true
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={2}
+                >
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<SearchIcon />}
+                    onClick={() => { set_abrir_modal_bien(true); }}
+                  >
+                    Buscar bien de consumo
+                  </Button>
+                  {abrir_modal_bien && (
+                    <BuscarBienConsumo
+                      is_modal_active={abrir_modal_bien}
+                      set_is_modal_active={set_abrir_modal_bien}
+                      title={"Búsqueda de bienes de consumo"}
+                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
+                  )}
+                </Stack>
+              </Grid>
+              {seleccion_bodega === 'Todos' && <Grid item xs={12} sm={12}>
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={2}>
+                  <span style={{ margin: '7px' }}>Agrupar resultados por bodega </span><Switch color="primary" onChange={() => { set_agrupar_bodega(!agrupar_bodega); set_resultado_busqueda([]); set_inventarios([]); }} />
                 </Stack>
               </Grid>}
             </Grid>}
@@ -565,15 +752,15 @@ export const ControlDeInventariosScreen: React.FC = () => {
                 <Button
                   color='primary'
                   variant='contained'
-                  startIcon={<SearchIcon />}
+                  // startIcon={<SearchIcon />}
                   onClick={busqueda_control}
                 >
-                  Buscar
+                  Consultar
                 </Button>
               </Stack>
             </Grid>
           </Box>
-        </Grid>}
+        </Grid>
       </Grid>}
       {(resultado_busqueda.length > 0) && (<Grid
         container
@@ -587,7 +774,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
     </>
