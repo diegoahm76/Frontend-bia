@@ -39,7 +39,7 @@ export const putControlAccesoExpedientes = async (
     setLoading(true);
     const url = `gestor/ctrl-acceso/put/`;
     const { data: response } = await api.put(url, data);
-    if (response?.status === 200) {
+    if (response?.succes < 200 || response?.succes < 310) {
       control_success(
         response?.detail || 'Se actualizó el control de acceso de expedientes'
       );

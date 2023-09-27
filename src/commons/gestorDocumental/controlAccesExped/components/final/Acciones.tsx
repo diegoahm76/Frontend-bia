@@ -54,7 +54,11 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
     void putControlAccesoExpedientes(
       setLoadingButton,
       controlAccesoExpedientesList.length > 0
-        ? currentControlAccesoExpedientes
+        ? controlAccesoExpedientesList.filter(
+            (el) =>
+              el?.id_ctrl_acceso_clasif_exp_ccd ===
+              currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
+          )[0]
         : rowsControlInicial[0]
     ).then(() => {
       getControlAccesoExpedientes({
@@ -69,7 +73,7 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
         if (res?.length > 0) {
           dispatch(setControlAccesoExpedientesList(res));
           dispatch(setVerModuloAutorizacioneGenerales(false));
-        }else{
+        } else {
           dispatch(setVerModuloAutorizacioneGenerales(true));
           dispatch(setControlAccesoExpedientesList([]));
         }

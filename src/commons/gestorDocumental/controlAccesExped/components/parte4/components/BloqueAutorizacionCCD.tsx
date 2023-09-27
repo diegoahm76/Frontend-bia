@@ -1,64 +1,61 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { FC } from 'react';
-import {
-  Avatar,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useAppSelector } from '../../../../../../hooks';
-import  EditIcon  from '@mui/icons-material/Edit';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
 import { render } from '@testing-library/react';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
+import { setCurrentControlAccesoExpedientes, setVerModuloAutorizacioneGenerales } from '../../../toolkit/slice/CtrlAccesoExpSlice';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
   const { controlAccesoExpedientesList } = useAppSelector(
     (state) => state.ctrlAccesoExpSlice
   );
 
   const columns = [
     {
-      headerName : 'Clasificación / sección',
+      headerName: 'Clasificación / sección',
       field: 'clasificacion_seccion',
       headerAlign: 'center',
       width: 230,
       renderCell: (params: GridValueGetterParams) => (
         <>
-          {
-            params?.row?.cod_clasificacion_exp ? params?.row?.cod_clasificacion_exp : params?.row?.nombre_unidad_organizacional
-          }
+          {params?.row?.cod_clasificacion_exp
+            ? params?.row?.cod_clasificacion_exp
+            : params?.row?.nombre_unidad_organizacional}
         </>
-      )
+      ),
     },
-     {
-      headerName : 'Serie documental',
+    {
+      headerName: 'Serie documental',
       field: 'serie_documental',
       headerAlign: 'center',
       width: 520,
       renderCell: (params: GridValueGetterParams) => (
         <>
-          {
-            params?.row?.cod_clasificacion_exp ? 'N/A' : 
-            `${params?.row?.codigo_serie} - ${params?.row?.nombre_serie} / ${params?.row?.codigo_subserie} - ${params?.row?.nombre_subserie}`
-          }
+          {params?.row?.cod_clasificacion_exp
+            ? 'N/A'
+            : `${params?.row?.codigo_serie} - ${params?.row?.nombre_serie} / ${params?.row?.codigo_subserie} - ${params?.row?.nombre_subserie}`}
         </>
-      )
+      ),
     },
     {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
         <>
-        <Tooltip
-            title="Actualizar control de acceso"
-            placement="top"
-            arrow
-        >
-          <IconButton
-            onClick={() => {
-              console.log(params?.row)
-             /* dispatch(get_trd_current(params.row));
+          <Tooltip title="Actualizar control de acceso" placement="top" arrow>
+            <IconButton
+              onClick={() => {
+                console.log(params?.row);
+                dispatch(setCurrentControlAccesoExpedientes(params.row));
+                dispatch(setVerModuloAutorizacioneGenerales(true));
+                /* dispatch(get_trd_current(params.row));
               closeModalModalSearchTRD();
               dispatch(get_trds([]));
               const ccd_current = {
@@ -70,27 +67,27 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
               ).then((res: any) => {
                 dispatch(get_catalogo_trd(params.row.id_trd));
               }); */
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
               }}
-              variant="rounded"
             >
-              <EditIcon
-                titleAccess="Ver TRD"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <EditIcon
+                  titleAccess="Ver TRD"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
           </Tooltip>
         </>
-      )
-    }
+      ),
+    },
   ];
 
   /*
@@ -110,7 +107,7 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
   "unds_org_sec_respon_inf_nivel_resp_exp_descargar": false,
   */
 
- if (controlAccesoExpedientesList?.length === 0) return <></>;
+  if (controlAccesoExpedientesList?.length === 0) return <></>;
 
   /*
   if (loadingRestricciones)

@@ -22,7 +22,7 @@ import { columnsControlAcceso } from './columns/columns';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import { rowsDataGrid } from './utils/initialState';
 import { control } from 'leaflet';
-import { setControlAccesoExpedientesList } from '../../../../toolkit/slice/CtrlAccesoExpSlice';
+import { setControlAccesoExpedientesList, setCurrentControlAccesoExpedientes } from '../../../../toolkit/slice/CtrlAccesoExpSlice';
 import { render } from '@testing-library/react';
 import { event } from './../../../../../../recaudo/facilidadPago/interfaces/interfaces';
 
@@ -35,7 +35,7 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
   const {
     verModuloAutorizacioneGenerales,
     controlAccesoExpedientesList,
-    currentCcdCtrlAccesoExp,
+    currentControlAccesoExpedientes,
   } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   // ? context necesarios
@@ -57,6 +57,8 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
     dispatch: React.Dispatch<any>,
     callback: Function
   ): void => {
+    console.log(arrayComparacion)
+    console.log(callback)
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
       elemento.hasOwnProperty(compararPor) &&
       elemento[compararPor] === valorComparar
@@ -89,6 +91,10 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
     dispatch: React.Dispatch<any>,
     callback: Function
   ): void => {
+
+    console.log(arrayComparacion)
+    console.log(callback)
+
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
       elemento.hasOwnProperty(compararPor) &&
       elemento[compararPor] === valorComparar
@@ -578,13 +584,14 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
     );
   }
 
+
   return (
     <>
       <RenderDataGrid
         columns={columns ?? []}
         rows={
           controlAccesoExpedientesList.length > 0
-            ? controlAccesoExpedientesList
+            ?  controlAccesoExpedientesList.filter(el => el?.id_ctrl_acceso_clasif_exp_ccd === currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd)
             : rowsControlInicial ?? []
         }
         title="Autorizaciones generales"
