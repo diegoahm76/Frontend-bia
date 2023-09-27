@@ -13,9 +13,17 @@ import {
   reset_all,
 } from '../../../../../utils/functions/getOutOfModule';
 import { containerStyles } from '../../../tca/screens/utils/constants/constants';
-import { resetStatesCtrlAccesoExp } from '../../toolkit/slice/CtrlAccesoExpSlice';
+import {
+  resetStatesCtrlAccesoExp,
+  setControlAccesoExpedientesList,
+  setVerModuloAutorizacioneGenerales,
+} from '../../toolkit/slice/CtrlAccesoExpSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { rowsDataGrid } from './../parte3/components/AutorizacionesGenerales/utils/initialState';
+import {
+  getControlAccesoExpedientes,
+  putControlAccesoExpedientes,
+} from '../../toolkit/thunks/controlAccesoThunks';
 
 export const Acciones: FC<any> = (params: any): JSX.Element | null => {
   const { setRowsControlInicial, rowsControlInicial } = params;
@@ -32,19 +40,41 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
   );
 
   // ! states from redux
-  /*  const {
-    current_unidad_organizacional,
-    currentSeriesSubseries,
-  } = useAppSelector((state) => state.PsdSlice); */
-
-  //* usePSD
-  // const { reset_all } = usePSD();
-
-  // ? validaciones de renderizado
-  // if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
+  const {
+    controlAccesoExpedientesList,
+    currentControlAccesoExpedientes,
+    currentSerieSubserie,
+  } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   const handleSubmit = () => {
-    console.log('hello from submit');
+    controlAccesoExpedientesList.length > 0
+      ? console.log(currentControlAccesoExpedientes)
+      : console.log(rowsControlInicial[0]);
+
+    void putControlAccesoExpedientes(
+      setLoadingButton,
+      controlAccesoExpedientesList.length > 0
+        ? currentControlAccesoExpedientes
+        : rowsControlInicial[0]
+    ).then(() => {
+      getControlAccesoExpedientes({
+        setLoading: setLoadingButton,
+        idCcd: currentCcdCtrlAccesoExp?.id_ccd,
+        codClasificacionExp:
+          currentControlAccesoExpedientes?.cod_clasificacion_exp ||
+          rowsControlInicial[0]?.cod_clasificacion_exp,
+        idCatSerieUnidad: currentSerieSubserie?.id_cat_serie_unidad,
+      }).then((res) => {
+        console.log(res);
+        if (res?.length > 0) {
+          dispatch(setControlAccesoExpedientesList(res));
+          dispatch(setVerModuloAutorizacioneGenerales(false));
+        }else{
+          dispatch(setVerModuloAutorizacioneGenerales(true));
+          dispatch(setControlAccesoExpedientesList([]));
+        }
+      });
+    });
   };
 
   if (!currentCcdCtrlAccesoExp) return null;
@@ -94,7 +124,13 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
                     onClick={() => {
                       reset_all([
                         () => dispatch(resetStatesCtrlAccesoExp()),
-                        () => setRowsControlInicial(rowsDataGrid.map((row: any) => ({ ...row, id_ccd: currentCcdCtrlAccesoExp?.id_ccd }))),
+                        () =>
+                          setRowsControlInicial(
+                            rowsDataGrid.map((row: any) => ({
+                              ...row,
+                              id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+                            }))
+                          ),
                       ]);
                     }}
                   >

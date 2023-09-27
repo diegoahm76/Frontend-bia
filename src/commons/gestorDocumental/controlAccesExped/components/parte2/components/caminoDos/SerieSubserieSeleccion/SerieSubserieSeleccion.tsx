@@ -103,10 +103,11 @@ export const SeleccionSerieSubserie: FC<any> = (params: any): JSX.Element => {
                   }).then((res) => {
                     console.log(res);
                     if(res?.length > 0){
-                      // dispatch(setVerModuloAutorizacioneGenerales(false));
+                      dispatch(setVerModuloAutorizacioneGenerales(false));
                       dispatch(setControlAccesoExpedientesList(res));
                   }else{
                     dispatch(setVerModuloAutorizacioneGenerales(true));
+                    dispatch(setControlAccesoExpedientesList([]));
                   }
                   });
  

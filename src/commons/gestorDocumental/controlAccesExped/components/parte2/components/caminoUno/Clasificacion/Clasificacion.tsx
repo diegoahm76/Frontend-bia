@@ -47,10 +47,11 @@ export const Clasificacion = (params: any): JSX.Element | null => {
     }).then((res) => {
       console.log(res);
       if(res?.length > 0){
-        // dispatch(setVerModuloAutorizacioneGenerales(false));
+        dispatch(setVerModuloAutorizacioneGenerales(false));
         dispatch(setControlAccesoExpedientesList(res));
     }else{
       dispatch(setVerModuloAutorizacioneGenerales(true));
+      dispatch(setControlAccesoExpedientesList([]));
     }
     });
     //* se debe realizar la petición al servicio de control de acceso de expedientes

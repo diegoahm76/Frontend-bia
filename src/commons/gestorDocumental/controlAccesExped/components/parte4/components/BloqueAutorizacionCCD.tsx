@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { FC } from 'react';
 import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Grid,
+  Avatar,
+  IconButton,
   Tooltip,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-// import { Loader } from '../../../../../../../utils/Loader/Loader';
-
-import InfoIcon from '@mui/icons-material/Info';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppSelector } from '../../../../../../hooks';
-import { columnsBloqueAutorizacionCCD } from './columns/columnsBloqueAutorizacionCCD';
-import { EditIcon } from '@mui/icons-material/Edit';
+import  EditIcon  from '@mui/icons-material/Edit';
+import { render } from '@testing-library/react';
+import { type GridValueGetterParams } from '@mui/x-data-grid';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
@@ -24,12 +18,43 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
   );
 
   const columns = [
-    ...columnsBloqueAutorizacionCCD,
+    {
+      headerName : 'Clasificación / sección',
+      field: 'clasificacion_seccion',
+      headerAlign: 'center',
+      width: 230,
+      renderCell: (params: GridValueGetterParams) => (
+        <>
+          {
+            params?.row?.cod_clasificacion_exp ? params?.row?.cod_clasificacion_exp : params?.row?.nombre_unidad_organizacional
+          }
+        </>
+      )
+    },
+     {
+      headerName : 'Serie documental',
+      field: 'serie_documental',
+      headerAlign: 'center',
+      width: 520,
+      renderCell: (params: GridValueGetterParams) => (
+        <>
+          {
+            params?.row?.cod_clasificacion_exp ? 'N/A' : 
+            `${params?.row?.codigo_serie} - ${params?.row?.nombre_serie} / ${params?.row?.codigo_subserie} - ${params?.row?.nombre_subserie}`
+          }
+        </>
+      )
+    },
     {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
         <>
+        <Tooltip
+            title="Actualizar control de acceso"
+            placement="top"
+            arrow
+        >
           <IconButton
             onClick={() => {
               console.log(params?.row)
@@ -62,6 +87,7 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
               />
             </Avatar>
           </IconButton>
+          </Tooltip>
         </>
       )
     }
@@ -84,7 +110,7 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
   "unds_org_sec_respon_inf_nivel_resp_exp_descargar": false,
   */
 
-  if (controlAccesoExpedientesList?.length === 0) return <></>;
+ if (controlAccesoExpedientesList?.length === 0) return <></>;
 
   /*
   if (loadingRestricciones)
@@ -107,7 +133,7 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        columns={[]}
+        columns={columns ?? []}
         rows={controlAccesoExpedientesList ?? []}
         title="Listado bloque de autorización en el CCD"
       />
