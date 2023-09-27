@@ -84,6 +84,14 @@ export const SeleccionSerieSubserie: FC<any> = (params: any): JSX.Element => {
                     rowsDataGrid.map((row: any) => ({
                       ...row,
                       id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+                      id_serie_doc: selectedOption?.item?.id_serie_doc,
+                      nombre_serie: selectedOption?.item?.nombre_serie,
+                      codigo_serie: selectedOption?.item?.codigo_serie,
+                      id_subserie_doc: selectedOption?.item?.id_subserie_doc,
+                      nombre_subserie: selectedOption?.item?.nombre_subserie,
+                      codigo_subserie: selectedOption?.item?.codigo_subserie,
+                      nombre_unidad_organizacional: currentUnidadOrganizacional?.nombre_unidad_org_actual_admin_series,
+                      codigo_unidad_organizacional: currentUnidadOrganizacional?.codigo_unidad_org_actual_admin_series,
                     }))
                   );
 

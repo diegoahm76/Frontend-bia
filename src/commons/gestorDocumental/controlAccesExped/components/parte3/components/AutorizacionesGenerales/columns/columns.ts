@@ -55,7 +55,17 @@ export const columnsControlAcceso = [
     headerName: 'Cód. Clasificación expediente',
     width: 210,
     headerAlign: 'center',
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.cod_clasificacion_exp || 'N/A'}`,
+    valueGetter: (params: GridValueGetterParams) => {
+      const codClasificacionExp = params.row.cod_clasificacion_exp;
+      if (codClasificacionExp === 'P') {
+        return 'Público';
+      } else if (codClasificacionExp === 'C') {
+        return 'Clasificado';
+      } else if (codClasificacionExp === 'R') {
+        return 'Reservado';
+      } else {
+        return 'N/A';
+      }
+    },
   },
 ]

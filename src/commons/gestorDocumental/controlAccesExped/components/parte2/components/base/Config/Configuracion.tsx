@@ -16,7 +16,7 @@ export const ConfiguracionInicial = (params: any): JSX.Element | null => {
 
 
   //* get states from the redux store
-  const { moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { moodConfig, currentCcdCtrlAccesoExp, currentUnidadOrganizacional, currentSerieSubserie } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
     //* context declarations
@@ -31,8 +31,16 @@ export const ConfiguracionInicial = (params: any): JSX.Element | null => {
     setRowsControlInicial(rowsDataGrid.map((row: any) => ({
       ...row,
       id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+      id_serie_doc: currentSerieSubserie?.id_serie_doc, 
+      nombre_serie: currentSerieSubserie?.nombre_serie,
+      codigo_serie: currentSerieSubserie?.codigo_serie,
+      id_subserie_doc: currentSerieSubserie?.id_subserie_doc,
+      nombre_subserie: currentSerieSubserie?.nombre_subserie,
+      codigo_subserie: currentSerieSubserie?.codigo_subserie,
+      nombre_unidad_organizacional: currentUnidadOrganizacional?.nombre_unidad_org_actual_admin_series,
+      codigo_unidad_organizacional: currentUnidadOrganizacional?.codigo_unidad_org_actual_admin_series,
     })))
-
+    
     //* if selected option . value = 2, se debe hacer la petición http al servidor para obtener las unidades organizacionales asociadas a ese organigrama y en consecuencia las series documentales asociadas a esa unidad organizacional luego de seleccionar la respectiva unidad organizacional
     if(selectedOption?.value === 1){
       console.log('getting directly control de acceso de expedientes')

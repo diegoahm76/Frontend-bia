@@ -14,7 +14,7 @@ import { rowsDataGrid } from '../../../../parte3/components/AutorizacionesGenera
 export const Clasificacion = (params: any): JSX.Element | null => {
   const { setRowsControlInicial, rowsControlInicial } = params;
   //* get states from the redux store
-  const { tipoDeClasificacion, moodConfig, currentCcdCtrlAccesoExp } = useAppSelector((state) => state.ctrlAccesoExpSlice);
+  const { tipoDeClasificacion, moodConfig, currentCcdCtrlAccesoExp, currentUnidadOrganizacional, currentSerieSubserie } = useAppSelector((state) => state.ctrlAccesoExpSlice);
   //*dispatch declarations
     const dispatch = useAppDispatch();
       // ? context necesarios
@@ -29,6 +29,15 @@ export const Clasificacion = (params: any): JSX.Element | null => {
     setRowsControlInicial(rowsDataGrid.map((row: any) => ({
       ...row,
       id_ccd: currentCcdCtrlAccesoExp?.id_ccd,
+      id_serie_doc: currentSerieSubserie?.id_serie_doc, 
+      nombre_serie: currentSerieSubserie?.nombre_serie,
+      codigo_serie: currentSerieSubserie?.codigo_serie,
+      id_subserie_doc: currentSerieSubserie?.id_subserie_doc,
+      nombre_subserie: currentSerieSubserie?.nombre_subserie,
+      codigo_subserie: currentSerieSubserie?.codigo_subserie,
+      nombre_unidad_organizacional: currentUnidadOrganizacional?.nombre_unidad_org_actual_admin_series,
+      codigo_unidad_organizacional: currentUnidadOrganizacional?.codigo_unidad_org_actual_admin_series,
+      cod_clasificacion_exp: selectedOption?.value,
     })))
 
     void getControlAccesoExpedientes({
