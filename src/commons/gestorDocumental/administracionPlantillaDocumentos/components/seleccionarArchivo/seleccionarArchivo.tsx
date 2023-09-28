@@ -9,6 +9,17 @@ import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 export const SeleccionarArchivo: React.FC = () => {
 
   const [fileExtension, setFileExtension] = useState<string | null>(null);
+  const { form, set_form } = useContext(FormCreacionContext);
+
+
+
+  const HandleCompletarDatos = (e: any) => {
+    set_form({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  }
+
 
   const VisuallyHiddenInput = styled('input')`
     clip: rect(0 0 0 0);
@@ -25,6 +36,11 @@ export const SeleccionarArchivo: React.FC = () => {
     const fileInput = event.target;
     if (fileInput?.files?.length) {
       const fileName = fileInput.files[0].name;
+       const selectedFile = fileInput.files[0];
+      set_form({
+        ...form,
+        archivo: selectedFile,
+      });
       const extension = fileName.split('.').pop();
       if (extension) {
         setFileExtension(extension);
@@ -37,19 +53,6 @@ export const SeleccionarArchivo: React.FC = () => {
       setFileExtension(null);
     }
   };
-
-
-  const { form, set_form } = useContext(FormCreacionContext);
-
-  const HandleCompletarDatos = (e: any) => {
-    set_form({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  }
-
-
-
 
 
   return (
@@ -73,7 +76,6 @@ export const SeleccionarArchivo: React.FC = () => {
           <TextField
             style={{ marginTop: 20 }}
             variant="outlined"
-            size="small"
             label="Nombre de la Plantilla"
             fullWidth
             name="nombre"
