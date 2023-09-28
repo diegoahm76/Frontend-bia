@@ -266,7 +266,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
               md: 2,
               control_form: control_despacho,
               control_name: 'fecha_despacho',
-              default_value: new Date().toString(),
+              default_value: '',
               rules: { required_rule: { rule: true, message: 'requerido' } },
               label: 'Fecha del despacho',
               type: 'text',

@@ -58,7 +58,7 @@ const ListadoCarpetas = ({
         if (cajas.id_caja !== null && cajas.id_caja !== undefined) {
             void dispatch(get_carpeta_id(cajas.id_caja))
         }
-    }, [])
+    }, [cajas])
 
 
 

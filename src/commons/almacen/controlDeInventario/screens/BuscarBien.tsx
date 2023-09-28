@@ -22,6 +22,7 @@ import { Title } from '../../../../components/Title';
 import { useAppDispatch } from '../../../../hooks';
 import { download_pdf_dos } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls_dos } from '../../../../documentos-descargar/XLS_descargar';
+import { obtener_bienes } from '../thunks/ControlDeInventarios';
 
 interface IProps {
   is_modal_active: boolean;
@@ -39,22 +40,34 @@ const BuscarBien = (props: IProps) => {
   const [data_filtrada, set_data_filtrada] = useState<any[]>([]);
   const [nombre, set_nombre] = useState<string>('');
   const [serial, set_serial] = useState<string>('');
+  const [categoria, set_categoria] = useState<string>('');
+  const [marca, set_marca] = useState<string>('');
   const [codigo_bien, set_codigo_bien] = useState<string>('');
 
   useEffect(() => {
-    // dispatch(obtener_bienes_viveros(props.filtros)).then((response: any) => {
-    //   response.data.map((resp: any, index: number) => {
-    //     resp.id = index;
-    //     if (resp.codigo_bien === null || resp.codigo_bien === undefined)
-    //       resp.codigo_bien = 'N/A';
-    //   });
-    //   set_data_bienes(response.data);
-    //   set_data_filtrada(response.data);
-    // });
+    dispatch(obtener_bienes()).then((response: any) => {
+      response.data.map((resp: any, index: number) => {
+        resp.id = index;
+        if (resp.codigo_bien === null || resp.codigo_bien === undefined)
+          resp.codigo_bien = 'N/A';
+        if (resp.nombre_marca === null || resp.nombre_marca === undefined)
+          resp.nombre_marca = 'N/A';
+        if (resp.serial === null || resp.serial === undefined)
+          resp.serial = 'N/A';
+      });
+      set_data_bienes(response.data);
+      set_data_filtrada(response.data);
+    });
   }, []);
 
   const cambio_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_nombre(e.target.value);
+  };
+  const cambio_categoria: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_categoria(e.target.value);
+  };
+  const cambio_marca: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_marca(e.target.value);
   };
   const cambio_serial: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_serial(e.target.value);
@@ -65,20 +78,38 @@ const BuscarBien = (props: IProps) => {
 
   const buscar_bien = (): void => {
     let data_filter: any = [...data_bienes];
-    if (nombre === '' && codigo_bien === '') {
+    if (nombre === '' && codigo_bien === '' && serial === '' && categoria === '' && marca === '') {
       set_data_filtrada(data_bienes);
       return;
     }
-    if (nombre !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.nombre.toLowerCase().includes(nombre.toLowerCase())
-        ),
-      ];
     if (codigo_bien !== '')
       data_filter = [
         ...data_filter.filter((da: any) =>
           da.codigo_bien.includes(codigo_bien)
+        ),
+      ];
+    if (serial !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.serial.toLowerCase().includes(serial.toLowerCase())
+        ),
+      ];
+    if (nombre !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.nombre_bien.toLowerCase().includes(nombre.toLowerCase())
+        ),
+      ];
+    if (categoria !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.categoria.toLowerCase().includes(categoria.toLowerCase())
+        ),
+      ];
+    if (marca !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.nombre_marca.toLowerCase().includes(marca.toLowerCase())
         ),
       ];
     set_data_filtrada(data_filter);
@@ -89,9 +120,11 @@ const BuscarBien = (props: IProps) => {
     props.set_is_modal_active(false);
   };
   const columnsss = [
-    { field: 'codigo_bien', header: 'Código bien', style: { width: '5%' } },
-    { field: 'nombre', header: 'Nombre', style: { width: '8%' } },
-    { field: 'tipo_bien', header: 'Tipo bien', style: { width: '8%' } },
+    { field: 'codigo_bien', header: 'Código', style: { width: '5%' } },
+    { field: 'serial', header: 'Serial', style: { width: '8%' } },
+    { field: 'nombre_bien', header: 'Bien', style: { width: '8%' } },
+    { field: 'categoria', header: 'Categoría', style: { width: '8%' } },
+    { field: 'nombre_marca', header: 'Marca', style: { width: '8%' } },
   ];
 
   return (
@@ -104,9 +137,9 @@ const BuscarBien = (props: IProps) => {
         props.set_is_modal_active(false);
       }}
     >
-       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-                    <Title title={`${props.title} `} />
-                </Grid>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+        <Title title={`${props.title} `} />
+      </Grid>
       <DialogTitle> </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
@@ -128,7 +161,7 @@ const BuscarBien = (props: IProps) => {
               }}
             >
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     label="Código"
                     helperText=" "
@@ -164,8 +197,8 @@ const BuscarBien = (props: IProps) => {
                     helperText=" "
                     size="small"
                     fullWidth
-                    value={nombre}
-                    onChange={cambio_nombre}
+                    value={categoria}
+                    onChange={cambio_categoria}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -174,8 +207,8 @@ const BuscarBien = (props: IProps) => {
                     helperText=" "
                     size="small"
                     fullWidth
-                    value={nombre}
-                    onChange={cambio_nombre}
+                    value={marca}
+                    onChange={cambio_marca}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -225,21 +258,31 @@ const BuscarBien = (props: IProps) => {
                       onSelectionChange={(e) => {
                         set_seleccion_bien(e.value);
                       }}
-                      dataKey="id"
+                      dataKey="id_bien"
                     >
                       <Column
                         field="codigo_bien"
-                        header="Código bien"
+                        header="Código"
                         style={{ width: '5%' }}
                       ></Column>
                       <Column
-                        field="nombre"
-                        header="Nombre"
+                        field="nombre_bien"
+                        header="Bien"
                         style={{ width: '8%' }}
                       ></Column>
                       <Column
-                        field="tipo_bien"
-                        header="Tipo bien"
+                        field="nombre_marca"
+                        header="Marca"
+                        style={{ width: '8%' }}
+                      ></Column>
+                      <Column
+                        field="serial"
+                        header="Serial"
+                        style={{ width: '8%' }}
+                      ></Column>
+                      <Column
+                        field="categoria"
+                        header="Categoría"
                         style={{ width: '8%' }}
                       ></Column>
                     </DataTable>
