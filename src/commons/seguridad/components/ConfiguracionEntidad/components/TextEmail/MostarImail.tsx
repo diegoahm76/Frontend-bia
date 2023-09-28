@@ -45,21 +45,21 @@ export const MostrarEmail: React.FC = () => {
 
   // Función para obtener los datos de la sucursal de la empresa mediante una solicitud a la API
   const fetchDataGet = async (): Promise<void> => {
-    // try {
-    //   const url = '/transversal/configuracion/configuracionEntidad/3/';
-    //   const res = await api.get(url);
+    try {
+      const url = '/transversal/configuracion/configuracionEntidad/3/';
+      const res = await api.get(url);
   
-    //   if (res.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
-    //     const facilidad_pago_data = res.data.data;
-    //     setDataEntidad(facilidad_pago_data[0]);
-    //   } else {
-    //     // Tratar el caso en el que los datos no son válidos o están vacíos
-    //     // Por ejemplo, mostrar un mensaje de error o realizar otra acción apropiada.
-    //     console.error('Los datos no son válidos o están vacíos.');
-    //   }
-    // } catch (error:any) {
-    //   control_error(error.detail);
-    // }
+      if (res.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+        const facilidad_pago_data = res.data.data;
+        setDataEntidad(facilidad_pago_data[0]);
+      } else {
+        // Tratar el caso en el que los datos no son válidos o están vacíos
+        // Por ejemplo, mostrar un mensaje de error o realizar otra acción apropiada.
+        console.error('Los datos no son válidos o están vacíos.');
+      }
+    } catch (error:any) {
+      control_error(error.detail);
+    }
   };
   
 
@@ -111,23 +111,19 @@ export const MostrarEmail: React.FC = () => {
       // Los correos no coinciden, están vacíos o el formato no es válido
       setEmailMismatch(true);
     }
+    fetchDataGet();
   };
 
   const { email_corporativo_sistema } = dataEntidad;
   const emailactaul = email_corporativo_sistema;
 
-  // useEffect(() => {
-  //   fetchDataGet().catch((error) => {
-  //     console.error(error);
-  //   });
-  // }, []);
+  useEffect(() => {
+    fetchDataGet().catch((error) => {
+      console.error(error);
+    });
+  }, []);
 
-  // useEffect(() => {
-  //   fetchDataGet().catch((error) => {
-  //     console.error(error);
-  //   });
-  // }, [handleChangeEmail]);
-
+ 
   return (
     <Grid
       container
@@ -201,9 +197,9 @@ export const MostrarEmail: React.FC = () => {
                     variant="contained"
                     color="success"
                     startIcon={<SaveIcon />}
-                    // onClick={
-                    //   handleChangeEmail
-                    // }
+                    onClick={
+                      handleChangeEmail
+                    }
                   >
                     Guardar
                   </Button>

@@ -81,15 +81,6 @@ export const MostrarEditables: React.FC = () => {
         }
     };
 
-    // Fetch entity configuration data on component mount
-    useEffect(() => {
-        fetch_data_get().catch(console.error);
-    }, []);
-
-    // Update data_nombre whenever data_entidad changes
-    useEffect(() => {
-        void traer_personas_por_id();
-    }, [data_entidad]);
 
     const {
         fecha_inicio_dir_actual,
@@ -109,9 +100,10 @@ export const MostrarEditables: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const Coordinadoalmacen = data_nombre[1] !== undefined ? data_nombre[1] : "";
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const Coordinadorviveros = data_nombre[2] !== undefined ? data_nombre[2] : "";
+    const Coordinadortransporte = data_nombre[2] !== undefined ? data_nombre[2] : "";
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const Coordinadortransporte = data_nombre[3] !== undefined ? data_nombre[3] : "";
+    const  Coordinadorviveros= data_nombre[3] !== undefined ? data_nombre[3] : "";
+    
     const almacenista = data_nombre[4] !== undefined ? data_nombre[4] : "";
 
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -124,7 +116,7 @@ const [variable,setvariable] = useState<boolean>(false);
         setvariable(true);
     
     };
- // Update data_nombre whenever data_entidad changes
+
     useEffect(() => {
         void traer_personas_por_id();
     }, [variable]);
@@ -134,7 +126,16 @@ const [variable,setvariable] = useState<boolean>(false);
         setvariable(false);
     }, [variable]);
 
-   
+       // Fetch entity configuration data on component mount
+       useEffect(() => {
+        fetch_data_get().catch(console.error);
+    }, []);
+
+    // Update data_nombre whenever data_entidad changes
+    useEffect(() => {
+        void traer_personas_por_id();
+    }, [data_entidad]);
+
 
 
     return (

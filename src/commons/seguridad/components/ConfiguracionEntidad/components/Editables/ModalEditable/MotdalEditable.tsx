@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import { Dialog } from 'primereact/dialog';
@@ -19,44 +20,7 @@ interface ModalEditarCargoProps {
     cod: number;
     onClick: () => void; // Prop para la función onClick del botón en el componente hijo
 }
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod, onClick }) => {
-
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const handleGuardarYPoner = (): void => {
-        onClick();
-        setVisible(false)
-        
-        setValue("");
-        set_persona(undefined);
-    };
-
-
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [visible, setVisible] = React.useState<boolean>(false);
-
-    const footer_content = (
-        <div>
-            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { handleGuardarYPoner() }} >Salir</Button>
-            <Button style={{ margin: 3 }} type="submit" startIcon={<SaveIcon />}  variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
-
-        </div>
-    );
-
-    const title = (<Title title={"Cambiar " + titlee + " Actual"} />);
-
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const handleClick = (): void => {
-        setVisible(true);
-
-    };
-
-
-    interface Persona {
+ interface Persona {
         id_persona: number;
         primer_nombre: string;
         segundo_nombre: string;
@@ -65,27 +29,9 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
     }
 
-    const [persona, set_persona] = useState<Persona | undefined>();
+export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha, titlee, cod, onClick }) => {
 
-    const on_result = async (info_persona: Persona): Promise<void> => {
-        set_persona(info_persona);
-
-    }
-
-    const {
-        id_persona,
-        primer_nombre,
-        segundo_nombre,
-        primer_apellido,
-        segundo_apellido } = persona ?? {}; // Usar el operador de encadenamiento opcional (??) para manejar persona undefined
-
-    const nombre_completo = `${primer_nombre ?? ""} ${segundo_nombre ?? ""} ${primer_apellido ?? ""} ${segundo_apellido ?? ""}`;
-    const nombre = nombre_completo ?? "";
-    const id_personaa: number = id_persona ?? 0;
-
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const initialState: ISucursalEmpresa = {
+ const initialState: ISucursalEmpresa = {
 
         email_corporativo_sistema: null,
         fecha_inicio_dir_actual: null,
@@ -105,10 +51,61 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         observaciones_de_cambio_almacenista: "",
     };
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [dataEntidad, setDataEntidad] = useState<ISucursalEmpresa>(initialState);
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const handleGuardarYPoner = (): void => {
+        onClick();
+        setVisible(false)
+        setValue("");
+        set_persona(undefined);
+    };
+
+
+
+    const [visible, setVisible] = React.useState<boolean>(false);
+
+    const footer_content = (
+        <div>
+            <Button style={{ margin: 3 }} color="primary" variant="contained" onClick={() => { handleGuardarYPoner() }} >Salir</Button>
+            <Button style={{ margin: 3 }} type="submit" startIcon={<SaveIcon />}  variant="contained" onClick={() => { handleChangeEmail() }} color="success" >Guardar   </Button>
+
+        </div>
+    );
+
+    const title = (<Title title={"Cambiar " + titlee + " Actual"} />);
+
+
+    const handleClick = (): void => {
+        setVisible(true);
+
+    };
+
+
+   
+    const [persona, set_persona] = useState<Persona | undefined>();
+    const [value, setValue] = useState<string>("");
+    const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
+    const [dataEntidad, setDataEntidad] = useState<ISucursalEmpresa>(initialState);
+    const codigo = cod;
+
+    const on_result = async (info_persona: Persona): Promise<void> => {
+        set_persona(info_persona);
+    }
+
+    const {
+        id_persona,
+        primer_nombre,
+        segundo_nombre,
+        primer_apellido,
+        segundo_apellido } = persona ?? {}; // Usar el operador de encadenamiento opcional (??) para manejar persona undefined
+
+    const nombre_completo = `${primer_nombre ?? ""} ${segundo_nombre ?? ""} ${primer_apellido ?? ""} ${segundo_apellido ?? ""}`;
+    const nombre = nombre_completo ?? "";
+    const id_personaa: number = id_persona ?? 0;
+
+
+   
+
+   
     const fetchDataGet = async (): Promise<void> => {
         try {
             const url = "/transversal/configuracion/configuracionEntidad/3/";
@@ -121,13 +118,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [value, setValue] = useState<string>("");
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
 
-
-    const codigo = cod;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const handleChangeEmail = (): void => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -215,42 +206,9 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             });
     
         setDataEntidad(updatedDataEntidad);
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        fetchDataGet();
     
         };
-
-
-    useEffect(() => {
-        fetchDataGet().catch((error) => {
-            console.error(error);
-        });
-    }, [handleChangeEmail]);
 
     return (
         <div>
