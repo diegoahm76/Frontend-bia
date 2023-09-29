@@ -9,60 +9,49 @@ import ExportDocs from "../../controlDeInventario/screens/ExportDocs";
 interface IProps {
     resultado_busqueda: any[],
     seleccion_presentacion: string,
+    seleccion_tablero_control: string,
+    discriminar: boolean,
     titulo: string
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
     const [columnas_mp, set_columnas_mp] = useState<GridColDef[]>([]);
-    const [propio, set_propio] = useState<any[]>([]);
-    const [no_propio, set_no_propio] = useState<any[]>([]);
 
     useEffect(() => {
         if (props.resultado_busqueda.length > 0) {
-            if (props.seleccion_presentacion === 'und')
-                set_columnas_mp([
-                    {
-                        field: 'nombre_unidad_para_la_que_solicita',
-                        headerName: 'Unidad organizacional',
-                        width: 400,
-                        valueGetter: (params) => params.row.nombre_unidad_para_la_que_solicita,
-                    },
-                    {
-                        field: 'nombre_bien_despachado',
-                        headerName: 'Bien',
-                        width: 400,
-                        valueGetter: (params) => params.row.nombre_bien_despachado,
-                    },
-                    {
-                        field: 'cantidad_despachada_unidad',
-                        headerName: 'Cantidad despachada',
-                        width: 300,
-                        valueGetter: (params) => params.row.cantidad_despachada_unidad,
-                    }
-                ])
-            else
-                set_columnas_mp([
-                    {
-                        field: 'nombre_bien_despachado',
-                        headerName: 'Bien',
-                        width: 400,
-                        valueGetter: (params) => params.row.nombre_bien_despachado,
-                    },
-                    {
-                        field: 'nombre_unidad_para_la_que_solicita',
-                        headerName: 'Unidad organizacional',
-                        width: 400,
-                        valueGetter: (params) => params.row.nombre_unidad_para_la_que_solicita,
-                    },
-                    {
-                        field: 'cantidad_despachada_unidad',
-                        headerName: 'Cantidad despachada',
-                        width: 300,
-                        valueGetter: (params) => params.row.cantidad_despachada_unidad,
-                    }
-                ])
+            switch (props.seleccion_tablero_control) {
+                case 'CBU':
+                    const columnas_cbu: GridColDef[] = [
+                        {
+                            field: 'nombre_unidad_para_la_que_solicita',
+                            headerName: 'Unidad organizacional',
+                            width: 400,
+                            valueGetter: (params) => params.row.nombre_unidad_para_la_que_solicita,
+                        },
+                        {
+                            field: 'nombre_bien_despachado',
+                            headerName: 'Bien',
+                            width: props.discriminar ? 550 : 400,
+                            valueGetter: (params) => params.row.nombre_bien_despachado,
+                        },
+                        {
+                            field: 'cantidad_despachada_unidad',
+                            headerName: 'Cantidad despachada',
+                            width: props.discriminar ? 550 : 300,
+                            valueGetter: (params) => params.row.cantidad_despachada_unidad,
+                        }]
+                    if (props.discriminar)
+                        set_columnas_mp([columnas_cbu[1], columnas_cbu[2]]);
+                    else
+                        props.seleccion_presentacion === 'UND' ? set_columnas_mp(columnas_cbu) : set_columnas_mp([columnas_cbu[1], columnas_cbu[0], columnas_cbu[2]]);
+                    break;
+
+                default:
+                    break;
+            }
+
         }
-    }, [props.resultado_busqueda,props.seleccion_presentacion]);
+    }, [props.resultado_busqueda, props.seleccion_presentacion]);
 
     return (
         <>

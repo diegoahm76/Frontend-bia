@@ -39,11 +39,11 @@ export const ControlDespachoBienesScreen: React.FC = () => {
   // Listas
   const lt_tablero_control = [{ id: 'CBU', value: 'Consumo de bienes por unidad' }]
   const lt_tipo_despacho = [{ id: 'DG', value: 'Despacho general' }, { id: 'DV', value: 'Despacho a vivero' }];
-  const lt_presentacion = [{ id: "und", value: "Unidad" }, { id: "Bn", value: "Bien" }];
+  const lt_presentacion = [{ id: "UND", value: "Unidad" }, { id: "BN", value: "Bien" }];
   // Variables globales
   const [resultado_busqueda, set_resultado_busqueda] = useState<any[]>([]);
   const [lt_unidades_org, set_lt_unidades_org] = useState<any[]>([]);
-  const [seleccion_tablero_control, set_seleccion_tablero_control] = useState<string>("CBU");
+  const [seleccion_tablero_control, set_seleccion_tablero_control] = useState<string>("");
   const [seleccion_tipo_despacho, set_seleccion_tipo_despacho] = useState<string>("");
   const [seleccion_unidad_org, set_seleccion_unidad_org] = useState<string>("");
   const [seleccion_presentacion, set_seleccion_presentacion] = useState<string>("");
@@ -104,16 +104,23 @@ export const ControlDespachoBienesScreen: React.FC = () => {
   }, [resultado_busqueda]);
 
   const busqueda_control: () => void = () => {
-    if (fecha_desde === null || fecha_hasta === null) {
-      set_error_fecha_desde(fecha_desde === null);
-      set_error_fecha_hasta(fecha_hasta === null);
-      return
+    switch (seleccion_tablero_control) {
+      case 'CBU':
+        if (fecha_desde === null || fecha_hasta === null) {
+          set_error_fecha_desde(fecha_desde === null);
+          set_error_fecha_hasta(fecha_hasta === null);
+          return
+        }
+        const tipo_despacho = (seleccion_tipo_despacho === 'Todos' || seleccion_tipo_despacho === '') ? seleccion_tipo_despacho : seleccion_tipo_despacho === 'DV';
+        const id_bien = seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
+        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+          set_resultado_busqueda(response.data);
+        });
+        break;
+
+      default:
+        break;
     }
-    const tipo_despacho = (seleccion_tipo_despacho === 'Todos' || seleccion_tipo_despacho === '') ? seleccion_tipo_despacho : seleccion_tipo_despacho === 'DV';
-    const id_bien = seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
-    dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
-      set_resultado_busqueda(response.data);
-    });
   }
 
   return (
@@ -123,7 +130,7 @@ export const ControlDespachoBienesScreen: React.FC = () => {
         sx={estilo_seccion}
       >
         <Grid item md={12} xs={12}>
-          <Title title="Tablero de control - Despacho de bienes de consumo" />
+          <Title title="Tablero de control - Almacen" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={12}>
@@ -153,11 +160,11 @@ export const ControlDespachoBienesScreen: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Grid container sx={estilo_seccion}>
+      {seleccion_tablero_control !== '' && <Grid container sx={estilo_seccion}>
         <Grid item md={12} xs={12}>
           <Title title="Filtros de búsqueda" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-            <Grid item container spacing={2}>
+            {seleccion_tablero_control === 'CBU' && <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <FormControl size='small' fullWidth>
                   <InputLabel>Tipo de despacho</InputLabel>
@@ -291,7 +298,7 @@ export const ControlDespachoBienesScreen: React.FC = () => {
                   </Grid>
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12}>
+              {!discriminar && <Grid item xs={12} sm={12}>
                 <Stack
                   direction="row"
                   justifyContent="center"
@@ -313,8 +320,8 @@ export const ControlDespachoBienesScreen: React.FC = () => {
                     </FormControl>
                   </Grid>
                 </Stack>
-              </Grid>
-            </Grid>
+              </Grid>}
+            </Grid>}
             <Grid item xs={12} sm={12} sx={{ p: '10px' }}>
               <Stack
                 direction="row"
@@ -332,7 +339,7 @@ export const ControlDespachoBienesScreen: React.FC = () => {
             </Grid>
           </Box>
         </Grid>
-      </Grid>
+      </Grid>}
       {(resultado_busqueda.length > 0) && (<Grid
         container
         sx={{
@@ -345,7 +352,7 @@ export const ControlDespachoBienesScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Despacho de bienes de consumo"}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Despacho de bienes de consumo"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">
