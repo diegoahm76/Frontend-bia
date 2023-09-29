@@ -479,6 +479,16 @@ const AdministrarCarpetasScreen = () => {
                 </Grid>
             }
 
+            <Grid item xs={12} sm={4}>
+                <LoadingButton
+                    variant="contained"
+                    onClick={handle_buscar}
+                    disabled={false}
+                >
+                    Generar Rótulo
+                </LoadingButton>
+            </Grid>
+
             <Grid item xs={12} md={2}>
                 <ButtonSalir />
             </Grid>

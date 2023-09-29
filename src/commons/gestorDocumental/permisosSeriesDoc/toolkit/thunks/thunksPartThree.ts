@@ -68,3 +68,31 @@ export const get_restricciones_series_documentales = async (
     setLoadingRestricciones(false);
   }
 };
+
+export const putPSD = async (
+  id_cat_serie_und_org_ccd: number,
+  data: any,
+  setLoadingRestricciones: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<any> => {
+  try {
+    setLoadingRestricciones(true);
+    const url = `gestor/permisos/unidades-permisos/put/${id_cat_serie_und_org_ccd}/`;
+    const { data: dataResponse } = await api.put(url, data);
+    if (dataResponse?.succes) {
+      control_success('Se actualizaron las restricciones');
+      return true;
+    } else {
+      control_warning('Hubo un error al actualizar las restricciones');
+      return false;
+    }
+  } catch (error: any) {
+    control_error(
+      error?.response?.data?.detail ||
+        'Hubo un error al actualizar las restricciones'
+    );
+    console.log(error);
+    return false;
+  } finally {
+    setLoadingRestricciones(false);
+  }
+}

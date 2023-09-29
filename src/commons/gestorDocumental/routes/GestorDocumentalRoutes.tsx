@@ -18,8 +18,15 @@ import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlant
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+
+import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
+import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
+import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
+// import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+
 
 const routes = [
   {
@@ -57,9 +64,14 @@ const routes = [
 
   //! rutas de configuracion y datos básicos
   {
-    path: 'configuracion_datos_basicos/',
+    path: 'configuracion_datos_basicos',
     name: 'configuracion',
     component: () => <ConfigYDatosBasicosRoutes />,
+  },
+  {
+    path: 'metadatos/',
+    name: 'metadatos',
+    component: () => <ConfiguracionMetadatosRoutes />,
   },
   {
     path: 'activacion_instrumentos_archivisticos',
@@ -104,25 +116,30 @@ const routes = [
   {
     path: 'expedientes/',
     name: 'expedientes',
-    component: () => <ExpedientesRoutes />,
+    // component: () => <ExpedientesRoutes />,
+    component: () => <CierreExpedientesRoutes />,
   },
-
+  {
+    path: 'archivo_fisico/',
+    name: 'archivo_fisico',
+    component: () => <ArchivoFisicoRoutes />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
     // <Suspense fallback={<Loader />}>
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-            element={route.component()}
-          />
-        ))}
-        <Route path="/*" element={<Page404 />} />
-      </Routes>
+    <Routes>
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+          element={route.component()}
+        />
+      ))}
+      <Route path="/*" element={<Page404 />} />
+    </Routes>
     // </Suspense>
   );
 };

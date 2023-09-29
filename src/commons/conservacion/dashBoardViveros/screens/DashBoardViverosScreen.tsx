@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, FormHelperText, Switch, Card, CardContent, Typography } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, Switch, Card, CardContent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Title } from "../../../../components";
 import ClearIcon from '@mui/icons-material/Clear';
