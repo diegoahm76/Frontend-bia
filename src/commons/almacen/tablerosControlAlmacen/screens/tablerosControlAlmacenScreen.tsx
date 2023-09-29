@@ -12,10 +12,10 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import BuscarBienConsumo from "../../controlDeInventario/screens/BuscarBienConsumo";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { obtener_consumo_bienes_und, obtener_unidades_organizacionales } from "../thunks/controlDespachoBienesConsumo";
+import { obtener_consumo_bienes_und, obtener_unidades_organizacionales } from "../thunks/tablerosControlAlmacen";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ControlDespachoBienesScreen: React.FC = () => {
+export const TablerosControlAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const estilo_seccion = {
@@ -46,7 +46,7 @@ export const ControlDespachoBienesScreen: React.FC = () => {
   const [seleccion_tablero_control, set_seleccion_tablero_control] = useState<string>("");
   const [seleccion_tipo_despacho, set_seleccion_tipo_despacho] = useState<string>("");
   const [seleccion_unidad_org, set_seleccion_unidad_org] = useState<string>("");
-  const [seleccion_presentacion, set_seleccion_presentacion] = useState<string>("");
+  const [seleccion_presentacion, set_seleccion_presentacion] = useState<string>("BN");
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
@@ -78,6 +78,14 @@ export const ControlDespachoBienesScreen: React.FC = () => {
   };
 
   const limpiar_filtros: () => void = () => {
+    set_seleccion_unidad_org('');
+    set_seleccion_tipo_despacho('');
+    set_seleccion_presentacion('BN');
+    set_seleccion_bien('');
+    set_fecha_desde(null);
+    set_fecha_hasta(null);
+    set_error_fecha_desde(false);
+    set_error_fecha_hasta(false);
     set_discriminar(false);
     set_resultado_busqueda([]);
   }
