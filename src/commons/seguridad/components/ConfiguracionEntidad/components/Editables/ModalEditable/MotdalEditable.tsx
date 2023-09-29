@@ -202,7 +202,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
             })
             .catch((error: any) => {
 
-                control_error(error.response.data.detail);
+                // control_error(error.response.data.detail);
             });
     
         setDataEntidad(updatedDataEntidad);

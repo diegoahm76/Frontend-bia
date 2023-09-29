@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import { AnyListenerPredicate } from '@reduxjs/toolkit';
 
 
 interface UnidadOrganizacional {
@@ -34,14 +35,12 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
 
 
-
-const handleAcumularDatos=()=>{
-
-  set_PQR_seleccionado([...PQR_seleccionado,PQR_seleccionado]);
-}
-
-
-
+const[alerta,set_alerta]=useState<any[]>([]);
+  const handleAcumularDatos = (e:any) => {
+    const selectedItem = e.target;
+     set_PQR_seleccionado([...PQR_seleccionado, selectedItem]);
+     set_alerta([...alerta, selectedItem]);
+  };
 
   const fetch_data_get = async (): Promise<void> => {
     try {
@@ -135,7 +134,7 @@ const handleAcumularDatos=()=>{
             </FormControl>
           </Grid>
           <Grid item md={3}>
-            <Button fullWidth variant="contained"  onClick={handleAcumularDatos}>
+            <Button fullWidth variant="contained" onClick={() => handleAcumularDatos(PQR_seleccionado)} >
               Agregar
             </Button>
           </Grid>
@@ -152,6 +151,16 @@ const handleAcumularDatos=()=>{
             getRowId={(row) => uuidv4()}
           />
         </Grid>
+        <DataGrid
+            density="compact"
+            autoHeight
+            columns={columns}
+            rows={alerta}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowId={(row) => uuidv4()}
+          />
+        
       </Grid>
     </>
   );
