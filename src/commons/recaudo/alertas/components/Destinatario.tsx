@@ -110,19 +110,6 @@ const Destinatario = () => {
         console.log(destinatario_busqueda)
 
     };
-
-    // const on_submit_eliminar = (data: IObjDestinatario): void => {
-
-    //     if (
-    //         current_destinatario.id_persona_alertar !== null &&
-    //         current_destinatario.id_persona_alertar !== undefined
-    //     ) {
-    //         void dispatch(
-    //             eliminar_persona_alerta(
-    //                 current_destinatario.id_persona_alertar)
-    //         );
-    //     }
-    // };
     console.log(destinatario)
     console.log(current_destinatario)
 

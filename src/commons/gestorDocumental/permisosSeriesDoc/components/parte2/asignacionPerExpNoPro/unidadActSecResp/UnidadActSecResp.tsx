@@ -47,24 +47,19 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     dispatch: React.Dispatch<any>,
     callback: Function
   ): void => {
-    const DATOS_ACTUALIZADOS = arrayComparacion.map((elementos: any) => {
-      if (
-        elementos.hasOwnProperty(compararPor) &&
-        elementos[compararPor] === valorComparar
-      ) {
-        const DATA_ACTUALIZADA = { ...elementos };
-        for (const propiedad of propiedades) {
-          if (propiedad === 'consultar_expedientes_no_propios' && DATA_ACTUALIZADA[propiedad]) {
-            DATA_ACTUALIZADA[propiedad] = true;
-          } else {
-            DATA_ACTUALIZADA[propiedad] = checked;
+    const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
+      elemento.hasOwnProperty(compararPor) && elemento[compararPor] === valorComparar
+        ? {
+            ...elemento,
+            ...Object.fromEntries(
+              propiedades.map((propiedad) => [
+                propiedad,
+                propiedad === 'consultar_expedientes_no_propios' && elemento[propiedad] ? true : checked,
+              ])
+            ),
           }
-        }
-        return DATA_ACTUALIZADA;
-      } else {
-        return elementos;
-      }
-    });
+        : elemento
+    );
     console.log(DATOS_ACTUALIZADOS);
     dispatch(callback(DATOS_ACTUALIZADOS));
   };
@@ -79,24 +74,19 @@ export const UnidadActSecResp: FC<any> = (): JSX.Element => {
     dispatch: React.Dispatch<any>,
     callback: Function
   ): void => {
-    const DATOS_ACTUALIZADOS = arrayComparacion.map((elementos: any) => {
-      if (
-        elementos.hasOwnProperty(compararPor) &&
-        elementos[compararPor] === valorComparar
-      ) {
-        const DATA_ACTUALIZADA = { ...elementos };
-        for (const propiedad of propiedades) {
-          if (propiedad === 'consultar_expedientes_no_propios') {
-            DATA_ACTUALIZADA[propiedad] = checked;
-          } else {
-            DATA_ACTUALIZADA[propiedad] = false;
+    const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
+      elemento.hasOwnProperty(compararPor) && elemento[compararPor] === valorComparar
+        ? {
+            ...elemento,
+            ...Object.fromEntries(
+              propiedades.map((propiedad) => [
+                propiedad,
+                propiedad === 'consultar_expedientes_no_propios' ? checked : false,
+              ])
+            ),
           }
-        }
-        return DATA_ACTUALIZADA;
-      } else {
-        return elementos;
-      }
-    });
+        : elemento
+    );
     console.log(DATOS_ACTUALIZADOS);
     dispatch(callback(DATOS_ACTUALIZADOS));
   };

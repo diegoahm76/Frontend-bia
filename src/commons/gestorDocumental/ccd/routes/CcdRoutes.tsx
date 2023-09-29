@@ -8,6 +8,7 @@ import { Page404 } from '../../../../screens/404';
 import { ScreenPerSerDoc as PermisosSobreSeriesDocumentales } from '../../permisosSeriesDoc/screens/ScreenPerSerDoc';
 import { ScreenControlAccExp as ControlAccesoExpedientes } from '../../controlAccesExped/screens/ScreenControlAccExp';
 import { ModalProviderPSD } from '../../permisosSeriesDoc/context/ModalContextPSD';
+import { ActividadesPreviasCambioCCDRoutes } from '../../actividadesPreviasCambioCCD/routes/ActividadesPreviasCambioCCD.routes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const routes = [
@@ -26,6 +27,10 @@ const routes = [
   {
     path: 'control_acceso_expedientes/',
     element: () => <ControlAccesoExpedientes />
+  },
+  {
+    path: '/actividades_previas_cambio_ccd/*',
+    element: () => <ActividadesPreviasCambioCCDRoutes/>,
   }
 ];
 

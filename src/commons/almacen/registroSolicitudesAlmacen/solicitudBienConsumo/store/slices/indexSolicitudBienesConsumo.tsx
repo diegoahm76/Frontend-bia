@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, type IObjBienViveroConsumo, type IObjBienesViveroSolicitud, } from "../../interfaces/solicitudBienConsumo"
+import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, type IObjBienViveroConsumo, type IObjBienesViveroSolicitud, ICoordonadorVivero, } from "../../interfaces/solicitudBienConsumo"
 
 
 const initial_state_current_solicitud: IObjSolicitud = {
@@ -79,6 +79,7 @@ const initial_state_persona_solicita = {
     unidad_organizacional: "",
 }
 
+
 const initial_state: ISolicitudConsumo | any = {
     current_solicitud: initial_state_current_solicitud,
     solicitudes: [],
@@ -97,6 +98,7 @@ const initial_state: ISolicitudConsumo | any = {
     nro_solicitud: null,
     nro_solicitud_vivero: null,
     unidades_medida: [],
+    coordinador_vivero: [],
 
 
 }
@@ -226,9 +228,15 @@ export const solicitud_consumo_slice = createSlice({
         ) => {
             state.persona_solicita = action.payload;
         },
+        set_coordinador_vivero: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<ICoordonadorVivero[]>
+        ) => {
+            state.coordinador_vivero = action.payload;
+        },
 
 
     }
 })
 
-export const { reset_state, set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;
+export const { reset_state, set_coordinador_vivero, set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;

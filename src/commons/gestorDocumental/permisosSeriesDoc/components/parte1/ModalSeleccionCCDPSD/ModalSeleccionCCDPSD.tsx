@@ -79,7 +79,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     {
       headerName: 'Usado',
       field: 'usado',
-      width: 80,
+      width: 100,
       renderCell: (params: { row: { usado: boolean } }) => {
         return params.row.usado ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
@@ -91,7 +91,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     {
       headerName: 'Actual',
       field: 'is_actual',
-      width: 80,
+      width: 100,
       renderCell: (params: { row: { actual: boolean } }) => {
         return params.row.actual ? (
           <Chip size="small" label="Si" color="info" variant="outlined" />
@@ -103,7 +103,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
     {
       headerName: 'Fecha terminado',
       field: 'fecha_terminado',
-      width: 150,
+      width: 170,
       renderCell: (params: { row: { fecha_terminado: string } }) => {
         const date = new Date(params.row.fecha_terminado);
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
