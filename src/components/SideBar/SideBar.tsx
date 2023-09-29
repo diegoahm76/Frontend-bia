@@ -59,7 +59,9 @@ export const SideBar: FC<SideBarProps> = ({
     handle_datos_acceso,
     handle_datos_personales,
     handle_autorizacion_notificacion,
-    handle_indices_electronicos
+    handle_indices_electronicos,
+    //* se deja de manera temporal
+    handle_homologacion_series_documentales
   } = useRoutes();
 
   const dispatch = useDispatch();
@@ -351,7 +353,22 @@ export const SideBar: FC<SideBarProps> = ({
                 onClick={handle_autorizacion_notificacion}
               />
             </ListItemButton>
-
+            {/* Homologación de series documentales - se deja de manera temporal */}
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <CircleNotificationsIcon
+                  sx={{
+                    color: 'red',
+                    height: '30px'
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary="Homologación de series documentales"
+                onClick={handle_homologacion_series_documentales}
+              />
+            </ListItemButton>
+            {/* Homologación de series documentales - se deja de manera temporal */}
             {/* ------------ índices electrónicos ------------  */}
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
