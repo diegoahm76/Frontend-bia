@@ -10,6 +10,12 @@ export const getControlAccesoExpedientes = async ({
   idCatSerieUnidad = '',
 }: any) => {
   try {
+
+    if(codClasificacionExp === '' && idCatSerieUnidad === ''){
+      control_warning('No se puede guardar el control de acceso de manera incompleta');
+      return [];
+    }
+
     setLoading(true);
     const url = `gestor/ctrl-acceso/get/?id_ccd=${idCcd}&cod_clasificacion_exp=${codClasificacionExp}&id_cat_serie_und=${idCatSerieUnidad}`;
     const { data } = await api.get(url);
@@ -20,7 +26,7 @@ export const getControlAccesoExpedientes = async ({
       );
       return data?.data;
     } else {
-      control_warning('No se encontró control de acceso configurado');
+      control_warning('No se encontró control de acceso configurado, porfavor configúrelo');
       return [];
     }
   } catch (error: any) {

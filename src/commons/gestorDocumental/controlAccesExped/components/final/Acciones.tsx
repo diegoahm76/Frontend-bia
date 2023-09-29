@@ -60,7 +60,10 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
                   currentSerieSubserie?.id_cat_serie_und,
               };
             }
-            return el;
+            return {
+              ...el,
+              id_cat_serie_und_org_ccd: null,
+            };
           })[0]
         )
       : console.log(
@@ -80,22 +83,23 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
             ) {
               return {
                 ...el,
-                id_cat_serie_und_org_ccd:
-                  currentSerieSubserie?.id_cat_serie_und,
+                id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und ? currentSerieSubserie?.id_cat_serie_und : null
               };
             }
-            return el;
+            return {
+              ...el,
+              id_cat_serie_und_org_ccd: null,
+            };
           })[0]
         : rowsControlInicial.map((el: any) => ({
             ...el,
-            id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
+            id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und ? currentSerieSubserie?.id_cat_serie_und : null
           }))[0]
     ).then(() => {
       getControlAccesoExpedientes({
         setLoading: setLoadingButton,
         idCcd: currentCcdCtrlAccesoExp?.id_ccd,
-        codClasificacionExp:
-          currentControlAccesoExpedientes?.cod_clasificacion_exp ||
+        codClasificacionExp: currentControlAccesoExpedientes?.cod_clasificacion_exp ||
           rowsControlInicial[0]?.cod_clasificacion_exp,
         idCatSerieUnidad: currentSerieSubserie?.id_cat_serie_und,
       }).then((res) => {

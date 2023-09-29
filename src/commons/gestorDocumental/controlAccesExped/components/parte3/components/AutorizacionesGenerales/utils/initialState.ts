@@ -9,6 +9,7 @@ const initialStateCreacionControlDeAccesoExp = {
   codigo_subserie: null, // ?  camino 2 codigo subserie existe ? lleva valor : no lleva valor
   nombre_unidad_organizacional: null, // ? camino 2 ? lleva valor : no lleva valor
   codigo_unidad_organizacional: null, // ? camino 2 ? lleva valor : no lleva valor
+  id_cat_serie_und_org_ccd: null, // ? camino 2 ? lleva valor : no lleva valor
 
   //! este es el paquete de restricciones que inicialmente se debe enviar y plantear todo en false si es apenas la creación del control de acceso de expedientes
   entidad_entera_consultar: false,
@@ -31,7 +32,6 @@ const initialStateCreacionControlDeAccesoExp = {
 
   id_ccd: null, // se debe poner el id del ccd respectivamente
   cod_clasificacion_exp: '', // se debe de igual manera configurar el cod. clasificacion de expediente en la edición de los checkbox
-  id_cat_serie_und_org_ccd: null,
 };
 
 export const rowsDataGrid = [

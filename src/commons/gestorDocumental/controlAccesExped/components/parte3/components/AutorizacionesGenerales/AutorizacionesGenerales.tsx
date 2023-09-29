@@ -23,8 +23,6 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { rowsDataGrid } from './utils/initialState';
 import { control } from 'leaflet';
 import { setControlAccesoExpedientesList, setCurrentControlAccesoExpedientes } from '../../../../toolkit/slice/CtrlAccesoExpSlice';
-import { render } from '@testing-library/react';
-import { event } from './../../../../../../recaudo/facilidadPago/interfaces/interfaces';
 
 //! componente unidades organizacionales actuales de la sección responsable
 export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
