@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, FormControl, Grid, MenuItem, Select } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
-import { AnyListenerPredicate } from '@reduxjs/toolkit';
+import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
+
 
 
 interface UnidadOrganizacional {
@@ -27,16 +28,19 @@ interface UnidadOrganizacional {
 
 
 export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
+
+const {form,set_form}=useContext(FormCreacionContext);
+// set_form({
+//   ...form,
+//   [e.target.name]: e.target.value
+// });
+
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
-  console.log(tipos_pqr);
-
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<any>([]);
-  console.log(PQR_seleccionado);
-
-
-
 const[alerta,set_alerta]=useState<any[]>([]);
-console.log(alerta);
+const[variable_concatenada,set_variable_concatenada]=useState<any[]>([]);
+
+console.log(variable_concatenada);
 
 const handleAcumularDatos = () => {
   if (PQR_seleccionado.length > 0) {
@@ -44,11 +48,25 @@ const handleAcumularDatos = () => {
     const selectedItem = PQR_seleccionado[0];
 
     // Agrega el elemento seleccionado a la alerta
-    set_alerta([...alerta, selectedItem]);
+     set_alerta([...alerta, selectedItem]);
+  }
+  if (PQR_seleccionado.length > 0) {
+    // Obtiene el elemento seleccionado
+    const selectedItem = PQR_seleccionado[0];
+
+    // Crea un nuevo objeto con la propiedad id_unidad_organizacional
+    const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
+
+    // Agrega el nuevo objeto a la alerta
+    set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
   }
 };
 
-
+const handleEliminarDato = (id: number) => {
+  const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
+  set_alerta(updatedAlerta);
+  set_variable_concatenada(updatedAlerta);
+};
   
   const fetch_data_get = async (): Promise<void> => {
     try {
@@ -63,13 +81,6 @@ const handleAcumularDatos = () => {
   };
 
 
-
-
-  useEffect(() => {
-    fetch_data_get().catch((error) => {
-      console.error(error);
-    });
-  }, []);
 
 
 
@@ -87,11 +98,21 @@ const handleAcumularDatos = () => {
       flex: 1,
     },
     {
-      field: 'nombre_unidad_org_actual_admin_series',
-      headerName: 'ID Unidad Organizacional (Otra vez)',
-      width: 250,
-      flex: 1,
-    }
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 150,
+      renderCell: (params: any) => (
+        // Celda personalizada con el botón
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => handleEliminarDato(params.row.id_unidad_organizacional)}
+        >
+          Eliminar
+        </Button>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -99,6 +120,11 @@ const handleAcumularDatos = () => {
       console.error(error);
     });
   }, []);
+  
+
+
+
+
   return (
     <>
       <Grid
