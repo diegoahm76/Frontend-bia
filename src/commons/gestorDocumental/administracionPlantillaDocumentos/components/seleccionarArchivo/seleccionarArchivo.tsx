@@ -3,9 +3,24 @@ import { Grid, TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Title } from '../../../../../components/Title';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
 export const SeleccionarArchivo: React.FC = () => {
+
+  const [fileExtension, setFileExtension] = useState<string | null>(null);
+  const { form, set_form } = useContext(FormCreacionContext);
+
+
+
+  const HandleCompletarDatos = (e: any) => {
+    set_form({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  }
+
+
   const VisuallyHiddenInput = styled('input')`
     clip: rect(0 0 0 0);
     clip-path: inset(50%);
@@ -17,13 +32,15 @@ export const SeleccionarArchivo: React.FC = () => {
     white-space: nowrap;
     width: 1px;
   `;
-
-  const [fileExtension, setFileExtension] = useState<string | null>(null);
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const fileInput = event.target;
     if (fileInput?.files?.length) {
       const fileName = fileInput.files[0].name;
+       const selectedFile = fileInput.files[0];
+      set_form({
+        ...form,
+        archivo: selectedFile,
+      });
       const extension = fileName.split('.').pop();
       if (extension) {
         setFileExtension(extension);
@@ -59,22 +76,23 @@ export const SeleccionarArchivo: React.FC = () => {
           <TextField
             style={{ marginTop: 20 }}
             variant="outlined"
-            size="small"
             label="Nombre de la Plantilla"
-            value={'tipos de documentos'}
             fullWidth
-            name="Numero identificación "
+            name="nombre"
+            value={form.nombre}
+            onChange={HandleCompletarDatos}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             style={{ width: '100%', marginTop: 10 }}
-            label={`Descripccion`}
-            id="description"
-            value={'ninguna observacion aserca de esta plantilla en especial'}
-
-            // error={emailMismatch}
-            // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
+            label="Descripccion"
+            
+            name = "descripcion"
+            value={form.descripcion}
+            onChange={HandleCompletarDatos}
+          // error={emailMismatch}
+          // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
           />
         </Grid>
         <Grid item xs={12} sm={4.5} md={3}>
