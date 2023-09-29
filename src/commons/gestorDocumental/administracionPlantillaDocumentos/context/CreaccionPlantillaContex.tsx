@@ -13,6 +13,7 @@ interface VariablesCreacionPlantilla {
     version_formato_calidad_asociado: string;
     archivo: any;
     otras_tipologias:string;
+    acceso_unidades:any[];
 }
 interface FormContextstate {
 
@@ -29,6 +30,7 @@ const valores_defecto: VariablesCreacionPlantilla = {
     version_formato_calidad_asociado: "",
     archivo: null,
     otras_tipologias:"",
+    acceso_unidades:[]
 }
 export const FormCreacionContext = createContext<FormContextstate>({
     form: valores_defecto,

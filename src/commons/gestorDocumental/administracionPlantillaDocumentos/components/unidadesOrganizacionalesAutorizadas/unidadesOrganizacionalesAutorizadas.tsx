@@ -29,11 +29,13 @@ interface UnidadOrganizacional {
 
 export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
-//const {form,set_form}=useContext(FormCreacionContext);
-// set_form({
-//   ...form,
-//   [e.target.name]: e.target.value
-// });
+const {form,set_form}=useContext(FormCreacionContext);
+const HandleCompletarDatos = (e: any) => {
+  set_form({
+    ...form,
+    [e.target.name]: e.target.value
+  });
+}
 
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<any>([]);
@@ -59,8 +61,30 @@ const handleAcumularDatos = () => {
 
     // Agrega el nuevo objeto a la alerta
     set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
+    set_form({
+            ...form,
+            acceso_unidades: [...variable_concatenada, unidadOrganizacional]
+          });
   }
 };
+// const handleAcumularDatos = () => {
+//   if (PQR_seleccionado.length > 0) {
+//     // Obtiene el elemento seleccionado
+//     const selectedItem = PQR_seleccionado[0];
+
+//     // Agrega el elemento seleccionado a la alerta
+//     set_alerta([...alerta, selectedItem]);
+
+//     // Envía la variable_concatenada al formulario en el contexto
+//     set_form({
+//       ...form,
+//       acceso_unidades: [...variable_concatenada, selectedItem]
+//     });
+//   }
+// };
+
+
+
 
 const handleEliminarDato = (id: number) => {
   const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
