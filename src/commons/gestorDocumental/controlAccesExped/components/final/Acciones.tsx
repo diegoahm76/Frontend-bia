@@ -48,18 +48,48 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
 
   const handleSubmit = () => {
     controlAccesoExpedientesList.length > 0
-      ? console.log(currentControlAccesoExpedientes)
-      : console.log(rowsControlInicial[0]);
+      ? console.log(
+          controlAccesoExpedientesList.map((el: any) => {
+            if (
+              el?.id_ctrl_acceso_clasif_exp_ccd ===
+              currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
+            ) {
+              return {
+                ...el,
+                id_cat_serie_und_org_ccd:
+                  currentSerieSubserie?.id_cat_serie_und,
+              };
+            }
+            return el;
+          })[0]
+        )
+      : console.log(
+          rowsControlInicial.map((el: any) => ({
+            ...el,
+            id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
+          }))[0]
+        );
 
     void putControlAccesoExpedientes(
       setLoadingButton,
       controlAccesoExpedientesList.length > 0
-        ? controlAccesoExpedientesList.filter(
-            (el) =>
+        ? controlAccesoExpedientesList.map((el: any) => {
+            if (
               el?.id_ctrl_acceso_clasif_exp_ccd ===
               currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
-          )[0] || currentControlAccesoExpedientes
-        : rowsControlInicial[0] || currentControlAccesoExpedientes
+            ) {
+              return {
+                ...el,
+                id_cat_serie_und_org_ccd:
+                  currentSerieSubserie?.id_cat_serie_und,
+              };
+            }
+            return el;
+          })[0]
+        : rowsControlInicial.map((el: any) => ({
+            ...el,
+            id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
+          }))[0]
     ).then(() => {
       getControlAccesoExpedientes({
         setLoading: setLoadingButton,
