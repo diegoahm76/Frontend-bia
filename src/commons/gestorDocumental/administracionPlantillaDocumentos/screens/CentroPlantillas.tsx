@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import { Dialog } from 'primereact/dialog';
-import { Box, Button, Checkbox, FormControl, Grid, InputLabel, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, Grid, IconButton, InputLabel, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { v4 as uuidv4 } from 'uuid';
-import ClearIcon from '@mui/icons-material/Clear';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components/Title';
+import { InformacionPlantillasPersonas } from '../components/informacionPlantillas/InformacionPlantillasPersonas';
+import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 export const MostrarCentroPlantillas: React.FC = () => {
 
@@ -24,70 +25,101 @@ export const MostrarCentroPlantillas: React.FC = () => {
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
   const [activador, set_activaador] = useState<boolean>(false);
-  const descripcion = '';
-  const disponibilidad = '';
-  const tipologia = '';
 
-  
+  const [id_visualizar, set_id_visualizar] = useState(0);
+
 
   const columns: GridColDef[] = [
+
     {
       field: 'id_plantilla_doc',
-      headerName: 'ID Plantilla',
-      width: 120,
-      flex:1
+      headerName: 'Id',
+      width: 200,
+      flex: 1,
     },
     {
       field: 'nombre',
       headerName: 'Nombre Plantilla',
       width: 200,
-      flex:1
+      flex: 1,
     },
     {
       field: 'nombre_tipologia',
       headerName: 'Nombre Tipologia',
-      width: 180,
-      flex:1
+      width: 200,
+      flex: 1,
     },
     {
       field: 'ruta',
       headerName: 'Ruta',
-      width: 200,
-      flex:1
+      width: 120,
+      flex: 1,
+      renderCell: (params: any) => (
+        <DownloadButton
+          fileUrl={params.row.archivos_digitales.ruta_archivo}
+          fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
+          condition={false} // Establece la condición según tus necesidades
+        />
+      ),
     },
     {
       field: 'extension',
       headerName: 'Extensión',
-      width: 120,
-      flex:1
+      width: 80,
+      flex: 1,
+      valueGetter: (params) => {
+        // Accede a la propiedad 'ruta' en 'archivos_digitales'
+        return params.row.archivos_digitales.formato;
+      },
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 80,
+      flex: 1,
+      renderCell: (params: any) => (
+
+        <IconButton onClick={() => set_id_visualizar(params.row.id_plantilla_doc)}      >
+          <InformacionPlantillasPersonas data={id_visualizar} />
+        </IconButton>),
     },
   ];
 
 
 
+  const limpiar = () => {
+    set_nombre_plantilla("");
+    set_Descripccion("");
+    set_Extension("");
+    set_choise_seleccionado_tipologia("");
+    set_choise_seleccionado_disponivilidad("")
+
+  };
+  // const buscar_todos = true;
   const fetch_data_busqueda_avanzada = async (): Promise<void> => {
     try {
       const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada/`;
-    
-     // Construye dinámicamente la URL de consulta
-     let queryURL = url;
 
-     if (descripcion || nombre_plantilla || Extension || disponibilidad || tipologia) {
-       queryURL += '?';
-       if (descripcion) {   queryURL += `descripcion=${descripcion}&`; }
- 
-       if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`;  }
- 
-       if (Extension) {  queryURL += `extension=${Extension}&`;}
- 
-      if (disponibilidad) {queryURL += `disponibilidad=${disponibilidad}&`;  }
- 
-       if (tipologia) {    queryURL += `tipologia=${tipologia}`;   }
- 
-       // Elimina el último '&' si está presente
-       if (queryURL.endsWith('&')) {     queryURL = queryURL.slice(0, -1);  }
+      // Construye dinámicamente la URL de consulta
+      let queryURL = url;
+
+      if (!checked) {
+        if (nombre_plantilla || Extension || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+          queryURL += '?';
+
+          if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
+
+          if (Extension) { queryURL += `extension=${Extension}&`; }
+
+          if (choise_seleccionado_tipologia) { queryURL += `tipologia=${choise_seleccionado_tipologia}&`; }
+
+          if (choise_seleccionado_disponivilidad) { queryURL += `disponibilidad=${choise_seleccionado_disponivilidad}`; }
+
+          // Elimina el último '&' si está presente
+          if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
         }
-    
+      }
+
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
@@ -134,7 +166,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
     });
   }, []);
 
-  
+
   useEffect(() => {
     fetch_data_busqueda_avanzada().catch((error) => {
       console.error(error);
@@ -158,8 +190,8 @@ export const MostrarCentroPlantillas: React.FC = () => {
         <Title title="Seleccionar Archivos" />
       </Grid>
 
-      <Grid item xs={6}>
-      <TextField
+      <Grid item xs={5}>
+        <TextField
           style={{ width: '80%', marginTop: 20 }}
           label={`Buscar por Nombre de Plantilla`}
           variant="outlined"
@@ -241,17 +273,21 @@ export const MostrarCentroPlantillas: React.FC = () => {
       <Grid container>
         <Grid item xs={6}>
           <Button
-            color="success"
+            color="primary"
             fullWidth
             variant="contained"
+            startIcon={<SearchIcon />}
             style={{ width: '80%' }}
-            onClick={() => {set_activaador(!activador)}}
+            onClick={() => { set_activaador(!activador) }}
           >
             Buscar
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <Button fullWidth variant="outlined" style={{ width: '80%' }}>
+          <Button fullWidth variant="outlined"
+            startIcon={<CleanIcon />}
+
+            style={{ width: '80%' }} onClick={limpiar} >
             limpiar
           </Button>
         </Grid>
@@ -264,15 +300,19 @@ export const MostrarCentroPlantillas: React.FC = () => {
           noValidate
           autoComplete="off"
         >
-          <DataGrid
-            density="compact"
-            autoHeight
-            columns={columns}
-            rows={data_busqueda_Avanazda}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => uuidv4()}
-          />
+          {data_busqueda_Avanazda.length === 0 ? (
+            <p>No hay datos disponibles.</p>
+          ) : (
+            <DataGrid
+              density="compact"
+              autoHeight
+              columns={columns}
+              rows={data_busqueda_Avanazda}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => uuidv4()}
+            />
+          )}
         </Box>
       </Grid>
     </Grid>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useState, useEffect } from 'react';
 import { TextField, Grid, Box, Button } from '@mui/material';
 import { api } from '../../../../../../api/axios';
@@ -29,7 +30,6 @@ export const MostrarEmail: React.FC = () => {
   };
 
   // Estado para almacenar los datos de la sucursal de la empresa
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [dataEntidad, setDataEntidad] = useState<IconfiguracionEntidad>(initialState);
 
   // Estado para almacenar el valor del campo de email
@@ -37,30 +37,33 @@ export const MostrarEmail: React.FC = () => {
   const [emailValue, setEmailValue] = useState<string>('');
 
   // Estado para almacenar el valor del campo de confirmación de email
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [confirmEmailValue, setConfirmEmailValue] = useState<string>('');
 
   // Estado para controlar si los correos coinciden o están vacíos
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [isEditMode, setIsEditMode] = useState<boolean>(false); // Estado para habilitar/deshabilitar edición
 
   // Función para obtener los datos de la sucursal de la empresa mediante una solicitud a la API
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const fetchDataGet = async (): Promise<void> => {
     try {
       const url = '/transversal/configuracion/configuracionEntidad/3/';
       const res = await api.get(url);
-      const facilidad_pago_data = res.data.data;
-      setDataEntidad(facilidad_pago_data[0]);
-    } catch (error) {
-      console.error(error);
+  
+      if (res.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+        const facilidad_pago_data = res.data.data;
+        setDataEntidad(facilidad_pago_data[0]);
+      } else {
+        // Tratar el caso en el que los datos no son válidos o están vacíos
+        // Por ejemplo, mostrar un mensaje de error o realizar otra acción apropiada.
+        console.error('Los datos no son válidos o están vacíos.');
+      }
+    } catch (error:any) {
+      control_error(error.detail);
     }
   };
+  
 
-  // Función para manejar el cambio de email y la lógica de actualización
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+
   const handleChangeEmail = (): void => {
     // Expresión regular para validar el formato del correo electrónico
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -108,23 +111,19 @@ export const MostrarEmail: React.FC = () => {
       // Los correos no coinciden, están vacíos o el formato no es válido
       setEmailMismatch(true);
     }
+    fetchDataGet();
   };
 
   const { email_corporativo_sistema } = dataEntidad;
   const emailactaul = email_corporativo_sistema;
 
-  // Efecto para obtener los datos de la sucursal de la empresa al cargar el componente
   useEffect(() => {
     fetchDataGet().catch((error) => {
       console.error(error);
     });
   }, []);
-  useEffect(() => {
-    fetchDataGet().catch((error) => {
-      console.error(error);
-    });
-  }, [handleChangeEmail]);
 
+ 
   return (
     <Grid
       container
@@ -198,12 +197,9 @@ export const MostrarEmail: React.FC = () => {
                     variant="contained"
                     color="success"
                     startIcon={<SaveIcon />}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleChangeEmail();
-               
-                      
-                    }}
+                    onClick={
+                      handleChangeEmail
+                    }
                   >
                     Guardar
                   </Button>

@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import { Dialog } from 'primereact/dialog';
 import { Box, Button, Checkbox, FormControl, Grid, InputLabel, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { v4 as uuidv4 } from 'uuid';
-import ClearIcon from '@mui/icons-material/Clear';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Title } from '../../../../../components/Title';
 import { api } from '../../../../../api/axios';
-
+import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import { Dialog } from 'primereact/dialog';
+import { ModificadorFormatoFechaPlantillas } from '../../utils/ModificadorFecha';
 
 export const MostrarModalBuscarPlantilla: React.FC = () => {
 
@@ -22,10 +23,11 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const [Extension, set_Extension] = useState<string>(''); // Nuevo estado para el filtro
   const [data_choise, set_data_choise] = useState<any>(null);
   const [choise_seleccionado_tipologia, set_choise_seleccionado_tipologia] = useState<string>('');
-//  console.log(choise_seleccionado_tipologia);
   const [checked, setChecked] = useState(false);
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
+  const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+  const [activador, set_activaador] = useState<boolean>(false);
 
 
   const titulo = <Title title={`Busqueda`} />;
@@ -35,7 +37,6 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       <Button
         style={{ margin: 3 }}
         variant="contained"
-        startIcon={<ClearIcon />}
         color="error"
         onClick={() => {
           setVisible(false);
@@ -46,134 +47,32 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
     </div>
   );
 
-
-
-  const data = [
-    {
-      nivel_prioridad: '1',
-      tipo_alerta: 'Tipo 1',
-      nombre_clase_alerta: 'Clase 1',
-      responsable_directo: true,
-      fecha_envio_email: '2023-09-11',
-      nombre_modulo: 'Módulo 1',
-    }, {
-      nivel_prioridad: '1',
-      tipo_alerta: 'Tipo 1',
-      nombre_clase_alerta: 'Clase 1',
-      responsable_directo: true,
-      fecha_envio_email: '2023-09-11',
-      nombre_modulo: 'Módulo 1',
-    }, {
-      nivel_prioridad: '1',
-      tipo_alerta: 'Tipo 1',
-      nombre_clase_alerta: 'Clase 1',
-      responsable_directo: true,
-      fecha_envio_email: '2023-09-11',
-      nombre_modulo: 'Módulo 1',
-    }, {
-      nivel_prioridad: '1',
-      tipo_alerta: 'Tipo 1',
-      nombre_clase_alerta: 'Clase 1',
-      responsable_directo: true,
-      fecha_envio_email: '2023-09-11',
-      nombre_modulo: 'Módulo 1',
-    }, {
-      nivel_prioridad: '1',
-      tipo_alerta: 'Tipo 1',
-      nombre_clase_alerta: 'Clase 1',
-      responsable_directo: true,
-      fecha_envio_email: '2023-09-11',
-      nombre_modulo: 'Módulo 1',
-    }, {
-      nivel_prioridad: '1',
-      tipo_alerta: 'Tipo 1',
-      nombre_clase_alerta: 'Clase 1',
-      responsable_directo: true,
-      fecha_envio_email: '2023-09-11',
-      nombre_modulo: 'Módulo 1',
-    },
-    {
-      nivel_prioridad: '2',
-      tipo_alerta: 'Tipo 2',
-      nombre_clase_alerta: 'Clase 2',
-      responsable_directo: false,
-      fecha_envio_email: '2023-09-12',
-      nombre_modulo: 'Módulo 2',
-    },
-  ];
-
-  const columns: GridColDef[] = [
-    {
-      field: 'nivel_prioridad',
-      headerName: 'Nivel',
-      width: 55,
-      renderCell: (params: any) => {
-        let icon_color = '';
-        if (params.value === '1') {
-          icon_color = '#4CAF50'; // Color verde
-        } else if (params.value === '2') {
-          icon_color = '#FFC107'; // Color amarillo
-        } else if (params.value === '3') {
-          icon_color = '#F44336'; // Color rojo
-        }
-
-        return (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <PriorityHighRoundedIcon
-              fontSize="small"
-              style={{ color: icon_color, marginRight: 4 }}
-            />
-          </div>
-        );
-      },
-    },
-
-    {
-      field: 'tipo_alerta',
-      headerName: 'Tipo alerta',
-      width: 150,
-    },
-
-    {
-      field: 'nombre_clase_alerta',
-      headerName: 'Nombre Clase Alerta',
-      width: 250,
-    },
-    {
-      field: 'responsable_directo',
-      headerName: 'Responsable directo',
-      headerAlign: 'center',
-      minWidth: 120,
-      maxWidth: 180,
-      valueGetter: (params: any) =>
-        params.row.responsable_directo === true ? 'Sí' : 'No',
-    },
-    {
-      field: 'fecha_envio_email',
-      headerName: 'Fecha envio email',
-      width: 200,
-    },
-    {
-      field: 'nombre_modulo',
-      headerName: 'Nombre Módulo',
-      width: 250,
-      valueGetter: (params: any) => {
-        const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
-        const firstPart = ruta.split('/')[0]; // Obtener la primera palabra después de eliminar '/#/app/'
-        // Reemplazar guion bajo (_) por espacio
-        return firstPart.replace(/_/g, ' ');
-      },
-    },
-  ];
-
-
-
-  const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
-  console.log(data_busqueda_Avanazda);
-   const fetch_data_busqueda_avanzada = async (): Promise<void> => {
+  // const buscar_todos = true;
+  const fetch_data_busqueda_avanzada = async (): Promise<void> => {
     try {
       const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada/`;
-      const res: any = await api.get(url);
+
+      // Construye dinámicamente la URL de consulta
+      let queryURL = url;
+
+      if (!checked) {
+        if (nombre_plantilla || Extension || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+          queryURL += '?';
+
+          if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
+
+          if (Extension) { queryURL += `extension=${Extension}&`; }
+
+          if (choise_seleccionado_tipologia) { queryURL += `tipologia=${choise_seleccionado_tipologia}&`; }
+
+          if (choise_seleccionado_disponivilidad) { queryURL += `disponibilidad=${choise_seleccionado_disponivilidad}`; }
+
+          // Elimina el último '&' si está presente
+          if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
+        }
+      }
+
+      const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
     } catch (error) {
@@ -181,11 +80,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetch_data_busqueda_avanzada().catch((error) => {
-      console.error(error);
-    });
-  }, []);
+
 
   const fetch_choise_tipologia_documental = async (): Promise<void> => {
     try {
@@ -212,6 +107,85 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   };
 
 
+
+  const columns: GridColDef[] = [
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 200,
+      flex: 1,
+    },
+    {
+      field: 'archivos_digitales.formato',
+      headerName: 'Formato',
+      width: 150,
+      flex: 1,
+      valueGetter: (params) => params.row.archivos_digitales.formato,
+    },
+    {
+      field: 'cod_tipo_acceso',
+      headerName: 'Código de Acceso',
+      width: 150,
+      flex: 1,
+    },
+    {
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      valueGetter: (params: any) =>
+        ModificadorFormatoFechaPlantillas(params.row.fecha_creacion),
+      width: 200,
+      flex: 1,
+    },
+    {
+      field: 'activa',
+      headerName: 'Activa',
+      width: 100,
+      flex: 1,
+      valueFormatter: (params: any) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'ruta',
+      headerName: 'Ruta',
+      width: 120,
+      flex: 1,
+      renderCell: (params: any) => (
+        <DownloadButton
+          fileUrl={params.row.archivos_digitales.ruta_archivo}
+          fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
+          condition={false} // Establece la condición según tus necesidades
+        />
+      ),
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 150,
+      flex: 1,
+      renderCell: (params: any) => (
+        <button
+          onClick={() => console.log('Funciona')}
+          className="button-class"
+        >
+          Acción
+        </button>
+      ),
+    },
+  ];
+
+
+
+  const limpiar = () => {
+    set_nombre_plantilla("");
+    set_Descripccion("");
+    set_Extension("");
+    set_choise_seleccionado_tipologia("");
+    set_choise_seleccionado_disponivilidad("")
+
+  };
+
+
+
+
   useEffect(() => {
     fetch_choise_tipologia_documental().catch((error) => {
       console.error(error);
@@ -223,6 +197,17 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       console.error(error);
     });
   }, []);
+
+
+  useEffect(() => {
+    fetch_data_busqueda_avanzada().catch((error) => {
+      console.error(error);
+    });
+  }, [activador]);
+
+
+
+
 
 
   return (
@@ -239,7 +224,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       <Dialog
         header={titulo}
         visible={visible}
-        style={{ width: '90%' }}
+        style={{ width: '85%' }}
         closable={false}
         onHide={(): void => {
           setVisible(false);
@@ -257,9 +242,10 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
             boxShadow: '0px 3px 6px #042F4A26',
           }}
         >
-          <Grid item xs={6}>
+
+          <Grid item xs={5}>
             <TextField
-              style={{ width: '80%', marginTop: 7 }}
+              style={{ width: '80%' }}
               label={`Buscar por Nombre de Plantilla`}
               variant="outlined"
               fullWidth
@@ -302,14 +288,14 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
             </Grid>
           </Grid>
           <Grid item xs={5}>
-            <FormControl fullWidth style={{ margin: 5 }}>
+            <FormControl fullWidth >
               <InputLabel id="choise-label">Tipologia Documental</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="choise-seleccionado-tipologia"
                 value={choise_seleccionado_tipologia}
                 label="Tipologia Documental"
-                onChange={(event):any => {set_choise_seleccionado_tipologia(event.target.value)}}
+                onChange={(event): any => { set_choise_seleccionado_tipologia(event.target.value) }}
               >
                 {data_choise?.map((item: any, index: number) => (
                   <MenuItem key={index} value={item.nombre}>
@@ -319,9 +305,8 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
               </Select>
             </FormControl>
 
-
-            <FormControl fullWidth style={{ margin: 5 }}>
-            <InputLabel id="choise-label">Disponibilidad</InputLabel>
+            <FormControl fullWidth style={{ marginTop: 5 }}>
+              <InputLabel id="choise-label">Disponibilidad</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 value={choise_seleccionado_disponivilidad}
@@ -341,16 +326,21 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
           <Grid container>
             <Grid item xs={6}>
               <Button
-                color="success"
+                color="primary"
                 fullWidth
                 variant="contained"
+                startIcon={<SearchIcon />}
                 style={{ width: '80%' }}
+                onClick={() => { set_activaador(!activador) }}
               >
-                guardar
+                Buscar
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <Button fullWidth variant="outlined" style={{ width: '80%' }}>
+              <Button fullWidth variant="outlined"
+                startIcon={<CleanIcon />}
+
+                style={{ width: '80%' }} onClick={limpiar} >
                 limpiar
               </Button>
             </Grid>
@@ -363,15 +353,19 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
               noValidate
               autoComplete="off"
             >
-              <DataGrid
-                density="compact"
-                autoHeight
-                columns={columns}
-                rows={data}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                getRowId={(row) => uuidv4()}
-              />
+              {data_busqueda_Avanazda.length === 0 ? (
+                <p>No hay datos disponibles.</p>
+              ) : (
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  columns={columns}
+                  rows={data_busqueda_Avanazda}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  getRowId={(row) => uuidv4()}
+                />
+              )}
             </Box>
           </Grid>
         </Grid>
