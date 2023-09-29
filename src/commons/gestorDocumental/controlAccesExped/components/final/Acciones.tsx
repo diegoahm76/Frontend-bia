@@ -58,8 +58,8 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
             (el) =>
               el?.id_ctrl_acceso_clasif_exp_ccd ===
               currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
-          )[0]
-        : rowsControlInicial[0]
+          )[0] || currentControlAccesoExpedientes
+        : rowsControlInicial[0] || currentControlAccesoExpedientes
     ).then(() => {
       getControlAccesoExpedientes({
         setLoading: setLoadingButton,
@@ -67,7 +67,7 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
         codClasificacionExp:
           currentControlAccesoExpedientes?.cod_clasificacion_exp ||
           rowsControlInicial[0]?.cod_clasificacion_exp,
-        idCatSerieUnidad: currentSerieSubserie?.id_cat_serie_unidad,
+        idCatSerieUnidad: currentSerieSubserie?.id_cat_serie_und,
       }).then((res) => {
         console.log(res);
         if (res?.length > 0) {
