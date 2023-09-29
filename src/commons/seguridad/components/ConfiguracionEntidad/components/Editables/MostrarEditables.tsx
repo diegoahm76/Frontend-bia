@@ -228,7 +228,7 @@ export const MostrarEditables: React.FC = () => {
 
 
                         <Box style={{ display: 'flex' }}>
-                            <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Viveros"} cod={3} onClick={handleButtonClick} />
+                            <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} cod={3} onClick={handleButtonClick} />
                             <MostrrModalHistorico cargo={"Coordinador de Viveros"} codig={3} />
                         </Box>
 
@@ -259,7 +259,7 @@ export const MostrarEditables: React.FC = () => {
 
 
                         <Box style={{ display: 'flex' }}>
-                            <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Transporte"} cod={4} onClick={handleButtonClick} />
+                            <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} cod={4} onClick={handleButtonClick} />
                             <MostrrModalHistorico cargo={"Coordinador de Transporte"} codig={4} />
                         </Box>
 
