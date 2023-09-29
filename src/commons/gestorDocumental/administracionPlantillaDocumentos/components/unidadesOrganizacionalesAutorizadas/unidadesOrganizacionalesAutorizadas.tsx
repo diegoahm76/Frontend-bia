@@ -36,12 +36,20 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
 
 const[alerta,set_alerta]=useState<any[]>([]);
-  const handleAcumularDatos = (e:any) => {
-    const selectedItem = e.target;
-     set_PQR_seleccionado([...PQR_seleccionado, selectedItem]);
-     set_alerta([...alerta, selectedItem]);
-  };
+console.log(alerta);
 
+const handleAcumularDatos = () => {
+  if (PQR_seleccionado.length > 0) {
+    // Obtiene el elemento seleccionado
+    const selectedItem = PQR_seleccionado[0];
+
+    // Agrega el elemento seleccionado a la alerta
+    set_alerta([...alerta, selectedItem]);
+  }
+};
+
+
+  
   const fetch_data_get = async (): Promise<void> => {
     try {
       const url = `/transversal/organigrama/unidades/get-list/organigrama-actual/`;
@@ -114,28 +122,32 @@ const[alerta,set_alerta]=useState<any[]>([]);
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-              <Select
+             <Select
                 style={{ height: 50 }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={PQR_seleccionado} // Esto debería ser un array de datos, no un solo elemento
+                value={PQR_seleccionado[0]?.id_unidad_organizacional || ''} // Obtener la ID del primer elemento seleccionado
                 onChange={(event): any => {
-                  // Actualiza PQR_seleccionado con un array de datos basados en el elemento seleccionado
-                  const selectedItem = event.target.value;
-                  set_PQR_seleccionado([selectedItem]); // Esto convierte el elemento seleccionado en un array
+                  // Actualiza PQR_seleccionado con el elemento seleccionado
+                  const selectedItem = tipos_pqr.find(
+                    (item:any) => item.id_unidad_organizacional === event.target.value
+                  );
+                  set_PQR_seleccionado([selectedItem]);
                 }}
               >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item}>
+                {tipos_pqr?.map((item: UnidadOrganizacional) => (
+                  <MenuItem key={item.id_unidad_organizacional} value={item.id_unidad_organizacional}>
                     {item.nombre}
                   </MenuItem>
                 ))}
               </Select>
+
+              
             </FormControl>
           </Grid>
           <Grid item md={3}>
-            <Button fullWidth variant="contained" onClick={() => handleAcumularDatos(PQR_seleccionado)} >
-              Agregar
+            <Button fullWidth variant="contained" onClick={() => handleAcumularDatos()} >
+              AgregarR
             </Button>
           </Grid>
         </Grid>
@@ -145,21 +157,12 @@ const[alerta,set_alerta]=useState<any[]>([]);
             density="compact"
             autoHeight
             columns={columns}
-            rows={PQR_seleccionado}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => uuidv4()}
-          />
-        </Grid>
-        <DataGrid
-            density="compact"
-            autoHeight
-            columns={columns}
             rows={alerta}
             pageSize={10}
             rowsPerPageOptions={[10]}
             getRowId={(row) => uuidv4()}
           />
+        </Grid>
         
       </Grid>
     </>
