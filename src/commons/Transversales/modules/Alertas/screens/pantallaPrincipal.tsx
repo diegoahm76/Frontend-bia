@@ -83,32 +83,35 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       width: 55,
       renderCell: (params: any) => {
         let icon_color = '';
-        if (params.value === 1) {
+        if (params.value === '1') {
           icon_color = '#4CAF50'; // Color verde
-        } else if (params.value === 2) {
+        } else if (params.value === '2') {
           icon_color = '#FFC107'; // Color amarillo
-        } else if (params.value === 3) {
+        } else if (params.value === '3') {
           icon_color = '#F44336'; // Color rojo
         }
 
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <PriorityHighRoundedIcon fontSize="small" style={{ color: icon_color, marginRight: 4 }} />
-
+            <PriorityHighRoundedIcon
+              fontSize="small"
+              style={{ color: icon_color, marginRight: 4 }}
+            />
           </div>
         );
       },
     },
     {
       field: 'tipo_alerta',
-      headerName: 'Tipo alerta',
-      width: 150,
+      headerName: 'Tipo Alerta',
+      width: 100,
     },
     {
       field: 'fecha_hora',
       headerName: 'Fecha',
       width: 80,
-      valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_hora),
+      valueGetter: (params: any) =>
+        ModificadorFormatoFecha(params.row.fecha_hora),
     },
     {
       field: 'fecha_horaa',
@@ -123,17 +126,19 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     },
     {
       field: 'responsable_directo',
-      headerName: 'Responsable directo',
+      headerName: 'Responsable Directo',
       headerAlign: 'center',
       minWidth: 120,
       maxWidth: 180,
-      valueGetter: (params: any) => (params.row.responsable_directo === true ? "Sí" : "No"),
+      valueGetter: (params: any) =>
+        params.row.responsable_directo === true ? 'Sí' : 'No',
     },
     {
       field: 'fecha_envio_email',
-      headerName: 'Fecha envio email',
+      headerName: 'Fecha Envio Email',
       width: 150,
-      valueGetter: (params: any) => ModificadorFormatoFecha(params.row.fecha_envio_email),
+      valueGetter: (params: any) =>
+        ModificadorFormatoFecha(params.row.fecha_envio_email),
     },
 
     {
@@ -143,27 +148,10 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       valueGetter: (params: any) => {
         const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
         const firstPart = ruta.split('/')[0]; // Obtener la primera palabra después de eliminar '/#/app/'
-        return firstPart;
+        const valorModificado = firstPart.replace(/_/g, ' '); // Reemplazar las barras bajas (_) por espacios
+        return valorModificado;
       },
     },
-    // {
-    //   field: 'archivado',
-    //   headerName: 'Archivado',
-    //   width: 50,
-    //   valueGetter: (params: any) => (params.row.archivado === true ? "Sí" : "No"),
-    // },
-    // {
-    //   field: 'leido',
-    //   headerName: 'Leído',
-    //   width: 50,
-    //   renderCell: (params: any) => (params.row.leido === true ? "Sí" : "No"),
-    // },
-    // {
-    //   field: 'repeticiones_suspendidas',
-    //   headerName: 'Repeticiones Suspendidas',
-    //   width: 50,
-    //   renderCell: (params: any) => (params.row.repeticiones_suspendidas === true ? "Sí" : "No"),
-    // },
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -171,35 +159,42 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       renderCell: (params: any) => (
         <>
           <ButtonGroup variant="text">
-
-            <SuspenderAlerta
-              dat={params.row.id_alerta_bandeja_alerta_persona}
-              marcador={params.row.repeticiones_suspendidas}
-              activate_suspender_alerta={buscar_bandeja_alerta}
-            />
-
+            <Tooltip title="Suspender alerta" placement="right">
+              <SuspenderAlerta
+                dat={params.row.id_alerta_bandeja_alerta_persona}
+                marcador={params.row.repeticiones_suspendidas}
+                activate_suspender_alerta={buscar_bandeja_alerta}
+              />
+            </Tooltip>
 
             <ModalConfirmacionArchivar
               dat={params.row.id_alerta_bandeja_alerta_persona}
               marcador={params.row.archivado}
-              activate_suspender_alerta={buscar_bandeja_alerta} />
+              activate_suspender_alerta={buscar_bandeja_alerta}
+            />
 
-
-            <ModalInfoAlerta columnnns={params.row}
+            <ModalInfoAlerta
+              columnnns={params.row}
               dat={params.row.id_alerta_bandeja_alerta_persona}
               marcador={params.row.leido}
-              activate_suspender_alerta={buscar_bandeja_alerta} />
-
-
-
+              activate_suspender_alerta={buscar_bandeja_alerta}
+            />
 
             <Tooltip title="Redirigir al origen de la alerta" placement="right">
-              <Button onClick={() => {
-                const ruta = params.row.nombre_modulo.replace('/#', ''); // Eliminar "/#/app/"
-                navigate(ruta);
-              }}><ReplyIcon /></Button>
+              {params.row.nombre_modulo &&
+              params.row.nombre_modulo.trim() !== '' ? (
+                <Button
+                  onClick={() => {
+                    const ruta = params.row.nombre_modulo.replace('/#', ''); // Eliminar "/#/app/"
+                    navigate(ruta);
+                  }}
+                >
+                  <ReplyIcon />
+                </Button>
+              ) : (
+                <> {/* Fragmento vacío */}</>
+              )}
             </Tooltip>
-
           </ButtonGroup>
         </>
       ),
@@ -212,13 +207,11 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     });
   }, [id_alertas]);
 
-
   useEffect(() => {
     fetch_data_get().catch((error) => {
       console.error(error);
     });
   }, []);
-
 
   const f_leidos = (): void => {
     set_mostrar_leidos(true);
@@ -235,27 +228,21 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     // activate_suspender_alerta();
   };
 
-
-  const filtered_rows = mostrar_leidos === true
-    ? bandeja_alerta.filter((row) => row.leido && !row.archivado)
-    : mostrar_leidos === false
+  const filtered_rows =
+    mostrar_leidos === true
+      ? bandeja_alerta.filter((row) => row.leido && !row.archivado)
+      : mostrar_leidos === false
       ? bandeja_alerta.filter((row) => !row.leido && !row.archivado)
       : bandeja_alerta.filter((row) => !row.archivado);
 
-
-
-  const Variablex = bandeja_alerta.filter(row => row.archivado);
+  const Variablex = bandeja_alerta.filter((row) => row.archivado);
 
   useEffect(() => {
     fetch_data_get().catch((error) => {
       console.error(error);
     });
-
   }, [mostrar_leidos]);
 
-
-
-  
   const numeroDeAlertasLeidos = alertas_leidas_icono;
   const numeroDeAlertasNoLeidos = alertas_no_leidas_icono;
   const numeroDeAlertasTodos = numeroDeAlertasLeidos + numeroDeAlertasNoLeidos;
@@ -276,8 +263,6 @@ export const PantallaPrincipalAlertas: React.FC = () => {
           <Title title="Mis alertas" />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <ButtonGroup style={{ margin: 7 }}>
-             
-
               <BotonConAlerta
                 label="Leídos"
                 icono={<MarkEmailReadIcon />}
@@ -297,19 +282,24 @@ export const PantallaPrincipalAlertas: React.FC = () => {
                 numeroDeAlertas={numeroDeAlertasTodos}
               />
 
-               <MostrrModalArchivado data={Variablex} />
-
+              <MostrrModalArchivado data={Variablex} />
             </ButtonGroup>
-
-          
-
 
             <ButtonGroup style={{ margin: 7 }}>
               {download_xls({ nurseries: filtered_rows, columns })}
-              {download_pdf({ nurseries: filtered_rows, columns, title: 'Mis alertas' })}
+              {download_pdf({
+                nurseries: filtered_rows,
+                columns,
+                title: 'Mis alertas',
+              })}
             </ButtonGroup>
           </div>
-          <Box component="form" sx={{ mt: '20px', width: '100%' }} noValidate autoComplete="off">
+          <Box
+            component="form"
+            sx={{ mt: '20px', width: '100%' }}
+            noValidate
+            autoComplete="off"
+          >
             <DataGrid
               density="compact"
               autoHeight
@@ -319,11 +309,9 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               rowsPerPageOptions={[10]}
               getRowId={(row) => uuidv4()}
             />
-
           </Box>
         </Grid>
       </Grid>
-
 
       <Grid
         container
@@ -336,33 +324,41 @@ export const PantallaPrincipalAlertas: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
           width: '20%',
-        }}>
-
-
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'rigth' }}>
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'rigth',
+          }}
+        >
           <div style={{ color: '#	#000000', marginBottom: '8px' }}>
             Tipos de alertas:
           </div>
           <div style={{ color: '#4CAF50', marginBottom: '8px' }}>
-            <PriorityHighRoundedIcon fontSize="small" style={{ color: '#4CAF50', marginRight: 4 }} />
+            <PriorityHighRoundedIcon
+              fontSize="small"
+              style={{ color: '#4CAF50', marginRight: 4 }}
+            />
             Baja
           </div>
           <div style={{ color: '#FFC107', marginBottom: '8px' }}>
-            <PriorityHighRoundedIcon fontSize="small" style={{ color: '#FFC107', marginRight: 4 }} />
+            <PriorityHighRoundedIcon
+              fontSize="small"
+              style={{ color: '#FFC107', marginRight: 4 }}
+            />
             Media
           </div>
           <div style={{ color: '#F44336' }}>
-            <PriorityHighRoundedIcon fontSize="small" style={{ color: '#F44336', marginRight: 4 }} />
+            <PriorityHighRoundedIcon
+              fontSize="small"
+              style={{ color: '#F44336', marginRight: 4 }}
+            />
             Alta
           </div>
         </div>
-
-
-
       </Grid>
-
     </>
-
-
   );
 };

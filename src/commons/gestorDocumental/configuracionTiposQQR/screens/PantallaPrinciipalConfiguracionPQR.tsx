@@ -85,57 +85,59 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
   const fetch_data_get_buscar_letraaaa = async (): Promise<void> => {
     try {
+      set_loading(true);
+
       if (tiempoRespuesta === null || tiempoRespuesta <= 0) {
         // tiempoRespuesta no cumple con las condiciones, mostrar un mensaje de error o manejarlo según tus necesidades 
+
         set_loading(false);
-        
         control_error('El valor de tiempo de respuesta no es válido');
+
+
         return; // Salir de la función sin hacer la solicitud PUT
       }
-  
+
       const updatedDataEntidad: TipoPQR = {
         ...primerElementoConsulta,
         tiempo_respuesta_en_dias: tiempoRespuesta,
       };
-  
+
       const payload = {
         ...updatedDataEntidad,
       };
-  
+
       const response = await api.put(
         `gestor/pqr/tipos_pqr/update/${PQR_seleccionado}/`,
         payload
       );
-  
-        const updatedEmail = response.data.tiempo_respuesta_en_dias;
-        const updatedDataEntidadWithUpdatedEmail: TipoPQR = {
-          ...updatedDataEntidad,
-          tiempo_respuesta_en_dias: updatedEmail,
-        };
-        set_tipos_pqer(updatedDataEntidadWithUpdatedEmail);
-        control_success('Tiempo de respuesta actualizado correctamente');
-       
-        set_loading(false);
+
+      const updatedEmail = response.data.tiempo_respuesta_en_dias;
+      const updatedDataEntidadWithUpdatedEmail: TipoPQR = {
+        ...updatedDataEntidad,
+        tiempo_respuesta_en_dias: updatedEmail,
+      };
+      set_tipos_pqer(updatedDataEntidadWithUpdatedEmail);
+      control_success('Tiempo de respuesta actualizado correctamente');
+
+      set_loading(false);
     } catch (error:any) {
       control_error(error.response.data.detail);
+    }finally{
+      set_loading(false);
     }
     set_loading(false);
     set_activador(true);
   };
-  
+
 
   const handleTiempoRespuestaChange = (event: any): void => {
     setTiempoRespuesta(event.target.value); // Actualizar el estado con el nuevo valor ingresado por el usuario
-  };
-  const handle_restableser_tiempo = (event: any): void => {
-    setTiempoRespuesta(0); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
 
   const handleChange_guardar = (): void => {
     fetch_data_get_buscar_letraaaa().catch((error) => {
       console.error(error);
     });
-    set_loading(true);
   };
 
   const handleLimpiarCampos = (): void => {
@@ -147,7 +149,8 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   };
 
   const handleLimpiarCamposss = (): void => {
-    handle_restableser_tiempo(0);
+
+    setTiempoRespuesta(0); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
 
   useEffect(() => {
@@ -194,20 +197,17 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Configuracion Tipos PQR" />
+          <Title title="Configuracion Tipos PQRSDF" />
         </Grid>
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
-            <h5>Registrado desde:</h5>
+            <h5>Registrado Desde:</h5>
           </Grid>
           <Grid item xs={12} sm={5}>
             <FormControl fullWidth>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
                 value={PQR_seleccionado}
-                label="PQR_seleccionado"
                 onChange={(event): any => {
                   set_PQR_seleccionado(event.target.value);
                 }} >
@@ -223,7 +223,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
-            <h5>Codigo de PQR:</h5>
+            <h5>Codigo de PQRSDF:</h5>
           </Grid>
           <Grid item xs={12} sm={3}>
             <TextField
@@ -239,7 +239,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
           <Grid item xs={12} sm={4} md={2}>
-            <h5>Tiempo de respuesta:</h5>
+            <h5>Tiempo de Respuesta:</h5>
           </Grid>
           <Grid item xs={12} sm={3}>
             <TextField

@@ -82,7 +82,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
 
   const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: any,
     value: ClaseTercero[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<ClaseTercero>
@@ -574,8 +574,8 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
                         placeholder="Clasificacion Cormacarena"
                       />
                     )}
-                    {...register('datos_clasificacion_persona')}                 
-                    onChange={handle_change_autocomplete}
+                    {...register('datos_clasificacion_persona')}                
+                    onChange={handle_change_autocomplete as any}
                   />
                 </Grid>
               </>

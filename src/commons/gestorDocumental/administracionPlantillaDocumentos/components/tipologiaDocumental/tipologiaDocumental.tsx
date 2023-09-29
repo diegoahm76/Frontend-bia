@@ -44,10 +44,10 @@ export const TipologiaDocumental: React.FC = () => {
           <Title title="Tipologia Documental" />
         </Grid>
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={6} md={3}>
             <h5>¿Plantilla asociada a tipologia documental del TRD?</h5>
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={5} md={4}>
             <FormControl fullWidth>
               <Select
                 labelId="demo-simple-select-label"
@@ -70,10 +70,10 @@ export const TipologiaDocumental: React.FC = () => {
 
         {/* Desplegable adicional 1 */}
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={6} md={3}>
             <h5>Selecciona tipologia documental:</h5>
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={5} md={4}>
             <FormControl fullWidth>
               <Select
                 labelId="demo-simple-select-label-2"
@@ -96,10 +96,10 @@ export const TipologiaDocumental: React.FC = () => {
 
         {/* Desplegable adicional 2 */}
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={1}>
+          <Grid item xs={12} sm={1} >
             <h5>¿Cual?</h5>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} sm={5} md={3}>
             <TextField id="outlined-basic" variant="outlined" />
           </Grid>
           <Grid item sm={5}>

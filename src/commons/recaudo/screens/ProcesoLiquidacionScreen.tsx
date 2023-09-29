@@ -95,7 +95,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_form_liquidacion((previousState) => ({
       ...previousState,
       periodo_liquidacion,
-      valor: valor,
+      valor,
     }));
     set_fecha_liquidacion(dayjs(fecha_liquidacion));
     set_fecha_vencimiento(dayjs(vencimiento));
@@ -136,7 +136,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         id_opcion_liq: id_opcion_liquidacion,
         valor: Number(funcion()),
         estado: 1,
-        concepto: concepto,
+        concepto
       }
     ]);
   };

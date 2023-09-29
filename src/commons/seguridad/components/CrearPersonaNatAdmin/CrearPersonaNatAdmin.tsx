@@ -95,7 +95,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
   const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
   const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: any,
     value: ClaseTercero[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<ClaseTercero>
@@ -740,7 +740,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
                       />
                     )}
                     {...register('datos_clasificacion_persona')}
-                    onChange={handle_change_autocomplete}
+                    onChange={handle_change_autocomplete as any}
                   />
                 </Grid>
               </>
