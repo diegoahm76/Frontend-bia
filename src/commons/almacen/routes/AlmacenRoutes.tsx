@@ -16,7 +16,7 @@ import AprobacionSolicitudViveroScreen from '../registroSolicitudesAlmacen/solic
 import RechazoSolicitudScreen from '../registroSolicitudesAlmacen/despacho/screens/rechazoSolicitudScreen';
 import EntregaScreen from '../gestionDeInventario/movimientos/screens/entregasOtrasScreen';
 import { ControlDeInventariosRoutes } from '../controlDeInventario/routes/ControlDeInventariosRoutes';
-import { TablerosControlAlmacenRoutes } from '../tablerosControlAlmacen/routes/ControlDespachoBienesConsumoRoutes';
+import { TablerosControlAlmacenRoutes } from '../tablerosControlAlmacen/routes/TablerosControlAlmacenRoutes';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 

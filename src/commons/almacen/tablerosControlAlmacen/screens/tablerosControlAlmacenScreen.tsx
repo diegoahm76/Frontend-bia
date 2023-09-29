@@ -13,6 +13,7 @@ import BuscarBienConsumo from "../../controlDeInventario/screens/BuscarBienConsu
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { obtener_consumo_bienes_und, obtener_unidades_organizacionales } from "../thunks/tablerosControlAlmacen";
+import { GridColDef } from "@mui/x-data-grid";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablerosControlAlmacenScreen: React.FC = () => {
@@ -37,7 +38,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     })
   }
   // Listas
-  const lt_tablero_control = [{ id: 'CBU', value: 'Consumo de bienes por unidad' }]
+  const lt_tablero_control = [{ id: 'CBU', value: 'Consumo de bienes por unidad' }, { id: 'MP', value: 'Mantenimientos programados' }]
   const lt_tipo_despacho = [{ id: 'DG', value: 'Despacho general' }, { id: 'DV', value: 'Despacho a vivero' }];
   const lt_presentacion = [{ id: "UND", value: "Unidad" }, { id: "BN", value: "Bien" }];
   // Variables globales
@@ -47,7 +48,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   const [seleccion_tipo_despacho, set_seleccion_tipo_despacho] = useState<string>("");
   const [seleccion_unidad_org, set_seleccion_unidad_org] = useState<string>("");
   const [seleccion_presentacion, set_seleccion_presentacion] = useState<string>("BN");
+  const [nombre_archivo, set_nombre_archivo] = useState<string>("");
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
+  const [filtros, set_filtros] = useState<any[]>([]);
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
   const [discriminar, set_discriminar] = useState<boolean>(false);
@@ -99,19 +102,27 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     navigate('/home');
   }
 
-  useEffect(() => {
-    // if (resultado_busqueda.length > 0 && (agrupar || discriminar || mostrar || seleccion_tablero_control === 'IPC')) {
-    //   let agrupamiento: any = [];
-    //   resultado_busqueda.forEach(rb => {
-    //     rb.inventario.forEach((inv: any) => {
-    //       agrupamiento.push(inv);
-    //     });
-    //   });
-    //   set_inventarios(agrupamiento);
-    // }
-  }, [resultado_busqueda]);
+  const crear_objeto_filtro: () => void = () => {
+    const tipo_despacho = (seleccion_tipo_despacho === 'Todos' || seleccion_tipo_despacho === '') ? 'Todos' : seleccion_tipo_despacho === 'DV' ? 'Despacho a vivero' : 'Despacho general';
+    const nombre_unidad_org = (seleccion_unidad_org === 'Todos' || seleccion_unidad_org === '') ? 'Todos' : lt_unidades_org.find(lt => lt.id === seleccion_unidad_org)?.value;
+    const nombre_bien = seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.nombre_bien : '';
+    switch (seleccion_tablero_control) {
+      case 'CBU':
+        const nombre = lt_tablero_control.find(lt => lt.id === seleccion_tablero_control)?.value;
+        if(nombre !== undefined)
+          set_nombre_archivo(nombre)
+        set_filtros([{ 'Tipo de despacho': tipo_despacho, Bien: nombre_bien, 'Unidad organizacional que recibe': nombre_unidad_org, discriminar: discriminar ? 'Si' : 'No', 'Fecha desde': dayjs(fecha_desde).format('YYYY-MM-DD'), 'Fecha hasta': dayjs(fecha_hasta).format('YYYY-MM-DD') }])
+        break;
+      case 'MP':
+        set_filtros([]);
+        break;
+      default:
+        break;
+    }
+  }
 
   const busqueda_control: () => void = () => {
+    crear_objeto_filtro();
     switch (seleccion_tablero_control) {
       case 'CBU':
         if (fecha_desde === null || fecha_hasta === null) {
@@ -125,7 +136,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           set_resultado_busqueda(response.data);
         });
         break;
-
+      case 'MP':
+        break;
       default:
         break;
     }
@@ -164,11 +176,26 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   </Grid>
                 </Stack>
               </Grid>
+              {seleccion_tablero_control == 'MP' && <Grid item xs={12} sm={12} sx={{ p: '10px' }}>
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={2}>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    // startIcon={<SearchIcon />}
+                    onClick={busqueda_control}
+                  >
+                    Consultar
+                  </Button>
+                </Stack>
+              </Grid>}
             </Grid>
           </Box>
         </Grid>
       </Grid>
-      {seleccion_tablero_control !== '' && <Grid container sx={estilo_seccion}>
+      {(seleccion_tablero_control !== '' && seleccion_tablero_control !== 'MP') && <Grid container sx={estilo_seccion}>
         <Grid item md={12} xs={12}>
           <Title title="Filtros de búsqueda" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
@@ -360,7 +387,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Despacho de bienes de consumo"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Despacho de bienes de consumo"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar} filtros={filtros} nombre_archivo={nombre_archivo}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">

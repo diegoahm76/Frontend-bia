@@ -11,7 +11,9 @@ interface IProps {
     seleccion_presentacion: string,
     seleccion_tablero_control: string,
     discriminar: boolean,
-    titulo: string
+    titulo: string,
+    nombre_archivo: string,
+    filtros: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
@@ -45,7 +47,58 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                     else
                         props.seleccion_presentacion === 'UND' ? set_columnas_mp(columnas_cbu) : set_columnas_mp([columnas_cbu[1], columnas_cbu[0], columnas_cbu[2]]);
                     break;
-
+                case 'MP':
+                    set_columnas_mp([
+                        {
+                            field: 'nombre_bien',
+                            headerName: 'Bien',
+                            width: 200,
+                            valueGetter: (params) => params.row.nombre_bien,
+                        },
+                        {
+                            field: 'nombre_marca',
+                            headerName: 'Tipo de bien',
+                            width: 100,
+                            valueGetter: (params) => params.row.nombre_marca,
+                        },
+                        {
+                            field: 'serial',
+                            headerName: 'Serial / Placa',
+                            width: 100,
+                            valueGetter: (params) => params.row.serial,
+                        },
+                        {
+                            field: 'nombre_tipo_entrada',
+                            headerName: 'Tipo mantenimiento',
+                            width: 100,
+                            valueGetter: (params) => params.row.nombre_tipo_entrada,
+                        },
+                        {
+                            field: 'fecha',
+                            headerName: 'Fecha programada',
+                            width: 100,
+                            valueGetter: (params) => params.row.propiedad,
+                        },
+                        {
+                            field: 'fecha_ingreso',
+                            headerName: 'Kilómetraje programado',
+                            width: 100,
+                            valueGetter: (params) => params.row.fecha_ingreso,
+                        },
+                        {
+                            field: 'ubicacion',
+                            headerName: 'Kilómetraje actual',
+                            width: 100,
+                            valueGetter: (params) => params.row.ubicacion,
+                        },
+                        {
+                            field: 'ubicacion',
+                            headerName: 'Días vencido / Kilómetros vencido',
+                            width: 200,
+                            valueGetter: (params) => params.row.ubicacion,
+                        }
+                    ])
+                    break;        
                 default:
                     break;
             }
@@ -59,7 +112,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} nombre_archivo={props.nombre_archivo}></ExportDocs>
                         <DataGrid
                             autoHeight
                             rows={props.resultado_busqueda}
