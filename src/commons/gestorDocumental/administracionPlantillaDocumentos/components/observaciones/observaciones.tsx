@@ -70,6 +70,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       formData.append('cod_tipo_acceso', form.cod_tipo_acceso);
       formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
       formData.append('version_formato_calidad_asociado', form.version_formato_calidad_asociado.toString());
+       formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades));
 
       // Agregar el archivo al objeto FormData
       if (form.archivo) {
