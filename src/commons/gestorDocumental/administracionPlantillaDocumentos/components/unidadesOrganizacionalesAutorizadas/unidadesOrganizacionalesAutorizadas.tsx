@@ -29,7 +29,7 @@ interface UnidadOrganizacional {
 
 export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
-const {form,set_form}=useContext(FormCreacionContext);
+//const {form,set_form}=useContext(FormCreacionContext);
 // set_form({
 //   ...form,
 //   [e.target.name]: e.target.value
