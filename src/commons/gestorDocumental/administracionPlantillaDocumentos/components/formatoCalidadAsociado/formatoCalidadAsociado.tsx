@@ -15,21 +15,20 @@ export const FormatoCalidadAsociado: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '80%' }}
+            style={{ width: '80%', margin: 4 }}
             variant="outlined"
             size="small"
             label="Formato de calidad asociado"
-            value={"xml"}
+            value={'xml'}
             fullWidth
             name="Numero identificación "
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '80%' }}
-            variant="outlined"
+            style={{ width: '80%', margin: 4 }}
             size="small"
             label="Version formato calidad "
             value={12}
@@ -38,13 +37,13 @@ export const FormatoCalidadAsociado: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '80%' }}
+            style={{ width: '80%', margin: 4 }}
             variant="outlined"
             size="small"
             label="Disponibilidad "
-            value={"ninguna"}
+            value={'ninguna'}
             fullWidth
             name="Numero identificación "
           />

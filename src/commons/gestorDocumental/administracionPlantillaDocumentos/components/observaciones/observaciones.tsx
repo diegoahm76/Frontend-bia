@@ -12,6 +12,7 @@ import { Title } from '../../../../../components/Title';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { MostrarModalBuscarPlantilla } from '../modalBuscarPlantilla/BuscarPlantilla';
 
 export const ObservacionesAdministradorPlantillas: React.FC = () => {
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
@@ -63,10 +64,10 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
         </Grid>
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={4} md={2}>
+          <Grid item  xs={2} >
             <h5>Activo</h5>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={10} sm={4}>
             <FormControl fullWidth>
               <Select
                 labelId="demo-simple-select-label"
@@ -87,7 +88,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Grid container   spacing={2}  justifyContent="flex-end" >
+        <Grid container spacing={2} justifyContent="flex-end">
           <Grid item xs={12} sm={1.5}>
             <Button color="success" fullWidth variant="contained">
               guardar
@@ -104,9 +105,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
             </Button>
           </Grid>
           <Grid item xs={12} sm={1.5}>
-            <Button fullWidth variant="contained">
-              buscar
-            </Button>
+            <MostrarModalBuscarPlantilla />
           </Grid>
 
           <Grid item xs={12} sm={2}>

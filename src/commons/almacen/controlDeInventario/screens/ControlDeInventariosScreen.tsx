@@ -83,8 +83,8 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const [agrupar_bodega, set_agrupar_bodega] = useState<boolean>(false);
   const [mostrar, set_mostrar] = useState<boolean>(false);
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
+  const [msj_error_bien, set_msj_error_bien] = useState<any>("");
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
-
   const cambio_tipo_consulta: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_tipo_consulta(e.target.value);
     limpiar_filtros();
@@ -123,6 +123,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   }
 
   const limpiar_filtros: () => void = () => {
+    set_msj_error_bien('');
     set_seleccion_bodega('');
     set_seleccion_estado('');
     set_seleccion_ubicacion('');
@@ -161,7 +162,8 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const obtener_inventario_consumo_fc: () => void = () => {
     let solicitable_vivero: any = null;
     solicitable_vivero = seleccion_tipo_consulta === 'TIC' ? '' : true;
-    dispatch(obtener_inventario_consumo({ seleccion_bodega, seleccion_bien, solicitable: solicitable_vivero, agrupar_bodega })).then((response: any) => {
+    const id_bien =  seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
+    dispatch(obtener_inventario_consumo({ seleccion_bodega, seleccion_bien: id_bien, solicitable: solicitable_vivero, agrupar_bodega })).then((response: any) => {
       if (agrupar_bodega) {
         response.data.forEach((data: any) => {
           data.inventario.forEach((inv: any) => { inv.nombre_bodega = data.nombre_bodega; });
@@ -183,17 +185,25 @@ export const ControlDeInventariosScreen: React.FC = () => {
     }
   }, [resultado_busqueda]);
 
+  useEffect(() => {
+    if (seleccion_bien !== undefined && seleccion_bien !== '')
+      set_msj_error_bien('');
+  }, [seleccion_bien]);
+
   const busqueda_control: () => void = () => {
     switch (seleccion_tipo_consulta) {
       case 'TI':
         obtener_inventario_af_fc();
         break;
       case 'BE':
-        dispatch(obtener_bien_especifico_af(seleccion_bien.id_bien)).then((response: any) => {
+        if(seleccion_bien !== undefined && seleccion_bien !== ''){        
+          dispatch(obtener_bien_especifico_af(seleccion_bien.id_bien)).then((response: any) => {
           response.data.fecha_ingreso = dayjs(response.data.fecha_ingreso).format('DD/MM/YYYY');
           response.data.fecha_ultimo_movimiento = dayjs(response.data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
           set_resultado_busqueda([response.data]);
         });
+        }else
+          set_msj_error_bien('El campo es obligatorio');
         break;
       case 'IPC':
         dispatch(obtener_inventario_categoria({ seleccion_bodega, seleccion_categoria })).then((response: any) => {
@@ -431,7 +441,9 @@ export const ControlDeInventariosScreen: React.FC = () => {
                       InputProps={{
                         readOnly: true
                       }}
+                      error={msj_error_bien !== ''}
                     />
+                    {msj_error_bien !== '' && (<FormHelperText error >{msj_error_bien}</FormHelperText>)}
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <Stack
@@ -452,7 +464,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
                           is_modal_active={abrir_modal_bien}
                           set_is_modal_active={set_abrir_modal_bien}
                           title={"Búsqueda de bienes"}
-                          seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
+                          seleccion_bien={set_seleccion_bien} />
                       )}
                     </Stack>
                   </Grid>
@@ -676,7 +688,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
                           is_modal_active={abrir_modal_bien}
                           set_is_modal_active={set_abrir_modal_bien}
                           title={"Búsqueda de bienes de consumo"}
-                          seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
+                          seleccion_bien={set_seleccion_bien} />
                       )}
                     </Stack>
                   </Grid>
@@ -740,7 +752,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
                       is_modal_active={abrir_modal_bien}
                       set_is_modal_active={set_abrir_modal_bien}
                       title={"Búsqueda de bienes de consumo"}
-                      seleccion_bien={set_seleccion_bien} filtros={{ seleccion_tipo_bien }} />
+                      seleccion_bien={set_seleccion_bien} />
                   )}
                 </Stack>
               </Grid>
