@@ -43,7 +43,7 @@ export const Sucursal: FC = () => {
       fetchand_update_data().catch((error) => {
         console.error(error);
       });
-    }, 6000);
+    }, 5800);
 
     return () => { clearInterval(interval) };
   }, []);
@@ -54,7 +54,7 @@ export const Sucursal: FC = () => {
       const res = await api.get(url);
       const sucursales_data = res.data.data;
       setdata_entidad(sucursales_data);
-      fetch_dataget();
+      // fetch_dataget();
       const max_numero_sucursal = Math.max(...sucursales_data.map((sucursal: any) => sucursal.numero_sucursal));
 
       setnew_number(max_numero_sucursal + 1);
