@@ -321,6 +321,12 @@ export const Encabezado: React.FC = () => {
     // setSelectedEncuestaId(null);
     setTempOption("");
     setItemYaUsado(false)
+    setFormData({
+      ...formData,
+      preguntas: [
+        { redaccion_pregunta: "",
+          opciones_rta: [] }
+      ] });
     setFormData((prevData) => ({
       ...prevData,
       preguntas: prevData.preguntas.map((pregunta) => ({
@@ -588,7 +594,7 @@ export const Encabezado: React.FC = () => {
                 </Button>
               </Grid>
               <Grid item xs={12} sm={1.4}>
-                <Button variant="contained" color='error' onClick={() => { setShowContent(false); handleClear(); }} startIcon={<ReplyIcon />}>
+                <Button variant="contained" color='error' onClick={() => { setShowContent(false); handleClear();  setSelectedEncuestaId(null);}} startIcon={<ReplyIcon />}>
                   Regresar
                 </Button>
               </Grid>
