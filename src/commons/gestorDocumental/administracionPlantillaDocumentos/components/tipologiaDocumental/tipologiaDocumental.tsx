@@ -18,7 +18,7 @@ export const TipologiaDocumental: React.FC = () => {
   }
   //otras_tipologias
 
-  const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
+  const [tipologia_documental, set_tipologia_documental] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<boolean>(false);
   const [otro_seleccionado, set_otro_seleccionado] = useState<string>('');
   const [tercero_seleccionado, set_tercero_seleccionado] = useState<string>('');
@@ -31,7 +31,7 @@ export const TipologiaDocumental: React.FC = () => {
       const url = `/gestor/plantillas/tipos_tipologia/get/`;
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
-      set_tipos_pqr(numero_consulta);
+      set_tipologia_documental(numero_consulta);
     } catch (error) {
       console.error(error);
     }
@@ -92,12 +92,11 @@ export const TipologiaDocumental: React.FC = () => {
               <FormControl fullWidth>
                 <Select
                   id="demo-simple-select-2"
-                  value={otro_seleccionado}
-                  onChange={(event): any => {
-                    set_otro_seleccionado(event.target.value);
-                  }}
+                  name="otras_tipologias"
+                  value={form.otras_tipologias}
+                  onChange={HandleCompletarDatos}
                 >
-                  {tipos_pqr?.map((item: any, index: number) => (
+                  {tipologia_documental?.map((item: any, index: number) => (
                     <MenuItem key={index} value={item.nombre}>
                       {item.nombre}
                     </MenuItem>
@@ -134,9 +133,9 @@ export const TipologiaDocumental: React.FC = () => {
                     set_tercero_seleccionado(event.target.value);
                   }}
                 >
-                  {tipos_pqr?.map((item: any, index: number) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.name}
+                  {tipologia_documental?.map((item: any, index: number) => (
+                    <MenuItem key={index} value={item.nombre}>
+                      {item.nombre}
                     </MenuItem>
                   ))}
                 </Select>

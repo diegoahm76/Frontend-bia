@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import { Box, Button, Checkbox, FormControl, Grid, InputLabel, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, Grid, IconButton, InputLabel, TextField, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +13,10 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Dialog } from 'primereact/dialog';
 import { ModificadorFormatoFechaPlantillas } from '../../utils/ModificadorFecha';
+import { confirmarAccion } from '../../../deposito/utils/function';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { control_error, control_success } from '../../../alertasgestor/utils/control_error_or_success';
+import ClearIcon from '@mui/icons-material/Clear';
 
 export const MostrarModalBuscarPlantilla: React.FC = () => {
 
@@ -35,6 +39,9 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const footerContent = (
     <div>
       <Button
+       startIcon={<ClearIcon />}
+       fullWidth
+       
         style={{ margin: 3 }}
         variant="contained"
         color="error"
@@ -108,6 +115,26 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
 
 
 
+  const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
+    try {
+
+        console.log(idRegistro)
+        // Define la URL del servidor junto con el ID del registro que deseas eliminar
+        const url = `/gestor/plantillas/plantilla_documento/delete/${idRegistro}/`;
+
+        // Realiza una solicitud HTTP DELETE al servidor
+        const { data } = await api.delete(url);
+
+        // Verifica si la eliminación se realizó con éxito
+        control_success(data?.detail);
+
+        // Realiza una nueva consulta para actualizar la tabla después de la eliminación
+        return data;
+    } catch (error: any) {
+        control_error(error.response.data.detail);
+    }
+};
+
   const columns: GridColDef[] = [
     {
       field: 'nombre',
@@ -160,16 +187,40 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       field: 'acciones',
       headerName: 'Acciones',
       width: 150,
-      flex: 1,
-      renderCell: (params: any) => (
-        <button
-          onClick={() => console.log('Funciona')}
-          className="button-class"
-        >
-          Acción
-        </button>
-      ),
-    },
+      sortable: false,
+      renderCell: (params: any) => {
+          const idMedioSolicitud = params.row.id_plantilla_doc;
+      
+
+          const handleDeleteClick = () => {
+              // Llama a la función de eliminación pasando el idMedioSolicitud como parámetro
+              fetch_delete_registro(idMedioSolicitud).then(() => {
+                fetch_data_busqueda_avanzada()
+                
+
+              })
+          };
+
+
+          return (
+              <>
+               <Tooltip title="Borrar registro" placement="right">
+                  <IconButton
+                      onClick={() => {
+                          void confirmarAccion(
+                              handleDeleteClick,
+                              '¿Estás seguro de eliminar  este campo?'
+                          );
+                    }}
+                  >
+                      <DeleteIcon style={{ color: "red" }} />
+                  </IconButton>
+
+              </Tooltip>
+              </>
+          );
+      },
+  },
   ];
 
 
@@ -213,6 +264,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   return (
     <div className="card flex justify-content-center">
       <Button
+      startIcon={<SearchIcon />}
         fullWidth
         variant="contained"
         onClick={() => {
@@ -224,7 +276,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       <Dialog
         header={titulo}
         visible={visible}
-        style={{ width: '85%' }}
+        style={{ width: '60%' }}
         closable={false}
         onHide={(): void => {
           setVisible(false);

@@ -20,7 +20,18 @@ import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
 export const ObservacionesAdministradorPlantillas: React.FC = () => {
 
-  const { form } = useContext(FormCreacionContext);
+  const { form, set_form } = useContext(FormCreacionContext);
+
+  const HandleCompletarDatos = (e: any) => {
+    set_form({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  }
+
+
+
+
   const navigate = useNavigate();
 
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
@@ -40,21 +51,6 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
 
 
 
-  // const fetch_Crear_archivo_digital = async () => {
-  //   try {
-  //     const url = `/gestor/plantillas/plantilla_documento/create/`;
-  //     const putData = 
-  //      form
-  //     ;
-
-  //     const res = await api.post(url, putData);
-
-  //   } catch (error:any) {
-  //     control_error(error.response.data.detail);
-  //   }otro_seleccionado
-  // };
-
-
   const fetch_Crear_archivo_digital = async () => {
     try {
       const url = `/gestor/plantillas/plantilla_documento/create/`;
@@ -71,6 +67,8 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
       formData.append('version_formato_calidad_asociado', form.version_formato_calidad_asociado.toString());
        formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades));
+       formData.append('observacion', form.observacion.toString());
+
 
       // Agregar el archivo al objeto FormData
       if (form.archivo) {
@@ -95,7 +93,6 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       control_error(error.response.data.detail);
     }
   };
-
 
 
 
@@ -127,7 +124,11 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
             style={{ width: '100%', marginTop: 20 }}
             label={`Observacion`}
             id="description"
-            value={12345648}
+            value={form.observacion}
+            onChange={HandleCompletarDatos}
+            name="observacion"
+            multiline
+            rows={2}
 
           // error={emailMismatch}
           // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
@@ -171,17 +172,13 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
               Guardar
             </Button>
           </Grid>
-          <Grid item xs={12} sm={1.5}>
-            <Button color="error" fullWidth variant="outlined">
-              borrar
-            </Button>
-          </Grid>
+         
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button color='primary' variant="outlined" fullWidth startIcon={<CleanIcon />}>
               Limpiar
             </Button>
           </Grid>
-          <Grid item xs={12} sm={1.5}>
+          <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <MostrarModalBuscarPlantilla />
           </Grid>
 

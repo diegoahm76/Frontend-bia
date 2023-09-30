@@ -14,6 +14,8 @@ interface VariablesCreacionPlantilla {
     archivo: any;
     otras_tipologias:string;
     acceso_unidades:any[];
+    acceso_unidades_dos:any[];
+    observacion:string;
 }
 interface FormContextstate {
 
@@ -25,12 +27,14 @@ const valores_defecto: VariablesCreacionPlantilla = {
     descripcion: "",
     id_formato_tipo_medio: 1,
     asociada_a_tipologia_doc_trd: true,
-    cod_tipo_acceso: "TC",
+    cod_tipo_acceso: '',
     codigo_formato_calidad_asociado: "",
     version_formato_calidad_asociado: "",
     archivo: null,
     otras_tipologias:"",
-    acceso_unidades:[]
+    acceso_unidades:[],
+    acceso_unidades_dos:[],
+    observacion:"",
 }
 export const FormCreacionContext = createContext<FormContextstate>({
     form: valores_defecto,

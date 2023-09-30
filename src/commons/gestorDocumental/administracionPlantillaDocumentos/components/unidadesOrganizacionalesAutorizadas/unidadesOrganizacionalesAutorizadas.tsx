@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, FormControl, Grid, MenuItem, Select } from '@mui/material';
+import { Button, FormControl, Grid, IconButton, MenuItem, Select, Tooltip } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -29,51 +30,57 @@ interface UnidadOrganizacional {
 
 export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
-const {form,set_form}=useContext(FormCreacionContext);
+  const { form, set_form } = useContext(FormCreacionContext);
 
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<any>([]);
-const[alerta,set_alerta]=useState<any[]>([]);
-const[variable_concatenada,set_variable_concatenada]=useState<any[]>([]);
+  const [alerta, set_alerta] = useState<any[]>([]);
+  const [variable_concatenada, set_variable_concatenada] = useState<any[]>([]);
 
 
-const handleAcumularDatos = () => {
-  if (PQR_seleccionado.length > 0) {
-    // Obtiene el elemento seleccionado
-    const selectedItem = PQR_seleccionado[0];
+  const handleAcumularDatos = () => {
+    if (PQR_seleccionado.length > 0) {
+      // Obtiene el elemento seleccionado
+      const selectedItem = PQR_seleccionado[0];
+      
+      // Agrega el elemento seleccionado a la alerta
+      set_alerta([...alerta, selectedItem]);
+    
+      // Crea un nuevo objeto con la propiedad id_unidad_organizacional
+      const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
 
-    // Agrega el elemento seleccionado a la alerta
-     set_alerta([...alerta, selectedItem]);
-  }
-  if (PQR_seleccionado.length > 0) {
-    // Obtiene el elemento seleccionado
-    const selectedItem = PQR_seleccionado[0];
-
-    // Crea un nuevo objeto con la propiedad id_unidad_organizacional
-    const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
-
-    // Agrega el nuevo objeto a la alerta
-    set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
-    set_form({
-            ...form,
-            acceso_unidades: [...variable_concatenada, unidadOrganizacional]
-          });
-  }
-};
+      // Agrega el nuevo objeto a la alerta
+      set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
+      set_form({
+        ...form,
+        acceso_unidades: [...variable_concatenada,  unidadOrganizacional]
+      });
+      set_form({
+        ...form,
+        acceso_unidades_dos: [...alerta,  selectedItem]
+      });
+    }
+  };
 
 
-const handleEliminarDato = (id: number) => {
-  const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
-  set_alerta(updatedAlerta);
-  set_variable_concatenada(updatedAlerta);
-};
-  
+  const handleEliminarDato = (id: number) => {
+    const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
+    set_alerta(updatedAlerta);
+
+    const updatedAccessUnits = form.acceso_unidades.filter((item) => item.id_unidad_organizacional !== id);
+
+    set_variable_concatenada(updatedAccessUnits);
+  set_form({
+    ...form,
+    acceso_unidades: updatedAccessUnits,
+  });
+  };
+
   const fetch_data_get = async (): Promise<void> => {
     try {
       const url = `/transversal/organigrama/unidades/get-list/organigrama-actual/`;
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
-      console.log(numero_consulta);
       set_tipos_pqr(numero_consulta);
     } catch (error) {
       console.error(error);
@@ -103,14 +110,14 @@ const handleEliminarDato = (id: number) => {
       width: 150,
       renderCell: (params: any) => (
         // Celda personalizada con el botón
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
+        <Tooltip title="Borrar unidad organizacional" placement="right">
+        <IconButton
+        
           onClick={() => handleEliminarDato(params.row.id_unidad_organizacional)}
         >
-          Eliminar
-        </Button>
+           <DeleteIcon style={{ color: "red" }} />
+        </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -120,7 +127,7 @@ const handleEliminarDato = (id: number) => {
       console.error(error);
     });
   }, []);
-  
+
 
 
 
@@ -148,7 +155,7 @@ const handleEliminarDato = (id: number) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-             <Select
+              <Select
                 style={{ height: 50 }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -156,7 +163,7 @@ const handleEliminarDato = (id: number) => {
                 onChange={(event): any => {
                   // Actualiza PQR_seleccionado con el elemento seleccionado
                   const selectedItem = tipos_pqr.find(
-                    (item:any) => item.id_unidad_organizacional === event.target.value
+                    (item: any) => item.id_unidad_organizacional === event.target.value
                   );
                   set_PQR_seleccionado([selectedItem]);
                 }}
@@ -168,28 +175,28 @@ const handleEliminarDato = (id: number) => {
                 ))}
               </Select>
 
-              
+
             </FormControl>
           </Grid>
-          <Grid item md={3}>
+          <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button fullWidth variant="contained" onClick={() => handleAcumularDatos()} >
-              AgregarR
+              Agregar
             </Button>
           </Grid>
         </Grid>
-
+     
         <Grid item xs={12}>
           <DataGrid
             density="compact"
             autoHeight
             columns={columns}
-            rows={alerta}
+            rows={form.acceso_unidades_dos}
             pageSize={10}
             rowsPerPageOptions={[10]}
             getRowId={(row) => uuidv4()}
           />
         </Grid>
-        
+
       </Grid>
     </>
   );

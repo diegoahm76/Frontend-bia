@@ -5,10 +5,13 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Title } from '../../../../../components/Title';
 import { useContext, useState } from 'react';
 import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
+import { styles } from '../../../tca/components/SecondScreenComponentsAdminTca/AdministracionTCA/ItemSeleccionadoCatalago/utils/style';
 
 export const SeleccionarArchivo: React.FC = () => {
 
   const [fileExtension, setFileExtension] = useState<string | null>(null);
+  const [file_nombre, set_file_nombre] = useState<string | null>(null);
+
   const { form, set_form } = useContext(FormCreacionContext);
 
 
@@ -36,7 +39,7 @@ export const SeleccionarArchivo: React.FC = () => {
     const fileInput = event.target;
     if (fileInput?.files?.length) {
       const fileName = fileInput.files[0].name;
-       const selectedFile = fileInput.files[0];
+      const selectedFile = fileInput.files[0];
       set_form({
         ...form,
         archivo: selectedFile,
@@ -44,13 +47,16 @@ export const SeleccionarArchivo: React.FC = () => {
       const extension = fileName.split('.').pop();
       if (extension) {
         setFileExtension(extension);
+        set_file_nombre(fileName);
       } else {
         console.error("No se pudo determinar la extensión del archivo.");
         setFileExtension("Desconocido");
+        set_file_nombre("Desconocido");
       }
     } else {
       console.warn("Ningún archivo seleccionado.");
       setFileExtension(null);
+      set_file_nombre(null);
     }
   };
 
@@ -87,17 +93,18 @@ export const SeleccionarArchivo: React.FC = () => {
           <TextField
             style={{ width: '100%', marginTop: 10 }}
             label="Descripccion"
-            
-            name = "descripcion"
+
+            name="descripcion"
             value={form.descripcion}
             onChange={HandleCompletarDatos}
           // error={emailMismatch}
           // helperText={emailMismatch ? "El campo de observaciones esta vacio " : ""}
           />
         </Grid>
-        <Grid item xs={12} sm={4.5} md={3}>
+        <Grid item xs={12} sm={4} md={3}  >
           <Button
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, width: '90%'}}
+            fullWidth
             component="label"
             variant="outlined"
             startIcon={<CloudUploadIcon />}
@@ -111,19 +118,31 @@ export const SeleccionarArchivo: React.FC = () => {
             />
           </Button>
         </Grid>
-
         <Grid item xs={12} sm={4} md={3}>
           <TextField
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, width: '90%' }}
+            variant="outlined"
+            disabled
+            size="small"
+            label="Nombre de la plantilla"
+            value={file_nombre ?? ''}
+            fullWidth
+            name="Numero identificación"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} md={3}>
+          <TextField
+            style={{ marginTop: 10, width: '90%' }}
             variant="outlined"
             disabled
             size="small"
             label="Extensión de la plantilla"
             value={fileExtension ?? ''}
             fullWidth
-            name="Numero identificación"
+
           />
         </Grid>
+
       </Grid>
     </>
   );
