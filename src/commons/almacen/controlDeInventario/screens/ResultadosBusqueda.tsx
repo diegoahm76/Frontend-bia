@@ -533,7 +533,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             {props.seleccion_tipo_consulta !== 'IPC' && props.seleccion_tipo_consulta !== 'IP' && props.seleccion_tipo_consulta !== 'ITB' && props.seleccion_tipo_consulta !== 'TIC' && props.seleccion_tipo_consulta !== 'BSV' && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={undefined} nombre_archivo={""}></ExportDocs>
                         <DataGrid
                             autoHeight
                             rows={props.resultado_busqueda}
@@ -547,7 +547,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             {props.seleccion_tipo_consulta === 'IPC' && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={undefined} nombre_archivo={""}></ExportDocs>
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12} sx={{ mb: '20px' }}>
                                 <Typography variant="h6" gutterBottom> Propio </Typography>
@@ -577,7 +577,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 </Grid>
             </Box>}
             {(props.seleccion_tipo_consulta === 'IP' && props.agrupar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-                <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios}></ExportDocs>
+                <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={undefined} nombre_archivo={""}></ExportDocs>
                 <Grid item container spacing={2}>
                     {props.resultado_busqueda.map((rb: any) => (
                         // eslint-disable-next-line react/jsx-key
@@ -597,7 +597,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             {(props.seleccion_tipo_consulta === 'IP' && !props.agrupar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={undefined} nombre_archivo={""}></ExportDocs>
                         <Typography variant="h6" gutterBottom> No agrupado por categoría </Typography>
                         <DataGrid
                             autoHeight
@@ -611,7 +611,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             </Box>}
             {(props.seleccion_tipo_consulta === 'ITB' && !props.mostrar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
-                    <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios}></ExportDocs>
+                    <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={undefined} nombre_archivo={""}></ExportDocs>
                     {props.resultado_busqueda.map((rb: any) => (
                         // eslint-disable-next-line react/jsx-key
                         <Grid item xs={12} sm={12}>
@@ -630,7 +630,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             {(props.seleccion_tipo_consulta === 'ITB' && props.mostrar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={undefined} nombre_archivo={""}></ExportDocs>
                         <Typography variant="h6" gutterBottom> Para toda la entidad </Typography>
                         <DataGrid
                             autoHeight
@@ -643,7 +643,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 </Grid>
             </Box>}
             {((props.seleccion_tipo_consulta === 'TIC' || props.seleccion_tipo_consulta === 'BSV') && props.agrupar_bodega) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-                <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios}></ExportDocs>
+                <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={undefined} nombre_archivo={""}></ExportDocs>
                 <Grid item container spacing={2}>
                     {props.resultado_busqueda.map((rb: any) => (
                         // eslint-disable-next-line react/jsx-key
@@ -663,7 +663,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             {((props.seleccion_tipo_consulta === 'TIC' || props.seleccion_tipo_consulta === 'BSV') && !props.agrupar_bodega) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={undefined} nombre_archivo={""}></ExportDocs>
                         <DataGrid
                             autoHeight
                             rows={props.resultado_busqueda}
