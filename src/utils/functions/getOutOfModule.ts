@@ -37,7 +37,7 @@ export const getOutModule = (navigate: any, resetFunctions?: Function[] | null |
 
 export const reset_all = (resetFunctions: Function[]): void => {
   void Swal.fire({
-    title: '¿Está seguro de limpiar todos los campos?, la información no se guardará.',
+    title: '¿Está seguro de limpiar todos los campos?, la información no guardada se perderá.',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Si, limpiar',
