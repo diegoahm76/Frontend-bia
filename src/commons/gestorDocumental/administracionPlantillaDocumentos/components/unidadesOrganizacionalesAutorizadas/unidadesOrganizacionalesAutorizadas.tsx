@@ -74,6 +74,11 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
     ...form,
     acceso_unidades: updatedAccessUnits,
   });
+  set_form({
+    ...form,
+    acceso_unidades_dos: updatedAlerta,
+  });
+  
   };
 
   const fetch_data_get = async (): Promise<void> => {
@@ -111,12 +116,12 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
       renderCell: (params: any) => (
         // Celda personalizada con el botón
         <Tooltip title="Borrar unidad organizacional" placement="right">
-        <IconButton
+        <Button
         
           onClick={() => handleEliminarDato(params.row.id_unidad_organizacional)}
         >
            <DeleteIcon style={{ color: "red" }} />
-        </IconButton>
+        </Button>
         </Tooltip>
       ),
     },
