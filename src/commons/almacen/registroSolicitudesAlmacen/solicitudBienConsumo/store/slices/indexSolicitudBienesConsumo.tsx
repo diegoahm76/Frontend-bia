@@ -33,12 +33,12 @@ const initial_state_current_solicitud_vivero: IObjSolicitudVivero = {
     fecha_solicitud: (new Date().toString()),
     fecha_anulacion_solicitante: (new Date().toString()),
     solicitud_anulada_solicitante: false,
-    justificacion_anulacion_solicitante: "",
-    estado_aprobacion_responsable: "",
+    justificacion_anulacion_solicitante: null,
+    estado_aprobacion_responsable: null,
     fecha_aprobacion_responsable: null,
-    justificacion_rechazo_responsable: "",
+    justificacion_rechazo_responsable: null,
     fecha_rechazo_almacen: null,
-    justificacion_rechazo_almacen: "",
+    justificacion_rechazo_almacen:null,
     rechazada_almacen: false,
 
 }
