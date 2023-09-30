@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -5,7 +6,7 @@ import { Button, FormControl, Grid, TextField } from "@mui/material";
 import { Title } from "../../../../components";
 import { InputLabel, MenuItem, Select, } from "@mui/material";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     RadioGroup,
     FormControlLabel,
@@ -13,6 +14,13 @@ import {
     Typography,
 } from "@mui/material";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
+import SaveIcon from '@mui/icons-material/Save';
+import { api, baseURL } from "../../../../api/axios";
+import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Paises, PaisesResponse } from "../interfaces/types";
+export interface Opcion_Genero {
+    value: string;
+    label: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Encuesta: React.FC = () => {
@@ -46,9 +54,85 @@ export const Encuesta: React.FC = () => {
         newRespuestas[index] = event.target.value;
         setRespuestas(newRespuestas);
     };
+    const [genero, set_genero] = useState<Opcion_Genero[]>([]);
+    useEffect(() => {
+        const fetch_perfil = async (): Promise<void> => {
+            try {
+                const url = `/choices/sexo/`;
+                const res_genero = await api.get(url);
+                const alertas_genero = res_genero.data;
+                set_genero(alertas_genero);
+                console.log("222222222222");
+                console.log(alertas_genero);
+                console.log("111111111111");
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        void fetch_perfil();
+    }, []);
 
+    const [paises, setpaises] = useState<Paises[]>([]);
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch(`${baseURL}listas/paises/`);
+                const data: PaisesResponse = await response.json();
+                if (data.success) {
+                    setpaises(data.data);
 
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching paises:', error);
+            }
+        };
+        void fetch_data();
+    }, []);
+    const [link, set_link] = useState('');
+    const [selected_pais, setselected_pais] = useState('');
 
+    useEffect(() => {
+        set_link(`${baseURL}listas/departamentos/?pais=${selected_pais}`);
+    }, [selected_pais]);
+    const [departamentos, set_departamentos] = useState<Departamento[]>([]);
+
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch(link);
+                const data: DepartamentoResponse = await response.json();
+                if (data.success) {
+                    set_departamentos(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching departamentos:', error);
+            }
+        };
+        void fetch_data();
+    }, [link]);
+    const [selected_departamento, setselected_departamento] = useState('');
+    const [municipios, setmunicipios] = useState<Municipios[]>([]);
+
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch(`${baseURL}listas/municipios/?cod_departamento=${selected_departamento}`);
+                const data: MunicipiosResponse = await response.json();
+                if (data.success) {
+                    setmunicipios(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching municipios:', error);
+            }
+        };
+        void fetch_data();
+    }, [selected_departamento]);
 
     return (
         <>
@@ -56,7 +140,9 @@ export const Encuesta: React.FC = () => {
                 spacing={2} m={2} p={2}
                 sx={miEstilo}
             >
-                <Title title="Encuesta satisfaccion al usuario" />
+
+
+                <Title title="Encuesta satisfacción al usuario" />
             </Grid>
             <Grid container
                 spacing={2} m={2} p={2}
@@ -102,7 +188,7 @@ export const Encuesta: React.FC = () => {
 
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
-                        <InputLabel  >sexo</InputLabel>
+                        <InputLabel  >Sexo</InputLabel>
                         <Select
 
                             required
@@ -116,7 +202,7 @@ export const Encuesta: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
-                        <InputLabel  >rango de edad </InputLabel>
+                        <InputLabel  >Rango de edad </InputLabel>
                         <Select
 
                             required
@@ -146,50 +232,77 @@ export const Encuesta: React.FC = () => {
                         // InputLabelProps={{
                         //     shrink: true,
                         // }}
-                        label="telefono  "
+                        label="Telefono  "
                         fullWidth
                         name="telefono  "
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small">
-                        <InputLabel  >pais  </InputLabel>
+                    <FormControl size="small" fullWidth>
+                        <InputLabel shrink={true}>pais</InputLabel>
                         <Select
+                            label="país"
 
-                            required
-                            label="pais  "
 
+                            name="pais_sucursal_exterior"
+                            onChange={(event) => {
+                                const selectedValue = event.target.value as string; // Conversión de tipo a cadena
+                                setselected_pais(selectedValue);
+                            }}
                         >
-                            <MenuItem value="encuesta 1" >encuesta 1</MenuItem>
-                            <MenuItem value="encuesta 2">encuesta 2</MenuItem>
+                            {paises.map((Paises) => (
+                                <MenuItem key={Paises.value} value={Paises.value}>
+                                    {Paises.label}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
 
+
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small">
-                        <InputLabel  >departamento  </InputLabel>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel shrink={true}>Departamento</InputLabel>
                         <Select
-                            required
-                            label="departamento  "
+                            label="Departamento"
+                            onChange={(event) => {
+                                const selectedValue = event.target.value as string;
+                                setselected_departamento(selectedValue);
+                            }}
 
                         >
-                            <MenuItem value="encuesta 1" >encuesta 1</MenuItem>
-                            <MenuItem value="encuesta 2">encuesta 2</MenuItem>
+                            {departamentos.map((departamento) => (
+                                <MenuItem key={departamento.value} value={departamento.value}>
+                                    {departamento.label}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small">
-                        <InputLabel  >Ciudad </InputLabel>
-                        <Select
-                            required
-                            label="Ciudad "
 
+                <Grid item xs={12} sm={4}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel shrink={true}>Municipio</InputLabel>
+                        <Select
+                            label="Municipio"
+                            name="municipio"
+                            // value={form_values.municipio}
+                            // onChange={handleinput_change}
+                            // onChange={(event) => {
+                            //     const new_valor = event.target.value !== null ? event.target.value : '';
+                            //     setselected_municipio(new_valor);
+                            //     handleinput_change(event);
+                            // }}
+                            inputProps={{ shrink: true }}
+                        /* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */
+                        // disabled={!selected_departamento && departamentos_retur.length !== 1}
                         >
-                            <MenuItem value="encuesta 1" >encuesta 1</MenuItem>
-                            <MenuItem value="encuesta 2">encuesta 2</MenuItem>
+                            {municipios.map((municipio) => (
+                                <MenuItem key={municipio.value} value={municipio.value}>
+                                    {municipio.label}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -243,8 +356,9 @@ export const Encuesta: React.FC = () => {
                 sx={miEstilo}
             >
 
+
                 <Grid item xs={12} sm={1.2}>
-                    <Button color='success' fullWidth variant="contained"    >
+                    <Button startIcon={<SaveIcon />} color='success' fullWidth variant="contained"    >
                         guardar
                     </Button>
                 </Grid>

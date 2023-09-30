@@ -16,7 +16,7 @@ export interface Rango {
   descripcion: string;
   inicial: number;
   final: number;
-  color: string;
+  color: "success" | "warning" | "error";
 }
 
 export interface Deudor {

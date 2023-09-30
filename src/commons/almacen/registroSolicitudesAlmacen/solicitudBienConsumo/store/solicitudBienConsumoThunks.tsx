@@ -9,7 +9,7 @@ import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero, set_current_bien_vivero, set_bienes_vivero } from './slices/indexSolicitudBienesConsumo';
+import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero, set_current_bien_vivero, set_bienes_vivero, set_coordinador_vivero } from './slices/indexSolicitudBienesConsumo';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -668,13 +668,13 @@ export const get_solicitudes_despacho_fecha = (fecha: string | number,): any => 
             dispatch(set_solicitudes(data.data))
             console.log(data);
             console.log(data, "data")
-            // if ('data' in data) {
-            //     if (data.length > 0) {
-            //         control_success("Se encontrarón solicitudes aprobadas por despachar")
-            //     } else {
-            //         control_error("No se encontrarón solicitudes")
-            //     }
-            // }
+            if ('data' in data) {
+                if (data.data.length > 0) {
+                    control_success("Se encontrarón solicitudes aprobadas por despachar")
+                } else {
+                    control_error("No se encontrarón solicitudes")
+                }
+            }
             return data;
         } catch (error: any) {
             return error as AxiosError;
@@ -709,3 +709,22 @@ export const rechazar_solicitud_service: any = (
         }
     };
 };
+
+
+// obtener coordinador de vivero
+export const get_coordinador_actual = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('almacen/solicitudes-vivero/search-coordinador-viveros/get/');
+
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success === true) {
+                dispatch(set_coordinador_vivero(data.data))
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+}

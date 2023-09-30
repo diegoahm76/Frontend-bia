@@ -1,65 +1,117 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, FormControl, Grid, MenuItem, Select } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
+import { v4 as uuidv4 } from 'uuid';
+import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
+
+
+
+interface UnidadOrganizacional {
+  id_unidad_organizacional: number;
+  nombre_unidad_org_actual_admin_series: string;
+  codigo_unidad_org_actual_admin_series: string;
+  nombre: string;
+  codigo: string;
+  cod_tipo_unidad: string;
+  cod_agrupacion_documental: string;
+  unidad_raiz: boolean;
+  item_usado: boolean;
+  activo: boolean;
+  id_organigrama: number;
+  id_nivel_organigrama: number;
+  id_unidad_org_padre: number | null;
+  id_unidad_org_actual_admin_series: number;
+}
+
 
 export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
-  const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
-  const [PQR_seleccionado, set_PQR_seleccionado] = useState<string>('');
 
+const {form,set_form}=useContext(FormCreacionContext);
+
+  const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
+  const [PQR_seleccionado, set_PQR_seleccionado] = useState<any>([]);
+const[alerta,set_alerta]=useState<any[]>([]);
+const[variable_concatenada,set_variable_concatenada]=useState<any[]>([]);
+
+
+const handleAcumularDatos = () => {
+  if (PQR_seleccionado.length > 0) {
+    // Obtiene el elemento seleccionado
+    const selectedItem = PQR_seleccionado[0];
+
+    // Agrega el elemento seleccionado a la alerta
+     set_alerta([...alerta, selectedItem]);
+  }
+  if (PQR_seleccionado.length > 0) {
+    // Obtiene el elemento seleccionado
+    const selectedItem = PQR_seleccionado[0];
+
+    // Crea un nuevo objeto con la propiedad id_unidad_organizacional
+    const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
+
+    // Agrega el nuevo objeto a la alerta
+    set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
+    set_form({
+            ...form,
+            acceso_unidades: [...variable_concatenada, unidadOrganizacional]
+          });
+  }
+};
+
+
+const handleEliminarDato = (id: number) => {
+  const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
+  set_alerta(updatedAlerta);
+  set_variable_concatenada(updatedAlerta);
+};
+  
   const fetch_data_get = async (): Promise<void> => {
     try {
-      const url = `/gestor/choices/cod-tipo-pqrs/`;
+      const url = `/transversal/organigrama/unidades/get-list/organigrama-actual/`;
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
+      console.log(numero_consulta);
       set_tipos_pqr(numero_consulta);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [dataEntidad, setDataEntidad] = useState<any[]>([]);
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const fetchDataGet = async (): Promise<void> => {
-    try {
-      const url = '/transversal/sucursales/sucursales-empresa-lista/3';
-      const res = await api.get(url);
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const sucursalesData = res.data.data;
-      setDataEntidad(sucursalesData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
-  useEffect(() => {
-    fetchDataGet().catch((error) => {
-      console.error(error);
-    });
-  }, []);
+
 
   const columns = [
     {
-      field: 'numero_sucursal',
-      headerName: 'Número de Sucursal',
-      width: 100,
-      flex: 1,
-    },
-    {
-      field: 'descripcion_sucursal',
-      headerName: 'Descripción',
+      field: 'nombre',
+      headerName: 'ID Unidad Organizacional',
       width: 200,
       flex: 1,
     },
     {
-      field: 'es_principal',
-      headerName: 'Es Principal',
-      width: 150,
+      field: 'id_unidad_organizacional',
+      headerName: 'ID Unidad Organizacional',
+      width: 200,
       flex: 1,
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 150,
+      renderCell: (params: any) => (
+        // Celda personalizada con el botón
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => handleEliminarDato(params.row.id_unidad_organizacional)}
+        >
+          Eliminar
+        </Button>
+      ),
     },
   ];
 
@@ -68,6 +120,11 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
       console.error(error);
     });
   }, []);
+  
+
+
+
+
   return (
     <>
       <Grid
@@ -91,27 +148,32 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-              <Select
-              style={{height:50}}
+             <Select
+                style={{ height: 50 }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={PQR_seleccionado}
-                label="PQR_seleccionado"
+                value={PQR_seleccionado[0]?.id_unidad_organizacional || ''} // Obtener la ID del primer elemento seleccionado
                 onChange={(event): any => {
-                  set_PQR_seleccionado(event.target.value);
+                  // Actualiza PQR_seleccionado con el elemento seleccionado
+                  const selectedItem = tipos_pqr.find(
+                    (item:any) => item.id_unidad_organizacional === event.target.value
+                  );
+                  set_PQR_seleccionado([selectedItem]);
                 }}
               >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
+                {tipos_pqr?.map((item: UnidadOrganizacional) => (
+                  <MenuItem key={item.id_unidad_organizacional} value={item.id_unidad_organizacional}>
+                    {item.nombre}
                   </MenuItem>
                 ))}
               </Select>
+
+              
             </FormControl>
           </Grid>
           <Grid item md={3}>
-            <Button fullWidth variant="contained">
-              Agregar
+            <Button fullWidth variant="contained" onClick={() => handleAcumularDatos()} >
+              AgregarR
             </Button>
           </Grid>
         </Grid>
@@ -121,12 +183,13 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
             density="compact"
             autoHeight
             columns={columns}
-            rows={dataEntidad}
+            rows={alerta}
             pageSize={10}
             rowsPerPageOptions={[10]}
-            getRowId={(row) => row.id_sucursal_empresa}
+            getRowId={(row) => uuidv4()}
           />
         </Grid>
+        
       </Grid>
     </>
   );
