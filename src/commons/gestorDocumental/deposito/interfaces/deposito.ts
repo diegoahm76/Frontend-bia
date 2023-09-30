@@ -100,3 +100,4 @@ export interface IObjCarpeta {
 }
 
 export interface IObjRotuloCarpeta {}
+export interface IObjRotuloCaja {}
