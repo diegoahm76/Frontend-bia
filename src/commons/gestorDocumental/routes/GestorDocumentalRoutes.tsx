@@ -21,6 +21,7 @@ import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
+import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
@@ -113,6 +114,11 @@ const routes = [
     path: 'archivo_fisico/',
     name: 'archivo_fisico',
     component: () => <ArchivoFisicoRoutes />,
+  },
+  {
+    path: 'configuracion_tiempo_respuesta/',
+    name: 'configuracion_tiempo_respuesta',
+    component: () => <ConfiTiempoRespuestaRoutes />,
   },
 ];
 

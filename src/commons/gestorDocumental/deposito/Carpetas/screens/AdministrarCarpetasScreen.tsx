@@ -3,10 +3,11 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Grid } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
-import type { IObjCarpeta, } from "../../interfaces/deposito";
+import CloseIcon from '@mui/icons-material/Close';
+import { IObjRotuloCarpeta, type IObjCarpeta, } from "../../interfaces/deposito";
 import FormButton from "../../../../../components/partials/form/FormButton";
 import { useForm } from "react-hook-form";
 import { Title } from "../../../../../components/Title";
@@ -21,13 +22,17 @@ import { editar_carpeta, crear_carpeta, eliminar_carpeta, get_carpeta_id, mover_
 import ListadoCarpetas from "../components/CarpetasExistentes";
 import MoverCarpeta from "../components/MoverCarpeta";
 import DeleteIcon from '@mui/icons-material/Delete';
+import Rotulo from "../components/Rotulo";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AdministrarCarpetasScreen = () => {
     const { control: control_carpeta, reset,
         handleSubmit: handle_submit } = useForm<IObjCarpeta>();
+
     const { control: control_carpeta_destino, reset: reset_carpeta_destino,
         getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
+
+    const { control: control_rotulo } = useForm<IObjRotuloCarpeta>();
     const { control: control_caja } = useForm<IBuscarCaja>();
     const [carpeta, set_carpeta] = useState(false);
     const [mover_carpeta, set_mover_carpeta] = useState(false);
@@ -43,6 +48,7 @@ const AdministrarCarpetasScreen = () => {
     );
     const [select_orden, set_select_orden] = useState(false);
     const [open_modal, set_open_modal] = useState(false);
+    const [open_modal_rotulo, set_open_modal_rotulo] = useState(false);
     const handle_orden = () => {
         set_select_orden(true);
     };
@@ -50,6 +56,14 @@ const AdministrarCarpetasScreen = () => {
     const handle_buscar = () => {
         set_open_modal(true);
     };
+
+    const handle_rotulo = () => {
+        set_open_modal_rotulo(true);
+    };
+    const handle_rotulo_cerrar = () => {
+        set_open_modal_rotulo(false);
+    };
+
     const handle_close_buscar = () => {
         set_open_modal(false);
     };
@@ -115,9 +129,9 @@ const AdministrarCarpetasScreen = () => {
 
         set_selected_carpeta(initial_state_carpeta);
         set_action("Guardar");
-
+        void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
     };
-    void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
+
 
     const on_submit_elimnar = (data: IObjCarpeta): void => {
 
@@ -478,11 +492,22 @@ const AdministrarCarpetasScreen = () => {
                     </Button>
                 </Grid>
             }
+            {open_modal_rotulo && (
+                <Dialog open={open_modal_rotulo} onClose={handle_rotulo_cerrar}>
+                    <DialogTitle>
+                        Generar Rótulo
+
+                    </DialogTitle>
+                    <DialogContent>
+                        <Rotulo control_rotulo={control_rotulo} open={open_modal_rotulo} />
+                    </DialogContent>
+                </Dialog>
+            )}
 
             <Grid item xs={12} sm={4}>
                 <LoadingButton
                     variant="contained"
-                    onClick={handle_buscar}
+                    onClick={handle_rotulo}
                     disabled={false}
                 >
                     Generar Rótulo
