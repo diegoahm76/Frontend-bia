@@ -108,7 +108,7 @@ const FormSelectController = ({
                   }
                 >
                   {!(error == null) ||
-                  ((auto_focus ?? false) && (value === null || value === ''))
+                    ((auto_focus ?? false) && (value === null || value === ''))
                     ? rules.required_rule?.message
                     : helper_text}
                 </FormHelperText>

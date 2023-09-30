@@ -625,6 +625,7 @@ export const finish_trd_service = (id_trd: number, setFlag: any): any => {
       if (!id_trd) return control_error('No se ha podido realizar la acción');
       const url = `gestor/trd/finish/${id_trd}/`;
       const { data } = await api.put(url);
+      control_warning('No olvides limpiar lo campos antes de salir del módulo')
       control_success(data.detail);
       setFlag(true);
       return data.data;

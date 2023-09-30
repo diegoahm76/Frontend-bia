@@ -33,6 +33,7 @@ import {
   setAsignacionConsultaTablaTemporal,
   setGridActualANuevo,
   setGridAnteriorAActual,
+  setUnidadesSeleccionadas,
   // setUnidadesSeleccionadas,
   setUnidadesSeleccionadasAnteriorAActual,
   set_current_id_organigrama
@@ -56,19 +57,24 @@ export const CleanData: FC<any> = (): JSX.Element => {
     //* unidades seleccionadas traslado anterior a actual
     unidadesSeleccionadasAnteriorAActual,
     organigrama_current,
-    gridAnteriorAActual,
-    asignacionConsultaTablaTemporal
+    gridAnteriorAActual
+    // asignacionConsultaTablaTemporal
     /* controlFaseEntrada */
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //* elements from context
-  const { handleModalHistoricos, handleGridActualANuevo, handleMood /* setOrganigramasDisponibles */ } = useContext(ContextUnidadxEntidad);
+  const {
+    handleModalHistoricos,
+    handleGridActualANuevo,
+    handleMood /* setOrganigramasDisponibles */
+  } = useContext(ContextUnidadxEntidad);
 
   //* hook elements
-  const { setOrganigramaActual, setOrganigramasDisponibles } = use_u_x_entidad();
+  const { setOrganigramaActual, setOrganigramasDisponibles } =
+    use_u_x_entidad();
 
   const guardarRegistrosT026 = (): void => {
-    console.log(unidadesSeleccionadas);
+    // console.log(unidadesSeleccionadas);
 
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
@@ -83,115 +89,128 @@ export const CleanData: FC<any> = (): JSX.Element => {
           id_nueva_unidad_organizacional: value?.value
         }));
 
-    console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
-    console.log(organigrama_current, 'organigrama_current');
+    // console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
+    // console.log(organigrama_current, 'organigrama_current');
 
     void putCrearRegistrosTemporalesT026(
       organigrama_current,
       unidadesSeleccionadasArray,
       setLoadingButton
     ).then(() => {
-      const obtenerOrganigramas = async (): Promise<any> => {
-        const organigramasActuales = await get_organigrama_acual(navigate);
-        setOrganigramaActual(
-          organigramasActuales?.map((item: any) => ({
-            label: item?.nombre,
-            value: item?.id_organigrama
-          }))
-        );
-
-        if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
-          void getOrganigramasDispobibles().then((resOrganigramas: any) => {
-            handleMood(true);
-
-            const organigramaNecesario = resOrganigramas?.filter(
-              (item: any) =>
-                item?.id_organigrama ===
-                asignacionConsultaTablaTemporal?.id_organigrama_nuevo
-            );
-
-            setOrganigramasDisponibles(
-              organigramaNecesario?.map((item: any) => ({
-                label: item?.nombre,
-                value: item?.id_organigrama
-              }))
-            );
-          });
-
-          dispatch(
-            set_current_id_organigrama(
-              asignacionConsultaTablaTemporal?.id_organigrama_nuevo
-            )
+      void consultarTablaTemporal().then((asignacionConsultaTablaTemporal) => {
+        // console.log('asignacionTemporal', asignacionConsultaTablaTemporal)
+        const obtenerOrganigramas = async (): Promise<any> => {
+          const organigramasActuales = await get_organigrama_acual(navigate);
+          setOrganigramaActual(
+            organigramasActuales?.map((item: any) => ({
+              label: item?.nombre,
+              value: item?.id_organigrama
+            }))
           );
+          // console.log('organigramasActuales', organigramasActuales);
+          if (
+            asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+          ) {
+            void getOrganigramasDispobibles().then((resOrganigramas: any) => {
+              handleMood(true);
 
-          handleGridActualANuevo(true);
+              const organigramaNecesario = resOrganigramas?.filter(
+                (item: any) =>
+                  item?.id_organigrama ===
+                  asignacionConsultaTablaTemporal?.totalData
+                    ?.id_organigrama_nuevo
+              );
 
-          void getListadoPersonasOrganigramaActual().then(
-            (resListaPersonas: any) => {
-              void getListaUnidadesOrganigramaSeleccionado(
-                asignacionConsultaTablaTemporal?.id_organigrama_nuevo
-              ).then((resListaUnidades) => {
-                const dataMixed = resListaPersonas?.data?.map((item: any) => {
-                  return {
-                    ...item,
-                    unidadesDisponiblesParaTraslado: resListaUnidades?.data
-                  };
-                });
+              // console.log(organigramaNecesario);
 
-                const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
-                  (item: any) => {
-                    return {
-                      ...item,
-                      unidadesDisponiblesParaTraslado: resListaUnidades?.data
-                    };
+              setOrganigramasDisponibles(
+                organigramaNecesario?.map((item: any) => ({
+                  label: item?.nombre,
+                  value: item?.id_organigrama
+                }))
+              );
+            });
+
+            dispatch(
+              set_current_id_organigrama(
+                asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
+              )
+            );
+
+            handleGridActualANuevo(true);
+
+            void getListadoPersonasOrganigramaActual().then(
+              (resListaPersonas: any) => {
+                void getListaUnidadesOrganigramaSeleccionado(
+                  asignacionConsultaTablaTemporal?.totalData
+                    ?.id_organigrama_nuevo
+                ).then((resListaUnidades) => {
+                  const dataMixed =
+                    resListaPersonas?.data?.map((item: any) => {
+                      return {
+                        ...item,
+                        unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                      };
+                    }) || [];
+
+                  const dataMixed2 =
+                    asignacionConsultaTablaTemporal?.data?.map((item: any) => {
+                      return {
+                        ...item,
+                        unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                      };
+                    }) || [];
+
+                  dispatch(setGridActualANuevo(dataMixed ? dataMixed : []));
+                  dispatch(
+                    setAsignacionConsultaTablaTemporal(
+                      dataMixed2 ? dataMixed2 : []
+                    )
+                  );
+
+                  const arraySinRepetidos = [...dataMixed2, ...dataMixed] || [];
+
+                  const elementosNoRepetidos = eliminarObjetosDuplicadosPorId(
+                    arraySinRepetidos || []
+                  );
+
+                  if (elementosNoRepetidos.length === 0) {
+                    void Swal.fire({
+                      icon: 'warning',
+                      title: 'NO HAY PERSONAS PARA TRASLADAR',
+                      text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
+                      showCloseButton: false,
+                      allowOutsideClick: false,
+                      showCancelButton: true,
+                      showConfirmButton: true,
+                      cancelButtonText: 'Reiniciar módulo',
+                      confirmButtonText: 'Ir a administrador de personas',
+                      confirmButtonColor: '#042F4A',
+                      allowEscapeKey: false
+                    }).then((result: any) => {
+                      if (result.isConfirmed) {
+                        navigate('/app/transversal/administracion_personas');
+                      } else {
+                        window.location.reload();
+                      }
+                    });
+                  } else {
+                    dispatch(setGridActualANuevo(elementosNoRepetidos));
                   }
-                );
+                });
+              }
+            );
+          } else {
+            const organigramasDisponibles = await getOrganigramasDispobibles();
+            setOrganigramasDisponibles(
+              filtrarOrganigramas(organigramasDisponibles, navigate)
+            );
+            handleMood(false);
+          }
+        };
 
-                dispatch(setGridActualANuevo(dataMixed));
-                dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
-
-                const arraySinRepetidos = [...dataMixed2, ...dataMixed];
-
-                const elementosNoRepetidos =
-                  eliminarObjetosDuplicadosPorId(arraySinRepetidos);
-
-                if (elementosNoRepetidos.length === 0) {
-                  void Swal.fire({
-                    icon: 'warning',
-                    title: 'NO HAY PERSONAS PARA TRASLADAR',
-                    text:
-                      'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
-                    showCloseButton: false,
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                    cancelButtonText: 'Reiniciar módulo',
-                    confirmButtonText: 'Ir a administrador de personas',
-                    confirmButtonColor: '#042F4A',
-                    allowEscapeKey: false
-                  }).then((result: any) => {
-                    if (result.isConfirmed) {
-                      navigate('/app/transversal/administracion_personas');
-                    } else {
-                      window.location.reload();
-                    }
-                  });
-                } else {
-                  dispatch(setGridActualANuevo(elementosNoRepetidos));
-                }
-              });
-            }
-          );
-        } else {
-          const organigramasDisponibles = await getOrganigramasDispobibles();
-          setOrganigramasDisponibles(
-            filtrarOrganigramas(organigramasDisponibles)
-          );
-          handleMood(false);
-        }
-      };
-
-      void obtenerOrganigramas();
+        void obtenerOrganigramas();
+      });
     });
   };
 
@@ -231,7 +250,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
       };
     });
 
-    console.log('newArray', arraysComparados);
+    // console.log('newArray', arraysComparados);
 
     // ? el servicio el cual se manda a llamar cuando se ejecuta la función está fallando en el backend, se debe revisar
     void putTrasladoMasivoUnidadesPorEntidad(
@@ -284,11 +303,11 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   -success - booleano que me indica si la consulta fue exitosa o no
                   -detail - mensaje de error en caso de que la consulta no haya sido exitosa
                 */
-                  console.log('data tabla temporal', informacionTablaTemporal);
-                  console.log(
+                  // console.log('data tabla temporal', informacionTablaTemporal);
+                  /*cconsole.log(
                     'personas sin actualizar organigrama anterior',
                     personasSinActualizar
-                  );
+                  ); */
 
                   // ? se deben hacer un merge de los datos de la tabla temporal y de la lista de personas sin actualizar, eliminando los elemenetos repetidos (deben prevalecer los de la tabla temporal) en el caso de que se repitan los datosen ambas listas
                   void getUnidadesOrganizacionalesOrganigramaActual()
@@ -335,7 +354,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                             };
                           }
                         );
-                        console.log(dataMixed);
+                        // console.log(dataMixed);
 
                         dispatch(setGridAnteriorAActual(dataMixed));
                       }
@@ -415,17 +434,23 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     </Button>
                   )}
 
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    startIcon={<CleanIcon />}
-                    onClick={() => {
-                      console.log('cleaning fields');
-                    }}
-                  >
-                    REINICIAR CAMPOS
-                  </Button>
-
+                  {/*  solo en el modo 1 debe aparecer  */}
+{/*
+                  {controlModoTrasladoUnidadXEntidad !==
+                    'modo_entrada_con_validacion_organigrama_anterior_a_actual' && (
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={() => {
+                        console.log('cleaning fields');
+                        dispatch(setUnidadesSeleccionadas(null));
+                      }}
+                    >
+                      REINICIAR CAMPOS
+                    </Button>
+                  )}
+*/}
                   <LoadingButton
                     // color="success"
                     loading={loadingButton}
@@ -450,12 +475,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                       : 'PROCEDER'}
                   </LoadingButton>
 
-                  <Link
-                    to="/app/home"
-                    onClick={() => {
-                      console.log('closing module');
-                    }}
-                  >
+                  <Link to="/app/home">
                     <Button
                       color="error"
                       variant="contained"

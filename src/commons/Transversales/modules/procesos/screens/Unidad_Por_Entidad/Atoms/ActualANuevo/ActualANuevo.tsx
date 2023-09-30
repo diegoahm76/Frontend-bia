@@ -25,7 +25,6 @@ import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import {
   setAsignacionConsultaTablaTemporal,
-  //  setAsignacionConsultaTablaTemporal,
   setGridActualANuevo,
   setUnidadesSeleccionadas,
   set_current_id_organigrama
@@ -40,8 +39,11 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   // ? redux toolkit - values
 
-  const { asignacionConsultaTablaTemporal, /* organigrama_current */ } =
-    useAppSelector((state) => state.u_x_e_slice);
+  const {
+    asignacionConsultaTablaTemporal,
+    controlFaseEntrada,
+    unidadesSeleccionadas /* organigrama_current */
+  } = useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
 
@@ -55,17 +57,16 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
   //* context necesario
 
-  const { gridActualANuevo, handleGridActualANuevo, handleMood, mood } = useContext(
+  const { gridActualANuevo, handleGridActualANuevo } = useContext(
     ContextUnidadxEntidad
   );
-
 
   // ! use effects necesarios para el manejo del módulo
   useEffect(() => {
     //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
-     // console.log('res', organigramasActuales);
+      // console.log('res', organigramasActuales);
       setOrganigramaActual(
         organigramasActuales?.map((item: any) => ({
           label: item?.nombre,
@@ -80,16 +81,18 @@ export const ActualANuevo: FC = (): JSX.Element => {
       // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_nuevo está presente
 
       if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
+        console.log('assssignacion T026', asignacionConsultaTablaTemporal);
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
-          handleMood(true);
           // console.log(resOrganigramas);
           // console.log(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
+          // console.log('resOrganigramas', resOrganigramas);
           const organigramaNecesario = resOrganigramas?.filter(
             (item: any) =>
               item?.id_organigrama ===
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
           );
+          // console.log('organigramaNecesario', organigramaNecesario);
 
           setOrganigramasDisponibles(
             organigramaNecesario?.map((item: any) => ({
@@ -115,75 +118,68 @@ export const ActualANuevo: FC = (): JSX.Element => {
         //! 1. se realiza la consuta del listado de personas del organigrama actual
         void getListadoPersonasOrganigramaActual().then(
           (resListaPersonas: any) => {
+            // dispatch(setMoodAction(true));
             void getListaUnidadesOrganigramaSeleccionado(
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
             ).then((resListaUnidades) => {
-              const dataMixed = resListaPersonas?.data?.map((item: any) => {
-                return {
-                  ...item,
-                  unidadesDisponiblesParaTraslado: resListaUnidades?.data
-                };
-              });
-
-              const dataMixed2 = asignacionConsultaTablaTemporal?.data?.map(
-                (item: any) => {
+              const dataMixed =
+                resListaPersonas?.data?.map((item: any) => {
                   return {
                     ...item,
                     unidadesDisponiblesParaTraslado: resListaUnidades?.data
                   };
-                }
-              );
+                }) || [];
+
+              const dataMixed2 =
+                asignacionConsultaTablaTemporal?.data?.map((item: any) => {
+                  return {
+                    ...item,
+                    unidadesDisponiblesParaTraslado: resListaUnidades?.data
+                  };
+                }) || [];
 
               // ! realizo la asignaciónde la dataMixed
-              dispatch(setGridActualANuevo(dataMixed));
+              dispatch(setGridActualANuevo(dataMixed ? dataMixed : []));
               // ! se realiza nueva asignacion a al data de la tabla tempora
-              dispatch(setAsignacionConsultaTablaTemporal(dataMixed2));
+              dispatch(
+                setAsignacionConsultaTablaTemporal(dataMixed2 ? dataMixed2 : [])
+              );
 
-                // ? se realiza el mixing de los componentes para evitar los elementos repetidos y si los hay se sobreponene con el valor de aquellos que vienen en la tabla temporal t026
+              // ? se realiza el mixing de los componentes para evitar los elementos repetidos y si los hay se sobreponene con el valor de aquellos que vienen en la tabla temporal t026
 
+              const arraySinRepetidos = [...dataMixed2, ...dataMixed];
 
-                const arraySinRepetidos = [
-                  ...dataMixed2,
-                  ...dataMixed
-                ];
+              // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
 
-                // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
+              const elementosNoRepetidos = eliminarObjetosDuplicadosPorId(
+                arraySinRepetidos || []
+              );
 
-                const elementosNoRepetidos =
-                  eliminarObjetosDuplicadosPorId(arraySinRepetidos);
+              if (elementosNoRepetidos.length === 0) {
+                void Swal.fire({
+                  icon: 'warning',
+                  title: 'NO HAY PERSONAS PARA TRASLADAR',
+                  text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
+                  showCloseButton: false,
+                  allowOutsideClick: false,
+                  showCancelButton: true,
+                  showConfirmButton: true,
+                  cancelButtonText: 'Reiniciar módulo',
+                  confirmButtonText: 'Ir a administrador de personas',
+                  confirmButtonColor: '#042F4A',
 
-               if (elementosNoRepetidos.length === 0) {
-                  void Swal.fire({
-                    icon: 'warning',
-                    title: 'NO HAY PERSONAS PARA TRASLADAR',
-                    text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
-                    showCloseButton: false,
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                    cancelButtonText: 'Reiniciar módulo',
-                    confirmButtonText: 'Ir a administrador de personas',
-                    confirmButtonColor: '#042F4A',
-
-                    allowEscapeKey: false
-                  }).then((result: any) => {
-                    if (result.isConfirmed) {
-                      navigate('/app/transversal/administracion_personas');
-                    } else {
-                      window.location.reload();
-                    }
-                  });
-                } else {
-                  dispatch(setGridActualANuevo(elementosNoRepetidos));
-                  // dispatch(setGridAnteriorAActual(dataMixed));
-                }
-
-
-
-
-
-
-
+                  allowEscapeKey: false
+                }).then((result: any) => {
+                  if (result.isConfirmed) {
+                    navigate('/app/transversal/administracion_personas');
+                  } else {
+                    window.location.reload();
+                  }
+                });
+              } else {
+                dispatch(setGridActualANuevo(elementosNoRepetidos || []));
+                // dispatch(setGridAnteriorAActual(dataMixed));
+              }
 
               //* se limpian las unidades seleccionadas al realizar un cambio de organigrama - analizar que tan viable es esta opción al momento en el que se deben traer los datos
 
@@ -199,16 +195,22 @@ export const ActualANuevo: FC = (): JSX.Element => {
       } else {
         const organigramasDisponibles = await getOrganigramasDispobibles();
         setOrganigramasDisponibles(
-          filtrarOrganigramas(organigramasDisponibles)
+          filtrarOrganigramas(organigramasDisponibles, navigate)
         );
-        handleMood(false);
+        // console.log('organigramasDisponibles', organigramasDisponibles);
       }
     };
 
     void obtenerOrganigramas();
-  }, []);
+  }, [
+    dispatch,
+    navigate,
+    setOrganigramaActual,
+    setOrganigramasDisponibles,
+    asignacionConsultaTablaTemporal
+  ]);
 
-  if (!organigramaActual[0]?.label || organigramasDisponibles.length === 0)
+  if (!organigramaActual[0]?.label || organigramasDisponibles?.length === 0)
     return (
       <Grid
         container
@@ -304,7 +306,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                     <div>
                       <Select
                         value={
-                          mood
+                          controlFaseEntrada === 2
                             ? organigramasDisponibles?.length > 0
                               ? {
                                   label: organigramasDisponibles[0]?.label,
@@ -313,7 +315,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                               : value
                             : value
                         }
-                        isDisabled={mood}
+                        isDisabled={controlFaseEntrada === 2}
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
@@ -381,10 +383,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
               </Grid>
             </Grid>
           </form>
-          {
-            // ! se debe tener en cuenta que en este button tambien se deben limpiar todos los datos de la tabla para comodidad del usuario y para buen funcionamiento del módulo
-
-            gridActualANuevo ? (
+  
               <Stack
                 direction="row"
                 justifyContent="center"
@@ -393,21 +392,17 @@ export const ActualANuevo: FC = (): JSX.Element => {
               >
                 <Button
                   startIcon={<CloseFullscreenIcon />}
-                  // endIcon={<CloseFullscreenIcon />}
+                  endIcon={<CloseFullscreenIcon />}
                   variant="contained"
                   color="warning"
                   onClick={() => {
-                    // se debe tener en cuenta que en este button tambien se deben limpiar todos los datos de la tabla para comodidad del usuario y para buen funcionamiento del módulo
-                    handleGridActualANuevo(false);
+                    handleGridActualANuevo(!gridActualANuevo);
                   }}
                 >
-                  Contraer tabla
+                  {gridActualANuevo ? 'Contrer tabla' : 'Expandir tabla'}
                 </Button>
               </Stack>
-            ) : (
-              <></>
-            )
-          }
+          
         </Grid>
       </Grid>
 

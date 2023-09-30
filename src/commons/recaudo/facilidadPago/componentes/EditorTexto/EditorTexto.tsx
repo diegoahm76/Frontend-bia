@@ -7,13 +7,11 @@ export const EditorTexto: React.FC = () => {
 
   return (
     <CKEditor
-    // @ts-ignore
-      editor={ ClassicEditor }
+      editor={ ClassicEditor as unknown as { create: (...args: any[]) => Promise<any> } }
       data="<p></p>"
       onChange={ ( event, editor ) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        // @ts-ignore
-        const data = editor.getData();
+        const data = editor?.getData();
       } }
       config={ {
         placeholder: 'Redacte aquí el contenido del mensaje o cargue una plantilla predefinida.',

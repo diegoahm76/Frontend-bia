@@ -154,7 +154,7 @@ export const useRegisterInstrumentoHook = () => {
   };
 
   const handle_change_autocomplete_edit = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: any,
     value: ValueProps[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<ValueProps>
@@ -164,7 +164,7 @@ export const useRegisterInstrumentoHook = () => {
   };
 
   const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: any,
     value: ValueProps[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<ValueProps>

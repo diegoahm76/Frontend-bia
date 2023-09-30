@@ -286,7 +286,7 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: any,
     value: IList2[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<IList2>

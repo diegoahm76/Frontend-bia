@@ -335,7 +335,7 @@ export const AdminUsers: React.FC = () => {
                             />
                           )}
                           {...register_admin_user('roles')}
-                          onChange={handle_change_autocomplete}
+                          onChange={handle_change_autocomplete as any}
                         />
                       )}
                       {/* {roles_opt.length > 0 && (

@@ -10,7 +10,15 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 // import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { usePSD } from '../../../../../hook/usePSD';
-import { setListaSeriesSubseries, set_current_unidad_organizacional_action } from '../../../../../toolkit/slice/PSDSlice';
+import {
+  setCurrentSerieSubserie,
+  setListaSeriesSubseries,
+  set_current_unidad_organizacional_action,
+  set_permisos_unidades_actuales_action,
+  set_permisos_unidades_actuales_externas_action,
+  set_restricciones_para_todas_las_unidades_organizacionales_action,
+  set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action
+} from '../../../../../toolkit/slice/PSDSlice';
 import { ModalContextPSD } from '../../../../../context/ModalContextPSD';
 import { get_series_documentales_unidad_organizacional_psd } from '../../../../../toolkit/thunks/psdThunks';
 
@@ -58,7 +66,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
       >
         {/* En esta seleccion quiero tomar la seccion o subseccion asociada al ccd para realizar la respectiva busqueda de la serie - subserie respectivamente asociada */}
         <Controller
-          name="id_cdd_unidad_organizacional"
+          name="id_unidad_organizacional"
           control={control_seleccionar_seccion_control}
           rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -66,39 +74,40 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption);
+                  // ! se limpia la lista de series y subseries
+                  dispatch(setListaSeriesSubseries([]));
+                  dispatch(setCurrentSerieSubserie(null));
+
+                  //  ! se limpian las listas de los permisos y de las restricciones
+                  dispatch(set_restricciones_para_todas_las_unidades_organizacionales_action(null));
+                  dispatch(set_restricciones_para_unidades_diferentes_al_a_seccion_o_subseccion_actual_responsable_action(null));
+                  dispatch(set_permisos_unidades_actuales_action([]));
+                  dispatch(set_permisos_unidades_actuales_externas_action([]));
+
 
                   // ? seleccionando current unidad organizacional para el llamado de serie subserie
                   dispatch(
                     set_current_unidad_organizacional_action(
-                      selectedOption.item
+                      selectedOption?.item
                     )
                   );
                   // ! se deben llamar las respectivas series - subseries que estan asociadas a la unidad organizacional seleccionada y respectivo ccd seleccionado
 
                   void get_series_documentales_unidad_organizacional_psd(
-                    selectedOption.item.id_unidad_organizacional,
-                    ccd_current_busqueda.id_ccd,
+                    selectedOption?.item?.id_unidad_organizacional,
+                    ccd_current_busqueda?.id_ccd,
                     setloadingSeriesSubseries
                   ).then((res) => {
                     console.log(res);
                     dispatch(setListaSeriesSubseries(res));
                   });
 
-                  /* void get_catalogo_TRD_service(selectedOption.value).then(
-                    (res) => {
-                      console.log(res);
-                      dispatch(set_catalog_trd_action(res));
-                    }
-                  );
-
                   //* tambien debo seleccionar alguna sección o subsección (unidad organizacional) con la que se va a trabajar, esta es consecuencia servirá para mostrar el respectivo select de las series - subseries necesarias
 
                   
 
-                  onChange(selectedOption); */
+                  onChange(selectedOption);
                 }}
-                // isDisabled={tca_current != null}
                 options={
                   [...unidadesOrganizacionales]
                     .sort((a, b) => a.nombre.localeCompare(b.nombre))

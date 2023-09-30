@@ -88,7 +88,6 @@ const CrearBienDialogForm = ({
     } else if (action === 'create') {
       data.nivel_jerarquico = 1;
     }
-    data.id_unidad_medida_vida_util = 59
     data.maneja_hoja_vida = data.maneja_hoja_vida === "true"
     data.solicitable_vivero = data.solicitable_vivero === "true"
     data.visible_solicitudes = data.visible_solicitudes === "true"
@@ -228,7 +227,7 @@ const CrearBienDialogForm = ({
                     rules: { required_rule: { rule: true, message: "requerida" } },
                     label: "Codigo",
                     type: "number",
-                    disabled: true,
+                    disabled: false,
                     helper_text: ""
                   },
                   {
@@ -454,7 +453,7 @@ const CrearBienDialogForm = ({
                     rules: { required_rule: { rule: true, message: "requerida" } },
                     label: "Codigo",
                     type: "number",
-                    disabled: true,
+                    disabled: false,
                     helper_text: ""
                   },
                   {

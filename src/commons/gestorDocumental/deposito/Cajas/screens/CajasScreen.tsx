@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { BusquedaEstanteCajas } from '../components/BusquedaEstanteCajas';
 import { LoadingButton } from '@mui/lab';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { DataContext } from '../../Estantes/context/context';
 import { delete_caja } from '../services/services';
@@ -19,6 +19,9 @@ import { ListarCajas } from '../components/ListarCajas';
 import { ListarCarpetas } from '../components/ListarCarpetas';
 import { RegistrarCaja } from '../components/RegistrarCajas';
 import { set_current_mode_estantes } from '../../store/slice/indexDeposito';
+import Rotulo from '../components/Rotulo';
+import { useForm } from 'react-hook-form';
+import { IObjRotuloCaja } from '../../interfaces/deposito';
 
 // const RegistrarCaja = lazy(async () => {
 //   const module = await import('../components/RegistrarCajas');
@@ -55,7 +58,7 @@ export const CajasScreen: React.FC = () => {
   const { nuevo_orden, fetch_data_caja_bandeja } = useContext(DataContext);
   const dispatch = useAppDispatch();
   const { cajas, mode_estante } = useAppSelector((state) => state.deposito);
-
+  const { control: control_rotulo } = useForm<IObjRotuloCaja>();
   const {
     onsubmit_cajas,
     onsubmit_update_cajas,
@@ -72,6 +75,18 @@ export const CajasScreen: React.FC = () => {
       })
     );
   }, []);
+
+  const [open_modal_rotulo, set_open_modal_rotulo] = useState(false);
+
+  const handle_rotulo = () => {
+    set_open_modal_rotulo(true);
+  }
+  const handle_rotulo_cerrar = () => {
+    set_open_modal_rotulo(false);
+  };
+
+
+
 
   return (
     <>
@@ -148,6 +163,27 @@ export const CajasScreen: React.FC = () => {
               Limpiar
             </LoadingButton>{' '}
           </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <LoadingButton
+              variant="contained"
+              onClick={handle_rotulo}
+              disabled={false}
+            >
+              Generar Rótulo
+            </LoadingButton>
+          </Grid>
+          {open_modal_rotulo && (
+            <Dialog open={open_modal_rotulo} onClose={handle_rotulo_cerrar}>
+              <DialogTitle>
+                Generar Rótulo
+
+              </DialogTitle>
+              <DialogContent>
+                <Rotulo control_rotulo={control_rotulo} open={open_modal_rotulo} />
+              </DialogContent>
+            </Dialog>
+          )}
           {cajas.id_caja ? (
             <>
               <Grid item>
@@ -183,8 +219,8 @@ export const CajasScreen: React.FC = () => {
               {mode_estante.crear
                 ? 'Guardar'
                 : mode_estante.editar
-                ? 'Actualizar'
-                : 'Guardar'}{' '}
+                  ? 'Actualizar'
+                  : 'Guardar'}{' '}
             </LoadingButton>
           </Grid>
           <Grid item>

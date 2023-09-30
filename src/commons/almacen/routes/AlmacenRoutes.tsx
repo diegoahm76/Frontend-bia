@@ -15,6 +15,8 @@ import SolicitudConsumoViveroScreen from '../registroSolicitudesAlmacen/solicitu
 import AprobacionSolicitudViveroScreen from '../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudViveroScreen';
 import RechazoSolicitudScreen from '../registroSolicitudesAlmacen/despacho/screens/rechazoSolicitudScreen';
 import EntregaScreen from '../gestionDeInventario/movimientos/screens/entregasOtrasScreen';
+import { ControlDeInventariosRoutes } from '../controlDeInventario/routes/ControlDeInventariosRoutes';
+import { ControlDespachosBienesConsumoRoutes } from '../controlDespachoBienesConsumo/routes/ControlDespachoBienesConsumoRoutes';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -48,6 +50,14 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="gestion_inventario/*"
         element={<GestionInventarioRoutes />}
+      />
+      <Route
+        path="control/*"
+        element={<ControlDeInventariosRoutes />}
+      />
+      <Route
+        path="control_despacho/*"
+        element={<ControlDespachosBienesConsumoRoutes />}
       />
       <Route path="solicitud_consumo/*" element={<SolicitudConsumoScreen />} />
       <Route

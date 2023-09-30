@@ -13,10 +13,10 @@ export const ConfiguracionEntidad: React.FC = () => {
     return (
         <>
             <MostrarEntidad />
-            <MostrarEmail  /> {/* Pasa el prop emailSent a MostrarEmail */}
-            <MostrarEditables />
+            <MostrarEmail  /> 
+           <MostrarEditables />
             <br />
-            <TablaSucursales />
+             <TablaSucursales /> 
             <br />
             <TablaLineresUnidadesOrganizacionales />
 

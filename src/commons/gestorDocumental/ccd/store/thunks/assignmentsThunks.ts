@@ -13,6 +13,8 @@ import { toast, type ToastContent } from 'react-toastify';
 // import { get_assignments_ccd } from '../slices/assignmentsSlice';
 import { type Dispatch } from 'react';
 import { get_assignments_ccd } from '../slices/assignmentsSlice';
+// import { control_error } from '../../../../../helpers';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 // import { ccd_slice } from './../slices/ccdSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -127,7 +129,7 @@ export const create_or_delete_assignments_service: any = (
     } catch (error: any) {
       // console.log(error);
       dispatch(get_assignments_service(ccd_current));
-      // control_error(error.response?.data?.detail);
+      control_warning(error.response?.data?.detail);
 
       return error as AxiosError;
     } finally {
