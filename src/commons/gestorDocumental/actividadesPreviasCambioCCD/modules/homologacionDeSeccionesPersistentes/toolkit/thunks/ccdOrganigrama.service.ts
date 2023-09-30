@@ -1,10 +1,13 @@
 import { AxiosResponse } from 'axios';
 import { api } from '../../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../../helpers';
+import Swal from 'sweetalert2';
+import { NavBar } from './../../../../../../../components/NavBar';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const functionGetCcdHomologacionSeries = async (
-  SetLoadingRequest: any
+  SetLoadingRequest: any,
+  navigate: any
 ): Promise<any> => {
   try {
     SetLoadingRequest(true);
@@ -13,12 +16,26 @@ export const functionGetCcdHomologacionSeries = async (
       data,
     }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
       await api.get(url);
-    if (data?.data.length > 0) {
+    if (data?.data.length === 0) {
       control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
       return data?.data;
     } else {
-      control_error('No se han encontrado datos que coincidan');
-      return [];
+      void Swal.fire({
+        icon: 'warning',
+        title: 'ACTUALMENTE NO HAY UN CCD DISPONIBLE',
+        text: 'Sin un CCD diferente al actual no se puede realizar la homologación de series documentales',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText: 'Ir a administración de instrumentos archivísticos',
+        confirmButtonColor: '#042F4A',
+        allowEscapeKey: false,
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate('/app/gestor_documental/activacion_instrumentos_archivisticos');
+        }
+      });
     }
   } catch (err) {
     control_error('No se han encontrado datos que coincidan');
@@ -38,10 +55,10 @@ export const validacionInicialCCD = async (navigate: any): Promise<any> => {
     if (data?.data.length > 0) {
       // control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
       if (
-        data?.data.length > 1 
+        data?.data.length > 1
         // && data?.data?.some((element: any) => element?.actual)
       ) {
-        data?.data?.some((element: any) => element?.actual)
+        data?.data?.some((element: any) => element?.actual);
         console.log('hay más de un ccd disponible');
       }
 

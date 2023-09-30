@@ -7,17 +7,21 @@ import { stylesGrid } from '../../../../../../../../permisosSeriesDoc/utils/styl
 import { ModalContextPSD } from '../../../../../../../../permisosSeriesDoc/context/ModalContextPSD';
 import { functionGetCcdHomologacionSeries } from '../../../../../toolkit/thunks/ccdOrganigrama.service';
 import { useAppSelector } from '../../../../../../../../../../hooks';
+import { useNavigate } from 'react-router-dom';
 // import { useAppSelector } from '../../../../../../../../../../hooks';
 
-export const VistaCcd: FC<any> = (params:any): JSX.Element => {
-  const {
-    setccdList,
-  } = params
+export const VistaCcd: FC<any> = (params: any): JSX.Element => {
+  const { setccdList } = params;
+  //* navigate declaration
+  const navigate = useNavigate();
   // ! states from redux
- const { ccdOrganigramaCurrentBusqueda } = useAppSelector((state) => state.HomologacionesSlice);
+  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
+    (state) => state.HomologacionesSlice
+  );
 
   // ? context necesarios
-  const { handleSeleccionCCD_PSD, setLoadingButtonPSD: setLoadingRequest, } = useContext(ModalContextPSD);
+  const { handleSeleccionCCD_PSD, setLoadingButtonPSD: setLoadingRequest } =
+    useContext(ModalContextPSD);
 
   return (
     <>
@@ -50,13 +54,16 @@ export const VistaCcd: FC<any> = (params:any): JSX.Element => {
           startIcon={<SearchIcon />}
           onClick={() => {
             handleSeleccionCCD_PSD(true);
-            void functionGetCcdHomologacionSeries(setLoadingRequest).then((data: any) => {
-              setccdList(data)
-            })
+            void functionGetCcdHomologacionSeries(
+              setLoadingRequest,
+              navigate
+            ).then((data: any) => {
+              setccdList(data);
+            });
           }}
         >
           BUSCAR
-          </Button>
+        </Button>
       </Grid>
     </>
   );
