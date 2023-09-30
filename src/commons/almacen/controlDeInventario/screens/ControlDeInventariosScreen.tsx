@@ -267,7 +267,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <Title title="Tablero de control - Almacén" />
+          <Title title="Control de inventario" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={6}>

@@ -1,13 +1,13 @@
 import { Box, Button, ButtonGroup, Grid, Stack } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import jsPDF from 'jspdf';
-import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import { useState } from 'react';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls_props } from '../../../../documentos-descargar/XLS_descargar_props';
 
 interface IProps {
     cols: GridColDef[],
-    resultado_busqueda: any
+    resultado_busqueda: any,
+    filtros: any,
+    nombre_archivo: string
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -25,7 +25,7 @@ const ExportDocs = (props: IProps) => {
                     style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
                 >
                     {download_pdf({ nurseries: props.resultado_busqueda, columns: props.cols, title: 'Tablero de control - Almacén' })}
-                    {download_xls({ nurseries: props.resultado_busqueda, columns: props.cols })}
+                    {download_xls_props({ nurseries: props.resultado_busqueda, columns: props.cols, filtrers: props.filtros, nombre_archivo: props.nombre_archivo })}
                 </ButtonGroup>
             </Grid>
         </Box>

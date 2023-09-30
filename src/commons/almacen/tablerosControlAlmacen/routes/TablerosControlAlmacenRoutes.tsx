@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
-import { ControlDespachoBienesScreen } from '../screens/controlDespachoBienesScreen';
+import { TablerosControlAlmacenScreen } from '../screens/tablerosControlAlmacenScreen';
 ;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ControlDespachosBienesConsumoRoutes: React.FC = () => {
+export const TablerosControlAlmacenRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="bienes_consumo" element={<ControlDespachoBienesScreen/>} />
+      <Route path="almacen" element={<TablerosControlAlmacenScreen/>} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
