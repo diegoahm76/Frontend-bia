@@ -1,41 +1,89 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Dialog, Grid, } from '@mui/material';
-import type React from 'react';
-import { type Dispatch, type SetStateAction } from 'react';
-import { Title } from '../../../../components';
-import IconButton from '@mui/material/IconButton';
-import { DataGrid } from '@mui/x-data-grid';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-interface IProps {
-    is_modal_active: boolean;
-    set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-}
+import { BucacarEncuesta, BuscarProps } from '../interfaces/types';
+import {Divider, Button, Dialog, Grid, } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Title } from '../../../../components';
+import { api } from '../../../../api/axios';
+import { useState, useEffect } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { TextField } from "@mui/material";
+import type React from 'react';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, }) => {
 
+export const Buscar: React.FC<BuscarProps> = ({ handleClear, setSelectedEncuestaId, is_modal_active, set_is_modal_active, }) => {
+    // const [encuestas, setEncuestas] = useState<BucacarEncuesta[]>([]);
+    const [encuestas, setEncuestas] = useState<BucacarEncuesta[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
-    const rows = [
-        { id: 1,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"30-04-2023", opciones: 'Opción 1', acciones:  ""},
-        { id: 2,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"04-08-2023", opciones: 'Opción 2', acciones:  ""},
-        { id: 3,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"03-09-2023", opciones: 'Opción 3', acciones:  ""},
-        { id: 4,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"02-11-2023", opciones: 'Opción 4', acciones:  ""},
-        { id: 5,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"020-3-2023", opciones: 'Opción 5', acciones: "" },
-        { id: 6,Nombre_encuesta:"encuesta macarenia corpo",Fecha:"01-01-2023", opciones: 'Opción 6', acciones: "" },
-        // Agrega más filas según tus datos
-    ];
-        
-        // Columnas de la datagrid
+    const fetchEncuestas = async () => {
+        try {
+            const res = await api.get("/gestor/encuestas/encabezado_encuesta/get/");
+            if (res.data.success) {
+                setEncuestas(res.data.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handle_close = (): void => {
+        set_is_modal_active(false);
+    };
+
+    useEffect(() => {
+        fetchEncuestas();
+    }, []);
+
+    const handleSearch = async (): Promise<void> => {
+        if (!searchTerm.trim()) {
+            await fetchEncuestas();
+            return;
+        }
+
+        const filteredEncuestas = encuestas.filter(encuesta =>
+            encuesta.nombre_encuesta.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        setEncuestas(filteredEncuestas);
+    };
+    useEffect(() => {
+        fetchEncuestas(); // Llama a fetchEncuestas al montar el componente
+    }, []);
+    // const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null); // Estado para almacenar el ID seleccionado
+
     const columns = [
-        { field: 'Nombre_encuesta', headerName: 'Nombre encuesta', width: 200, flex: 1, },
-        { field: 'Fecha', headerName: 'Fecha creación', width: 200, flex: 1, },
+        // { field: "id_encabezado_encuesta", headerName: "ID", width: 100 },
+        { field: "nombre_encuesta", headerName: "Nombre de Encuesta", width: 300, },
         {
-            field: 'acciones', headerName: 'Acciones', width: 200, flex: 1, renderCell: (params: any) => (
-                <>
+            field: "fecha_creacion", headerName: "Fecha de creación", width: 300, valueFormatter: (params: { value: string | number | Date; }) => {
+                const date = new Date(params.value);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+                return formattedDate;
+            },
+        },
 
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            width: 200,
+
+            renderCell: (params: any) => (
+                <>
                     <IconButton
                         color="primary"
-                        aria-label="Eliminar"
+                        aria-label="Ver"
+                        onClick={() => {
+                            handleClear();
+                            const id = params.row.id_encabezado_encuesta; // Obtener el ID de la fila seleccionada
+                            setSelectedEncuestaId(id); // Almacenar el ID en el estado
+                            handle_close();
+                        }}
                     >
                         <PlaylistAddCheckIcon />
                     </IconButton>
@@ -43,11 +91,10 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
             ),
         },
     ];
+    const handleActualizarTabla = () => {
+        fetchEncuestas();
 
-    const handle_close = (): void => {
-        set_is_modal_active(false);
     };
-
 
     return (
         <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
@@ -64,23 +111,49 @@ export const Buscar: React.FC<IProps> = ({ is_modal_active, set_is_modal_active,
                 <Grid item xs={12}  >
                     <Title title="Selecione encuensta para ver los detalles de configuracion  " />
                 </Grid>
+                {/* <h1>{selectedEncuestaId !== null ? `ID seleccionado: ${selectedEncuestaId}` : ''}</h1> Mostrar el ID seleccionado en el h1 */}
+                <Grid item xs={12} marginTop={2} sm={3}>
+                    <TextField
+                        variant="outlined"
+                        size="small"
+                        label="Buscar"
 
-
-
-                <Grid item xs={12} marginTop={2}  >
+                        fullWidth
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </Grid>
+                <Grid item marginTop={2} marginLeft={2} xs={12} sm={1.5}>
+                    <Button variant="contained" color='primary' startIcon={<SearchIcon />} onClick={handleSearch}>
+                        Buscar
+                    </Button>
+                </Grid>
+                <Divider
+                style={{
+                    width: '100%',
+                    marginTop: '8px',
+                    marginBottom: '8px',
+                    marginLeft: 'auto',
+                }}
+            />
+                <Grid item xs={12} marginTop={2}>
                     <DataGrid
                         density="compact"
                         autoHeight
-                        rows={rows}
                         columns={columns}
-                        rowsPerPageOptions={[5]}
-                        pageSize={5} // Cantidad de filas por página
-                        disableSelectionOnClick // Desactiva la selección al hacer clic en una fila
+                        rows={encuestas}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        getRowId={(row) => row.id_encabezado_encuesta}
                     />
-                    {/* </div> */}
                 </Grid>
-
-
+                <Grid container spacing={2} justifyContent="flex-end" >
+                    <Grid item xs={12} marginTop={2} sm={1.5}>
+                        <Button variant="contained" color='error' onClick={handle_close} fullWidth startIcon={<ClearIcon />}>
+                            Salir
+                        </Button>
+                    </Grid>
+                </Grid>
             </Grid>
         </Dialog>
     );
