@@ -12,7 +12,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import BuscarBienConsumo from "../../controlDeInventario/screens/BuscarBienConsumo";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { obtener_consumo_bienes_und, obtener_unidades_organizacionales } from "../thunks/tablerosControlAlmacen";
+import { obtener_consumo_bienes_und, obtener_mtto_programados, obtener_unidades_organizacionales } from "../thunks/tablerosControlAlmacen";
 import { GridColDef } from "@mui/x-data-grid";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -137,6 +137,28 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'MP':
+        dispatch(obtener_mtto_programados()).then((response: any) => {
+          response.data.forEach((mtto: any) => {
+            mtto.fecha_programada = dayjs(mtto.fecha_programada).format('DD/MM/YYYY');
+            if(mtto.fecha_programada === null)
+              mtto.fecha_programada = 'N/A';
+            if(mtto.kilometraje_programado === null)
+              mtto.kilometraje_programado = 'N/A';
+            if(mtto.kilometraje_actual === null)
+              mtto.kilometraje_actual = 'N/A';
+          });
+          response.data.sort(function (a: any, b:any) {
+            if (a.dias_kilometros_vencidos < b.dias_kilometros_vencidos) {
+              return 1;
+            }
+            if (a.dias_kilometros_vencidos > b.dias_kilometros_vencidos) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          });
+          set_resultado_busqueda(response.data);
+        });
         break;
       default:
         break;
