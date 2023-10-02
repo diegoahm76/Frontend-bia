@@ -83,8 +83,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                     return '';
                                 }
                                 return clsx('super-app', {
-                                    positive: params.row.dias_kilometros_vencidos > 0,
-                                })
+                                    positive: params.row.dias_kilometros_vencidos > 0 })
                             },
                             valueGetter: (params) => params.row.fecha_programada,
                         },
@@ -96,9 +95,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                 if (params.row.dias_kilometros_vencidos == null || params.row.fecha_programada !== 'N/A') {
                                     return '';
                                 }
-                                return clsx('super-app', {
-                                    positive: params.row.dias_kilometros_vencidos > 0,
-                                })
+                                return clsx('super-app', { positive: params.row.dias_kilometros_vencidos > 0 })
                             },
                             valueGetter: (params) => params.row.kilometraje_programado,
                         },
