@@ -48,7 +48,7 @@ export const functionGetCcdHomologacionSeries = async (
   }
 };
 
-// ! --------- GET CCD ACTUAL, VALIDACIÓN INICIAL DEL MÓDULO ---------
+// ! --------- GET CCD ACTUAL, VALIDACIÓN INICIAL DEL MÓDULOgit  ---------
 export const validacionInicialCCD = async (navigate: any): Promise<any> => {
   try {
     const url = 'gestor/ccd/get-validacion-homologacion/';
