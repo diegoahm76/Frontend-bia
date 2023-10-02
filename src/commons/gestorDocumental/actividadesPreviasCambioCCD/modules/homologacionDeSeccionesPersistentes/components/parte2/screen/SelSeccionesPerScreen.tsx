@@ -9,7 +9,7 @@ import { PersistenciaConfirmadaCCD } from '../components/persistenciaConfirmadaC
 export const SelSeccionesPerScreen = (): JSX.Element => {
   return (
     <Grid container sx={containerStyles}>
-      <Title title="Asignación de permisos sobre expedientes no propios" />
+      <Title title="Selección de secciones persistentes" />
 
       {/* Coincidencias halladas de los CCD */}
 
