@@ -19,7 +19,7 @@ export const functionGetCcdHomologacionSeries = async (
       data,
     }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
       await api.get(url);
-    if (data?.data.length === 0) {
+    if (data?.data.length > 0) {
       control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
       return data?.data;
     } else {
@@ -57,15 +57,14 @@ export const validacionInicialCCD = async (navigate: any): Promise<any> => {
     }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
       await api.get(url);
     if (data?.data.length > 0) {
-      if (
-        data?.data?.some((element: any) => element?.actual)
-      ) {
+      const elementoActual = data?.data.find((element: any) => element?.actual);
+      if (!elementoActual) {
         void Swal.fire({
           icon: 'warning',
           title: 'NO HAY CCD ACTUAL',
           text: 'Sin un CCD actual no se puede realizar la homologación de series documentales',
           showCloseButton: false,
-          allowOutsideClick: true,
+          allowOutsideClick: false,
           showConfirmButton: true,
           cancelButtonText: 'Reiniciar módulo',
           confirmButtonText: 'Ir a administración de instrumentos archivísticos',
