@@ -33,7 +33,15 @@ import { download_pdf } from '../../../../../../../../../documentos-descargar/PD
 import { useAppDispatch } from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
-import { setCcdOrganigramaCurrent } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import {
+  setCcdOrganigramaCurrent,
+  setHomologacionUnidades,
+  setUnidadesPersistentes,
+} from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import {
+  fnGetHomologacionUnidades,
+  fnGetUnidadesPersistentes,
+} from '../../../../toolkit/thunks/seccionesPersistentes.service';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -42,11 +50,32 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   // ? ---- context declaration ----
-  const {
-    modalSeleccionCCD_PSD,
-    handleSeleccionCCD_PSD,
-    loadingButtonPSD,
-  } = useContext(ModalContextPSD);
+  const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
+    useContext(ModalContextPSD);
+
+
+
+    async function handleHomologacionUnidades(params: any) {
+      try {
+        const resHomologacionesUnidades = await fnGetHomologacionUnidades(params.row.id_ccd);
+        console.log(resHomologacionesUnidades);
+    
+        if (resHomologacionesUnidades?.mismo_organigrama) {
+          console.log('chao bambino');
+          //* se le asigna el valor de las UNIDADES A HOMOLOGAR
+          dispatch(setUnidadesPersistentes(resHomologacionesUnidades?.coincidencias));
+        } else {
+          dispatch(setHomologacionUnidades(resHomologacionesUnidades?.coincidencias));
+    
+          const resUnidadesPersistentes = await fnGetUnidadesPersistentes(params.row.id_ccd);
+          console.log(resUnidadesPersistentes);
+          //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
+          dispatch(setUnidadesPersistentes(resUnidadesPersistentes));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
@@ -91,21 +120,18 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                // ! se limpia la lista de series y subseries
-                // dispatch(setListaSeriesSubseries([]));
-                // dispatch(set_current_unidad_organizacional_action(null));
-
-                //* se traen las unidades disponibles y se asignan al estado
-                /* void get_unidad_organizacional_ccd_psd(
-                  params.row.id_organigrama,
-                  setLoadingButtonPSD
-                ).then((data: any) => {
-                  // ! se asignan las unidades organizacionales al estado
-                  dispatch(set_unidades_organizacionales_action(data));
-                }); */
                 console.log(params.row);
                 // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
                 dispatch(setCcdOrganigramaCurrent(params.row));
+
+                //* se hace la petición de los siguientes servicios
+                // ? 1. homologación de unidades
+                // ? 2. unidades persistentes
+
+                /* tomar en cuenta lo siguiente, si la propiedad mismo organigrama del servicio homologacion de unidades está en true, el estado que actualiza la homologacón de unidades no debe llenarse, por el contrario se llenará el estado de unidades persistentes pero con la información que traía el servicio de HOMOLOGACIÓN DE UNIDADES  */
+
+                handleHomologacionUnidades(params);
+
                 // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
               }}
