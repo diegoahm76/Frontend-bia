@@ -19,7 +19,6 @@ interface MostrrModalArchivadoProps {
 
 export const MostrrModalArchivado: React.FC<MostrrModalArchivadoProps> = ({ data }: MostrrModalArchivadoProps) => {
 
-
     const [visible, setVisible] = useState<boolean>(false);
     const [filtroNombreModulo, setFiltroNombreModulo] = useState<string>(''); // Nuevo estado para el filtro
     const [columnaSeleccionada, setColumnaSeleccionada] = useState("nombre_modulo");
@@ -49,11 +48,11 @@ export const MostrrModalArchivado: React.FC<MostrrModalArchivadoProps> = ({ data
         width: 55,
         renderCell: (params: any) => {
           let icon_color = '';
-          if (params.value === 1) {
+          if (params.value === "1") {
             icon_color = '#4CAF50'; // Color verde
-          } else if (params.value === 2) {
+          } else if (params.value === "2") {
             icon_color = '#FFC107'; // Color amarillo
-          } else if (params.value === 3) {
+          } else if (params.value === "3") {
             icon_color = '#F44336'; // Color rojo
           }
 
@@ -67,6 +66,31 @@ export const MostrrModalArchivado: React.FC<MostrrModalArchivadoProps> = ({ data
           );
         },
       },
+      
+      // {
+      //   field: 'nivel_prioridad',
+      //   headerName: 'Nivel',
+      //   width: 55,
+      //   renderCell: (params: any) => {
+      //     let icon_color = '';
+      
+      //     if (params.value === 1) {
+      //       icon_color = '#4CAF50'; // Color verde
+      //     } else if (params.value === 2) {
+      //       icon_color = '#FFC107'; // Color amarillo
+      //     } else if (params.value === 3) {
+      //       icon_color = '#F44336'; // Color rojo
+      //     } else {
+      //       icon_color = '#FFC107'; // Color amarillo por defecto
+      //     }
+      
+      //     return (
+      //       <div style={{ display: 'flex', alignItems: 'center' }}>
+      //         <PriorityHighRoundedIcon fontSize="small" style={{ color: icon_color, marginRight: 4 }} />
+      //       </div>
+      //     );
+      //   },
+      // },
       {
         field: 'tipo_alerta',
         headerName: 'Tipo alerta',

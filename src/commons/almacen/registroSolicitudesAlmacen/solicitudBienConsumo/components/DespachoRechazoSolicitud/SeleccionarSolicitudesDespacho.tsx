@@ -79,9 +79,10 @@ const SeleccionarSolicitudDespacho = ({
     },
   ];
 
-  const fecha = new Date(get_values('fecha_despacho') ?? '').toISOString();
+
   const get_solicitudes_filtro: any = async () => {
-    const fecha_despacho = fecha.slice(0, 10) + '' + fecha.slice(11, 19);
+    const fecha = new Date(get_values('fecha_despacho') ?? '').toISOString();
+    const fecha_despacho = fecha.slice(0, 10) + ' ' + fecha.slice(11, 19);
     void dispatch(get_solicitudes_despacho_fecha(fecha_despacho));
   };
 

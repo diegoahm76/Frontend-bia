@@ -51,7 +51,7 @@ const SeleccionarSolicitud = ({
     {
       field: 'persona_solicita',
       headerName: 'Observación',
-      width: 350,flex: 1,
+      width: 350, flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}

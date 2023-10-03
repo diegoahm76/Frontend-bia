@@ -16,12 +16,14 @@ export interface ISolicitudConsumo {
   nro_solicitud_vivero: number | null;
   unidades_medida: UnidadesMedida[];
   unidad_organizacional: UnidadOrganizacional[];
+  coordinador_vivero: ICoordonadorVivero[];
 }
 
 export interface IObjPersonaSolicita {
   id_persona?: number | null;
   nombre?: string;
   unidad_organizacional?: string | null;
+  id_unidad_organizacional_actual?: number | null;
 }
 
 export interface IObjBienesSolicitud {
@@ -227,4 +229,24 @@ export interface IObjSolicitudVivero {
   id_persona_almacen_rechaza?: number | null;
   persona_solicita?: string | null;
   nombre_unidad_organizacional?: string | null;
+}
+
+export interface ICoordonadorVivero {
+  id_persona?: number | null;
+  tipo_persona?: string | null;
+  tipo_persona_desc?: string | null;
+  tipo_documento?: string | null;
+  numero_documento?: number | null;
+  primer_nombre?: string | null;
+  segundo_nombre?: string | null;
+  primer_apellido?: string | null;
+  segundo_apellido?: string | null;
+  nombre_completo?: string | null;
+  razon_social?: string | null;
+  nombre_comercial?: string | null;
+  digito_verificacion?: string | null;
+  cod_naturaleza_empresa?: string | null;
+  tiene_usuario?: boolean;
+  id_unidad_organizacional_actual?: number | null;
+  nombre_unidad_organizacional_actual?: string | null;
 }

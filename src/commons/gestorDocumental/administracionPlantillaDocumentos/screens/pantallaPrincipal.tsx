@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { Grid } from '@mui/material';
 import { SeleccionarArchivo } from '../components/seleccionarArchivo/seleccionarArchivo';
 import { TipologiaDocumental } from '../components/tipologiaDocumental/tipologiaDocumental';

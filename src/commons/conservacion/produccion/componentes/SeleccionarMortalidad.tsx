@@ -40,8 +40,8 @@ const SeleccionarMortalidad = ({
   const columns_mortalidad: GridColDef[] = [
     { field: 'id_baja', headerName: 'ID', width: 20 },
     {
-      field: 'nro_baja_por_tipo',
-      headerName: '# baja',
+      field: 'codigo_bien',
+      headerName: 'Código',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -50,18 +50,14 @@ const SeleccionarMortalidad = ({
       ),
     },
     {
-      field: 'fecha_baja',
-      headerName: 'Fecha de baja',
+      field: 'nombre_bien',
+      headerName: 'Nombre',
       width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(params.value).toDateString()}
-        </div>
-      ),
+
     },
     {
-      field: 'motivo',
-      headerName: 'Motivo',
+      field: 'observaciones',
+      headerName: 'Observación',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

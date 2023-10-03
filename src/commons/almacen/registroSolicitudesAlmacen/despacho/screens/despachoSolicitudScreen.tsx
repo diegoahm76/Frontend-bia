@@ -330,7 +330,7 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarBienDespacho />
       </Grid>
 
-      <Grid     justifyContent="flex-end" container direction="row" padding={2} spacing={2}>
+      <Grid justifyContent="flex-end" container direction="row" padding={2} spacing={2}>
         {!(current_despacho.despacho_anulado === true) && (
           <Grid item xs={12} md={2}>
             <FormButton
@@ -415,7 +415,7 @@ const DespachoBienesConsumoScreen = () => {
                     current_solicitud.solicitud_anulada_solicitante === true
                       ? 'fecha_cierre_no_dispo_alm'
                       : 'fecha',
-                  default_value: new Date().toString(),
+                  default_value: '',
                   rules: { required_rule: { rule: true, message: 'requerido' } },
                   label: 'Fecha actual',
                   type: 'text',

@@ -31,7 +31,6 @@ const FormButton = ({
   style_button,
   color_button,
 }: IProps) => {
-  console.log(label)
   return (
     <Button
       color={(label === 'GUARDAR' || label === 'guardar' || label === 'Guardar') ? 'success' : color_button ?? 'primary'}

@@ -3,6 +3,7 @@ import { Grid, Box, Stack, TextField, Button, FormControl } from '@mui/material'
 import { FileDownloadOutlined, SearchOutlined } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -47,7 +48,7 @@ export const CarteraGeneralFecha: React.FC = () => {
   };
 
   const handle_export_excel = async (): Promise<void> => {
-    const fecha_seleccionada = dayjs(date).format('DD/MM/YYYY');
+    const fecha_seleccionada = dayjs(date).format('YYYY/MM/DD');
     try {
       const xlsx = await import('xlsx');
       const worksheet = xlsx.utils.json_to_sheet(visible_rows);
@@ -80,7 +81,7 @@ export const CarteraGeneralFecha: React.FC = () => {
   };
 
   const handle_export_pdf = (): void => {
-    const fecha_seleccionada = dayjs(date).format('DD/MM/YYYY');
+    const fecha_seleccionada = dayjs(date).format('YYYY/MM/DD');
     const report = new JsPDF('l', 'pt', 'letter');
     report.text(`Reporte General de Cartera Fecha de Corte ${fecha_seleccionada}`, 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
@@ -183,10 +184,10 @@ export const CarteraGeneralFecha: React.FC = () => {
       }}
     >
       <Grid item xs={12} >
-        
+
         <Title title={`Informe General de Cartera - Totalizado a fecha de corte seleccionada `} />
       </Grid>
-      <Grid item  marginTop={2} xs={12}>
+      <Grid item marginTop={2} xs={12}>
         <Box
           component="form"
           noValidate
@@ -206,9 +207,9 @@ export const CarteraGeneralFecha: React.FC = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                   <DatePicker
                     label="Fecha Corte"
-                    inputFormat="DD/MM/YYYY"
+                    inputFormat="YYYY/MM/DD"
                     openTo="day"
-                    views={['day', 'month', 'year']}
+                    views={['year', 'month', 'day']}
                     value={date}
                     onChange={handle_change_date}
                     renderInput={(params) => (
@@ -285,7 +286,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                             pageSize={10}
                             rowsPerPageOptions={[10]}
                             experimentalFeatures={{ newEditingApi: true }}
-                            getRowId={(row) => faker.database.mongodbObjectId()}
+                            getRowId={(row) => uuidv4()}
                           />
                         </Box>
                       </Grid>
