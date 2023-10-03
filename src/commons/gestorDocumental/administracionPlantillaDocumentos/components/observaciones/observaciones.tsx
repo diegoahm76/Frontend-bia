@@ -16,7 +16,7 @@ import { api } from '../../../../../api/axios';
 import { MostrarModalBuscarPlantilla } from '../modalBuscarPlantilla/BuscarPlantilla';
 import { useNavigate } from 'react-router-dom';
 import { control_error, control_success } from '../../../ccd/componentes/crearSeriesCcdDialog/utils/success_errors';
-import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
+import { FormCreacionContext, valores_defecto } from '../../context/CreaccionPlantillaContex';
 
 export const ObservacionesAdministradorPlantillas: React.FC = () => {
 
@@ -33,20 +33,6 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
 
 
   const navigate = useNavigate();
-
-  const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
-  const [PQR_seleccionado, set_PQR_seleccionado] = useState<string>('');
-  const fetch_data_get = async (): Promise<void> => {
-    try {
-      const url = `/gestor/choices/cod-tipo-pqrs/`;
-      const res: any = await api.get(url);
-      const numero_consulta: any = res.data.data;
-      set_tipos_pqr(numero_consulta);
-      // control_success("se creo correctamente");
-    } catch (error:any) {
-      control_error(error.response.detail)
-    }
-  };
 
 
 
@@ -66,14 +52,11 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       formData.append('cod_tipo_acceso', form.cod_tipo_acceso);
       formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
       formData.append('version_formato_calidad_asociado', form.version_formato_calidad_asociado.toString());
-       formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades));
-       formData.append('observacion', form.observacion.toString());
-
-
-      // Agregar el archivo al objeto FormData
-      if (form.archivo) {
-        formData.append('archivo', form.archivo);
-      }
+      formData.append('otras_tipologias', form.otras_tipologias.toString());
+      formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades));
+      formData.append('observacion', form.observacion.toString());
+      formData.append('archivo', form.archivo);
+      formData.append('activa', form.activa.toString());
 
       const res = await api.post(url, formData, {
         // Configura las cabeceras adecuadamente si es necesario
@@ -94,13 +77,12 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
     }
   };
 
+  const limpiar = () => {
+    set_form(valores_defecto);
+
+  }
 
 
-  useEffect(() => {
-    fetch_data_get().catch((error) => {
-      console.error(error);
-    });
-  }, []);
 
   return (
     <>
@@ -140,23 +122,22 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
             <h5>Activo</h5>
           </Grid>
           <Grid item xs={10} sm={4}>
+
             <FormControl fullWidth>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={PQR_seleccionado}
-                label="PQR_seleccionado"
-                onChange={(event): any => {
-                  set_PQR_seleccionado(event.target.value);
+                labelId="demo-simple-select-label-2"
+                name="activa"
+                id="demo-simple-select-2"
+                value={form.activa.toString()} // Convierte el valor booleano a cadena de texto
+                onChange={(event) => {
+                  HandleCompletarDatos(event);
                 }}
               >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
+                <MenuItem value="true">Si</MenuItem> {/* Utiliza cadenas de texto */}
+                <MenuItem value="false">No</MenuItem> {/* Utiliza cadenas de texto */}
               </Select>
             </FormControl>
+
           </Grid>
         </Grid>
 
@@ -172,9 +153,9 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
               Guardar
             </Button>
           </Grid>
-         
+
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-            <Button color='primary' variant="outlined" fullWidth startIcon={<CleanIcon />}>
+            <Button color='primary' variant="outlined" onClick={limpiar} fullWidth startIcon={<CleanIcon />}>
               Limpiar
             </Button>
           </Grid>

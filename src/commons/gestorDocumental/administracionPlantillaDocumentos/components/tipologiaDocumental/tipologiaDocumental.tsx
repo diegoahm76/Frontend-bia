@@ -20,7 +20,6 @@ export const TipologiaDocumental: React.FC = () => {
 
   const [tipologia_documental, set_tipologia_documental] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<boolean>(false);
-  const [otro_seleccionado, set_otro_seleccionado] = useState<string>('');
   const [tercero_seleccionado, set_tercero_seleccionado] = useState<string>('');
 
 

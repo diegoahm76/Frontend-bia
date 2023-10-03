@@ -16,13 +16,14 @@ interface VariablesCreacionPlantilla {
     acceso_unidades:any[];
     acceso_unidades_dos:any[];
     observacion:string;
+    activa:boolean;
 }
 interface FormContextstate {
 
     form: VariablesCreacionPlantilla;
     set_form: Dispatch<SetStateAction<VariablesCreacionPlantilla>>
 }
-const valores_defecto: VariablesCreacionPlantilla = {
+export const valores_defecto: VariablesCreacionPlantilla = {
     nombre: "",
     descripcion: "",
     id_formato_tipo_medio: 1,
@@ -35,6 +36,7 @@ const valores_defecto: VariablesCreacionPlantilla = {
     acceso_unidades:[],
     acceso_unidades_dos:[],
     observacion:"",
+    activa:false,
 }
 export const FormCreacionContext = createContext<FormContextstate>({
     form: valores_defecto,

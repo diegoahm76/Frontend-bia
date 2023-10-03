@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Box, Button, Checkbox, FormControl, Grid, IconButton, InputLabel, TextField, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -17,9 +17,12 @@ import { confirmarAccion } from '../../../deposito/utils/function';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_error, control_success } from '../../../alertasgestor/utils/control_error_or_success';
 import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
+import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
 export const MostrarModalBuscarPlantilla: React.FC = () => {
 
+const {form,set_form}=useContext(FormCreacionContext);
 
   const [visible, setVisible] = useState<boolean>(false);
   const [nombre_plantilla, set_nombre_plantilla] = useState<string>(''); // Nuevo estado para el filtro
@@ -39,9 +42,9 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const footerContent = (
     <div>
       <Button
-       startIcon={<ClearIcon />}
-       fullWidth
-       
+        startIcon={<ClearIcon />}
+        fullWidth
+
         style={{ margin: 3 }}
         variant="contained"
         color="error"
@@ -118,22 +121,93 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
     try {
 
-        console.log(idRegistro)
-        // Define la URL del servidor junto con el ID del registro que deseas eliminar
-        const url = `/gestor/plantillas/plantilla_documento/delete/${idRegistro}/`;
+      console.log(idRegistro)
+      // Define la URL del servidor junto con el ID del registro que deseas eliminar
+      const url = `/gestor/plantillas/plantilla_documento/delete/${idRegistro}/`;
 
-        // Realiza una solicitud HTTP DELETE al servidor
-        const { data } = await api.delete(url);
+      // Realiza una solicitud HTTP DELETE al servidor
+      const { data } = await api.delete(url);
 
-        // Verifica si la eliminación se realizó con éxito
-        control_success(data?.detail);
+      // Verifica si la eliminación se realizó con éxito
+      control_success(data?.detail);
 
-        // Realiza una nueva consulta para actualizar la tabla después de la eliminación
-        return data;
+      // Realiza una nueva consulta para actualizar la tabla después de la eliminación
+      return data;
     } catch (error: any) {
-        control_error(error.response.data.detail);
+      control_error(error.response.data.detail);
     }
-};
+  };
+
+
+    
+    const handleDelClick = async (data:any): Promise<void> => {
+      try { 
+        console.log(data)
+
+        const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
+        const res: any = await api.get(url);
+        let numero_consulta: any = res.data.data;
+        // set_data_choise(numero_consulta);
+        // set_form(numero_consulta)
+         console.log(numero_consulta); 
+
+
+
+
+         set_form({
+          ...form,
+          nombre: numero_consulta.nombre,
+           descripcion:numero_consulta.descripcion,
+         id_formato_tipo_medio: numero_consulta.id_formato_tipo_medio,
+          asociada_a_tipologia_doc_trd: numero_consulta.asociada_a_tipologia_doc_trd,
+          cod_tipo_acceso: numero_consulta.cod_tipo_acceso,
+          codigo_formato_calidad_asociado:numero_consulta.codigo_formato_calidad_asociado,
+        version_formato_calidad_asociado: numero_consulta.version_formato_calidad_asociado,
+           otras_tipologias:numero_consulta.otras_tipologias,
+        
+          acceso_unidades_dos:numero_consulta.acceso_unidades,
+         observacion:numero_consulta.observacion,
+          activa:numero_consulta.activa,
+         
+         });
+
+
+         setVisible(false);
+
+
+      } catch (error:any) {
+        control_error(error.detail);
+      }
+    
+
+
+
+
+
+
+
+
+
+
+
+    // set_form({
+    //    ...form,
+    //    nombre: data.nombre,
+    //    descripcion:data.descripcion,
+    //    id_formato_tipo_medio: data.id_formato_tipo_medio,
+    //    asociada_a_tipologia_doc_trd: data.asociada_a_tipologia_doc_trd,
+    //    cod_tipo_acceso: data.cod_tipo_acceso,
+    //    codigo_formato_calidad_asociado:data.codigo_formato_calidad_asociado,
+    //   version_formato_calidad_asociado: data.version_formato_calidad_asociado,
+    //   //  archivo: null,
+    //     otras_tipologias:data.otras_tipologias,
+    //   // acceso_unidades:data.archivos_digitales,
+    //    observacion:data.observacion,
+    //    activa:data.activa,
+      
+    //   });
+  
+  };
 
   const columns: GridColDef[] = [
     {
@@ -189,38 +263,46 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       width: 150,
       sortable: false,
       renderCell: (params: any) => {
-          const idMedioSolicitud = params.row.id_plantilla_doc;
-      
-
-          const handleDeleteClick = () => {
-              // Llama a la función de eliminación pasando el idMedioSolicitud como parámetro
-              fetch_delete_registro(idMedioSolicitud).then(() => {
-                fetch_data_busqueda_avanzada()
-                
-
-              })
-          };
+        const idMedioSolicitud = params.row.id_plantilla_doc;
 
 
-          return (
-              <>
-               <Tooltip title="Borrar registro" placement="right">
-                  <IconButton
-                      onClick={() => {
-                          void confirmarAccion(
-                              handleDeleteClick,
-                              '¿Estás seguro de eliminar  este campo?'
-                          );
-                    }}
-                  >
-                      <DeleteIcon style={{ color: "red" }} />
-                  </IconButton>
+        const handleDeleteClick = () => {
+          // Llama a la función de eliminación pasando el idMedioSolicitud como parámetro
+          fetch_delete_registro(idMedioSolicitud).then(() => {
+            fetch_data_busqueda_avanzada()
 
-              </Tooltip>
-              </>
-          );
+
+          })
+        };
+
+       
+        return (
+          <>
+            <Tooltip title="Borrar registro" placement="right">
+              <IconButton
+                onClick={() => {
+                  void confirmarAccion(
+                    handleDeleteClick,
+                    '¿Estás seguro de eliminar  este campo?'
+                  );
+                }}
+              >
+                <DeleteIcon style={{ color: "red" }} />
+              </IconButton>
+            </Tooltip>
+            <IconButton
+              onClick={()=>
+                handleDelClick(params.row.id_plantilla_doc)
+              }
+            >
+              <EditIcon />
+            </IconButton>
+
+
+          </>
+        );
       },
-  },
+    },
   ];
 
 
@@ -264,7 +346,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   return (
     <div className="card flex justify-content-center">
       <Button
-      startIcon={<SearchIcon />}
+        startIcon={<SearchIcon />}
         fullWidth
         variant="contained"
         onClick={() => {

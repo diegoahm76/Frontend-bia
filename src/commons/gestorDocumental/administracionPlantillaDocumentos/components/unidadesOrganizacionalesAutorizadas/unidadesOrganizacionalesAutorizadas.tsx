@@ -51,14 +51,13 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
       // Agrega el nuevo objeto a la alerta
       set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
+
       set_form({
         ...form,
-        acceso_unidades: [...variable_concatenada,  unidadOrganizacional]
-      });
-      set_form({
-        ...form,
+        acceso_unidades: [...variable_concatenada,  unidadOrganizacional],
         acceso_unidades_dos: [...alerta,  selectedItem]
       });
+  
     }
   };
 
@@ -98,7 +97,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
   const columns = [
     {
-      field: 'nombre',
+      field: 'nombre_unidad',
       headerName: 'ID Unidad Organizacional',
       width: 200,
       flex: 1,
