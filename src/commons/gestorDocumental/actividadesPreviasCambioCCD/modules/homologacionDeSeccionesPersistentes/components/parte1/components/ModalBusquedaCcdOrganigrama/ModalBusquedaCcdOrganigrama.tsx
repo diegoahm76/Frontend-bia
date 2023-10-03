@@ -62,7 +62,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
         params.row.id_ccd
       );
-
+      console.log(resHomologacionesUnidades);
       // ! se mezcla la información necesaria para poder tener todos los datos disponibles
       const infoToReturn =
         resHomologacionesUnidades?.coincidencias.map((item: any) => {

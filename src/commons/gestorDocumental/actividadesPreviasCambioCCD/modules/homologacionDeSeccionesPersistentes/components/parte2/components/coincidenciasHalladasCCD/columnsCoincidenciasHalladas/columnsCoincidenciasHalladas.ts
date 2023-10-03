@@ -16,26 +16,26 @@ export const columnsCoincidenciasHalladas = [
   //* codigo unidad ccd actual
   {
     field: 'cod_unidad_actual',
-    headerName: 'Cód. unidad org. actual',
-    width: 200,
+    headerName: 'Cód. unidad org. (ACTUAL)',
+    width: 220,
   },
   //* serie documental unidad ccd actual
   {
     field: 'nom_unidad_actual',
-    headerName: 'Nombre unidad org. actual',
-    width: 200,
+    headerName: 'Nombre unidad org. (ACTUAL)',
+    width: 220,
   },
   //* codigo unidad ccd nueva
   {
     field: 'cod_unidad_nueva',
-    headerName: 'Cód. unidad org. nueva',
-    width: 200,
+    headerName: 'Cód. unidad org. (NUEVA)',
+    width: 190,
   },
   //* serie documental unidad ccd nueva
   {
     field: 'nom_unidad_nueva',
-    headerName: 'Nombre unidad org. nueva',
-    width: 200,
+    headerName: 'Nombre unidad org. (NUEVA)',
+    width: 205,
   },
   //* --- comparación entre iguales o no
 ];
