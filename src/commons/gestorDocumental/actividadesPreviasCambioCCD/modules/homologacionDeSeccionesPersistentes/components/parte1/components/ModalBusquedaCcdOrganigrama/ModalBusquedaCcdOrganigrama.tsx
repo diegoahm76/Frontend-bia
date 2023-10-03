@@ -18,7 +18,11 @@ import {
   Stack,
   Tooltip,
 } from '@mui/material';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridValueGetterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 
 //* icons
@@ -53,29 +57,43 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
+  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
+    try {
+      const resHomologacionesUnidades = await fnGetHomologacionUnidades(
+        params.row.id_ccd
+      );
 
+      // ! se mezcla la información necesaria para poder tener todos los datos disponibles
+      const infoToReturn =
+        resHomologacionesUnidades?.coincidencias.map((item: any) => {
+          return {
+            ...item,
+            id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
+            id_ccd_nuevo: params.row.id_ccd,
+          };
+        }) || [];
 
-    async function handleHomologacionUnidades(params: any) {
-      try {
-        const resHomologacionesUnidades = await fnGetHomologacionUnidades(params.row.id_ccd);
-        console.log(resHomologacionesUnidades);
-    
-        if (resHomologacionesUnidades?.mismo_organigrama) {
-          console.log('chao bambino');
-          //* se le asigna el valor de las UNIDADES A HOMOLOGAR
-          dispatch(setUnidadesPersistentes(resHomologacionesUnidades?.coincidencias));
-        } else {
-          dispatch(setHomologacionUnidades(resHomologacionesUnidades?.coincidencias));
-    
-          const resUnidadesPersistentes = await fnGetUnidadesPersistentes(params.row.id_ccd);
-          console.log(resUnidadesPersistentes);
-          //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
-          dispatch(setUnidadesPersistentes(resUnidadesPersistentes));
-        }
-      } catch (error) {
-        console.error(error);
+      if (resHomologacionesUnidades?.mismo_organigrama) {
+        dispatch(setUnidadesPersistentes(infoToReturn));
+      } else {
+        dispatch(setHomologacionUnidades(infoToReturn));
+
+        const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
+          params.row.id_ccd
+        );
+        console.log(resUnidadesPersistentes);
+        //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
+        /*
+          - tiene prop id_ccd_nuevo
+          - array unidades persistentes
+        */
+
+        dispatch(setUnidadesPersistentes(resUnidadesPersistentes));
       }
+    } catch (error) {
+      console.error(error);
     }
+  };
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
