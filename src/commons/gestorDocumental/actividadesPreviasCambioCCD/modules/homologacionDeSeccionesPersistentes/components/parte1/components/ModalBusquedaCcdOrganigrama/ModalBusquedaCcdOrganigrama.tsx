@@ -74,7 +74,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           };
         }) || [];
 
-      if (resHomologacionesUnidades?.mismo_organigrama) {
+      if (!resHomologacionesUnidades?.mismo_organigrama) {
         dispatch(setUnidadesPersistentes(infoToReturn));
       } else {
         dispatch(setHomologacionUnidades(infoToReturn));

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Avatar, IconButton, Tooltip, Typography } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import {
   useAppDispatch,
   useAppSelector,
@@ -15,6 +15,9 @@ import {
   setUnidadesPersistentes,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
+import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 
 export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
   // ? dispatch declaration
@@ -24,6 +27,28 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
   const { homologacionUnidades, unidadesPersistentes } = useAppSelector(
     (state) => state.HomologacionesSlice
   );
+
+  // * context declaration
+  // ? context necesarios
+  const { generalLoading } = useContext(ModalAndLoadingContext);
+
+  // ? ----- ESPACIO PARA FUNCIONES OPEN ------
+  const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
+    const nuevasUnidadesPersistentes = [
+      ...unidadesPersistentes,
+      {
+        ...params?.row,
+        persistenciaConfirmada: true,
+      },
+    ];
+    const nuevaHomologacionUnidades = homologacionUnidades?.filter(
+      (item: any) => item?.id_unidad_actual !== params?.row?.id_unidad_actual
+    );
+
+    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+    dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
+    control_success('Persistencia confirmada');
+  };
 
   // ? ---- columns adición ----
 
@@ -47,27 +72,7 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
               size="large"
               // title="Añadir tipología a TRD"
               onClick={() => {
-                dispatch(
-                  setUnidadesPersistentes([
-                    ...unidadesPersistentes,
-                    {
-                      ...params?.row,
-                      persistenciaConfirmada: true,
-                    },
-                  ])
-                );
-
-                dispatch(
-                  setHomologacionUnidades(
-                    homologacionUnidades?.filter(
-                      (item: any) =>
-                        item?.id_unidad_actual !== params?.row?.id_unidad_actual
-                    )
-                  )
-                );
-
-                control_success('Persi');
-                console.log(params.row);
+                handleConfirmarPersistencia(params);
               }}
             >
               <Avatar
@@ -122,6 +127,35 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     */
   }
 
+  {
+    /* si no hay coincidencias en las unidades del ccd este componente no se visualiza */
+  }
+
+  if (homologacionUnidades?.length === 0) return <></>;
+
+  {
+    /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
+  }
+
+
+/*  if (isLoadingSeccionSub) {
+    return (
+      <Grid
+      container
+      sx={{
+        ...containerStyles,
+        boxShadow: 'none',
+        background: 'none',
+        position: 'static',
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <Loader altura={200} />
+    </Grid>
+    );
+  }
+*/
   return (
     <>
       <RenderDataGrid
