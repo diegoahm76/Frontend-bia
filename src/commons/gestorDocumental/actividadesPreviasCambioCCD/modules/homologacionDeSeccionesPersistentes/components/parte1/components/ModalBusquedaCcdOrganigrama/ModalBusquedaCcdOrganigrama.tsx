@@ -74,7 +74,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           };
         }) || [];
 
-      if (!resHomologacionesUnidades?.mismo_organigrama) {
+      if (resHomologacionesUnidades?.mismo_organigrama) {
         dispatch(setUnidadesPersistentes(infoToReturn));
       } else {
         dispatch(setHomologacionUnidades(infoToReturn));
@@ -91,10 +91,12 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
         dispatch(
           setUnidadesPersistentes(
-            resUnidadesPersistentes?.unidades_persistentes.map((seccionPersistente: any) => ({
-              ...seccionPersistente,
-              mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
-            }))
+            resUnidadesPersistentes?.unidades_persistentes.map(
+              (seccionPersistente: any) => ({
+                ...seccionPersistente,
+                mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
+              })
+            )
           )
         );
       }

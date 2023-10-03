@@ -32,7 +32,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ! eliminación de persistencias confirmadas
 
   const handleEliminarPersistencia = (params: GridValueGetterParams) => {
-    if (!params?.row?.mismo_organigrama) {
+    if (params?.row?.mismo_organigrama) {
       control_warning(
         'No se puede eliminar una persistencia confirmada de un CCD perteneciente al mismo organigrama'
       );
