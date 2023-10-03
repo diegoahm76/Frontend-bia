@@ -21,6 +21,9 @@ export const useRoutes = (): any => {
   const handle_indices_electronicos = () =>
     navigate('/app/usuario/indices_electronicos');
 
+    const handle_homologacion_series_documentales = () =>
+    navigate('/app/gestor_documental/ccd/actividades_previas_cambio_ccd/homologacion_secciones_persistentes');
+
 
   return {
     handle_click_delegar_super,
@@ -28,5 +31,8 @@ export const useRoutes = (): any => {
     handle_datos_personales,
     handle_autorizacion_notificacion,
     handle_indices_electronicos,
+
+    //* se deja de manera temporal
+    handle_homologacion_series_documentales
   };
 };

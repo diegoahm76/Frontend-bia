@@ -1,18 +1,34 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { FormControl, Grid, MenuItem, Select, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
+import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
 export const TipologiaDocumental: React.FC = () => {
+
+  const { form, set_form } = useContext(FormCreacionContext);
+
+  const HandleCompletarDatos = (e: any) => {
+    set_form({
+      ...form,
+      [e.target.name]: e.target.value
+
+    })
+  }
+  //otras_tipologias
+
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
-  const [PQR_seleccionado, set_PQR_seleccionado] = useState<string>('');
+  const [PQR_seleccionado, set_PQR_seleccionado] = useState<boolean>(false);
   const [otro_seleccionado, set_otro_seleccionado] = useState<string>('');
   const [tercero_seleccionado, set_tercero_seleccionado] = useState<string>('');
 
+
+
+
   const fetch_data_get = async (): Promise<void> => {
     try {
-      const url = `/gestor/choices/cod-tipo-pqrs/`;
+      const url = `/gestor/plantillas/tipos_tipologia/get/`;
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
       set_tipos_pqr(numero_consulta);
@@ -44,84 +60,90 @@ export const TipologiaDocumental: React.FC = () => {
           <Title title="Tipologia Documental" />
         </Grid>
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={6} md={3}>
             <h5>¿Plantilla asociada a tipologia documental del TRD?</h5>
           </Grid>
-          <Grid item xs={12} sm={5}>
-            <FormControl fullWidth>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={PQR_seleccionado}
-                label="PQR_seleccionado"
-                onChange={(event): any => {
-                  set_PQR_seleccionado(event.target.value);
-                }}
-              >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-
-        {/* Desplegable adicional 1 */}
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={5}>
-            <h5>Selecciona tipologia documental:</h5>
-          </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={5} md={4}>
             <FormControl fullWidth>
               <Select
                 labelId="demo-simple-select-label-2"
                 id="demo-simple-select-2"
-                value={otro_seleccionado}
-                label="Otro_seleccionado"
+                value={PQR_seleccionado === true ? "Si" : "No"}
                 onChange={(event): any => {
-                  set_otro_seleccionado(event.target.value);
+                  const selectedValue = event.target.value;
+                  set_PQR_seleccionado(selectedValue === "Si" ? true : false);
                 }}
               >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
+                <MenuItem value="Si">Si</MenuItem>
+                <MenuItem value="No">No</MenuItem>
               </Select>
             </FormControl>
+
           </Grid>
         </Grid>
 
+        {/* Desplegable adicional 1 */}
+        {PQR_seleccionado === true && (
+          <Grid item container spacing={1} style={{ margin: 1 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <h5>Selecciona tipología documental:</h5>
+            </Grid>
+            <Grid item xs={12} sm={5} md={4}>
+              <FormControl fullWidth>
+                <Select
+                  id="demo-simple-select-2"
+                  value={otro_seleccionado}
+                  onChange={(event): any => {
+                    set_otro_seleccionado(event.target.value);
+                  }}
+                >
+                  {tipos_pqr?.map((item: any, index: number) => (
+                    <MenuItem key={index} value={item.nombre}>
+                      {item.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+            </Grid>
+          </Grid>
+        )}
+
         {/* Desplegable adicional 2 */}
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={1}>
-            <h5>¿Cual?</h5>
+        {PQR_seleccionado === false && (
+          <Grid item container spacing={1} style={{ margin: 1 }}>
+            <Grid item xs={12} sm={1} >
+              <h5>¿Cual?</h5>
+            </Grid>
+            <Grid item xs={12} sm={5} md={3}>
+              <TextField
+                style={{}}
+                variant="outlined"
+                fullWidth
+                name="otras_tipologias"
+                value={form.otras_tipologias}
+                onChange={HandleCompletarDatos}
+              />            </Grid>
+            <Grid item xs={5}>
+              <FormControl fullWidth>
+                <Select
+                  labelId="demo-simple-select-label-3"
+                  id="demo-simple-select-3"
+                  value={tercero_seleccionado}
+                  onChange={(event): any => {
+                    set_tercero_seleccionado(event.target.value);
+                  }}
+                >
+                  {tipos_pqr?.map((item: any, index: number) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <TextField id="outlined-basic" variant="outlined" />
-          </Grid>
-          <Grid item sm={5}>
-            <FormControl fullWidth>
-              <Select
-                labelId="demo-simple-select-label-3"
-                id="demo-simple-select-3"
-                value={tercero_seleccionado}
-                label="Tercero_seleccionado"
-                onChange={(event): any => {
-                  set_tercero_seleccionado(event.target.value);
-                }}
-              >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
+        )}
       </Grid>
     </>
   );

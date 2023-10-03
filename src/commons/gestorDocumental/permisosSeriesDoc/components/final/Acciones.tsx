@@ -16,6 +16,7 @@ import { reset_states, set_permisos_unidades_actuales_action, set_permisos_unida
 import { GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE, GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE } from '../../toolkit/thunks/psdThunks';
 
 import { useNavigate } from 'react-router-dom';
+import { getOutModule, reset_all } from '../../../../../utils/functions/getOutOfModule';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
@@ -47,10 +48,10 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.PsdSlice);
 
   //* usePSD
-  const { reset_all,
+  const {
     seleccionar_serie_subserie_reset,
      seleccionar_seccion_reset,
-      reset_search_ccd_psd,getOutModule } = usePSD();
+      reset_search_ccd_psd, } = usePSD();
 
   // ? validaciones de renderizado
   if (!current_unidad_organizacional || !currentSeriesSubseries) return null;
@@ -184,7 +185,19 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     color="primary"
                     variant="outlined"
                     startIcon={<CleanIcon />}
-                    onClick={reset_all}
+                    onClick={() => {
+                      reset_all( [() => reset_search_ccd_psd({
+                        nombre: '',
+                        version: ''
+                      }),
+                      () => seleccionar_seccion_reset({
+                        id_cdd_unidad_organizacional: ''
+                      }),
+                      () => seleccionar_serie_subserie_reset({
+                        id_unidad_organizacional: ''
+                      }),
+                      () => dispatch(reset_states())]);
+                    }}
                   >
                     LIMPIAR CAMPOS
                   </Button>
@@ -205,7 +218,20 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                       startIcon={<CloseIcon />}
                       onClick={() => {
                         getOutModule(
-                        
+                          navigate,
+                          [
+                            () => reset_search_ccd_psd({
+                              nombre: '',
+                              version: ''
+                            }),
+                            () => seleccionar_seccion_reset({
+                              id_cdd_unidad_organizacional: ''
+                            }),
+                            () => seleccionar_serie_subserie_reset({
+                              id_unidad_organizacional: ''
+                            }),
+                            () => dispatch(reset_states())
+                          ]
                         );
                       }}
                     >

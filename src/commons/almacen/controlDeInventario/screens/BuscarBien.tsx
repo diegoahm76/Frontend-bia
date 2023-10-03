@@ -22,38 +22,54 @@ import { Title } from '../../../../components/Title';
 import { useAppDispatch } from '../../../../hooks';
 import { download_pdf_dos } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls_dos } from '../../../../documentos-descargar/XLS_descargar';
+import { obtener_bienes } from '../thunks/ControlDeInventarios';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   title: string;
-  filtros: any;
   seleccion_bien: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const BuscarBienViveros = (props: IProps) => {
+const BuscarBien = (props: IProps) => {
   const dispatch = useAppDispatch();
   const [seleccion_bien, set_seleccion_bien] = useState<any | null>(null);
   const [data_bienes, set_data_bienes] = useState<any[]>([]);
   const [data_filtrada, set_data_filtrada] = useState<any[]>([]);
   const [nombre, set_nombre] = useState<string>('');
+  const [serial, set_serial] = useState<string>('');
+  const [categoria, set_categoria] = useState<string>('');
+  const [marca, set_marca] = useState<string>('');
   const [codigo_bien, set_codigo_bien] = useState<string>('');
 
   useEffect(() => {
-    // dispatch(obtener_bienes_viveros(props.filtros)).then((response: any) => {
-    //   response.data.map((resp: any, index: number) => {
-    //     resp.id = index;
-    //     if (resp.codigo_bien === null || resp.codigo_bien === undefined)
-    //       resp.codigo_bien = 'N/A';
-    //   });
-    //   set_data_bienes(response.data);
-    //   set_data_filtrada(response.data);
-    // });
+    dispatch(obtener_bienes()).then((response: any) => {
+      response.data.map((resp: any, index: number) => {
+        resp.id = index;
+        if (resp.codigo_bien === null || resp.codigo_bien === undefined)
+          resp.codigo_bien = 'N/A';
+        if (resp.nombre_marca === null || resp.nombre_marca === undefined)
+          resp.nombre_marca = 'N/A';
+        if (resp.serial === null || resp.serial === undefined)
+          resp.serial = 'N/A';
+      });
+      set_data_bienes(response.data);
+      set_data_filtrada(response.data);
+    });
   }, []);
 
   const cambio_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_nombre(e.target.value);
+  };
+  const cambio_categoria: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_categoria(e.target.value);
+  };
+  const cambio_marca: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_marca(e.target.value);
+  };
+  const cambio_serial: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_serial(e.target.value);
   };
   const cambio_codigo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo_bien(e.target.value);
@@ -61,20 +77,38 @@ const BuscarBienViveros = (props: IProps) => {
 
   const buscar_bien = (): void => {
     let data_filter: any = [...data_bienes];
-    if (nombre === '' && codigo_bien === '') {
+    if (nombre === '' && codigo_bien === '' && serial === '' && categoria === '' && marca === '') {
       set_data_filtrada(data_bienes);
       return;
     }
-    if (nombre !== '')
-      data_filter = [
-        ...data_filter.filter((da: any) =>
-          da.nombre.toLowerCase().includes(nombre.toLowerCase())
-        ),
-      ];
     if (codigo_bien !== '')
       data_filter = [
         ...data_filter.filter((da: any) =>
           da.codigo_bien.includes(codigo_bien)
+        ),
+      ];
+    if (serial !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.serial.toLowerCase().includes(serial.toLowerCase())
+        ),
+      ];
+    if (nombre !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.nombre_bien.toLowerCase().includes(nombre.toLowerCase())
+        ),
+      ];
+    if (categoria !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.categoria.toLowerCase().includes(categoria.toLowerCase())
+        ),
+      ];
+    if (marca !== '')
+      data_filter = [
+        ...data_filter.filter((da: any) =>
+          da.nombre_marca.toLowerCase().includes(marca.toLowerCase())
         ),
       ];
     set_data_filtrada(data_filter);
@@ -85,9 +119,11 @@ const BuscarBienViveros = (props: IProps) => {
     props.set_is_modal_active(false);
   };
   const columnsss = [
-    { field: 'codigo_bien', header: 'Código bien', style: { width: '5%' } },
-    { field: 'nombre', header: 'Nombre', style: { width: '8%' } },
-    { field: 'tipo_bien', header: 'Tipo bien', style: { width: '8%' } },
+    { field: 'codigo_bien', header: 'Código', style: { width: '5%' } },
+    { field: 'serial', header: 'Serial', style: { width: '8%' } },
+    { field: 'nombre_bien', header: 'Bien', style: { width: '8%' } },
+    { field: 'categoria', header: 'Categoría', style: { width: '8%' } },
+    { field: 'nombre_marca', header: 'Marca', style: { width: '8%' } },
   ];
 
   return (
@@ -100,9 +136,9 @@ const BuscarBienViveros = (props: IProps) => {
         props.set_is_modal_active(false);
       }}
     >
-       <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-                    <Title title={`${props.title} `} />
-                </Grid>
+      <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+        <Title title={`${props.title} `} />
+      </Grid>
       <DialogTitle> </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
@@ -126,6 +162,26 @@ const BuscarBienViveros = (props: IProps) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
                   <TextField
+                    label="Código"
+                    helperText=" "
+                    size="small"
+                    fullWidth
+                    value={codigo_bien}
+                    onChange={cambio_codigo_bien}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="serial"
+                    helperText=" "
+                    size="small"
+                    fullWidth
+                    value={serial}
+                    onChange={cambio_serial}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
                     label="Nombre"
                     helperText=" "
                     size="small"
@@ -136,12 +192,22 @@ const BuscarBienViveros = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
-                    label="Código bien"
+                    label="Categoría"
                     helperText=" "
                     size="small"
                     fullWidth
-                    value={codigo_bien}
-                    onChange={cambio_codigo_bien}
+                    value={categoria}
+                    onChange={cambio_categoria}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="Marca"
+                    helperText=" "
+                    size="small"
+                    fullWidth
+                    value={marca}
+                    onChange={cambio_marca}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -191,21 +257,31 @@ const BuscarBienViveros = (props: IProps) => {
                       onSelectionChange={(e) => {
                         set_seleccion_bien(e.value);
                       }}
-                      dataKey="id"
+                      dataKey="id_bien"
                     >
                       <Column
                         field="codigo_bien"
-                        header="Código bien"
+                        header="Código"
                         style={{ width: '5%' }}
                       ></Column>
                       <Column
-                        field="nombre"
-                        header="Nombre"
+                        field="nombre_bien"
+                        header="Bien"
                         style={{ width: '8%' }}
                       ></Column>
                       <Column
-                        field="tipo_bien"
-                        header="Tipo bien"
+                        field="nombre_marca"
+                        header="Marca"
+                        style={{ width: '8%' }}
+                      ></Column>
+                      <Column
+                        field="serial"
+                        header="Serial"
+                        style={{ width: '8%' }}
+                      ></Column>
+                      <Column
+                        field="categoria"
+                        header="Categoría"
                         style={{ width: '8%' }}
                       ></Column>
                     </DataTable>
@@ -240,4 +316,4 @@ const BuscarBienViveros = (props: IProps) => {
   );
 };
 // eslint-disable-next-line no-restricted-syntax
-export default BuscarBienViveros;
+export default BuscarBien;

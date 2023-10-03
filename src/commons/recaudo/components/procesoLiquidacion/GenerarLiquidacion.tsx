@@ -5,7 +5,7 @@ import type { Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/
 import SaveIcon from '@mui/icons-material/Save';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import dayjs, { type Dayjs } from "dayjs";
 import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
@@ -26,20 +26,27 @@ interface IProps {
   set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
 }
 
-const periodos = [
-  { id: 0, nombre: 'enero' },
-  { id: 1, nombre: 'febrero' },
-  { id: 2, nombre: 'marzo' },
-  { id: 3, nombre: 'abril' },
-  { id: 4, nombre: 'mayo' },
-  { id: 5, nombre: 'junio' },
-  { id: 6, nombre: 'julio' },
-  { id: 7, nombre: 'agosto' },
-  { id: 8, nombre: 'septiembre' },
-  { id: 9, nombre: 'octubre' },
-  { id: 10, nombre: 'noviembre' },
-  { id: 11, nombre: 'diciembre' }
+const ciclos: string[] = [
+  'trimestral',
+  'semestral',
+  'anual',
 ];
+
+const periodos_ciclos: Record<string, string[]> = {
+  trimestral: [
+    'enero a marzo',
+    'abril a julio',
+    'junio a septiembre',
+    'octubre a diciembre',
+  ],
+  semestral: [
+    'enero a junio',
+    'julio a diciembre'
+  ],
+  anual: [
+    'enero a diciembre'
+  ],
+};
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
@@ -57,6 +64,14 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   set_fecha_liquidacion,
   set_fecha_vencimiento,
 }: IProps) => {
+  const [periodos, set_periodos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const ciclo = form_liquidacion.ciclo_liquidacion;
+    if (ciclo) {
+      set_periodos(periodos_ciclos[ciclo]);
+    }
+  }, [form_liquidacion.ciclo_liquidacion]);
 
   const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
     if (date !== null) {
@@ -159,6 +174,29 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl size="small" fullWidth>
+            <InputLabel>Ciclos</InputLabel>
+            <Select
+              label='Ciclos'
+              name="ciclo_liquidacion"
+              value={form_liquidacion.ciclo_liquidacion}
+              MenuProps={{
+                style: {
+                  maxHeight: 224,
+                }
+              }}
+              onChange={handle_select_form_liquidacion_change}
+            >
+              {ciclos.map((ciclo, index) => (
+                <MenuItem key={index} value={ciclo}>
+                  {ciclo}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText>Seleccione el ciclo</FormHelperText>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl size="small" fullWidth>
             <InputLabel>Periodo</InputLabel>
             <Select
               label='Periodo'
@@ -171,9 +209,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               }}
               onChange={handle_select_form_liquidacion_change}
             >
-              {periodos.map((periodo) => (
-                <MenuItem key={periodo.id} value={periodo.nombre}>
-                  {periodo.nombre}
+              {periodos.map((periodo, index) => (
+                <MenuItem key={index} value={periodo}>
+                  {periodo}
                 </MenuItem>
               ))}
             </Select>

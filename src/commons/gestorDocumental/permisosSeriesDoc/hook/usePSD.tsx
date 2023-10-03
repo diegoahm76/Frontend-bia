@@ -65,88 +65,6 @@ export const usePSD = (): any => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const values_watch_seleccionar_serie_subserie = seleccionar_serie_subseire_watch();
 
-  //! --------- funciones de reseteo de los useForm -------------
-  const reset_all = (): void => {
-    void Swal.fire({
-      title: '¿Está seguro de limpiar todos los campos?, la información no se guardará.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Si, limpiar',
-      cancelButtonText: 'No, cancelar',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire(
-          'Limpiado!',
-          'Todos los campos han sido limpiados.',
-          'success',
-        );
-    reset_search_ccd_psd({
-      nombre: '',
-      version: ''
-    });
-    seleccionar_seccion_reset({
-      id_cdd_unidad_organizacional: ''
-    });
-    seleccionar_serie_subserie_reset({
-      id_unidad_organizacional: ''
-    });
-    dispatch(reset_states());
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Cancelado',
-          'Información conservada.',
-          'info'
-        );
-      }
-    });
-  };
-
-
- const getOutModule = () => {
-
-    void Swal.fire({
-      title: '¿Está seguro de salir del módulo?, la información no se guardará.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Si, salir',
-      cancelButtonText: 'No, cancelar',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire(
-          'Salida!',
-          'Ha salido del módulo.',
-          'success',
-        );
-        reset_search_ccd_psd({
-          nombre: '',
-          version: ''
-        });
-        seleccionar_seccion_reset({
-          id_cdd_unidad_organizacional: ''
-        });
-        seleccionar_serie_subserie_reset({
-          id_unidad_organizacional: ''
-        });
-        dispatch(reset_states());
-
-      navigate("/app/home", { replace: true });
-  }
-
-  else if (result.dismiss === Swal.DismissReason.cancel) {
-    Swal.fire(
-      'Cancelado',
-      'Información conservada, puede continuar.',
-      'info'
-    );
-  }
-});
-  };
-
-
   //* retorno
   return {
     //* valores de los useForm
@@ -163,12 +81,5 @@ export const usePSD = (): any => {
     seleccionar_serie_subserie_control,
     values_watch_seleccionar_serie_subserie,
     seleccionar_serie_subserie_reset,
-
-    //* funciones de reseteo de los useForm
-    reset_all,
-
-
-    //* funcion de salida del modulo
-   getOutModule
   };
 };

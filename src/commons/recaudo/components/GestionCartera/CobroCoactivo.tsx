@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Box, Button, Grid, TextField } from "@mui/material"
+import { Box, Button, Grid, Link, TextField } from "@mui/material"
 import { DataGrid, type GridValueFormatterParams, type GridColDef, GridToolbar } from "@mui/x-data-grid"
 import { Title } from "../../../../components"
-import type { AtributoEtapa } from "../../interfaces/proceso";
+import type { AtributoEtapa, ValoresProceso } from "../../interfaces/proceso";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import SaveIcon from '@mui/icons-material/Save';
 import { CollapsibleButton } from "../CollapsibleButton";
@@ -11,6 +11,8 @@ interface IProps {
   rows_atributos: AtributoEtapa[][];
   input_values: Record<string, string>;
   input_files: Record<string, File>;
+  valores_proceso: ValoresProceso[][];
+  etapa_actual: string;
   handle_input_change: (event: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   handle_file_change: (event: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   handle_post_valores_sin_archivo: (id_atributo: string, value: string) => void;
@@ -22,12 +24,14 @@ export const CobroCoactivo: React.FC<IProps> = ({
   rows_atributos,
   input_values,
   input_files,
+  valores_proceso,
+  etapa_actual,
   handle_input_change,
   handle_file_change,
   handle_post_valores_sin_archivo,
   handle_post_valores_con_archivo
 }: IProps) => {
-  const column_detalle: GridColDef[] = [
+  const column_atributos: GridColDef[] = [
     {
       field: 'id',
       headerName: 'ID atributo',
@@ -107,6 +111,65 @@ export const CobroCoactivo: React.FC<IProps> = ({
             Guardar
           </Button>
         );
+      }
+    }
+  ];
+
+  const column_valores_proceso: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID Valor',
+      width: 90
+    },
+    {
+      field: 'id_atributo',
+      headerName: 'Atributo',
+      width: 200,
+      valueGetter: (params) => {
+        if (!params.value) {
+          return params.value;
+        }
+        return params.value.descripcion;
+      }
+    },
+    {
+      field: 'obligatorio',
+      headerName: 'Obligatorio',
+      width: 200,
+      valueGetter: (params) => {
+        return params.row.id_atributo.obligatorio || '';
+      }
+    },
+    {
+      field: 'tipo',
+      headerName: 'Tipo',
+      width: 200,
+      valueGetter: (params) => {
+        return params.row.id_atributo.id_tipo.tipo || '';
+      }
+    },
+    {
+      field: 'valor',
+      headerName: 'Valores',
+      width: 200,
+    },
+    {
+      field: 'documento',
+      headerName: 'Documento',
+      width: 200,
+    },
+    {
+      field: 'valor_guardado',
+      headerName: 'Valor',
+      minWidth: 400,
+      renderCell: (params) => {
+        return params.row.valor ?
+          <span>{params.row.valor || ''}</span> :
+          <Link
+            href={`https://back-end-bia-beta.up.railway.app/static${params.row.documento as string || ''}`}
+          >
+            {(params.row.documento as string).slice(7)}
+          </Link>;
       }
     }
   ];
@@ -195,28 +258,45 @@ export const CobroCoactivo: React.FC<IProps> = ({
         }}
       >
         <Grid item xs={12}>
-          <Title title="Nuevo estado de Cartera: Cobro Coactivo"></Title>
+          <Title title={`Nuevo estado de Cartera: ${etapa_actual}`}></Title>
           <Box
             sx={{ mt: '20px' }}
           >
-            {/* <DataGrid
-              autoHeight
-              rows={rows_atributos}
-              columns={column_detalle}
-              getRowId={(row) => row.id}
-            /> */}
-            {rows_atributos.map((arreglo_objetos, index) => (
-              <CollapsibleButton key={index} texto_boton={arreglo_objetos[0].id_categoria.categoria}>
+            {rows_atributos.length > 0 && rows_atributos.map((arreglo_atributos, index) => (
+              <CollapsibleButton key={index} texto_boton={arreglo_atributos[0].id_categoria.categoria}>
                 <DataGrid
                   density="standard"
                   autoHeight
-                  rows={arreglo_objetos}
-                  columns={column_detalle}
+                  rows={arreglo_atributos}
+                  columns={column_atributos}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}
                   getRowId={(row) => row.id}
                   components={{ Toolbar: GridToolbar }}
+                />
+              </CollapsibleButton>
+            ))}
+            {valores_proceso.length > 0 && valores_proceso.map((arreglo_valores, index) => (
+              <CollapsibleButton key={index} texto_boton={arreglo_valores[0].id_atributo.id_categoria.categoria}>
+                <DataGrid
+                  density="standard"
+                  autoHeight
+                  rows={arreglo_valores}
+                  columns={column_valores_proceso}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id}
+                  components={{ Toolbar: GridToolbar }}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {
+                        valor: false,
+                        documento: false,
+                      }
+                    }
+                  }}
                 />
               </CollapsibleButton>
             ))}
