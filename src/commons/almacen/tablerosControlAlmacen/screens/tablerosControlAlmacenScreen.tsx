@@ -51,6 +51,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   const [nombre_archivo, set_nombre_archivo] = useState<string>("");
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [filtros, set_filtros] = useState<any[]>([]);
+  const [filtros_pdf, set_filtros_pdf] = useState<any[]>([]);
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
   const [discriminar, set_discriminar] = useState<boolean>(false);
@@ -112,9 +113,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         if (nombre !== undefined)
           set_nombre_archivo(nombre)
         set_filtros([{ 'Tipo de despacho': tipo_despacho, Bien: nombre_bien, 'Unidad organizacional que recibe': nombre_unidad_org, discriminar: discriminar ? 'Si' : 'No', 'Fecha desde': dayjs(fecha_desde).format('YYYY-MM-DD'), 'Fecha hasta': dayjs(fecha_hasta).format('YYYY-MM-DD') }])
+        set_filtros_pdf([{ tipo_despacho: tipo_despacho, nombre_bien: nombre_bien, nombre_unidad_org: nombre_unidad_org, discriminar: discriminar ? 'Si' : 'No', fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') }])
         break;
       case 'MP':
         set_filtros([]);
+        set_filtros_pdf([]);
         break;
       default:
         break;
@@ -462,7 +465,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Resultado de búsqueda"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar} filtros={filtros} nombre_archivo={nombre_archivo}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Resultado de búsqueda"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar} filtros={filtros} nombre_archivo={nombre_archivo} filtros_pdf={filtros_pdf}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">

@@ -1,10 +1,17 @@
 import JsPDF from 'jspdf';
 import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar la función autoTable
 
+interface DownloadPDFProps {
+    nurseries: any[];
+    columns: any[];
+    filtrers: any;
+    nombre_archivo: string,
+    title: string,
+  }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const download_pdf_props = ({ nurseries, columns, title }: any): JSX.Element => {
+export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadPDFProps) => {
 
-    const titulo:any = title;
+    const titulo:any = props.title;
     // console.log(titulo);
     const button_style = {
         color: 'white',
@@ -44,26 +51,36 @@ export const download_pdf_props = ({ nurseries, columns, title }: any): JSX.Elem
     const gato_x = text_x + gato_text_width / 2+8; // Calcula la posición x para centrar el texto
     const gato_y = text_y; // Mantiene la misma posición y que la palabra "CARRETERA"
 
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
     doc.text(gato_text, gato_x, gato_y, { align: 'center' });
+    if(props.filtrers.length !== 0){
+        doc.setFontSize(12);
+        doc.text('Filtros', ((doc.internal.pageSize.width - doc.getTextWidth('Filtros')) / 2), 47);
+        doc.setFontSize(11);
+        doc.text('Tipo despacho: ' + props.filtrers[0].tipo_despacho, 15, 52);
+        doc.text('Bien: ' + props.filtrers[0].nombre_bien, 70,52);
+        doc.text('Unidad organizacional: ' + props.filtrers[0].nombre_unidad_org, 140, 52);
+        doc.text('Discriminar: ' + props.filtrers[0].discriminar, 15, 57);
+        doc.text('Fecha desde: ' + props.filtrers[0].fecha_desde, 70, 57);
+        doc.text('Fecha hasta: ' + props.filtrers[0].fecha_hasta, 140, 57);
+        doc.setFontSize(16);
+    }
 
 
-    const start_y = img_y + img_height -25; // Posición vertical para iniciar los encabezados y datos
+    const start_y = img_y + 5 + img_height -25; // Posición vertical para iniciar los encabezados y datos
 
     const data: any[][] = [];
     const headers: any[] = [];
 
     // Obtener los nombres de las columnas de la cuadrícula
-    columns.forEach((column: any) => {
+    props.columns.forEach((column: any) => {
         headers.push(column.headerName);
     });
 
     // Obtener los datos de las filas de la cuadrícula
-    nurseries.forEach((row: any) => {
+    props.nurseries.forEach((row: any) => {
         const row_data: any[] = [];
 
-        columns.forEach((column: any) => {
+        props.columns.forEach((column: any) => {
             const cell_data = row[column.field as keyof typeof row];
             row_data.push(cell_data);
         });
@@ -79,10 +96,8 @@ export const download_pdf_props = ({ nurseries, columns, title }: any): JSX.Elem
     });
 
     const file_id = Math.random();
-    const file_name = `Resultados_de_la_busqueda_${file_id}.pdf`;
-
- 
-        doc.save(file_name);
+    const file_name = `${props.nombre_archivo}_${file_id}.pdf`;
+    doc.save(file_name);
     };
 
     return (

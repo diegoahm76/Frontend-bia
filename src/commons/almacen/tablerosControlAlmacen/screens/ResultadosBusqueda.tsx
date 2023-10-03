@@ -14,7 +14,8 @@ interface IProps {
     discriminar: boolean,
     titulo: string,
     nombre_archivo: string,
-    filtros: any
+    filtros: any,
+    filtros_pdf: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
@@ -135,7 +136,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             <Box component="form" sx={{ mt: '20px', '& .super-app.positive': { backgroundColor: '#fdfd96' }, '& .super-app.warning': { backgroundColor: '#ffa07a' }, '& .super-app.danger': { backgroundColor: '#ff6961' }}} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} nombre_archivo={props.nombre_archivo}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
                         <DataGrid
                             autoHeight
                             rows={props.resultado_busqueda}
