@@ -5,12 +5,15 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 const initialState: any | any = {
   //! TCA necesarios para el funcionamiento de la aplicación
   ccdOrganigramaCurrentBusqueda: null,
+  // ? comprobar si es o no un ccd perteneciente al mismo organigrama
+  // mismo_organigrama: null,
 
   // ? homologacion unidades
   homologacionUnidades: [],
 
   // ? unidades persistentes
   unidadesPersistentes: [],
+
 
   // ! agrupacion (serie - subserie) current ---- pendiente
 
@@ -29,6 +32,11 @@ export const HomologacionesSlice = createSlice({
     setCcdOrganigramaCurrent: (state, action: PayloadAction<any>) => {
       state.ccdOrganigramaCurrentBusqueda = action.payload;
     },
+
+    //* mirar si es o no el mismo organigrama
+   /* setMismoOrganigrama: (state, action: PayloadAction<any>) => {
+      state.mismo_organigrama = action.payload;
+    }, */
 
     // ? homologacion unidades
     setHomologacionUnidades: (state, action: PayloadAction<any>) => {
@@ -66,6 +74,8 @@ export const HomologacionesSlice = createSlice({
 export const {
   // ! acciones sobre los ccd's y organigramas
   setCcdOrganigramaCurrent,
+  // ? mirar si es o no el mismo organigrama
+ // setMismoOrganigrama,
 
   // ? homologacion unidades
   setHomologacionUnidades,

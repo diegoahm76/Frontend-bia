@@ -1,16 +1,27 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Avatar, IconButton, Tooltip, Typography } from '@mui/material';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsCoincidenciasHalladas } from './columnsCoincidenciasHalladas/columnsCoincidenciasHalladas';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import {
+  setHomologacionUnidades,
+  setUnidadesPersistentes,
+} from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import { control_success } from '../../../../../../../../../helpers';
 
 export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
+  // ? dispatch declaration
+  const dispatch = useAppDispatch();
+
   //* redux states
-  const { homologacionUnidades } = useAppSelector(
+  const { homologacionUnidades, unidadesPersistentes } = useAppSelector(
     (state) => state.HomologacionesSlice
   );
 
@@ -36,18 +47,27 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
               size="large"
               // title="Añadir tipología a TRD"
               onClick={() => {
-                // ? añdir y actualizar tipologias asociadas a trd
-                /*  dispatch(
-                add_tipologia_documental_to_trd(
-                  nuevasTipologias.length > 0
-                    ? [...nuevasTipologias, params.row]
-                    : [...tipologias_asociadas_a_trd, params.row]
-                )
-              );
-              control_success('Tipología añadida a la relación TRD'); */
+                dispatch(
+                  setUnidadesPersistentes([
+                    ...unidadesPersistentes,
+                    {
+                      ...params?.row,
+                      persistenciaConfirmada: true,
+                    },
+                  ])
+                );
+
+                dispatch(
+                  setHomologacionUnidades(
+                    homologacionUnidades?.filter(
+                      (item: any) =>
+                        item?.id_unidad_actual !== params?.row?.id_unidad_actual
+                    )
+                  )
+                );
+
+                control_success('Persi');
                 console.log(params.row);
-                /* reset_administrar_trd({
-              }); */
               }}
             >
               <Avatar
@@ -106,7 +126,15 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     <>
       <RenderDataGrid
         columns={columns ?? []}
-        rows={homologacionUnidades ?? []}
+        rows={[...homologacionUnidades].sort((a: any, b: any) => {
+          if (a.iguales && !b.iguales) {
+            return -1;
+          } else if (!a.iguales && b.iguales) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })}
         title="Coincidencias halladas entre CCD's ( CCD actual / CCD nuevo )"
       />
     </>

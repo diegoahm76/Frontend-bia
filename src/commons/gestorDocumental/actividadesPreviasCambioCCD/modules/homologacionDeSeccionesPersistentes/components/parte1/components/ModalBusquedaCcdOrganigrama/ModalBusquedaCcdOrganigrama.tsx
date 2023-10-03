@@ -68,6 +68,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         resHomologacionesUnidades?.coincidencias.map((item: any) => {
           return {
             ...item,
+            mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
             id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
             id_ccd_nuevo: params.row.id_ccd,
           };
@@ -88,7 +89,14 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           - array unidades persistentes
         */
 
-        dispatch(setUnidadesPersistentes(resUnidadesPersistentes));
+        dispatch(
+          setUnidadesPersistentes(
+            resUnidadesPersistentes?.unidades_persistentes.map((seccionPersistente: any) => ({
+              ...seccionPersistente,
+              mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
+            }))
+          )
+        );
       }
     } catch (error) {
       console.error(error);
