@@ -53,56 +53,65 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'nombre_bien',
                             headerName: 'Bien',
-                            width: 200,
+                            width: 220,
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
                             field: 'tipo_activo',
                             headerName: 'Tipo de bien',
-                            width: 100,
+                            width: 150,
                             valueGetter: (params) => params.row.tipo_activo,
                         },
                         {
                             field: 'serial_placa',
                             headerName: 'Serial / Placa',
-                            width: 100,
+                            width: 150,
                             valueGetter: (params) => params.row.serial_placa,
                         },
                         {
                             field: 'tipo_mantenimiento',
                             headerName: 'Tipo mantenimiento',
-                            width: 140,
+                            width: 170,
                             valueGetter: (params) => params.row.tipo_mantenimiento,
                         },
                         {
                             field: 'fecha_programada',
                             headerName: 'Fecha programada',
-                            width: 140,
+                            width: 200,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.dias_kilometros_vencidos === null || params.row.kilometraje_programado !== 'N/A') {
                                     return '';
                                 }
-                                return clsx('super-app', {
-                                    positive: params.row.dias_kilometros_vencidos > 0 })
+                                console.log('fecha_programada: ', params.row.dias_kilometros_vencidos);
+                                if(params.row.dias_kilometros_vencidos >= 1 && params.row.dias_kilometros_vencidos <= 5)
+                                    return clsx("super-app",{positive: true});
+                                if(params.row.dias_kilometros_vencidos >= 6 && params.row.dias_kilometros_vencidos <= 30)
+                                    return clsx("super-app",{warning: true});
+                                if(params.row.dias_kilometros_vencidos > 30)
+                                    return clsx("super-app",{danger: true});
+                                return '';
                             },
                             valueGetter: (params) => params.row.fecha_programada,
                         },
                         {
                             field: 'kilometraje_programado',
                             headerName: 'Kilómetraje programado',
-                            width: 150,
+                            width: 200,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.dias_kilometros_vencidos == null || params.row.fecha_programada !== 'N/A') {
                                     return '';
                                 }
-                                return clsx('super-app', { positive: params.row.dias_kilometros_vencidos > 0 })
+                                console.log('kilometraje_programado: ', params.row.dias_kilometros_vencidos);
+                                if(params.row.dias_kilometros_vencidos > 0)
+                                    return clsx("super-app",{danger: true});
+                                return '';
                             },
                             valueGetter: (params) => params.row.kilometraje_programado,
                         },
                         {
                             field: 'kilometraje_actual',
                             headerName: 'Kilómetraje actual',
-                            width: 140,
+                            width: 200,
                             valueGetter: (params) => params.row.kilometraje_actual,
                         },
                         {
@@ -123,8 +132,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
     return (
         <>
             <Title title={props.titulo} />
-            <Box component="form" sx={{
-                mt: '20px', '& .super-app.positive': { backgroundColor: '#d47483' }}} noValidate autoComplete="off">
+            <Box component="form" sx={{ mt: '20px', '& .super-app.positive': { backgroundColor: '#fdfd96' }, '& .super-app.warning': { backgroundColor: '#ffa07a' }, '& .super-app.danger': { backgroundColor: '#ff6961' }}} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} nombre_archivo={props.nombre_archivo}></ExportDocs>

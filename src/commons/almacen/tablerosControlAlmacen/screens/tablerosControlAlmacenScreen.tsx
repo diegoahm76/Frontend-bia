@@ -109,7 +109,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     switch (seleccion_tablero_control) {
       case 'CBU':
         const nombre = lt_tablero_control.find(lt => lt.id === seleccion_tablero_control)?.value;
-        if(nombre !== undefined)
+        if (nombre !== undefined)
           set_nombre_archivo(nombre)
         set_filtros([{ 'Tipo de despacho': tipo_despacho, Bien: nombre_bien, 'Unidad organizacional que recibe': nombre_unidad_org, discriminar: discriminar ? 'Si' : 'No', 'Fecha desde': dayjs(fecha_desde).format('YYYY-MM-DD'), 'Fecha hasta': dayjs(fecha_hasta).format('YYYY-MM-DD') }])
         break;
@@ -138,31 +138,86 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         break;
       case 'MP':
         dispatch(obtener_mtto_programados()).then((response: any) => {
-          response.data.forEach((mtto: any) => {
-            mtto.fecha_programada = dayjs(mtto.fecha_programada).format('DD/MM/YYYY');
-            if(mtto.fecha_programada === null)
-              mtto.fecha_programada = 'N/A';
-            if(mtto.kilometraje_programado === null)
-              mtto.kilometraje_programado = 'N/A';
-            if(mtto.kilometraje_actual === null)
-              mtto.kilometraje_actual = 'N/A';
+          let resultado: any[] = [];
+          let data = ordenar_fechas(response.data, 'fecha_programada', 'desc');
+          let data_programada_v = data.filter((d: any) => (d.fecha_programada !== null && d.dias_kilometros_vencidos !== null));
+          let data_programada_nv = data.filter((d: any) => (d.fecha_programada !== null && d.dias_kilometros_vencidos === null));
+          let data_kilometros_v = data.filter((d: any) => d.kilometraje_programado !== null && d.dias_kilometros_vencidos !== null);
+          let data_kilometros_nv = ordenar(data.filter((d: any) => d.kilometraje_programado !== null && d.dias_kilometros_vencidos === null), 'dias_kilometros_vencidos', 'asc');
+
+          ordenar(data_kilometros_v, 'dias_kilometros_vencidos', 'desc').forEach((data_o: any) => {
+            resultado.push(data_o);
           });
-          response.data.sort(function (a: any, b:any) {
-            if (a.dias_kilometros_vencidos < b.dias_kilometros_vencidos) {
-              return 1;
-            }
-            if (a.dias_kilometros_vencidos > b.dias_kilometros_vencidos) {
-              return -1;
-            }
-            // a must be equal to b
-            return 0;
+          ordenar(data_programada_v, 'dias_kilometros_vencidos', 'desc').forEach((data_o: any) => {
+            resultado.push(data_o);
           });
-          set_resultado_busqueda(response.data);
+          data_kilometros_nv.forEach((data_o: any) => {
+            resultado.push(data_o);
+          });
+          data_programada_nv.forEach((data_o: any) => {
+            resultado.push(data_o);
+          });
+          set_resultado_busqueda(set_campos(resultado));
         });
         break;
       default:
         break;
     }
+  }
+
+  const set_campos: (data: any) => any = (data: any) => {
+    data.forEach((mtto: any) => {
+      mtto.fecha_programada = mtto.fecha_programada !== null ? dayjs(mtto.fecha_programada).format('DD/MM/YYYY') : mtto.fecha_programada = 'N/A';
+      if (mtto.kilometraje_programado === null)
+        mtto.kilometraje_programado = 'N/A';
+      if (mtto.kilometraje_actual === null)
+        mtto.kilometraje_actual = 'N/A';
+      if (mtto.dias_kilometros_vencidos === null)
+        mtto.dias_kilometros_vencidos = 0;
+    });
+    return data;
+  }
+
+  const ordenar: (data: any, parametro: string, tipo: string) => any = (data: any, parametro: string, tipo: string) => {
+    if(data.length > 0){
+      data.sort(function (a: any, b: any) {
+        if(tipo === 'desc'){
+          if (a[parametro] < b[parametro])
+            return 1;
+          if (a[parametro] > b[parametro])
+            return -1;
+          return 0;
+        }else{
+          if (a[parametro] > b[parametro])
+          return 1;
+        if (a[parametro] < b[parametro])
+          return -1;
+        return 0;
+        }
+      });
+    }
+    return data;
+  }
+
+  const ordenar_fechas: (data: any, parametro: string, tipo: string) => any = (data: any, parametro: string, tipo: string) => {
+    if(data.length > 0){
+      data.sort(function (a: any, b: any) {
+        if(tipo === 'desc'){
+          if (dayjs(a[parametro]).isBefore(dayjs(b[parametro])))
+            return 1;
+          if (dayjs(a[parametro]).isAfter(dayjs(b[parametro])))
+            return -1;
+          return 0;
+        }else{
+          if (dayjs(a[parametro]).isAfter(dayjs(b[parametro])))
+          return 1;
+        if (dayjs(a[parametro]).isBefore(dayjs(b[parametro])))
+          return -1;
+        return 0;
+        }
+      });
+    }
+    return data;
   }
 
   return (
@@ -206,7 +261,6 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <Button
                     color='primary'
                     variant='contained'
-                    // startIcon={<SearchIcon />}
                     onClick={busqueda_control}
                   >
                     Consultar
@@ -387,7 +441,6 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                 <Button
                   color='primary'
                   variant='contained'
-                  // startIcon={<SearchIcon />}
                   onClick={busqueda_control}
                 >
                   Consultar
@@ -409,7 +462,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Despacho de bienes de consumo"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar} filtros={filtros} nombre_archivo={nombre_archivo}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_presentacion={seleccion_presentacion} titulo={"Resultado de búsqueda"} seleccion_tablero_control={seleccion_tablero_control} discriminar={discriminar} filtros={filtros} nombre_archivo={nombre_archivo}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">
