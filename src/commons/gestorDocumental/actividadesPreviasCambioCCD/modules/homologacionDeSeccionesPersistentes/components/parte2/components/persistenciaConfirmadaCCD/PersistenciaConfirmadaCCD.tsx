@@ -19,6 +19,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Grid } from 'blockly';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { fnGetAgrupacionesCoincidetesCcd } from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
+import Swal from 'sweetalert2';
 
 export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ? dispatch declaration
@@ -33,40 +34,68 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
 
+  // ? eliminación de persitencia sin validación
+
+  const eliminarPersistencia = (
+    unidadesPersistentes: any[],
+    idUnidadActual: number
+  ) => {
+    return unidadesPersistentes.filter(
+      //* revisar si es !== o ===
+      (item: any) => item?.id_unidad_actual !== idUnidadActual
+    );
+  };
+
   // ? handleEliminicacionValidacionPersistencia
   const handleEliminicacionValidacionPersistencia = (
     unidadesPersistentes: any[],
-    agrupacionesPersistentesSerieSubserie: any[],
-    params: any
+    params: any,
+    nuevaHomologacionUnidades: any[],
+    agrupacionesPersistentesSerieSubserie: any[] = [
+      {
+        id_unidad_org_actual: 5381,
+      },
+    ]
   ) => {
     const { row } = params;
 
-    // ? se debe validar si hay agrupaciones persistentes para poder eliminarlas
-    if (agrupacionesPersistentesSerieSubserie?.length === 0) {
-      const nuevasAgrupacionesPersistentes =
-        agrupacionesPersistentesSerieSubserie.filter(
-          (item: any) => item?.id_unidad_org_actual !== row?.id_unidad_actual
-        );
-      control_warning(
-        'no se puede eliminar la persistencia confirmada de secciones, ya que tiene un valor asociado'
+    const nuevasAgrupacionesPersistentes =
+      agrupacionesPersistentesSerieSubserie?.filter(
+        //* revisar si es !== o ===
+        (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
       );
+
+    console.log(
+      'nuevasAgrupacionesPersistentes',
+      nuevasAgrupacionesPersistentes
+    );
+
+    if (nuevasAgrupacionesPersistentes?.length > 0) {
+      //* si hay un valor coincida no se elimina
+      void Swal.fire({
+        title: 'Cuidado',
+        text: 'No se puede eliminar esta persistencia confirmada de secciones, ya que tiene un valor asociado en la persistencia de series confirmadas',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+      });
       return;
     }
 
-    //* si no entra en la condicional pasa directamente a absorber este valor
-    const nuevasUnidadesPersistentes = unidadesPersistentes.filter(
-      (item: any) => item?.id_unidad_actual !== row?.id_unidad_actual
+    const nuevasUnidadesPersistentes = eliminarPersistencia(
+      unidadesPersistentes,
+      row?.id_unidad_actual
     );
 
-    console.log('valor actualizado');
+    control_success('Persistencia eliminada');
     dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+    //* se actualiza tambien la tabla de las homologaciones si se pasa a este caso, en caso contrario no lo hace
+    dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
   };
 
   // ! eliminación de persistencias confirmadas
 
   const handleEliminarPersistencia = (params: GridValueGetterParams) => {
     const { row } = params;
-
     if (row?.mismo_organigrama) {
       control_warning(
         'No se puede eliminar una persistencia confirmada de un CCD perteneciente al mismo organigrama'
@@ -81,18 +110,14 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         persistenciaConfirmada: false,
       },
     ];
-    /* const nuevasUnidadesPersistentes = unidadesPersistentes.filter(
-      (item: any) => item?.id_unidad_actual !== row?.id_unidad_actual
-    );*/
 
-    dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
     //* aquó se realiza la validación de la eliminación de la persistencia y se actualiza el estado de las persistencias en consecuencia
     handleEliminicacionValidacionPersistencia(
       unidadesPersistentes,
+      params,
+      nuevaHomologacionUnidades,
       agrupacionesPersistentesSerieSubserie,
-      params
     );
-    control_success('Persistencia eliminada');
   };
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
