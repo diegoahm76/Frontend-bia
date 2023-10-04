@@ -668,7 +668,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             autoHeight
                             rows={props.resultado_busqueda}
                             columns={columnas_mp}
-                            getRowId={(row) => uuidv4()}
+                            getRowId={() => uuidv4()}
                             pageSize={5}
                             rowsPerPageOptions={[5]} />
                     </Grid>
