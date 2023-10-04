@@ -18,42 +18,80 @@ import { control_warning } from '../../../../../../../../almacen/configuracion/s
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Grid } from 'blockly';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { fnGetAgrupacionesCoincidetesCcd } from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
 
 export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ? dispatch declaration
   const dispatch = useAppDispatch();
 
   //* redux states
-  const { unidadesPersistentes, homologacionUnidades } = useAppSelector(
-    (state) => state.HomologacionesSlice
-  );
+  const {
+    unidadesPersistentes,
+    homologacionUnidades,
+    agrupacionesPersistentesSerieSubserie,
+  } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
+
+  // ? handleEliminicacionValidacionPersistencia
+  const handleEliminicacionValidacionPersistencia = (
+    unidadesPersistentes: any[],
+    agrupacionesPersistentesSerieSubserie: any[],
+    params: any
+  ) => {
+    const { row } = params;
+
+    // ? se debe validar si hay agrupaciones persistentes para poder eliminarlas
+    if (agrupacionesPersistentesSerieSubserie?.length === 0) {
+      const nuevasAgrupacionesPersistentes =
+        agrupacionesPersistentesSerieSubserie.filter(
+          (item: any) => item?.id_unidad_org_actual !== row?.id_unidad_actual
+        );
+      control_warning(
+        'no se puede eliminar la persistencia confirmada de secciones, ya que tiene un valor asociado'
+      );
+      return;
+    }
+
+    //* si no entra en la condicional pasa directamente a absorber este valor
+    const nuevasUnidadesPersistentes = unidadesPersistentes.filter(
+      (item: any) => item?.id_unidad_actual !== row?.id_unidad_actual
+    );
+
+    console.log('valor actualizado');
+    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+  };
+
   // ! eliminación de persistencias confirmadas
 
   const handleEliminarPersistencia = (params: GridValueGetterParams) => {
-    if (params?.row?.mismo_organigrama) {
+    const { row } = params;
+
+    if (row?.mismo_organigrama) {
       control_warning(
         'No se puede eliminar una persistencia confirmada de un CCD perteneciente al mismo organigrama'
       );
       return;
     }
-
     // ? debe validarse la eliminación al recorrer primero el array de las persistencias de las series con persistencias, para que se hay
-
     const nuevaHomologacionUnidades = [
       ...homologacionUnidades,
       {
-        ...params?.row,
+        ...row,
         persistenciaConfirmada: false,
       },
     ];
-    const nuevasUnidadesPersistentes = unidadesPersistentes.filter(
-      (item: any) => item?.id_unidad_actual !== params?.row?.id_unidad_actual
-    );
+    /* const nuevasUnidadesPersistentes = unidadesPersistentes.filter(
+      (item: any) => item?.id_unidad_actual !== row?.id_unidad_actual
+    );*/
 
     dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
-    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+    //* aquó se realiza la validación de la eliminación de la persistencia y se actualiza el estado de las persistencias en consecuencia
+    handleEliminicacionValidacionPersistencia(
+      unidadesPersistentes,
+      agrupacionesPersistentesSerieSubserie,
+      params
+    );
     control_success('Persistencia eliminada');
   };
 
@@ -101,7 +139,28 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
               aria-label="select"
               size="large"
               onClick={() => {
-                console.log(params.row);
+                const {
+                  //* datos para traer las agrupaciones coincidentes del ccd
+                  id_ccd_actual,
+                  id_ccd_nuevo,
+                  id_unidad_actual,
+                  id_unidad_nueva,
+                  //* datos para traer las agrupaciones coincidentes del ccd
+                  // ? datos que necesito para llenar el espacio de la unidad actual y nuevo que estoy usando
+                  cod_unidad_actual,
+                  nom_unidad_actual,
+                  cod_unidad_nueva,
+                  nom_unidad_nueva,
+                  // ? datos que necesito para llenar el espacio de la unidad actual y nuevo que estoy usando
+                } = params?.row;
+                // ! crear estado para almacenar la row actual seleccionada y de esa manera mostrar los datos correspondientes que necesito
+
+                void fnGetAgrupacionesCoincidetesCcd({
+                  id_ccd_actual,
+                  id_ccd_nuevo,
+                  id_unidad_actual,
+                  id_unidad_nueva,
+                });
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -130,7 +189,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
   }
 
-/*
+  /*
   if (isLoadingSeccionSub) {
     return (
       <Grid
@@ -148,8 +207,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     </Grid>
     );
   } */
-
-
 
   return (
     <>

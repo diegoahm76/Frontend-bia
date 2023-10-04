@@ -1,22 +1,30 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 //! --- DOCUMENTO DE THUNKS DE LA PARTE DE SERIES DOCUMENTALES PERSISTENTES DE LA HOMOLOGACIÓN DE CCD'S ---
 
-/* export const fnGetSeriesDocumentalesPersistentes = async (idCcdNuevo: number) => {
+import { api } from '../../../../../../../api/axios';
+
+interface IGetAgrupacionesCoincidetesCcd {
+  id_ccd_actual: number;
+  id_ccd_nuevo: number;
+  id_unidad_actual: number;
+  id_unidad_nueva: number;
+}
+
+export const fnGetAgrupacionesCoincidetesCcd = async ({
+  id_ccd_actual,
+  id_ccd_nuevo,
+  id_unidad_actual,
+  id_unidad_nueva,
+}: IGetAgrupacionesCoincidetesCcd): Promise<any> => {
   try {
-    const url = `gestor/ccd/persistencia-series-ccd/get/${idCcdNuevo}`;
-    const { data } = await api.get(url);
-    console.log(data);
-
-    if (data.success) {
-      control_success(data.detail);
-      return data?.data;
-    }
-
-    control_error('Error al obtener las series documentales persistentes');
-    return {
-      coincidencias: [],
-      //* mirar si se debe retornar algo más al error
-    };
+    //* url de la api
+    const url = `gestor/ccd/get-homologacion-cat-serie-ccd/?id_ccd_actual=${id_ccd_actual}&id_ccd_nuevo=${id_ccd_nuevo}&id_unidad_actual=${id_unidad_actual}&id_unidad_nueva=${id_unidad_nueva}`;
+    const {
+      data: { data },
+    } = await api.get(url);
+    // ? la data devuelve el array de las conincidencias y tambien el elemento del id_ccd_actual y id_ccd_nuevo
+    console.log('data agrupaciones coincidentes ccd', data?.coincdencias);
   } catch (error: any) {
-    control_error(error?.response?.data?.detail);
+    throw error;
   }
-} */
+};
