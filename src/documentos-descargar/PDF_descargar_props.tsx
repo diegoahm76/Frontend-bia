@@ -95,7 +95,7 @@ export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadP
         startY: start_y, // Utiliza la variable start_y para la posición vertical de inicio
     });
 
-    const file_id = Math.random();
+    const file_id = Math.floor(Math.random() * 99999);
     const file_name = `${props.nombre_archivo}_${file_id}.pdf`;
     doc.save(file_name);
     };

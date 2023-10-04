@@ -85,6 +85,8 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [msj_error_bien, set_msj_error_bien] = useState<any>("");
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
+  const [nombre_archivo, set_nombre_archivo] = useState<string>("");
+
   const cambio_tipo_consulta: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_tipo_consulta(e.target.value);
     limpiar_filtros();
@@ -174,7 +176,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   }
 
   useEffect(() => {
-    if (resultado_busqueda.length > 0 && (agrupar || agrupar_bodega || mostrar || seleccion_tipo_consulta === 'IPC')) {
+    if (resultado_busqueda.length > 0 && (agrupar || agrupar_bodega || !mostrar || seleccion_tipo_consulta === 'IPC')) {
       let agrupamiento: any = [];
       resultado_busqueda.forEach(rb => {
         rb.inventario.forEach((inv: any) => {
@@ -251,6 +253,13 @@ export const ControlDeInventariosScreen: React.FC = () => {
       default:
         break;
     }
+    asignar_nombre_reporte();
+  }
+
+  const asignar_nombre_reporte: () => void = () => {
+    const nombre = lt_tipo_consulta.find((lt: any) => lt.id === seleccion_tipo_consulta)?.value;
+    if (nombre !== undefined)
+      set_nombre_archivo(nombre)
   }
 
   return (
@@ -795,7 +804,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">
