@@ -35,6 +35,7 @@ export const useCierreExpedientes = () => {
 
       tipologia_documental: '',
       tiene_consecutivo: '',
+      file: '',
     },
   });
 
@@ -78,44 +79,58 @@ export const useCierreExpedientes = () => {
     cierre_expediente: { id_expediente_documental },
   } = useAppSelector((state) => state.expedientes);
 
-  // * onSubmit
-  const onSubmit_archivo_soporte = handleSubmit_archivo_soporte(
-    async (data) => {
-      try {
-        set_is_saving(true);
-        console.log(data);
-        const data_archivo = {
-          id_expediente_documental: id_expediente_documental,
-          nombre_asignado_documento: data.nombre_asignado_documento,
 
-          fecha_creacion_doc: dayjs(data.fecha_creacion_doc, 'DD/MM/YYYY').format(
-            'YYYY-MM-DDTHH:mm:ss.SSSZ'
-          ),
-          nro_folios_del_doc: data.nro_folios_del_doc,
-          cod_origen_archivo: data.cod_origen_archivo,
-          codigo_tipologia_doc_prefijo: data.codigo_tipologia_doc_prefijo,
-          codigo_tipologia_doc_agno: agno_archivo,
-          codigo_tipologia_doc_consecutivo:
-            data.codigo_tipologia_doc_consecutivo,
-          cod_categoria_archivo: data.cod_categoria_archivo,
-          tiene_replica_fisica: data.tiene_replica_fisica,
-          asunto: data.asunto,
-          descripcion: data.descripcion,
-          palabras_clave_documento: palabrasClave,
-        };
-        await post_archivo_soporte(data_archivo);
-        
-        control_success('Se ha creado el archivo de soporte exitosamente');
-      } catch (error: any) {
-        control_error(
-          error.response.data.detail ||
-            'Error al crear el archivo de soporte, intente nuevamente'
-        );
-      } finally {
-        set_is_saving(false);
-      }
+  // archivo 
+
+  const [file_name, set_file_name] = useState('');
+
+  const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected_file =
+      event.target.files != null ? event.target.files[0] : null;
+    if (selected_file != null) {
+      set_file_name(selected_file.name);
     }
-  );
+  };
+  const reset_file_state = (): void => {
+    set_file_name('');
+  };
+
+  // * onSubmit
+  const onSubmit_archivo_soporte = handleSubmit_archivo_soporte(async (data) => {
+    try {
+      set_is_saving(true);
+      console.log(data);
+      console.log('data.file[0]', data.file[0])
+      const formData = new FormData();
+      formData.append('id_expediente_documental', String(id_expediente_documental));
+      formData.append('nombre_asignado_documento', data.nombre_asignado_documento);
+      // formData.append('fecha_creacion_doc', dayjs(data.fecha_creacion_doc, 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ss.SSSZ'));
+      formData.append('fecha_creacion_doc', dayjs(data.fecha_creacion_doc, 'DD/MM/YYYY').format('YYYY-MM-DD'));
+      formData.append('nro_folios_del_doc', data.nro_folios_del_doc);
+      formData.append('cod_origen_archivo', data.cod_origen_archivo);
+      formData.append('codigo_tipologia_doc_prefijo', data.codigo_tipologia_doc_prefijo);
+      formData.append('codigo_tipologia_doc_agno', String(agno_archivo));
+      formData.append('codigo_tipologia_doc_consecutivo', data.codigo_tipologia_doc_consecutivo);
+      formData.append('cod_categoria_archivo', data.cod_categoria_archivo);
+      formData.append('tiene_replica_fisica', String(data.tiene_replica_fisica));
+      formData.append('asunto', data.asunto);
+      formData.append('descripcion', data.descripcion);
+      formData.append('palabras_clave_documento', palabrasClave);
+      formData.append('tipologia_documental', data.tipologia_documental);
+      formData.append('file', data.file[0]);
+
+      await post_archivo_soporte(formData);
+
+      control_success('Se ha creado el archivo de soporte exitosamente');
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail ||
+          'Error al crear el archivo de soporte, intente nuevamente'
+      );
+    } finally {
+      set_is_saving(false);
+    }
+  });
 
   return {
     // * useForm archivo_soporte
@@ -154,5 +169,11 @@ export const useCierreExpedientes = () => {
     palabrasClave,
     setPalabrasClave,
     handlePalabrasClaveChange,
+
+    // archivo
+    file_name,
+    handle_file_select,
+    reset_file_state,
+
   };
 };
