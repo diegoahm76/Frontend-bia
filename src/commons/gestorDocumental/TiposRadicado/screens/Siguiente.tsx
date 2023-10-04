@@ -170,7 +170,6 @@ export const Siguiente: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={6}>
             <Controller
               name="cod_tipo_radicado"
@@ -207,7 +206,6 @@ export const Siguiente: React.FC = () => {
               )}
             />{' '}
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <Grid
             sx={{
               marginBottom: '10px',
@@ -317,7 +315,6 @@ export const Siguiente: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={6}>
             <Controller
               name="consecutivo_inicial"
@@ -350,7 +347,6 @@ export const Siguiente: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={6}>
             <Controller
               name="cantidad_digitos"
@@ -383,7 +379,6 @@ export const Siguiente: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               label="Fecha de configuración"
@@ -397,7 +392,6 @@ export const Siguiente: React.FC = () => {
               helperText="Fecha de configuración"
             />
           </Grid>
-          <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               // label="Persona que configuró"
