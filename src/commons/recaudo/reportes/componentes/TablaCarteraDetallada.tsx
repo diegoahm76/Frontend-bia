@@ -26,17 +26,58 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [total, set_total] = useState(0);
   const [values, set_values] = useState([]);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
+  const [data, set_data] = useState([]);
+  const [page, set_page] = useState(1);
+  const [total_pages, set_total_pages] = useState(1);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-  useEffect(() => {
-    if(visible_rows.length !== 0) {
-      let total = 0
-      for(let i=0; i< visible_rows.length; i++){
-        total = total + parseFloat(visible_rows[i].valor_sancion)
-        set_total(total)
-      }
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const fetchData = (page_number: number) => {
+    // Realiza la solicitud HTTP utilizando la página especificada
+    fetch(`https://back-end-bia-beta.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number}`)
+      .then((response) => response.json())
+      .then((responseData) => {
+        // Extrae la propiedad "data" de la respuesta JSON
+        const data = responseData.results.data;
+        const total_pages = Math.ceil(responseData.count / 10); // Supongo 10 elementos por página
+        set_data(data);
+        set_total_pages(total_pages);
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos:', error);
+      });
+  };
+
+  const handle_next_page = () => {
+    // Maneja la paginación siguiente
+    if (page < total_pages) {
+      set_page(page + 1);
     }
-  }, [visible_rows])
+  };
+
+  const handle_prev_page = () => {
+    // Maneja la paginación anterior
+    if (page > 1) {
+      set_page(page - 1);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
+
+  // useEffect(() => {
+  //   dispatch(get_cartera_detallada())
+  // }, []);
+
+
+  useEffect(() => {
+    if (visible_rows.length !== 0) {
+      set_values(visible_rows.map((obj) => Object.values(obj)) as any);
+      const new_total_pages = Math.ceil(visible_rows.length / 10); // Calcular el número total de páginas
+      set_total_pages(new_total_pages);
+    }
+  }, [visible_rows]);
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -76,14 +117,14 @@ export const TablaCarteraDetallada: React.FC = () => {
   };
 
   const handle_export_pdf = (): void => {
-    const report = new JsPDF('l','pt','letter');
+    const report = new JsPDF('l', 'pt', 'letter');
     report.text("Reporte General de Cartera con Detalle", 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     autoTable(report, {
       theme: 'grid',
       head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
       body: values,
-      foot:[['Total General', '', '', '', '', '', '', `${total_cop}`]],
+      foot: [['Total General', '', '', '', '', '', '', `${total_cop}`]],
     })
     report.save('Reporte General de Cartera con Detalle.pdf');
   }
@@ -176,16 +217,20 @@ export const TablaCarteraDetallada: React.FC = () => {
       }
     },
   ];
+  console.log(visible_rows)
+
 
   useEffect(() => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if(visible_rows.length !== 0){
+    if (visible_rows.length !== 0) {
       set_values(visible_rows.map((obj) => Object.values(obj)) as any)
     }
   }, [visible_rows])
+
+
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -201,23 +246,23 @@ export const TablaCarteraDetallada: React.FC = () => {
         >
           <FormControl sx={{ minWidth: 130 }}>
             <InputLabel>Filtrar por: </InputLabel>
-              <Select
-                label="Filtrar por: "
-                defaultValue={''}
-                onChange={(event: event)=>{
-                  const { value } = event.target
-                  set_filter(value)
-                }}
-              >
-                <MenuItem value='codigo_contable'>Código Contable</MenuItem>
-                <MenuItem value='nombre_deudor'>Nombre Deudor</MenuItem>
-              </Select>
+            <Select
+              label="Filtrar por: "
+              defaultValue={''}
+              onChange={(event: event) => {
+                const { value } = event.target
+                set_filter(value)
+              }}
+            >
+              <MenuItem value='codigo_contable'>Código Contable</MenuItem>
+              <MenuItem value='nombre_deudor'>Nombre Deudor</MenuItem>
+            </Select>
           </FormControl>
           <TextField
             required
             label="Búsqueda"
             size="medium"
-            onChange={(event: event)=>{
+            onChange={(event: event) => {
               const { value } = event.target
               set_search(value)
             }}
@@ -228,7 +273,7 @@ export const TablaCarteraDetallada: React.FC = () => {
             startIcon={<SearchOutlined />}
             onClick={() => {
               try {
-                void dispatch(get_filtro_cartera_detallada({parametro: filter, valor: search}));
+                void dispatch(get_filtro_cartera_detallada({ parametro: filter, valor: search }));
               } catch (error: any) {
                 throw new Error(error);
               }
@@ -275,52 +320,53 @@ export const TablaCarteraDetallada: React.FC = () => {
         </Stack>
       </Stack>
       <div id='report'>
-      {
-        visible_rows.length !== 0 ? (
-          <Grid
-            container
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px',
-              mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-            }}
-          >
-            <Grid item xs={12}>
-              <Grid item>
-                <Box sx={{ width: '100%' }}>
-                  <DataGrid
-                    autoHeight
-                    disableSelectionOnClick
-                    rows={visible_rows}
-                    columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => faker.database.mongodbObjectId()}
-                  />
-                </Box>
-              </Grid>
-              <Stack
-                direction="row"
-                display='flex'
-                justifyContent='flex-end'
-              >
-                <Grid item xs={12} sm={2.5} mt='30px'>
-                  <TextField
-                    label={<strong>Total General</strong>}
-                    size="small"
-                    fullWidth
-                    value={total_cop}
-                  />
+        {
+          visible_rows.length !== 0 ? (
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <Grid item xs={12}>
+                <Grid item>
+                  <Box sx={{ width: '100%' }}>
+                    <DataGrid
+                      rows={data}
+                      columns={columns}
+                      pageSize={10}
+                      checkboxSelection
+                      pagination
+                      onPageChange={(newPage) => set_page(newPage)}
+                      rowCount={data.length}
+                    />
+                    <button onClick={handle_prev_page} disabled={page === 1}>Página anterior</button>
+                    <button onClick={handle_next_page} disabled={page === total_pages}>Página siguiente</button>
+                  </Box>
                 </Grid>
-            </Stack>
+                <Stack
+                  direction="row"
+                  display='flex'
+                  justifyContent='flex-end'
+                >
+                  <Grid item xs={12} sm={2.5} mt='30px'>
+                    <TextField
+                      label={<strong>Total General</strong>}
+                      size="small"
+                      fullWidth
+                      value={total_cop}
+                    />
+                  </Grid>
+                </Stack>
+              </Grid>
             </Grid>
-          </Grid>
-        ) : null
-      }
+          ) : null
+        }
       </div>
     </Box>
   );
