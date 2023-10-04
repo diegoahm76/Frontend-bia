@@ -35,6 +35,7 @@ interface IProps {
   option_label: string | number;
   multiple?: boolean | null;
   hidden_text?: boolean | null;
+  marginTop?: number;
   auto_focus?: boolean | null;
 }
 
@@ -55,6 +56,7 @@ const FormSelectController = ({
   multiple,
   hidden_text,
   margin,
+  marginTop,
   auto_focus,
 }: IProps) => {
   const id_select = String(uuid());
@@ -62,7 +64,7 @@ const FormSelectController = ({
   return (
     <>
       {!(hidden_text ?? false) && (
-        <Grid item xs={xs} md={md} margin={margin ?? 0}>
+        <Grid item xs={xs} md={md} margin={margin ?? 0} marginTop={marginTop ?? 0}>
           <Controller
             name={control_name}
             control={control_form}

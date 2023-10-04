@@ -10,14 +10,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
-import InfoIcon from '@mui/icons-material/Info';
+import { v4 as uuidv4 } from 'uuid';
 import { IList } from '../../../../interfaces/globalModels';
-import { crear_metadato, crear_valor_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato } from '../store/thunks/metadatos';
-import { initial_state_metadato, set_current_valor_metadato } from '../store/slice/indexMetadatos';
+import { crear_metadato, crear_valor_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato, get_valores_metadatos } from '../store/thunks/metadatos';
+import { initial_state_metadato, initial_state_valor_metadato, set_current_valor_metadato } from '../store/slice/indexMetadatos';
 import ListadoMetadatos from './ListarMetadatos';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import FormButton from '../../../../components/partials/form/FormButton';
-
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 
 
 
@@ -26,16 +27,17 @@ import FormButton from '../../../../components/partials/form/FormButton';
 const ConfiguracionMetadatos = () => {
     const { control: control_metadatos, reset, handleSubmit: handle_submit, watch } = useForm<IMetadatos>();
 
-    const { control: control_valores, watch: watch_valor, reset: reset_valores } = useForm<IObjValoresMetadatos>();
+    const { control: control_valores, reset: reset_valores, handleSubmit: handle_submit_valores, } = useForm<IObjValoresMetadatos>();
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const { valores_metadatos, current_valor_metadato } = useAppSelector((state) => state.metadatos);
+    const { valores_metadatos, current_valor_metadato, } = useAppSelector((state) => state.metadatos);
     const [tipos_datos, set_tipos_datos] = useState<IList[]>([]);
     const [agregar_valor, set_agregar_valor] = useState(false);
     const [action, set_action] = useState<string>("Guardar");
     const [valores_metadatos_loaded, set_valores_metadatos_loaded] = useState(false);
     const [selected_metadato, set_selected_metadato] = useState<IMetadatos>(initial_state_metadato);
-
+    const [selected_valor, set_selected_valor] = useState<IObjValoresMetadatos>(initial_state_valor_metadato);
+    let orden_dentro_de_lista = 0;
     const dispatch = useAppDispatch();
     const text_choise_adapter: any = (dataArray: string[]) => {
         const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -54,6 +56,18 @@ const ConfiguracionMetadatos = () => {
         set_action("Editar");
     };
 
+    // editar desde la tabla
+    const handle_edit_valores_click = (valores: IObjValoresMetadatos) => {
+        set_selected_valor(valores);
+        // set_action("Editar");
+    };
+
+    // asignar valor 
+    useEffect(() => {
+        reset_valores(selected_valor);
+    }, [selected_valor]);
+
+
     // asignar metadatos de la tabla al formulario
     useEffect(() => {
         console.log(selected_metadato)
@@ -67,32 +81,20 @@ const ConfiguracionMetadatos = () => {
             });
         }
     }, [valores_metadatos_loaded, dispatch]);
-    console.log(valores_metadatos)
 
 
     useEffect(() => {
         void dispatch(get_metadatos());
+        void dispatch(get_valores_metadatos())
+
 
     }, [])
 
-
-
-    useEffect(() => {
-        reset_valores(current_valor_metadato);
-        console.log(current_valor_metadato)
-    }, [current_valor_metadato]);
-
-
     useEffect(() => {
 
+        console.log(valores_metadatos)
 
-        const primera_configuracion = valores_metadatos.find(elemento => elemento.valor_a_mostrar === watch_valor('valor_a_mostrar'));
-
-        if (primera_configuracion !== undefined) {
-            dispatch(set_current_valor_metadato(primera_configuracion));
-        }
-        console.log(primera_configuracion)
-    }, [watch_valor('valor_a_mostrar')]);
+    }, [])
 
 
     useEffect(() => {
@@ -120,6 +122,41 @@ const ConfiguracionMetadatos = () => {
         set_agregar_valor(true)
     }
 
+
+    const colums_valores_metadatos: GridColDef[] = [
+        {
+            field: 'orden_dentro_de_lista',
+            width: 100,
+            headerName: 'ÓRDEN',
+
+
+        },
+
+        {
+            field: 'valor_a_mostrar',
+            width: 300,
+            headerName: 'LISTA DE VALORES',
+
+
+        },
+        {
+            field: '',
+            width: 300,
+            headerName: 'ACCIONES',
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handle_edit_valores_click(params.row)}
+                    startIcon={<ChecklistIcon />}
+                >
+
+                </Button>
+            ),
+
+
+        },
+
+
+    ]
 
 
     const on_submit = (data: IMetadatos): void => {
@@ -161,24 +198,28 @@ const ConfiguracionMetadatos = () => {
             void dispatch(
                 eliminar_metadato(selected_metadato.id_metadato_personalizado)
             );
+            void dispatch(get_metadatos());
         }
-        void dispatch(get_metadatos());
+
         console.log(selected_metadato)
 
     }
-    const on_submit_agregar_valor = (data: IMetadatos): void => {
+    const on_submit_agregar_valor = (data: IObjValoresMetadatos): void => {
 
         if (
             selected_metadato.id_metadato_personalizado !== null &&
             selected_metadato.id_metadato_personalizado !== undefined
 
         ) {
+            orden_dentro_de_lista++;
+
             const data_valor = {
                 ...data,
-                id_metadato_personalizado: selected_metadato.id_metadato_personalizado
-
+                id_metadato_personalizado: selected_metadato.id_metadato_personalizado,
+                orden_dentro_de_lista: orden_dentro_de_lista
             }
             void dispatch(crear_valor_metadato(data_valor))
+            void dispatch(get_valores_metadatos())
         }
 
     }
@@ -202,8 +243,6 @@ const ConfiguracionMetadatos = () => {
                     hidden_text={null}
                     label={"Nombre"}
                 />
-
-
                 <FormInputController
                     xs={12}
                     md={6}
@@ -218,8 +257,6 @@ const ConfiguracionMetadatos = () => {
                     hidden_text={null}
                     label={"Nombre para mostrar al usuario"}
                 />
-
-
                 <FormInputController
                     xs={12}
                     md={12}
@@ -234,12 +271,12 @@ const ConfiguracionMetadatos = () => {
                     disabled={false}
                     helper_text=""
                     hidden_text={null}
-                    label={"Descripción"}
-                />
+                    label={"Descripción"} />
 
                 <FormSelectController
                     xs={12}
                     md={2}
+                    marginTop={2}
                     control_form={control_metadatos}
                     control_name={'cod_tipo_dato_alojar'}
                     default_value=''
@@ -258,6 +295,7 @@ const ConfiguracionMetadatos = () => {
                     xs={12}
                     md={2}
                     margin={0}
+                    marginTop={2}
                     control_form={control_metadatos}
                     control_name="longitud_dato_alojar"
                     default_value=''
@@ -267,14 +305,11 @@ const ConfiguracionMetadatos = () => {
                     hidden_text={null}
                     label={"Longitud de dato"}
                     helper_text={''} />
-
-
-
-
                 <FormInputController
                     xs={12}
                     md={2}
                     margin={0}
+                    marginTop={2}
                     control_form={control_metadatos}
                     control_name="valor_minimo"
                     default_value=''
@@ -284,12 +319,11 @@ const ConfiguracionMetadatos = () => {
                     hidden_text={null}
                     label={"Valor minimo"}
                     helper_text={''} />
-
-
                 <FormInputController
                     xs={12}
                     md={2}
                     margin={0}
+                    marginTop={2}
                     control_form={control_metadatos}
                     control_name="valor_maximo"
                     default_value=''
@@ -300,11 +334,11 @@ const ConfiguracionMetadatos = () => {
                     hidden_text={null}
                     label={"Valor máximo"}
                 />
-
                 <FormInputController
                     xs={12}
                     md={2}
                     margin={0}
+                    marginTop={2}
                     control_form={control_metadatos}
                     control_name="orden_aparicion"
                     default_value=''
@@ -315,9 +349,6 @@ const ConfiguracionMetadatos = () => {
                     label={"Órden de aparición"}
                     helper_text={''}
                 />
-
-
-
 
             </Grid>
 
@@ -446,10 +477,6 @@ const ConfiguracionMetadatos = () => {
                     </Grid>
                 }
 
-
-
-
-
             </Grid>
             <Grid container spacing={4} alignItems="center" marginTop={4}>
 
@@ -470,7 +497,7 @@ const ConfiguracionMetadatos = () => {
                         xs={12}
                         md={2}
                         margin={0}
-                        control_form={control_metadatos}
+                        control_form={control_valores}
                         control_name="valor_a_mostrar"
                         default_value=''
                         rules={{}}
@@ -480,15 +507,47 @@ const ConfiguracionMetadatos = () => {
                         label={"Valor"}
                         helper_text={''}
                     />
+
+
+                    {/* <FormInputController
+                        xs={12}
+                        md={2}
+                        margin={0}
+                        control_form={control_valores}
+                        control_name="orden_dentro_de_lista"
+                        default_value=''
+                        rules={{}}
+                        type='text'
+                        disabled={false}
+                        hidden_text={null}
+                        label={"Nuevo Órden"}
+                        helper_text={''}
+                    /> */}
                     <Grid item>
                         <Button variant="contained"
                             color="success"
-                            onClick={handle_submit(on_submit_agregar_valor)}>
+                            onClick={handle_submit_valores(on_submit_agregar_valor)}>
                             Guardar valor
                         </Button>
                     </Grid>
 
+                </Grid>
+            )}
 
+            {agregar_valor && (
+                <Grid container marginTop={2} xs={6}>
+
+
+                    <DataGrid
+                        density="compact"
+                        autoHeight
+                        columns={colums_valores_metadatos}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        getRowId={(row) => row.id_lista_valor_metadato_pers}
+                        rows={valores_metadatos}
+                    />
 
                 </Grid>
             )}

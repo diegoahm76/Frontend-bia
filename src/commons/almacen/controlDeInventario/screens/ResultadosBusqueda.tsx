@@ -534,6 +534,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                         <DataGrid
                             autoHeight
                             rows={props.resultado_busqueda}
@@ -548,6 +549,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12} sx={{ mb: '20px' }}>
                                 <Typography variant="h6" gutterBottom> Propio </Typography>
@@ -578,6 +580,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             </Box>}
             {(props.seleccion_tipo_consulta === 'IP' && props.agrupar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                 <Grid item container spacing={2}>
                     {props.resultado_busqueda.map((rb: any) => (
                         // eslint-disable-next-line react/jsx-key
@@ -612,6 +615,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             {(props.seleccion_tipo_consulta === 'ITB' && !props.mostrar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                     {props.resultado_busqueda.map((rb: any) => (
                         // eslint-disable-next-line react/jsx-key
                         <Grid item xs={12} sm={12}>
@@ -631,6 +635,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                         <Typography variant="h6" gutterBottom> Para toda la entidad </Typography>
                         <DataGrid
                             autoHeight
@@ -644,6 +649,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             </Box>}
             {((props.seleccion_tipo_consulta === 'TIC' || props.seleccion_tipo_consulta === 'BSV') && props.agrupar_bodega) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                 <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                 <Grid item container spacing={2}>
                     {props.resultado_busqueda.map((rb: any) => (
                         // eslint-disable-next-line react/jsx-key
@@ -664,6 +670,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={[]} nombre_archivo={""} filtros_pdf={[]}></ExportDocs>
+
                         <DataGrid
                             autoHeight
                             rows={props.resultado_busqueda}
