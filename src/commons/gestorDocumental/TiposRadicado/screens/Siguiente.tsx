@@ -111,7 +111,7 @@ export const Siguiente: React.FC = () => {
         }
       );
     }
-  }, [data_consecutivo]);
+  }, [data_consecutivo, tipos_radicado]);
 
   return (
     <>

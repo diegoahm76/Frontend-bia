@@ -14,6 +14,7 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
+  Input,
   MenuItem,
   TextField,
   Tooltip,
@@ -38,6 +39,7 @@ import {
 } from '../utils/choices';
 import { LoadingButton } from '@mui/lab';
 import { control_error } from '../../../../../helpers';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 dayjs.locale('es');
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -54,6 +56,7 @@ export const ArchivosSoporte: React.FC<IProps> = ({
     errors_archivo_soporte,
     control_archivo_soporte,
     reset_archivo_soporte,
+    register_archivo_soporte,
     // select
     tiene_consecutivo_documento,
     set_tiene_consecutivo_documento,
@@ -67,6 +70,11 @@ export const ArchivosSoporte: React.FC<IProps> = ({
     // onSubmit_archivo_soporte,
     onSubmit_archivo_soporte,
     is_saving,
+
+    // * file
+    file_name,
+    handle_file_select,
+    reset_file_state,
   } = useCierreExpedientes();
 
   const { tipos_tipoligia_selected, fetch_data_tipos_tipoligia_selected } =
@@ -78,6 +86,11 @@ export const ArchivosSoporte: React.FC<IProps> = ({
 
   // * useEffect
   useEffect(() => {
+    fetch_data_tipos_tipoligia_selected();
+  }, [open_dialog]);
+
+  useEffect(() => {
+    console.log('useEffect');
     fetch_data_tipos_tipoligia_selected();
   }, []);
 
@@ -91,6 +104,7 @@ export const ArchivosSoporte: React.FC<IProps> = ({
               e.preventDefault();
               e.stopPropagation();
               reset_archivo_soporte();
+              reset_file_state();
               setPalabrasClave(''); // Limpiar el estado de "palabrasClave"
               handle_close();
             } catch (error: any) {
@@ -585,6 +599,32 @@ export const ArchivosSoporte: React.FC<IProps> = ({
                   )}
                 />
               </Grid>
+              <Grid item xs={12} >
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    component="label"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    {file_name !== ''
+                      ? file_name
+                      : 'Seleccione archivo'}
+                    <Input
+                      hidden
+                      id="archivo-de-soporte-natural"
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      {...register_archivo_soporte('file', {
+                        required: 'Este campo es obligatorio',
+                      })}
+                      error={!!(errors_archivo_soporte.file)}
+                      onChange={handle_file_select}
+                    />
+                  </Button>
+                </Grid>
+
             </Grid>
           </DialogContent>
           <DialogActions>

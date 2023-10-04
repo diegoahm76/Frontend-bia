@@ -111,7 +111,7 @@ export const Actual: React.FC = () => {
         }
       );
     }
-  }, [data_consecutivo]);
+  }, [data_consecutivo, tipos_radicado]);
 
   return (
     <>

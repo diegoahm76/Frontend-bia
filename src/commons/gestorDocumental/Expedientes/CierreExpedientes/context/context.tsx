@@ -39,6 +39,7 @@ export const UserProvider = ({
 
   const fetch_data_tipos_tipoligia_selected = async (): Promise<void> => {
     try {
+      console.log('fetch_data_tipos_tipoligia_selected')
       const response = await get_tipos_tipologias();
       if (response?.length > 0) {
         const data_tipoligia: ValueProps[] = response.map(
@@ -47,6 +48,7 @@ export const UserProvider = ({
             label: item.nombre,
           })
         );
+        console.log('data_tipoligia', data_tipoligia);
         set_tipos_tipoligia_selected(data_tipoligia);
       } else {
         set_tipos_tipoligia_selected([]);
