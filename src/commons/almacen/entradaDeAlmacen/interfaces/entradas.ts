@@ -19,7 +19,10 @@ export interface IInfoItemEntrada {
   id_item_entrada_almacen: number | null;
   id_entrada_almacen: number | null;
   id_bien?: number | null;
+  doc_identificador_bien?: string | null;
+  cantidad_vida_util?: number | null;
   id_unidad_medida_vida_util: number | null;
+  cod_estado?: string | null;
   codigo_bien: string;
   nombre_bien: string;
   cantidad?: number;
