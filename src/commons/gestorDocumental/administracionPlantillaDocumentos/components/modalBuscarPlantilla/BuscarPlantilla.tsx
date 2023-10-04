@@ -60,7 +60,7 @@ const {form,set_form}=useContext(FormCreacionContext);
   // const buscar_todos = true;
   const fetch_data_busqueda_avanzada = async (): Promise<void> => {
     try {
-      const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada/`;
+      const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada_admin/`;
 
       // Construye dinámicamente la URL de consulta
       let queryURL = url;
@@ -85,6 +85,8 @@ const {form,set_form}=useContext(FormCreacionContext);
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
+      // console.log(numero_consulta);
+    
     } catch (error) {
       console.error(error);
     }
@@ -120,8 +122,6 @@ const {form,set_form}=useContext(FormCreacionContext);
 
   const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
     try {
-
-      console.log(idRegistro)
       // Define la URL del servidor junto con el ID del registro que deseas eliminar
       const url = `/gestor/plantillas/plantilla_documento/delete/${idRegistro}/`;
 
@@ -142,20 +142,12 @@ const {form,set_form}=useContext(FormCreacionContext);
     
     const handleDelClick = async (data:any): Promise<void> => {
       try { 
-        console.log(data)
-
         const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
         const res: any = await api.get(url);
         let numero_consulta: any = res.data.data;
-        // set_data_choise(numero_consulta);
-        // set_form(numero_consulta)
-         console.log(numero_consulta); 
-
-
-
-
          set_form({
           ...form,
+          id_actualizar: numero_consulta.id_plantilla_doc,
           nombre: numero_consulta.nombre,
            descripcion:numero_consulta.descripcion,
          id_formato_tipo_medio: numero_consulta.id_formato_tipo_medio,
@@ -164,11 +156,12 @@ const {form,set_form}=useContext(FormCreacionContext);
           codigo_formato_calidad_asociado:numero_consulta.codigo_formato_calidad_asociado,
         version_formato_calidad_asociado: numero_consulta.version_formato_calidad_asociado,
            otras_tipologias:numero_consulta.otras_tipologias,
-        
+           acceso_unidades: numero_consulta.acceso_unidades.map((id:any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),
+
           acceso_unidades_dos:numero_consulta.acceso_unidades,
          observacion:numero_consulta.observacion,
           activa:numero_consulta.activa,
-         
+         archivo:null,
          });
 
 
@@ -178,35 +171,6 @@ const {form,set_form}=useContext(FormCreacionContext);
       } catch (error:any) {
         control_error(error.detail);
       }
-    
-
-
-
-
-
-
-
-
-
-
-
-    // set_form({
-    //    ...form,
-    //    nombre: data.nombre,
-    //    descripcion:data.descripcion,
-    //    id_formato_tipo_medio: data.id_formato_tipo_medio,
-    //    asociada_a_tipologia_doc_trd: data.asociada_a_tipologia_doc_trd,
-    //    cod_tipo_acceso: data.cod_tipo_acceso,
-    //    codigo_formato_calidad_asociado:data.codigo_formato_calidad_asociado,
-    //   version_formato_calidad_asociado: data.version_formato_calidad_asociado,
-    //   //  archivo: null,
-    //     otras_tipologias:data.otras_tipologias,
-    //   // acceso_unidades:data.archivos_digitales,
-    //    observacion:data.observacion,
-    //    activa:data.activa,
-      
-    //   });
-  
   };
 
   const columns: GridColDef[] = [

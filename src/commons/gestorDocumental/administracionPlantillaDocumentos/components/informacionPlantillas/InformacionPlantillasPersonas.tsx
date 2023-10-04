@@ -5,27 +5,9 @@ import { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Title } from '../../../../../components/Title';
 import { api } from '../../../../../api/axios';
+import { InfoPorId } from '../../interfaces/interfacesAdministradorPlantillas';
 
-interface InfoPorId {
-  id_plantilla_doc: number;
-  nombre_creador: string | null;
-  nombre_completo: string;
-  cod_tipo_acceso_display: string;
-  nombre: string;
-  descripcion: string;
-  asociada_a_tipologia_doc_trd: boolean;
-  otras_tipologias: string | null;
-  codigo_formato_calidad_asociado: string;
-  version_formato_calidad_asociado: string;
-  cod_tipo_acceso: string;
-  observacion: string;
-  activa: boolean;
-  fecha_creacion: string;
-  id_archivo_digital: number;
-  id_formato_tipo_medio: number;
-  id_tipologia_doc_trd: number;
-  id_persona_crea_plantilla: number;
-}
+
 interface InformacionPlantillasPersonasProps {
   data: any; // Aquí debes especificar el tipo correcto de "data" si es posible
 }

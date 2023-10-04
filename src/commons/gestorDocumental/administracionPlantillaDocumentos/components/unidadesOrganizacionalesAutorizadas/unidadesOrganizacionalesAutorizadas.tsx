@@ -7,25 +7,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { UnidadOrganizacional } from '../../interfaces/interfacesAdministradorPlantillas';
 
-
-
-interface UnidadOrganizacional {
-  id_unidad_organizacional: number;
-  nombre_unidad_org_actual_admin_series: string;
-  codigo_unidad_org_actual_admin_series: string;
-  nombre: string;
-  codigo: string;
-  cod_tipo_unidad: string;
-  cod_agrupacion_documental: string;
-  unidad_raiz: boolean;
-  item_usado: boolean;
-  activo: boolean;
-  id_organigrama: number;
-  id_nivel_organigrama: number;
-  id_unidad_org_padre: number | null;
-  id_unidad_org_actual_admin_series: number;
-}
 
 
 export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
@@ -38,29 +22,37 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
   const [variable_concatenada, set_variable_concatenada] = useState<any[]>([]);
 
 
+
   const handleAcumularDatos = () => {
     if (PQR_seleccionado.length > 0) {
       // Obtiene el elemento seleccionado
       const selectedItem = PQR_seleccionado[0];
-      
-      // Agrega el elemento seleccionado a la alerta
-      set_alerta([...alerta, selectedItem]);
-    
-      // Crea un nuevo objeto con la propiedad id_unidad_organizacional
-      const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
-
-      // Agrega el nuevo objeto a la alerta
-      set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
-
-      set_form({
-        ...form,
-        acceso_unidades: [...variable_concatenada,  unidadOrganizacional],
-        acceso_unidades_dos: [...alerta,  selectedItem]
-      });
   
+      // Verifica si el elemento seleccionado ya está presente en variable_concatenada
+      const alreadyExists = variable_concatenada.some(item => item.id_unidad_organizacional === selectedItem.id_unidad_organizacional);
+  
+      if (!alreadyExists) {
+        // Agrega el elemento seleccionado a la alerta
+        set_alerta([...alerta, selectedItem]);
+  
+        // Crea un nuevo objeto con la propiedad id_unidad_organizacional
+        const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
+  
+        // Agrega el nuevo objeto a variable_concatenada
+        set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
+  
+        set_form({
+          ...form,
+          acceso_unidades: [...variable_concatenada, unidadOrganizacional],
+          acceso_unidades_dos: [...form.acceso_unidades_dos, selectedItem]
+        });
+      } else {
+        // El elemento ya existe en variable_concatenada, puedes mostrar un mensaje o realizar otra acción
+        control_warning('El elemento ya existe en variable_concatenada.');
+      }
     }
   };
-
+  
 
   const handleEliminarDato = (id: number) => {
     const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
@@ -97,7 +89,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
   const columns = [
     {
-      field: 'nombre_unidad',
+      field: 'nombre',
       headerName: 'ID Unidad Organizacional',
       width: 200,
       flex: 1,
@@ -131,9 +123,6 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
       console.error(error);
     });
   }, []);
-
-
-
 
 
   return (

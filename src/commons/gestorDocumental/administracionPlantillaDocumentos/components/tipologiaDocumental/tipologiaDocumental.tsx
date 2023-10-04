@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FormControl, Grid, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
@@ -16,12 +16,10 @@ export const TipologiaDocumental: React.FC = () => {
 
     })
   }
-  //otras_tipologias
 
   const [tipologia_documental, set_tipologia_documental] = useState<any>(null);
+  const [tipologia_documental_otro, set_tipologia_documental_otro] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<boolean>(false);
-  const [tercero_seleccionado, set_tercero_seleccionado] = useState<string>('');
-
 
 
 
@@ -36,11 +34,29 @@ export const TipologiaDocumental: React.FC = () => {
     }
   };
 
+  const fetch_data_desplegable_no = async (): Promise<void> => {
+    try {
+      const url = `/gestor/plantillas/otras_tipologias/get/`;
+      const res: any = await api.get(url);
+      const numero_consulta: any = res.data.data;
+      set_tipologia_documental_otro(numero_consulta);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   useEffect(() => {
     fetch_data_get().catch((error) => {
       console.error(error);
     });
   }, []);
+  useEffect(() => {
+    fetch_data_desplegable_no().catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
 
   return (
     <>
@@ -124,17 +140,19 @@ export const TipologiaDocumental: React.FC = () => {
               />            </Grid>
             <Grid item xs={5}>
               <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label" style={{marginTop:5}} >Sugerecias Creadas Anteriormente</InputLabel>
+
                 <Select
                   labelId="demo-simple-select-label-3"
                   id="demo-simple-select-3"
-                  value={tercero_seleccionado}
-                  onChange={(event): any => {
-                    set_tercero_seleccionado(event.target.value);
-                  }}
+                  name="otras_tipologias"
+                  label="Sugerecias Creadas Anteriormente"
+                  value={form.otras_tipologias}
+                  onChange={HandleCompletarDatos}
                 >
-                  {tipologia_documental?.map((item: any, index: number) => (
-                    <MenuItem key={index} value={item.nombre}>
-                      {item.nombre}
+                  {tipologia_documental_otro?.map((item: any, index: number) => (
+                    <MenuItem key={index} value={item.otras_tipologias}>
+                      {item.otras_tipologias}
                     </MenuItem>
                   ))}
                 </Select>

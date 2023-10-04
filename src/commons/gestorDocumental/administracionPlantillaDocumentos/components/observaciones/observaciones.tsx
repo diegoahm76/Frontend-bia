@@ -11,7 +11,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../../components/Title';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { api } from '../../../../../api/axios';
 import { MostrarModalBuscarPlantilla } from '../modalBuscarPlantilla/BuscarPlantilla';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +47,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       // Agregar los campos del formulario al objeto FormData
       formData.append('nombre', form.nombre);
       formData.append('descripcion', form.descripcion);
-      formData.append('id_formato_tipo_medio', form.id_formato_tipo_medio);
+      // formData.append('id_formato_tipo_medio', form.id_formato_tipo_medio);
       formData.append('asociada_a_tipologia_doc_trd', form.asociada_a_tipologia_doc_trd.toString());
       formData.append('cod_tipo_acceso', form.cod_tipo_acceso);
       formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
@@ -76,6 +76,52 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       control_error(error.response.data.detail);
     }
   };
+
+  const fetch_Actualizar_archivo_digital = async () => {
+    try {
+      const url = `/gestor/plantillas/plantilla_documento/update/${form.id_actualizar}/`;
+
+      // Crear un objeto FormData
+      const formData = new FormData();
+
+      // Agregar los campos del formulario al objeto FormData
+      formData.append('nombre', form.nombre);
+      formData.append('descripcion', form.descripcion);
+      formData.append('id_formato_tipo_medio', form.id_formato_tipo_medio);
+      formData.append('asociada_a_tipologia_doc_trd', form.asociada_a_tipologia_doc_trd.toString());
+      formData.append('cod_tipo_acceso', form.cod_tipo_acceso);
+      formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
+      formData.append('version_formato_calidad_asociado', form.version_formato_calidad_asociado.toString());
+      formData.append('otras_tipologias', form.otras_tipologias.toString());
+      formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades_dos.map((id: any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),));
+      formData.append('observacion', form.observacion.toString());
+      formData.append('activa', form.activa.toString());
+
+      if (form.archivo) {
+        formData.append('archivo', form.archivo);
+      }
+
+      const res = await api.put(url, formData, {
+        // Configura las cabeceras adecuadamente si es necesario
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.data) {
+        // La solicitud fue exitosa
+        control_success("se actualizo correctamente");
+      } else {
+        // La solicitud falló
+        console.error('Error en la solicitud:', res.statusText);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
+
+
 
   const limpiar = () => {
     set_form(valores_defecto);
@@ -145,15 +191,14 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button
               startIcon={<SaveIcon />}
-              color='success' // Cambia el color según si es una actualización o creación
+              color={form.id_actualizar ? 'success' : 'success'} // Cambia el color según si es una actualización o creación
               fullWidth
               variant="contained"
-              onClick={fetch_Crear_archivo_digital}
+              onClick={form.id_actualizar ? fetch_Actualizar_archivo_digital : fetch_Crear_archivo_digital}
             >
-              Guardar
+              {form.id_actualizar ? 'Actualizar' : 'Guardar'}
             </Button>
           </Grid>
-
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button color='primary' variant="outlined" onClick={limpiar} fullWidth startIcon={<CleanIcon />}>
               Limpiar

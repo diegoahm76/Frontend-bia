@@ -25,6 +25,7 @@ import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
+import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 
@@ -97,6 +98,11 @@ const routes = [
     path: 'configuracionnnnnn/',
     name: 'configuracionnnnnn',
     component: () => <ConfiguracionMediosSolicitud_routes />,
+  },
+  {
+    path: 'configuracionTiposExpedientes/',
+    name: 'configuracionTiposExpedientes',
+    component: () => <ConfiguracionTiposExpedientes_Routes />,
   },
   {
     path: 'encuesta_configuracion/',
