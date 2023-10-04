@@ -147,38 +147,6 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                     </Grid>
                 </Grid>
             </Box>
-            {/* {((props.seleccion_tipo_consulta === 'TIC' || props.seleccion_tipo_consulta === 'BSV') && props.agrupar_bodega) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-                <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios}></ExportDocs>
-                <Grid item container spacing={2}>
-                    {props.resultado_busqueda.map((rb: any) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <Grid item xs={12} sm={12}>
-                            <Typography variant="h6" gutterBottom> {rb.nombre_bodega}</Typography>
-                            <DataGrid
-                                autoHeight
-                                rows={rb.inventario}
-                                columns={columnas_mp}
-                                getRowId={(row) => uuidv4()}
-                                pageSize={5}
-                                rowsPerPageOptions={[5]} />
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>}
-            {((props.seleccion_tipo_consulta === 'TIC' || props.seleccion_tipo_consulta === 'BSV') && !props.agrupar_bodega) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-                <Grid item container spacing={2}>
-                    <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda}></ExportDocs>
-                        <DataGrid
-                            autoHeight
-                            rows={props.resultado_busqueda}
-                            columns={columnas_mp}
-                            getRowId={(row) => uuidv4()}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]} />
-                    </Grid>
-                </Grid>
-            </Box>} */}
         </>
     );
 }
