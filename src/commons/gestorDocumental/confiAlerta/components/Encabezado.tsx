@@ -6,11 +6,11 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Button, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
-import { control_info } from "../../ccd/componentes/crearSeriesCcdDialog/utils/success_errors";
+import { Button, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, RadioGroup } from "@mui/material";
 import { Pregunta, initialFormData, miEstilo } from "../interfaces/types";
 import { control_error, control_success } from "../../../../helpers";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -23,11 +23,14 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import ClearIcon from '@mui/icons-material/Clear';
 import { TablaEncuesta } from "./TablaEncuesta";
 import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from "react-router-dom";
 import { Title } from "../../../../components";
-import Checkbox from '@mui/material/Checkbox';
 import { api } from "../../../../api/axios";
+import Radio from '@mui/material/Radio';
 import { Buscar } from "./Buscar";
+import { control_warning } from "../../../almacen/configuracion/store/thunks/BodegaThunks";
+
 
 export const Encabezado: React.FC = () => {
 
@@ -43,6 +46,7 @@ export const Encabezado: React.FC = () => {
   const [isVerModalAbierto, setIsVerModalAbierto] = useState<boolean>(false);
   const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null);
   const [opcionesActuales, setOpcionesActuales] = useState<Array<{ opcion_rta: string }>>([]);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
 
   const handleDeleteOption = (opcionToDelete: string) => {
@@ -79,6 +83,19 @@ export const Encabezado: React.FC = () => {
           >
             <DeleteIcon />
           </IconButton>
+          <IconButton
+            color="primary"
+            aria-label="Editar"
+            disabled={itemYaUsado}
+            onClick={() => {
+              setSelectedOption(params.row.opciones);
+              setTempOption(params.row.opciones);
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+
+
         </>
       )
     }
@@ -138,6 +155,7 @@ export const Encabezado: React.FC = () => {
       return newFormData;
     }); setGridRows((prevRows) => [
       ...prevRows,
+      
       { opciones: tempOption, acciones: <IconButton><DeleteIcon /></IconButton> }
     ]);
     setTempOption("");
@@ -151,6 +169,22 @@ export const Encabezado: React.FC = () => {
   const cerrarVerModal = (): void => {
     setIsVerModalAbierto(false);
   };
+
+
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const startEditQuestion = (id: string) => {
+    const questionToEdit = tempQuestions.find(q => q.redaccion_pregunta === id);
+    if (questionToEdit) {
+      setFormData({
+        ...formData,
+        preguntas: [questionToEdit]
+      });
+      setGridRows(questionToEdit.opciones_rta.map((opt: { opcion_rta: any; }) => ({ opciones: opt.opcion_rta })));
+      handleDeleteQuestion(id); // Elimina la pregunta original de la lista temporal
+      setEditMode(true); // Cambia al modo de edición
+    }
+  };
+
   const questionColumns: GridColDef[] = [
     {
       field: 'pregunta',
@@ -164,18 +198,22 @@ export const Encabezado: React.FC = () => {
       width: 200,
       flex: 1,
       renderCell: (params: any) => (
-        <IconButton
-          color="primary"
-          aria-label="Ver"
+        <>
+          <IconButton
+            color="primary"
+            aria-label="Ver"
+            onClick={() => {
+              const pregunta = params.row.id;
+              const opciones = tempQuestions.find(q => q.redaccion_pregunta === pregunta)?.opciones_rta || [];
+              abrirVerModal(opciones);
+            }}
+          >
+            <VisibilityIcon />
+          </IconButton>
 
-          onClick={() => {
-            const pregunta = params.row.id;
-            const opciones = tempQuestions.find(q => q.redaccion_pregunta === pregunta)?.opciones_rta || [];
-            abrirVerModal(opciones);
-          }}
-        >
-          <VisibilityIcon />
-        </IconButton>
+
+        </>
+
       )
     },
     {
@@ -193,6 +231,15 @@ export const Encabezado: React.FC = () => {
           >
             <DeleteIcon />
           </IconButton>
+          <IconButton
+            color="primary"
+            aria-label="Editar"
+            disabled={itemYaUsado}
+            onClick={() => startEditQuestion(params.row.id)}
+          >
+            <EditIcon />
+          </IconButton>
+
         </>
       )
     }
@@ -204,7 +251,15 @@ export const Encabezado: React.FC = () => {
     setQuestionGridRows(updatedRows);
   };
   const addNewQuestion = () => {
+
     const newQuestion = formData.preguntas[0]
+    if (editMode) {
+      setTempQuestions([...tempQuestions, newQuestion]); // Actualiza la lista temporal de preguntas
+      setEditMode(false); // Sal del modo de edición
+    } else {
+      setTempQuestions([...tempQuestions, newQuestion]);
+      setQuestionGridRows([...questionGridRows, { id: newQuestion.redaccion_pregunta, pregunta: newQuestion.redaccion_pregunta }]);
+    }
     if (!newQuestion.redaccion_pregunta.trim()) {
       control_error('El campo de texto de la pregunta no puede estar vacío.');
       return;
@@ -280,7 +335,7 @@ export const Encabezado: React.FC = () => {
       control_error('Debe agregar al menos una pregunta.');
       return;
     }
-    
+
     setLoading(true);
     try {
       if (selectedEncuestaId) { // Si hay un selectedEncuestaId, actualizamos
@@ -288,13 +343,16 @@ export const Encabezado: React.FC = () => {
           ...formData,
           preguntas: tempQuestions
         });
+
+        
+
         console.log('Encuesta actualizada exitosamente:', response.data);
         control_success("Encuesta actualizada con éxito");
         setItemYaUsado(false);
         handleClear();
         setSelectedEncuestaId(null);
       }
-       else  { // De lo contrario, creamos una nueva
+      else { // De lo contrario, creamos una nueva
         const response = await api.post('/gestor/encuestas/encabezado_encuesta/create/', {
           ...formData,
           preguntas: tempQuestions
@@ -308,7 +366,7 @@ export const Encabezado: React.FC = () => {
       setTempQuestions([]);
       setLoading(false);
     } catch (error) {
-      console.error( error);
+      console.error(error);
       control_error(error);
       setLoading(false);
     }
@@ -318,15 +376,23 @@ export const Encabezado: React.FC = () => {
     setTempQuestions([]);
     setGridRows([]);
     setQuestionGridRows([]);
+    setSelectedOption(null);
+    setItemYaUsado(false);
     // setSelectedEncuestaId(null);
     setTempOption("");
-    setItemYaUsado(false)
+    setEditMode(false);
     setFormData({
       ...formData,
+      // nombre_encuesta: "",
+      descripcion: "",
+      activo: "",
       preguntas: [
-        { redaccion_pregunta: "",
-          opciones_rta: [] }
-      ] });
+        {
+          redaccion_pregunta: "",
+          opciones_rta: []
+        }
+      ]
+    });
     setFormData((prevData) => ({
       ...prevData,
       preguntas: prevData.preguntas.map((pregunta) => ({
@@ -337,7 +403,7 @@ export const Encabezado: React.FC = () => {
   };
   useEffect(() => {
     if (itemYaUsado) {
-      control_info('El ítem ha sido usado, no se podra actualizar ni eliminar ');
+      control_warning('El ítem ha sido usado, no se podra actualizar ni eliminar ');
     }
   }, [itemYaUsado]);
   const deleteEncuesta = async () => {
@@ -361,6 +427,31 @@ export const Encabezado: React.FC = () => {
     }
   };
   const [showContent, setShowContent] = useState(false);
+
+  const handleUpdateOption = (oldOption: string, newOption: string) => {
+    setGridRows(prevRows => {
+      return prevRows.map(row => row.opciones === oldOption ? { ...row, opciones: newOption } : row);
+    });
+    setFormData(prevData => {
+      const newFormData = { ...prevData };
+      newFormData.preguntas.forEach((pregunta: { opciones_rta: { opcion_rta: string, id_opcion_rta?: number }[] }) => {
+        pregunta.opciones_rta = pregunta.opciones_rta.map(
+          opcion => opcion.opcion_rta === oldOption ? { ...opcion, opcion_rta: newOption } : opcion  // Mantener el id_opcion_rta
+        );
+      });
+      return newFormData;
+    });
+    setSelectedOption(null);
+    setTempOption("");
+  };
+  
+
+  const [valorSeleccionado, setValorSeleccionado] = useState('');
+
+  const handleSeleccion = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    setValorSeleccionado(event.target.value);
+  };
+
   return (
     <>
       <>
@@ -376,8 +467,8 @@ export const Encabezado: React.FC = () => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  disabled={itemYaUsado}
-                  required  fullWidth
+                  disabled={itemYaUsado || selectedEncuestaId !== null}
+                  required fullWidth
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -392,7 +483,7 @@ export const Encabezado: React.FC = () => {
                   <InputLabel shrink>Activo</InputLabel>
                   <Select
                     labelId="activo-label"
-                    required  name="activo"
+                    required name="activo"
                     disabled={itemYaUsado}
                     value={formData.activo.toString()} // Convierte el valor booleano a cadena
                     onChange={handleInputChange}
@@ -419,10 +510,12 @@ export const Encabezado: React.FC = () => {
                 />
               </Grid>
             </Grid>
+
             <Grid container
               spacing={2} m={2} p={2}
               sx={miEstilo}
             >
+
               <Title title="Detalle - Pregunta" />
               <Grid item xs={12} >
                 {formData.preguntas.map((pregunta, index) => (
@@ -447,13 +540,14 @@ export const Encabezado: React.FC = () => {
                         })} /> </div>
                 ))}
               </Grid>
+
               <Grid item spacing={2} container>
                 <Grid item xs={12} sm={3}>
                   {formData.preguntas.map((pregunta, index) => (
                     <div key={index}>
                       <TextField
                         variant="outlined"
-                        size="small"fullWidth
+                        size="small" fullWidth
                         disabled={itemYaUsado}
                         InputLabelProps={{
                           shrink: true,
@@ -478,20 +572,29 @@ export const Encabezado: React.FC = () => {
                 <Grid item xs={12} sm={1.2}>
                   {formData.preguntas.map((pregunta, index) => (
                     <div key={index}>
+
                       <Button
-                        onClick={() => addNewOption(index, tempOption)}
+                        onClick={() => {
+                          if (selectedOption) {
+                            // Código para actualizar el ítem
+                            handleUpdateOption(selectedOption, tempOption);
+                          } else {
+                            addNewOption(index, tempOption);
+                          }
+                        }}
                         startIcon={<SaveIcon />}
                         color='success'
                         disabled={itemYaUsado}
                         variant="contained"
                       >
-                        Adicionar
+                        {selectedOption ? "Actualizar" : "Adicionar"}
                       </Button>
+
                     </div>
                   ))}
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={2.4}>
                 <Button
                   onClick={addNewQuestion}
                   startIcon={<SaveIcon />}
@@ -499,8 +602,9 @@ export const Encabezado: React.FC = () => {
                   disabled={itemYaUsado}
                   variant="contained"
                 >
-                  Crear Pregunta
+                  {editMode ? 'Actualizar Pregunta' : 'Crear Pregunta'}
                 </Button>
+
               </Grid>
               {/* <h1> {selectedEncuestaId}</h1> */}
               <Grid item xs={12}>
@@ -534,11 +638,18 @@ export const Encabezado: React.FC = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {opcionesActuales.map((opcion, index) => (
-                          <TableRow key={index}>
-                            <TableCell><Checkbox /> {opcion.opcion_rta}</TableCell>
-                          </TableRow>
-                        ))}
+                        <RadioGroup
+                          aria-label="Opciones de respuesta"
+                          name="opciones-respuesta"
+                          value={valorSeleccionado}
+                          onChange={handleSeleccion}
+                        >
+                          {opcionesActuales.map((opcion, index) => (
+                            <TableRow key={index}>
+                              <TableCell> <FormControlLabel value={opcion.opcion_rta} control={<Radio />} label={opcion.opcion_rta} /> </TableCell>
+                            </TableRow>
+                          ))}
+                        </RadioGroup>
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -594,7 +705,20 @@ export const Encabezado: React.FC = () => {
                 </Button>
               </Grid>
               <Grid item xs={12} sm={1.4}>
-                <Button variant="contained" color='error' onClick={() => { setShowContent(false); handleClear();  setSelectedEncuestaId(null);}} startIcon={<ReplyIcon />}>
+                <Button variant="contained" color='error' onClick={() => {
+                  setShowContent(false); handleClear(); setSelectedEncuestaId(null); setFormData({
+                    ...formData,
+                    nombre_encuesta: "",
+                    descripcion: "",
+                    activo: "",
+                    preguntas: [
+                      {
+                        redaccion_pregunta: "",
+                        opciones_rta: []
+                      }
+                    ]
+                  });
+                }} startIcon={<ReplyIcon />}>
                   Regresar
                 </Button>
               </Grid>
