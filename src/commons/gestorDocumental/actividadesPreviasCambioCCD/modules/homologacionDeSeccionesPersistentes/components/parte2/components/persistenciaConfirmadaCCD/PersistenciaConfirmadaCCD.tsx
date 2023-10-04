@@ -41,15 +41,14 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     idUnidadActual: number
   ) => {
     return unidadesPersistentes.filter(
-      //* revisar si es !== o ===
       (item: any) => item?.id_unidad_actual !== idUnidadActual
     );
   };
 
   // ? handleEliminicacionValidacionPersistencia
   const handleEliminicacionValidacionPersistencia = (
+    params: GridValueGetterParams,
     unidadesPersistentes: any[],
-    params: any,
     nuevaHomologacionUnidades: any[],
     agrupacionesPersistentesSerieSubserie: any[] = [
       {
@@ -113,10 +112,10 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
 
     //* aquó se realiza la validación de la eliminación de la persistencia y se actualiza el estado de las persistencias en consecuencia
     handleEliminicacionValidacionPersistencia(
-      unidadesPersistentes,
       params,
+      unidadesPersistentes,
       nuevaHomologacionUnidades,
-      agrupacionesPersistentesSerieSubserie,
+      agrupacionesPersistentesSerieSubserie
     );
   };
 
