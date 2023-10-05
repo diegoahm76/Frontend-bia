@@ -1,19 +1,57 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { columnsAgrupDocCoinCCD } from './columnsAgrupDocCoinCCD/columnsAgrupDocCoinCCD';
 import { Avatar, IconButton, Tooltip, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import {
+  setAgrupacionesPersistentesSerieSubserie,
+  setHomologacionAgrupacionesSerieSubserie,
+} from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import { control_success } from '../../../../../../../../../helpers';
 
 export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* redux declaration
-  const { homologacionAgrupacionesSerieSubserie } = useAppSelector(
-    (state) => state.HomologacionesSlice
-  );
+  const {
+    homologacionAgrupacionesSerieSubserie,
+    agrupacionesPersistentesSerieSubserie,
+  } = useAppSelector((state) => state.HomologacionesSlice);
+
+  // ? ----- ESPACIO PARA FUNCIONES OPEN ------
+  const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
+    console.log(params?.row);
+    const nuevasAgrupacionesPersistentes = [
+      ...agrupacionesPersistentesSerieSubserie,
+      {
+        ...params?.row,
+        persistenciaConfirmada: true,
+      },
+    ];
+    const nuevaHomologacionAgrupaciones =
+      homologacionAgrupacionesSerieSubserie?.filter(
+        (item: any) =>
+          item?.id_catalogo_serie_actual !==
+          params?.row?.id_catalogo_serie_actual
+      );
+
+    dispatch(
+      setAgrupacionesPersistentesSerieSubserie(nuevasAgrupacionesPersistentes)
+    );
+    dispatch(
+      setHomologacionAgrupacionesSerieSubserie(nuevaHomologacionAgrupaciones)
+    );
+    control_success('Persistencia confirmada');
+  };
+  // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
 
   //* declaración de columnas del data grid
   const columns = [
@@ -34,10 +72,8 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
             <IconButton
               aria-label="edit"
               size="large"
-              // title="Añadir tipología a TRD"
               onClick={() => {
-                console.log(params?.row)
-                // handleConfirmarPersistencia(params);
+                handleConfirmarPersistencia(params);
               }}
             >
               <Avatar

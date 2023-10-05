@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { control_success } from '../../../../../../../../../helpers';
 import {
+  setAgrupacionesPersistentesSerieSubserie,
   setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
@@ -111,8 +112,8 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     handleEliminicacionValidacionPersistencia(
       params,
       unidadesPersistentes,
-      nuevaHomologacionUnidades
-      // agrupacionesPersistentesSerieSubserie
+      nuevaHomologacionUnidades,
+      agrupacionesPersistentesSerieSubserie
     );
   };
 
@@ -160,6 +161,11 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
               aria-label="select"
               size="large"
               onClick={() => {
+                //* se limpian tambien los estados consecuentes luego de la elección de las agrupaciones coincidentes o persistentes
+
+                //? revisar la necesidad de estos dos estados ya que se debe mantener en memoria esos elememtos para poder hacer la comparación de los elementos que se van a homologar
+                dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+                dispatch(setAgrupacionesPersistentesSerieSubserie([]));
                 const {
                   //* datos para traer las agrupaciones coincidentes del ccd
                   id_ccd_actual,

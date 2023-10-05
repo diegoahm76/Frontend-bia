@@ -27,22 +27,22 @@ export const columnsAgrupDocCoinCCD = [
   {
     field: 'cod_serie_actual',
     headerName: 'Cód. serie doc. (ACTUAL)',
-    width: 220,
+    width: 190,
   },
   {
     field: 'nombre_serie_actual',
     headerName: 'Nombre serie doc. (ACTUAL)',
-    width: 220,
+    width: 200,
   },
   {
     field: 'cod_serie_nueva',
     headerName: 'Cód. serie doc. (NUEVA)',
-    width: 190,
+    width: 180,
   },
   {
     field: 'nombre_serie_nueva',
     headerName: 'Nombre serie doc. (NUEVA)',
-    width: 205,
+    width: 200,
   },
   /* {
     field: 'iguales',

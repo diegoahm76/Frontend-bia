@@ -8,11 +8,17 @@ import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
-import { getOutModule, reset_all } from '../../../../../../../../utils/functions/getOutOfModule';
+import {
+  getOutModule,
+  reset_all,
+} from '../../../../../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
+import { reset_states } from '../../../toolkit/slice/HomologacionesSeriesSlice';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
   //* navigate declaration
   const navigate = useNavigate();
@@ -20,19 +26,42 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-const {
-    ccdOrganigramaCurrentBusqueda
-  } = useAppSelector((state) => state.HomologacionesSlice);
+  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
+    (state) => state.HomologacionesSlice
+  );
 
   const handleSubmit = () => {
     setLoadingButton(true);
     console.log('hello from submit');
-    setLoadingButton(false);
 
+    //* analizar los datos a enviar
+
+   /* {
+      "id_ccd_nuevo": 176,
+      "unidades_persistentes":[
+          {
+          "id_unidad_actual": 5381,
+          "id_unidad_nueva": 5385
+          }
+          ,
+          {
+          "id_unidad_actual": 5383,
+          "id_unidad_nueva": 5387
+          }
+      ],
+      "catalagos_persistentes":[
+          {
+              "id_catalogo_serie_actual": 1085,
+              "id_catalogo_serie_nueva": 1094
+          }
+      ]
+  } */
+
+
+    setLoadingButton(false);
   };
 
-
-  if(!ccdOrganigramaCurrentBusqueda) return null;
+  if (!ccdOrganigramaCurrentBusqueda) return null;
 
   return (
     <>
@@ -47,13 +76,13 @@ const {
             style={{
               textAlign: 'center',
               justifyContent: 'center',
-              marginTop: '20px'
+              marginTop: '20px',
             }}
           >
             <Grid
               container
               sx={{
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
               spacing={2}
             >
@@ -63,7 +92,7 @@ const {
                 sm={12}
                 sx={{
                   // zIndex: 2,
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}
               >
                 <Stack
@@ -76,10 +105,8 @@ const {
                     color="primary"
                     variant="outlined"
                     startIcon={<CleanIcon />}
-                    onClick={()=>{
-                      reset_all(
-                        [() => {}]
-                      )
+                    onClick={() => {
+                      reset_all([() => dispatch(reset_states())]);
                     }}
                   >
                     LIMPIAR CAMPOS
@@ -95,19 +122,16 @@ const {
                     GUARDAR
                   </LoadingButton>
 
-                    <Button
-                      color="error"
-                      variant="contained"
-                      startIcon={<CloseIcon />}
-                      onClick={() => {
-                        getOutModule(
-                          navigate,
-                          [() => {},]
-                        );
-                      }}
-                    >
-                      SALIR DEL MÓDULO
-                    </Button>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    startIcon={<CloseIcon />}
+                    onClick={() => {
+                      getOutModule(navigate, [() => dispatch(reset_states())]);
+                    }}
+                  >
+                    SALIR DEL MÓDULO
+                  </Button>
                 </Stack>
               </Grid>
             </Grid>

@@ -30,3 +30,8 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
     throw error;
   }
 };
+
+// ? get persistencias confirmadas si ya se ha hecho la llamada el previo guardado en base de datos, por el contrario, debe manejarse toda la lógica desde la vista del cliente
+
+
+// ! el servicio aúun no está listo para ser usado
