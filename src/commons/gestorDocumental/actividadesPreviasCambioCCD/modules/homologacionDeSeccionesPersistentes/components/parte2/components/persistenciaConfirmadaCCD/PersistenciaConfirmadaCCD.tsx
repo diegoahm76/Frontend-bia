@@ -21,7 +21,10 @@ import { control_warning } from '../../../../../../../../almacen/configuracion/s
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Grid } from 'blockly';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
-import { fnGetAgrupacionesCoincidetesCcd } from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
+import {
+  fnGetAgrupacionesCoincidetesCcd,
+  fnGetPersistenciasConfirmadas,
+} from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
 import Swal from 'sweetalert2';
 
 export const PersistenciaConfirmadaCCD = (): JSX.Element => {
@@ -180,6 +183,17 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   nom_unidad_nueva,
                   // ? datos que necesito para llenar el espacio de la unidad actual y nuevo que estoy usando
                 } = params?.row;
+
+                //* la idea es asignar el array de las coincidencias en series documentales en base al elemento seleccionado y al mismo tiempo seleccionar ese elemento como la persistencia actual
+                dispatch(
+                  setCurrentPersistenciaSeccionSubseccion({
+                    cod_unidad_actual,
+                    nom_unidad_actual,
+                    cod_unidad_nueva,
+                    nom_unidad_nueva,
+                  })
+                );
+
                 // ! crear estado para almacenar la row actual seleccionada y de esa manera mostrar los datos correspondientes que necesito
 
                 void fnGetAgrupacionesCoincidetesCcd({
@@ -196,17 +210,20 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       resCoincidenciasAgrupacionesDocumentales
                     )
                   );
+                  //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho
 
-                  console.log(params?.row);
-                  //* la idea es asignar el array de las coincidencias en series documentales en base al elemento seleccionado y al mismo tiempo seleccionar ese elemento como la persistencia actual
-                  dispatch(
-                    setCurrentPersistenciaSeccionSubseccion({
-                      cod_unidad_actual,
-                      nom_unidad_actual,
-                      cod_unidad_nueva,
-                      nom_unidad_nueva,
-                    })
-                  );
+                  // ! LLAMAR A LA PETICIÓN DE LAS AGRUPACIONES PERSISTENTES
+                  void fnGetPersistenciasConfirmadas({
+                    id_ccd_nuevo,
+                    id_unidad_actual,
+                    id_unidad_nueva,
+                  }).then((resAgrupacionesPersistentes: any) => {
+                    console.log(resAgrupacionesPersistentes);
+
+                    //* asignar esas persistencias al estado si ya existen
+                  });
+
+                  // console.log(params?.row);
                 });
               }}
             >
