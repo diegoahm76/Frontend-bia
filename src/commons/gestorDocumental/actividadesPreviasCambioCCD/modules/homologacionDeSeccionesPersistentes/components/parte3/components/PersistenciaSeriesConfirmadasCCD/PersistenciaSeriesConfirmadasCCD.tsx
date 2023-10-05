@@ -10,7 +10,6 @@ export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
   );
 
   if (agrupacionesPersistentesSerieSubserie?.length === 0) return null;
-
   return (
     <>
       <RenderDataGrid
