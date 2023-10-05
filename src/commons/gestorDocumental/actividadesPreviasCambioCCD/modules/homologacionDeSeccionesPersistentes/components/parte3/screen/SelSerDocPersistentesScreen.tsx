@@ -9,12 +9,17 @@ import { SecSubSeleccionada } from '../components/SecSubSeleccionada/SecSubSelec
 import { useAppSelector } from '../../../../../../../../hooks';
 
 export const SelSerDocPersistentesScreen = (): JSX.Element => {
-  //* redux states neccesaries
-  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
+  //* redux states declarations
+  const { currentPersistenciaSeccionSubseccion } = useAppSelector(
     (state) => state.HomologacionesSlice
   );
 
-  if (!ccdOrganigramaCurrentBusqueda) return <></>;
+  //* se hace la condional por si el objeto no tiene valores con los que se pueda trabajar
+  if (
+    !currentPersistenciaSeccionSubseccion ||
+    Object.keys(currentPersistenciaSeccionSubseccion).length === 0
+  )
+    return <></>;
 
   return (
     <Grid container sx={containerStyles}>

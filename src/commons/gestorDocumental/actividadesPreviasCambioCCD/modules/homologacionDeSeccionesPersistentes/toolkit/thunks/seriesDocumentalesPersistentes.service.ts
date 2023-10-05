@@ -20,9 +20,9 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
     const coincidencias = [...(data?.data?.coincdencias ?? [])];
 
     if (coincidencias.length > 0) {
-      control_success('coincidencias encontradas');
+      control_success('coincidencias documentales de CCD encontradas');
     } else {
-      control_warning('no se encontraron coincidencias');
+      control_warning('no se encontraron agrupaciones documentales coincidentes de CCD');
     }
 
     return coincidencias;

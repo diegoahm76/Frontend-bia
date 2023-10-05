@@ -26,17 +26,25 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
-    (state) => state.HomologacionesSlice
-  );
+  const {
+    ccdOrganigramaCurrentBusqueda,
+    unidadesPersistentes,
+    agrupacionesPersistentesSerieSubserie,
+  } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
     setLoadingButton(true);
-    console.log('hello from submit');
+
+    console.log('ccdOrganigramaCurrentBusqueda', ccdOrganigramaCurrentBusqueda);
+    console.log('persitencias seccion / subseccion', unidadesPersistentes);
+    console.log(
+      'persitencias serie / subserie',
+      agrupacionesPersistentesSerieSubserie
+    );
 
     //* analizar los datos a enviar
 
-   /* {
+    /* {
       "id_ccd_nuevo": 176,
       "unidades_persistentes":[
           {
@@ -56,7 +64,6 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
           }
       ]
   } */
-
 
     setLoadingButton(false);
   };
