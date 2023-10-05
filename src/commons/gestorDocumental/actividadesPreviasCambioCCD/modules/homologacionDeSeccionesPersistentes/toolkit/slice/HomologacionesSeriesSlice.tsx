@@ -5,8 +5,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 const initialState: any | any = {
   //! TCA necesarios para el funcionamiento de la aplicación
   ccdOrganigramaCurrentBusqueda: null,
-  // ? comprobar si es o no un ccd perteneciente al mismo organigrama
-  // mismo_organigrama: null,
+  // ? currentPersistenciaSeccionSubseccion
+  currentPersistenciaSeccionSubseccion: null,
 
   // ? homologacion unidades
   homologacionUnidades: [],
@@ -33,10 +33,13 @@ export const HomologacionesSlice = createSlice({
       state.ccdOrganigramaCurrentBusqueda = action.payload;
     },
 
-    //* mirar si es o no el mismo organigrama
-   /* setMismoOrganigrama: (state, action: PayloadAction<any>) => {
-      state.mismo_organigrama = action.payload;
-    }, */
+    //* current persistencia seccion - subseccion
+    setCurrentPersistenciaSeccionSubseccion: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.currentPersistenciaSeccionSubseccion = action.payload;
+    },
 
     // ? homologacion unidades
     setHomologacionUnidades: (state, action: PayloadAction<any>) => {
@@ -67,6 +70,11 @@ export const HomologacionesSlice = createSlice({
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     reset_states: (state) => {
       state.ccdOrganigramaCurrentBusqueda = null;
+      state.currentPersistenciaSeccionSubseccion = null;
+      state.homologacionUnidades = [];
+      state.unidadesPersistentes = [];
+      state.homologacionAgrupacionesSerieSubserie = [];
+      state.agrupacionesPersistentesSerieSubserie = [];
     },
   },
 });
@@ -74,8 +82,8 @@ export const HomologacionesSlice = createSlice({
 export const {
   // ! acciones sobre los ccd's y organigramas
   setCcdOrganigramaCurrent,
-  // ? mirar si es o no el mismo organigrama
- // setMismoOrganigrama,
+  // * current persistencia seccion - subseccion
+  setCurrentPersistenciaSeccionSubseccion,
 
   // ? homologacion unidades
   setHomologacionUnidades,

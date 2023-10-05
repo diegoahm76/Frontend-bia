@@ -8,8 +8,10 @@ export const fnGetHomologacionUnidades = async (idCcdNuevo: number) => {
   try {
     const url = `gestor/ccd/get-homologacion-ccd/${idCcdNuevo}`;
     const { data } = await api.get(url);
-    if (data.success) {
-      control_success(data.detail);
+
+    if (data?.success) {
+      control_success(data?.detail);
+      console.log(data.data)
       return data?.data;
     }
 

@@ -15,13 +15,12 @@ export const functionGetCcdHomologacionSeries = async (
   try {
     SetLoadingRequest(true);
     const url = 'gestor/ccd/get-homologacion-busqueda/';
-    const {
-      data,
-    }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
-      await api.get(url);
-    if (data?.data.length > 0) {
-      control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
-      return data?.data;
+    const { data } = await api.get(url);
+
+    const datos = [...(data?.data ?? [])];
+
+    if (datos.length > 0) {
+      control_success('Se han encontrado los siguientes CCDs disponibles' || data?.detail);
     } else {
       void Swal.fire({
         icon: 'warning',
@@ -36,10 +35,13 @@ export const functionGetCcdHomologacionSeries = async (
         allowEscapeKey: false,
       }).then((result: any) => {
         if (result.isConfirmed) {
-          navigate('/app/gestor_documental/activacion_instrumentos_archivisticos');
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
         }
       });
     }
+    return datos;
   } catch (err) {
     control_error('No se han encontrado datos que coincidan');
     return [];
@@ -52,32 +54,35 @@ export const functionGetCcdHomologacionSeries = async (
 export const validacionInicialCCD = async (navigate: any): Promise<any> => {
   try {
     const url = 'gestor/ccd/get-validacion-homologacion/';
-    const {
-      data,
-    }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
-      await api.get(url);
-    if (data?.data.length > 0) {
-      const elementoActual = data?.data.find((element: any) => element?.actual);
-      if (!elementoActual) {
-        void Swal.fire({
-          icon: 'warning',
-          title: 'NO HAY CCD ACTUAL',
-          text: 'Sin un CCD actual no se puede realizar la homologación de series documentales',
-          showCloseButton: false,
-          allowOutsideClick: false,
-          showConfirmButton: true,
-          cancelButtonText: 'Reiniciar módulo',
-          confirmButtonText: 'Ir a administración de instrumentos archivísticos',
-          confirmButtonColor: '#042F4A',
-          allowEscapeKey: false,
-        }).then((result: any) => {
-          if (result.isConfirmed) {
-            navigate('/app/gestor_documental/activacion_instrumentos_archivisticos');
-          }
-        });
-      }
-      console.log(data?.data);
-      return data?.data;
+    const { data } = await api.get(url);
+
+    const datos = [...data?.data ?? []];
+
+    const elementoActual = datos.find((element: any) => element?.actual);
+    if (!elementoActual) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'NO HAY CCD ACTUAL',
+        text: 'Sin un CCD actual no se puede realizar la homologación de series documentales',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText:
+          'Ir a administración de instrumentos archivísticos',
+        confirmButtonColor: '#042F4A',
+        allowEscapeKey: false,
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
+        }
+      });
+    }
+
+    if (datos.length > 0) {
+      // control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
     } else {
       void Swal.fire({
         icon: 'warning',
@@ -92,10 +97,14 @@ export const validacionInicialCCD = async (navigate: any): Promise<any> => {
         allowEscapeKey: false,
       }).then((result: any) => {
         if (result.isConfirmed) {
-          navigate('/app/gestor_documental/activacion_instrumentos_archivisticos');
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
         }
       });
     }
+    // console.log(datos);
+    return datos;
   } catch (err) {
     return [];
   }

@@ -26,7 +26,6 @@ export const HomologacionDeSeccionesPersistentes = (): JSX.Element => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('se realiza ingreso al módulo');
     void validacionInicialCCD(navigate);
   }, []);
 

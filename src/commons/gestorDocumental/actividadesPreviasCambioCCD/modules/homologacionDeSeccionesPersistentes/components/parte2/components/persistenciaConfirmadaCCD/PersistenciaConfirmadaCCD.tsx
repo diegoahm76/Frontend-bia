@@ -10,6 +10,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { control_success } from '../../../../../../../../../helpers';
 import {
+  setCurrentPersistenciaSeccionSubseccion,
+  setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
   setUnidadesPersistentes,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
@@ -119,7 +121,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     );
   };
 
-  // ? ----- ESPACIO PARA FUNCIONES OPEN ------
+  // ? ----- ESPACIO PARA FUNCIONES CLOSED ------
 
   // ? columnas modificadas para la tabla de persistencia confirmada
   const columns = [
@@ -184,6 +186,26 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_ccd_nuevo,
                   id_unidad_actual,
                   id_unidad_nueva,
+                }).then((resCoincidenciasAgrupacionesDocumentales: any) => {
+                  console.log(resCoincidenciasAgrupacionesDocumentales);
+
+                  //* se asigna las agrupaciones coincidentes en el estado de las agrupaciones coincidentes
+                  dispatch(
+                    setHomologacionAgrupacionesSerieSubserie(
+                      resCoincidenciasAgrupacionesDocumentales
+                    )
+                  );
+
+                  console.log(params?.row);
+                  //* la idea es asignar el array de las coincidencias en series documentales en base al elemento seleccionado y al mismo tiempo seleccionar ese elemento como la persistencia actual
+                  dispatch(
+                    setCurrentPersistenciaSeccionSubseccion({
+                      cod_unidad_actual,
+                      nom_unidad_actual,
+                      cod_unidad_nueva,
+                      nom_unidad_nueva,
+                    })
+                  );
                 });
               }}
             >
