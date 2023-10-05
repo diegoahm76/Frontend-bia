@@ -9,6 +9,8 @@ export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
     (state) => state.HomologacionesSlice
   );
 
+  if (agrupacionesPersistentesSerieSubserie?.length === 0) return null;
+
   return (
     <>
       <RenderDataGrid

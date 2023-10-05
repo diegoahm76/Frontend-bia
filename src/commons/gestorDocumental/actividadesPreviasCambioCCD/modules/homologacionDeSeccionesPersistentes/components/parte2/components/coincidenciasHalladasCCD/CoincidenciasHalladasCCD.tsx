@@ -119,6 +119,16 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     },
   ];
 
+  const rows = [...homologacionUnidades].sort((a: any, b: any) => {
+    if (a.iguales && !b.iguales) {
+      return -1;
+    } else if (!a.iguales && b.iguales) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
   {
     /*
   deben ir dos condicionales
@@ -137,8 +147,7 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
   }
 
-
-/*  if (isLoadingSeccionSub) {
+  /*  if (isLoadingSeccionSub) {
     return (
       <Grid
       container
@@ -160,15 +169,7 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     <>
       <RenderDataGrid
         columns={columns ?? []}
-        rows={[...homologacionUnidades].sort((a: any, b: any) => {
-          if (a.iguales && !b.iguales) {
-            return -1;
-          } else if (!a.iguales && b.iguales) {
-            return 1;
-          } else {
-            return 0;
-          }
-        })}
+        rows={rows ?? []}
         title="Coincidencias halladas entre CCD's ( CCD actual / CCD nuevo )"
       />
     </>
