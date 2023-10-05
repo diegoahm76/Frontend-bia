@@ -108,15 +108,16 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
         },
       });
 
-      if (res.data) {
+      if (res && res.data) {
         // La solicitud fue exitosa
-        control_success("se actualizo correctamente");
+        control_success("se actualizó correctamente");
       } else {
         // La solicitud falló
-        console.error('Error en la solicitud:', res.statusText);
+        console.error('Error en la solicitud:', res ? res.statusText : 'Response undefined');
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      // Manejar la excepción aquí
+      control_error(error.response?.data?.detail || 'Error desconocido,revisa que estes enviadno todos los campos');
     }
   };
 

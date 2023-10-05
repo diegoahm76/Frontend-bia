@@ -12,8 +12,8 @@ interface InformacionPlantillasPersonasProps {
   data: any; // Aquí debes especificar el tipo correcto de "data" si es posible
 }
 export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPersonasProps> = ( data ) => {
-  console.log(data);
-  console.log(data.data);
+  // console.log(data);
+  // console.log(data.data);
 
   const mi_info: InfoPorId = {
     id_plantilla_doc: 0,
