@@ -66,16 +66,11 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
       );
 
-    console.log(
-      'nuevasAgrupacionesPersistentes',
-      nuevasAgrupacionesPersistentes
-    );
-
     if (nuevasAgrupacionesPersistentes?.length > 0) {
       //* si hay un valor coincida no se elimina
       void Swal.fire({
-        title: 'Cuidado',
-        text: 'No se puede eliminar esta persistencia confirmada de secciones, ya que tiene un valor asociado en la persistencia de series confirmadas',
+        title: 'Atención',
+        text: `No puede eliminar la persistencia confirmada de secciones, ya que tiene ${nuevasAgrupacionesPersistentes?.length} valor(es) asociado(s) en la persistencia confirmada de series, elimine primero la(s) relacion(es).`,
         icon: 'warning',
         confirmButtonText: 'Aceptar',
       });
@@ -116,8 +111,8 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     handleEliminicacionValidacionPersistencia(
       params,
       unidadesPersistentes,
-      nuevaHomologacionUnidades,
-      agrupacionesPersistentesSerieSubserie
+      nuevaHomologacionUnidades
+      // agrupacionesPersistentesSerieSubserie
     );
   };
 

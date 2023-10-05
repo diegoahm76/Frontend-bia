@@ -16,7 +16,8 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
     const url = `gestor/ccd/get-homologacion-cat-serie-ccd/?id_ccd_actual=${id_ccd_actual}&id_ccd_nuevo=${id_ccd_nuevo}&id_unidad_actual=${id_unidad_actual}&id_unidad_nueva=${id_unidad_nueva}`;
     const { data } = await api.get(url);
 
-    const coincidencias = [...(data?.coincidencias ?? [])];
+    console.log(data);
+    const coincidencias = [...(data?.data?.coincdencias ?? [])];
 
     if (coincidencias.length > 0) {
       control_success('coincidencias encontradas');

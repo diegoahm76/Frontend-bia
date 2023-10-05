@@ -1,15 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react'
-import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid'
+import React from 'react';
+import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { useAppSelector } from '../../../../../../../../../hooks';
 
 export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
+  //* redux states declarations
+  const { agrupacionesPersistentesSerieSubserie } = useAppSelector(
+    (state) => state.HomologacionesSlice
+  );
+
   return (
     <>
       <RenderDataGrid
         columns={[] || []}
-        rows={[]|| []}
+        rows={[] || []}
         title="Persistencia de series confirmadas en nuevo CCD ( CCD actual / CCD nuevo )"
       />
     </>
-  )
-}
+  );
+};
