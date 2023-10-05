@@ -35,35 +35,23 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const handleSubmit = () => {
     setLoadingButton(true);
 
-    console.log('ccdOrganigramaCurrentBusqueda', ccdOrganigramaCurrentBusqueda);
-    console.log('persitencias seccion / subseccion', unidadesPersistentes);
-    console.log(
-      'persitencias serie / subserie',
-      agrupacionesPersistentesSerieSubserie
-    );
+    const dataToSend = {
+      id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
+      unidades_persistentes: unidadesPersistentes.map((el: any) => ({
+        id_unidad_actual: el.id_unidad_actual,
+        id_unidad_nueva: el.id_unidad_nueva,
+      })),
+      catalagos_persistentes: agrupacionesPersistentesSerieSubserie.map(
+        (el: any) => ({
+          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
+          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
+        })
+      ),
+    };
+
+    console.log(dataToSend);
 
     //* analizar los datos a enviar
-
-    /* {
-      "id_ccd_nuevo": 176,
-      "unidades_persistentes":[
-          {
-          "id_unidad_actual": 5381,
-          "id_unidad_nueva": 5385
-          }
-          ,
-          {
-          "id_unidad_actual": 5383,
-          "id_unidad_nueva": 5387
-          }
-      ],
-      "catalagos_persistentes":[
-          {
-              "id_catalogo_serie_actual": 1085,
-              "id_catalogo_serie_nueva": 1094
-          }
-      ]
-  } */
 
     setLoadingButton(false);
   };
