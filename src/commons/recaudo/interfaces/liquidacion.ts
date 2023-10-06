@@ -74,6 +74,7 @@ export interface FormLiquidacion {
 
 export interface RowDetalles {
   id: number,
+  mes_actual: string,
   nombre_opcion: string;
   concepto: string;
   formula_aplicada: string;
