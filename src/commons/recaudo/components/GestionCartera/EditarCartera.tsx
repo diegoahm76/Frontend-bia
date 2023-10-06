@@ -15,10 +15,10 @@ import type { FlujoProceso } from "../../interfaces/flujoProceso";
 import { type Dispatch, type SetStateAction } from "react";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SaveIcon from '@mui/icons-material/Save';
+import type { AtributoEtapa } from "../../interfaces/proceso";
 
 interface IProps {
-  id_flujo: string;
-  handle_select_change: (event: SelectChangeEvent) => void;
+  id_flujo_destino: string;
   selected_proceso: {
     fecha_facturacion: string;
     numero_factura: string;
@@ -32,20 +32,27 @@ interface IProps {
   flujos_destino: FlujoProceso[];
   id_proceso: string;
   id_cartera: string;
+  id_subetapa_destino: string;
+  subetapas: AtributoEtapa[];
+  handle_select_change: (event: SelectChangeEvent) => void;
   set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
   set_open_create_proceso_modal: Dispatch<SetStateAction<boolean>>;
+  mover_subetapa_actual: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarCartera: React.FC<IProps> = ({
-  id_flujo,
-  handle_select_change,
+  id_flujo_destino,
   selected_proceso,
   flujos_destino,
   id_proceso,
   id_cartera,
+  id_subetapa_destino,
+  subetapas,
+  handle_select_change,
   set_open_requisitos_modal,
-  set_open_create_proceso_modal
+  set_open_create_proceso_modal,
+  mover_subetapa_actual
 }: IProps) => {
   return (
     <>
@@ -256,46 +263,95 @@ export const EditarCartera: React.FC<IProps> = ({
         </Grid>
       </Grid>
       <Grid item xs={12} sx={{ my: '30px' }}>
-        <Stack
-          direction='row'
-          justifyContent='center'
-          alignItems='center'
-          spacing={2}
-        >
-          {id_proceso !== '' ?
-            (<>
-              <Grid item xs={12} sm={3}>
-                <FormControl size='small' fullWidth>
-                  <InputLabel>Mover a</InputLabel>
-                  <Select
-                    label='Mover a'
-                    value={id_flujo}
-                    onChange={handle_select_change}
+        {id_proceso !== '' ?
+          (
+            <>
+              {/* ETAPAS */}
+              <Grid
+                container
+                spacing={2}
+                justifyContent={'center'}
+                alignItems={'center'}
+                sx={{ mb: '20px' }}
+              >
+                <Grid item xs={12} sm={3}>
+                  <FormControl size='small' fullWidth>
+                    <InputLabel>Etapas</InputLabel>
+                    <Select
+                      label='Etapas'
+                      name="id_flujo_destino"
+                      value={id_flujo_destino}
+                      onChange={handle_select_change}
+                    >
+                      {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
+                        <MenuItem key={id} value={id}>
+                          {etapa}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<ChangeCircleIcon />}
+                    fullWidth
+                    onClick={() => {
+                      set_open_requisitos_modal(true);
+                    }}
+                    disabled={!id_flujo_destino}
                   >
-                    {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
-                      <MenuItem key={id} value={id}>
-                        {etapa}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    Mover etapa actual
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <Button
-                  color='primary'
-                  variant='contained'
-                  startIcon={<ChangeCircleIcon />}
-                  fullWidth
-                  onClick={() => {
-                    set_open_requisitos_modal(true);
-                  }}
-                  disabled={!id_flujo}
-                >
-                  Mover estado actual
-                </Button>
+              {/* SUBETAPAS */}
+              <Grid
+                container
+                spacing={2}
+                justifyContent={'center'}
+                alignItems={'center'}
+              >
+                <Grid item xs={12} sm={3}>
+                  <FormControl size='small' fullWidth>
+                    <InputLabel>Subetapas</InputLabel>
+                    <Select
+                      label='Subetapas'
+                      name="id_subetapa_destino"
+                      value={id_subetapa_destino}
+                      onChange={handle_select_change}
+                    >
+                      {subetapas.map(({ id_categoria: { id, categoria } }) => (
+                        <MenuItem key={id} value={id}>
+                          {categoria}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<ChangeCircleIcon />}
+                    fullWidth
+                    onClick={mover_subetapa_actual}
+                    disabled={!id_subetapa_destino}
+                  >
+                    Mover subetapa actual
+                  </Button>
+                </Grid>
               </Grid>
-            </>) :
-            (<Grid item xs={12} sm={3}>
+            </>
+          ) :
+          (<Stack
+            direction='row'
+            justifyContent='center'
+            alignItems='center'
+            spacing={2}
+          >
+            <Grid item xs={12} sm={3}>
               <Button
                 color='primary'
                 variant='contained'
@@ -308,8 +364,8 @@ export const EditarCartera: React.FC<IProps> = ({
               >
                 Crear nuevo proceso
               </Button>
-            </Grid>)}
-        </Stack>
+            </Grid>
+          </Stack>)}
       </Grid>
       <Grid item xs={12} sx={{ my: '30px' }}>
         <Stack

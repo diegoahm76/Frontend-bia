@@ -36,7 +36,9 @@ export const GestionCarteraScreen: React.FC = () => {
   const [id_cartera, set_id_cartera] = useState('');
   const [flujos_proceso, set_flujos_proceso] = useState<FlujoProceso[]>([]);
   const [flujos_destino, set_flujos_destino] = useState<FlujoProceso[]>([]);
-  const [id_flujo, set_id_flujo] = useState('');
+  const [id_flujo_destino, set_id_flujo_destino] = useState('');
+  const [id_etapa_destino, set_id_etapa_destino] = useState('');
+  const [id_subetapa_destino, set_id_subetapa_destino] = useState('');
   const [requisitos, set_requisitos] = useState('');
   const [atributos_etapa, set_atributos_etapa] = useState<AtributoEtapa[][]>([]);
   const [input_values, set_input_values] = useState<Record<string, string>>({});
@@ -46,6 +48,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
+  const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
 
   const columns_carteras: GridColDef[] = [
     {
@@ -199,7 +202,7 @@ export const GestionCarteraScreen: React.FC = () => {
   useEffect(() => {
     api.get('recaudo/cobros/carteras')
       .then((response) => {
-        set_carteras(response.data.data);
+        set_carteras(response.data.results.data);
       })
       .catch((error) => {
         console.log(error);
@@ -240,6 +243,27 @@ export const GestionCarteraScreen: React.FC = () => {
     }
   }, [id_proceso]);
 
+  useEffect(() => {
+    if (id_flujo_destino) {
+      const new_id_etapa_destino = flujos_proceso.find(flujo_proceso => flujo_proceso.id === Number(id_flujo_destino))?.id_etapa_destino.id;
+      if (new_id_etapa_destino) {
+        set_id_etapa_destino(new_id_etapa_destino.toString());
+      }
+    }
+  }, [id_flujo_destino]);
+
+  useEffect(() => {
+    if (id_etapa_destino) {
+      api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
+        .then((response) => {
+          set_subetapas(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [id_etapa_destino]);
+
   const update_procesos_sin_finalizar = (): void => {
     api.get('recaudo/procesos/procesos-sin-finalizar')
       .then((response) => {
@@ -277,14 +301,20 @@ export const GestionCarteraScreen: React.FC = () => {
   const handle_tablist_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab(newValue);
     if (newValue === '1') {
-      set_id_flujo('');
+      set_id_flujo_destino('');
     }
   };
 
   const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-    const requisitos_actual = flujos_proceso.filter(flujo => flujo.id === Number(event.target.value))[0].requisitos;
-    set_id_flujo(event.target.value);
-    set_requisitos(requisitos_actual);
+    if (event.target.name === 'id_flujo_destino') {
+      set_id_subetapa_destino('');
+      const requisitos_actual = flujos_proceso.filter(flujo => flujo.id === Number(event.target.value))[0].requisitos;
+      set_id_flujo_destino(event.target.value);
+      set_requisitos(requisitos_actual);
+    }
+    if (event.target.name === 'id_subetapa_destino') {
+      set_id_subetapa_destino(event.target.value);
+    }
   };
 
   const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
@@ -295,9 +325,8 @@ export const GestionCarteraScreen: React.FC = () => {
     }));
   };
 
-  const mover_estado_actual = (): void => {
-    if (id_flujo) {
-      const id_etapa_destino = flujos_proceso.filter(flujo => flujo.id === Number(id_flujo))[0]?.id_etapa_destino.id;
+  const mover_etapa_actual = (): void => {
+    if (id_flujo_destino) {
       api.post(`recaudo/procesos/actualizar-proceso/${id_proceso}/`, {
         id_etapa: id_etapa_destino,
       })
@@ -321,16 +350,32 @@ export const GestionCarteraScreen: React.FC = () => {
     }
   };
 
+  const mover_subetapa_actual = (): void => {
+    if (id_subetapa_destino) {
+      api.post(`recaudo/procesos/actualizar-categoria-proceso/${id_proceso}/`, {
+        id_categoria: id_subetapa_destino,
+      })
+        .then((response) => {
+          console.log(response);
+          update_flujos();
+          update_procesos_sin_finalizar();
+          update_carteras();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const set_values = (atributos: AtributoEtapa[]): void => {
     const new_input_values: Record<string, string> = {};
     const new_input_files: Record<string, File> = {};
 
     atributos.forEach(objeto => {
+      const key: string = `${objeto.id}-${objeto.id_tipo.tipo}`;
       if (objeto.id_tipo.tipo === 'Documento') {
-        const key: string = `${objeto.id}-${objeto.id_tipo.tipo}`;
         new_input_files[key] = new File([''], '');
       } else {
-        const key: string = `${objeto.id}-${objeto.id_tipo.tipo}`;
         new_input_values[key] = '';
       }
     });
@@ -382,17 +427,6 @@ export const GestionCarteraScreen: React.FC = () => {
     const nuevo_arreglo = Object.values(categorias_agrupadas);
     set_valores_proceso(nuevo_arreglo);
   };
-
-  // const set_atributos = (id_etapa: number): void => {
-  //   api.get(`recaudo/procesos/atributos/${id_etapa}`)
-  //     .then((response) => {
-  //       set_values(response.data.data);
-  //       group_atributos(response.data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   const create_new_proceso = (inicio: string, id_etapa: number, id_categoria: number): void => {
     api.post('recaudo/procesos/crear-proceso/', {
@@ -460,19 +494,6 @@ export const GestionCarteraScreen: React.FC = () => {
       });
   };
 
-  // const handle_post_valores_proceso = (): void => {
-  //   if (input_values) {
-  //     for (const [key, value] of Object.entries(input_values)) {
-  //       handle_post_valores_sin_archivo(key.split('-')[0], value);
-  //     }
-  //   }
-  //   if (input_files) {
-  //     for (const [key, value] of Object.entries(input_files)) {
-  //       handle_post_valores_con_archivo(key.split('-')[0], value);
-  //     }
-  //   }
-  // };
-
   const handle_file_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
     if (event.target.files) {
       const file = event.target.files[0];
@@ -539,14 +560,17 @@ export const GestionCarteraScreen: React.FC = () => {
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <EditarCartera
-                  id_flujo={id_flujo}
-                  handle_select_change={handle_select_change}
+                  id_flujo_destino={id_flujo_destino}
                   selected_proceso={selected_proceso}
                   flujos_destino={flujos_destino}
                   id_proceso={id_proceso}
                   id_cartera={id_cartera}
+                  id_subetapa_destino={id_subetapa_destino}
+                  subetapas={subetapas}
+                  handle_select_change={handle_select_change}
                   set_open_requisitos_modal={set_open_requisitos_modal}
                   set_open_create_proceso_modal={set_open_create_proceso_modal}
+                  mover_subetapa_actual={mover_subetapa_actual}
                 />
               </TabPanel>
             </TabContext>
@@ -572,9 +596,9 @@ export const GestionCarteraScreen: React.FC = () => {
 
       <RequisitosModal
         open_requisitos_modal={open_requisitos_modal}
-        set_open_requisitos_modal={set_open_requisitos_modal}
         requisitos={requisitos}
-        mover_estado_actual={mover_estado_actual}
+        set_open_requisitos_modal={set_open_requisitos_modal}
+        mover_etapa_actual={mover_etapa_actual}
       />
 
       <NotificationModal
