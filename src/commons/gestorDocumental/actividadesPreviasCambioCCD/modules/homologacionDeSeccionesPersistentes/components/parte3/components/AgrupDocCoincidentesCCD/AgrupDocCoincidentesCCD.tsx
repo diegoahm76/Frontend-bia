@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   useAppDispatch,
@@ -14,6 +14,7 @@ import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCc
 import {
   setAgrupacionesPersistentesSerieSubserie,
   setHomologacionAgrupacionesSerieSubserie,
+  setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
 
@@ -24,6 +25,8 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   const {
     homologacionAgrupacionesSerieSubserie,
     agrupacionesPersistentesSerieSubserie,
+    relacionesAlmacenamientoLocal,
+    currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
@@ -49,6 +52,44 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     dispatch(
       setHomologacionAgrupacionesSerieSubserie(nuevaHomologacionAgrupaciones)
     );
+
+    // objeto local
+    // const objetoLocal = {
+    //   ...relacionesAlmacenamientoLocal,
+    //   [params?.row?.id_catalogo_serie_actual]: {
+    //     ...params?.row,
+    //     persistenciaConfirmada: true,
+    //   },
+    // };
+    // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
+
+    dispatch(
+      setRelacionesAlmacenamientoLocal({
+        ...relacionesAlmacenamientoLocal,
+        [params?.row?.id_unidad_org_actual]: {
+          ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
+          /* [params?.row?.id_catalogo_serie_actual]: {
+          ...params?.row,
+          persistenciaConfirmada: true,
+        },*/
+          agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
+          homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
+        },
+      })
+    );
+
+    console.log({
+      ...relacionesAlmacenamientoLocal,
+      [params?.row?.id_unidad_org_actual]: {
+        ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
+        /* [params?.row?.id_catalogo_serie_actual]: {
+          ...params?.row,
+          persistenciaConfirmada: true,
+        },*/
+        agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
+        homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
+      },
+    });
     control_success('Persistencia confirmada');
   };
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
@@ -131,6 +172,20 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
       }
     }
   );
+
+
+    useEffect(() => {
+
+    },[])
+
+
+  if (
+    Object.keys(relacionesAlmacenamientoLocal).some(
+      (key) =>
+        relacionesAlmacenamientoLocal[key] ===
+        currentPersistenciaSeccionSubseccion.id_unidad_actual
+    )
+  ) return null;
 
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
 

@@ -40,6 +40,7 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import {
   setCcdOrganigramaCurrent,
   setHomologacionUnidades,
+  setRelacionesAlmacenamientoLocal,
   setUnidadesPersistentes,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import {
@@ -149,6 +150,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
             <IconButton
               onClick={() => {
                 console.log(params.row);
+                //* si limpia el estado local que almacenaba valores
+                dispatch(setRelacionesAlmacenamientoLocal({}));
                 // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
                 dispatch(setCcdOrganigramaCurrent(params.row));
 

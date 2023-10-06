@@ -20,7 +20,7 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
     const { data } = await api.get(url);
 
     console.log(data);
-    const coincidencias = [...(data?.data?.coincdencias ?? [])];
+    const coincidencias = [...(data?.data?.coincidencias ?? [])];
 
     if (coincidencias.length > 0) {
       control_success('coincidencias documentales de CCD encontradas');
@@ -71,6 +71,7 @@ export const fnGetPersistenciasConfirmadas = async ({
 
     return coincidencias;
   } catch (error: any) {
-    throw error;
+    console.log('un error ocurrió')
+    return [];
   }
 };

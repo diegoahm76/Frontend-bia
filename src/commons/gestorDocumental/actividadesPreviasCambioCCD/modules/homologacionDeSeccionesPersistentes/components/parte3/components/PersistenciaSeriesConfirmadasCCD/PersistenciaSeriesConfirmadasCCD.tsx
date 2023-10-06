@@ -10,7 +10,11 @@ import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_success } from '../../../../../../../../../helpers';
-import { setAgrupacionesPersistentesSerieSubserie, setHomologacionAgrupacionesSerieSubserie } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import {
+  setAgrupacionesPersistentesSerieSubserie,
+  setHomologacionAgrupacionesSerieSubserie,
+  setRelacionesAlmacenamientoLocal,
+} from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 
 export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
   //* dispatch declaration
@@ -20,6 +24,8 @@ export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
   const {
     agrupacionesPersistentesSerieSubserie,
     homologacionAgrupacionesSerieSubserie,
+    relacionesAlmacenamientoLocal,
+    currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
@@ -48,10 +54,32 @@ export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
     dispatch(setAgrupacionesPersistentesSerieSubserie(a));
 
     control_success('Ítem eliminado de tipologías restringidas');
+
+    const idUnidadOrgActual = params?.row?.id_unidad_org_actual;
+
+    const nuevoRelacionesAlmacenamientoLocal = {
+      ...relacionesAlmacenamientoLocal,
+    };
+
+    delete nuevoRelacionesAlmacenamientoLocal[idUnidadOrgActual];
+
+    console.log(nuevoRelacionesAlmacenamientoLocal);
+
+    dispatch(
+      setRelacionesAlmacenamientoLocal(nuevoRelacionesAlmacenamientoLocal)
+    );
+    /*
+    console.log({
+      ...relacionesAlmacenamientoLocal,
+      [params?.row?.id_unidad_org_actual]: {
+        ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
+        agrupacionesPersistentesSerieSubserie: a,
+        homologacionAgrupacionesSerieSubserie: nuevasAgrupacionesPersistentes,
+      },
+    }); */
   };
 
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
-
 
   // ? definicion de columnas
   const colums = [
@@ -86,6 +114,15 @@ export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
       ),
     },
   ];
+
+  if (
+    Object.keys(relacionesAlmacenamientoLocal).some(
+      (key) =>
+        relacionesAlmacenamientoLocal[key] ===
+        currentPersistenciaSeccionSubseccion.id_unidad_actual
+    )
+  )
+    return null;
 
   if (agrupacionesPersistentesSerieSubserie?.length === 0) return null;
 

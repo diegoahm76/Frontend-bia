@@ -14,6 +14,7 @@ import {
   setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
+  setRelacionesAlmacenamientoLocal,
   setUnidadesPersistentes,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
@@ -36,6 +37,8 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     unidadesPersistentes,
     homologacionUnidades,
     agrupacionesPersistentesSerieSubserie,
+    relacionesAlmacenamientoLocal,
+    homologacionAgrupacionesSerieSubserie,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
@@ -43,9 +46,31 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ? eliminación de persitencia sin validación
 
   const eliminarPersistencia = (
+    relacionesAlmacenamientoLocal: any[],
     unidadesPersistentes: any[],
     idUnidadActual: number
   ) => {
+    // ? si existe el valor en el local storage se asigna el valor al estado correspondiente
+    const nuevasUnidadesPersistentes = Object.keys(
+      relacionesAlmacenamientoLocal
+    ).some((key) => key === idUnidadActual.toString())
+      ? relacionesAlmacenamientoLocal[
+          idUnidadActual
+        ].homologacionAgrupacionesSerieSubserie.filter(
+          (item: any) => item?.id_unidad_org_actual !== idUnidadActual
+        )
+      : homologacionAgrupacionesSerieSubserie?.filter(
+          (item: any) => item?.id_unidad_org_actual !== idUnidadActual
+        );
+
+    console.log(nuevasUnidadesPersistentes);
+
+    //    console.log(objetoLocal);
+
+    dispatch(
+      setHomologacionAgrupacionesSerieSubserie(nuevasUnidadesPersistentes)
+    );
+
     return unidadesPersistentes.filter(
       (item: any) => item?.id_unidad_actual !== idUnidadActual
     );
@@ -64,11 +89,17 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   ) => {
     const { row } = params;
 
-    const nuevasAgrupacionesPersistentes =
-      agrupacionesPersistentesSerieSubserie?.filter(
-        //* revisar si es !== o ===
-        (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
-      );
+    const nuevasAgrupacionesPersistentes = Object.keys(
+      relacionesAlmacenamientoLocal
+    ).some((key) => key === row?.id_unidad_actual.toString())
+      ? relacionesAlmacenamientoLocal[
+          row?.id_unidad_actual
+        ]?.agrupacionesPersistentesSerieSubserie?.filter(
+          (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
+        )
+      : agrupacionesPersistentesSerieSubserie?.filter(
+          (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
+        );
 
     if (nuevasAgrupacionesPersistentes?.length > 0) {
       //* si hay un valor coincida no se elimina
@@ -82,6 +113,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     }
 
     const nuevasUnidadesPersistentes = eliminarPersistencia(
+      relacionesAlmacenamientoLocal,
       unidadesPersistentes,
       row?.id_unidad_actual
     );
@@ -191,10 +223,42 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     nom_unidad_actual,
                     cod_unidad_nueva,
                     nom_unidad_nueva,
+
+                    id_unidad_actual,
+                    id_unidad_nueva,
                   })
                 );
 
                 // ! crear estado para almacenar la row actual seleccionada y de esa manera mostrar los datos correspondientes que necesito
+
+                // ? acá primero entro a hacer la comprobación de las persistencias que se han almacena en local storage para poder asignarlas al estado correspondiente
+                // ? si no hay nada en el local,se llaman los servicios para asginar valor
+
+                if (
+                  Object.keys(relacionesAlmacenamientoLocal).some(
+                    (key) => key === id_unidad_actual.toString()
+                  )
+                ) {
+                  console.log('existe');
+
+                  // ? si existe el valor en el local storage se asigna el valor al estado correspondiente
+                  dispatch(
+                    setHomologacionAgrupacionesSerieSubserie(
+                      relacionesAlmacenamientoLocal[id_unidad_actual]
+                        .homologacionAgrupacionesSerieSubserie
+                    )
+                  );
+                  dispatch(
+                    setAgrupacionesPersistentesSerieSubserie(
+                      relacionesAlmacenamientoLocal[id_unidad_actual]
+                        .agrupacionesPersistentesSerieSubserie
+                    )
+                  );
+                  return;
+                }
+
+                // id_unidad_actual - secciones
+                // id_unidad_org_actual - series
 
                 void fnGetAgrupacionesCoincidetesCcd({
                   id_ccd_actual,
@@ -219,7 +283,11 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     id_unidad_nueva,
                   }).then((resAgrupacionesPersistentes: any) => {
                     console.log(resAgrupacionesPersistentes);
-
+                    dispatch(
+                      setAgrupacionesPersistentesSerieSubserie(
+                        resAgrupacionesPersistentes
+                      )
+                    );
                     //* asignar esas persistencias al estado si ya existen
                   });
 
