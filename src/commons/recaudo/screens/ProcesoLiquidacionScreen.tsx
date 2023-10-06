@@ -10,6 +10,54 @@ import { api } from '../../../api/axios';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { NotificationModal } from '../components/NotificationModal';
 import dayjs, { type Dayjs } from 'dayjs';
+import type { DetallePeriodo, DetallesPeriodos } from '../interfaces/proceso';
+
+const detalles_ciclos: string[] = [
+  'trimestral',
+  'semestral',
+  'anual',
+];
+
+const detalles_periodos: DetallesPeriodos = {
+  trimestral: {
+    tamano: 3,
+    periodos: [
+      'enero a marzo',
+      'abril a julio',
+      'junio a septiembre',
+      'octubre a diciembre',
+    ],
+    meses: [
+      ['enero', 'febrero', 'marzo'],
+      ['abril', 'mayo', 'junio'],
+      ['julio', 'agosto', 'septiembre'],
+      ['octubre', 'noviembre', 'diciembre'],
+    ]
+  },
+  semestral: {
+    tamano: 6,
+    periodos: [
+      'enero a junio',
+      'julio a diciembre'
+    ],
+    meses: [
+      ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio'],
+      ['julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+    ]
+  },
+  anual: {
+    tamano: 12,
+    periodos: [
+      'enero a diciembre'
+    ],
+    meses: [
+      [
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+      ]
+    ]
+  },
+};
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
@@ -34,6 +82,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [rows_detalles, set_rows_detalles] = useState<RowDetalles[]>([]);
   const [id_row_detalles, set_id_row_detalles] = useState(0);
   const [id_liquidacion_pdf, set_id_liquidacion_pdf] = useState('');
+  const [periodo_actual, set_periodo_actual] = useState<DetallePeriodo>({
+    tamano: 0,
+    periodos: [],
+    meses: []
+  });
+  const [meses_actual, set_meses_actual] = useState<string[]>([]);
+  const [tamano_detalles, set_tamano_detalles] = useState<boolean>(true);
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/deudores')
@@ -72,6 +127,25 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     }
   }, [form_liquidacion.id_expediente]);
 
+  useEffect(() => {
+    if (form_liquidacion.periodo_liquidacion) {
+      const index_periodo = periodo_actual.periodos.findIndex(periodo => periodo === form_liquidacion.periodo_liquidacion);
+      if (index_periodo >= 0) {
+        set_meses_actual(periodo_actual.meses[index_periodo]);
+        set_rows_detalles([]);
+        set_id_row_detalles(0);
+      }
+    }
+  }, [form_liquidacion.periodo_liquidacion]);
+
+  useEffect(() => {
+    if (rows_detalles.length > 0 && rows_detalles.length === periodo_actual.tamano) {
+      set_tamano_detalles(false);
+    } else {
+      set_tamano_detalles(true);
+    }
+  }, [rows_detalles.length]);
+
   const get_liquidacion_por_expediente = (liquidado: boolean): void => {
     if (liquidado) {
       api.get(`recaudo/liquidaciones/liquidacion-base-por-expediente/${form_liquidacion.id_expediente}`)
@@ -106,6 +180,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_id_row_detalles(0);
     const new_detalles: RowDetalles[] = detalles.map((detalle) => ({
       id: detalle.id,
+      mes_actual: '',
       nombre_opcion: detalle.id_opcion_liq.nombre,
       concepto: detalle.concepto,
       formula_aplicada: detalle.id_opcion_liq.funcion,
@@ -115,11 +190,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_rows_detalles(new_detalles);
   };
 
-  const add_new_row_detalles = (formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string): void => {
+  const add_new_row_detalles = (mes_actual: string, formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string): void => {
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const funcion = new Function(`return ${formula}`);
     const new_row: RowDetalles = {
       id: id_row_detalles,
+      mes_actual,
       nombre_opcion: opcion_liquidacion.nombre,
       concepto,
       formula_aplicada: opcion_liquidacion.funcion,
@@ -139,6 +215,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         concepto: concepto,
       }
     ]);
+    set_meses_actual(meses_actual.slice(1));
   };
 
   const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
@@ -350,11 +427,15 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   fecha_liquidacion={fecha_liquidacion}
                   fecha_vencimiento={fecha_vencimiento}
                   id_liquidacion_pdf={id_liquidacion_pdf}
+                  detalles_ciclos={detalles_ciclos}
+                  detalles_periodos={detalles_periodos}
+                  tamano_detalles={tamano_detalles}
                   handle_input_form_liquidacion_change={handle_input_form_liquidacion_change}
                   handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
                   handle_submit_liquidacion={handle_submit_liquidacion}
                   set_fecha_liquidacion={set_fecha_liquidacion}
                   set_fecha_vencimiento={set_fecha_vencimiento}
+                  set_periodo_actual={set_periodo_actual}
                 />
               </TabPanel>
             </TabContext>
@@ -368,6 +449,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           <DetalleLiquidacion
             rows_detalles={rows_detalles}
             expediente_liquidado={expediente_liquidado}
+            meses_actual={meses_actual}
             add_new_row_detalles={add_new_row_detalles}
           />
         </TabPanel>
