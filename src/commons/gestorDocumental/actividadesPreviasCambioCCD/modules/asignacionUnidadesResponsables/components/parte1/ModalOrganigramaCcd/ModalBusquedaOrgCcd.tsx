@@ -29,24 +29,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import CloseIcon from '@mui/icons-material/Close';
-import { ModalContextPSD } from '../../../../../../../permisosSeriesDoc/context/ModalContextPSD';
-import { columnnsSelCCDPSD } from '../../../../../../../permisosSeriesDoc/components/parte1/ModalSeleccionCCDPSD/columns/columnsSelCCDPSD';
-import { Title } from '../../../../../../../../../components';
-import { download_xls } from '../../../../../../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../../../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch } from '../../../../../../../../../hooks';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
-import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
-import {
-  setCcdOrganigramaCurrent,
-  setHomologacionUnidades,
-  setRelacionesAlmacenamientoLocal,
-  setUnidadesPersistentes,
-} from '../../../../toolkit/slice/HomologacionesSeriesSlice';
-import {
-  fnGetHomologacionUnidades,
-  fnGetUnidadesPersistentes,
-} from '../../../../toolkit/thunks/seccionesPersistentes.service';
+import { useAppDispatch } from '../../../../../../../../hooks';
+import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { columnnsSelCCDPSD } from '../../../../../../permisosSeriesDoc/components/parte1/ModalSeleccionCCDPSD/columns/columnsSelCCDPSD';
+import { Title } from '../../../../../../../../components';
+import { download_xls } from '../../../../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../../../../documentos-descargar/PDF_descargar';
+import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -58,7 +49,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
-  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
+/*  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
         params.row.id_ccd
@@ -84,12 +75,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           params.row.id_ccd
         );
         console.log(resUnidadesPersistentes);
-        //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
-        /*
-          - tiene prop id_ccd_nuevo
-          - array unidades persistentes
-        */
-
         dispatch(
           setUnidadesPersistentes(
             resUnidadesPersistentes?.unidades_persistentes.map(
@@ -104,7 +89,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }; */
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
@@ -151,9 +136,9 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
               onClick={() => {
                 console.log(params.row);
                 //* si limpia el estado local que almacenaba valores
-                dispatch(setRelacionesAlmacenamientoLocal({}));
+                // dispatch(setRelacionesAlmacenamientoLocal({}));
                 // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
-                dispatch(setCcdOrganigramaCurrent(params.row));
+                // dispatch(setCcdOrganigramaCurrent(params.row));
 
                 //* se hace la petición de los siguientes servicios
                 // ? 1. homologación de unidades
@@ -161,7 +146,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
                 /* tomar en cuenta lo siguiente, si la propiedad mismo organigrama del servicio homologacion de unidades está en true, el estado que actualiza la homologacón de unidades no debe llenarse, por el contrario se llenará el estado de unidades persistentes pero con la información que traía el servicio de HOMOLOGACIÓN DE UNIDADES  */
 
-                handleHomologacionUnidades(params);
+                // handleHomologacionUnidades(params);
 
                 // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
@@ -198,7 +183,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       }}
     >
       <DialogTitle>
-        <Title title="Consultar CCD's para homologación de secciones persistentes" />
+        <Title title="Consulta para asignación secciones responsables del CCD" />
       </DialogTitle>
       <DialogContent sx={{ mb: '0px' }}>
         <ButtonGroup

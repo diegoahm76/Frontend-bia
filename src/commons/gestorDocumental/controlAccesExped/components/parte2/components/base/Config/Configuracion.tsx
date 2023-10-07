@@ -52,6 +52,13 @@ export const ConfiguracionInicial = (params: any): JSX.Element | null => {
 
     if(selectedOption?.value === 2){
       // ? se deben realizar también aquellas validaciones que solo sean útiles en el módulo 1
+
+      dispatch(setUnidadesOrganizacionales([]));
+      dispatch(setCurrentUnidadOrganizacional(null));
+      dispatch(setSeriesSubseriesList([]));
+      dispatch(setCurrentSerieSubserie(null));
+
+
       console.log('getting unidades organizacionales, then get series documentales, then get control de acceso de expedientes')
       void getUnidadesOrganizacionalesSeccionSubseccion({
         idOrganigrama: currentCcdCtrlAccesoExp.id_organigrama,
