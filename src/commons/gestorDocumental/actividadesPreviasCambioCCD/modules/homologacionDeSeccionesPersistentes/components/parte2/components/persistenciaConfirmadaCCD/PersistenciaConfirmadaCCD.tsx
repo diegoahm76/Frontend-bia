@@ -199,11 +199,13 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
               aria-label="select"
               size="large"
               onClick={() => {
+                console.log(params?.row);
                 //* se limpian tambien los estados consecuentes luego de la elección de las agrupaciones coincidentes o persistentes
 
                 //? revisar la necesidad de estos dos estados ya que se debe mantener en memoria esos elememtos para poder hacer la comparación de los elementos que se van a homologar
                 dispatch(setHomologacionAgrupacionesSerieSubserie([]));
                 dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+
                 const {
                   //* datos para traer las agrupaciones coincidentes del ccd
                   id_ccd_actual,
@@ -294,7 +296,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     //* asignar esas persistencias al estado si ya existen
                   });
 
-                  // console.log(params?.row);
+                  
                 });
               }}
             >
