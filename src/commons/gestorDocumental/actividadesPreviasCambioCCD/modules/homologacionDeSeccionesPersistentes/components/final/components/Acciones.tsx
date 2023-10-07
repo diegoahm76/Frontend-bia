@@ -15,6 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { reset_states } from '../../../toolkit/slice/HomologacionesSeriesSlice';
+import { postPersistenciasConfirmadas } from '../../../toolkit/thunks/createHomologacion.service';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
@@ -30,10 +31,38 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
     ccdOrganigramaCurrentBusqueda,
     unidadesPersistentes,
     agrupacionesPersistentesSerieSubserie,
+    relacionesAlmacenamientoLocal,
+    P,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
-    setLoadingButton(true);
+    console.log(relacionesAlmacenamientoLocal);
+
+    if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
+      const agrupaciones: any = Object.values(
+        relacionesAlmacenamientoLocal
+      ).reduce(
+        (acc: any, curr: any) => [
+          ...acc,
+          ...(curr?.agrupacionesPersistentesSerieSubserie || []),
+        ],
+        []
+      );
+
+      const objectToSend = {
+        id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
+        unidades_persistentes: unidadesPersistentes.map((el: any) => ({
+          id_unidad_actual: el.id_unidad_actual,
+          id_unidad_nueva: el.id_unidad_nueva,
+        })),
+        catalagos_persistentes: agrupaciones?.map((el: any) => ({
+          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
+          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
+        })),
+      };
+
+      console.log(objectToSend);
+    }
 
     const dataToSend = {
       id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
@@ -49,11 +78,13 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       ),
     };
 
-    console.log(dataToSend);
+   // console.log(dataToSend);
 
-    //* analizar los datos a enviar
-
-    setLoadingButton(false);
+    // ! funcion de envío de datos
+    void postPersistenciasConfirmadas({
+      setLoading: setLoadingButton,
+      dataToPost: dataToSend,
+    });
   };
 
   if (!ccdOrganigramaCurrentBusqueda) return null;

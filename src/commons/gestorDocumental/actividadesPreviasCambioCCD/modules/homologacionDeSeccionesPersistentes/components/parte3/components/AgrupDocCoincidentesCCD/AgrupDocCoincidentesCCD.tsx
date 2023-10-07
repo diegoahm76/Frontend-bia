@@ -174,9 +174,6 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   );
 
 
-    useEffect(() => {
-
-    },[])
 
 
   if (

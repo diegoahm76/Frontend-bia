@@ -122,6 +122,9 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
     //* se actualiza tambien la tabla de las homologaciones si se pasa a este caso, en caso contrario no lo hace
     dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
+
+    //* se quita la persistencia marcada como current
+    dispatch(setCurrentPersistenciaSeccionSubseccion(null));
   };
 
   // ! eliminación de persistencias confirmadas
