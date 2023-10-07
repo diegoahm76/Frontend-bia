@@ -29,12 +29,14 @@ export const AsignacionUnidadesResponsables = (): JSX.Element => {
       {/* Parte 2 */}
       {/* Secciones que persisterán en CCD nuevo*/}
       <>
-        Selección de series responsables del ccd nuevo sobre las series
-        documentales de secciones del CCD actual
+        {/* Selección de series responsables del ccd nuevo sobre las series
+        documentales de secciones del CCD actual */}
       </>
       {/* Parte 3 */}
       {/* Listado de asignaciones */}
-      <>Listado de asignaciones</>
+      <>
+      {/* Listado de asignaciones */}
+      </>
       {/* Acciones */}
       <AccionesLoad />
     </>

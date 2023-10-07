@@ -89,7 +89,7 @@ export const validacionInicialCcdAsignacionUnidadesResp = async (
       void Swal.fire({
         icon: 'warning',
         title: 'ACTUALMENTE NO HAY UN CCD DISPONIBLE',
-        text: 'Sin CCDs en el sistema no es posible usar el módulo de homologación de series documentales',
+        text: 'Sin CCDs en el sistema no es posible usar el módulo de asignación de unidades responsables',
         showCloseButton: false,
         allowOutsideClick: false,
         showConfirmButton: true,
@@ -112,7 +112,10 @@ export const validacionInicialCcdAsignacionUnidadesResp = async (
   }
 };
 
-export const getCcdActual = async (params: GridValueGetterParams, navigate: any) => {
+export const getCcdActual = async (
+  params: GridValueGetterParams,
+  navigate: any
+) => {
   try {
     const url = 'gestor/ccd/get-validacion-homologacion/';
     const { data } = await api.get(url);
@@ -124,19 +127,25 @@ export const getCcdActual = async (params: GridValueGetterParams, navigate: any)
     if (params.row.id_organigrama !== ccdActual?.id_organigrama) {
       void Swal.fire({
         icon: 'warning',
-        title: 'EL CCD ACTUAL NO COINCIDE CON EL CCD DE LA FILA SELECCIONADA',
-        text: 'Para realizar la asignación de unidades responsables del CCD, el CCD actual debe coincidir con el CCD de la fila seleccionada',
+        title: 'NO SE PUEDE USAR EL CCD',
+        text: 'El CCD seleccionado fue creado usando el mismo organigrama que el CCD actual, por lo tanto no se puede usar en este módulo',
         showCloseButton: false,
         allowOutsideClick: false,
         showConfirmButton: true,
+        showCancelButton: true,
         cancelButtonText: 'Reiniciar módulo',
-        confirmButtonText: 'Ir a administración de instrumentos archivísticos',
+        cancelButtonColor: '#FF0000',
+        confirmButtonText: 'Administrar instrumentos archivísticos',
         confirmButtonColor: '#042F4A',
         allowEscapeKey: false,
       }).then((result: any) => {
-        navigate(
-          '/app/gestor_documental/activacion_instrumentos_archivisticos'
-        );
+
+        if (result.isConfirmed) {
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
+        }
+        window.location.reload();
       });
       return true;
     } else {
