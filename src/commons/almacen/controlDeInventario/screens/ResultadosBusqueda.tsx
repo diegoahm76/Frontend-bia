@@ -11,6 +11,7 @@ interface IProps {
     inventarios: any[],
     titulo: string,
     seleccion_tipo_consulta: string,
+    nombre_archivo: string,
     agrupar: boolean,
     mostrar: boolean,
     agrupar_bodega: boolean
@@ -610,6 +611,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 </Grid>
             </Box>}
             {(props.seleccion_tipo_consulta === 'ITB' && !props.mostrar) && <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+                <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={[]} nombre_archivo={props.nombre_archivo} filtros_pdf={[]}></ExportDocs>
                 <Grid item container spacing={2}>
                     <ExportDocs cols={columnas_mp} resultado_busqueda={props.inventarios} filtros={undefined} nombre_archivo={""}></ExportDocs>
                     {props.resultado_busqueda.map((rb: any) => (

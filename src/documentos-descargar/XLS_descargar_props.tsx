@@ -23,7 +23,7 @@ export const download_xls_props: React.FC<DownloadXLSProps> = (props: DownloadXL
       data.push(row_data);
     });
     const workbook = XLSX.utils.book_new();
-    if(props.filtrers.length != 0){
+    if(props.filtrers.length !== 0){
       const worksheet = XLSX.utils.json_to_sheet(props.filtrers);
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Filtros');
     }

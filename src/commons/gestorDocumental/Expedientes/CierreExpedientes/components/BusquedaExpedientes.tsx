@@ -293,7 +293,7 @@ export const BusquedaExpedientes: React.FC = () => {
                 marginLeft: '-5px',
               }}
             >
-              <Title title="Búsqueda avanzada estantes" />
+              <Title title="Búsqueda avanzada Expedientes" />
               <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
                 <Grid item xs={12} sm={6} md={3}>
                   <Controller
