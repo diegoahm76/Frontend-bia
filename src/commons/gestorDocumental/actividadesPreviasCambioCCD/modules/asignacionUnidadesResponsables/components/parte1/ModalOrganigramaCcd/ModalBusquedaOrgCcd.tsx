@@ -37,19 +37,22 @@ import { download_xls } from '../../../../../../../../documentos-descargar/XLS_d
 import { download_pdf } from '../../../../../../../../documentos-descargar/PDF_descargar';
 import { containerStyles } from './../../../../../../tca/screens/utils/constants/constants';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-
+import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
+import { useNavigate } from 'react-router-dom';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { ccdList, setccdList } = params;
+  //* navigate declaration
+  const navigate = useNavigate();
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   // ? ---- context declaration ----
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
-/*  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
+  /*  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
         params.row.id_ccd
@@ -90,6 +93,22 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       console.error(error);
     }
   }; */
+
+  const handleCcdConincidenteConIdOrganigrama = async (
+    params: GridValueGetterParams
+  ) => {
+    try {
+      const resHomologacionesUnidades = await getCcdActual(params, navigate);
+      if (resHomologacionesUnidades) {
+        console.log(' no se puede continuar con la ejecución del módulo');
+        return;
+      }
+
+      console.log('siuuuuu bitch');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
@@ -146,7 +165,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
                 /* tomar en cuenta lo siguiente, si la propiedad mismo organigrama del servicio homologacion de unidades está en true, el estado que actualiza la homologacón de unidades no debe llenarse, por el contrario se llenará el estado de unidades persistentes pero con la información que traía el servicio de HOMOLOGACIÓN DE UNIDADES  */
 
-                // handleHomologacionUnidades(params);
+                handleCcdConincidenteConIdOrganigrama(params);
 
                 // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
