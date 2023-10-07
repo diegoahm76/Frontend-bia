@@ -36,7 +36,6 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
-    console.log(relacionesAlmacenamientoLocal);
 
     if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
       const agrupaciones: any = Object.values(

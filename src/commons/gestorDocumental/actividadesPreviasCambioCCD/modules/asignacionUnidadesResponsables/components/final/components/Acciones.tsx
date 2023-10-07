@@ -20,19 +20,19 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-const {
+/* const {
     ccdOrganigramaCurrentBusqueda
   } = useAppSelector((state) => state.HomologacionesSlice);
+  
+*/
+
 
   const handleSubmit = () => {
     setLoadingButton(true);
     console.log('hello from submit');
     setLoadingButton(false);
-
-  };
-
-
-  if(!ccdOrganigramaCurrentBusqueda) return null;
+  }
+  // if(!ccdOrganigramaCurrentBusqueda) return null;
 
   return (
     <>

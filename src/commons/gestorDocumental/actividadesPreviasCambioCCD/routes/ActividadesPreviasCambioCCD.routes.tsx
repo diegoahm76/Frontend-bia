@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react'
+import React from 'react';
 import { Page404 } from '../../../../screens/404';
 import { Route, Routes } from 'react-router-dom';
 import { AsignacionUnidadesResponsables as AsignacionUnidadesResponsablesMainScreen } from '../modules/asignacionUnidadesResponsables/screen/AsignacionUnidadesResponsables';
-import { HomologacionDeSeccionesPersistentes as HomologacionDeSeccionesPersistentesMainScreen} from '../modules/homologacionDeSeccionesPersistentes/screen/HomologacionDeSeccionesPersistentes';
+import { HomologacionDeSeccionesPersistentes as HomologacionDeSeccionesPersistentesMainScreen } from '../modules/homologacionDeSeccionesPersistentes/screen/HomologacionDeSeccionesPersistentes';
+import { DelegacionOficinasResponsablesScreen } from '../modules/delegacionDeOficinasResponsables/screen/DelegacionOficinasResponsablesScreen';
 
 interface RouteType {
   path: string;
@@ -13,32 +14,38 @@ export const ActividadesPreviasCambioCCDRoutes = () => {
   const routes: RouteType[] = [
     {
       path: '/homologacion_secciones_persistentes',
-      element: () => <>
-        <HomologacionDeSeccionesPersistentesMainScreen/>
-      </>
+      element: () => (
+        <>
+          <HomologacionDeSeccionesPersistentesMainScreen />
+        </>
+      ),
     },
     {
       path: '/asignaciones_unidades_responsables',
-      element: () => <>
-        <AsignacionUnidadesResponsablesMainScreen/>
-      </>
+      element: () => (
+        <>
+          <AsignacionUnidadesResponsablesMainScreen />
+        </>
+      ),
     },
     {
       path: '/delegacion_oficinas_responsables_expedientes',
-      element: () => <>
-        <div>delegacion_oficinas_responsables_expedientes_ccd</div>
-      </>
+      element: () => (
+        <>
+          <DelegacionOficinasResponsablesScreen />
+        </>
+      ),
     },
     {
       path: '/*',
-      element: () => <Page404 />
+      element: () => <Page404 />,
     },
   ];
   return (
     <Routes>
-    {routes.map((route, index) => (
-      <Route key={index} path={route.path} element={route.element()} />
-    ))}
+      {routes.map((route, index) => (
+        <Route key={index} path={route.path} element={route.element()} />
+      ))}
     </Routes>
-  )
-}
+  );
+};
