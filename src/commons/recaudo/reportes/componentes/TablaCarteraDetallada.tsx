@@ -29,14 +29,26 @@ export const TablaCarteraDetallada: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   useEffect(() => {
-    if(visible_rows.length !== 0) {
-      let total = 0
-      for(let i=0; i< visible_rows.length; i++){
-        total = total + parseFloat(visible_rows[i].valor_sancion)
-        set_total(total)
+    if (visible_rows && visible_rows.length !== undefined) {
+      let total = 0;
+      for (let i = 0; i < visible_rows.length; i++) {
+        if (visible_rows[i].valor_sancion) {
+          total = total + parseFloat(visible_rows[i].valor_sancion);
+        }
       }
+      set_total(total);
     }
-  }, [visible_rows])
+  }, [visible_rows]);
+  
+  // useEffect(() => {
+  //   if(visible_rows.length !== 0) {
+  //     let total = 0
+  //     for(let i=0; i< visible_rows.length; i++){
+  //       total = total + parseFloat(visible_rows[i].valor_sancion)
+  //       set_total(total)
+  //     }
+  //   }
+  // }, [visible_rows])
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -182,10 +194,18 @@ export const TablaCarteraDetallada: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if(visible_rows.length !== 0){
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    if (visible_rows && visible_rows.length !== undefined) {
+      set_values(
+        visible_rows.map((obj) => Object.values(obj)) as any
+      );
     }
-  }, [visible_rows])
+  }, [visible_rows]);
+  
+  // useEffect(() => {
+  //   if(visible_rows.length !== 0){
+  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+  //   }
+  // }, [visible_rows])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -275,8 +295,7 @@ export const TablaCarteraDetallada: React.FC = () => {
         </Stack>
       </Stack>
       <div id='report'>
-      {
-        visible_rows.length !== 0 ? (
+      {visible_rows && visible_rows.length !== undefined ?(
           <Grid
             container
             sx={{
@@ -294,7 +313,7 @@ export const TablaCarteraDetallada: React.FC = () => {
                   <DataGrid
                     autoHeight
                     disableSelectionOnClick
-                    rows={visible_rows}
+                    rows={visible_rows || []}
                     columns={columns}
                     pageSize={10}
                     rowsPerPageOptions={[10]}
