@@ -203,8 +203,8 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                 //* se limpian tambien los estados consecuentes luego de la elección de las agrupaciones coincidentes o persistentes
 
                 //? revisar la necesidad de estos dos estados ya que se debe mantener en memoria esos elememtos para poder hacer la comparación de los elementos que se van a homologar
-                dispatch(setHomologacionAgrupacionesSerieSubserie([]));
-                dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+                /* dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+                dispatch(setAgrupacionesPersistentesSerieSubserie([])); */
 
                 const {
                   //* datos para traer las agrupaciones coincidentes del ccd
@@ -228,7 +228,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     nom_unidad_actual,
                     cod_unidad_nueva,
                     nom_unidad_nueva,
-
                     id_unidad_actual,
                     id_unidad_nueva,
                   })
@@ -239,14 +238,12 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                 // ? acá primero entro a hacer la comprobación de las persistencias que se han almacena en local storage para poder asignarlas al estado correspondiente
                 // ? si no hay nada en el local,se llaman los servicios para asginar valor
 
-                if (
+                /*   if (
                   Object.keys(relacionesAlmacenamientoLocal).some(
                     (key) => key === id_unidad_actual.toString()
                   )
                 ) {
                   console.log('existe');
-
-                  // ? si existe el valor en el local storage se asigna el valor al estado correspondiente
                   dispatch(
                     setHomologacionAgrupacionesSerieSubserie(
                       relacionesAlmacenamientoLocal[id_unidad_actual]
@@ -260,7 +257,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     )
                   );
                   return;
-                }
+                } */
 
                 // id_unidad_actual - secciones
                 // id_unidad_org_actual - series
@@ -279,24 +276,43 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       resCoincidenciasAgrupacionesDocumentales
                     )
                   );
-                  //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho
+                });
 
-                  // ! LLAMAR A LA PETICIÓN DE LAS AGRUPACIONES PERSISTENTES
-                  void fnGetPersistenciasConfirmadas({
-                    id_ccd_nuevo,
-                    id_unidad_actual,
-                    id_unidad_nueva,
-                  }).then((resAgrupacionesPersistentes: any) => {
-                    console.log(resAgrupacionesPersistentes);
-                    dispatch(
-                      setAgrupacionesPersistentesSerieSubserie(
-                        resAgrupacionesPersistentes
-                      )
-                    );
-                    //* asignar esas persistencias al estado si ya existen
-                  });
+                //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho
 
-                  
+                // ! LLAMAR A LA PETICIÓN DE LAS AGRUPACIONES PERSISTENTES
+                void fnGetPersistenciasConfirmadas({
+                  id_ccd_nuevo,
+                  id_unidad_actual,
+                  id_unidad_nueva,
+                }).then((resAgrupacionesPersistentes: any) => {
+                  console.log(resAgrupacionesPersistentes);
+                  dispatch(
+                    setAgrupacionesPersistentesSerieSubserie(
+                      resAgrupacionesPersistentes
+                    )
+                  );
+                  /*
+                  dispatch(
+                      setRelacionesAlmacenamientoLocal({
+                        ...relacionesAlmacenamientoLocal,
+                        [params?.row?.id_unidad_org_actual]: {
+                          ...relacionesAlmacenamientoLocal[
+                            params?.row?.id_unidad_org_actual
+                          ],
+                          agrupacionesPersistentesSerieSubserie: [
+                            ...relacionesAlmacenamientoLocal[
+                              params?.row?.id_unidad_org_actual
+                            ]?.agrupacionesPersistentesSerieSubserie,
+                            resAgrupacionesPersistentes,
+                          ],
+                          homologacionAgrupacionesSerieSubserie:
+                            resCoincidenciasAgrupacionesDocumentales,
+                        },
+                      })
+                    ); */
+
+                  //* asignar esas persistencias al estado si ya existen
                 });
               }}
             >

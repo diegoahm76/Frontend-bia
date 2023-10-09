@@ -63,33 +63,25 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     // };
     // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
 
-    dispatch(
+  /*  dispatch(
       setRelacionesAlmacenamientoLocal({
         ...relacionesAlmacenamientoLocal,
         [params?.row?.id_unidad_org_actual]: {
           ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-          /* [params?.row?.id_catalogo_serie_actual]: {
-          ...params?.row,
-          persistenciaConfirmada: true,
-        },*/
           agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-          homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
+          // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
         },
       })
-    );
+    );*/
 
-    console.log({
+/*    console.log({
       ...relacionesAlmacenamientoLocal,
       [params?.row?.id_unidad_org_actual]: {
         ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-        /* [params?.row?.id_catalogo_serie_actual]: {
-          ...params?.row,
-          persistenciaConfirmada: true,
-        },*/
         agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-        homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
+        // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
       },
-    });
+    }); */
     control_success('Persistencia confirmada');
   };
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----

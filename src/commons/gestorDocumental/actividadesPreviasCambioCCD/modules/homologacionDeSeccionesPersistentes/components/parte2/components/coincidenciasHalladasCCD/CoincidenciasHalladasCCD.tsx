@@ -45,8 +45,8 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
       (item: any) => item?.id_unidad_actual !== params?.row?.id_unidad_actual
     );
 
-    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
     dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
+    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
     control_success('Persistencia confirmada');
   };
 

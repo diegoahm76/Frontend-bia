@@ -67,7 +67,23 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
         })),
       };
 
-      console.log(objectToSend);
+      void postPersistenciasConfirmadas({
+        setLoading: setLoadingButton,
+        dataToPost: objectToSend,
+      }).then((res) => {
+        //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
+        void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
+        void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
+
+        dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+        dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+
+        /* if (res) {
+          getOutModule(navigate, [() => dispatch(reset_states())]);
+        } */
+      });
+
+      return;
     }
 
     const dataToSend = {

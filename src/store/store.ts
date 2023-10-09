@@ -2,6 +2,8 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { persistReducer } from "redux-persist";
+
+
 import { layout_slice } from "./layoutSlice";
 import { auth_slice } from "../commons/auth/store/authSlice";
 import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
@@ -55,6 +57,7 @@ import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/Obli
 import { cierre_expedientes_slice } from "../commons/gestorDocumental/Expedientes/cierreExpediente/store/slice/indexCierreExpedientes";
 import { archivo_fisico_slice } from "../commons/gestorDocumental/archivoFisico/store/slice/indexArchivoFisico";
 import { configuracion_tiempo_respuesta_slice } from "../commons/gestorDocumental/confiTiemposRespuestaPlazoAccion/store/slice/indexConfiTiemposRespPlazoAccion";
+import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/toolkit/slice/types/AsignacionUniResp";
 
 const persist_config = {
   key: "macarenia_app",
@@ -131,6 +134,9 @@ const app_reducers = combineReducers({
   cierre_expedientes: cierre_expedientes_slice.reducer,
   archivo_fisico: archivo_fisico_slice.reducer,
   confi_tiempo_respuesta: configuracion_tiempo_respuesta_slice.reducer,
+  //* asignacion de unidades responsables
+  AsigUniRespSlice: AsigUniRespSlice.reducer,
+  //* asignacion de unidades responsables
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

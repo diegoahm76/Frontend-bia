@@ -124,7 +124,7 @@ export const getCcdActual = async (
     console.log(ccdActual?.id_organigrama);
     console.log(params.row.id_organigrama);
 
-    if (params.row.id_organigrama !== ccdActual?.id_organigrama) {
+    if (params.row.id_organigrama === ccdActual?.id_organigrama) {
       void Swal.fire({
         icon: 'warning',
         title: 'NO SE PUEDE USAR EL CCD',
