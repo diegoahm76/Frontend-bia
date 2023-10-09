@@ -135,11 +135,11 @@ export const AñosCerrados: React.FC<IProps> = ({
       if (response.data) {
         set_datos_persona_consecutivo_actual(response.data.data);
       }
-    } catch (err) {
-      const temp = err as AxiosError;
-      if (temp.response?.status !== 404) {
-        control_error(err);
-      }
+    } catch (err: any) {
+      control_error(
+        err.response.data.datail ||
+          'Error al consultar datos de la persona, al parecer no se encuentra quien configuto el consecutivo o quien solicito el ultimo consecutivo'
+      );
     }
   };
 

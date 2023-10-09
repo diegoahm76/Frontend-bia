@@ -54,7 +54,7 @@ export const crear_metadato: any = (
             return data;
         } catch (error: any) {
             console.log(error);
-            control_error(error?.response?.data?.non_field_errors[0]);
+            control_error(error.response.data.detail);
 
             return error as AxiosError;
         }
@@ -203,6 +203,27 @@ export const crear_valor_metadato: any = (
         } catch (error: any) {
 
             control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// listar valores
+
+export const get_valores_metadatos = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('gestor/metadatos/valores-metadatos/listar/');
+
+            if (data.success === true) {
+                dispatch(set_valores_metadatos(data.data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
             return error as AxiosError;
         }
     };

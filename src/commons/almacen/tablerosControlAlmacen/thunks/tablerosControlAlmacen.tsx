@@ -55,3 +55,15 @@ export const obtener_consumo_bienes_und: any = (filtros: { seleccion_tipo_despac
     }
   };
 };
+// Consumo Mantenimientos Programados
+export const obtener_mtto_programados: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/mantenimientos/programados/control/get-list/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

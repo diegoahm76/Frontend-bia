@@ -3,8 +3,11 @@ import { api } from '../../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../../helpers';
 import Swal from 'sweetalert2';
 import { NavBar } from './../../../../../../../components/NavBar';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 /* eslint-disable @typescript-eslint/naming-convention */
+
+// ! --------- GET CCDS DISPONIBLES PARA HOMOLOGAR SERIES DOCUMENTALES ---------
 export const functionGetCcdHomologacionSeries = async (
   SetLoadingRequest: any,
   navigate: any
@@ -12,13 +15,12 @@ export const functionGetCcdHomologacionSeries = async (
   try {
     SetLoadingRequest(true);
     const url = 'gestor/ccd/get-homologacion-busqueda/';
-    const {
-      data,
-    }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
-      await api.get(url);
-    if (data?.data.length === 0) {
-      control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
-      return data?.data;
+    const { data } = await api.get(url);
+
+    const datos = [...(data?.data ?? [])];
+
+    if (datos.length > 0) {
+      control_success('Se han encontrado los siguientes CCDs disponibles' || data?.detail);
     } else {
       void Swal.fire({
         icon: 'warning',
@@ -33,10 +35,13 @@ export const functionGetCcdHomologacionSeries = async (
         allowEscapeKey: false,
       }).then((result: any) => {
         if (result.isConfirmed) {
-          navigate('/app/gestor_documental/activacion_instrumentos_archivisticos');
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
         }
       });
     }
+    return datos;
   } catch (err) {
     control_error('No se han encontrado datos que coincidan');
     return [];
@@ -45,58 +50,62 @@ export const functionGetCcdHomologacionSeries = async (
   }
 };
 
+// ! --------- GET CCD ACTUAL, VALIDACIÓN INICIAL DEL MÓDULOgit  ---------
 export const validacionInicialCCD = async (navigate: any): Promise<any> => {
   try {
-    const url = 'gestor/ccd/get-homologacion-busqueda/';
-    const {
-      data,
-    }: AxiosResponse<{ data: any[]; detail?: string; message?: string }> =
-      await api.get(url);
-    if (data?.data.length > 0) {
-      // control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
-      if (
-        data?.data.length > 1
-        // && data?.data?.some((element: any) => element?.actual)
-      ) {
-        data?.data?.some((element: any) => element?.actual);
-        console.log('hay más de un ccd disponible');
-      }
+    const url = 'gestor/ccd/get-validacion-homologacion/';
+    const { data } = await api.get(url);
 
-      console.log(data?.data);
-      return data?.data;
-    } else {
-      // control_error('No se han encontrado datos que coincidan');
-      console.log([]);
-      return [];
+    const datos = [...data?.data ?? []];
+
+    const elementoActual = datos.find((element: any) => element?.actual);
+    if (!elementoActual) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'NO HAY CCD ACTUAL',
+        text: 'Sin un CCD actual no se puede realizar la homologación de series documentales',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText:
+          'Ir a administración de instrumentos archivísticos',
+        confirmButtonColor: '#042F4A',
+        allowEscapeKey: false,
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
+        }
+      });
     }
+
+    if (datos.length > 0) {
+      // control_success(data?.detail ?? 'Se han encontrado los siguientes datos');
+    } else {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'ACTUALMENTE NO HAY UN CCD DISPONIBLE',
+        text: 'Sin CCDs en el sistema no es posible usar el módulo de homologación de series documentales',
+        showCloseButton: false,
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        cancelButtonText: 'Reiniciar módulo',
+        confirmButtonText: 'Ir a administración de instrumentos archivísticos',
+        confirmButtonColor: '#042F4A',
+        allowEscapeKey: false,
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          navigate(
+            '/app/gestor_documental/activacion_instrumentos_archivisticos'
+          );
+        }
+      });
+    }
+    // console.log(datos);
+    return datos;
   } catch (err) {
-    // control_error('No se han encontrado datos que coincidan');
     return [];
   }
 };
-
-/* if (elementosNoRepetidos.length === 0) {
-  void Swal.fire({
-    icon: 'warning',
-    title: 'NO HAY PERSONAS PARA TRASLADAR',
-    text: 'No se encuentran personas disponibles para realizar el traslado masivo de unidades organizacionales',
-    showCloseButton: false,
-    allowOutsideClick: false,
-    showCancelButton: true,
-    showConfirmButton: true,
-    cancelButtonText: 'Reiniciar módulo',
-    confirmButtonText: 'Ir a administrador de personas',
-    confirmButtonColor: '#042F4A',
-
-    allowEscapeKey: false
-  }).then((result: any) => {
-    if (result.isConfirmed) {
-      navigate('/app/transversal/administracion_personas');
-    } else {
-      window.location.reload();
-    }
-  });
-} else {
-  console.log('no haz salido del módulo')
-}
-*/

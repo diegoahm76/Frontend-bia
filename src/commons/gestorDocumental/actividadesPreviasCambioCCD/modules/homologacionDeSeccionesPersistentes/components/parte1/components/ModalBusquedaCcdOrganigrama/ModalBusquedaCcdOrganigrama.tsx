@@ -18,7 +18,11 @@ import {
   Stack,
   Tooltip,
 } from '@mui/material';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridValueGetterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 
 //* icons
@@ -33,7 +37,19 @@ import { download_pdf } from '../../../../../../../../../documentos-descargar/PD
 import { useAppDispatch } from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
-import { setCcdOrganigramaCurrent } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import {
+  reset_states,
+  setAgrupacionesPersistentesSerieSubserie,
+  setCcdOrganigramaCurrent,
+  setHomologacionAgrupacionesSerieSubserie,
+  setHomologacionUnidades,
+  setRelacionesAlmacenamientoLocal,
+  setUnidadesPersistentes,
+} from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import {
+  fnGetHomologacionUnidades,
+  fnGetUnidadesPersistentes,
+} from '../../../../toolkit/thunks/seccionesPersistentes.service';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -42,11 +58,64 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   // ? ---- context declaration ----
-  const {
-    modalSeleccionCCD_PSD,
-    handleSeleccionCCD_PSD,
-    loadingButtonPSD,
-  } = useContext(ModalContextPSD);
+  const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
+    useContext(ModalContextPSD);
+
+  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
+    //* se limpian todos los estados que se relacionan con la homologación de unidades
+    // dispatch(setCcdOrganigramaCurrent(params.row));
+    // dispatch(setRelacionesAlmacenamientoLocal({}));
+    dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+    dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+
+    try {
+      const resHomologacionesUnidades = await fnGetHomologacionUnidades(
+        params.row.id_ccd
+      );
+      console.log(resHomologacionesUnidades);
+      // ! se mezcla la información necesaria para poder tener todos los datos disponibles
+      const infoToReturn =
+        resHomologacionesUnidades?.coincidencias.map((item: any) => {
+          return {
+            ...item,
+            mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
+            id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
+            id_ccd_nuevo: params.row.id_ccd,
+          };
+        }) || [];
+
+      if (resHomologacionesUnidades?.mismo_organigrama) {
+        dispatch(setUnidadesPersistentes(infoToReturn));
+      } else {
+        dispatch(setHomologacionUnidades(infoToReturn));
+
+        const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
+          params.row.id_ccd
+        );
+        console.log(resUnidadesPersistentes);
+        //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
+        /*
+          - tiene prop id_ccd_nuevo
+          - array unidades persistentes
+        */
+
+        dispatch(
+          setUnidadesPersistentes(
+            resUnidadesPersistentes?.unidades_persistentes.map(
+              (seccionPersistente: any) => ({
+                ...seccionPersistente,
+                mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
+                id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
+                id_ccd_nuevo: params.row.id_ccd,
+              })
+            )
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const columns_ccds: GridColDef[] = [
     ...columnnsSelCCDPSD,
@@ -91,21 +160,20 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                // ! se limpia la lista de series y subseries
-                // dispatch(setListaSeriesSubseries([]));
-                // dispatch(set_current_unidad_organizacional_action(null));
-
-                //* se traen las unidades disponibles y se asignan al estado
-                /* void get_unidad_organizacional_ccd_psd(
-                  params.row.id_organigrama,
-                  setLoadingButtonPSD
-                ).then((data: any) => {
-                  // ! se asignan las unidades organizacionales al estado
-                  dispatch(set_unidades_organizacionales_action(data));
-                }); */
                 console.log(params.row);
+                //* si limpia el estado local que almacenaba valores
+                dispatch(setRelacionesAlmacenamientoLocal({}));
                 // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
                 dispatch(setCcdOrganigramaCurrent(params.row));
+
+                //* se hace la petición de los siguientes servicios
+                // ? 1. homologación de unidades
+                // ? 2. unidades persistentes
+
+                /* tomar en cuenta lo siguiente, si la propiedad mismo organigrama del servicio homologacion de unidades está en true, el estado que actualiza la homologacón de unidades no debe llenarse, por el contrario se llenará el estado de unidades persistentes pero con la información que traía el servicio de HOMOLOGACIÓN DE UNIDADES  */
+
+                handleHomologacionUnidades(params);
+
                 // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
               }}

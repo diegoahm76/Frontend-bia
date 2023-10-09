@@ -260,7 +260,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       }}
     >
       <Grid item xs={12}>
-        <Title title="Módulo de administración de formatos documentales" />
+        <Title title="Módulo de administración de formatos por tipo de medio" />
         <form
           style={{
             marginTop: '20px'
