@@ -110,7 +110,8 @@ export const FacilidadPago: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if (visible_rows.length !== 0) {
+    // if (visible_rows.length !== 0) {
+      if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
       let total_coactivo = 0
       let total_persuasivo = 0
       for (let i = 0; i < visible_rows.length; i++) {
