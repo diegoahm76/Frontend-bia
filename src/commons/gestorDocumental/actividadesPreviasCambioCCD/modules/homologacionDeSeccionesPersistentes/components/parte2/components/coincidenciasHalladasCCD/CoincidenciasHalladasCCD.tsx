@@ -5,7 +5,7 @@ import {
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { columnsCoincidenciasHalladas } from './columnsCoincidencias/columnsCoincidenciasHalladas';
+import { columnsCoincidenciasHalladas } from './columnsCoincidencias/columnsCoincidencias';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
