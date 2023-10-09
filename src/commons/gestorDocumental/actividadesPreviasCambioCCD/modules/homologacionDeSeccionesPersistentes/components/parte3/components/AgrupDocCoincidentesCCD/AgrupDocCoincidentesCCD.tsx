@@ -63,7 +63,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     // };
     // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
 
-  /*  dispatch(
+  dispatch(
       setRelacionesAlmacenamientoLocal({
         ...relacionesAlmacenamientoLocal,
         [params?.row?.id_unidad_org_actual]: {
@@ -72,7 +72,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
           // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
         },
       })
-    );*/
+    );
 
 /*    console.log({
       ...relacionesAlmacenamientoLocal,

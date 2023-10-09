@@ -238,7 +238,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                 // ? acá primero entro a hacer la comprobación de las persistencias que se han almacena en local storage para poder asignarlas al estado correspondiente
                 // ? si no hay nada en el local,se llaman los servicios para asginar valor
 
-                /*   if (
+                if (
                   Object.keys(relacionesAlmacenamientoLocal).some(
                     (key) => key === id_unidad_actual.toString()
                   )
@@ -257,7 +257,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     )
                   );
                   return;
-                } */
+                }
 
                 // id_unidad_actual - secciones
                 // id_unidad_org_actual - series
@@ -292,8 +292,8 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       resAgrupacionesPersistentes
                     )
                   );
-                  /*
-                  dispatch(
+                  
+                 /* dispatch(
                       setRelacionesAlmacenamientoLocal({
                         ...relacionesAlmacenamientoLocal,
                         [params?.row?.id_unidad_org_actual]: {
@@ -306,11 +306,10 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                             ]?.agrupacionesPersistentesSerieSubserie,
                             resAgrupacionesPersistentes,
                           ],
-                          homologacionAgrupacionesSerieSubserie:
-                            resCoincidenciasAgrupacionesDocumentales,
+                          
                         },
                       })
-                    ); */
+                    );*/
 
                   //* asignar esas persistencias al estado si ya existen
                 });
