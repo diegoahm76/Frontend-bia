@@ -48,18 +48,17 @@ export const fnGetPersistenciasConfirmadas = async ({
   id_unidad_nueva,
 }: IGetAgrupacionesCoincidetesCcdWithoutActual): Promise<any> => {
   try {
-
     const url = `gestor/ccd/persistencia-agrupaciones-documental-ccd/get/?id_ccd_nuevo=${id_ccd_nuevo}&id_unidad_actual=${id_unidad_actual}&id_unidad_nueva=${id_unidad_nueva}`;
     const { data } = await api.get(url);
 
-    if(!data.success) return { 
-      success: false, 
+    /*    if(!data.success) return { 
+      success: false,
       data: [],
       detail: data.detail,
     }
-
+*/
     console.log(data);
-    const coincidencias = [...(data?.data ?? [])];
+    const coincidencias = [...(data?.data?.coincidencias ?? [])];
 
     if (coincidencias.length > 0) {
       control_success('coincidencias documentales de CCD encontradas');
@@ -71,7 +70,7 @@ export const fnGetPersistenciasConfirmadas = async ({
 
     return coincidencias;
   } catch (error: any) {
-    console.log('un error ocurrió')
+    console.log('un error ocurrió');
     return [];
   }
 };

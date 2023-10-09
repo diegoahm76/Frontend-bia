@@ -38,7 +38,10 @@ import { useAppDispatch } from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import {
+  reset_states,
+  setAgrupacionesPersistentesSerieSubserie,
   setCcdOrganigramaCurrent,
+  setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
   setRelacionesAlmacenamientoLocal,
   setUnidadesPersistentes,
@@ -59,6 +62,12 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     useContext(ModalContextPSD);
 
   const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
+    //* se limpian todos los estados que se relacionan con la homologación de unidades
+    // dispatch(setCcdOrganigramaCurrent(params.row));
+    // dispatch(setRelacionesAlmacenamientoLocal({}));
+    dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+    dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
         params.row.id_ccd
@@ -96,6 +105,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
               (seccionPersistente: any) => ({
                 ...seccionPersistente,
                 mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
+                id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
+                id_ccd_nuevo: params.row.id_ccd,
               })
             )
           )

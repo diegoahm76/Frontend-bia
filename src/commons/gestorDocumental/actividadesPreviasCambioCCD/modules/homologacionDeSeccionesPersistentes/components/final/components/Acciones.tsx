@@ -14,8 +14,16 @@ import {
 } from '../../../../../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { reset_states } from '../../../toolkit/slice/HomologacionesSeriesSlice';
+import {
+  reset_states,
+  setAgrupacionesPersistentesSerieSubserie,
+  setHomologacionAgrupacionesSerieSubserie,
+} from '../../../toolkit/slice/HomologacionesSeriesSlice';
 import { postPersistenciasConfirmadas } from '../../../toolkit/thunks/createHomologacion.service';
+import {
+  fnGetHomologacionUnidades,
+  fnGetUnidadesPersistentes,
+} from '../../../toolkit/thunks/seccionesPersistentes.service';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
@@ -36,7 +44,6 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
-
     if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
       const agrupaciones: any = Object.values(
         relacionesAlmacenamientoLocal
@@ -60,7 +67,23 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
         })),
       };
 
-      console.log(objectToSend);
+      void postPersistenciasConfirmadas({
+        setLoading: setLoadingButton,
+        dataToPost: objectToSend,
+      }).then((res) => {
+        //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
+        void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
+        void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
+
+        dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+        dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+
+        /* if (res) {
+          getOutModule(navigate, [() => dispatch(reset_states())]);
+        } */
+      });
+
+      return;
     }
 
     const dataToSend = {
@@ -77,12 +100,23 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       ),
     };
 
-   // console.log(dataToSend);
+    // console.log(dataToSend);
 
     // ! funcion de envío de datos
     void postPersistenciasConfirmadas({
       setLoading: setLoadingButton,
       dataToPost: dataToSend,
+    }).then((res) => {
+      //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
+      void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
+      void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
+
+      dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+      dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+
+      /* if (res) {
+        getOutModule(navigate, [() => dispatch(reset_states())]);
+      } */
     });
   };
 

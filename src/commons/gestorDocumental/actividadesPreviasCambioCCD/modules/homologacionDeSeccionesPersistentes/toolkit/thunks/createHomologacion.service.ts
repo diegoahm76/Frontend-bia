@@ -1,3 +1,5 @@
+import { api } from '../../../../../../../api/axios';
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export const postPersistenciasConfirmadas = async ({
   setLoading,
@@ -9,10 +11,10 @@ export const postPersistenciasConfirmadas = async ({
   try {
     setLoading(true);
     console.log(dataToPost);
-    /* const url = 'gestor/ccd/persistencia-confirmada-ccd/create/'
-    const response = await api.post(url, dataToPost)
-
-    console.log() */
+    const url = 'gestor/ccd/persistencia-confirmada-ccd/create/';
+    const response = await api.post(url, dataToPost);
+    console.log(response);
+    return response;
   } catch (err) {
   } finally {
     setLoading(false);
