@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState, useEffect } from 'react';
-import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip } from "@mui/material"
+import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip, Pagination, Stack } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Title } from "../../../components"
 import { EditarCartera } from '../components/GestionCartera/EditarCartera';
@@ -18,6 +18,8 @@ import { CreateProcesoModal } from '../components/GestionCartera/modal/CreatePro
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
   const [carteras, set_carteras] = useState<Cartera[]>([]);
+  const [current_page, set_current_page] = useState<number>(0);
+  const [count, set_count] = useState<number>(0);
   const [loading, set_loading] = useState<boolean>(true);
   const [procesos, set_procesos] = useState<Proceso[]>([]);
   const [position_tab, set_position_tab] = useState('1');
@@ -200,9 +202,10 @@ export const GestionCarteraScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    api.get('recaudo/cobros/carteras')
+    api.get(`recaudo/cobros/carteras/?limit=10&offset=${current_page}`)
       .then((response) => {
         set_carteras(response.data.results.data);
+        set_count(response.data.count);
       })
       .catch((error) => {
         console.log(error);
@@ -210,7 +213,7 @@ export const GestionCarteraScreen: React.FC = () => {
       .finally(() => {
         set_loading(false);
       });
-  }, []);
+  }, [current_page]);
 
   useEffect(() => {
     api.get('recaudo/procesos/flujos')
@@ -276,9 +279,10 @@ export const GestionCarteraScreen: React.FC = () => {
 
   const update_carteras = (): void => {
     set_loading(true);
-    api.get('recaudo/cobros/carteras')
+    api.get(`recaudo/cobros/carteras/?limit=10&offset=${current_page}`)
       .then((response) => {
-        set_carteras(response.data.data);
+        set_carteras(response.data.results.data);
+        set_count(response.data.count);
       })
       .catch((error) => {
         console.log(error);
@@ -504,6 +508,10 @@ export const GestionCarteraScreen: React.FC = () => {
     }
   };
 
+  const handle_pagination_change = (event: React.ChangeEvent<unknown>, value: number): void => {
+    set_current_page((value - 1) * 10);
+  };
+
   return (
     <>
       <Grid
@@ -556,6 +564,15 @@ export const GestionCarteraScreen: React.FC = () => {
                     }
                   }}
                 />
+                <Stack alignItems={'center'} sx={{ pt: '30px' }}>
+                  <Pagination
+                    count={Math.ceil(count / 10)}
+                    size='large'
+                    shape='rounded'
+                    color='primary'
+                    onChange={handle_pagination_change}
+                  />
+                </Stack>
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
