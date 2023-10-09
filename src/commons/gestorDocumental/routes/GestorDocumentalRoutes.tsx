@@ -95,8 +95,8 @@ const routes = [
     component: () => <AdministracionPlantillaDocumentos_Routes />,
   },
   {
-    path: 'configuracionnnnnn/',
-    name: 'configuracionnnnnn',
+    path: 'configuracionmedio/',
+    name: 'configuracionmedio',
     component: () => <ConfiguracionMediosSolicitud_routes />,
   },
   {
