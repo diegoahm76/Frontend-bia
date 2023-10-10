@@ -277,7 +277,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     )
                   );
 
-                  if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
+                 /* if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
                     dispatch(
                       setRelacionesAlmacenamientoLocal({
                         ...relacionesAlmacenamientoLocal,
@@ -296,7 +296,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       })
                     );
 
-                    //* console.log de los datos necesarios
                     console.log({
                       ...relacionesAlmacenamientoLocal,
                       [params?.row?.id_unidad_actual]: {
@@ -312,7 +311,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                         ],
                       },
                     });
-                  }
+                  }*/
                 });
 
                 //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho

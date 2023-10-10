@@ -45,6 +45,10 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
+
+    console.log(unidadesPersistentes);
+
+
     if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
       const agrupaciones: any = Object.values(
         relacionesAlmacenamientoLocal
@@ -58,42 +62,37 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
       const objectToSend = {
         id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
-        unidades_persistentes: unidadesPersistentes
-          .filter(
+        unidades_persistentes: unidadesPersistentes.map((el: any) => ({
+          id_unidad_actual: el.id_unidad_actual,
+          id_unidad_nueva: el.id_unidad_nueva,
+        })),
+        catalagos_persistentes: agrupaciones
+          ?.filter(
             (el: any, index: number, self: any[]) =>
               index ===
               self.findIndex(
                 (t: any) =>
                   t.id_catalogo_serie_actual === el.id_catalogo_serie_actual &&
-                  t.id_catalogo_serie_actual === el.id_catalogo_serie_actual
+                  t.id_catalogo_serie_nueva === el.id_catalogo_serie_nueva
               )
           )
           .map((el: any) => ({
-            id_unidad_actual: el.id_unidad_actual,
-            id_unidad_nueva: el.id_unidad_nueva,
+            id_catalogo_serie_actual: el.id_catalogo_serie_actual,
+            id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
           })),
-        catalagos_persistentes: agrupaciones?.map((el: any) => ({
-          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
-          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
-        })),
       };
-
+      console.log(objectToSend);
+      /*
       void postPersistenciasConfirmadas({
         setLoading: setLoadingButton,
         dataToPost: objectToSend,
       }).then((res) => {
-        //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
-        // dispatch(setRelacionesAlmacenamientoLocal({}))
         void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
         void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
 
         dispatch(setHomologacionAgrupacionesSerieSubserie([]));
         dispatch(setAgrupacionesPersistentesSerieSubserie([]));
-
-        /* if (res) {
-          getOutModule(navigate, [() => dispatch(reset_states())]);
-        } */
-      });
+      }); */
 
       return;
     }
@@ -112,7 +111,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       ),
     };
 
-    // console.log(dataToSend);
+    console.log(dataToSend);
 
     // ! funcion de envío de datos
     void postPersistenciasConfirmadas({
