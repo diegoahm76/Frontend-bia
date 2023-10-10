@@ -4,7 +4,7 @@ import { containerStyles } from '../../../../../../tca/screens/utils/constants/c
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../../../../components';
 import { AgrupDocCoincidentesCCD } from '../components/AgrupDocCoincidentesCCD/AgrupDocCoincidentesCCD';
-import { PersistenciaSeriesConfirmadasCCD } from '../components/PersistenciaSeriesConfirmadasCCD/PersistenciaSeriesConfirmadasCCD';
+import { PersistenciaSerConfir } from '../components/PersistenciaSerConfir/PersistenciaSerConfir';
 import { SecSubSeleccionada } from '../components/SecSubSeleccionada/SecSubSeleccionada';
 import { useAppSelector } from '../../../../../../../../hooks';
 
@@ -33,7 +33,7 @@ export const SelSerDocPersistentesScreen = (): JSX.Element => {
       <AgrupDocCoincidentesCCD />
 
       {/* Persistencia de series confirmadas en nuevo CCD */}
-      <PersistenciaSeriesConfirmadasCCD />
+      <PersistenciaSerConfir />
     </Grid>
   );
 };
