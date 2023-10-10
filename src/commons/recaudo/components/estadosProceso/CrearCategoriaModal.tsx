@@ -53,15 +53,15 @@ export const CrearCategoriaModal = ({
       <Box component='form' onSubmit={handle_submit} sx={{
         width: '500px'
       }}>
-        <DialogTitle>{actualizar_categoria ? 'Editar Categoría' : 'Crear Nueva Categoría'}</DialogTitle>
+        <DialogTitle>{actualizar_categoria ? 'Editar Subetapa' : 'Crear Nueva Subetapa'}</DialogTitle>
         <DialogContent dividers>
           <Grid container direction='column'>
             <Grid item xs={12} md={5} margin={1}>
               <TextField
                 name="categoria"
                 value={form_data_categoria.categoria}
-                label='Categoria'
-                helperText='Ingrese un nombre para la categoria'
+                label='Subetapa'
+                helperText='Ingrese un nombre para la subetapa'
                 size="small"
                 fullWidth
                 onChange={handle_input_change}
@@ -74,7 +74,8 @@ export const CrearCategoriaModal = ({
                 value={form_data_categoria.orden}
                 label='Orden'
                 type="number"
-                helperText='Ingrese el orden de la categoría'
+                InputProps={{ inputProps: { min: 1 } }}
+                helperText='Ingrese el orden de la subetapa'
                 size="small"
                 fullWidth
                 onChange={handle_input_change}
