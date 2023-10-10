@@ -6,7 +6,7 @@ import { Title } from "../../../components"
 import { EditarCartera } from '../components/GestionCartera/EditarCartera';
 import { CobroCoactivo } from '../components/GestionCartera/CobroCoactivo';
 import { DataGrid, GridToolbar, type GridColDef } from '@mui/x-data-grid';
-import type { AtributoEtapa, Proceso, ValoresProceso } from '../interfaces/proceso';
+import type { AtributoEtapa, CategoriaAtributo, Proceso, ValoresProceso } from '../interfaces/proceso';
 import EditIcon from '@mui/icons-material/Edit';
 import type { FlujoProceso } from '../interfaces/flujoProceso';
 import { api } from '../../../api/axios';
@@ -22,6 +22,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [count, set_count] = useState<number>(0);
   const [loading, set_loading] = useState<boolean>(true);
   const [procesos, set_procesos] = useState<Proceso[]>([]);
+  const [categorias, set_categorias] = useState<CategoriaAtributo[]>([]);
   const [position_tab, set_position_tab] = useState('1');
   const [selected_proceso, set_selected_proceso] = useState({
     fecha_facturacion: '',
@@ -104,14 +105,23 @@ export const GestionCarteraScreen: React.FC = () => {
     },
     {
       field: 'proceso_cartera',
-      headerName: 'Estado Proceso',
+      headerName: 'Etapas',
       minWidth: 100,
       flex: 1,
       valueGetter: (params) => {
         if (!params.value) {
           return params.value;
         }
-        return procesos.find(proceso => proceso.id === params.value[0]?.id)?.id_etapa.etapa ?? 'Sin proceso activo';
+        return procesos.find((proceso) => proceso.id === params.value[0]?.id)?.id_etapa.etapa ?? 'Sin etapa activa';
+      }
+    },
+    {
+      field: 'id_categoria',
+      headerName: 'Subetapas',
+      minWidth: 100,
+      flex: 1,
+      valueGetter: (params) => {
+        return categorias.find((categoria) => categoria.id === params.row.proceso_cartera[0]?.id_categoria)?.categoria ?? 'Sin subetapa activa';
       }
     },
     {
@@ -202,6 +212,16 @@ export const GestionCarteraScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    api.get('recaudo/procesos/categoria-atributos')
+    .then((response) => {
+      set_categorias(response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }, []);
+
+  useEffect(() => {
     api.get(`recaudo/cobros/carteras/?limit=10&offset=${current_page}`)
       .then((response) => {
         set_carteras(response.data.results.data);
@@ -259,13 +279,25 @@ export const GestionCarteraScreen: React.FC = () => {
     if (id_etapa_destino) {
       api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
         .then((response) => {
-          set_subetapas(response.data.data);
+          delete_duplicated_atributos(response.data.data);
         })
         .catch((error) => {
           console.log(error);
         });
     }
   }, [id_etapa_destino]);
+
+  useEffect(() => {
+    if (id_etapa) {
+      api.get(`recaudo/procesos/atributos/${id_etapa}`)
+        .then((response) => {
+          delete_duplicated_atributos(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [id_etapa]);
 
   const update_procesos_sin_finalizar = (): void => {
     api.get('recaudo/procesos/procesos-sin-finalizar')
@@ -386,6 +418,17 @@ export const GestionCarteraScreen: React.FC = () => {
 
     set_input_files(new_input_files);
     set_input_values(new_input_values);
+  };
+
+  const delete_duplicated_atributos = (atributos: AtributoEtapa[]): void => {
+    const unique_atributos: AtributoEtapa[] = [];
+    for (const atributo of atributos) {
+      const is_duplicated = unique_atributos.find((atributo_unico) => atributo_unico.id_categoria.id === atributo.id_categoria.id);
+      if (!is_duplicated) {
+        unique_atributos.push(atributo);
+      }
+    }
+    set_subetapas(unique_atributos);
   };
 
   const group_atributos = (atributos: AtributoEtapa[]): void => {
