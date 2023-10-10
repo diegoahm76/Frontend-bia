@@ -32,7 +32,12 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
 
     return coincidencias;
   } catch (error: any) {
-    throw error;
+    // throw error;
+    if (error?.response?.status === 500) {
+      control_warning('Sin coincidencias documentales de CCD');
+      return [];
+    }
+    return [];
   }
 };
 
@@ -56,7 +61,7 @@ export const fnGetPersistenciasConfirmadas = async ({
       return [];
     }
 
-  /*  const coincidencias = [
+    /*  const coincidencias = [
       ...(res?.data?.data?.agrupaciones_persistentes || []),
     ];
 */
@@ -69,10 +74,11 @@ export const fnGetPersistenciasConfirmadas = async ({
       );
       return [];
     }
-
   } catch (error: any) {
-    console.log('un error ocurrió');
-    control_warning(error?.response?.data?.detail);
+    if (error?.response?.status === 500) {
+      control_warning('Sin persistencias confirmadas');
+      return [];
+    }
     return [];
   }
 };

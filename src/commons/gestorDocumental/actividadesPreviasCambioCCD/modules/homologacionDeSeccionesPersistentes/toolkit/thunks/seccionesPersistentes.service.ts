@@ -38,7 +38,7 @@ export const fnGetUnidadesPersistentes = async (idCcdNuevo: number) => {
 
     control_error('Error al obtener las unidades persistentes');
     return {
-      coincidencias: [],
+      unidades_persistentes: [],
       //* mirar si se debe retornar algo más al error
     };
   } catch (error: any) {
