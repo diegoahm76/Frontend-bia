@@ -246,7 +246,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const cargar_entradas = (): void => {
     const encabezado: IInfoEntrada = {
-      id_entrada_almacen: numero_entrada,
+      id_entrada_almacen: entrada_update ? buscar_articulo.info_entrada.id_entrada_almacen : null,
       fecha_entrada: fecha_entrada.format("YYYY-MM-DD HH:mm:ss"), 
       motivo, 
       observacion: observaciones, 
@@ -264,7 +264,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         set_info_items(prevArray => [...prevArray, {
           id_entrada_local: String(uuid()),
           id_item_entrada_almacen: null,
-          id_entrada_almacen: numero_entrada,
+          id_entrada_almacen: entrada_update ? buscar_articulo.info_entrada.id_entrada_almacen : null,
           id_bien: null,
           codigo_bien: articulo.codigo_bien,
           nombre_bien: articulo.nombre,
@@ -288,7 +288,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_info_items(prevArray => [...prevArray, {
         id_entrada_local: String(uuid()),
         id_item_entrada_almacen: null,
-        id_entrada_almacen: numero_entrada,
+        id_entrada_almacen: entrada_update ? buscar_articulo.info_entrada.id_entrada_almacen : null,
         id_bien: articulo.id_bien,
         id_unidad_medida_vida_util: null,
         codigo_bien: articulo.codigo_bien,
