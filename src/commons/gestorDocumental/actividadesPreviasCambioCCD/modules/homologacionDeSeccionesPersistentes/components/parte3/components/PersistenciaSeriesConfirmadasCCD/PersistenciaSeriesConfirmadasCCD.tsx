@@ -38,7 +38,7 @@ export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
       ...homologacionAgrupacionesSerieSubserie,
       {
         ...params?.row,
-        persistenciaConfirmada: true,
+        persistenciaConfirmada: false,
       },
     ];
 

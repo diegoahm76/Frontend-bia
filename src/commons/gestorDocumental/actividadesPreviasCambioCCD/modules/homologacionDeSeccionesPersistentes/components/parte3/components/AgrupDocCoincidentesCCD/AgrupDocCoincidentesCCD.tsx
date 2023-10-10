@@ -69,7 +69,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
         [params?.row?.id_unidad_org_actual]: {
           ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
           agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-          // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
+          homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
         },
       })
     );
