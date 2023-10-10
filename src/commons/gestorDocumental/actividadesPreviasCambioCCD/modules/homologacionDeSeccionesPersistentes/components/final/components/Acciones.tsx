@@ -18,6 +18,7 @@ import {
   reset_states,
   setAgrupacionesPersistentesSerieSubserie,
   setHomologacionAgrupacionesSerieSubserie,
+  setRelacionesAlmacenamientoLocal,
 } from '../../../toolkit/slice/HomologacionesSeriesSlice';
 import { postPersistenciasConfirmadas } from '../../../toolkit/thunks/createHomologacion.service';
 import {
@@ -82,6 +83,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
         dataToPost: objectToSend,
       }).then((res) => {
         //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
+        // dispatch(setRelacionesAlmacenamientoLocal({}))
         void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
         void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
 

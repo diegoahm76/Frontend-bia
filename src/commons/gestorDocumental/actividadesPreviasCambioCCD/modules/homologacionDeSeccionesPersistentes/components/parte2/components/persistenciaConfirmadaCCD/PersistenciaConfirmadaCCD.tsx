@@ -168,7 +168,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         <>
           <Tooltip
             title={
-              params?.row?.mismo_organigrama
+              !params?.row?.mismo_organigrama
                 ? 'Eliminar persistencia'
                 : 'No se puede eliminar una persistencia confirmada de un CCD perteneciente al mismo organigrama'
             }
