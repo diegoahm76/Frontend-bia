@@ -25,7 +25,7 @@ api.interceptors.request.use(
 
         return request;
       }
-     /* window.location.href = '/#/auth/login';
+      /* window.location.href = '/#/auth/login';
       control_warning(
         'Su sesión ha expirado, por favor vuelva a iniciar sesión'
       );

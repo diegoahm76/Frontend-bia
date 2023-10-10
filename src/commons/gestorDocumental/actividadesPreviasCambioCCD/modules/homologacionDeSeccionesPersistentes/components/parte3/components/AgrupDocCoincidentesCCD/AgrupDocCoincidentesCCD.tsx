@@ -5,7 +5,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
-import { columnsAgrupDocCoinCCD } from './columnsAgrupDocCoinCCD/columnsAgrupDocCoinCCD';
+import { columnsAgrupCcd } from './columns/columnsAgrupCcd';
 import { Avatar, IconButton, Tooltip, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -88,7 +88,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
 
   //* declaración de columnas del data grid
   const columns = [
-    ...columnsAgrupDocCoinCCD,
+    ...columnsAgrupCcd,
     {
       headerName: 'Acciones',
       field: 'acciones',

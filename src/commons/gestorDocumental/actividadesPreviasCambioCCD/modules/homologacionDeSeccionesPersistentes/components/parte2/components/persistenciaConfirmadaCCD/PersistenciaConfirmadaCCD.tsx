@@ -5,7 +5,7 @@ import {
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { columnsCoincidenciasHalladas as columnsPersistenciasConfirmadas } from '../coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencias';
+import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { control_success } from '../../../../../../../../../helpers';

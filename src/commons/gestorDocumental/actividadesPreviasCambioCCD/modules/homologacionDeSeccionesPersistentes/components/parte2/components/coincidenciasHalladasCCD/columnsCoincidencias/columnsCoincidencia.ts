@@ -12,7 +12,7 @@
 },
 */
 
-export const columnsCoincidenciasHalladas = [
+export const columnsCoincidencias = [
   //* codigo unidad ccd actual
   {
     field: 'cod_unidad_actual',

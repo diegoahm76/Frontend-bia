@@ -23,7 +23,7 @@
 
 */
 
-export const columnsAgrupDocCoinCCD = [
+export const columnsAgrupCcd = [
   {
     field: 'cod_serie_actual',
     headerName: 'Cód. serie doc. (ACTUAL)',

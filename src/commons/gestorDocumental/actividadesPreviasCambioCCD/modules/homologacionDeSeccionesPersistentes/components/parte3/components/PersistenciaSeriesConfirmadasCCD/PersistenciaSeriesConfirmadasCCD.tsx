@@ -5,7 +5,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
-import { columnsAgrupDocCoinCCD as columnsPersistenciasSeriesSub } from '../AgrupDocCoincidentesCCD/columnsAgrupDocCoinCCD/columnsAgrupDocCoinCCD';
+import { columnsAgrupCcd as columnsPersistenciasSeriesSub } from '../AgrupDocCoincidentesCCD/columns/columnsAgrupCcd';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
