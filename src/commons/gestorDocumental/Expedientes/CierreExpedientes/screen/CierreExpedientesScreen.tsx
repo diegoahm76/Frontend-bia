@@ -18,7 +18,7 @@ import { set_cierre_expediente } from '../../store/slice/indexExpedientes';
 import { DataContext } from '../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CierreExpedientesScreen: React.FC = () => {
+export const CierreExpedientesDocumentalesScreen: React.FC = () => {
   const [open_dialog, set_open_dialog] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();

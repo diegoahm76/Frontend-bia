@@ -265,7 +265,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           id_entrada_local: String(uuid()),
           id_item_entrada_almacen: null,
           id_entrada_almacen: numero_entrada,
-          id_bien: articulo.id_bien,
+          id_bien: null,
           codigo_bien: articulo.codigo_bien,
           nombre_bien: articulo.nombre,
           cantidad: 1,
@@ -279,6 +279,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           id_unidad_medida_vida_util: info_item.unidad_tiempo,
           valor_residual: info_item.valor_residual,
           tiene_hoja_vida: info_item.abrir_hdv,
+          doc_identificador_bien: info_item.placa_serial,
+          cantidad_vida_util: info_item.vida_util,
+          cod_estado: info_item.estado
         }])
       });
     }else{
@@ -395,7 +398,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   useEffect(() => {
     if(entradas !== undefined)
     if(entrada_update){
-      dispatch(actualizar_entrada_bien(buscar_articulo.id_entrada_almacen,entradas)).then((response: any) =>{
+      dispatch(actualizar_entrada_bien(buscar_articulo.info_entrada.id_entrada_almacen,entradas)).then((response: any) =>{
         console.log("Se actualizó una entrada: ",response);
       });
     }else{
@@ -1028,7 +1031,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               </Button>
               {anular_entrada_is_active && (<AnularEntradaComponent is_modal_active={anular_entrada_is_active}
                 set_is_modal_active={set_anular_entrada_is_active}
-                title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
+                title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.info_entrada.id_entrada_almacen}></AnularEntradaComponent>)}
               <Button
                 // color='inherit'
                 variant="outlined"
