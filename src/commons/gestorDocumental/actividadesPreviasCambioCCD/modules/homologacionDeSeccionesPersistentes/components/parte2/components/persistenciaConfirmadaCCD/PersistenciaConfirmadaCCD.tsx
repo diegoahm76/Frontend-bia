@@ -5,7 +5,7 @@ import {
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { columnsCoincidenciasHalladas as columnsPersistenciasConfirmadas } from '../coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencias';
+import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { control_success } from '../../../../../../../../../helpers';
@@ -168,7 +168,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         <>
           <Tooltip
             title={
-              params?.row?.mismo_organigrama
+              !params?.row?.mismo_organigrama
                 ? 'Eliminar persistencia'
                 : 'No se puede eliminar una persistencia confirmada de un CCD perteneciente al mismo organigrama'
             }
@@ -238,7 +238,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                 // ? acá primero entro a hacer la comprobación de las persistencias que se han almacena en local storage para poder asignarlas al estado correspondiente
                 // ? si no hay nada en el local,se llaman los servicios para asginar valor
 
-                /*   if (
+                if (
                   Object.keys(relacionesAlmacenamientoLocal).some(
                     (key) => key === id_unidad_actual.toString()
                   )
@@ -247,17 +247,17 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   dispatch(
                     setHomologacionAgrupacionesSerieSubserie(
                       relacionesAlmacenamientoLocal[id_unidad_actual]
-                        .homologacionAgrupacionesSerieSubserie
+                        .homologacionAgrupacionesSerieSubserie || []
                     )
                   );
                   dispatch(
                     setAgrupacionesPersistentesSerieSubserie(
                       relacionesAlmacenamientoLocal[id_unidad_actual]
-                        .agrupacionesPersistentesSerieSubserie
+                        .agrupacionesPersistentesSerieSubserie || []
                     )
                   );
                   return;
-                } */
+                }
 
                 // id_unidad_actual - secciones
                 // id_unidad_org_actual - series
@@ -276,6 +276,43 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       resCoincidenciasAgrupacionesDocumentales
                     )
                   );
+
+                  if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
+                    dispatch(
+                      setRelacionesAlmacenamientoLocal({
+                        ...relacionesAlmacenamientoLocal,
+                        [params?.row?.id_unidad_actual]: {
+                          ...relacionesAlmacenamientoLocal[
+                            params?.row?.id_unidad_actual
+                          ],
+                          homologacionAgrupacionesSerieSubserie: [
+                            ...(relacionesAlmacenamientoLocal[
+                              params?.row?.id_unidad_actual
+                            ]?.homologacionAgrupacionesSerieSubserie ||
+                              homologacionAgrupacionesSerieSubserie),
+                            ...resCoincidenciasAgrupacionesDocumentales,
+                          ],
+                        },
+                      })
+                    );
+
+                    //* console.log de los datos necesarios
+                    console.log({
+                      ...relacionesAlmacenamientoLocal,
+                      [params?.row?.id_unidad_actual]: {
+                        ...relacionesAlmacenamientoLocal[
+                          params?.row?.id_unidad_actual
+                        ],
+                        homologacionAgrupacionesSerieSubserie: [
+                          ...(relacionesAlmacenamientoLocal[
+                            params?.row?.id_unidad_actual
+                          ]?.homologacionAgrupacionesSerieSubserie ||
+                            homologacionAgrupacionesSerieSubserie),
+                          resCoincidenciasAgrupacionesDocumentales,
+                        ],
+                      },
+                    });
+                  }
                 });
 
                 //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho
@@ -285,35 +322,63 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_ccd_nuevo,
                   id_unidad_actual,
                   id_unidad_nueva,
-                }).then((resAgrupacionesPersistentes: any) => {
-                  console.log(resAgrupacionesPersistentes);
-                  dispatch(
-                    setAgrupacionesPersistentesSerieSubserie(
-                      resAgrupacionesPersistentes
-                    )
-                  );
-                  /*
-                  dispatch(
-                      setRelacionesAlmacenamientoLocal({
+                })
+                  .then((resAgrupacionesPersistentes: any) => {
+                    console.log(resAgrupacionesPersistentes);
+                    dispatch(
+                      setAgrupacionesPersistentesSerieSubserie(
+                        resAgrupacionesPersistentes || []
+                      )
+                    );
+                    //* asignar esas persistencias al estado si ya existen
+
+                    if (resAgrupacionesPersistentes?.length > 0) {
+                      dispatch(
+                        setRelacionesAlmacenamientoLocal({
+                          ...relacionesAlmacenamientoLocal,
+                          [params?.row?.id_unidad_actual]: {
+                            ...relacionesAlmacenamientoLocal[
+                              params?.row?.id_unidad_actual
+                            ],
+                            agrupacionesPersistentesSerieSubserie: [
+                              ...(relacionesAlmacenamientoLocal[
+                                params?.row?.id_unidad_actual
+                              ]?.agrupacionesPersistentesSerieSubserie ||
+                                agrupacionesPersistentesSerieSubserie),
+                              ...resAgrupacionesPersistentes,
+                            ],
+                            /*homologacionAgrupacionesSerieSubserie: [
+                              ...(relacionesAlmacenamientoLocal[
+                                params?.row?.id_unidad_actual
+                              ]?.homologacionAgrupacionesSerieSubserie ||
+                                homologacionAgrupacionesSerieSubserie),
+                              ...resAgrupacionesPersistentes,
+                            ],*/
+                          },
+                        })
+                      );
+
+                      //* console.log de los datos necesarios
+                      console.log({
                         ...relacionesAlmacenamientoLocal,
-                        [params?.row?.id_unidad_org_actual]: {
+                        [params?.row?.id_unidad_actual]: {
                           ...relacionesAlmacenamientoLocal[
-                            params?.row?.id_unidad_org_actual
+                            params?.row?.id_unidad_actual
                           ],
                           agrupacionesPersistentesSerieSubserie: [
-                            ...relacionesAlmacenamientoLocal[
-                              params?.row?.id_unidad_org_actual
-                            ]?.agrupacionesPersistentesSerieSubserie,
+                            ...(relacionesAlmacenamientoLocal[
+                              params?.row?.id_unidad_actual
+                            ]?.agrupacionesPersistentesSerieSubserie ||
+                              agrupacionesPersistentesSerieSubserie),
                             resAgrupacionesPersistentes,
                           ],
-                          homologacionAgrupacionesSerieSubserie:
-                            resCoincidenciasAgrupacionesDocumentales,
                         },
-                      })
-                    ); */
-
-                  //* asignar esas persistencias al estado si ya existen
-                });
+                      });
+                    }
+                  })
+                  .catch((err: any) => {
+                    console.log(err);
+                  });
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

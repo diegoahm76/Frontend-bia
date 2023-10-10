@@ -6,6 +6,7 @@ import { containerStyles } from '../../../../../../tca/screens/utils/constants/c
 import { ModalBusquedaCcdOrganigrama } from '../ModalOrganigramaCcd/ModalBusquedaOrgCcd';
 import { VistaOrgSeccionesResp } from '../SeleccionCcdOrg/vistaOrganigrama/VistaOrgSeccionesResp';
 import { VistaCcdSeccionesResp } from '../SeleccionCcdOrg/vistaCCD/VistaCCDSeccionesResp';
+import { SeccionesQuePersistiranNuevoCcd } from '../seccionesQuePersistiran/SeccionesQuePersistiran';
 
 export const Parte1Screen = (): JSX.Element => {
   // ! use States busqueda de ccds homologaciones
@@ -34,6 +35,10 @@ export const Parte1Screen = (): JSX.Element => {
       >
         <VistaOrgSeccionesResp />
       </Grid>
+
+      {/* se agrega la tabla de las secciones que persistirán, secciones que vienen del módulo deh homologación de secciones persistentes */}
+      <SeccionesQuePersistiranNuevoCcd />
+
       {/* Se agrega el modal de búsqueda de los ccd para la homologación de las series documentales */}
       <ModalBusquedaCcdOrganigrama setccdList={setccdList} ccdList={ccdList} />
     </Grid>

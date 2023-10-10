@@ -18,6 +18,7 @@ import {
   reset_states,
   setAgrupacionesPersistentesSerieSubserie,
   setHomologacionAgrupacionesSerieSubserie,
+  setRelacionesAlmacenamientoLocal,
 } from '../../../toolkit/slice/HomologacionesSeriesSlice';
 import { postPersistenciasConfirmadas } from '../../../toolkit/thunks/createHomologacion.service';
 import {
@@ -57,10 +58,20 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
       const objectToSend = {
         id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
-        unidades_persistentes: unidadesPersistentes.map((el: any) => ({
-          id_unidad_actual: el.id_unidad_actual,
-          id_unidad_nueva: el.id_unidad_nueva,
-        })),
+        unidades_persistentes: unidadesPersistentes
+          .filter(
+            (el: any, index: number, self: any[]) =>
+              index ===
+              self.findIndex(
+                (t: any) =>
+                  t.id_catalogo_serie_actual === el.id_catalogo_serie_actual &&
+                  t.id_catalogo_serie_actual === el.id_catalogo_serie_actual
+              )
+          )
+          .map((el: any) => ({
+            id_unidad_actual: el.id_unidad_actual,
+            id_unidad_nueva: el.id_unidad_nueva,
+          })),
         catalagos_persistentes: agrupaciones?.map((el: any) => ({
           id_catalogo_serie_actual: el.id_catalogo_serie_actual,
           id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
@@ -72,6 +83,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
         dataToPost: objectToSend,
       }).then((res) => {
         //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
+        // dispatch(setRelacionesAlmacenamientoLocal({}))
         void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
         void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
 

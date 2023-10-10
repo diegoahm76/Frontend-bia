@@ -25,11 +25,11 @@ api.interceptors.request.use(
 
         return request;
       }
-      window.location.href = '/#/auth/login';
+      /* window.location.href = '/#/auth/login';
       control_warning(
         'Su sesión ha expirado, por favor vuelva a iniciar sesión'
       );
-      throw new Error('No se ha encontrado un token de autenticación');
+      throw new Error('No se ha encontrado un token de autenticación');*/
     } catch (e) {
       console.log(e);
       window.location.href = '/#/auth/login';

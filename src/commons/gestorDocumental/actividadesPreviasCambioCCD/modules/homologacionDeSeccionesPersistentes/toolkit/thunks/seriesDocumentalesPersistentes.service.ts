@@ -2,7 +2,7 @@
 //! --- DOCUMENTO DE THUNKS DE LA PARTE DE SERIES DOCUMENTALES PERSISTENTES DE LA HOMOLOGACIÓN DE CCD'S ---
 
 import { api } from '../../../../../../../api/axios';
-import { control_success } from '../../../../../../../helpers';
+import { control_error, control_success } from '../../../../../../../helpers';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import type {
   IGetAgrupacionesCoincidetesCcd,
@@ -49,28 +49,30 @@ export const fnGetPersistenciasConfirmadas = async ({
 }: IGetAgrupacionesCoincidetesCcdWithoutActual): Promise<any> => {
   try {
     const url = `gestor/ccd/persistencia-agrupaciones-documental-ccd/get/?id_ccd_nuevo=${id_ccd_nuevo}&id_unidad_actual=${id_unidad_actual}&id_unidad_nueva=${id_unidad_nueva}`;
-    const { data } = await api.get(url);
+    const res = await api.get(url);
 
-    /*    if(!data.success) return { 
-      success: false,
-      data: [],
-      detail: data.detail,
+    if (res?.status === 404) {
+      control_warning('No se encontró el recurso solicitado');
+      return [];
     }
-*/
-    console.log(data);
-    const coincidencias = [...(data?.data?.coincidencias ?? [])];
 
-    if (coincidencias.length > 0) {
+  /*  const coincidencias = [
+      ...(res?.data?.data?.agrupaciones_persistentes || []),
+    ];
+*/
+    if (res?.data?.data?.agrupaciones_persistentes?.length > 0) {
       control_success('coincidencias documentales de CCD encontradas');
+      return res?.data?.data?.agrupaciones_persistentes;
     } else {
       control_warning(
         'no se encontraron agrupaciones documentales coincidentes de CCD'
       );
+      return [];
     }
 
-    return coincidencias;
   } catch (error: any) {
     console.log('un error ocurrió');
+    control_warning(error?.response?.data?.detail);
     return [];
   }
 };
