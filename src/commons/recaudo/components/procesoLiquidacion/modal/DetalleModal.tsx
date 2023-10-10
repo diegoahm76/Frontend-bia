@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction, type ChangeEvent, useEffect, useMemo } from 'react';
 import type { OpcionLiquidacion } from "../../../interfaces/liquidacion";
 import { api } from "../../../../../api/axios";
@@ -8,12 +8,13 @@ import AddIcon from '@mui/icons-material/Add';
 
 interface IProps {
   is_modal_active: boolean;
+  meses_actual: string[];
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  add_new_row: (valor: string, variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string) => void;
+  add_new_row: (mes_actual: string, valor: string, variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, add_new_row }: IProps) => {
+export const DetalleModal: React.FC<IProps> = ({ is_modal_active, meses_actual, set_is_modal_active, add_new_row }: IProps) => {
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
   const [concepto, set_concepto] = useState('');
@@ -51,11 +52,11 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
     set_concepto(event.target.value);
   };
 
-  const handle_liquidar = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handle_agregar_detalle = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const regex = new RegExp(Object.keys(variables_datos).map((propiedad) => `\\b${propiedad}\\b`).join('|'), 'g');
     const formula = opcion_liquidacion.funcion.replace(regex, matched => variables_datos[matched]);
-    add_new_row(formula, variables_datos, opcion_liquidacion, id_opcion_liquidacion, concepto);
+    add_new_row(meses_actual[0].toUpperCase(), formula, variables_datos, opcion_liquidacion, id_opcion_liquidacion, concepto);
     set_id_opcion_liquidacion('');
     set_concepto('');
     set_variables_datos({});
@@ -70,7 +71,7 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
     >
       <Box
         component="form"
-        onSubmit={handle_liquidar}
+        onSubmit={handle_agregar_detalle}
         sx={{
           width: '500px'
         }}
@@ -81,6 +82,11 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
         <DialogContent sx={{ mb: '0px' }}>
 
           <Grid container direction='column'>
+            {meses_actual.length > 0 && (
+              <Grid item xs={11} md={5} margin={1}>
+                <Typography variant="h5">{meses_actual[0].toUpperCase()}</Typography>
+              </Grid>
+            )}
             <Grid item xs={11} md={5} margin={1}>
               <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
                 <InputLabel>Selecciona opción liquidación</InputLabel>

@@ -6,13 +6,13 @@ import CheckIcon from '@mui/icons-material/Check';
 
 interface IProps {
   open_requisitos_modal: boolean;
-  set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
   requisitos: string;
-  mover_estado_actual: () => void;
+  set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
+  mover_etapa_actual: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RequisitosModal = ({ open_requisitos_modal, set_open_requisitos_modal, requisitos, mover_estado_actual }: IProps): JSX.Element => {
+export const RequisitosModal = ({ open_requisitos_modal, set_open_requisitos_modal, requisitos, mover_etapa_actual }: IProps): JSX.Element => {
 
   const handle_close = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
@@ -61,7 +61,7 @@ export const RequisitosModal = ({ open_requisitos_modal, set_open_requisitos_mod
           color="primary"
           startIcon={<CheckIcon />}
           onClick={(event) => {
-            mover_estado_actual();
+            mover_etapa_actual();
             handle_close(event);
           }}
         >

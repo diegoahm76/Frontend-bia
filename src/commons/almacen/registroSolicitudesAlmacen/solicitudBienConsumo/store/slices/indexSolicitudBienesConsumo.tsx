@@ -39,6 +39,7 @@ const initial_state_current_solicitud_vivero: IObjSolicitudVivero = {
     justificacion_rechazo_responsable: null,
     fecha_rechazo_almacen: null,
     justificacion_rechazo_almacen: null,
+
     rechazada_almacen: false,
 
 }
