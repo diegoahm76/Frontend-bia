@@ -804,7 +804,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo}></ResultadosBusqueda>
+          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo ?? ''}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">

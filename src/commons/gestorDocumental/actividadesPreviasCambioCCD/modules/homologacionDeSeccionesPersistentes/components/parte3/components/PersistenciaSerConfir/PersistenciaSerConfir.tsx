@@ -16,7 +16,7 @@ import {
   setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 
-export const PersistenciaSeriesConfirmadasCCD = (): JSX.Element | null => {
+export const PersistenciaSerConfir = (): JSX.Element | null => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
