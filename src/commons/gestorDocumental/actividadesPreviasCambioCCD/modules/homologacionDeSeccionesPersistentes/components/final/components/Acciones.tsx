@@ -45,9 +45,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
-
     console.log(unidadesPersistentes);
-
 
     if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
       const agrupaciones: any = Object.values(
@@ -82,7 +80,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
           })),
       };
       console.log(objectToSend);
-      /*
+
       void postPersistenciasConfirmadas({
         setLoading: setLoadingButton,
         dataToPost: objectToSend,
@@ -92,7 +90,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
         dispatch(setHomologacionAgrupacionesSerieSubserie([]));
         dispatch(setAgrupacionesPersistentesSerieSubserie([]));
-      }); */
+      });
 
       return;
     }
