@@ -259,6 +259,34 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         }
                     ])
                     break;
+                case 'EI':
+                    set_columnas_mp([
+                        {
+                            field: 'nombre_bodega',
+                            headerName: 'Bodega',
+                            width: 300,
+                            valueGetter: (params) => params.row.nombre_bodega
+                        },
+                        {
+                            field: 'nombre_bien',
+                            headerName: 'Bien',
+                            width: 300,
+                            valueGetter: (params) => params.row.nombre_bien,
+                        },
+                        {
+                            field: 'cantidad_ingresada_total',
+                            headerName: 'Cantidad ingresada total',
+                            width: 300,
+                            valueGetter: (params) => params.row.cantidad_ingresada_total
+                        },
+                        {
+                            field: 'responsable_bodega',
+                            headerName: 'Responsable bodega',
+                            width: 300,
+                            valueGetter: (params) => params.row.responsable_bodega
+                        }
+                    ]);
+                    break;
                 default:
                     break;
             }
