@@ -64,17 +64,26 @@ export const TablaCarteraDetallada: React.FC = () => {
 
   };
   useEffect(() => {
-    fetchData(page);
-  }, [page]);
-
-
-
+    if (visible_rows && visible_rows.length !== undefined) {
+      let total = 0;
+      for (let i = 0; i < visible_rows.length; i++) {
+        if (visible_rows[i].valor_sancion) {
+          total = total + parseFloat(visible_rows[i].valor_sancion);
+        }
+      }
+      set_total(total);
+    }
+  }, [visible_rows]);
+  
   // useEffect(() => {
-  //   dispatch(get_cartera_detallada())
-  // }, []);
-
-
-
+  //   if(visible_rows.length !== 0) {
+  //     let total = 0
+  //     for(let i=0; i< visible_rows.length; i++){
+  //       total = total + parseFloat(visible_rows[i].valor_sancion)
+  //       set_total(total)
+  //     }
+  //   }
+  // }, [visible_rows])
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -231,18 +240,18 @@ export const TablaCarteraDetallada: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    console.log(data)
-  }, [data])
-
+    if (visible_rows && visible_rows.length !== undefined) {
+      set_values(
+        visible_rows.map((obj) => Object.values(obj)) as any
+      );
+    }
+  }, [visible_rows]);
+  
   // useEffect(() => {
-  //   if (visible_rows.length !== 0) {
-  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any);
-  //     const new_total_pages = Math.ceil(visible_rows.length / 10); // Calcular el número total de páginas
-  //     //set_total_pages(new_total_pages);
+  //   if(visible_rows.length !== 0){
+  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
   //   }
-  // }, [visible_rows]);
-
-
+  // }, [visible_rows])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -331,8 +340,8 @@ export const TablaCarteraDetallada: React.FC = () => {
           </Button>
         </Stack>
       </Stack>
-      {
-        visible_rows.length !== 0 ? (
+
+      {visible_rows && visible_rows.length !== undefined ?(
           <Grid
             container
             sx={{
@@ -348,7 +357,9 @@ export const TablaCarteraDetallada: React.FC = () => {
               <Grid item>
                 <Box sx={{ width: '100%', height: '400px' }}>
                   <DataGrid
-                    rows={data}
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={visible_rows || []}
                     columns={columns}
                     pageSize={10}
                     page={page}

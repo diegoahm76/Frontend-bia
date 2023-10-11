@@ -25,6 +25,7 @@ import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
+import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
@@ -95,9 +96,14 @@ const routes = [
     component: () => <AdministracionPlantillaDocumentos_Routes />,
   },
   {
-    path: 'configuracionnnnnn/',
-    name: 'configuracionnnnnn',
+    path: 'configuracionmedio/',
+    name: 'configuracionmedio',
     component: () => <ConfiguracionMediosSolicitud_routes />,
+  },
+  {
+    path: 'configuraciontiposexpedientes/',
+    name: 'configuraciontiposexpedientes',
+    component: () => <ConfiguracionTiposExpedientes_Routes />,
   },
   {
     path: 'encuesta_configuracion/',

@@ -99,7 +99,8 @@ export const CarteraGeneralFecha: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if (visible_rows.length !== 0) {
+    // if (visible_rows.length !== 0) {
+      if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
       let total = 0
       for (let i = 0; i < visible_rows.length; i++) {
         total = total + parseFloat(visible_rows[i].valor_sancion)
@@ -107,29 +108,37 @@ export const CarteraGeneralFecha: React.FC = () => {
       }
     }
   }, [visible_rows])
-
   useEffect(() => {
-    if (visible_rows.length !== 0) {
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    if (visible_rows !== undefined && Array.isArray(visible_rows) && visible_rows.length > 0) {
+        set_values(visible_rows.map((obj) => Object.values(obj)) as any)
     }
-  }, [visible_rows])
+}, [visible_rows])
+
+  // useEffect(() => {
+  //   // if (visible_rows.length !== 0) {
+  //     if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
+  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+  //   }
+  // }, [visible_rows])
 
   useEffect(() => {
     const arr_labels: any = []
+    if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
     for (let i = 0; i < visible_rows.length; i++) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       arr_labels.push(`${visible_rows[i].codigo_contable} ${visible_rows[i].concepto_deuda}`)
     }
     set_arr_label(arr_labels)
-  }, [visible_rows])
+}}, [visible_rows])
 
   useEffect(() => {
     const arr_series = []
+    if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
     for (let i = 0; i < visible_rows.length; i++) {
       arr_series.push(parseFloat(visible_rows[i].valor_sancion))
     }
     set_arr_data(arr_series)
-  }, [visible_rows])
+ } }, [visible_rows])
 
   const columns: GridColDef[] = [
     {
@@ -257,7 +266,7 @@ export const CarteraGeneralFecha: React.FC = () => {
             </Stack>
           </Stack>
           {
-            visible_rows.length !== 0 ? (
+  visible_rows && visible_rows.length !== undefined && visible_rows.length !== 0 ? (
               <Stack
                 direction='column'
                 justifyContent='center'
@@ -281,7 +290,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                           <DataGrid
                             autoHeight
                             disableSelectionOnClick
-                            rows={visible_rows}
+                            rows={visible_rows||[]}
                             columns={columns}
                             pageSize={10}
                             rowsPerPageOptions={[10]}
