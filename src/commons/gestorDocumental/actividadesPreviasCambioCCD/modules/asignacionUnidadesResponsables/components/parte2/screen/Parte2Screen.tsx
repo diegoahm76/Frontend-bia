@@ -7,7 +7,10 @@ import { containerStyles } from '../../../../../../tca/screens/utils/constants/c
 
 export const Parte2Screen = (): JSX.Element => {
   return (
-    <Grid container sx={containerStyles}>
+    <Grid container sx={{
+      ...containerStyles,
+      justifyContent: 'center',
+    }}>
       <UnidadesSeries />
       <SeccionSelecccionada />
     </Grid>

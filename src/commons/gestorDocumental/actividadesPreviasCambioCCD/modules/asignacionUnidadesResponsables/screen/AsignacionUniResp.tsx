@@ -5,6 +5,7 @@ import { AccionesLoad } from '../components/final/screen/Acciones.load';
 import { Parte1Screen } from '../components/parte1/screen/Parte1ScreenAsignacionUnResp';
 import { validacionInicialCcdAsignacionUnidadesResp } from '../toolkit/thunks/busquedaOrgCcd.service';
 import { Parte2Screen } from '../components/parte2/screen/Parte2Screen';
+import { ListadoAsigScreen } from '../components/parte3/screen/ListadoAsigScreen';
 /**
  * Pantalla principal módulo asignación unidades responsables
  * @returns JSX.Element
@@ -36,7 +37,7 @@ export const AsignacionUnidadesResponsables = (): JSX.Element => {
       </>
       {/* Parte 3 */}
       {/* Listado de asignaciones */}
-      <>{/* Listado de asignaciones */}</>
+      <ListadoAsigScreen />
       {/* Acciones */}
       <AccionesLoad />
     </>
