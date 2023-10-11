@@ -73,19 +73,6 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     }
   };
 
-  const handle_print_bill = (): void => {
-    if (id_liquidacion_pdf) {
-      api.get(`recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`)
-        .then((response) => {
-          console.log(response);
-          window.open(response.config.url, '_blank', 'rel=noopener noreferrer');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
   return (
     <>
       <Grid container spacing={2}>
@@ -230,7 +217,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 variant="contained"
                 fullWidth
                 startIcon={<PrintIcon />}
-                onClick={handle_print_bill}
+                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Imprimir recibo
               </Button>
