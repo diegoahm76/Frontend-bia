@@ -34,6 +34,7 @@ const {form,set_form}=useContext(FormCreacionContext);
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+ console.log(data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
 
@@ -66,7 +67,7 @@ const {form,set_form}=useContext(FormCreacionContext);
       let queryURL = url;
 
       if (!checked) {
-        if (nombre_plantilla || Extension || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+        if (nombre_plantilla || Extension || Descripccion||choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
           queryURL += '?';
 
           if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
@@ -77,6 +78,9 @@ const {form,set_form}=useContext(FormCreacionContext);
 
           if (choise_seleccionado_disponivilidad) { queryURL += `disponibilidad=${choise_seleccionado_disponivilidad}`; }
 
+          if (Descripccion) {
+            queryURL += `descripcion=${Descripccion}`;
+          }
           // Elimina el último '&' si está presente
           if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
         }
@@ -145,6 +149,7 @@ const {form,set_form}=useContext(FormCreacionContext);
         const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
         const res: any = await api.get(url);
         let numero_consulta: any = res.data.data;
+        console.log(numero_consulta);
          set_form({
           ...form,
           id_actualizar: numero_consulta.id_plantilla_doc,
@@ -157,7 +162,7 @@ const {form,set_form}=useContext(FormCreacionContext);
         version_formato_calidad_asociado: numero_consulta.version_formato_calidad_asociado,
            otras_tipologias:numero_consulta.otras_tipologias,
            acceso_unidades: numero_consulta.acceso_unidades.map((id:any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),
-
+           id_tipologia_doc_trd:numero_consulta.id_tipologia_doc_trd,
           acceso_unidades_dos:numero_consulta.acceso_unidades,
          observacion:numero_consulta.observacion,
           activa:numero_consulta.activa,
@@ -190,6 +195,12 @@ const {form,set_form}=useContext(FormCreacionContext);
     {
       field: 'cod_tipo_acceso',
       headerName: 'Código de Acceso',
+      width: 150,
+      flex: 1,
+    },
+    {
+      field: 'nombre_tipologia',
+      headerName: 'Nombre Tipologia',
       width: 150,
       flex: 1,
     },

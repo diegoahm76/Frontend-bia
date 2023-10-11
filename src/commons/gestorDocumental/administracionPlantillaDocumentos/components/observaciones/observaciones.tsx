@@ -47,13 +47,22 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       // Agregar los campos del formulario al objeto FormData
       formData.append('nombre', form.nombre);
       formData.append('descripcion', form.descripcion);
-      // formData.append('id_formato_tipo_medio', form.id_formato_tipo_medio);
-      formData.append('asociada_a_tipologia_doc_trd', form.asociada_a_tipologia_doc_trd.toString());
+
+
+      // formData.append('id_tipologia_doc_trd', form.id_tipologia_doc_trd.toString());
+      // formData.append('otras_tipologias', form.otras_tipologias.toString());
+      if (form.asociada_a_tipologia_doc_trd) {
+        formData.append('id_tipologia_doc_trd', form.id_tipologia_doc_trd.toString());
+      } else {
+        formData.append('otras_tipologias', form.otras_tipologias.toString());
+      }
+     formData.append('asociada_a_tipologia_doc_trd', form.asociada_a_tipologia_doc_trd.toString());
+
       formData.append('cod_tipo_acceso', form.cod_tipo_acceso);
       formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
       formData.append('version_formato_calidad_asociado', form.version_formato_calidad_asociado.toString());
       formData.append('otras_tipologias', form.otras_tipologias.toString());
-      formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades));
+      formData.append('acceso_unidades', JSON.stringify(form.acceso_unidades_dos.map((id: any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),));
       formData.append('observacion', form.observacion.toString());
       formData.append('archivo', form.archivo);
       formData.append('activa', form.activa.toString());

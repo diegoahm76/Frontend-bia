@@ -10,7 +10,7 @@ export const ConfiguracionTiposExpedientes_Routes: React.FC = () => {
   return (
 
     <Routes>
-      <Route path="/configuracionTiposExpedientes" element={<PantallaPrincipalConfiguracoinTiposExpediente/>} />
+      <Route path="/configuraciontiposexpedientes" element={<PantallaPrincipalConfiguracoinTiposExpediente/>} />
   
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>

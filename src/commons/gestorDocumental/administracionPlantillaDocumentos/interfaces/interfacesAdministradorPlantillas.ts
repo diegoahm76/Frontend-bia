@@ -34,6 +34,7 @@ export interface InfoPorId {
     id_nivel_organigrama: number;
     id_unidad_org_padre: number | null;
     id_unidad_org_actual_admin_series: number;
+
   }
   
 
@@ -42,7 +43,7 @@ export interface InfoPorId {
     nombre: string;
     descripcion: string;
     id_formato_tipo_medio: number|any;
-    asociada_a_tipologia_doc_trd: boolean;
+    asociada_a_tipologia_doc_trd: boolean|string;
     cod_tipo_acceso: string;
     codigo_formato_calidad_asociado: string;
     version_formato_calidad_asociado: string;
@@ -51,5 +52,7 @@ export interface InfoPorId {
     acceso_unidades:any[];
     acceso_unidades_dos:any[];
     observacion:string;
-    activa:boolean;
+    activa:boolean;    
+    id_tipologia_doc_trd:number;
+    borrar_text:number;
 }

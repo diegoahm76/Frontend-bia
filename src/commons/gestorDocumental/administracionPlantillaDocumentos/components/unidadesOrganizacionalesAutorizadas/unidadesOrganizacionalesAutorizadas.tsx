@@ -19,7 +19,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
   const [PQR_seleccionado, set_PQR_seleccionado] = useState<any>([]);
   const [alerta, set_alerta] = useState<any[]>([]);
-  const [variable_concatenada, set_variable_concatenada] = useState<any[]>([]);
+
 
 
 
@@ -29,21 +29,22 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
       const selectedItem = PQR_seleccionado[0];
   
       // Verifica si el elemento seleccionado ya está presente en variable_concatenada
-      const alreadyExists = variable_concatenada.some(item => item.id_unidad_organizacional === selectedItem.id_unidad_organizacional);
+      // const alreadyExists = alerta.some(item => item.id_unidad_organizacional === selectedItem.id_unidad_organizacional);
+      const alreadyExists = form.acceso_unidades_dos.some((item) => item.id_unidad_organizacional === selectedItem.id_unidad_organizacional);
   
       if (!alreadyExists) {
         // Agrega el elemento seleccionado a la alerta
         set_alerta([...alerta, selectedItem]);
   
-        // Crea un nuevo objeto con la propiedad id_unidad_organizacional
-        const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
+        // // Crea un nuevo objeto con la propiedad id_unidad_organizacional
+        // const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
   
-        // Agrega el nuevo objeto a variable_concatenada
-        set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
+        // // Agrega el nuevo objeto a variable_concatenada
+        // set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
   
         set_form({
           ...form,
-          acceso_unidades: [...variable_concatenada, unidadOrganizacional],
+          // acceso_unidades: [...variable_concatenada, unidadOrganizacional],
           acceso_unidades_dos: [...form.acceso_unidades_dos, selectedItem]
         });
       } else {
@@ -58,13 +59,13 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
     const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
     set_alerta(updatedAlerta);
 
-    const updatedAccessUnits = form.acceso_unidades.filter((item) => item.id_unidad_organizacional !== id);
+    // const updatedAccessUnits = form.acceso_unidades.filter((item) => item.id_unidad_organizacional !== id);
 
-    set_variable_concatenada(updatedAccessUnits);
-  set_form({
-    ...form,
-    acceso_unidades: updatedAccessUnits,
-  });
+    // set_variable_concatenada(updatedAccessUnits);
+  // set_form({
+  //   ...form,
+  //   acceso_unidades: updatedAccessUnits,
+  // });
   set_form({
     ...form,
     acceso_unidades_dos: updatedAlerta,

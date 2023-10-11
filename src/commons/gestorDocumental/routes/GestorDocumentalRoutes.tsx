@@ -100,8 +100,8 @@ const routes = [
     component: () => <ConfiguracionMediosSolicitud_routes />,
   },
   {
-    path: 'configuracionTiposExpedientes/',
-    name: 'configuracionTiposExpedientes',
+    path: 'configuraciontiposexpedientes/',
+    name: 'configuraciontiposexpedientes',
     component: () => <ConfiguracionTiposExpedientes_Routes />,
   },
   {

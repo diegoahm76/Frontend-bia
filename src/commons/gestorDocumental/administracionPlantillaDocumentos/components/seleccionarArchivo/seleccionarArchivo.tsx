@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Button, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -39,6 +39,9 @@ export const SeleccionarArchivo: React.FC = () => {
       set_form({
         ...form,
         archivo: selectedFile,
+        borrar_text: 1
+
+
       });
       const extension = fileName.split('.').pop();
       if (extension) {
@@ -66,6 +69,10 @@ export const SeleccionarArchivo: React.FC = () => {
     set_file_nombre(null);
   };
 
+  // useEffect(()=>{
+  //   set_file_nombre(null);
+  //   setFileExtension(null);
+  // }),[form.archivo===null]
   return (
     <>
       <Grid
@@ -133,7 +140,7 @@ export const SeleccionarArchivo: React.FC = () => {
             />
           </Button>
         </Grid>
-        {file_nombre && (
+        {file_nombre && form.borrar_text === 1 && (
           <Grid item xs={12} sm={4} md={3}>
             <TextField
               style={{ marginTop: 10, width: '90%' }}
@@ -147,7 +154,8 @@ export const SeleccionarArchivo: React.FC = () => {
             />
           </Grid>
         )}
-        {fileExtension && (
+
+        {fileExtension && form.borrar_text === 1 && (
           <Grid item xs={12} sm={4} md={3}>
             <TextField
               style={{ marginTop: 10, width: '90%' }}
@@ -160,6 +168,7 @@ export const SeleccionarArchivo: React.FC = () => {
             />
           </Grid>
         )}
+
       </Grid>
     </>
   );

@@ -41,7 +41,7 @@ export const TipologiaDocumental: React.FC = () => {
       const numero_consulta: any = res.data.data;
       set_tipologia_documental_otro(numero_consulta);
       console.log(numero_consulta);
-    
+
     } catch (error) {
       console.error(error);
     }
@@ -85,14 +85,12 @@ export const TipologiaDocumental: React.FC = () => {
               <Select
                 labelId="demo-simple-select-label-2"
                 id="demo-simple-select-2"
-                value={PQR_seleccionado === true ? "Si" : "No"}
-                onChange={(event): any => {
-                  const selectedValue = event.target.value;
-                  set_PQR_seleccionado(selectedValue === "Si" ? true : false);
-                }}
+                name="asociada_a_tipologia_doc_trd"
+                value={form.asociada_a_tipologia_doc_trd}
+                onChange={HandleCompletarDatos}
               >
-                <MenuItem value="Si">Si</MenuItem>
-                <MenuItem value="No">No</MenuItem>
+                <MenuItem value="True">Si</MenuItem>
+                <MenuItem value="False">No</MenuItem>
               </Select>
             </FormControl>
 
@@ -100,7 +98,7 @@ export const TipologiaDocumental: React.FC = () => {
         </Grid>
 
         {/* Desplegable adicional 1 */}
-        {PQR_seleccionado === true && (
+        {form.asociada_a_tipologia_doc_trd === "True" && (
           <Grid item container spacing={1} style={{ margin: 1 }}>
             <Grid item xs={12} sm={6} md={3}>
               <h5>Selecciona tipología documental:</h5>
@@ -109,12 +107,12 @@ export const TipologiaDocumental: React.FC = () => {
               <FormControl fullWidth>
                 <Select
                   id="demo-simple-select-2"
-                  name="otras_tipologias"
-                  value={form.otras_tipologias}
+                  name="id_tipologia_doc_trd"
+                  value={form.id_tipologia_doc_trd}
                   onChange={HandleCompletarDatos}
                 >
                   {tipologia_documental?.map((item: any, index: number) => (
-                    <MenuItem key={index} value={item.nombre}>
+                    <MenuItem key={index} value={item.id_tipologia_documental}>
                       {item.nombre}
                     </MenuItem>
                   ))}
@@ -126,7 +124,7 @@ export const TipologiaDocumental: React.FC = () => {
         )}
 
         {/* Desplegable adicional 2 */}
-        {PQR_seleccionado === false && (
+        {form.asociada_a_tipologia_doc_trd === "False" && (
           <Grid item container spacing={1} style={{ margin: 1 }}>
             <Grid item xs={12} sm={1} >
               <h5>¿Cual?</h5>
@@ -139,10 +137,11 @@ export const TipologiaDocumental: React.FC = () => {
                 name="otras_tipologias"
                 value={form.otras_tipologias}
                 onChange={HandleCompletarDatos}
-              />            </Grid>
+              />
+            </Grid>
             <Grid item xs={5}>
               <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label" style={{marginTop:5}} >Sugerecias Creadas Anteriormente</InputLabel>
+                <InputLabel id="demo-simple-select-label" style={{ marginTop: 5 }} >Sugerecias Creadas Anteriormente</InputLabel>
 
                 <Select
                   labelId="demo-simple-select-label-3"
