@@ -24,6 +24,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+  console.log("data_busqueda_Avanazda", data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
   const [id_visualizar, set_id_visualizar] = useState(0);
@@ -44,11 +45,24 @@ export const MostrarCentroPlantillas: React.FC = () => {
       flex: 1,
     },
     {
-      field: 'nombre_tipologia',
-      headerName: 'Nombre Tipologia',
+      field: 'descripcion',
+      headerName: 'Descripcion',
+      width: 200,
+      flex: 1
+    },
+    {
+      field: 'otras_tipologias',
+      headerName: 'Tipologia',
       width: 200,
       flex: 1,
     },
+    {
+      field: 'cod_tipo_acceso',
+      headerName: 'Disponibilidad',
+      width: 200,
+      flex: 1,
+    },
+    
     {
       field: 'ruta',
       headerName: 'Ruta',
@@ -104,7 +118,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       let queryURL = url;
 
       if (!checked) {
-        if (nombre_plantilla || Extension || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+        if (nombre_plantilla || Extension ||Descripccion||choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
           queryURL += '?';
 
           if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
@@ -115,11 +129,14 @@ export const MostrarCentroPlantillas: React.FC = () => {
 
           if (choise_seleccionado_disponivilidad) { queryURL += `disponibilidad=${choise_seleccionado_disponivilidad}`; }
 
+          if (Descripccion) {
+            queryURL += `descripcion=${Descripccion}`;
+          }
           // Elimina el último '&' si está presente
           if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
         }
       }
-
+console.log("queryURL", queryURL);
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);

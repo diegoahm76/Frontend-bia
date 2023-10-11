@@ -93,19 +93,25 @@ export const FacilidadPago: React.FC = () => {
     })
     report.save('Reporte Facilidades de Pago con Detalle.pdf');
   }
-
   useEffect(() => {
-    if (visible_rows.length !== 0) {
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
+      set_values(visible_rows.map((obj) => Object.values(obj)) as any);
     }
-  }, [visible_rows])
+  }, [visible_rows]);
+  
+  // useEffect(() => {
+  //   if (visible_rows.length !== 0) {
+  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+  //   }
+  // }, [visible_rows])
 
   useEffect(() => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if (visible_rows.length !== 0) {
+    // if (visible_rows.length !== 0) {
+      if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
       let total_coactivo = 0
       let total_persuasivo = 0
       for (let i = 0; i < visible_rows.length; i++) {
