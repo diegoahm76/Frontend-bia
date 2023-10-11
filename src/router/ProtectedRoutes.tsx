@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../commons/auth/interfaces';
 import { TransversalRoutes } from '../commons/Transversales/routes/TransversalRoutes';
 import { AlertasProvider } from '../commons/Transversales/modules/Alertas/context/AlertasContext';
+import { ModalAndLoadingProvider } from '../context/GeneralContext';
 
 //* changes
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -37,6 +38,7 @@ export const ProtectedRoutes: React.FC = () => {
   //* changes
 
   return (
+    <ModalAndLoadingProvider>
     <AlertasProvider>
       <Routes>
         <Route path="/*" element={<MainLayout />}>
@@ -84,6 +86,7 @@ export const ProtectedRoutes: React.FC = () => {
         </Route>
       </Routes>
     </AlertasProvider>
+    </ModalAndLoadingProvider>
   );
 };
 

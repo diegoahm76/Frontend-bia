@@ -39,7 +39,7 @@ export const control_success = (message: ToastContent) =>
         theme: 'light',
     });
 
-// Obtener viveros
+
 export const get_sucursales = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {

@@ -5,121 +5,273 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LoadingButton } from '@mui/lab';
-import {
-    Avatar,
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    Grid,
-    IconButton,
-    MenuItem,
-    TextField,
-} from '@mui/material';
+
+import { Grid, } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { Title } from '../../../../../components/Title';
-import { Controller, useForm } from 'react-hook-form';
-import { control_error } from '../../../../../helpers';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import FormSelectController from '../../../../../components/partials/form/FormSelectController';
-import { get_busqueda_avanzada, get_depositos, get_estantes_deposito } from '../../store/thunks/deposito';
-import FormInputController from '../../../../../components/partials/form/FormInputController';
+import FormButton from '../../../../../components/partials/form/FormButton';
+import PrintIcon from '@mui/icons-material/Print';
 
 interface IProps {
 
-    control_carpeta_destino: any;
+    control_rotulo: any;
     open: any;
-    handle_close_buscar: any;
-    get_values: any;
-    handle_mover_carpeta: any;
 
 }
+function EditableTable() {
+    const [data, setData] = useState([
+        { id: 1, col1: '', col2: '', col3: '', col4: '', col5: '' },
 
 
+    ]);
 
-const Rotulo = ({ control_carpeta_destino, open, handle_close_buscar, get_values, handle_mover_carpeta }: IProps) => {
-    const { deposito, cajas_lista } = useAppSelector((state) => state.deposito);
-    console.log(cajas_lista)
-    const dispatch = useAppDispatch();
+    const [currentDate, setCurrentDate] = useState(new Date().toLocaleDateString());
 
-    const columns: GridColDef[] = [
-        {
-            field: 'orden_carpeta',
-            headerName: 'ÓRDEN DE LA CARPETA',
-            sortable: true,
-            width: 250,
-        },
-        {
-            field: 'identificacion_deposito',
-            headerName: 'IDENTIFICACIÓN DEL DEPÓSITO',
-            sortable: true,
-            width: 250,
-        },
-        {
-            field: 'identificacion_estante',
-            headerName: 'IDENTIFICACIÓN DEL ESTANTE',
-            width: 250,
-        },
-        {
-            field: 'identificacion_bandeja',
-            headerName: 'IDENTIFICACIÓN DE LA BANDEJA',
-            width: 250,
-        },
-        {
-            field: 'identificacion_caja',
-            headerName: 'IDENTIFICACIÓN DE LA CAJA',
-            width: 250,
-        },
-        {
-            field: 'identificacion_carpeta',
-            headerName: 'IDENTIFICACIÓN DE LA CARPETA',
-            width: 250,
-        },
-        {
-            field: 'acciones',
-            headerName: 'ACCIONES',
-            width: 250,
-            renderCell: (params) => (
-                <Button
-                    onClick={() => handle_mover_carpeta(params.row)}
-                    startIcon={<EditIcon />}
-                >
-
-                </Button>
-            ),
-
-        },
-    ];
-
-
-
+    const handleCellEdit = (id: number, field: string, value: string) => {
+        const updatedData = data.map((row) => {
+            if (row.id === id) {
+                return { ...row, [field]: value };
+            }
+            return row;
+        });
+        setData(updatedData);
+    };
     useEffect(() => {
-        void dispatch(get_depositos())
-    }, [])
+        const interval = setInterval(() => {
+            setCurrentDate(new Date().toLocaleDateString());
+        }, 60000);
 
+        // Limpia el intervalo cuando el componente se desmonta
+        return () => clearInterval(interval);
+    }, []);
 
+    const { cajas, } = useAppSelector((state: { deposito: any }) => state.deposito);
 
     return (
-        <>
-            <Grid item>
-                <Button
-                    variant="contained"
-                    color="primary"
+        <table style={{ borderCollapse: 'collapse', width: '80%' }}>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={3} rowSpan={4} >
+                        <img src="/26_logocorma2_200x200.png" alt="Imagen" style={{ width: '80%' }} />
+                    </th>
+                    <th style={{ border: '1px solid #ddd', padding: '5px', fontSize: '10px', borderTop: '1px solid #ddd' }} colSpan={2} >Código: FGO-04</th>
+                </tr>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '5px', fontSize: '10px' }} colSpan={2}>
+                        Versión: 02
+                    </th>
+                </tr>
 
-                >
-                    Buscar
-                </Button>
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '3px', fontSize: '10px' }} colSpan={3} rowSpan={4} >RÓTULO DE CARPETAS</th>
+                    <th style={{ border: '1px solid #ddd', padding: '5px', borderTop: '1px solid #ddd', fontSize: '10px' }} colSpan={2} >{currentDate}</th>
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', width: '40px' }}  >UNIDAD ADMINISTRATIVA</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={4} ></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }} >Código</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={4} ></th>
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }}  >OfICINA PRODUCTORA</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={4} ></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }}  >Código</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={4} ></th>
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px' }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '10px', width: '80px' }} colSpan={2} >Código</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} colSpan={2}  >Nombre:</th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }}>SERIE</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }} colSpan={2}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} colSpan={2}  ></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }}>SUBSERIE</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }} colSpan={2}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} colSpan={2}  ></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }}>No. EXPEDIENTE</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '12px', textAlign: 'left', }} colSpan={4}  ></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '8px', fontSize: '10px', textAlign: 'left', }} >EXPEDIENTE</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }} colSpan={4} ></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >FECHA INICIAL</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >FECHA FINAL</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }}></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >DEL FOLIO</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >AL FOLIO</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }}></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >NÚMERO DE FOLIO</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }} colSpan={4}></th>
+
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >CARPETA:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}>{cajas.identificacion_por_caja}</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >CAJA:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }}>{cajas.identificacion_caja}</th>
+
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'center', }} colSpan={5}  >Nota: Verificar la vigencia del documento en el listado maestro de documentos</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                {data.map((row) => (
+                    <tr key={row.id}>
+                        <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                            <input
+                                type="text"
+                                value={row.col1}
+                                onChange={(e) => handleCellEdit(row.id, 'col1', e.target.value)}
+                                style={{ width: '100%', border: 'none', padding: '5px', }}
+                            />
+                        </td>
+                        <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                            <input
+                                type="text"
+                                value={row.col2}
+                                onChange={(e) => handleCellEdit(row.id, 'col2', e.target.value)}
+                                style={{ width: '100%', border: 'none', padding: '5px' }}
+                            />
+                        </td>
+                        <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                            <input
+                                type="text"
+                                value={row.col3}
+                                onChange={(e) => handleCellEdit(row.id, 'col3', e.target.value)}
+                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                            />
+                        </td>
+                        <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                            <input
+                                type="text"
+                                value={row.col4}
+                                onChange={(e) => handleCellEdit(row.id, 'col4', e.target.value)}
+                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                            />
+                        </td>
+                        <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                            <input
+                                type="text"
+                                value={row.col5}
+                                onChange={(e) => handleCellEdit(row.id, 'col5', e.target.value)}
+                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                            />
+                        </td>
+
+                    </tr>
+                ))}
+
+            </tbody>
+
+
+
+
+
+
+            <Grid item xs={12} md={1.5}>
+                <FormButton
+
+                    variant_button='outlined'
+                    icon_class={<PrintIcon />}
+                    on_click_function={() => { window.print(); }}
+                    label={'Imprimir'}
+                    type_button="button" />
+
             </Grid>
-            <Dialog fullWidth maxWidth="lg" open={open} onClose={handle_close_buscar} >
+        </table>
 
-            </Dialog>
-        </>
     );
-};
+}
+
+const Rotulo = ({ control_rotulo, open, }: IProps) => {
+    const { deposito, cajas_lista } = useAppSelector((state) => state.deposito);
+    const dispatch = useAppDispatch();
+
+    return (
+
+        <EditableTable />
+
+
+    );
+
+
+}
 
 export default Rotulo;

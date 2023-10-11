@@ -9,6 +9,7 @@ import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import dayjs, { type Dayjs } from "dayjs";
 import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
+import type { DetallePeriodo, DetallesPeriodos } from "../../interfaces/proceso";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
@@ -19,34 +20,16 @@ interface IProps {
   fecha_liquidacion: dayjs.Dayjs;
   fecha_vencimiento: dayjs.Dayjs;
   id_liquidacion_pdf: string;
+  detalles_ciclos: string[];
+  detalles_periodos: DetallesPeriodos;
+  tamano_detalles: boolean;
   handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
   handle_submit_liquidacion: () => void;
   set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
   set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
+  set_periodo_actual: Dispatch<SetStateAction<DetallePeriodo>>;
 }
-
-const ciclos: string[] = [
-  'trimestral',
-  'semestral',
-  'anual',
-];
-
-const periodos_ciclos: Record<string, string[]> = {
-  trimestral: [
-    'enero a marzo',
-    'abril a julio',
-    'junio a septiembre',
-    'octubre a diciembre',
-  ],
-  semestral: [
-    'enero a junio',
-    'julio a diciembre'
-  ],
-  anual: [
-    'enero a diciembre'
-  ],
-};
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
@@ -58,18 +41,23 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   fecha_liquidacion,
   fecha_vencimiento,
   id_liquidacion_pdf,
+  detalles_ciclos,
+  detalles_periodos,
+  tamano_detalles,
   handle_input_form_liquidacion_change,
   handle_select_form_liquidacion_change,
   handle_submit_liquidacion,
   set_fecha_liquidacion,
   set_fecha_vencimiento,
+  set_periodo_actual
 }: IProps) => {
   const [periodos, set_periodos] = useState<string[]>([]);
 
   useEffect(() => {
     const ciclo = form_liquidacion.ciclo_liquidacion;
     if (ciclo) {
-      set_periodos(periodos_ciclos[ciclo]);
+      set_periodos(detalles_periodos[ciclo].periodos);
+      set_periodo_actual(detalles_periodos[ciclo]);
     }
   }, [form_liquidacion.ciclo_liquidacion]);
 
@@ -174,9 +162,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl size="small" fullWidth>
-            <InputLabel>Ciclos</InputLabel>
+            <InputLabel>Ciclo</InputLabel>
             <Select
-              label='Ciclos'
+              label='Ciclo'
               name="ciclo_liquidacion"
               value={form_liquidacion.ciclo_liquidacion}
               MenuProps={{
@@ -186,7 +174,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               }}
               onChange={handle_select_form_liquidacion_change}
             >
-              {ciclos.map((ciclo, index) => (
+              {detalles_ciclos.map((ciclo, index) => (
                 <MenuItem key={index} value={ciclo}>
                   {ciclo}
                 </MenuItem>
@@ -258,7 +246,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 fecha_liquidacion.toString() === '' ||
                 fecha_vencimiento.toString() === '' ||
                 form_liquidacion.periodo_liquidacion === '' ||
-                rows_detalles.length === 0
+                rows_detalles.length === 0 ||
+                tamano_detalles
               }
               onClick={handle_submit_liquidacion}
             >

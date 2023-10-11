@@ -26,8 +26,43 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [total, set_total] = useState(0);
   const [values, set_values] = useState([]);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
+  const [data, set_data] = useState<CarteraDetallada[]>([]);
+  const [page, set_page] = useState(0);
+  const [pages, set_pages] = useState<number[]>([]);
+  const [total_pages, set_total_pages] = useState(1);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const fetchData = (page_number: number) => {
+    // Realiza la solicitud HTTP utilizando la página especificada
+    fetch(`https://back-end-bia-beta.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number + 1}`)
+      .then((response) => response.json())
+      .then((responseData) => {
+        // Extrae la propiedad "data" de la respuesta JSON
+        const data = responseData.results.data;
+        const total_pages = Math.ceil(responseData.count / 10); // Supongo 10 elementos por página
+        const number = page_number + 1
+        console.log(number, pages)
+        if (pages.length === 0) {
+          set_pages([...pages, number])
+          set_data(data);
+          set_total_pages(total_pages);
+
+        } else {
+          if (pages.indexOf(number) === -1) {
+            set_pages([...pages, number])
+            set_data((prevRows) => [...prevRows, ...data]);
+            set_total_pages(total_pages);
+
+          }
+        }
+
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos:', error);
+      });
+
+  };
   useEffect(() => {
     if (visible_rows && visible_rows.length !== undefined) {
       let total = 0;
@@ -88,19 +123,29 @@ export const TablaCarteraDetallada: React.FC = () => {
   };
 
   const handle_export_pdf = (): void => {
-    const report = new JsPDF('l','pt','letter');
+    const report = new JsPDF('l', 'pt', 'letter');
     report.text("Reporte General de Cartera con Detalle", 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     autoTable(report, {
       theme: 'grid',
       head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
       body: values,
-      foot:[['Total General', '', '', '', '', '', '', `${total_cop}`]],
+      foot: [['Total General', '', '', '', '', '', '', `${total_cop}`]],
     })
     report.save('Reporte General de Cartera con Detalle.pdf');
   }
 
   const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'id',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
     {
       field: 'codigo_contable',
       headerName: 'Código Contable',
@@ -189,6 +234,7 @@ export const TablaCarteraDetallada: React.FC = () => {
     },
   ];
 
+
   useEffect(() => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
@@ -221,23 +267,23 @@ export const TablaCarteraDetallada: React.FC = () => {
         >
           <FormControl sx={{ minWidth: 130 }}>
             <InputLabel>Filtrar por: </InputLabel>
-              <Select
-                label="Filtrar por: "
-                defaultValue={''}
-                onChange={(event: event)=>{
-                  const { value } = event.target
-                  set_filter(value)
-                }}
-              >
-                <MenuItem value='codigo_contable'>Código Contable</MenuItem>
-                <MenuItem value='nombre_deudor'>Nombre Deudor</MenuItem>
-              </Select>
+            <Select
+              label="Filtrar por: "
+              defaultValue={''}
+              onChange={(event: event) => {
+                const { value } = event.target
+                set_filter(value)
+              }}
+            >
+              <MenuItem value='codigo_contable'>Código Contable</MenuItem>
+              <MenuItem value='nombre_deudor'>Nombre Deudor</MenuItem>
+            </Select>
           </FormControl>
           <TextField
             required
             label="Búsqueda"
             size="medium"
-            onChange={(event: event)=>{
+            onChange={(event: event) => {
               const { value } = event.target
               set_search(value)
             }}
@@ -248,7 +294,7 @@ export const TablaCarteraDetallada: React.FC = () => {
             startIcon={<SearchOutlined />}
             onClick={() => {
               try {
-                void dispatch(get_filtro_cartera_detallada({parametro: filter, valor: search}));
+                void dispatch(get_filtro_cartera_detallada({ parametro: filter, valor: search }));
               } catch (error: any) {
                 throw new Error(error);
               }
@@ -309,17 +355,20 @@ export const TablaCarteraDetallada: React.FC = () => {
           >
             <Grid item xs={12}>
               <Grid item>
-                <Box sx={{ width: '100%' }}>
+                <Box sx={{ width: '100%', height: '400px' }}>
                   <DataGrid
                     autoHeight
                     disableSelectionOnClick
                     rows={visible_rows || []}
                     columns={columns}
                     pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => faker.database.mongodbObjectId()}
+                    page={page}
+                    rowCount={total_pages}
+                    pagination
+                    onPageChange={(params) => set_page(params)}
                   />
+
+
                 </Box>
               </Grid>
               <Stack
@@ -335,12 +384,11 @@ export const TablaCarteraDetallada: React.FC = () => {
                     value={total_cop}
                   />
                 </Grid>
-            </Stack>
+              </Stack>
             </Grid>
           </Grid>
         ) : null
       }
-      </div>
     </Box>
   );
 }

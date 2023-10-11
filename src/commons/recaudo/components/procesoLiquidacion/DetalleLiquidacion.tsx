@@ -11,7 +11,8 @@ import AddIcon from '@mui/icons-material/Add';
 interface IProps {
   rows_detalles: RowDetalles[];
   expediente_liquidado: boolean;
-  add_new_row_detalles: (formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string) => void;
+  meses_actual: string[];
+  add_new_row_detalles: (mes_actual: string, formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string) => void;
 }
 
 const column_detalle: GridColDef[] = [
@@ -19,6 +20,11 @@ const column_detalle: GridColDef[] = [
     field: 'id',
     headerName: 'ID',
     width: 20
+  },
+  {
+    field: 'mes_actual',
+    headerName: 'Mes',
+    width: 100
   },
   {
     field: 'nombre_opcion',
@@ -58,7 +64,7 @@ const column_detalle: GridColDef[] = [
 ]
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
-export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente_liquidado, add_new_row_detalles }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente_liquidado, meses_actual, add_new_row_detalles }: IProps) => {
   const [modal_detalle, set_modal_detalle] = useState<boolean>(false);
 
   const handle_liquidar = (): void => {
@@ -99,6 +105,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
                 fullWidth
                 startIcon={<AddIcon />}
                 onClick={handle_liquidar}
+                disabled={meses_actual.length === 0}
               >
                 Agregar detalle de liquidación
               </Button>
@@ -108,6 +115,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
       </Grid>
       <DetalleModal
         is_modal_active={modal_detalle}
+        meses_actual={meses_actual}
         set_is_modal_active={set_modal_detalle}
         add_new_row={add_new_row_detalles}
       />
