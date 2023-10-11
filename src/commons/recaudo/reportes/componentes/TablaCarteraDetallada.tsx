@@ -340,7 +340,7 @@ export const TablaCarteraDetallada: React.FC = () => {
           </Button>
         </Stack>
       </Stack>
-      <div id='report'>
+
       {visible_rows && visible_rows.length !== undefined ?(
           <Grid
             container

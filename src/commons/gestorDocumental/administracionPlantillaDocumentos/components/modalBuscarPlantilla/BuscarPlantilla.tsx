@@ -34,7 +34,6 @@ const {form,set_form}=useContext(FormCreacionContext);
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
- console.log(data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
 

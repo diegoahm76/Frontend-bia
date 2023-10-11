@@ -19,7 +19,6 @@ export const TipologiaDocumental: React.FC = () => {
 
   const [tipologia_documental, set_tipologia_documental] = useState<any>(null);
   const [tipologia_documental_otro, set_tipologia_documental_otro] = useState<any>(null);
-  const [PQR_seleccionado, set_PQR_seleccionado] = useState<boolean>(false);
 
 
 
@@ -40,7 +39,7 @@ export const TipologiaDocumental: React.FC = () => {
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
       set_tipologia_documental_otro(numero_consulta);
-      console.log(numero_consulta);
+      // console.log(numero_consulta);
 
     } catch (error) {
       console.error(error);
@@ -97,7 +96,7 @@ export const TipologiaDocumental: React.FC = () => {
           </Grid>
         </Grid>
 
-        {/* Desplegable adicional 1 */}
+      
         {form.asociada_a_tipologia_doc_trd === "True" && (
           <Grid item container spacing={1} style={{ margin: 1 }}>
             <Grid item xs={12} sm={6} md={3}>
@@ -108,7 +107,7 @@ export const TipologiaDocumental: React.FC = () => {
                 <Select
                   id="demo-simple-select-2"
                   name="id_tipologia_doc_trd"
-                  value={form.id_tipologia_doc_trd}
+                  value={form.id_tipologia_doc_trd||""}
                   onChange={HandleCompletarDatos}
                 >
                   {tipologia_documental?.map((item: any, index: number) => (
@@ -123,7 +122,7 @@ export const TipologiaDocumental: React.FC = () => {
           </Grid>
         )}
 
-        {/* Desplegable adicional 2 */}
+       
         {form.asociada_a_tipologia_doc_trd === "False" && (
           <Grid item container spacing={1} style={{ margin: 1 }}>
             <Grid item xs={12} sm={1} >
@@ -135,7 +134,7 @@ export const TipologiaDocumental: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 name="otras_tipologias"
-                value={form.otras_tipologias}
+                value={form.otras_tipologias||""}
                 onChange={HandleCompletarDatos}
               />
             </Grid>

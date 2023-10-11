@@ -37,14 +37,13 @@ export const Form_provaider = ({ children }: any): JSX.Element => {
 
     const [form, set_form] = useState<VariablesCreacionPlantilla>(valores_defecto);
 
-console.log(form);
+// console.log(form);
     return (
 
         <FormCreacionContext.Provider value={{ form, set_form }}>
             {children}
         </FormCreacionContext.Provider>
     );
-
 
 
 }
