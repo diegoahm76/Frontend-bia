@@ -34,9 +34,6 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
   const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
-
-    
-
     const nuevasUnidadesPersistentes = [
       ...unidadesPersistentes,
       {
