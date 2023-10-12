@@ -1,5 +1,3 @@
-import { Proceso } from "./proceso";
-
 export interface Obligacion {
   id: number;
   nombre: string;
@@ -30,6 +28,16 @@ export interface Deudor {
   naturaleza_juridica_id: number;
 }
 
+export interface ProcesoCartera {
+  id: number;
+  id_funcionario: number;
+  inicio: string | null;
+  fin: string | null;
+  id_cartera: number;
+  id_etapa: number;
+  id_categoria: number;
+}
+
 export interface Cartera {
   id: number;
   id_obligacion: Obligacion;
@@ -47,5 +55,5 @@ export interface Cartera {
   monto_inicial: string;
   tipo_cobro: string;
   id_deudor: Deudor;
-  proceso_cartera: Proceso[];
+  proceso_cartera: ProcesoCartera[];
 }
