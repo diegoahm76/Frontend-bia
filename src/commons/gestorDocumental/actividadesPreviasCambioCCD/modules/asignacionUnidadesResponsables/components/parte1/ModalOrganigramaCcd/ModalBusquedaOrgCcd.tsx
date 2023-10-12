@@ -40,6 +40,7 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
 import { setCcdOrganigramaCurrent } from '../../../toolkit/slice/types/AsignacionUniResp';
+import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -53,48 +54,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
-  /*  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
-    try {
-      const resHomologacionesUnidades = await fnGetHomologacionUnidades(
-        params.row.id_ccd
-      );
-      console.log(resHomologacionesUnidades);
-      // ! se mezcla la información necesaria para poder tener todos los datos disponibles
-      const infoToReturn =
-        resHomologacionesUnidades?.coincidencias.map((item: any) => {
-          return {
-            ...item,
-            mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
-            id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
-            id_ccd_nuevo: params.row.id_ccd,
-          };
-        }) || [];
-
-      if (resHomologacionesUnidades?.mismo_organigrama) {
-        dispatch(setUnidadesPersistentes(infoToReturn));
-      } else {
-        dispatch(setHomologacionUnidades(infoToReturn));
-
-        const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
-          params.row.id_ccd
-        );
-        console.log(resUnidadesPersistentes);
-        dispatch(
-          setUnidadesPersistentes(
-            resUnidadesPersistentes?.unidades_persistentes.map(
-              (seccionPersistente: any) => ({
-                ...seccionPersistente,
-                mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
-              })
-            )
-          )
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }; */
-
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
   ) => {
@@ -107,6 +66,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
       //* seleccionar los parametros con ccd organigrma current para usar dentro del módulo
       dispatch(setCcdOrganigramaCurrent(params.row));
+      //* traer las secciones persistentes por el id del ccd nuevo (seleccionado)
+      void getSeccionesPersistentesCcdNuevo(params.row.id_ccd);
 
       console.log('siuuuuu bitch');
     } catch (error) {
