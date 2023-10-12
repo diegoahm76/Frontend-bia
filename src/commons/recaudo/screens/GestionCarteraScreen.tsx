@@ -213,12 +213,12 @@ export const GestionCarteraScreen: React.FC = () => {
 
   useEffect(() => {
     api.get('recaudo/procesos/categoria-atributos')
-    .then((response) => {
-      set_categorias(response.data.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      .then((response) => {
+        set_categorias(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }, []);
 
   useEffect(() => {
@@ -274,18 +274,6 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     }
   }, [id_flujo_destino]);
-
-  useEffect(() => {
-    if (id_etapa_destino) {
-      api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
-        .then((response) => {
-          delete_duplicated_atributos(response.data.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [id_etapa_destino]);
 
   useEffect(() => {
     if (id_etapa) {
@@ -361,16 +349,31 @@ export const GestionCarteraScreen: React.FC = () => {
     }));
   };
 
+  const update_etapa_cartera = (): void => {
+    if (id_etapa_destino) {
+      set_id_flujo_destino('');
+      set_id_subetapa_destino('');
+      set_flujos_destino([]);
+      set_selected_proceso((previousState) => ({
+        ...previousState,
+        etapa: procesos.find((proceso) => proceso.id_etapa.id === Number(id_etapa_destino))?.id_etapa.etapa ?? 'Sin proceso activo',
+      }));
+      set_id_etapa(Number(id_etapa_destino));
+    }
+  };
+
   const mover_etapa_actual = (): void => {
     if (id_flujo_destino) {
       api.post(`recaudo/procesos/actualizar-proceso/${id_proceso}/`, {
         id_etapa: id_etapa_destino,
       })
         .then((response) => {
-          console.log(response);
           update_flujos();
           update_procesos_sin_finalizar();
           update_carteras();
+          update_etapa_cartera();
+          set_notification_info({ type: 'success', message: response.data.data });
+          set_open_notification_modal(true);
         })
         .catch((error) => {
           console.log(error);
