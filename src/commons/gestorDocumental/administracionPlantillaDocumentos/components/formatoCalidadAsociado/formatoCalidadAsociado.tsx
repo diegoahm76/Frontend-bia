@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FormControl, Grid, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 import { api } from '../../../../../api/axios';
@@ -13,9 +13,8 @@ export const FormatoCalidadAsociado: React.FC = () => {
 
   const { form, set_form } = useContext(FormCreacionContext);
 
-  const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
-  const [PQR_seleccionado, set_PQR_seleccionado] = useState<string>('');
-console.log(PQR_seleccionado);
+  const [Tipos_acceso_consulta, set_Tipos_acceso_consulta] = useState<any>(null);
+
   const HandleCompletarDatos = (e: any) => {
     set_form({
       ...form,
@@ -29,7 +28,7 @@ console.log(PQR_seleccionado);
       const url = `/gestor/choices/tipo-acceso/`;
       const res: any = await api.get(url);
       const numero_consulta: any = res.data;
-      set_tipos_pqr(numero_consulta);
+      set_Tipos_acceso_consulta(numero_consulta);
       // control_success("se creo correctamente");
     } catch (error: any) {
       control_error(error.response.detail)
@@ -82,16 +81,17 @@ console.log(PQR_seleccionado);
 
         <Grid item xs={12} sm={6} md={4}>
           <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label" style={{marginTop:5}} >Seleccionar tipo de acceso</InputLabel>
             <Select
               style={{ width: '80%', margin: 4 }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={PQR_seleccionado}
-              onChange={(event): any => {
-                set_PQR_seleccionado(event.target.value);
-              }}
+              label="Seleccionar tipo de acceso"
+              name="cod_tipo_acceso"
+              value={form.cod_tipo_acceso}
+              onChange={HandleCompletarDatos}
             >
-              {tipos_pqr?.map((item: any, index: number) => (
+              {Tipos_acceso_consulta?.map((item: any, index: number) => (
                 <MenuItem key={index} value={item.value}>
                   {item.label}
                 </MenuItem>

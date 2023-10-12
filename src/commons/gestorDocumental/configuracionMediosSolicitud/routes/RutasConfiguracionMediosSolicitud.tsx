@@ -10,8 +10,8 @@ export const ConfiguracionMediosSolicitud_routes: React.FC = () => {
   return (
     <ModalBusquedaMediosSolicitudProvider>
     <Routes>
-      <Route path="/configuracionnnnnn" element={<ConfiguracionMediosSolicitudScreem/>} />
-      <Route path="/*" element={<Navigate to={'/'} />} />
+      <Route path="/*" element={<ConfiguracionMediosSolicitudScreem/>} />
+    
     </Routes>
     </ModalBusquedaMediosSolicitudProvider>
   );

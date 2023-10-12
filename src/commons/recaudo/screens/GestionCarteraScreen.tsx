@@ -546,7 +546,7 @@ export const GestionCarteraScreen: React.FC = () => {
                 <DataGrid
                   density='standard'
                   autoHeight
-                  rows={carteras}
+                  rows={carteras || []}
                   columns={columns_carteras}
                   pageSize={100}
                   rowsPerPageOptions={[100]}

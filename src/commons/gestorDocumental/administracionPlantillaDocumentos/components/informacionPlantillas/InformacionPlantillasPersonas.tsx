@@ -5,33 +5,15 @@ import { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Title } from '../../../../../components/Title';
 import { api } from '../../../../../api/axios';
+import { InfoPorId } from '../../interfaces/interfacesAdministradorPlantillas';
 
-interface InfoPorId {
-  id_plantilla_doc: number;
-  nombre_creador: string | null;
-  nombre_completo: string;
-  cod_tipo_acceso_display: string;
-  nombre: string;
-  descripcion: string;
-  asociada_a_tipologia_doc_trd: boolean;
-  otras_tipologias: string | null;
-  codigo_formato_calidad_asociado: string;
-  version_formato_calidad_asociado: string;
-  cod_tipo_acceso: string;
-  observacion: string;
-  activa: boolean;
-  fecha_creacion: string;
-  id_archivo_digital: number;
-  id_formato_tipo_medio: number;
-  id_tipologia_doc_trd: number;
-  id_persona_crea_plantilla: number;
-}
+
 interface InformacionPlantillasPersonasProps {
   data: any; // Aquí debes especificar el tipo correcto de "data" si es posible
 }
 export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPersonasProps> = ( data ) => {
-  console.log(data);
-  console.log(data.data);
+ 
+ const buscador_varaiable=data.data||0;
 
   const mi_info: InfoPorId = {
     id_plantilla_doc: 0,
@@ -58,7 +40,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
 
   const Fetch_buscar_info_porId = async (): Promise<void> => {
     try {
-      const url = `/gestor/plantillas/plantilla_documento/get_id/16/`;
+      const url = `/gestor/plantillas/plantilla_documento/get_id/${buscador_varaiable}/`;
       const res: any = await api.get(url);
       const [numero_consulta]: any = res.data.data;
       set_info_por_id(numero_consulta);
@@ -111,17 +93,25 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
   // console.log(info_por_id);
 
   useEffect(() => {
-    Fetch_buscar_info_porId().catch((error) => {
-      console.error(error);
-    });
-  }, []);
+    if (typeof buscador_varaiable !== 'undefined' && buscador_varaiable !== 0) {
+      Fetch_buscar_info_porId().catch((error) => {
+        console.error(error);
+      });
+    }
+  }, [buscador_varaiable]);
+  
+  // useEffect(() => {
+  //   Fetch_buscar_info_porId().catch((error) => {
+  //     console.error(error);
+  //   });
+  // }, [buscador_varaiable]);
 
   return (
     <div>
       <Tooltip title="Informacion de alerta" placement="right">
-        <Button onClick={handleClick}>
-          <VisibilityIcon />
-        </Button>
+       
+          <VisibilityIcon onClick={handleClick}/>
+       
       </Tooltip>
       <Dialog
         header={title}
@@ -151,7 +141,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={id_plantilla_doc}
+              value={id_plantilla_doc||""}
             />
           </Grid>
 
@@ -163,7 +153,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={nombre_creador}
+              value={nombre_creador||""}
             />
           </Grid>
           <Grid item xs={12}>
@@ -185,7 +175,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={cod_tipo_acceso_display}
+              value={cod_tipo_acceso_display||""}
             />
           </Grid>
 
@@ -197,7 +187,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={nombre}
+              value={nombre||""}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -208,7 +198,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={asociada_a_tipologia_doc_trd}
+              value={asociada_a_tipologia_doc_trd||""}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -219,7 +209,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={otras_tipologias}
+              value={otras_tipologias||""}
             />
           </Grid>
 
@@ -231,7 +221,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={codigo_formato_calidad_asociado}
+              value={codigo_formato_calidad_asociado||""}
             />
           </Grid> 
            <Grid item xs={12} sm={3}>
@@ -242,7 +232,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={activa}
+              value={activa||""}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
@@ -253,7 +243,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={version_formato_calidad_asociado}
+              value={version_formato_calidad_asociado||""}
             />
           </Grid>
           
@@ -266,7 +256,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={cod_tipo_acceso}
+              value={cod_tipo_acceso||""}
             />
           </Grid>
       
@@ -278,7 +268,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={fecha_creacion}
+              value={fecha_creacion||""}
             />
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -289,7 +279,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={id_archivo_digital}
+              value={id_archivo_digital||""}
             />
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -300,7 +290,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={id_formato_tipo_medio}
+              value={id_formato_tipo_medio||""}
             />
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -311,7 +301,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={id_tipologia_doc_trd}
+              value={id_tipologia_doc_trd||""}
             />
           </Grid> 
           <Grid item xs={12} sm={3}>
@@ -322,7 +312,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={id_persona_crea_plantilla}
+              value={id_persona_crea_plantilla||""}
             />
           </Grid>
           <Grid item xs={12}>
@@ -330,7 +320,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               style={{ margin: 6, width: '100%' }}
               label="Observacion"
               multiline
-              value={observacion}
+              value={observacion||""}
               // id="description"
               disabled
             />
@@ -340,7 +330,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               style={{ margin: 6, width: '100%' }}
               label="Descripcion"
               multiline
-              value={descripcion}
+              value={descripcion||""}
               // id="description"
               disabled
             />
