@@ -22,7 +22,7 @@ import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
 export const MostrarModalBuscarPlantilla: React.FC = () => {
 
-const {form,set_form}=useContext(FormCreacionContext);
+  const { form, set_form } = useContext(FormCreacionContext);
 
   const [visible, setVisible] = useState<boolean>(false);
   const [nombre_plantilla, set_nombre_plantilla] = useState<string>(''); // Nuevo estado para el filtro
@@ -34,6 +34,7 @@ const {form,set_form}=useContext(FormCreacionContext);
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+  // console.log(data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
 
@@ -66,7 +67,7 @@ const {form,set_form}=useContext(FormCreacionContext);
       let queryURL = url;
 
       if (!checked) {
-        if (nombre_plantilla || Extension || Descripccion||choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+        if (nombre_plantilla || Extension || Descripccion || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
           queryURL += '?';
 
           if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
@@ -89,7 +90,7 @@ const {form,set_form}=useContext(FormCreacionContext);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
       // console.log(numero_consulta);
-    
+
     } catch (error) {
       console.error(error);
     }
@@ -142,65 +143,71 @@ const {form,set_form}=useContext(FormCreacionContext);
   };
 
 
-    
-    const handleDelClick = async (data:any): Promise<void> => {
-      try { 
-        const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
-        const res: any = await api.get(url);
-        let numero_consulta: any = res.data.data;
-        console.log(numero_consulta);
-         set_form({
-          ...form,
-          id_actualizar: numero_consulta.id_plantilla_doc,
-          nombre: numero_consulta.nombre,
-           descripcion:numero_consulta.descripcion,
-         id_formato_tipo_medio: numero_consulta.id_formato_tipo_medio,
-          asociada_a_tipologia_doc_trd: numero_consulta.asociada_a_tipologia_doc_trd,
-          cod_tipo_acceso: numero_consulta.cod_tipo_acceso,
-          codigo_formato_calidad_asociado:numero_consulta.codigo_formato_calidad_asociado,
+
+  const handleDelClick = async (data: any): Promise<void> => {
+    try {
+      const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
+      const res: any = await api.get(url);
+      let numero_consulta: any = res.data.data;
+      // console.log(numero_consulta);
+      set_form({
+        ...form,
+        id_actualizar: numero_consulta.id_plantilla_doc,
+        nombre: numero_consulta.nombre,
+        descripcion: numero_consulta.descripcion,
+        id_formato_tipo_medio: numero_consulta.id_formato_tipo_medio,
+        asociada_a_tipologia_doc_trd: numero_consulta.asociada_a_tipologia_doc_trd,
+        cod_tipo_acceso: numero_consulta.cod_tipo_acceso,
+        codigo_formato_calidad_asociado: numero_consulta.codigo_formato_calidad_asociado,
         version_formato_calidad_asociado: numero_consulta.version_formato_calidad_asociado,
-           otras_tipologias:numero_consulta.otras_tipologias,
-           acceso_unidades: numero_consulta.acceso_unidades.map((id:any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),
-           id_tipologia_doc_trd:numero_consulta.id_tipologia_doc_trd,
-          acceso_unidades_dos:numero_consulta.acceso_unidades,
-         observacion:numero_consulta.observacion,
-          activa:numero_consulta.activa,
-         archivo:null,
-         });
+        otras_tipologias: numero_consulta.otras_tipologias,
+        acceso_unidades: numero_consulta.acceso_unidades.map((id: any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),
+        id_tipologia_doc_trd: numero_consulta.id_tipologia_doc_trd,
+        acceso_unidades_dos: numero_consulta.acceso_unidades,
+        observacion: numero_consulta.observacion,
+        activa: numero_consulta.activa,
+        archivo: null,
+      });
 
 
-         setVisible(false);
+      setVisible(false);
 
 
-      } catch (error:any) {
-        control_error(error.detail);
-      }
+    } catch (error: any) {
+      control_error(error.detail);
+    }
   };
 
   const columns: GridColDef[] = [
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'archivos_digitales.formato',
       headerName: 'Formato',
-      width: 150,
+      minWidth: 80,
       flex: 1,
       valueGetter: (params) => params.row.archivos_digitales.formato,
     },
     {
       field: 'cod_tipo_acceso',
       headerName: 'Código de Acceso',
-      width: 150,
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'otras_tipologias',
+      headerName: 'Otra Tipologias',
+      minWidth: 150,
       flex: 1,
     },
     {
       field: 'nombre_tipologia',
       headerName: 'Nombre Tipologia',
-      width: 150,
+      minWidth: 150,
       flex: 1,
     },
     {
@@ -208,20 +215,20 @@ const {form,set_form}=useContext(FormCreacionContext);
       headerName: 'Fecha de Creación',
       valueGetter: (params: any) =>
         ModificadorFormatoFechaPlantillas(params.row.fecha_creacion),
-      width: 200,
+        minWidth: 200,
       flex: 1,
     },
     {
       field: 'activa',
       headerName: 'Activa',
-      width: 100,
+      minWidth: 70,
       flex: 1,
       valueFormatter: (params: any) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'ruta',
       headerName: 'Ruta',
-      width: 120,
+      minWidth: 100,
       flex: 1,
       renderCell: (params: any) => (
         <DownloadButton
@@ -234,7 +241,7 @@ const {form,set_form}=useContext(FormCreacionContext);
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 150,
+      minWidth: 150,
       sortable: false,
       renderCell: (params: any) => {
         const idMedioSolicitud = params.row.id_plantilla_doc;
@@ -249,7 +256,7 @@ const {form,set_form}=useContext(FormCreacionContext);
           })
         };
 
-       
+
         return (
           <>
             <Tooltip title="Borrar registro" placement="right">
@@ -265,7 +272,7 @@ const {form,set_form}=useContext(FormCreacionContext);
               </IconButton>
             </Tooltip>
             <IconButton
-              onClick={()=>
+              onClick={() =>
                 handleDelClick(params.row.id_plantilla_doc)
               }
             >
@@ -332,7 +339,8 @@ const {form,set_form}=useContext(FormCreacionContext);
       <Dialog
         header={titulo}
         visible={visible}
-        style={{ width: '60%' }}
+        
+        style={{ width: '80%' }}
         closable={false}
         onHide={(): void => {
           setVisible(false);

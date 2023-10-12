@@ -204,7 +204,7 @@ console.log("queryURL", queryURL);
       }}
     >
       <Grid item xs={12} >
-        <Title title="Seleccionar Archivos" />
+        <Title title="Descargar Plantillas" />
       </Grid>
 
       <Grid item xs={5}>

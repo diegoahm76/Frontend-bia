@@ -23,6 +23,7 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             const res = await api.get("/gestor/encuestas/encabezado_encuesta/get/");
             if (res.data.success) {
                 setEncuestas(res.data.data);
+                
             }
         } catch (error) {
             console.error(error);
@@ -70,6 +71,7 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
                         aria-label="Ver"
                         onClick={() => {
                             handleClear();
+                            console.log(params.row)
                             const id = params.row.id_encabezado_encuesta; // Obtener el ID de la fila seleccionada
                             setSelectedEncuestaId(id); // Almacenar el ID en el estado
                         }}
