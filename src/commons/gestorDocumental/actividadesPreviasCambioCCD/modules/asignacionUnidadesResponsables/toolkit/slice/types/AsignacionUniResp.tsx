@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 // import { type Ipsd } from './types/slice.types';
 
 interface InitialState {
-  ccdOrganigramaCurrentBusqueda: null | { [key: string]: any };
+  ccdOrganigramaCurrentBusqueda: any /*| { [key: string]: any }*/;
 }
 const initialState: InitialState = {
   //! variable de estado para el ccd actual de la busqueda

@@ -39,6 +39,7 @@ import { containerStyles } from './../../../../../../tca/screens/utils/constants
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
+import { setCcdOrganigramaCurrent } from '../../../toolkit/slice/types/AsignacionUniResp';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -104,6 +105,9 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         return;
       }
 
+      //* seleccionar los parametros con ccd organigrma current para usar dentro del módulo
+      dispatch(setCcdOrganigramaCurrent(params.row));
+
       console.log('siuuuuu bitch');
     } catch (error) {
       console.error(error);
@@ -154,21 +158,11 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
             <IconButton
               onClick={() => {
                 console.log(params.row);
-                //* si limpia el estado local que almacenaba valores
-                // dispatch(setRelacionesAlmacenamientoLocal({}));
-                // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
-                // dispatch(setCcdOrganigramaCurrent(params.row));
-
-                //* se hace la petición de los siguientes servicios
-                // ? 1. homologación de unidades
-                // ? 2. unidades persistentes
-
-                /* tomar en cuenta lo siguiente, si la propiedad mismo organigrama del servicio homologacion de unidades está en true, el estado que actualiza la homologacón de unidades no debe llenarse, por el contrario se llenará el estado de unidades persistentes pero con la información que traía el servicio de HOMOLOGACIÓN DE UNIDADES  */
-
-                handleCcdConincidenteConIdOrganigrama(params);
-
-                // ! se cierra el modal
-                handleSeleccionCCD_PSD(false);
+                handleCcdConincidenteConIdOrganigrama(params).then(() => {
+                  // ? se limpian las opciones del modal y se cierra el modal
+                  setccdList([]);
+                  handleSeleccionCCD_PSD(false);
+                });
               }}
             >
               <Avatar
