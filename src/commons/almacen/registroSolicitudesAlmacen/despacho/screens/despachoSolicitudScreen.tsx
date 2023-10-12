@@ -222,7 +222,7 @@ const DespachoBienesConsumoScreen = () => {
         id_bodega_general: bodega_seleccionada.id_bodega,
         es_despacho_conservacion:
           current_solicitud.es_solicitud_de_conservacion,
-        fecha_despacho: fecha.slice(0, 10),
+        fecha_despacho: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
         id_solicitud_consumo: current_solicitud.id_solicitud_consumibles,
         fecha_solicitud: current_solicitud.fecha_solicitud,
         numero_solicitud_por_tipo: current_solicitud.nro_solicitud_por_tipo,

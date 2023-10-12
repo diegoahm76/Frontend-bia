@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Box, Button, Grid, TextField, } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../../components/Title';
 import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
 import { Controller, useForm } from 'react-hook-form';
@@ -27,6 +26,7 @@ const CierreExpedientesScreen = () => {
     const [open_modal_archivo, set_open_modal_archivo] = useState(false);
     const [current_date, set_current_date] = useState(new Date().toLocaleDateString());
     const [selected_expediente, set_selected_expediente] = useState<IObjExpedientes>();
+    const [selected_archivo_soporte, set_selected_archivo_soporte] = useState<IObjArchivoExpediente>();
     const dispatch = useAppDispatch();
 
 
@@ -52,19 +52,40 @@ const CierreExpedientesScreen = () => {
     const handle_close_adjuntar_archivo = () => {
         set_open_modal_archivo(false);
     };
+
+
     useEffect(() => {
         reset_archivo_expediente(current_archivo_expediente)
     }, [current_archivo_expediente]);
 
     const handle_selected_expediente = (expediente: IObjExpedientes) => {
         set_selected_expediente(expediente);
-        // set_carpeta(true);
+
     };
 
     useEffect(() => {
         console.log(selected_expediente)
         reset_cierre_expediente(selected_expediente);
     }, [selected_expediente]);
+
+
+
+
+    const handle_selected_arrchivo_expediente = (archivo: IObjArchivoExpediente) => {
+        set_selected_archivo_soporte(archivo);
+        set_open_modal_archivo(true);
+
+
+    };
+
+
+    useEffect(() => {
+        console.log(selected_archivo_soporte)
+        reset_archivo_expediente(selected_archivo_soporte);
+    }, [selected_archivo_soporte]);
+
+
+
 
     useEffect(() => {
         if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
@@ -79,7 +100,7 @@ const CierreExpedientesScreen = () => {
             field: 'orden_en_expediente',
             headerName: 'ÓRDEN AGREGADO',
             sortable: true,
-            width: 350,
+            width: 200,
         },
         {
             field: 'nombre_asignado_documento',
@@ -91,6 +112,20 @@ const CierreExpedientesScreen = () => {
             field: 'nombre_tipologia',
             headerName: 'TIPOLOGÍA',
             width: 350,
+        },
+        {
+            field: 'acciones',
+            headerName: 'ACCIONES',
+            width: 100,
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handle_selected_arrchivo_expediente(params.row)}
+                    startIcon={<PlaylistAddCheckIcon />}
+                >
+
+                </Button>
+            ),
+
         },
 
 
@@ -220,7 +255,8 @@ const CierreExpedientesScreen = () => {
                 )}
 
                 {selected_expediente?.id_expediente_documental && (
-                    <Box sx={{ width: '50%' }} >
+                    <Box sx={{ width: '70%' }} >
+                        <Title title="RESULTADOS DE LA BÚSQUEDA" />
                         <>
                             <DataGrid
                                 density="compact"
@@ -236,13 +272,13 @@ const CierreExpedientesScreen = () => {
             </Grid>
 
             {selected_expediente?.id_expediente_documental && (
-                <Grid container spacing={2} margin={8} justifyContent="flex-end">
+                <Grid container spacing={2} margin={8} justifyContent="center">
                     <LoadingButton
                         variant="contained"
                         onClick={handle_adjuntar_archivo}
                         disabled={false}
                     >
-                        Agregar
+                        Agregar Archivo
                     </LoadingButton>
                 </Grid>
             )}
