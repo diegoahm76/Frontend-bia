@@ -4,12 +4,14 @@ export interface ICierreExpedientes {
   tipologias: IObTipologia[];
   expedientes: IObjExpedientes[];
   current_archivo_expediente: IObjArchivoExpediente;
-  // archivos_expedientes: IObjarchivo[];
+  archivos_por_expedientes: IObjarchivo[];
 }
 
 export interface IObjCierreExpediente {
   fecha_actual?: string | null;
   titulo_expediente?: string | null;
+  id_expediente_doc?: number | null;
+  justificacion_cierre_reapertura?: string | null;
 }
 
 export interface IObjTRD {

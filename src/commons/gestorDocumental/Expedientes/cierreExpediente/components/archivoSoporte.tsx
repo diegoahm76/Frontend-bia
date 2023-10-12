@@ -13,31 +13,22 @@ import {
     Dialog,
     DialogContent,
     Grid,
-    IconButton,
     MenuItem,
     TextField,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
-import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import FormSelectController from '../../../../../components/partials/form/FormSelectController';
-
-import FormInputController from '../../../../../components/partials/form/FormInputController';
-import { crear_archivo_soporte, get_busqueda_avanzada_expediente, get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
+import { crear_archivo_soporte, get_archivos_id_expediente, get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
 import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
 import { IList } from '../../../../../interfaces/globalModels';
 import { api } from '../../../../../api/axios';
 import FormInputFileController from '../../../../../components/partials/form/FormInputFileController';
-import { FormValues } from '../../../organigrama/componentes/DialogBusquedaAvanzadaUserOrganigrama/types/types';
-import { set_current_archivo_expediente } from '../store/slice/indexCierreExpedientes';
-import { IObjArchivoExpediente } from '../interfaces/cierreExpedientes';
-
+import { set_current_archivo_expediente, } from '../store/slice/indexCierreExpedientes';
+import { type IObjArchivoExpediente as FormValues } from '../interfaces/cierreExpedientes';
+import { IDeposito } from '../../../deposito/interfaces/deposito';
 interface IProps {
 
     control_archivo_expediente: any;
@@ -45,22 +36,24 @@ interface IProps {
     handle_close_adjuntar_archivo: any;
     get_values_archivo: any;
     handle_submit_archivo: any;
-    //  handle_mover_carpeta: any;
+    selected_expediente: any;
+    set_selected_expediente: any;
 
 }
 
 
 
-const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjuntar_archivo, get_values_archivo, handle_submit_archivo }: IProps) => {
+const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjuntar_archivo, get_values_archivo, handle_submit_archivo, selected_expediente, set_selected_expediente }: IProps) => {
 
     const { trd, tipologias, expedientes, current_archivo_expediente } = useAppSelector((state) => state.cierre_expedientes);
     const dispatch = useAppDispatch();
     const [tipo_origen, set_tipo_origen] = useState<IList[]>([]);
     const [tipo_archivo, set_tipo_archivo] = useState<IList[]>([]);
     const [mostrar_campos_consecutivo, set_mostrar_campos_consecutivo] = useState(true);
-
     const [file, set_file] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>('');
+
+
 
     const text_choise_adapter: any = (dataArray: string[]) => {
         const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -77,14 +70,19 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
 
     useEffect(() => {
         if (file !== null) {
+
             if ('name' in file) {
                 set_file_name(file.name);
+                console.log(file)
+
                 dispatch(
                     set_current_archivo_expediente({
                         ...current_archivo_expediente,
                         nombre_asignado_documento: get_values_archivo('nombre_asignado_documento'),
                         nro_folios_del_doc: get_values_archivo('nro_folios_del_doc'),
+                        fecha_creacion_doc: get_values_archivo('fecha_creacion_doc'),
                         tiene_consecutivo_documento: get_values_archivo('tiene_consecutivo_documento'),
+                        id_tipologia_documental: get_values_archivo('id_tipologia_documental'),
                         cod_origen_archivo: get_values_archivo('cod_origen_archivo'),
                         codigo_tipologia_doc_prefijo: get_values_archivo('codigo_tipologia_doc_prefijo'),
                         codigo_tipologia_doc_agno: get_values_archivo('codigo_tipologia_doc_agno'),
@@ -101,6 +99,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         }
     }, [file]);
     useEffect(() => {
+
 
         if (current_archivo_expediente.file !== null) {
             if (typeof current_archivo_expediente.file === 'string') {
@@ -165,13 +164,15 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         void dispatch(get_tipologias())
     }, [])
 
-    const on_submit = (data: IObjArchivoExpediente): void => {
+    const on_submit = (data: FormValues): void => {
+        console.log(data.fecha_creacion_doc)
         const form_data: any = new FormData();
         form_data.append('nombre_asignado_documento', data.nombre_asignado_documento);
         form_data.append('nro_folios_del_doc', data.nro_folios_del_doc);
         form_data.append('tiene_consecutivo_documento', data.tiene_consecutivo_documento);
         form_data.append('cod_origen_archivo', data.cod_origen_archivo);
         form_data.append('codigo_tipologia_doc_prefijo', data.codigo_tipologia_doc_prefijo);
+        form_data.append('fecha_creacion_doc', data.fecha_creacion_doc);
         form_data.append('codigo_tipologia_doc_agno', data.codigo_tipologia_doc_agno);
         form_data.append('codigo_tipologia_doc_consecutivo', data.codigo_tipologia_doc_consecutivo);
         form_data.append('cod_categoria_archivo', data.cod_categoria_archivo);
@@ -179,9 +180,16 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         form_data.append('asunto', data.asunto);
         form_data.append('descripcion', data.descripcion);
         form_data.append('palabras_clave_documento', data.palabras_clave_documento);
-        form_data.append('file', data.file);
         form_data.append('file', file === null ? '' : file);
+        form_data.append('id_expediente_documental', selected_expediente.id_expediente_documental)
+
         void dispatch(crear_archivo_soporte(form_data));
+        console.log('crear')
+        void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
+        //  set_selected_expediente(initial_state_current_archivo_expediente)
+
+
+
     };
 
 
@@ -432,19 +440,37 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                             )}
                                         />
                                     </Grid>
-                                    <FormDatePickerController
-                                        xs={12}
-                                        md={3.5}
-                                        margin={2}
-                                        control_form={control_archivo_expediente}
-                                        control_name={'codigo_tipologia_doc_agno'}
-                                        default_value={''}
-                                        rules={{}}
-                                        label={'Año'}
-                                        disabled={false}
-                                        format={'YYYY'}
-                                        helper_text={''}
-                                    />
+                                    <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
+                                        <Controller
+                                            name="codigo_tipologia_doc_agno"
+                                            control={control_archivo_expediente}
+                                            defaultValue=""
+                                            rules={{ required: true }}
+                                            render={({
+                                                field: { onChange, value },
+                                                fieldState: { error },
+                                            }) => (
+                                                <TextField
+                                                    margin="dense"
+                                                    fullWidth
+                                                    size="small"
+                                                    label="Año"
+                                                    variant="outlined"
+                                                    disabled={false}
+                                                    defaultValue={value}
+                                                    value={value}
+                                                    onChange={(e) => {
+                                                        const inputValue = e.target.value;
+                                                        // Filtra solo caracteres numéricos utilizando una expresión regular
+                                                        const numericValue = inputValue.replace(/\D/g, ''); // Solo deja los dígitos
+                                                        onChange(numericValue);
+                                                    }}
+                                                    error={!(error == null)}
+                                                >
+                                                </TextField>
+                                            )}
+                                        />
+                                    </Grid>
 
 
                                     <Grid item xs={12} sm={3.5} marginTop={2} >
@@ -673,7 +699,9 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                     label="Archivo de soporte"
                                     disabled={false}
                                     helper_text=""
-                                    file_name={'Cargar Archivo'}
+                                    set_value={set_file}
+                                    file_name={file_name}
+                                    value_file={current_archivo_expediente.file}
                                 />
                             </Grid>
 
@@ -683,11 +711,18 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="flex-end">
-                        <Grid item>
+                        <Grid item margin={2}>
                             <Button variant="contained"
                                 color="success"
                                 onClick={handle_submit_archivo(on_submit)}>
                                 Guardar
+                            </Button>
+                        </Grid>
+                        <Grid item margin={2}>
+                            <Button variant="outlined"
+                                color="error"
+                                onClick={handle_close_adjuntar_archivo}>
+                                Salir
                             </Button>
                         </Grid>
                     </Grid>

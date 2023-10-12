@@ -117,8 +117,8 @@ const routes = [
   {
     path: 'expedientes/',
     name: 'expedientes',
-    // component: () => <ExpedientesRoutes />,
-    component: () => <CierreExpedientesRoutes />,
+    component: () => <ExpedientesRoutes />,
+    // component: () => <CierreExpedientesRoutes />,
   },
   {
     path: 'archivo_fisico/',

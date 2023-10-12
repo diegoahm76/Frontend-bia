@@ -7,7 +7,7 @@ import {
     // type AxiosResponse
 } from 'axios';
 import { api } from '../../../../../../api/axios';
-import { set_expedientes, set_tipologias, set_trd } from '../slice/indexCierreExpedientes';
+import { set_archivos_por_expediente, set_expedientes, set_tipologias, set_trd } from '../slice/indexCierreExpedientes';
 // Slices
 
 
@@ -96,7 +96,7 @@ export const get_busqueda_avanzada_expediente = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expediente/?trd_nombre=${trd_nombre ?? ''}&fecha_apertura_expediente=${fecha_apertura_expediente ?? ''}&titulo_expediente=${titulo_expediente ?? ''}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie ?? ''}&id_serie_origen=${id_serie_origen ?? ''}&id_subserie_origen=${id_subserie_origen ?? ''}`);
+            const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expediente-abierto?trd_nombre/?trd_nombre=${trd_nombre ?? ''}&fecha_apertura_expediente=${fecha_apertura_expediente ?? ''}&titulo_expediente=${titulo_expediente ?? ''}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie ?? ''}&id_serie_origen=${id_serie_origen ?? ''}&id_subserie_origen=${id_subserie_origen ?? ''}`);
 
             if (data.success === true) {
                 dispatch(set_expedientes(data.data));
@@ -124,6 +124,29 @@ export const crear_archivo_soporte: any = (
         } catch (error: any) {
             control_error(error.response.data.detail);
             console.log(error.response.data);
+            return error as AxiosError;
+        }
+    };
+};
+
+// listar archivo de soporte por expediente 
+
+export const get_archivos_id_expediente = (
+    id: number,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/expedientes-archivos/expedientes/listar-archivos-soporte/${id ?? ''}/`);
+
+            if (data.success === true) {
+                dispatch(set_archivos_por_expediente(data.data));
+
+            }
+            console.log(data)
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
             return error as AxiosError;
         }
     };
