@@ -52,6 +52,7 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
       set_tipos_pqr(numero_consulta);
+      console.log(numero_consulta);
     } catch (error) {
       console.error(error);
     }
