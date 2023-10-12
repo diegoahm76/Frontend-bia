@@ -21,7 +21,7 @@ import React, { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import ReplyIcon from '@mui/icons-material/Reply';
 import ClearIcon from '@mui/icons-material/Clear';
-import { TablaEncuesta } from "./TablaEncuesta";
+// import { TablaEncuesta } from "./TablaEncuesta";
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,7 @@ import { Buscar } from "./Buscar";
 import { control_warning } from "../../../almacen/configuracion/store/thunks/BodegaThunks";
 
 
-export const Encabezado: React.FC = () => {
+export const EncabezadoCrear: React.FC = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -254,15 +254,11 @@ export const Encabezado: React.FC = () => {
 
     const newQuestion = formData.preguntas[0]
     if (editMode) {
-      // setTempQuestions([...tempQuestions, newQuestion]); // Actualiza la lista temporal de preguntas
+    //   setTempQuestions([...tempQuestions, newQuestion]); // Actualiza la lista temporal de preguntas
       setEditMode(false); // Sal del modo de edición
       setTempQuestions([...tempQuestions, newQuestion]);
       setQuestionGridRows([...questionGridRows, { id: newQuestion.redaccion_pregunta, pregunta: newQuestion.redaccion_pregunta }]);
-    } 
-    // else {
-    //   setTempQuestions([...tempQuestions, newQuestion]);
-    //   setQuestionGridRows([...questionGridRows, { id: newQuestion.redaccion_pregunta, pregunta: newQuestion.redaccion_pregunta }]);
-    // }
+    }
     if (!newQuestion.redaccion_pregunta.trim()) {
       control_error('El campo de texto de la pregunta no puede estar vacío.');
       return;
@@ -458,9 +454,8 @@ export const Encabezado: React.FC = () => {
   return (
     <>
       <>
-        {showContent || selectedEncuestaId ? (
-          // Si selectedEncuestaId tiene un valor, muestra todo el código a continuación:
-          <>
+       
+           <>
             <Grid container
               spacing={2} m={2} p={2}
               sx={miEstilo}
@@ -708,30 +703,16 @@ export const Encabezado: React.FC = () => {
                 </Button>
               </Grid>
               <Grid item xs={12} sm={1.4}>
-                <Button variant="contained" color='error' onClick={() => {
-                  setShowContent(false); handleClear(); setSelectedEncuestaId(null); setFormData({
-                    ...formData,
-                    nombre_encuesta: "",
-                    descripcion: "",
-                    activo: "",
-                    preguntas: [
-                      {
-                        redaccion_pregunta: "",
-                        opciones_rta: []
-                      }
-                    ]
-                  });
-                }} startIcon={<ReplyIcon />}>
-                  Regresar
-                </Button>
+                
               </Grid>
             </Grid>
             <Buscar handleClear={handleClear} setSelectedEncuestaId={setSelectedEncuestaId} is_modal_active={is_buscar} set_is_modal_active={set_is_buscar} />
           </>
-        ) : (
+     
           <>
-            <TablaEncuesta setShowContent={setShowContent} handleClear={handleClear} setSelectedEncuestaId={setSelectedEncuestaId} is_modal_active={is_buscar} /></>
-        )}
+         
+            </>
+      
       </>
     </>
   );
