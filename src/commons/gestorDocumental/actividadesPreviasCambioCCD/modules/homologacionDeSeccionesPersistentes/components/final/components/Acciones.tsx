@@ -122,10 +122,6 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
       dispatch(setHomologacionAgrupacionesSerieSubserie([]));
       dispatch(setAgrupacionesPersistentesSerieSubserie([]));
-
-      /* if (res) {
-        getOutModule(navigate, [() => dispatch(reset_states())]);
-      } */
     });
   };
 

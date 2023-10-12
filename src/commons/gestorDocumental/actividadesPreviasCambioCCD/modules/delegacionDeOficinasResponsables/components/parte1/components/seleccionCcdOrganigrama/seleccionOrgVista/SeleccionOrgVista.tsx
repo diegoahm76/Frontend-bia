@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import {  Grid, TextField } from '@mui/material';
-import {  type FC } from 'react';
+import { Grid, TextField } from '@mui/material';
+import React from 'react';
 import { stylesGrid } from '../../../../../../../../permisosSeriesDoc/utils/styles';
-import { useAppSelector } from '../../../../../../../../../../hooks';
 
-
-export const VistaOrganigrama: FC<any> = (): JSX.Element => {
-    // ! states from redux
- const { ccdOrganigramaCurrentBusqueda } = useAppSelector((state) => state.HomologacionesSlice);
+export const SeleccionOrgVista = () => {
   return (
     <>
       <Grid item xs={12} sm={4} sx={stylesGrid}>
@@ -18,7 +13,7 @@ export const VistaOrganigrama: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-         value={ccdOrganigramaCurrentBusqueda?.nombre_organigrama || ''}
+          value={/*ccdOrganigramaCurrentBusqueda?.nombre_organigrama || */ ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -29,7 +24,7 @@ export const VistaOrganigrama: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={ccdOrganigramaCurrentBusqueda?.version_organigrama || ''}
+          value={/* ccdOrganigramaCurrentBusqueda?.version_organigrama || */''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>

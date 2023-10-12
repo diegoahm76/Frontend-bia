@@ -36,7 +36,7 @@ interface IVisualTexto {
 }
 
 export function VisaulTexto({ elements }: IVisualTexto) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(true);
 
   const elementsFromIndexOne = elements?.slice(1, elements.length);
 
