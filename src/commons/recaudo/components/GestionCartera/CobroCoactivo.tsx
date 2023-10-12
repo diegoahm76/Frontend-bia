@@ -6,6 +6,7 @@ import type { AtributoEtapa, ValoresProceso } from "../../interfaces/proceso";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import SaveIcon from '@mui/icons-material/Save';
 import { CollapsibleButton } from "../CollapsibleButton";
+import { api } from "../../../../api/axios";
 
 interface IProps {
   rows_atributos: AtributoEtapa[][];
@@ -166,7 +167,9 @@ export const CobroCoactivo: React.FC<IProps> = ({
         return params.row.valor ?
           <span>{params.row.valor || ''}</span> :
           <Link
-            href={`https://back-end-bia-beta.up.railway.app/static${params.row.documento as string || ''}`}
+            href={`${api.defaults.baseURL?.replace('api/', 'static')}${params.row.documento as string || ''}`}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             {(params.row.documento as string).slice(7)}
           </Link>;
