@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useState } from 'react';
-import { Box, Button, Checkbox, FormControl, Grid, InputLabel, TextField } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import { Box, Button, Checkbox, FormControl, Grid, IconButton, InputLabel, TextField, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,9 +13,16 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Dialog } from 'primereact/dialog';
 import { ModificadorFormatoFechaPlantillas } from '../../utils/ModificadorFecha';
+import { confirmarAccion } from '../../../deposito/utils/function';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { control_error, control_success } from '../../../alertasgestor/utils/control_error_or_success';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
+import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
 export const MostrarModalBuscarPlantilla: React.FC = () => {
 
+  const { form, set_form } = useContext(FormCreacionContext);
 
   const [visible, setVisible] = useState<boolean>(false);
   const [nombre_plantilla, set_nombre_plantilla] = useState<string>(''); // Nuevo estado para el filtro
@@ -27,6 +34,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+  // console.log(data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
 
@@ -35,6 +43,9 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const footerContent = (
     <div>
       <Button
+        startIcon={<ClearIcon />}
+        fullWidth
+
         style={{ margin: 3 }}
         variant="contained"
         color="error"
@@ -50,13 +61,13 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   // const buscar_todos = true;
   const fetch_data_busqueda_avanzada = async (): Promise<void> => {
     try {
-      const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada/`;
+      const url = `/gestor/plantillas/plantilla_documento/get/busqueda_avanzada_admin/`;
 
       // Construye dinámicamente la URL de consulta
       let queryURL = url;
 
       if (!checked) {
-        if (nombre_plantilla || Extension || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+        if (nombre_plantilla || Extension || Descripccion || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
           queryURL += '?';
 
           if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
@@ -67,6 +78,9 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
 
           if (choise_seleccionado_disponivilidad) { queryURL += `disponibilidad=${choise_seleccionado_disponivilidad}`; }
 
+          if (Descripccion) {
+            queryURL += `descripcion=${Descripccion}`;
+          }
           // Elimina el último '&' si está presente
           if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
         }
@@ -75,6 +89,8 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
+      // console.log(numero_consulta);
+
     } catch (error) {
       console.error(error);
     }
@@ -108,24 +124,90 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
 
 
 
+  const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
+    try {
+      // Define la URL del servidor junto con el ID del registro que deseas eliminar
+      const url = `/gestor/plantillas/plantilla_documento/delete/${idRegistro}/`;
+
+      // Realiza una solicitud HTTP DELETE al servidor
+      const { data } = await api.delete(url);
+
+      // Verifica si la eliminación se realizó con éxito
+      control_success(data?.detail);
+
+      // Realiza una nueva consulta para actualizar la tabla después de la eliminación
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
+
+
+  const handleDelClick = async (data: any): Promise<void> => {
+    try {
+      const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
+      const res: any = await api.get(url);
+      let numero_consulta: any = res.data.data;
+      // console.log(numero_consulta);
+      set_form({
+        ...form,
+        id_actualizar: numero_consulta.id_plantilla_doc,
+        nombre: numero_consulta.nombre,
+        descripcion: numero_consulta.descripcion,
+        id_formato_tipo_medio: numero_consulta.id_formato_tipo_medio,
+        asociada_a_tipologia_doc_trd: numero_consulta.asociada_a_tipologia_doc_trd,
+        cod_tipo_acceso: numero_consulta.cod_tipo_acceso,
+        codigo_formato_calidad_asociado: numero_consulta.codigo_formato_calidad_asociado,
+        version_formato_calidad_asociado: numero_consulta.version_formato_calidad_asociado,
+        otras_tipologias: numero_consulta.otras_tipologias,
+        acceso_unidades: numero_consulta.acceso_unidades.map((id: any) => ({ id_unidad_organizacional: id.id_unidad_organizacional })),
+        id_tipologia_doc_trd: numero_consulta.id_tipologia_doc_trd,
+        acceso_unidades_dos: numero_consulta.acceso_unidades,
+        observacion: numero_consulta.observacion,
+        activa: numero_consulta.activa,
+        archivo: null,
+      });
+
+
+      setVisible(false);
+
+
+    } catch (error: any) {
+      control_error(error.detail);
+    }
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'archivos_digitales.formato',
       headerName: 'Formato',
-      width: 150,
+      minWidth: 80,
       flex: 1,
       valueGetter: (params) => params.row.archivos_digitales.formato,
     },
     {
       field: 'cod_tipo_acceso',
       headerName: 'Código de Acceso',
-      width: 150,
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'otras_tipologias',
+      headerName: 'Otra Tipologias',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'nombre_tipologia',
+      headerName: 'Nombre Tipologia',
+      minWidth: 150,
       flex: 1,
     },
     {
@@ -133,20 +215,20 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       headerName: 'Fecha de Creación',
       valueGetter: (params: any) =>
         ModificadorFormatoFechaPlantillas(params.row.fecha_creacion),
-      width: 200,
+        minWidth: 200,
       flex: 1,
     },
     {
       field: 'activa',
       headerName: 'Activa',
-      width: 100,
+      minWidth: 70,
       flex: 1,
       valueFormatter: (params: any) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'ruta',
       headerName: 'Ruta',
-      width: 120,
+      minWidth: 100,
       flex: 1,
       renderCell: (params: any) => (
         <DownloadButton
@@ -159,16 +241,48 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 150,
-      flex: 1,
-      renderCell: (params: any) => (
-        <button
-          onClick={() => console.log('Funciona')}
-          className="button-class"
-        >
-          Acción
-        </button>
-      ),
+      minWidth: 150,
+      sortable: false,
+      renderCell: (params: any) => {
+        const idMedioSolicitud = params.row.id_plantilla_doc;
+
+
+        const handleDeleteClick = () => {
+          // Llama a la función de eliminación pasando el idMedioSolicitud como parámetro
+          fetch_delete_registro(idMedioSolicitud).then(() => {
+            fetch_data_busqueda_avanzada()
+
+
+          })
+        };
+
+
+        return (
+          <>
+            <Tooltip title="Borrar registro" placement="right">
+              <IconButton
+                onClick={() => {
+                  void confirmarAccion(
+                    handleDeleteClick,
+                    '¿Estás seguro de eliminar  este campo?'
+                  );
+                }}
+              >
+                <DeleteIcon style={{ color: "red" }} />
+              </IconButton>
+            </Tooltip>
+            <IconButton
+              onClick={() =>
+                handleDelClick(params.row.id_plantilla_doc)
+              }
+            >
+              <EditIcon />
+            </IconButton>
+
+
+          </>
+        );
+      },
     },
   ];
 
@@ -213,6 +327,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   return (
     <div className="card flex justify-content-center">
       <Button
+        startIcon={<SearchIcon />}
         fullWidth
         variant="contained"
         onClick={() => {
@@ -224,7 +339,8 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       <Dialog
         header={titulo}
         visible={visible}
-        style={{ width: '85%' }}
+        
+        style={{ width: '80%' }}
         closable={false}
         onHide={(): void => {
           setVisible(false);

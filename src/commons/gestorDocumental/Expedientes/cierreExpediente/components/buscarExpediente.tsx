@@ -26,10 +26,8 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import FormSelectController from '../../../../../components/partials/form/FormSelectController';
-
-import FormInputController from '../../../../../components/partials/form/FormInputController';
-import { get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { get_busqueda_avanzada_expediente, get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
 
 interface IProps {
 
@@ -37,15 +35,15 @@ interface IProps {
     open: any;
     handle_close_buscar: any;
     get_values: any;
-    //  handle_mover_carpeta: any;
+    handle_selected_expediente: any;
 
 }
 
 
 
-const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar, get_values, }: IProps) => {
+const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar, get_values, handle_selected_expediente }: IProps) => {
 
-    const { trd, tipologias } = useAppSelector((state) => state.cierre_expedientes);
+    const { trd, tipologias, expedientes } = useAppSelector((state) => state.cierre_expedientes);
     const dispatch = useAppDispatch();
 
 
@@ -56,63 +54,69 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
 
     const columns: GridColDef[] = [
         {
-            field: 'orden_carpeta',
-            headerName: 'ÓRDEN DE LA CARPETA',
+            field: 'codigo_exp_und_serie_subserie',
+            headerName: 'CÓDIGO',
             sortable: true,
-            width: 250,
+            width: 200,
         },
         {
-            field: 'identificacion_deposito',
-            headerName: 'IDENTIFICACIÓN DEL DEPÓSITO',
+            field: 'nombre_trd_origen',
+            headerName: 'TRD',
             sortable: true,
+            width: 200,
+        },
+        {
+            field: 'titulo_expediente',
+            headerName: 'TITULO',
+            width: 200,
+        },
+        {
+            field: 'nombre_unidad_org',
+            headerName: 'UNIDAD ORGANIZACIONAL',
             width: 250,
         },
         {
-            field: 'identificacion_estante',
-            headerName: 'IDENTIFICACIÓN DEL ESTANTE',
-            width: 250,
+            field: 'nombre_serie_origen',
+            headerName: 'SERIE',
+            width: 200,
         },
         {
-            field: 'identificacion_bandeja',
-            headerName: 'IDENTIFICACIÓN DE LA BANDEJA',
-            width: 250,
+            field: 'nombre_subserie_origen',
+            headerName: 'SUB SERIE',
+            width: 200,
         },
         {
-            field: 'identificacion_caja',
-            headerName: 'IDENTIFICACIÓN DE LA CAJA',
-            width: 250,
-        },
-        {
-            field: 'identificacion_carpeta',
-            headerName: 'IDENTIFICACIÓN DE LA CARPETA',
-            width: 250,
+            field: 'fecha_apertura_expediente',
+            headerName: 'AÑO',
+            width: 200,
         },
         {
             field: 'acciones',
             headerName: 'ACCIONES',
-            width: 250,
-            // renderCell: (params) => (
-            //     <Button
-            //         onClick={() => handle_mover_carpeta(params.row)}
-            //         startIcon={<EditIcon />}
-            //     >
+            width: 200,
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handle_selected_expediente(params.row)}
+                    startIcon={<PlaylistAddCheckIcon />}
+                >
 
-            //     </Button>
-            // ),
+                </Button>
+            ),
 
         },
     ];
 
 
 
-    // useEffect(() => {
-    //     void dispatch(get_depositos())
-    // }, [])
 
-    const mostrar_busqueda: any = async () => {
-        const identificacion_deposito = get_values
-        const orden_estante = get_values('orden_estante') ?? '';
-        //  void dispatch(get_busqueda_avanzada(orden_estante))
+    const mostrar_busqueda_expediente: any = async () => {
+        const titulo_expediente = get_values('titulo_expediente') ?? '';
+        const codigos_uni_serie_subserie = get_values('codigos_uni_serie_subserie') ?? '';
+        const trd_nombre = get_values('trd_nombre') ?? '';
+        const fecha_apertura_expediente = get_values('fecha_apertura_expediente') ?? '';
+        const id_serie_origen = get_values('id_serie_origen') ?? '';
+        const id_subserie_origen = get_values('id_subserie_origen') ?? '';
+        void dispatch(get_busqueda_avanzada_expediente(titulo_expediente, trd_nombre, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
     }
 
 
@@ -147,69 +151,235 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                         <Title title="BÚSQUEDA DE EXPEDIENTES ABIERTOS" />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
-                            <Grid container spacing={2}>
-                                <FormInputController
-                                    xs={12}
-                                    md={2}
-                                    margin={2}
-                                    control_form={control_cierre_expediente}
-                                    control_name="titulo_expediente"
-                                    default_value=''
-                                    rules={{}}
-                                    type="text"
-                                    disabled={false}
-                                    helper_text=""
-                                    hidden_text={null}
-                                    label={"Estante"}
-                                />
+                            <Grid container justifyContent="center">
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
+                                    <Controller
+                                        name="titulo_expediente"
+                                        control={control_cierre_expediente}
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                fullWidth
+                                                size="small"
+                                                label="Titulo"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
 
-                                <FormSelectController
-                                    xs={12}
-                                    md={2}
-                                    margin={2}
-                                    control_form={control_cierre_expediente}
-                                    control_name={'identificacion_deposito'}
-                                    default_value=''
-                                    rules={{}}
-                                    label='TRD'
-                                    disabled={false}
-                                    helper_text=''
-                                    select_options={trd}
-                                    option_label='nombre_tdr_origen'
-                                    option_key='nombre_tdr_origen'
-                                    multiple={false}
-                                    hidden_text={false}
-                                    auto_focus={false}
-                                />
-                                <FormSelectController
-                                    xs={12}
-                                    md={2}
-                                    margin={2}
-                                    control_form={control_cierre_expediente}
-                                    control_name={'identificacion_deposito'}
-                                    default_value=''
-                                    rules={{}}
-                                    label='Tipólogia'
-                                    disabled={false}
-                                    helper_text=''
-                                    select_options={tipologias}
-                                    option_label='nombre'
-                                    option_key='nombre'
-                                    multiple={false}
-                                    hidden_text={false}
-                                    auto_focus={false}
-                                />
+                                            >
+
+                                            </TextField>
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
+                                    <Controller
+                                        name="codigo_exp_und_serie_subserie"
+                                        control={control_cierre_expediente}
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                fullWidth
+                                                size="small"
+                                                label="Código Und. Serie. Subserie"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
+
+                                            >
+
+                                            </TextField>
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
+                                    <Controller
+                                        name="trd_nombre"
+                                        control={control_cierre_expediente}
+                                        defaultValue=""
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                margin="dense"
+                                                fullWidth
+                                                select
+                                                size="small"
+                                                label="TRD"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
+                                            >
+                                                {trd.map((option) => (
+                                                    <MenuItem key={option.id_trd_origen} value={option.nombre_tdr_origen ?? ''}>
+                                                        {option.nombre_tdr_origen}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        )}
+                                    />
+
+                                </Grid>
+
+                            </Grid>
+
+
+                            <Grid container justifyContent="center">
+                                <Grid item xs={12} sm={3.5} margin={2}>
+                                    <Controller
+                                        name="fecha_apertura_expediente"
+                                        control={control_cierre_expediente}
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                fullWidth
+                                                size="small"
+                                                label="Año de Apertura"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
+
+                                            >
+
+                                            </TextField>
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
+                                    <Controller
+                                        name="id_serie_origen"
+                                        control={control_cierre_expediente}
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                fullWidth
+                                                size="small"
+                                                label="Serie"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
+
+                                            >
+
+                                            </TextField>
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
+                                    <Controller
+                                        name="id_subserie_origen"
+                                        control={control_cierre_expediente}
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                fullWidth
+                                                size="small"
+                                                label="Sub Serie"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
+
+                                            >
+
+                                            </TextField>
+                                        )}
+                                    />
+
+                                </Grid>
+                                <Grid item xs={12} sm={6} marginTop={2} margin={2}>
+                                    <Controller
+                                        name="palabras_clave_expediente"
+                                        control={control_cierre_expediente}
+                                        rules={{ required: true }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                fullWidth
+                                                size="small"
+                                                label="Palabras Clave"
+                                                variant="outlined"
+                                                disabled={false}
+                                                defaultValue={value}
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!(error == null)}
+
+                                            >
+
+                                            </TextField>
+                                        )}
+                                    />
+                                </Grid>
+
                                 <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
                                     <LoadingButton
                                         type="submit"
                                         variant="contained"
                                         color="primary"
-                                        onClick={mostrar_busqueda}
+                                        onClick={mostrar_busqueda_expediente}
 
                                     >
                                         Buscar
                                     </LoadingButton>
                                 </Grid>
+
+
+
+
+
 
                             </Grid>
 
@@ -223,14 +393,14 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12}>
                                     <Box sx={{ width: '100%' }}>
                                         <>
-                                            {/* <DataGrid
+                                            <DataGrid
                                                 density="compact"
                                                 autoHeight
                                                 columns={columns}
                                                 pageSize={10}
                                                 rowsPerPageOptions={[10]}
-                                                rows={cajas_lista}
-                                                getRowId={(row) => row.id_carpeta} /> */}
+                                                rows={expedientes}
+                                                getRowId={(row) => row.id_expediente_documental} />
                                         </>
                                     </Box>
                                 </Grid>

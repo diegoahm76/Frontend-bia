@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../../../api/axios';
 import { type Filtro } from '../../facilidadPago/interfaces/interfaces';
+import { CarteraDetallada, ReporteGeneralDetallado } from '../interfaces/interfaces';
 
 interface FiltroFacilidad {
   parametro: string;
@@ -13,15 +14,18 @@ interface FiltroEdad {
 }
 
 const initial_state = {
-  reportes_recaudo: [],
+  reportes_recaudo: [] as CarteraDetallada[], // Inicializado como un arreglo vacío
 };
-
 // Ver Reporte Detallado Cartera
-export const get_cartera_detallada = createAsyncThunk('reportes_recaudo/cartera_detallada', async () => {
-  const { data } = await api.get(`recaudo/reportes/reporte-general-detallado/`)
-  return data.data
-})
+// export const get_cartera_detallada = createAsyncThunk('reportes_recaudo/cartera_detallada', async () => {
+//   const { data } = await api.get(`recaudo/reportes/reporte-general-detallado/`)
+//   return data.data
+// })
 
+export const get_cartera_detallada = createAsyncThunk('reportes_recaudo/cartera_detallada', async () => {
+  const { data } = await api.get<ReporteGeneralDetallado>('recaudo/reportes/reporte-general-detallado/');
+  return data.results.data; // Devuelve el arreglo de datos dentro del objeto JSON
+});
 // Filtro Reporte Detallado Cartera
 export const get_filtro_cartera_detallada = createAsyncThunk('reportes_recaudo/filtro_cartera_detallada', async (filtro: Filtro) => {
   const { data } = await api.get(`recaudo/reportes/reporte-general-detallado/?${filtro.parametro}=${filtro.valor}`)

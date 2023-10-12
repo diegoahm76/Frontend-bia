@@ -68,7 +68,6 @@ export const EstadosProcesoScreen: React.FC = () => {
                 onClick={() => {
                   set_id_etapa(params.row.id);
                   set_descripcion_etapa(params.row.etapa);
-                  set_atributos_etapa(params.row.id);
                   set_position_tab_organigrama('2');
                 }}
               >
@@ -151,21 +150,21 @@ export const EstadosProcesoScreen: React.FC = () => {
   const columns_categorias_atributos: GridColDef[] = [
     {
       field: 'id',
-      headerName: 'ID categoria',
+      headerName: 'ID Subetapa',
       minWidth: 90,
       flex: 0.3,
+    },
+    {
+      field: 'categoria',
+      headerName: 'Subetapa',
+      minWidth: 110,
+      flex: 1,
     },
     {
       field: 'orden',
       headerName: 'Orden',
       minWidth: 90,
       flex: 0.3,
-    },
-    {
-      field: 'categoria',
-      headerName: 'Categoría',
-      minWidth: 110,
-      flex: 1,
     },
     {
       field: 'acciones',
@@ -230,18 +229,20 @@ export const EstadosProcesoScreen: React.FC = () => {
       })
   }, []); // rows_categorias_atributos
 
+  useEffect(() => {
+    if (id_etapa !== null) {
+      api.get(`recaudo/procesos/atributos/${id_etapa}`)
+        .then((response) => {
+          group_atributos(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [id_etapa]);
+
   const handle_change = (event: SyntheticEvent, new_value: string): void => {
     set_position_tab_organigrama(new_value);
-  };
-
-  const set_atributos_etapa = (id_etapa: number): void => {
-    api.get(`recaudo/procesos/atributos/${id_etapa}`)
-      .then((response) => {
-        group_atributos(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   const group_atributos = (atributos: AtributoEtapa[]): void => {
@@ -290,8 +291,32 @@ export const EstadosProcesoScreen: React.FC = () => {
       })
   };
 
-  const delete_atributos = (atributos: AtributoEtapa[]): void => {
-    console.log(atributos);
+  const update_atributos_etapa = (): void => {
+    if (id_etapa !== null) {
+      api.get(`recaudo/procesos/atributos/${id_etapa}`)
+        .then((response) => {
+          group_atributos(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const delete_categoria_atributos = (categoria: CategoriaAtributo): void => {
+    if (id_etapa !== null) {
+      const id_etapa_actual: number = id_etapa;
+      api.get(`recaudo/procesos/eliminar-atributos-etapa/${id_etapa}/${categoria.id}/`)
+        .then((response) => {
+          set_id_etapa(id_etapa_actual);
+          update_atributos_etapa();
+          set_notification_info({ type: 'success', message: `Se eliminó correctamente la subetapa "${categoria.categoria}".` });
+          set_open_notification_modal(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const submit_new_etapa = (etapa: string, descripcion: string): void => {
@@ -320,8 +345,7 @@ export const EstadosProcesoScreen: React.FC = () => {
       id_categoria
     })
       .then((response) => {
-        console.log(response);
-        set_notification_info({ type: 'success', message: `Se creó correctamente el atributo "${descripcion}".` });
+        set_notification_info({ type: 'success', message: `Se creó correctamente el atributo "${descripcion}" para la etapa "${descripcion_etapa}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -390,7 +414,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                 <TabList onChange={handle_change}>
                   <Tab label="Etapas de Proceso" value="1" />
                   <Tab label="Atributos de Etapa" value="2" />
-                  <Tab label="Categorías de Etapa" value="3" />
+                  <Tab label="Subetapas de Proceso" value="3" />
                 </TabList>
               </Box>
 
@@ -480,7 +504,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                       <Tooltip title='Eliminar' sx={{ mt: '18px' }}>
                         <IconButton
                           onClick={() => {
-                            delete_atributos(arreglo_atributos);
+                            delete_categoria_atributos(arreglo_atributos[0].id_categoria);
                           }}
                         >
                           <DeleteIcon />
@@ -502,7 +526,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                       set_open_categoria_modal(true);
                     }}
                   >
-                    Crear nueva categoría
+                    Crear nueva subetapa
                   </Button>
                 </Stack>
                 <Box sx={{ width: '100%' }}>

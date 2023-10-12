@@ -264,7 +264,7 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
 
 
 
-        <Grid item xs={6} sm={6} style={{ marginTop: 10 }}>
+        <Grid item xs={5} sm={5} style={{ marginTop: 10 }}>
           <FormControl fullWidth size="small" style={{ width: "70%" }} >
             <InputLabel id="activo">activo</InputLabel>
             <Select

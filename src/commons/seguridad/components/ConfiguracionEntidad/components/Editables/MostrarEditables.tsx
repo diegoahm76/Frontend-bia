@@ -221,15 +221,15 @@ export const MostrarEditables: React.FC = () => {
                             size="small"
                             disabled
                             fullWidth
-                            label="Coordinador de Viveros"
+                            label="Coordinador de Transporte"
                             value={Coordinadorviveros}
                             onClick={(): void => { fetch_data(id_persona_coord_viveros_actual).then(console.log).catch(console.error) }}
                         />
 
 
                         <Box style={{ display: 'flex' }}>
-                            <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Viveros"} cod={3} onClick={handleButtonClick} />
-                            <MostrrModalHistorico cargo={"Coordinador de Viveros"} codig={3} />
+                            <ModalEditarCargo name={data_nombre[2]} fecha={fecha_inicio_coord_viv_actual} titlee={"Coordinador de Transporte"} cod={3} onClick={handleButtonClick} />
+                            <MostrrModalHistorico cargo={"Coordinador de Transporte"} codig={3} />
                         </Box>
 
 
@@ -253,14 +253,14 @@ export const MostrarEditables: React.FC = () => {
                             size="small"
                             disabled
                             fullWidth
-                            label="Coordinador de Transporte"
+                            label="Coordinador de Viveros"
                             value={Coordinadortransporte}
                             onClick={(): void => { fetch_data(id_persona_respon_transporte_actual).then(console.log).catch(console.error) }} />
 
 
                         <Box style={{ display: 'flex' }}>
-                            <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Transporte"} cod={4} onClick={handleButtonClick} />
-                            <MostrrModalHistorico cargo={"Coordinador de Transporte"} codig={4} />
+                            <ModalEditarCargo name={data_nombre[3]} fecha={fecha_inicio_respon_trans_actual} titlee={"Coordinador de Viveros"} cod={4} onClick={handleButtonClick} />
+                            <MostrrModalHistorico cargo={"Coordinador de Viveros"} codig={4} />
                         </Box>
 
 

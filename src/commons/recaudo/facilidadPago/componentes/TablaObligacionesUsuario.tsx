@@ -232,7 +232,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={lista_obligaciones}
+                rows={lista_obligaciones || []}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

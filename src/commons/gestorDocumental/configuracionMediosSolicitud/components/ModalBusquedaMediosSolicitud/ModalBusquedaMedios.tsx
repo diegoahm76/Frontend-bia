@@ -272,7 +272,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
             <Dialog
                 header={titulo}
                 visible={visible}
-                style={{ width: '95%' }}
+                style={{ width: '60%' }}
                 closable={false}
                 onHide={(): void => {
                     setVisible(false);

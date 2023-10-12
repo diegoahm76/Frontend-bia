@@ -7,6 +7,20 @@ export interface CarteraDetallada {
   resolucion: string;
   numero_factura: string;
   valor_sancion: string;
+  id: number;
+}
+export interface ReporteGeneralDetallado {
+  links: {
+    siguiente: string | null;
+    anterior: string | null;
+  };
+  count: number;
+  results: {
+    success: boolean;
+    detail: string;
+    data: CarteraDetallada[];
+    total_general: number;
+  };
 }
 
 export interface CarteraEdad {

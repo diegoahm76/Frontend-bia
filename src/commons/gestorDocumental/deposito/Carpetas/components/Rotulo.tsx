@@ -52,7 +52,7 @@ function EditableTable() {
             <thead>
                 <tr>
                     <th style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={3} rowSpan={4} >
-                        <img src="/logo192.png" alt="Imagen" style={{ width: '10%' }} />
+                        <img src="/26_logocorma2_200x200.png" alt="Imagen" style={{ width: '80%' }} />
                     </th>
                     <th style={{ border: '1px solid #ddd', padding: '5px', fontSize: '10px', borderTop: '1px solid #ddd' }} colSpan={2} >Código: FGO-04</th>
                 </tr>
@@ -177,13 +177,12 @@ function EditableTable() {
                 <tr>
 
                     <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >CARPETA:</th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', }}>{cajas.identificacion_por_caja}</th>
                     <th style={{ border: '1px solid #ddd', padding: '2px', }}></th>
                     <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }} >CAJA:</th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', textAlign: 'left', fontSize: '12px', }}>{cajas.identificacion_caja}</th>
 
                 </tr>
-
             </thead>
             <thead>
                 <tr>

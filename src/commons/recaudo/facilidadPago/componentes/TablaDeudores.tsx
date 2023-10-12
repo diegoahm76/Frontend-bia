@@ -91,7 +91,7 @@ export const TablaDeudores: React.FC = () => {
       },
     },
   ];
-
+console.log(visible_rows)
   useEffect(() => {
     set_visible_rows(deudores)
   }, [deudores])

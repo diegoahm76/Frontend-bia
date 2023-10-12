@@ -56,7 +56,7 @@ function EditableTable() {
             <thead>
                 <tr>
                     <th style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={4} rowSpan={4} >
-                        <img src="/logo192.png" alt="Imagen" style={{ width: '10%' }} />
+                        <img src="/26_logocorma2_200x200.png" alt="Imagen" style={{ width: '80%' }} />
                     </th>
                     <th style={{ border: '1px solid #ddd', padding: '5px', fontSize: '10px', borderTop: '1px solid #ddd' }} colSpan={3} >Código: FGO-04</th>
                 </tr>

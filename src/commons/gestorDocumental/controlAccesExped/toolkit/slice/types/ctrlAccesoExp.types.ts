@@ -10,4 +10,19 @@ export interface InitialState {
    * The current CCD related to the control of access to expedients, or null if there is none.
    */
   currentCcdCtrlAccesoExp: any | null;
+
+  unidadesOrganizacionales: any[];
+  currentUnidadOrganizacional: any | null;
+
+  seriesSubseriesList: any[];
+  currentSerieSubserie: any | null;
+
+  controlAccesoExpedientesList: any[]; //
+  currentControlAccesoExpedientes:any;
+
+  verModuloAutorizacioneGenerales: boolean;
+
+  moodConfig: any;
+
+  tipoDeClasificacion: any;
 }
