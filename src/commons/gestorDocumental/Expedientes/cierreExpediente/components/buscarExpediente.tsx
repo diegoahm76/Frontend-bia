@@ -26,9 +26,7 @@ import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import FormSelectController from '../../../../../components/partials/form/FormSelectController';
-
-import FormInputController from '../../../../../components/partials/form/FormInputController';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { get_busqueda_avanzada_expediente, get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
 
 interface IProps {
@@ -37,13 +35,13 @@ interface IProps {
     open: any;
     handle_close_buscar: any;
     get_values: any;
-    //  handle_mover_carpeta: any;
+    handle_selected_expediente: any;
 
 }
 
 
 
-const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar, get_values, }: IProps) => {
+const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar, get_values, handle_selected_expediente }: IProps) => {
 
     const { trd, tipologias, expedientes } = useAppSelector((state) => state.cierre_expedientes);
     const dispatch = useAppDispatch();
@@ -96,14 +94,14 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
             field: 'acciones',
             headerName: 'ACCIONES',
             width: 200,
-            // renderCell: (params) => (
-            //     <Button
-            //         onClick={() => handle_mover_carpeta(params.row)}
-            //         startIcon={<EditIcon />}
-            //     >
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handle_selected_expediente(params.row)}
+                    startIcon={<PlaylistAddCheckIcon />}
+                >
 
-            //     </Button>
-            // ),
+                </Button>
+            ),
 
         },
     ];
