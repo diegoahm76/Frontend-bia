@@ -32,7 +32,7 @@ export const PersonaNatural: React.FC = () => {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if (obj.id_requisito_actuacion === 1) {
                   return (
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                    <Grid item xs={12} sm={6} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
                           fullWidth
@@ -49,7 +49,7 @@ export const PersonaNatural: React.FC = () => {
                 }
               })
             }
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -58,7 +58,7 @@ export const PersonaNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -67,7 +67,7 @@ export const PersonaNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Teléfono Contacto"
@@ -214,7 +214,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if (obj.id_requisito_actuacion === 5) {
                   return (
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                    <Grid item xs={12} sm={6} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
                           fullWidth
@@ -235,7 +235,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if (obj.id_requisito_actuacion === 6) {
                   return (
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                    <Grid item xs={12} sm={6} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
                           fullWidth
@@ -252,7 +252,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 }
               })
             }
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -261,7 +261,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -270,7 +270,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Teléfono Contacto"
@@ -291,8 +291,12 @@ export const DeudorSolidarioJuridico: React.FC = () => {
 
   return (
     <>
-      <p><strong>Caso Deudor Solidario Juridico</strong></p>
-      <Grid item xs={12}>
+     <Grid item xs={12}   >
+
+    <Title title={`Caso Deudor Solidario Juridico`} />
+     </Grid>
+      {/* <p><strong></strong></p> */}
+      <Grid marginTop={2} item xs={12}>
         <Box
           component="form"
           noValidate
@@ -303,7 +307,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if (obj.id_requisito_actuacion === 7) {
                   return (
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                    <Grid item xs={12} sm={6} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
                           fullWidth
@@ -324,7 +328,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if (obj.id_requisito_actuacion === 8) {
                   return (
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                    <Grid item xs={12} sm={6} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
                           fullWidth
@@ -345,7 +349,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
               solicitud_facilidad.documentos_deudor_actuacion.map((obj) => {
                 if (obj.id_requisito_actuacion === 9) {
                   return (
-                    <Grid item xs={12} sm={5} key={obj.id_requisito_actuacion}>
+                    <Grid item xs={12} sm={6} key={obj.id_requisito_actuacion}>
                       <a href={obj.documento} target="_blank" rel="noreferrer">
                         <Button
                           fullWidth
@@ -362,7 +366,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 }
               })
             }
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -371,7 +375,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -380,7 +384,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 disabled
                 label="Teléfono Contacto"
