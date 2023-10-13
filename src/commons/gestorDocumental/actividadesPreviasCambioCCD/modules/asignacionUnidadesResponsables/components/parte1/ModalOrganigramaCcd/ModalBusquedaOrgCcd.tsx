@@ -39,7 +39,7 @@ import { containerStyles } from './../../../../../../tca/screens/utils/constants
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
-import { setCcdOrganigramaCurrent } from '../../../toolkit/slice/types/AsignacionUniResp';
+import { setCcdOrganigramaCurrent, setSeccionesPersistentes } from '../../../toolkit/slice/types/AsignacionUniResp';
 import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
 
 //* services (redux (slice and thunks))
@@ -66,8 +66,13 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
       //* seleccionar los parametros con ccd organigrma current para usar dentro del módulo
       dispatch(setCcdOrganigramaCurrent(params.row));
-      //* traer las secciones persistentes por el id del ccd nuevo (seleccionado)
-      void getSeccionesPersistentesCcdNuevo(params.row.id_ccd);
+      // ? traer las secciones persistentes por el id del ccd nuevo (seleccionado)
+      const seccionesPersistentes = await getSeccionesPersistentesCcdNuevo(
+        params.row.id_ccd
+      );
+
+      //* asignar las secciones persistentes al estado de redux
+      dispatch(setSeccionesPersistentes(seccionesPersistentes));
 
       console.log('siuuuuu bitch');
     } catch (error) {

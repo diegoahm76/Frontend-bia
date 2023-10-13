@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { columnsAgrupCcd } from './columns/columnsAgrupCcd';
-import { Avatar, IconButton, Tooltip, Typography } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
@@ -17,6 +17,9 @@ import {
   setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
+import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   //* dispatch declaration
@@ -28,6 +31,8 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     relacionesAlmacenamientoLocal,
     currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
+
+  const { generalLoading } = useContext(ModalAndLoadingContext);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
   const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
@@ -63,7 +68,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     // };
     // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
 
-  dispatch(
+    dispatch(
       setRelacionesAlmacenamientoLocal({
         ...relacionesAlmacenamientoLocal,
         [params?.row?.id_unidad_org_actual]: {
@@ -74,7 +79,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
       })
     );
 
-/*    console.log({
+    /*    console.log({
       ...relacionesAlmacenamientoLocal,
       [params?.row?.id_unidad_org_actual]: {
         ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
@@ -165,18 +170,34 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     }
   );
 
-
-
-
   if (
     Object.keys(relacionesAlmacenamientoLocal).some(
       (key) =>
         relacionesAlmacenamientoLocal[key] ===
         currentPersistenciaSeccionSubseccion.id_unidad_actual
     )
-  ) return null;
+  )
+    return null;
 
+    if (generalLoading) {
+      return (
+        <Grid
+          container
+          sx={{
+            ...containerStyles,
+            boxShadow: 'none',
+            background: 'none',
+            position: 'static',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Loader altura={200} />
+        </Grid>
+      );
+    }
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
+
 
   return (
     <>

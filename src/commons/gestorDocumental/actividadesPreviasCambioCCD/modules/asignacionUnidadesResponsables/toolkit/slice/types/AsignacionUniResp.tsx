@@ -3,11 +3,17 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 // import { type Ipsd } from './types/slice.types';
 
 interface InitialState {
-  ccdOrganigramaCurrentBusqueda: any /*| { [key: string]: any }*/;
+  // ! organigrama actual de la busqueda
+  ccdOrganigramaCurrentBusqueda: any;
+  // ? lista de secciones persistentes del ccd nuevo
+  seccionesPersistentesCcdNuevo: any;
 }
 const initialState: InitialState = {
   //! variable de estado para el ccd actual de la busqueda
   ccdOrganigramaCurrentBusqueda: null,
+
+  // ? lista de secciones persistentes del ccd nuevo
+  seccionesPersistentesCcdNuevo: [],
 };
 
 export const AsigUniRespSlice = createSlice({
@@ -18,9 +24,15 @@ export const AsigUniRespSlice = createSlice({
     setCcdOrganigramaCurrent: (state, action: PayloadAction<any>) => {
       state.ccdOrganigramaCurrentBusqueda = action.payload;
     },
+
+    // ? set lista de persistencias del ccd nuevo (seleccionado)
+    setSeccionesPersistentes: (state, action: PayloadAction<any>) => {
+      state.seccionesPersistentesCcdNuevo = action.payload;
+    },
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     reset_states: (state) => {
       state.ccdOrganigramaCurrentBusqueda = null;
+      state.seccionesPersistentesCcdNuevo = [];
     },
   },
 });
@@ -28,7 +40,8 @@ export const AsigUniRespSlice = createSlice({
 export const {
   // ! acciones sobre los ccd's y organigramas
   setCcdOrganigramaCurrent,
-
+  // ? acciones sobre las secciones persistentes del ccd nuevo
+  setSeccionesPersistentes,
   // ? reset states
   reset_states,
 } = AsigUniRespSlice.actions;

@@ -50,6 +50,7 @@ import {
   fnGetHomologacionUnidades,
   fnGetUnidadesPersistentes,
 } from '../../../../toolkit/thunks/seccionesPersistentes.service';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -60,21 +61,22 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   // ? ---- context declaration ----
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
     //* se limpian todos los estados que se relacionan con la homologación de unidades
-    // dispatch(setCcdOrganigramaCurrent(params.row));
-    // dispatch(setRelacionesAlmacenamientoLocal({}));
     dispatch(setHomologacionAgrupacionesSerieSubserie([]));
     dispatch(setAgrupacionesPersistentesSerieSubserie([]));
 
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
-        params.row.id_ccd
+        params.row.id_ccd,
+        handleGeneralLoading
       );
       // ! se mezcla la información necesaria para poder tener todos los datos disponibles
       const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
-        params.row.id_ccd
+        params.row.id_ccd,
+        handleGeneralLoading
       );
 
       const infoToReturn =

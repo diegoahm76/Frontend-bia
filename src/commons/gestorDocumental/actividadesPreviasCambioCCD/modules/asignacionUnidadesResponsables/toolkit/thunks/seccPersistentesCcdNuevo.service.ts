@@ -11,9 +11,11 @@ export const getSeccionesPersistentesCcdNuevo = async (
     const url = `gestor/ccd/persistencia-unidades-ccd/get/${id_ccd_nuevo}`;
     const { data } = await api.get(url);
 
-    if (data?.data?.unidades_persistentes > 0) {
-      control_success('Secciones persistentes CCD nuevo (seleccionado)');
-      return data?.data;
+    console.log('data', data);
+
+    if (data?.data?.unidades_persistentes.length > 0) {
+      control_success('Secciones persistentes encontradas de CCD nuevo (seleccionado)');
+      return data?.data?.unidades_persistentes;
     }
 
     control_warning(

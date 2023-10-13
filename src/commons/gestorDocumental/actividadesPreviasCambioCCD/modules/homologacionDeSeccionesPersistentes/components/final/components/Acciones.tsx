@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC, useState, useEffect } from 'react';
+import { type FC, useState, useEffect, useContext } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
@@ -25,6 +25,7 @@ import {
   fnGetHomologacionUnidades,
   fnGetUnidadesPersistentes,
 } from '../../../toolkit/thunks/seccionesPersistentes.service';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const Acciones: FC<any> = (): JSX.Element | null => {
   //* dispatch declaration
@@ -34,6 +35,11 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const navigate = useNavigate();
   // ? loading  para los botones guardar y proceder respectivamente
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
+
+  //* context declaration
+  const { handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ! states from redux
   const {
@@ -85,8 +91,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
         setLoading: setLoadingButton,
         dataToPost: objectToSend,
       }).then((res) => {
-        void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
-        void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
+        void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
+        void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
 
         dispatch(setHomologacionAgrupacionesSerieSubserie([]));
         dispatch(setAgrupacionesPersistentesSerieSubserie([]));
@@ -117,8 +123,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       dataToPost: dataToSend,
     }).then((res) => {
       //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
-      void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd);
-      void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd);
+      void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
+      void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
 
       dispatch(setHomologacionAgrupacionesSerieSubserie([]));
       dispatch(setAgrupacionesPersistentesSerieSubserie([]));

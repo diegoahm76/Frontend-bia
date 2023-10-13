@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
+import React, { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { columnsAgrupCcd as columnsPersistenciasSeriesSub } from '../AgrupDocCoincidentesCCD/columns/columnsAgrupCcd';
-import { Avatar, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_success } from '../../../../../../../../../helpers';
@@ -15,6 +15,9 @@ import {
   setHomologacionAgrupacionesSerieSubserie,
   setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
+import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 
 export const PersistenciaSerConfir = (): JSX.Element | null => {
   //* dispatch declaration
@@ -27,6 +30,9 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
     relacionesAlmacenamientoLocal,
     currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
+
+  // ? ----- ESPACIO PARA FUNCIONES OPEN ------
+  const { generalLoading } = useContext(ModalAndLoadingContext);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
 
@@ -124,7 +130,25 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
   )
     return null;
 
+    if (generalLoading) {
+      return (
+        <Grid
+          container
+          sx={{
+            ...containerStyles,
+            boxShadow: 'none',
+            background: 'none',
+            position: 'static',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Loader altura={200} />
+        </Grid>
+      );
+    }
   if (agrupacionesPersistentesSerieSubserie?.length === 0) return null;
+
 
   return (
     <>

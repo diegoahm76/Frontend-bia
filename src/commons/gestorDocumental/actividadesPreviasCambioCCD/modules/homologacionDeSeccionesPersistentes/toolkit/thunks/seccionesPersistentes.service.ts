@@ -7,9 +7,11 @@ const HOMOLOGACION_UNIDADES_URL = (idCcdNuevo: number) =>
 const ERROR_MESSAGE = 'Ha ocurrido un error al obtener los datos';
 
 export const fnGetHomologacionUnidades = async (
-  idCcdNuevo: number
+  idCcdNuevo: number,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any> => {
   try {
+    setLoading(true);
     const url = HOMOLOGACION_UNIDADES_URL(idCcdNuevo);
     const { data } = await api.get(url);
 
@@ -30,10 +32,13 @@ export const fnGetHomologacionUnidades = async (
       coincidencias: [],
       // Agrega aquí cualquier otro campo que devuelva la función
     };
+  } finally {
+    setLoading(false);
   }
 };
-export const fnGetUnidadesPersistentes = async (idCcdNuevo: number) => {
+export const fnGetUnidadesPersistentes = async (idCcdNuevo: number, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
   try {
+    setLoading(true);
     const url = `gestor/ccd/persistencia-unidades-ccd/get/${idCcdNuevo}`;
     const { data } = await api.get(url);
     console.log(data);
@@ -54,5 +59,8 @@ export const fnGetUnidadesPersistentes = async (idCcdNuevo: number) => {
       unidades_persistentes: [],
       // Agrega aquí cualquier otro campo que devuelva la función
     };
+  }
+  finally {
+    setLoading(false);
   }
 };
