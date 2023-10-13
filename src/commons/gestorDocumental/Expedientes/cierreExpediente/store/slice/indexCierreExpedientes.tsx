@@ -3,14 +3,14 @@ import { ICierreExpedientes, IObjarchivo, IObjArchivoExpediente, IObjCierreExped
 import dayjs from 'dayjs';
 
 const initial_state_current_cierre_expediente: IObjCierreExpediente = {
-    fecha_actual: dayjs().format('YYYY-MM-DD')
+    fecha_actual: (new Date().toString()),
 
 }
 
 const initial_state_current_archivo_expediente: IObjArchivoExpediente = {
     id_expediente_documental: null,
     nombre_asignado_documento: null,
-    fecha_creacion_doc: dayjs().format('YYYY-MM-DD'),
+    fecha_creacion_doc: (new Date().toString()),
     nro_folios_del_doc: null,
     cod_origen_archivo: null,
     codigo_tipologia_doc_prefijo: "",

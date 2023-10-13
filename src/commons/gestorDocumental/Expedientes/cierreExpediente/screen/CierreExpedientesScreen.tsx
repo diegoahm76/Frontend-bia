@@ -185,7 +185,7 @@ const CierreExpedientesScreen = () => {
                     margin={0}
                     control_form={control_cierre_expediente}
                     control_name={'fecha_actual'}
-                    default_value={current_date}
+                    default_value=''
                     rules={{}}
                     label={'Fecha'}
                     disabled={true}

@@ -593,7 +593,7 @@ export const aprobacion_solicitud_pendiente_vivero: any = (
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(
-                `almacen/solicitudes/aprobacion-solicitudes-pendientes-viveros/${id}/`, form_data
+                `almacen/solicitudes-vivero/aprobacion-solicitudes-pendientes-vivero/${id}/`, form_data
             );
             console.log(data)
             dispatch(get_solicitud_service_vivero(id));
