@@ -6,8 +6,6 @@ import { Title } from '../../../../../../../../components';
 import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
 import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../../../../homologacionDeSeccionesPersistentes/components/parte2/components/coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 
 export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
   //* redux states neccesaries
@@ -25,7 +23,7 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
     Object.keys(ccdOrganigramaCurrentBusqueda).length === 0
   )
     return <></>; */
-    
+
   return (
     <>
       <Grid container sx={containerStyles}>

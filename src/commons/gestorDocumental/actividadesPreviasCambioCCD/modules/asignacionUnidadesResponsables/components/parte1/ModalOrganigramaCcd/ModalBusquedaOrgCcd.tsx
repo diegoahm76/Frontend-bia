@@ -39,8 +39,14 @@ import { containerStyles } from './../../../../../../tca/screens/utils/constants
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
-import { setCcdOrganigramaCurrent, setSeccionesPersistentes } from '../../../toolkit/slice/types/AsignacionUniResp';
+import {
+  reset_states,
+  setCcdOrganigramaCurrent,
+  setSeccionesPersistentes,
+} from '../../../toolkit/slice/types/AsignacionUniResp';
 import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
+import { GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE } from '../../../toolkit/thunks/seccPendientesAndCat.service';
+import { GET_LISTADO_ASIGNACIONES } from '../../../toolkit/thunks/listadoDeAsignaciones.service';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -61,20 +67,42 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const resHomologacionesUnidades = await getCcdActual(params, navigate);
       if (resHomologacionesUnidades) {
         console.log(' no se puede continuar con la ejecución del módulo');
+        dispatch(reset_states());
         return;
       }
 
-      //* seleccionar los parametros con ccd organigrma current para usar dentro del módulo
+      // ! OPERACIONES A REALIZAR SI EL CCD SELECCIONADO NO DERIVA DEL MISMO ORGANIGRAMA
+
+      /*
+        1. seleccionar el params.row como current element
+        2. get unidades que persistiran del ccd nuevo establecidas en el módulo de homologación de secciones persistentes
+        3. set unidades que persistiran del ccd nuevo establecidas en el módulo de homologación de secciones persistentes
+
+        4. get unidades sin responsable establecido u homologado
+        5. get listado de asignaciones en base a ese ccd nuevo
+      */
+
+      //* 1
       dispatch(setCcdOrganigramaCurrent(params.row));
-      // ? traer las secciones persistentes por el id del ccd nuevo (seleccionado)
+
+      //* 2
       const seccionesPersistentes = await getSeccionesPersistentesCcdNuevo(
         params.row.id_ccd
       );
 
-      //* asignar las secciones persistentes al estado de redux
+      //* 3
       dispatch(setSeccionesPersistentes(seccionesPersistentes));
 
-      console.log('siuuuuu bitch');
+      // *4
+
+      const unidadesSinResponsable =
+        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(params.row.id_ccd);
+
+      //* 5
+
+      const listadoDeAsignaciones = await GET_LISTADO_ASIGNACIONES(
+        params.row.id_ccd
+      );
     } catch (error) {
       console.error(error);
     }
