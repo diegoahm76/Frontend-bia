@@ -25,34 +25,7 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
     Object.keys(ccdOrganigramaCurrentBusqueda).length === 0
   )
     return <></>; */
-/*
-  const hola = [
-    {
-      id_unidad_seccion_temporal: 32,
-      id_unidad_actual: 5381,
-      cod_unidad_actual: '1000',
-      nom_unidad_actual: 'Dirección general',
-      id_organigrama_unidad_actual: 158,
-      id_unidad_nueva: 5385,
-      cod_unidad_nueva: '1000',
-      nom_unidad_nueva: 'Dirección general',
-      id_organigrama_unidad_nueva: 159,
-      tiene_agrupaciones: true,
-    },
-    {
-      id_unidad_seccion_temporal: 33,
-      id_unidad_actual: 5383,
-      cod_unidad_actual: '101',
-      nom_unidad_actual: 'Asesoria juridcia',
-      id_organigrama_unidad_actual: 158,
-      id_unidad_nueva: 5387,
-      cod_unidad_nueva: '101',
-      nom_unidad_nueva: 'Asesoria juridcia',
-      id_organigrama_unidad_nueva: 159,
-      tiene_agrupaciones: true,
-    },
-  ]; */
-
+    
   return (
     <>
       <Grid container sx={containerStyles}>
