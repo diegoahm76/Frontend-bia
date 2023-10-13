@@ -101,11 +101,14 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
           (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
         );
 
-    if (nuevasAgrupacionesPersistentes?.length > 0) {
+    if (
+      nuevasAgrupacionesPersistentes?.length > 0 ||
+      params?.row?.tiene_agrupaciones
+    ) {
       //* si hay un valor coincida no se elimina
       void Swal.fire({
         title: 'Atención',
-        text: `No puede eliminar la persistencia confirmada de secciones, ya que tiene ${nuevasAgrupacionesPersistentes?.length} valor(es) asociado(s) en la persistencia confirmada de series, elimine primero la(s) relacion(es).`,
+        text: `No puede eliminar la persistencia confirmada de secciones, ya que tiene valor(es) asociado(s) en la persistencia confirmada de series, elimine primero la(s) relacion(es).`,
         icon: 'warning',
         confirmButtonText: 'Aceptar',
       });
@@ -277,7 +280,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     )
                   );
 
-                 /* if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
+                  /* if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
                     dispatch(
                       setRelacionesAlmacenamientoLocal({
                         ...relacionesAlmacenamientoLocal,

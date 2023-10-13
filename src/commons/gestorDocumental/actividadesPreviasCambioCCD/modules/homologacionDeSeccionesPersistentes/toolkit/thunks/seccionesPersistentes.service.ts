@@ -1,30 +1,37 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-//! --- DOCUMENTO DE THUNKS DE LA PARTE DE SECCIONES PERSISTENTES DE LA HOMOLOGACIÓN ---
-
 import { api } from '../../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../../helpers';
 
-export const fnGetHomologacionUnidades = async (idCcdNuevo: number) => {
+const HOMOLOGACION_UNIDADES_URL = (idCcdNuevo: number) =>
+  `gestor/ccd/get-homologacion-ccd/${idCcdNuevo}`;
+const ERROR_MESSAGE = 'Ha ocurrido un error al obtener los datos';
+
+export const fnGetHomologacionUnidades = async (
+  idCcdNuevo: number
+): Promise<any> => {
   try {
-    const url = `gestor/ccd/get-homologacion-ccd/${idCcdNuevo}`;
+    const url = HOMOLOGACION_UNIDADES_URL(idCcdNuevo);
     const { data } = await api.get(url);
 
     if (data?.success) {
       control_success(data?.detail);
-      console.log(data.data)
+      console.log(data.data);
       return data?.data;
     }
 
-    control_error('Error al obtener las unidades persistentes');
+    control_error(ERROR_MESSAGE);
     return {
       coincidencias: [],
-      //* mirar si se debe retornar algo más al error
+      // Agrega aquí cualquier otro campo que devuelva la función
     };
   } catch (error: any) {
-    control_error(error?.response?.data?.detail);
+    control_error(error?.response?.data?.detail || ERROR_MESSAGE);
+    return {
+      coincidencias: [],
+      // Agrega aquí cualquier otro campo que devuelva la función
+    };
   }
 };
-
 export const fnGetUnidadesPersistentes = async (idCcdNuevo: number) => {
   try {
     const url = `gestor/ccd/persistencia-unidades-ccd/get/${idCcdNuevo}`;
@@ -39,9 +46,13 @@ export const fnGetUnidadesPersistentes = async (idCcdNuevo: number) => {
     control_error('Error al obtener las unidades persistentes');
     return {
       unidades_persistentes: [],
-      //* mirar si se debe retornar algo más al error
+      // Agrega aquí cualquier otro campo que devuelva la función
     };
   } catch (error: any) {
-    control_error(error?.response?.data?.detail);
+    control_error(error?.response?.data?.detail || ERROR_MESSAGE);
+    return {
+      unidades_persistentes: [],
+      // Agrega aquí cualquier otro campo que devuelva la función
+    };
   }
 };
