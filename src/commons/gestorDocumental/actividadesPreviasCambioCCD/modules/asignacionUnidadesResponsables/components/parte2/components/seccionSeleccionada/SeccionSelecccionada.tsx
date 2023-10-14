@@ -1,23 +1,40 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
-import React from 'react';
 import { stylesGrid } from '../../../../../../../permisosSeriesDoc/utils/styles';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useAsignacionesResp } from '../../../../hook/useAsignacionesResp';
 import { Title } from '../../../../../../../../../components';
+import { useAppSelector } from '../../../../../../../../../hooks';
 
 export const SeccionSelecccionada = (): JSX.Element => {
   //* hooks
   const { control_asignaciones_resp } = useAsignacionesResp();
+
+  //* redux states neccesaries
+  const { seccionesSinResponsable } = useAppSelector(
+    (state) => state.AsigUniRespSlice
+  );
+
+  if (seccionesSinResponsable.length === 0) return <></>;
+
+  {
+    /* también se debe establecer la validación de la carga del componente para el loader */
+  }
+
   return (
     <>
       <Title title="Selección de sección" />
-      <Grid item xs={12} sm={5} sx={{
-        ...stylesGrid,
-        zIndex: 5,
-        mt: '4rem',
-      }}>
+      <Grid
+        item
+        xs={12}
+        sm={5}
+        sx={{
+          ...stylesGrid,
+          zIndex: 5,
+          mt: '4rem',
+        }}
+      >
         <TextField
           fullWidth
           label="Sección seleccionada"

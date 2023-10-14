@@ -8,11 +8,9 @@ import {
   useAppDispatch,
   /* useAppDispatch, */ useAppSelector
 } from '../../../../../../../../hooks';
-import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { colGridAntANuevo } from './columns/colGridAntANuevo';
 import Select from 'react-select';
-import { Grid, Button, Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { setUnidadesSeleccionadasAnteriorAActual } from '../../toolkit/UxE_slice/UxE_slice';
 

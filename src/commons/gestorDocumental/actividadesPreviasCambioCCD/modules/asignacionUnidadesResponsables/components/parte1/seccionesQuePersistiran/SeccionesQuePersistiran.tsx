@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { Title } from '../../../../../../../../components';
-import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
+import { Grid } from '@mui/material';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
 import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../../../../homologacionDeSeccionesPersistentes/components/parte2/components/coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
 import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
@@ -36,12 +36,14 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
           justifyContent: 'center',
         }}
       >
-        <Loader altura={200} />
+        <Loader altura={300} />
       </Grid>
     );
   }
 
-  if (seccionesPersistentesCcdNuevo.length === 0) return <></>;
+  if (!seccionesPersistentesCcdNuevo.length) {
+    return <></>;
+  }
 
   return (
     <>

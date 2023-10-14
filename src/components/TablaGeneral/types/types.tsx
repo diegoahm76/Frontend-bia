@@ -1,8 +1,5 @@
-import  { type DataTableProps, type DataTableValue } from "primereact/datatable";
+import  { type DataTableValue } from "primereact/datatable";
 
-interface MyDataTableProps<T> {
-  value?: T[];
-}
 // Creando la interfaz de propiedades para la tabla general
 
 export interface GeneralTableProps {

@@ -10,7 +10,6 @@
  * @returns {JSX.Element} A JSX element that renders a checkbox with a title and an info icon.
  */
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
 import {
   Checkbox,
   FormControl,
@@ -59,60 +58,3 @@ export const CheckboxComponent = ({
     </>
   );
 };
-
-{
-  /*
-
-        <>
-          <FormControl fullWidth>
-            <FormControlLabel
-              control={
-                <Checkbox //* el title debe ir como un parametro que reciba el componente
-                  checked={params.row.crear_documentos_exps_no_propios} //* debe ir como un parametro que reciba el componente
-                  onChange={(event) => {
-                    handleCheckboxChange(
-                      event,
-                      params.row.id_und_organizacional_actual
-                    );
-                    // ? la funcion onchange tambien debe ser un paramatro que reciba el componente con la lógica
-                    console.log(event);
-                  }}
-                  inputProps={{ 'aria-label': 'Seleccionar item' }}
-                />
-              }
-              label={
-                params.row.crear_documentos_exps_no_propios ? (
-                  <Tooltip title={`crear documento marcado`} placement="right">
-                    <InfoIcon
-                      sx={{
-                        width: '1.2rem',
-                        height: '1.2rem',
-                        ml: '0.5rem',
-                        color: 'green'
-                      }}
-                    />
-                  </Tooltip>
-                ) : (
-                  <Tooltip
-                    title={`crear documento desmarcado`}
-                    placement="right"
-                  >
-                    <InfoIcon
-                      sx={{
-                        width: '1.2rem',
-                        height: '1.2rem',
-                        ml: '0.5rem',
-                        color: 'orange'
-                      }}
-                    />
-                  </Tooltip>
-                )
-              }
-            />
-          </FormControl>
-        </>
-
-
-
-*/
-}

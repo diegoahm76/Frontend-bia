@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, Stack } from '@mui/material';
-import React from 'react';
 import { Title } from '../../../components';
 import { containerStyles } from '../../../commons/gestorDocumental/tca/screens/utils/constants/constants';
 import CleanIcon from '@mui/icons-material/CleaningServices';
