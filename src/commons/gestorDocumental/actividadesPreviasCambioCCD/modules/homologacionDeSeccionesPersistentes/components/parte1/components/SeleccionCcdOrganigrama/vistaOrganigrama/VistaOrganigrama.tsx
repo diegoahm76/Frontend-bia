@@ -9,9 +9,6 @@ import { useAppSelector } from '../../../../../../../../../../hooks';
 export const VistaOrganigrama: FC<any> = (): JSX.Element => {
     // ! states from redux
  const { ccdOrganigramaCurrentBusqueda } = useAppSelector((state) => state.HomologacionesSlice);
-
-
-
   return (
     <>
       <Grid item xs={12} sm={4} sx={stylesGrid}>

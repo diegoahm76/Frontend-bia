@@ -91,7 +91,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
 
       // ! en consecuencia obtengo los datos del organigrama actual dentro del sistema
       // !
-      void obtenerOrganigramaActual().then((infoOrganigramaActual) => {
+      void obtenerOrganigramaActual().then((_infoOrganigramaActual) => {
         //* luego de haber obtenido el organigrama actual y el organigrama actual debo realizar la consulta de la tabal temporal y de la lista de las personas que en teoría habían quedado sin actualizarse, si no hay personas en ninguna de las dos listas la ídea es mostrar un alerta en la que se mencione que no se encuentran personas disponibles en este momento para realizar el traslado masivo necesario
 
         // ? se realiza la consulta a la tabla temporal, si la tabla temporal no trae datos se dejan solo los datos de la lista de personas sin actualizar y viceversa
@@ -213,8 +213,6 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   control={control_opcion_anterior_a_actual} // posiblemenete se deba modificar el nombre
                   rules={{ required: true }}
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <div>
                       <Select
@@ -262,8 +260,6 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   control={control_opcion_anterior_a_actual} // posiblemenete se deba modificar el nombre
                   rules={{ required: true }}
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <div>
                       <Select

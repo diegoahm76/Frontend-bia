@@ -34,30 +34,8 @@ datos en tabla temporal
 */
 
 
-
-
-const dataTablaTemporal = [
-  { id: 1, name: 'John', id_unidad_org: 1 },
-  { id: 2, name: 'Jane', id_unidad_org:2 },
-  { id: 3, name: 'Bob', id_unidad_org:3 }, // Elemento repetido
-  { id: 4, name: 'Alice', id_unidad_org:4 },
-  { id: 5, name: 'Eve', id_unidad_org:5 },
-  { id: 6, name: 'Sara',id_unidad_org: 6  }, // Elemento repetido
-];
-
-const dataListadoPersonasSinActualizar = [
-  { id: 7, name: 'Alice',id_unidad_org: null  },
-  { id: 8, name: 'Eve',id_unidad_org: null  },
-  { id: 3, name: 'Bob', id_unidad_org: null }, // Elemento repetido
-  { id: 4, name: 'Mike',id_unidad_org: null  },
-  { id: 9, name: 'Sara',id_unidad_org: null  },
-  { id: 6, name: 'Sara',id_unidad_org: null  } // Elemento repetido
-];
-
-
 //* primero debo pasar los de la tabla temporal para que de esta manera prevalzcan los elementos cuyo id_unidad_org tiene un valor en true
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const newArray = [...dataTablaTemporal, ...dataListadoPersonasSinActualizar ]
 
 
 

@@ -4,7 +4,6 @@ import { type FC, useContext, useState } from 'react';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../../components';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { ModalHistoricoTraslados } from '../ModalHistoricoTraslado/screen/ModalHistoricoTraslados';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -33,7 +32,6 @@ import {
   setAsignacionConsultaTablaTemporal,
   setGridActualANuevo,
   setGridAnteriorAActual,
-  setUnidadesSeleccionadas,
   // setUnidadesSeleccionadas,
   setUnidadesSeleccionadasAnteriorAActual,
   set_current_id_organigrama
@@ -79,12 +77,12 @@ export const CleanData: FC<any> = (): JSX.Element => {
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
-        .filter(([key, value]) => {
+        .filter(([_key, value]) => {
           return value
             ? value?.idPersona && value?.label && value?.value
             : null;
         })
-        .map(([key, value]) => ({
+        .map(([_key, value]) => ({
           id_persona: value?.idPersona,
           id_nueva_unidad_organizacional: value?.value
         }));
@@ -203,7 +201,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
           } else {
             const organigramasDisponibles = await getOrganigramasDispobibles();
             setOrganigramasDisponibles(
-              filtrarOrganigramas(organigramasDisponibles, navigate)
+              filtrarOrganigramas(organigramasDisponibles)
             );
             handleMood(false);
           }
@@ -221,13 +219,13 @@ export const CleanData: FC<any> = (): JSX.Element => {
       Object?.entries(unidadesSeleccionadasAnteriorAActual)
         .filter(
           // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-          ([key, value]) => {
+          ([_key, value]) => {
             return value
               ? value?.idPersona && value?.label && value?.value && value?.data
               : null;
           }
         )
-        .map(([key, value]) => ({
+        .map(([_key, value]) => ({
           // data: value?.data,
           id_persona: value?.idPersona,
           nombre_nueva_unidad_organizacional: value?.label,
@@ -256,7 +254,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
     void putTrasladoMasivoUnidadesPorEntidad(
       arraysComparados,
       setLoadingButton
-    ).then((res) => {
+    ).then((_res) => {
       //* ejecucion get informacion
       setLoadingButton(true);
       const obtenerOrganigramaActual = async (): Promise<any> => {
@@ -286,7 +284,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
 
           // ! en consecuencia obtengo los datos del organigrama actual dentro del sistema
           // !
-          void obtenerOrganigramaActual().then((infoOrganigramaActual) => {
+          void obtenerOrganigramaActual().then((_infoOrganigramaActual) => {
             //* luego de haber obtenido el organigrama actual y el organigrama actual debo realizar la consulta de la tabal temporal y de la lista de las personas que en teoría habían quedado sin actualizarse, si no hay personas en ninguna de las dos listas la ídea es mostrar un alerta en la que se mencione que no se encuentran personas disponibles en este momento para realizar el traslado masivo necesario
 
             // ? se realiza la consulta a la tabla temporal, si la tabla temporal no trae datos se dejan solo los datos de la lista de personas sin actualizar y viceversa

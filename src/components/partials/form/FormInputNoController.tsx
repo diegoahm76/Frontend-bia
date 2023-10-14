@@ -18,14 +18,10 @@ interface IProps {
 const FormInputNoController = ({
     xs,
     md,
-    value_input,
     on_change_function,
-    on_blur_function,
     label,
     type,
     disabled,
-    multiline_text,
-    rows_text
 }: IProps) => {
     const handle_file_input_change:any = (e: any) => {
         console.log(e.target.files[0].name)

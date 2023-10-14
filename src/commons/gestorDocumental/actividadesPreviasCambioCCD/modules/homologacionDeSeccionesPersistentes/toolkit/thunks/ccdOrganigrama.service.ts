@@ -43,7 +43,7 @@ export const functionGetCcdHomologacionSeries = async (
     }
     return datos;
   } catch (err) {
-    control_error('No se han encontrado datos que coincidan');
+    control_error('Ha ocurrido un error al cargar los datos');
     return [];
   } finally {
     SetLoadingRequest(false);
@@ -106,6 +106,7 @@ export const validacionInicialCCD = async (navigate: any): Promise<any> => {
     // console.log(datos);
     return datos;
   } catch (err) {
+    control_error('Ha ocurrido un error al cargar los datos');
     return [];
   }
 };

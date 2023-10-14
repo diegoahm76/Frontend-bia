@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Avatar, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import {
   useAppDispatch,
   useAppSelector,
@@ -20,13 +20,16 @@ import {
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { Grid } from 'blockly';
+
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import {
   fnGetAgrupacionesCoincidetesCcd,
   fnGetPersistenciasConfirmadas,
 } from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
 import Swal from 'sweetalert2';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
+import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ? dispatch declaration
@@ -40,6 +43,11 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     relacionesAlmacenamientoLocal,
     homologacionAgrupacionesSerieSubserie,
   } = useAppSelector((state) => state.HomologacionesSlice);
+
+  // ? context declaration
+  const { generalLoading, handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
 
@@ -101,11 +109,14 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
           (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
         );
 
-    if (nuevasAgrupacionesPersistentes?.length > 0) {
+    if (
+      nuevasAgrupacionesPersistentes?.length > 0 ||
+      params?.row?.tiene_agrupaciones
+    ) {
       //* si hay un valor coincida no se elimina
       void Swal.fire({
         title: 'Atención',
-        text: `No puede eliminar la persistencia confirmada de secciones, ya que tiene ${nuevasAgrupacionesPersistentes?.length} valor(es) asociado(s) en la persistencia confirmada de series, elimine primero la(s) relacion(es).`,
+        text: `No puede eliminar la persistencia confirmada de secciones, ya que tiene valor(es) asociado(s) en la persistencia confirmada de series, elimine primero la(s) relacion(es).`,
         icon: 'warning',
         confirmButtonText: 'Aceptar',
       });
@@ -267,6 +278,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_ccd_nuevo,
                   id_unidad_actual,
                   id_unidad_nueva,
+                  setLoading: handleGeneralLoading,
                 }).then((resCoincidenciasAgrupacionesDocumentales: any) => {
                   console.log(resCoincidenciasAgrupacionesDocumentales);
 
@@ -277,7 +289,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     )
                   );
 
-                  if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
+                  /* if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
                     dispatch(
                       setRelacionesAlmacenamientoLocal({
                         ...relacionesAlmacenamientoLocal,
@@ -296,7 +308,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       })
                     );
 
-                    //* console.log de los datos necesarios
                     console.log({
                       ...relacionesAlmacenamientoLocal,
                       [params?.row?.id_unidad_actual]: {
@@ -312,7 +323,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                         ],
                       },
                     });
-                  }
+                  }*/
                 });
 
                 //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho
@@ -322,6 +333,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_ccd_nuevo,
                   id_unidad_actual,
                   id_unidad_nueva,
+                  setLoading: handleGeneralLoading,
                 })
                   .then((resAgrupacionesPersistentes: any) => {
                     console.log(resAgrupacionesPersistentes);
@@ -347,13 +359,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                                 agrupacionesPersistentesSerieSubserie),
                               ...resAgrupacionesPersistentes,
                             ],
-                            /*homologacionAgrupacionesSerieSubserie: [
-                              ...(relacionesAlmacenamientoLocal[
-                                params?.row?.id_unidad_actual
-                              ]?.homologacionAgrupacionesSerieSubserie ||
-                                homologacionAgrupacionesSerieSubserie),
-                              ...resAgrupacionesPersistentes,
-                            ],*/
                           },
                         })
                       );
@@ -398,33 +403,31 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   ];
 
   {
+    /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
+  }
+
+  if (generalLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: 'none',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={200} />
+      </Grid>
+    );
+  }
+  {
     /* si no hay unidades persistentes este componente no se visualiza */
   }
 
   if (unidadesPersistentes?.length === 0) return <></>;
-
-  {
-    /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
-  }
-
-  /*
-  if (isLoadingSeccionSub) {
-    return (
-      <Grid
-      container
-      sx={{
-        ...containerStyles,
-        boxShadow: 'none',
-        background: 'none',
-        position: 'static',
-        display: 'flex',
-        justifyContent: 'center'
-      }}
-    >
-      <Loader altura={200} />
-    </Grid>
-    );
-  } */
 
   return (
     <>

@@ -94,7 +94,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
             pageSize={5}
             rowsPerPageOptions={[7]}
             experimentalFeatures={{ newEditingApi: true }}
-            getRowId={(row) => uuidv4()}
+            getRowId={(_row) => uuidv4()}
           />
         </DialogContent>
         <Divider />

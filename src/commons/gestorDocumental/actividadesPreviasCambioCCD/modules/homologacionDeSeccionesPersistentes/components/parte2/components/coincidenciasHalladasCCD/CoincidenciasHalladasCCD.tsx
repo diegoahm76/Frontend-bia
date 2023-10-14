@@ -18,6 +18,7 @@ import { control_success } from '../../../../../../../../../helpers';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { useContext } from 'react';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
   // ? dispatch declaration
@@ -137,34 +138,33 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     */
   }
 
+  
+    {
+      /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
+    }
+  
+  if (generalLoading) {
+      return (
+        <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: 'none',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Loader altura={200} />
+      </Grid>
+      );
+    }
   {
     /* si no hay coincidencias en las unidades del ccd este componente no se visualiza */
   }
 
   if (homologacionUnidades?.length === 0) return <></>;
-
-  {
-    /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
-  }
-
-  /*  if (isLoadingSeccionSub) {
-    return (
-      <Grid
-      container
-      sx={{
-        ...containerStyles,
-        boxShadow: 'none',
-        background: 'none',
-        position: 'static',
-        display: 'flex',
-        justifyContent: 'center'
-      }}
-    >
-      <Loader altura={200} />
-    </Grid>
-    );
-  }
-*/
   return (
     <>
       <RenderDataGrid
