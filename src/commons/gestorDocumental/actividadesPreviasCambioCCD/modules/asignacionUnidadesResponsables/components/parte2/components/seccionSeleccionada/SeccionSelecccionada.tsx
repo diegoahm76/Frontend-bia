@@ -11,12 +11,6 @@ export const SeccionSelecccionada = (): JSX.Element => {
   //* hooks
   const { control_asignaciones_resp } = useAsignacionesResp();
 
-  //* redux states neccesaries
-  const { seccionesSinResponsable } = useAppSelector(
-    (state) => state.AsigUniRespSlice
-  );
-
-  if (seccionesSinResponsable.length === 0) return <></>;
 
   {
     /* también se debe establecer la validación de la carga del componente para el loader */

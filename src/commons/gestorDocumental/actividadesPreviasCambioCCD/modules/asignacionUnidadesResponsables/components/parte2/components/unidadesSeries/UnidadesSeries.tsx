@@ -8,6 +8,14 @@ import { stylesGrid } from '../../../../../../../permisosSeriesDoc/utils/styles'
 import { VisaulTexto } from './visualTexto/VisualTexto';
 
 export const UnidadesSeries = (): JSX.Element => {
+
+    //* redux states neccesaries
+    const { seccionesSinResponsable } = useAppSelector(
+      (state) => state.AsigUniRespSlice
+    );
+  
+    if (seccionesSinResponsable.length === 0) return <></>;
+  
   return (
     <>
       <Title title="Selección de secciones responsables del CCD nuevo sobre las series documentales de secciones del CCD actual" />
@@ -36,7 +44,7 @@ export const UnidadesSeries = (): JSX.Element => {
       <RenderDataGrid
         title="Catálogo asociado - ${nombreUnidadSeleccionada}"
         columns={[]}
-        rows={[]}
+        rows={seccionesSinResponsable ?? []}
       />
     </>
   );
