@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import Swal from 'sweetalert2';
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const filtrarOrganigramas = (
   organigramas: any[],
-  navigate: any
 ): any[] => {
   const organigramaActual = organigramas.find((org: any) => org.actual);
 

@@ -3,7 +3,6 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { Button, Grid, Stack, TextField } from '@mui/material';
-import { Controller } from 'react-hook-form';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import dayjs from 'dayjs';
@@ -13,7 +12,6 @@ import { Title } from '../../../../../../../../../../components';
 import { containerStyles } from '../../../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { type AuthSlice } from '../../../../../../../../../auth/interfaces';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import { uni_a_uni_slice } from './../../../../toolkit/slice/Uni_A_UniSlice';
 
 export const InfoProcesoTraslado: FC<ProcesoTypes> = ({
   setmModalHistoricoTraslados,

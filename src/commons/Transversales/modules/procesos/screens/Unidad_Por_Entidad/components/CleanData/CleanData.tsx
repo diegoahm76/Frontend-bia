@@ -79,12 +79,12 @@ export const CleanData: FC<any> = (): JSX.Element => {
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
       Object?.entries(unidadesSeleccionadas)
-        .filter(([key, value]) => {
+        .filter(([_key, value]) => {
           return value
             ? value?.idPersona && value?.label && value?.value
             : null;
         })
-        .map(([key, value]) => ({
+        .map(([_key, value]) => ({
           id_persona: value?.idPersona,
           id_nueva_unidad_organizacional: value?.value
         }));
@@ -203,7 +203,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
           } else {
             const organigramasDisponibles = await getOrganigramasDispobibles();
             setOrganigramasDisponibles(
-              filtrarOrganigramas(organigramasDisponibles, navigate)
+              filtrarOrganigramas(organigramasDisponibles)
             );
             handleMood(false);
           }

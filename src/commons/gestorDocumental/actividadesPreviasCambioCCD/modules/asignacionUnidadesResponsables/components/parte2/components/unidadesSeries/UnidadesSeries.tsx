@@ -6,6 +6,7 @@ import { Sub } from '../../../../../../../../../components/Sub';
 import { Grid, TextField } from '@mui/material';
 import { stylesGrid } from '../../../../../../../permisosSeriesDoc/utils/styles';
 import { VisaulTexto } from './visualTexto/VisualTexto';
+import { useAppSelector } from '../../../../../../../../../hooks';
 
 export const UnidadesSeries = (): JSX.Element => {
 
