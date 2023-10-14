@@ -28,8 +28,6 @@ import { control_success, control_error } from '../../../helpers';
 import { type AxiosError } from 'axios';
 import { toast, type ToastContent } from 'react-toastify';
 import type {
-  AutocompleteChangeDetails,
-  AutocompleteChangeReason,
   SelectChangeEvent,
 } from '@mui/material';
 import { set_action_admin_users } from '../store';
@@ -286,10 +284,10 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const handle_change_autocomplete = (
-    // event: any,
+    _event: any,
     value: IList2[],
-   // reason: AutocompleteChangeReason,
-   // details?: AutocompleteChangeDetails<IList2>
+   _reason: any,
+   _details?: any
   ): void => {
     set_value_admin_user('roles', value);
     set_data_register({
