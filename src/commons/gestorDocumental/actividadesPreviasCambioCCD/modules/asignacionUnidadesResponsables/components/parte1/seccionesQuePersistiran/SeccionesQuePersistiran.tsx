@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
+import React, { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { Title } from '../../../../../../../../components';
 import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
 import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../../../../homologacionDeSeccionesPersistentes/components/parte2/components/coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
+import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
 
 export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
   //* redux states neccesaries
@@ -13,16 +15,33 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
     (state) => state.AsigUniRespSlice
   );
 
-  const columns = [
-    ...columnsPersistenciasConfirmadas,
-  ];
+  // ? context declaration
+  const { loadingButtonPSD: loadingSeccionesPersistentes } =
+    useContext(ModalContextPSD);
+
+  const columns = [...columnsPersistenciasConfirmadas];
 
   //* se debe poner luego la condicional para que funcione de manera de adecuada (deben ir las condicionales necesarias para manejar lo componentes)
-  /* if (
-    ccdOrganigramaCurrentBusqueda &&
-    Object.keys(ccdOrganigramaCurrentBusqueda).length === 0
-  )
-    return <></>; */
+
+  if (loadingSeccionesPersistentes) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: 'none',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={200} />
+      </Grid>
+    );
+  }
+
+  if (seccionesPersistentesCcdNuevo.length === 0) return <></>;
 
   return (
     <>

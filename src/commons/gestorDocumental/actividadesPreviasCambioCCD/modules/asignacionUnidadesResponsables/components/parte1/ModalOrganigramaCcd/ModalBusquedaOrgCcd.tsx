@@ -57,8 +57,20 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   // ? ---- context declaration ----
-  const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
-    useContext(ModalContextPSD);
+  const {
+    modalSeleccionCCD_PSD,
+    handleSeleccionCCD_PSD,
+    loadingButtonPSD,
+    setLoadingButtonPSD: setLoadingRequest,
+  } = useContext(ModalContextPSD);
+/*
+  const {
+    modalSeleccionCCD_PSD: hola,
+    handleSeleccionCCD_PSD: chao,
+    loadingButtonPSD: loadingButtonX,
+    setLoadingButtonPSD: setLoadingRequestX,
+  } = useContext(ModalContextPSD); */
+
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -87,7 +99,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
       //* 2
       const seccionesPersistentes = await getSeccionesPersistentesCcdNuevo(
-        params.row.id_ccd
+        params.row.id_ccd,
+        setLoadingRequest
       );
 
       //* 3
@@ -152,10 +165,10 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
             <IconButton
               onClick={() => {
                 console.log(params.row);
+                handleSeleccionCCD_PSD(false);
                 handleCcdConincidenteConIdOrganigrama(params).then(() => {
                   // ? se limpian las opciones del modal y se cierra el modal
                   setccdList([]);
-                  handleSeleccionCCD_PSD(false);
                 });
               }}
             >
