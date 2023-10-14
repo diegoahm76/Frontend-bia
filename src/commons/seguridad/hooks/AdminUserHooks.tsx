@@ -286,10 +286,10 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const handle_change_autocomplete = (
-    event: any,
+    // event: any,
     value: IList2[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<IList2>
+   // reason: AutocompleteChangeReason,
+   // details?: AutocompleteChangeDetails<IList2>
   ): void => {
     set_value_admin_user('roles', value);
     set_data_register({

@@ -4,7 +4,6 @@ import { type FC, useContext, useState } from 'react';
 import { containerStyles } from '../../../../../../../gestorDocumental/tca/screens/utils/constants/constants';
 import { Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../../components';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ContextUnidadxEntidad } from '../../context/ContextUnidadxEntidad';
 import { ModalHistoricoTraslados } from '../ModalHistoricoTraslado/screen/ModalHistoricoTraslados';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -33,7 +32,6 @@ import {
   setAsignacionConsultaTablaTemporal,
   setGridActualANuevo,
   setGridAnteriorAActual,
-  setUnidadesSeleccionadas,
   // setUnidadesSeleccionadas,
   setUnidadesSeleccionadasAnteriorAActual,
   set_current_id_organigrama

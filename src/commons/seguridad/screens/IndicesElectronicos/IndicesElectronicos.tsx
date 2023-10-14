@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useState } from 'react';
 import { api } from '../../../../api/axios';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -61,7 +61,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
       });
       console.log('response', response);
       const newData = response?.data?.map((item: any) => {
-        const { id_ccd } = item;
+        // const { id_ccd } = item;
         return {
           ...item,
           fecha_puesta_produccion: 'SIN_FECHA',

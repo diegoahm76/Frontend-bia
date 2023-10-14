@@ -333,7 +333,6 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
                     }) => (
                       <div>
                         <Select
