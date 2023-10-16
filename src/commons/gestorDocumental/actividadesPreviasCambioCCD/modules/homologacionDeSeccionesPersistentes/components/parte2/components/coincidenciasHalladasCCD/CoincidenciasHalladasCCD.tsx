@@ -11,6 +11,9 @@ import { type GridValueGetterParams } from '@mui/x-data-grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {
+  setAgrupacionesPersistentesSerieSubserie,
+  setCurrentPersistenciaSeccionSubseccion,
+  setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
   setUnidadesPersistentes,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
@@ -48,6 +51,13 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
 
     dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
     dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+
+
+    //* si limpian los campos tras la entrada de un nuevo dato a las unidades persistentesP
+    dispatch(setHomologacionAgrupacionesSerieSubserie([]));
+    dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+    dispatch(setCurrentPersistenciaSeccionSubseccion(null));
+
     control_success('Persistencia confirmada');
   };
 
@@ -138,14 +148,13 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     */
   }
 
-  
-    {
-      /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
-    }
-  
+  {
+    /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
+  }
+
   if (generalLoading) {
-      return (
-        <Grid
+    return (
+      <Grid
         container
         sx={{
           ...containerStyles,
@@ -153,13 +162,13 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
           background: 'none',
           position: 'static',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
         <Loader altura={200} />
       </Grid>
-      );
-    }
+    );
+  }
   {
     /* si no hay coincidencias en las unidades del ccd este componente no se visualiza */
   }

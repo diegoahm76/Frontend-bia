@@ -11,6 +11,7 @@ import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCc
 import { control_success } from '../../../../../../../../../helpers';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
@@ -24,6 +25,7 @@ import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import {
   fnGetAgrupacionesCoincidetesCcd,
   fnGetPersistenciasConfirmadas,
+  getAllElements,
 } from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
@@ -40,6 +42,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     homologacionUnidades,
     agrupacionesPersistentesSerieSubserie,
     homologacionAgrupacionesSerieSubserie,
+    currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? context declaration
@@ -201,8 +204,12 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
             <IconButton
               aria-label="select"
               size="large"
+              disabled={currentPersistenciaSeccionSubseccion}
               onClick={() => {
                 console.log(params?.row);
+                void getAllElements(unidadesPersistentes, handleGeneralLoading).then((res) => {
+                  dispatch(setAllElements(res))
+                })
                 //* se limpian tambien los estados consecuentes luego de la elección de las agrupaciones coincidentes o persistentes
 
                 //? revisar la necesidad de estos dos estados ya que se debe mantener en memoria esos elememtos para poder hacer la comparación de los elementos que se van a homologar
@@ -267,7 +274,25 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     console.log(resAgrupacionesPersistentes);
                     dispatch(
                       setAgrupacionesPersistentesSerieSubserie(
-                        resAgrupacionesPersistentes || []
+                        [...resAgrupacionesPersistentes,/*{
+                          "id_unidad_org_actual": 5383,
+                          "id_catalogo_serie_actual": 10874545,
+                          "id_serie_actual": 295,
+                          "cod_serie_actual": "1",
+                          "nombre_serie_actual": "ser 1aw",
+                          "id_subserie_actual": null,
+                          "cod_subserie_actual": null,
+                          "nombre_subserie_actual": null,
+                          "id_unidad_org_nueva": 5387,
+                          "id_catalogo_serie_nueva": 1046599,
+                          "id_serie_nueva": 299,
+                          "cod_serie_nueva": "1",
+                          "nombre_serie_nueva": "seriwwe 1",
+                          "id_subserie_nueva": null,
+                          "cod_subserie_nueva": null,
+                          "nombre_subserie_nueva": null,
+                          "iguales": false
+                      }*/] || []
                       )
                     );
                     //* asignar esas persistencias al estado si ya existen
@@ -279,8 +304,14 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DoneAllIcon
+                  titleAccess={
+                    currentPersistenciaSeccionSubseccion &&
+                    'Ya hay una persistencia seleccionada, limpie la selección para poder seleccionar otra persistencia'
+                  }
                   sx={{
-                    color: 'green',
+                    color: currentPersistenciaSeccionSubseccion
+                      ? 'gray'
+                      : 'green',
                     width: '18px',
                     height: '18px',
                   }}

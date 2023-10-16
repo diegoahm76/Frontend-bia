@@ -40,6 +40,7 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import {
   setAgrupacionesPersistentesSerieSubserie,
   setCcdOrganigramaCurrent,
+  setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
   setUnidadesPersistentes,
@@ -65,6 +66,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     //* se limpian todos los estados que se relacionan con la homologación de unidades
     dispatch(setHomologacionAgrupacionesSerieSubserie([]));
     dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+    dispatch(setCurrentPersistenciaSeccionSubseccion(null));
 
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(

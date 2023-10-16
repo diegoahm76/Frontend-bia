@@ -13,6 +13,7 @@ import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setHomologacionAgrupacionesSerieSubserie,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
@@ -27,6 +28,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   const {
     homologacionAgrupacionesSerieSubserie,
     agrupacionesPersistentesSerieSubserie,
+    allElements,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const { generalLoading } = useContext(ModalAndLoadingContext);
@@ -53,6 +55,24 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     );
     dispatch(
       setHomologacionAgrupacionesSerieSubserie(nuevaHomologacionAgrupaciones)
+    );
+
+    dispatch(
+      setAllElements({
+        coincidenciasAgrupaciones:
+          allElements?.coincidenciasAgrupaciones.filter(
+            (item: any) =>
+              item?.id_catalogo_serie_actual !==
+              params?.row?.id_catalogo_serie_actual
+          ),
+        persistenciasAgrupaciones: [
+          ...allElements?.persistenciasAgrupaciones,
+          {
+            ...params?.row,
+            persistenciaConfirmada: true,
+          },
+        ],
+      })
     );
     control_success('Persistencia confirmada');
   };
@@ -137,25 +157,24 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     }
   );
 
-    if (generalLoading) {
-      return (
-        <Grid
-          container
-          sx={{
-            ...containerStyles,
-            boxShadow: 'none',
-            background: 'none',
-            position: 'static',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Loader altura={200} />
-        </Grid>
-      );
-    }
+  if (generalLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: 'none',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={200} />
+      </Grid>
+    );
+  }
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
-
 
   return (
     <>

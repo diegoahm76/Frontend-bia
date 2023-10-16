@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { control_success } from '../../../../../../../../../helpers';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setHomologacionAgrupacionesSerieSubserie,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
@@ -26,6 +27,7 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
   const {
     agrupacionesPersistentesSerieSubserie,
     homologacionAgrupacionesSerieSubserie,
+    allElements,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
@@ -55,6 +57,24 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
     );
 
     dispatch(setAgrupacionesPersistentesSerieSubserie(a));
+
+    dispatch(
+      setAllElements({
+        coincidenciasAgrupaciones: [
+          ...allElements?.coincidenciasAgrupaciones,
+          {
+            ...params?.row,
+            persistenciaConfirmada: false,
+          },
+        ],
+        persistenciasAgrupaciones:
+          allElements?.persistenciasAgrupaciones.filter(
+            (item: any) =>
+              item?.id_catalogo_serie_actual !==
+              params?.row?.id_catalogo_serie_actual
+          ),
+      })
+    );
 
     control_success('Ítem eliminado de tipologías restringidas');
   };
@@ -95,26 +115,24 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
     },
   ];
 
-
-    if (generalLoading) {
-      return (
-        <Grid
-          container
-          sx={{
-            ...containerStyles,
-            boxShadow: 'none',
-            background: 'none',
-            position: 'static',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Loader altura={200} />
-        </Grid>
-      );
-    }
+  if (generalLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: 'none',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={200} />
+      </Grid>
+    );
+  }
   if (agrupacionesPersistentesSerieSubserie?.length === 0) return null;
-
 
   return (
     <>
