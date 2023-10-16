@@ -21,8 +21,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "removeComments": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "moduleDetection": "force"
   },
   "typeRoots": [
