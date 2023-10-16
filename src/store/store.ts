@@ -58,6 +58,7 @@ import { cierre_expedientes_slice } from "../commons/gestorDocumental/Expediente
 import { archivo_fisico_slice } from "../commons/gestorDocumental/archivoFisico/store/slice/indexArchivoFisico";
 import { configuracion_tiempo_respuesta_slice } from "../commons/gestorDocumental/confiTiemposRespuestaPlazoAccion/store/slice/indexConfiTiemposRespPlazoAccion";
 import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/toolkit/slice/types/AsignacionUniResp";
+import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
 
 const persist_config = {
   key: "macarenia_app",
@@ -137,6 +138,8 @@ const app_reducers = combineReducers({
   //* asignacion de unidades responsables
   AsigUniRespSlice: AsigUniRespSlice.reducer,
   //* asignacion de unidades responsables
+  // ? Delegacion oficinas responsables del ccd
+  DelOfiResSlice: DelOfiResSlice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
