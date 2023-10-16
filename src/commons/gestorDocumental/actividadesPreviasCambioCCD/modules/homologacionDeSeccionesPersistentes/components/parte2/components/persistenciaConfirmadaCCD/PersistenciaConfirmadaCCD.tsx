@@ -85,28 +85,49 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   ) => {
     const { row } = params;
 
-    if (row?.tiene_agrupaciones) {
-      void Swal.fire({
-        title: 'Atención',
-        text: `No puede eliminar la persistencia confirmada de la unidad con código ${row?.cod_unidad_actual} - ${row?.nom_unidad_actual} porque tiene agrupaciones persistentes, elimine primero las agrupaciones persistentes`,
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
+    void fnGetPersistenciasConfirmadas({
+      id_ccd_nuevo: row?.id_ccd_nuevo,
+      id_unidad_actual: row?.id_unidad_actual,
+      id_unidad_nueva: row?.id_unidad_nueva,
+      setLoading: handleGeneralLoading,
+    })
+      .then((resAgrupacionesPersistentes: any) => {
+        console.log(resAgrupacionesPersistentes);
+
+        if (resAgrupacionesPersistentes?.length > 0) {
+          void Swal.fire({
+            title: 'Atención',
+            text: `No puede eliminar la persistencia confirmada de la unidad con código ${row?.cod_unidad_actual} - ${row?.nom_unidad_actual} porque tiene agrupaciones persistentes, elimine primero las agrupaciones persistentes`,
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+          });
+          return;
+        } else {
+          const nuevasUnidadesPersistentes = eliminarPersistencia(
+            unidadesPersistentes,
+            row?.id_unidad_actual
+          );
+
+          control_success('Persistencia eliminada');
+          dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+          //* se actualiza tambien la tabla de las homologaciones si se pasa a este caso, en caso contrario no lo hace
+          dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
+
+          //* se quita la persistencia marcada como current
+          dispatch(setCurrentPersistenciaSeccionSubseccion(null));
+        }
+
+        /*
+        dispatch(
+          setAgrupacionesPersistentesSerieSubserie(
+            resAgrupacionesPersistentes || []
+          )
+        );*/
+        //* asignar esas persistencias al estado si ya existen
+      })
+      .catch((err: any) => {
+        console.log(err);
       });
-      return;
-    }
-
-    const nuevasUnidadesPersistentes = eliminarPersistencia(
-      unidadesPersistentes,
-      row?.id_unidad_actual
-    );
-
-    control_success('Persistencia eliminada');
-    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
-    //* se actualiza tambien la tabla de las homologaciones si se pasa a este caso, en caso contrario no lo hace
-    dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
-
-    //* se quita la persistencia marcada como current
-    dispatch(setCurrentPersistenciaSeccionSubseccion(null));
   };
 
   // ! eliminación de persistencias confirmadas
@@ -271,30 +292,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
       ),
     },
   ];
-
-  {
-    /*
-    
-       {
-                            "id_unidad_org_actual": 5383,
-                            "id_catalogo_serie_actual": 1088457,
-                            "id_serie_actual": 295,
-                            "cod_serie_actual": "1",
-                            "nombre_serie_actual": "serie local prueba",
-                            "id_subserie_actual": null,
-                            "cod_subserie_actual": null,
-                            "nombre_subserie_actual": null,
-                            "id_unidad_org_nueva": 53877,
-                            "id_catalogo_serie_nueva": 109959,
-                            "id_serie_nueva": 299,
-                            "cod_serie_nueva": "1",
-                            "nombre_serie_nueva": "serie 1 local prueba",
-                            "id_subserie_nueva": null,
-                            "cod_subserie_nueva": null,
-                            "nombre_subserie_nueva": null,
-                            "iguales": false
-                        }*/
-  }
 
   {
     /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
