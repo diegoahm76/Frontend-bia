@@ -8,6 +8,7 @@ import { containerStyles } from '../../../../../../tca/screens/utils/constants/c
 import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../../../../homologacionDeSeccionesPersistentes/components/parte2/components/coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
 import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
   //* redux states neccesaries
@@ -16,16 +17,13 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
   );
 
   // ? context declaration
-  const { loadingButtonPSD: loadingSeccionesPersistentes } =
-    useContext(ModalContextPSD);
+  const { generalLoading: loadingSeccionesPersistentes } = useContext(
+    ModalAndLoadingContext
+  );
 
   const columns = [...columnsPersistenciasConfirmadas];
 
   //* se debe poner luego la condicional para que funcione de manera de adecuada (deben ir las condicionales necesarias para manejar lo componentes)
-
-  if (!seccionesPersistentesCcdNuevo.length) {
-    return <></>;
-  }
 
   if (loadingSeccionesPersistentes) {
     return (
@@ -43,6 +41,10 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
         <Loader altura={300} />
       </Grid>
     );
+  }
+
+  if (!seccionesPersistentesCcdNuevo.length) {
+    return <></>;
   }
 
   return (

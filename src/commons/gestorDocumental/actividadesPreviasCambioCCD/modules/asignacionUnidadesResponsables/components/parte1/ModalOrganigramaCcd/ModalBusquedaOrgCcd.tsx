@@ -47,6 +47,7 @@ import {
 import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
 import { GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE } from '../../../toolkit/thunks/seccPendientesAndCat.service';
 import { GET_LISTADO_ASIGNACIONES } from '../../../toolkit/thunks/listadoDeAsignaciones.service';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -63,6 +64,11 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     loadingButtonPSD,
     setLoadingButtonPSD: setLoadingRequest,
   } = useContext(ModalContextPSD);
+
+  //* general loading state
+  const { handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -92,7 +98,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       //* 2
       const seccionesPersistentes = await getSeccionesPersistentesCcdNuevo(
         params.row.id_ccd,
-        setLoadingRequest
+        handleGeneralLoading
       );
 
       //* 3
