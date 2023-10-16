@@ -12,6 +12,9 @@ export const SeccionSelecccionada = (): JSX.Element => {
   const { control_asignaciones_resp } = useAsignacionesResp();
 
 
+
+  if(!0) return <></>;
+
   {
     /* también se debe establecer la validación de la carga del componente para el loader */
   }

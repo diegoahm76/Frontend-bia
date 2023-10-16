@@ -23,6 +23,10 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
 
   //* se debe poner luego la condicional para que funcione de manera de adecuada (deben ir las condicionales necesarias para manejar lo componentes)
 
+  if (!seccionesPersistentesCcdNuevo.length) {
+    return <></>;
+  }
+
   if (loadingSeccionesPersistentes) {
     return (
       <Grid
@@ -39,10 +43,6 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
         <Loader altura={300} />
       </Grid>
     );
-  }
-
-  if (!seccionesPersistentesCcdNuevo.length) {
-    return <></>;
   }
 
   return (

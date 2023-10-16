@@ -6,6 +6,8 @@ import { Grid } from '@mui/material';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
 
 export const Parte2Screen = (): JSX.Element => {
+
+  if(!0) return <></>;
   return (
     <Grid container sx={{
       ...containerStyles,

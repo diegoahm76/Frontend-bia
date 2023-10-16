@@ -40,7 +40,7 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
 import {
-  reset_states,
+  resetStateUniResp,
   setCcdOrganigramaCurrent,
   setSeccionesPersistentes,
 } from '../../../toolkit/slice/types/AsignacionUniResp';
@@ -63,14 +63,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     loadingButtonPSD,
     setLoadingButtonPSD: setLoadingRequest,
   } = useContext(ModalContextPSD);
-/*
-  const {
-    modalSeleccionCCD_PSD: hola,
-    handleSeleccionCCD_PSD: chao,
-    loadingButtonPSD: loadingButtonX,
-    setLoadingButtonPSD: setLoadingRequestX,
-  } = useContext(ModalContextPSD); */
-
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -79,7 +71,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const resHomologacionesUnidades = await getCcdActual(params, navigate);
       if (resHomologacionesUnidades) {
         console.log(' no se puede continuar con la ejecución del módulo');
-        dispatch(reset_states());
+        dispatch(resetStateUniResp());
         return;
       }
 
