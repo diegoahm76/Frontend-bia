@@ -37,9 +37,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   //* context declaration
-  const { handleGeneralLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   // ! states from redux
   const {
@@ -51,48 +49,71 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
-    console.log(unidadesPersistentes);
-
     if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
-      const agrupaciones: any = Object.values(
+      const agrupaciones: any = Object.values<{ [key: string]: any }>(
         relacionesAlmacenamientoLocal
-      ).reduce(
-        (acc: any, curr: any) => [
-          ...acc,
-          ...(curr?.agrupacionesPersistentesSerieSubserie || []),
-        ],
-        []
-      );
+      )
+        .reduce(
+          (acc: any, curr: any) => [
+            ...acc,
+            ...(curr?.agrupacionesPersistentesSerieSubserie || []),
+          ],
+          []
+        )
+        ?.filter(
+          (el: any, index: number, self: any[]) =>
+            index ===
+            self.findIndex(
+              (t: any) =>
+                t.id_catalogo_serie_actual === el.id_catalogo_serie_actual &&
+                t.id_catalogo_serie_nueva === el.id_catalogo_serie_nueva
+            )
+        )
+        .map((el: any) => ({
+          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
+          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
+          id_unidad_actual: el.id_unidad_actual,
+          id_unidad_nueva: el.id_unidad_nueva,
+        }));
+
+      console.log(agrupaciones);
 
       const objectToSend = {
         id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
         unidades_persistentes: unidadesPersistentes.map((el: any) => ({
           id_unidad_actual: el.id_unidad_actual,
           id_unidad_nueva: el.id_unidad_nueva,
+          tiene_agrupaciones:
+            agrupaciones.some(
+              (t: any) =>
+                t.id_unidad_actual === el.id_unidad_actual &&
+                t.id_unidad_nueva === el.id_unidad_nueva
+            ) && !el.tiene_agrupaciones
+              ? false
+              : true,
         })),
-        catalagos_persistentes: agrupaciones
-          ?.filter(
-            (el: any, index: number, self: any[]) =>
-              index ===
-              self.findIndex(
-                (t: any) =>
-                  t.id_catalogo_serie_actual === el.id_catalogo_serie_actual &&
-                  t.id_catalogo_serie_nueva === el.id_catalogo_serie_nueva
-              )
-          )
-          .map((el: any) => ({
-            id_catalogo_serie_actual: el.id_catalogo_serie_actual,
-            id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
-          })),
+        catalagos_persistentes: agrupaciones.map((el: any) => ({
+          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
+          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
+        })),
       };
-      console.log(objectToSend);
+      console.log(
+        'tengo valores en relacionesAlmacenamientoLocal',
+        objectToSend
+      );
 
       void postPersistenciasConfirmadas({
         setLoading: setLoadingButton,
         dataToPost: objectToSend,
       }).then((res) => {
-        void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
-        void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
+        void fnGetHomologacionUnidades(
+          ccdOrganigramaCurrentBusqueda?.id_ccd,
+          handleGeneralLoading
+        );
+        void fnGetUnidadesPersistentes(
+          ccdOrganigramaCurrentBusqueda?.id_ccd,
+          handleGeneralLoading
+        );
 
         dispatch(setHomologacionAgrupacionesSerieSubserie([]));
         dispatch(setAgrupacionesPersistentesSerieSubserie([]));
@@ -101,11 +122,20 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       return;
     }
 
+    //* se crea el objeto a enviar al servicio
+
     const dataToSend = {
       id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
       unidades_persistentes: unidadesPersistentes.map((el: any) => ({
         id_unidad_actual: el.id_unidad_actual,
         id_unidad_nueva: el.id_unidad_nueva,
+        tiene_agrupaciones: agrupacionesPersistentesSerieSubserie.some(
+          (t: any) =>
+            t.id_unidad_actual === el.id_unidad_actual &&
+            t.id_unidad_nueva === el.id_unidad_nueva
+        ) && !el.tiene_agrupaciones
+          ? false
+          : true,
       })),
       catalagos_persistentes: agrupacionesPersistentesSerieSubserie.map(
         (el: any) => ({
@@ -115,7 +145,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       ),
     };
 
-    console.log(dataToSend);
+    console.log('soy data to sedn', dataToSend);
 
     // ! funcion de envío de datos
     void postPersistenciasConfirmadas({
@@ -123,8 +153,14 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       dataToPost: dataToSend,
     }).then((res) => {
       //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
-      void fnGetHomologacionUnidades(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
-      void fnGetUnidadesPersistentes(ccdOrganigramaCurrentBusqueda?.id_ccd, handleGeneralLoading);
+      void fnGetHomologacionUnidades(
+        ccdOrganigramaCurrentBusqueda?.id_ccd,
+        handleGeneralLoading
+      );
+      void fnGetUnidadesPersistentes(
+        ccdOrganigramaCurrentBusqueda?.id_ccd,
+        handleGeneralLoading
+      );
 
       dispatch(setHomologacionAgrupacionesSerieSubserie([]));
       dispatch(setAgrupacionesPersistentesSerieSubserie([]));

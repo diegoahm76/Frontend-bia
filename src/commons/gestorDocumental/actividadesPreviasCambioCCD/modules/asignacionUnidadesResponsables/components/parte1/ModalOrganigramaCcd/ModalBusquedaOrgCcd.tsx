@@ -107,7 +107,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       // *4
 
       const unidadesSinResponsable =
-        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(params.row.id_ccd);
+        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(params.row.id_ccd, navigate);
 
       //* 5
 
@@ -162,7 +162,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                console.log(params.row);
+                // console.log(params.row);
                 handleSeleccionCCD_PSD(false);
                 handleCcdConincidenteConIdOrganigrama(params).then(() => {
                   // ? se limpian las opciones del modal y se cierra el modal
