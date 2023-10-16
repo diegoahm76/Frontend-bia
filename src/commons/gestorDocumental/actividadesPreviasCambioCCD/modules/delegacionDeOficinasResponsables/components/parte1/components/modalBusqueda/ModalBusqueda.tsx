@@ -20,7 +20,6 @@ import {
 } from '@mui/material';
 import {
   DataGrid,
-  type GridValueGetterParams,
   type GridColDef,
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,9 +33,10 @@ import { columnnsSelCCDPSD } from '../../../../../../../permisosSeriesDoc/compon
 import { Title } from '../../../../../../../../../components';
 import { download_xls } from '../../../../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch } from '../../../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
+import { setCcdOrganigramaCurrentAsiOfiResp } from '../../../../toolkit/slice/DelOfiResSlice';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -48,23 +48,19 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
+
+
   const handleSeleccionCcdOficinasResponsables = (params: any) => {
     const { row } = params;
     const { id, nombre, version, nombre_organigrama, version_organigrama } =
       row;
     console.log(row);
-    /* const ccd = {
-      id,
-      nombre,
-      version,
-      nombre_organigrama,
-      version_organigrama,
-    };
-    setccdList([ccd]);
-    dispatch({
-      type: 'HomologacionesSlice/setCcdOrganigramaCurrentBusqueda',
-      payload: ccd,
-    }); */
+
+    //* se selecciona el elemento seleccionado como actual dentro del módulo
+
+   dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
+
+
   };
 
   const columns_ccds: GridColDef[] = [
@@ -209,3 +205,4 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     </Dialog>
   );
 };
+
