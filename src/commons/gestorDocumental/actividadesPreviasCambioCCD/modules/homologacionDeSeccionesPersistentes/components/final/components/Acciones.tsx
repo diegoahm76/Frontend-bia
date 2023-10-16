@@ -18,7 +18,6 @@ import {
   reset_states,
   setAgrupacionesPersistentesSerieSubserie,
   setHomologacionAgrupacionesSerieSubserie,
-  setRelacionesAlmacenamientoLocal,
 } from '../../../toolkit/slice/HomologacionesSeriesSlice';
 import { postPersistenciasConfirmadas } from '../../../toolkit/thunks/createHomologacion.service';
 import {
@@ -44,84 +43,10 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
     ccdOrganigramaCurrentBusqueda,
     unidadesPersistentes,
     agrupacionesPersistentesSerieSubserie,
-    relacionesAlmacenamientoLocal,
-    P,
+    homologacionAgrupacionesSerieSubserie,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const handleSubmit = () => {
-    if (Object.keys(relacionesAlmacenamientoLocal).length > 0) {
-      const agrupaciones: any = Object.values<{ [key: string]: any }>(
-        relacionesAlmacenamientoLocal
-      )
-        .reduce(
-          (acc: any, curr: any) => [
-            ...acc,
-            ...(curr?.agrupacionesPersistentesSerieSubserie || []),
-          ],
-          []
-        )
-        ?.filter(
-          (el: any, index: number, self: any[]) =>
-            index ===
-            self.findIndex(
-              (t: any) =>
-                t.id_catalogo_serie_actual === el.id_catalogo_serie_actual &&
-                t.id_catalogo_serie_nueva === el.id_catalogo_serie_nueva
-            )
-        )
-        .map((el: any) => ({
-          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
-          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
-          id_unidad_actual: el.id_unidad_actual,
-          id_unidad_nueva: el.id_unidad_nueva,
-        }));
-
-      console.log(agrupaciones);
-
-      const objectToSend = {
-        id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
-        unidades_persistentes: unidadesPersistentes.map((el: any) => ({
-          id_unidad_actual: el.id_unidad_actual,
-          id_unidad_nueva: el.id_unidad_nueva,
-          tiene_agrupaciones:
-            agrupaciones.some(
-              (t: any) =>
-                t.id_unidad_actual === el.id_unidad_actual &&
-                t.id_unidad_nueva === el.id_unidad_nueva
-            ) && !el.tiene_agrupaciones
-              ? false
-              : true,
-        })),
-        catalagos_persistentes: agrupaciones.map((el: any) => ({
-          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
-          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
-        })),
-      };
-      console.log(
-        'tengo valores en relacionesAlmacenamientoLocal',
-        objectToSend
-      );
-
-      void postPersistenciasConfirmadas({
-        setLoading: setLoadingButton,
-        dataToPost: objectToSend,
-      }).then((res) => {
-        void fnGetHomologacionUnidades(
-          ccdOrganigramaCurrentBusqueda?.id_ccd,
-          handleGeneralLoading
-        );
-        void fnGetUnidadesPersistentes(
-          ccdOrganigramaCurrentBusqueda?.id_ccd,
-          handleGeneralLoading
-        );
-
-        dispatch(setHomologacionAgrupacionesSerieSubserie([]));
-        dispatch(setAgrupacionesPersistentesSerieSubserie([]));
-      });
-
-      return;
-    }
-
     //* se crea el objeto a enviar al servicio
 
     const dataToSend = {
@@ -129,13 +54,13 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       unidades_persistentes: unidadesPersistentes.map((el: any) => ({
         id_unidad_actual: el.id_unidad_actual,
         id_unidad_nueva: el.id_unidad_nueva,
-        tiene_agrupaciones: agrupacionesPersistentesSerieSubserie.some(
-          (t: any) =>
-            t.id_unidad_actual === el.id_unidad_actual &&
-            t.id_unidad_nueva === el.id_unidad_nueva
-        ) && !el.tiene_agrupaciones
-          ? false
-          : true,
+        tiene_agrupaciones: el.tiene_agrupaciones
+          ? !homologacionAgrupacionesSerieSubserie.some(
+              (t: any) =>
+                t.id_unidad_org_actual === el.id_unidad_actual &&
+                t.id_unidad_org_nueva === el.id_unidad_nueva
+            )
+          : el?.tiene_agrupaciones ?? false,
       })),
       catalagos_persistentes: agrupacionesPersistentesSerieSubserie.map(
         (el: any) => ({
@@ -145,7 +70,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       ),
     };
 
-    console.log('soy data to sedn', dataToSend);
+    console.log('soy data to senddddddd', dataToSend);
 
     // ! funcion de envío de datos
     void postPersistenciasConfirmadas({

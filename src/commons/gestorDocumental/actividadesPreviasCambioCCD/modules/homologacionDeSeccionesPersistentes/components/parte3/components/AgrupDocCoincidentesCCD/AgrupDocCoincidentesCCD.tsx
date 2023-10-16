@@ -14,7 +14,6 @@ import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCc
 import {
   setAgrupacionesPersistentesSerieSubserie,
   setHomologacionAgrupacionesSerieSubserie,
-  setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
@@ -28,8 +27,6 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   const {
     homologacionAgrupacionesSerieSubserie,
     agrupacionesPersistentesSerieSubserie,
-    relacionesAlmacenamientoLocal,
-    currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   const { generalLoading } = useContext(ModalAndLoadingContext);
@@ -57,36 +54,6 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     dispatch(
       setHomologacionAgrupacionesSerieSubserie(nuevaHomologacionAgrupaciones)
     );
-
-    // objeto local
-    // const objetoLocal = {
-    //   ...relacionesAlmacenamientoLocal,
-    //   [params?.row?.id_catalogo_serie_actual]: {
-    //     ...params?.row,
-    //     persistenciaConfirmada: true,
-    //   },
-    // };
-    // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
-
-    dispatch(
-      setRelacionesAlmacenamientoLocal({
-        ...relacionesAlmacenamientoLocal,
-        [params?.row?.id_unidad_org_actual]: {
-          ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-          agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-          homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
-        },
-      })
-    );
-
-    /*    console.log({
-      ...relacionesAlmacenamientoLocal,
-      [params?.row?.id_unidad_org_actual]: {
-        ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-        agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-        // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
-      },
-    }); */
     control_success('Persistencia confirmada');
   };
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
@@ -169,15 +136,6 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
       }
     }
   );
-
-  if (
-    Object.keys(relacionesAlmacenamientoLocal).some(
-      (key) =>
-        relacionesAlmacenamientoLocal[key] ===
-        currentPersistenciaSeccionSubseccion.id_unidad_actual
-    )
-  )
-    return null;
 
     if (generalLoading) {
       return (

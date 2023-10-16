@@ -13,7 +13,6 @@ import { control_success } from '../../../../../../../../../helpers';
 import {
   setAgrupacionesPersistentesSerieSubserie,
   setHomologacionAgrupacionesSerieSubserie,
-  setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
@@ -27,8 +26,6 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
   const {
     agrupacionesPersistentesSerieSubserie,
     homologacionAgrupacionesSerieSubserie,
-    relacionesAlmacenamientoLocal,
-    currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
@@ -60,29 +57,6 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
     dispatch(setAgrupacionesPersistentesSerieSubserie(a));
 
     control_success('Ítem eliminado de tipologías restringidas');
-
-    const idUnidadOrgActual = params?.row?.id_unidad_org_actual;
-
-    const nuevoRelacionesAlmacenamientoLocal = {
-      ...relacionesAlmacenamientoLocal,
-    };
-
-    delete nuevoRelacionesAlmacenamientoLocal[idUnidadOrgActual];
-
-    console.log(nuevoRelacionesAlmacenamientoLocal);
-
-    dispatch(
-      setRelacionesAlmacenamientoLocal(nuevoRelacionesAlmacenamientoLocal)
-    );
-    /*
-    console.log({
-      ...relacionesAlmacenamientoLocal,
-      [params?.row?.id_unidad_org_actual]: {
-        ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-        agrupacionesPersistentesSerieSubserie: a,
-        homologacionAgrupacionesSerieSubserie: nuevasAgrupacionesPersistentes,
-      },
-    }); */
   };
 
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
@@ -121,14 +95,6 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
     },
   ];
 
-  if (
-    Object.keys(relacionesAlmacenamientoLocal).some(
-      (key) =>
-        relacionesAlmacenamientoLocal[key] ===
-        currentPersistenciaSeccionSubseccion.id_unidad_actual
-    )
-  )
-    return null;
 
     if (generalLoading) {
       return (
