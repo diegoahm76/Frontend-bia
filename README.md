@@ -25,7 +25,7 @@ Este proyecto tiene como objetivo digitalizar y optimizar los trámites y servic
 git clone (link del repositorio)
 
 2. Instala las dependencias necesarias para el programa corra de manera adecuada, utilizando el comando yarn install
-3. Inicia el servidor de desarrollo: yarn start
+3. Inicia el servidor de desarrollo: yarn run dev
 
 ## Contacto
 
