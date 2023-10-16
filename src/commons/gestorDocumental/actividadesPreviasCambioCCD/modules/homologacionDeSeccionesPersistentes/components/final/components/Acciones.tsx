@@ -102,7 +102,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
           tiene_agrupaciones: tieneAgrupaciones,
         };
       }),
-      catalagos_persistentes: allElements?.persistenciasAgrupaciones,
+      catalagos_persistentes: allElements?.persistenciasAgrupaciones || [],
 
       /* 
       agrupacionesPersistentesSerieSubserie.map(

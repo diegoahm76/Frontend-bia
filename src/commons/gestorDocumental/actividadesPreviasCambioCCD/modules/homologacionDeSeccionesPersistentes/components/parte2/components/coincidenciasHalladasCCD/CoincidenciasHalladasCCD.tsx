@@ -152,7 +152,7 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
   }
 
-  if (generalLoading) {
+ /* if (generalLoading) {
     return (
       <Grid
         container
@@ -168,7 +168,7 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
         <Loader altura={200} />
       </Grid>
     );
-  }
+  }*/
   {
     /* si no hay coincidencias en las unidades del ccd este componente no se visualiza */
   }

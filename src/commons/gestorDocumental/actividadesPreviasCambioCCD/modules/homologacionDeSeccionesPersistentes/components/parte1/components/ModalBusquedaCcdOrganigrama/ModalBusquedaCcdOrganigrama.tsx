@@ -39,6 +39,7 @@ import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setCcdOrganigramaCurrent,
   setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
@@ -67,6 +68,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     dispatch(setHomologacionAgrupacionesSerieSubserie([]));
     dispatch(setAgrupacionesPersistentesSerieSubserie([]));
     dispatch(setCurrentPersistenciaSeccionSubseccion(null));
+    dispatch(setAllElements({}))
 
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(

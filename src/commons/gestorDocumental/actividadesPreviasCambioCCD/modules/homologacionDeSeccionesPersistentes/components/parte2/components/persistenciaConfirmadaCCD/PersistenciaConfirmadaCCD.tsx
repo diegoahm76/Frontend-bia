@@ -328,7 +328,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
   }
 
-  if (generalLoading) {
+ /* if (generalLoading) {
     return (
       <Grid
         container
@@ -344,7 +344,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         <Loader altura={200} />
       </Grid>
     );
-  }
+  }*/
   {
     /* si no hay unidades persistentes este componente no se visualiza */
   }

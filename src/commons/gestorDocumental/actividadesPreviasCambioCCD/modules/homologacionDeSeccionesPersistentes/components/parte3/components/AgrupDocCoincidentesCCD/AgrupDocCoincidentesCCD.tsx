@@ -17,9 +17,7 @@ import {
   setHomologacionAgrupacionesSerieSubserie,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   //* dispatch declaration
@@ -30,9 +28,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     agrupacionesPersistentesSerieSubserie,
     allElements,
   } = useAppSelector((state) => state.HomologacionesSlice);
-
-  const { generalLoading } = useContext(ModalAndLoadingContext);
-
+  
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
   const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
     console.log(params?.row);
@@ -157,23 +153,6 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     }
   );
 
-  if (generalLoading) {
-    return (
-      <Grid
-        container
-        sx={{
-          ...containerStyles,
-          boxShadow: 'none',
-          background: 'none',
-          position: 'static',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <Loader altura={200} />
-      </Grid>
-    );
-  }
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
 
   return (

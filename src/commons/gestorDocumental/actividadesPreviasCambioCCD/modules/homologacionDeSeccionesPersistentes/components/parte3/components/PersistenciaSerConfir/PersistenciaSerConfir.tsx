@@ -115,23 +115,6 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
     },
   ];
 
-  if (generalLoading) {
-    return (
-      <Grid
-        container
-        sx={{
-          ...containerStyles,
-          boxShadow: 'none',
-          background: 'none',
-          position: 'static',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <Loader altura={200} />
-      </Grid>
-    );
-  }
   if (agrupacionesPersistentesSerieSubserie?.length === 0) return null;
 
   return (

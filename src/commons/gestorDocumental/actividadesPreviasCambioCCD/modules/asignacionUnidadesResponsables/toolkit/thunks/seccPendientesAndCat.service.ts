@@ -13,7 +13,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
     const response = await api.get(url);
     console.log('data GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE', response);
 
-    if (response?.data.coincidencias) {
+    if (response?.data?.data?.coincidencias) {
       void Swal.fire({
         icon: 'warning',
         title: '¡ESPERA!',
