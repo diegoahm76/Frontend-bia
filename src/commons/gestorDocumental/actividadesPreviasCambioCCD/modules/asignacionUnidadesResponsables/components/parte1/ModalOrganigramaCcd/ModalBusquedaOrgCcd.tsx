@@ -40,13 +40,15 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
 import {
-  reset_states,
+  resetStateUniResp,
   setCcdOrganigramaCurrent,
   setSeccionesPersistentes,
+  setSeccionesSinResponsable,
 } from '../../../toolkit/slice/types/AsignacionUniResp';
 import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
 import { GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE } from '../../../toolkit/thunks/seccPendientesAndCat.service';
 import { GET_LISTADO_ASIGNACIONES } from '../../../toolkit/thunks/listadoDeAsignaciones.service';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -63,14 +65,9 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     loadingButtonPSD,
     setLoadingButtonPSD: setLoadingRequest,
   } = useContext(ModalContextPSD);
-/*
-  const {
-    modalSeleccionCCD_PSD: hola,
-    handleSeleccionCCD_PSD: chao,
-    loadingButtonPSD: loadingButtonX,
-    setLoadingButtonPSD: setLoadingRequestX,
-  } = useContext(ModalContextPSD); */
 
+  //* general loading state
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -79,7 +76,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const resHomologacionesUnidades = await getCcdActual(params, navigate);
       if (resHomologacionesUnidades) {
         console.log(' no se puede continuar con la ejecución del módulo');
-        dispatch(reset_states());
+        dispatch(resetStateUniResp());
         return;
       }
 
@@ -100,7 +97,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       //* 2
       const seccionesPersistentes = await getSeccionesPersistentesCcdNuevo(
         params.row.id_ccd,
-        setLoadingRequest
+        handleGeneralLoading
       );
 
       //* 3
@@ -109,7 +106,11 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       // *4
 
       const unidadesSinResponsable =
-        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(params.row.id_ccd);
+        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
+          params.row.id_ccd,
+          navigate
+        );
+      dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
 
       //* 5
 
@@ -164,7 +165,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                console.log(params.row);
+                // console.log(params.row);
                 handleSeleccionCCD_PSD(false);
                 handleCcdConincidenteConIdOrganigrama(params).then(() => {
                   // ? se limpian las opciones del modal y se cierra el modal

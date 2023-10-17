@@ -17,7 +17,7 @@ const initialState: InitialState = {
   // ? lista de secciones persistentes del ccd nuevo
   seccionesPersistentesCcdNuevo: [],
   // ? lista de secciones sin responsable establecido
-  seccionesSinResponsable: [],
+  seccionesSinResponsable: null, //* objeto que contiene el (id_ccd_nuevo, id_ccd_actual y las unidades halladas)
 };
 
 export const AsigUniRespSlice = createSlice({
@@ -40,9 +40,10 @@ export const AsigUniRespSlice = createSlice({
     },
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
-    reset_states: (state) => {
+    resetStateUniResp: (state) => {
       state.ccdOrganigramaCurrentBusqueda = null;
       state.seccionesPersistentesCcdNuevo = [];
+      state.seccionesSinResponsable = [];
     },
   },
 });
@@ -55,5 +56,5 @@ export const {
   // ? acciones sobre las secciones sin responsable establecido
   setSeccionesSinResponsable,
   // ? reset states
-  reset_states,
+  resetStateUniResp,
 } = AsigUniRespSlice.actions;

@@ -8,6 +8,7 @@ import { containerStyles } from '../../../../../../tca/screens/utils/constants/c
 import { columnsCoincidencias as columnsPersistenciasConfirmadas } from '../../../../homologacionDeSeccionesPersistentes/components/parte2/components/coincidenciasHalladasCCD/columnsCoincidencias/columnsCoincidencia';
 import { ModalContextPSD } from '../../../../../../permisosSeriesDoc/context/ModalContextPSD';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
   //* redux states neccesaries
@@ -16,8 +17,9 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
   );
 
   // ? context declaration
-  const { loadingButtonPSD: loadingSeccionesPersistentes } =
-    useContext(ModalContextPSD);
+  const { generalLoading: loadingSeccionesPersistentes } = useContext(
+    ModalAndLoadingContext
+  );
 
   const columns = [...columnsPersistenciasConfirmadas];
 

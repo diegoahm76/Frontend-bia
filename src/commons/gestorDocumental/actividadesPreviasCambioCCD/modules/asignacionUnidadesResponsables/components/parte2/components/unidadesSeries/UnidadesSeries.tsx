@@ -1,22 +1,60 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { Title } from '../../../../../../../../../components';
-import { Subtitle } from '../../../../../../../../../components/Subtitle';
-import { Sub } from '../../../../../../../../../components/Sub';
-import { Grid, TextField } from '@mui/material';
-import { stylesGrid } from '../../../../../../../permisosSeriesDoc/utils/styles';
+import { Avatar, Grid, IconButton, TextField, Tooltip } from '@mui/material';
 import { VisaulTexto } from './visualTexto/VisualTexto';
 import { useAppSelector } from '../../../../../../../../../hooks';
+import { unidadSeriesColumns } from './columns/unidadSeriesColumns';
+import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { type GridValueGetterParams } from '@mui/x-data-grid';
 
 export const UnidadesSeries = (): JSX.Element => {
+  //* redux states neccesaries
+  const { seccionesSinResponsable } = useAppSelector(
+    (state) => state.AsigUniRespSlice
+  );
 
-    //* redux states neccesaries
-    const { seccionesSinResponsable } = useAppSelector(
-      (state) => state.AsigUniRespSlice
-    );
-  
-    if (seccionesSinResponsable.length === 0) return <></>;
-  
+  // ? definicion de la columnas necesarias para el funcionamiento de las tablas
+
+  // ? columnas para la tabla de secciones del ccd actual
+  const columnsSeccionCcActual: any[] = [
+    ...unidadSeriesColumns,
+    {
+      headerName: 'Acciones',
+      field: 'acciones',
+      width: 150,
+      renderCell: (params: GridValueGetterParams) => {
+        return (
+          <Tooltip title="Seleccionar persistencia">
+            <IconButton
+              aria-label="select"
+              size="large"
+              // disabled={currentPersistenciaSeccionSubseccion}
+              onClick={() => {
+                console.log(params?.row);
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <DoneAllIcon
+                  sx={{
+                    color: 'green',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        );
+      },
+    },
+  ];
+  // ? columnas para la tabla de secciones del ccd nuevo
+  //* -------------
+
+  if (!seccionesSinResponsable?.unidades?.length) return <></>;
+
   return (
     <>
       <Title title="Selección de secciones responsables del CCD nuevo sobre las series documentales de secciones del CCD actual" />
@@ -41,12 +79,18 @@ export const UnidadesSeries = (): JSX.Element => {
           ]}
         />
       </Grid>
-      <RenderDataGrid title="Secciones CCD actual" columns={[]} rows={[]} />
+      {/* debe ponerse la condicional de la carga de este elemento */}
       <RenderDataGrid
+        title="Secciones CCD actual"
+        columns={columnsSeccionCcActual ?? []}
+        rows={seccionesSinResponsable?.unidades ?? []}
+      />
+      {/* debe ponerse la condicional de la carga de este elemento */}
+      {/* <RenderDataGrid
         title="Catálogo asociado - ${nombreUnidadSeleccionada}"
         columns={[]}
         rows={seccionesSinResponsable ?? []}
-      />
+      /> */}
     </>
   );
 };

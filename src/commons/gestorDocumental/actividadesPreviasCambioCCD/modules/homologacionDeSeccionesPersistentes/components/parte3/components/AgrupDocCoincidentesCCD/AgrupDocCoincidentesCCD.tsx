@@ -13,13 +13,11 @@ import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setHomologacionAgrupacionesSerieSubserie,
-  setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   //* dispatch declaration
@@ -28,12 +26,9 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   const {
     homologacionAgrupacionesSerieSubserie,
     agrupacionesPersistentesSerieSubserie,
-    relacionesAlmacenamientoLocal,
-    currentPersistenciaSeccionSubseccion,
+    allElements,
   } = useAppSelector((state) => state.HomologacionesSlice);
-
-  const { generalLoading } = useContext(ModalAndLoadingContext);
-
+  
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
   const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
     console.log(params?.row);
@@ -58,35 +53,23 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
       setHomologacionAgrupacionesSerieSubserie(nuevaHomologacionAgrupaciones)
     );
 
-    // objeto local
-    // const objetoLocal = {
-    //   ...relacionesAlmacenamientoLocal,
-    //   [params?.row?.id_catalogo_serie_actual]: {
-    //     ...params?.row,
-    //     persistenciaConfirmada: true,
-    //   },
-    // };
-    // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
-
     dispatch(
-      setRelacionesAlmacenamientoLocal({
-        ...relacionesAlmacenamientoLocal,
-        [params?.row?.id_unidad_org_actual]: {
-          ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-          agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-          homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
-        },
+      setAllElements({
+        coincidenciasAgrupaciones:
+          allElements?.coincidenciasAgrupaciones.filter(
+            (item: any) =>
+              item?.id_catalogo_serie_actual !==
+              params?.row?.id_catalogo_serie_actual
+          ),
+        persistenciasAgrupaciones: [
+          ...allElements?.persistenciasAgrupaciones,
+          {
+            ...params?.row,
+            persistenciaConfirmada: true,
+          },
+        ],
       })
     );
-
-    /*    console.log({
-      ...relacionesAlmacenamientoLocal,
-      [params?.row?.id_unidad_org_actual]: {
-        ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-        agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-        // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
-      },
-    }); */
     control_success('Persistencia confirmada');
   };
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
@@ -170,34 +153,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     }
   );
 
-  if (
-    Object.keys(relacionesAlmacenamientoLocal).some(
-      (key) =>
-        relacionesAlmacenamientoLocal[key] ===
-        currentPersistenciaSeccionSubseccion.id_unidad_actual
-    )
-  )
-    return null;
-
-    if (generalLoading) {
-      return (
-        <Grid
-          container
-          sx={{
-            ...containerStyles,
-            boxShadow: 'none',
-            background: 'none',
-            position: 'static',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Loader altura={200} />
-        </Grid>
-      );
-    }
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
-
 
   return (
     <>
