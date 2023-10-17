@@ -7,14 +7,16 @@ import { control_warning } from '../../../../../../almacen/configuracion/store/t
 
 export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
   idCcdNuevo: number,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   navigate?: any
 ) => {
   try {
+    setLoading(true);
     const url = `gestor/ccd/unidades-ccd-actual/get/${idCcdNuevo}`;
     const response = await api.get(url);
 
     if (response?.data?.data?.coincidencias) {
-      void Swal.fire({
+      await Swal.fire({
         icon: 'warning',
         title: '¡CUIDADO!',
         text: 'Hay coincidencias pendientes por confirmar, desea continuar?',
@@ -28,14 +30,26 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
         confirmButtonColor: '#042F4A',
         cancelButtonColor: 'none',
         allowEscapeKey: false,
-      }).then((result: any) => {
+      }).then(async (result: any) => {
         if (result.isConfirmed) {
           navigate(
             '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/homologacion_secciones_persistentes'
           );
         } else {
           if (!response?.data?.data?.unidades.length) {
-            control_warning('No hay unidades pendientes por confirmar');
+            await Swal.fire({
+              icon: 'warning',
+              title: '¡ATENCIÓN!',
+              text: 'No hay unidades pendientes por confirmar en este CCD, seleccione un CCD diferente para continuar',
+              showCloseButton: true,
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            });
+            return {
+              unidades: [],
+              id_ccd_actual: response?.data?.data?.id_ccd_actual,
+              id_ccd_nuevo: response?.data?.data?.id_ccd_nuevo,
+            };
           }
           return {
             unidades: response?.data?.data?.unidades,
@@ -46,14 +60,20 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
       });
     }
 
-    console.log({
-      unidades: response?.data?.data?.unidades,
-      id_ccd_actual: response?.data?.data?.id_ccd_actual,
-      id_ccd_nuevo: response?.data?.data?.id_ccd_nuevo,
-    });
-
     if (!response?.data?.data?.unidades.length) {
-      control_warning('No hay unidades pendientes por confirmar');
+      await Swal.fire({
+        icon: 'warning',
+        title: '¡ATENCIÓN!',
+        text: 'No hay unidades pendientes por confirmar en este CCD, seleccione un CCD diferente para continuar',
+        showCloseButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+      return {
+        unidades: [],
+        id_ccd_actual: response?.data?.data?.id_ccd_actual,
+        id_ccd_nuevo: response?.data?.data?.id_ccd_nuevo,
+      };
     }
 
     return {
@@ -64,7 +84,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
   } catch (error: any) {
     if (error?.response?.status === 403) {
       console.log('error', error?.response?.status);
-      void Swal.fire({
+      await Swal.fire({
         icon: 'warning',
         title: '¡CUIDADO!',
         text: error?.response?.data?.detail,
@@ -86,26 +106,38 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
     }
     return [];
   } finally {
-    //* establecer el loader
+    setLoading(false);
   }
 };
 
 // ? get series - subseries asociadas a la seccion - subseccion que no aplicaba para la homologación
 
 export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
+  idUnidadActual,
   idCcdActual,
   idCcdNuevo,
-  idUnidadActual,
 }: {
+  idUnidadActual: number;
   idCcdActual: number;
   idCcdNuevo: number;
-  idUnidadActual: number;
 }) => {
   try {
-    const url = `gestor/ccd/series-ccd-actual/get/${idCcdActual}/${idCcdNuevo}/${idUnidadActual}`;
+    const url = `gestor/ccd/cat-serie-ccd-actual/get/?id_ccd_actual=${idCcdActual}&id_ccd_nuevo=${idCcdNuevo}&id_unidad_actual=${idUnidadActual}`;
     const { data } = await api.get(url);
-    // console.log('data', data);
-  } catch (error) {
+    console.log('data', data);
+  } catch (error: any) {
+    console.log(error?.response?.status);
+
+    if (error?.response?.status === 500) {
+      void Swal.fire({
+        icon: 'warning',
+        title: '¡ATENCIÓN!',
+        text: 'No hay catálago de series asociadas a esta unidad, seleccione una unidad diferente para continuar',
+        showCloseButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+    }
     return [];
   } finally {
     //* establecer el loader
