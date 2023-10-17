@@ -17,7 +17,7 @@ const initialState: InitialState = {
   // ? lista de secciones persistentes del ccd nuevo
   seccionesPersistentesCcdNuevo: [],
   // ? lista de secciones sin responsable establecido
-  seccionesSinResponsable: [],
+  seccionesSinResponsable: null, //* objeto que contiene el (id_ccd_nuevo, id_ccd_actual y las unidades halladas)
 };
 
 export const AsigUniRespSlice = createSlice({

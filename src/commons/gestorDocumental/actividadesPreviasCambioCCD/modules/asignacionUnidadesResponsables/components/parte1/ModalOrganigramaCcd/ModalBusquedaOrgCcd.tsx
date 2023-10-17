@@ -43,6 +43,7 @@ import {
   resetStateUniResp,
   setCcdOrganigramaCurrent,
   setSeccionesPersistentes,
+  setSeccionesSinResponsable,
 } from '../../../toolkit/slice/types/AsignacionUniResp';
 import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
 import { GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE } from '../../../toolkit/thunks/seccPendientesAndCat.service';
@@ -66,9 +67,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   } = useContext(ModalContextPSD);
 
   //* general loading state
-  const { handleGeneralLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -107,7 +106,11 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       // *4
 
       const unidadesSinResponsable =
-        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(params.row.id_ccd, navigate);
+        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
+          params.row.id_ccd,
+          navigate
+        );
+      dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
 
       //* 5
 

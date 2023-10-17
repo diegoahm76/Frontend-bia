@@ -20,8 +20,6 @@ import {
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import {
   fnGetAgrupacionesCoincidetesCcd,
   fnGetPersistenciasConfirmadas,
@@ -30,7 +28,6 @@ import {
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { useContext } from 'react';
-import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ? dispatch declaration
@@ -120,12 +117,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
           dispatch(setCurrentPersistenciaSeccionSubseccion(null));
         }
 
-        /*
-        dispatch(
-          setAgrupacionesPersistentesSerieSubserie(
-            resAgrupacionesPersistentes || []
-          )
-        );*/
         //* asignar esas persistencias al estado si ya existen
       })
       .catch((err: any) => {
