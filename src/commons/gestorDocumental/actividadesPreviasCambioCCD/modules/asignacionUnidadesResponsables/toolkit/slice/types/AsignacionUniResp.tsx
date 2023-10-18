@@ -54,7 +54,7 @@ export const AsigUniRespSlice = createSlice({
       state.ccdOrganigramaCurrentBusqueda = null;
       state.seccionesPersistentesCcdNuevo = [];
       state.seccionesSinResponsable = {};
-      state.seriesSeccionSeleccionadaSinResponsable = [];
+      state.seriesSeccionSeleccionadaSinResponsable = {};
     },
   },
 });

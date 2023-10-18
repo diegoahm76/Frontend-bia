@@ -11,10 +11,12 @@ export const SeccionSelecccionada = (): JSX.Element => {
   //* hooks
   const { control_asignaciones_resp } = useAsignacionesResp();
 
+  const { seriesSeccionSeleccionadaSinResponsable } = useAppSelector(
+    (state) => state.AsigUniRespSlice
+  );
 
-
-  if(!0) return <></>;
-
+  if (!seriesSeccionSeleccionadaSinResponsable?.coincidencias?.length)
+    return <></>;
   {
     /* también se debe establecer la validación de la carga del componente para el loader */
   }
@@ -38,7 +40,10 @@ export const SeccionSelecccionada = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={/* ccdOrganigramaCurrentBusqueda?.nombre_organigrama || */ ''}
+          value={
+            `${seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada?.nombre} - ${seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada?.codigo}` ||
+            ''
+          }
           InputLabelProps={{ shrink: true }}
         />
       </Grid>

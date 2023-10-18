@@ -92,6 +92,21 @@ export const UnidadesSeries = (): JSX.Element => {
 
   /*if (!seccionesSinResponsable?.unidades?.length) return <></>;*/
 
+  [
+    {
+      id_unidad_organizacional: 5382,
+      codigo: '102',
+      nombre: 'Unidad 3',
+      id_organigrama: 158,
+    },
+    {
+      id_unidad_organizacional: 5384,
+      codigo: '104',
+      nombre: 'Unidad 4.0',
+      id_organigrama: 158,
+    },
+  ];
+
   return (
     <>
       <Title title="Selección de secciones responsables del CCD nuevo sobre las series documentales de secciones del CCD actual" />
@@ -162,12 +177,12 @@ export const UnidadesSeries = (): JSX.Element => {
             <Loader altura={300} />
           </Grid>
         </>
-      ) : !seccionesSinResponsable?.coincidencias?.length ? (
+      ) : !seriesSeccionSeleccionadaSinResponsable?.coincidencias?.length ? (
         <></>
       ) : (
         <>
           <RenderDataGrid
-            title={''}
+            title={`Cátalogo asociado - ( ${seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada?.nombre} )`}
             columns={columnsseriesSeccionSeleccionadSinResp ?? []}
             rows={seriesSeccionSeleccionadaSinResponsable?.coincidencias ?? []}
           />
@@ -176,3 +191,93 @@ export const UnidadesSeries = (): JSX.Element => {
     </>
   );
 };
+
+/*{
+  id_unidad_organizacional: 5384,
+  id_cat_serie_und: 1093,
+  id_serie: 295,
+  cod_serie: '2',
+  nombre_serie: 'ser Carros',
+  id_subserie: null,
+  cod_subserie: 4,
+  nombre_subserie: 'serie Automóviles',
+},
+{
+  id_unidad_organizacional: 5384,
+  id_cat_serie_und: 1093,
+  id_serie: 295,
+  cod_serie: '3',
+  nombre_serie: 'serie Documentos',
+  id_subserie: null,
+  cod_subserie: null,
+  nombre_subserie: null,
+},
+{
+  id_unidad_organizacional: 5384,
+  id_cat_serie_und: 1093,
+  id_serie: 295,
+  cod_serie: '4',
+  nombre_serie: 'serie Aguas',
+  id_subserie: null,
+  cod_subserie: null,
+  nombre_subserie: null,
+},
+{
+  id_unidad_organizacional: 5384,
+  id_cat_serie_und: 1093,
+  id_serie: 295,
+  cod_serie: '4',
+  nombre_serie: 'serie Aguas',
+  id_subserie: null,
+  cod_subserie: null,
+  nombre_subserie: null,
+},*/
+
+/*{
+  id_unidad_organizacional: 5382,
+  codigo: '102',
+  nombre: 'Unidad 3',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5384,
+  codigo: '14804',
+  nombre: 'Unidad 25.0',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5382,
+  codigo: '10288',
+  nombre: 'Unidad 3',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5384,
+  codigo: '104',
+  nombre: 'Unidad 4.0',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5382,
+  codigo: '1047',
+  nombre: 'Grupo tierras perdidas',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5384,
+  codigo: '1400',
+  nombre: 'Grupo aguas residuales',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5384,
+  codigo: '110',
+  nombre: 'Oficina jurídica',
+  id_organigrama: 158,
+},
+{
+  id_unidad_organizacional: 5384,
+  codigo: '1000',
+  nombre: 'Dirección general',
+  id_organigrama: 158,
+},*/

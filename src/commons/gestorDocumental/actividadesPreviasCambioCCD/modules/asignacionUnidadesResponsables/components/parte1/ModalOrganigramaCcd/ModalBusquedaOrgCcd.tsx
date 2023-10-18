@@ -84,6 +84,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         dispatch(resetStateUniResp());
         return;
       }
+      //* se limpian los estados al cambio de CCD para que no se "pise" la información
+      dispatch(resetStateUniResp());
 
       // ! OPERACIONES A REALIZAR SI EL CCD SELECCIONADO NO DERIVA DEL MISMO ORGANIGRAMA
 

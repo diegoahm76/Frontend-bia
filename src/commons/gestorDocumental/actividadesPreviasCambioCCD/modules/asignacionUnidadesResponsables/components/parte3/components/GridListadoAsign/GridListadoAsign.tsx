@@ -4,6 +4,7 @@ import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/Ren
 import { useAppSelector } from '../../../../../../../../../hooks';
 
 export const GridListadoAsign = (): JSX.Element => {
+  if (1) return <></>;
   return (
     <RenderDataGrid
       title="Listado de asignaciones (Unidad CCD actual / Unidad responsable CCD nuevo)"
