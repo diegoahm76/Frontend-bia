@@ -115,9 +115,9 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             <Grid item xs={5.3}>
             </Grid>
             <Grid item marginTop={2} xs={12} sm={2}>
-                <Button startIcon={<AddIcon />} variant="outlined" onClick={() => setShowContent(true)}>
+                {/* <Button startIcon={<AddIcon />} variant="outlined" onClick={() => setShowContent(true)}>
                     Crear encuesta
-                </Button>
+                </Button> */}
             </Grid>
             <Divider
                 style={{

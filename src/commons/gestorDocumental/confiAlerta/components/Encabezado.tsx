@@ -466,7 +466,7 @@ export const Encabezado: React.FC = () => {
               sx={miEstilo}
             >
               <Title title="Encabezado" />
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   variant="outlined"
                   size="small"
@@ -481,7 +481,7 @@ export const Encabezado: React.FC = () => {
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth size="small">
                   <InputLabel shrink>Activo</InputLabel>
                   <Select
@@ -545,6 +545,7 @@ export const Encabezado: React.FC = () => {
               </Grid>
 
               <Grid item spacing={2} container>
+              <Grid item xs={12} sm={3}></Grid>
                 <Grid item xs={12} sm={3}>
                   {formData.preguntas.map((pregunta, index) => (
                     <div key={index}>
