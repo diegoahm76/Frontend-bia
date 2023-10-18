@@ -110,10 +110,10 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
         </Grid>
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={4} md={3}>
+          <Grid item xs={12}  md={3}>
             <h5>Nombre del Medio de Solicitud:</h5>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={9}>
             <TextField
               variant="outlined"
               size="small"
@@ -130,7 +130,7 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
 
         <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
           <label htmlFor="ingredient4" className="ml-2">
-            Aplica para PQRSDF :
+            Aplica para PQRSDF ?:
           </label>
         </Grid>
         <Grid item xs={12} sm={4} md={3} style={{ marginTop: 10 }}>

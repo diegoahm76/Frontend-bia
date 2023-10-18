@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
@@ -76,11 +76,12 @@ export const TipologiaDocumental: React.FC = () => {
           <Title title="Tipologia Documental" />
         </Grid>
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <h5>¿Plantilla asociada a tipologia documental del TRD?</h5>
-          </Grid>
-          <Grid item xs={12} sm={5} md={4}>
-            <FormControl fullWidth>
+
+          <h5>¿Plantilla asociada a tipologia documental del TRD?</h5>
+
+          <Grid item xs={1} style={{ margin: 7, marginRight: 10 }}>
+            {/* <FormControl fullWidth>
+          
               <Select
                 labelId="demo-simple-select-label-2"
                 id="demo-simple-select-2"
@@ -91,23 +92,36 @@ export const TipologiaDocumental: React.FC = () => {
                 <MenuItem value="True">Si</MenuItem>
                 <MenuItem value="False">No</MenuItem>
               </Select>
-            </FormControl>
-
+            </FormControl> */}
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={form.asociada_a_tipologia_doc_trd === "True"}
+                  onChange={(event: any) => {
+                    HandleCompletarDatos({
+                      target: {
+                        name: "asociada_a_tipologia_doc_trd",
+                        value: event.target.checked ? "True" : "False"
+                      }
+                    });
+                  }}
+                />
+              }
+              label={form.asociada_a_tipologia_doc_trd === "True" ? "Si" : "No"}
+            />
           </Grid>
-        </Grid>
 
-      
-        {form.asociada_a_tipologia_doc_trd === "True" && (
-          <Grid item container spacing={1} style={{ margin: 1 }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <h5>Selecciona tipología documental:</h5>
-            </Grid>
-            <Grid item xs={12} sm={5} md={4}>
+
+
+          {form.asociada_a_tipologia_doc_trd === "True" && (
+            <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
+                <InputLabel id="choise-label">Selecciona tipología documental</InputLabel>
                 <Select
                   id="demo-simple-select-2"
                   name="id_tipologia_doc_trd"
-                  value={form.id_tipologia_doc_trd||""}
+                  label="Selecciona tipología documentall"
+                  value={form.id_tipologia_doc_trd || ""}
                   onChange={HandleCompletarDatos}
                 >
                   {tipologia_documental?.map((item: any, index: number) => (
@@ -117,28 +131,26 @@ export const TipologiaDocumental: React.FC = () => {
                   ))}
                 </Select>
               </FormControl>
-
             </Grid>
-          </Grid>
-        )}
+          )}
 
-       
+        </Grid>
         {form.asociada_a_tipologia_doc_trd === "False" && (
           <Grid item container spacing={1} style={{ margin: 1 }}>
-            <Grid item xs={12} sm={1} >
+            <Grid item sm={1} >
               <h5>¿Cual?</h5>
             </Grid>
-            <Grid item xs={12} sm={5} md={3}>
+            <Grid item xs={12} sm={5} >
               <TextField
                 style={{}}
                 variant="outlined"
                 fullWidth
                 name="otras_tipologias"
-                value={form.otras_tipologias||""}
+                value={form.otras_tipologias || ""}
                 onChange={HandleCompletarDatos}
               />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label" style={{ marginTop: 5 }} >Sugerecias Creadas Anteriormente</InputLabel>
 

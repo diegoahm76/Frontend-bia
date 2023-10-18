@@ -156,7 +156,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
         nombre: numero_consulta.nombre,
         descripcion: numero_consulta.descripcion,
         id_formato_tipo_medio: numero_consulta.id_formato_tipo_medio,
-        asociada_a_tipologia_doc_trd: numero_consulta.asociada_a_tipologia_doc_trd,
+        // asociada_a_tipologia_doc_trd: numero_consulta.asociada_a_tipologia_doc_trd,
         cod_tipo_acceso: numero_consulta.cod_tipo_acceso,
         codigo_formato_calidad_asociado: numero_consulta.codigo_formato_calidad_asociado,
         version_formato_calidad_asociado: numero_consulta.version_formato_calidad_asociado,
@@ -193,7 +193,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       valueGetter: (params) => params.row.archivos_digitales.formato,
     },
     {
-      field: 'cod_tipo_acceso',
+      field: 'cod_tipo_acceso_display',
       headerName: 'Código de Acceso',
       minWidth: 150,
       flex: 1,
@@ -340,7 +340,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
         header={titulo}
         visible={visible}
         
-        style={{ width: '80%' }}
+        style={{ width: '60%' }}
         closable={false}
         onHide={(): void => {
           setVisible(false);
@@ -359,9 +359,9 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
           }}
         >
 
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <TextField
-              style={{ width: '80%' }}
+              style={{ width: '95%' }}
               label={`Buscar por Nombre de Plantilla`}
               variant="outlined"
               fullWidth
@@ -372,7 +372,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
             />
 
             <TextField
-              style={{ width: '80%', marginTop: 7 }}
+              style={{ width: '95%', marginTop: 7 }}
               label={`Buscar por Descripccion`}
               variant="outlined"
               fullWidth
@@ -382,7 +382,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
               }}
             />
             <TextField
-              style={{ width: '80%', marginTop: 7 }}
+              style={{ width: '95%', marginTop: 7 }}
               label={`Buscar por Extension`}
               variant="outlined"
               fullWidth
@@ -391,19 +391,9 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
                 set_Extension(e.target.value);
               }}
             />
-            <Grid item xs={12}>
-              <Checkbox
-                onChange={(e) => {
-                  setChecked(e.target.checked);
-                }}
-                checked={checked}
-              ></Checkbox>
-              <label htmlFor="ingredient4" className="ml-2">
-                Mostrat Todas Las Plantillas
-              </label>
-            </Grid>
+         
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <FormControl fullWidth >
               <InputLabel id="choise-label">Tipologia Documental</InputLabel>
               <Select
@@ -439,8 +429,21 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid container>
-            <Grid item xs={6}>
+          <Grid container style={{ marginTop: 10 }}>
+
+          <Grid item xs={6}>
+              <Checkbox
+                onChange={(e) => {
+                  setChecked(e.target.checked);
+                }}
+                checked={checked}
+              ></Checkbox>
+              <label htmlFor="ingredient4" className="ml-2">
+                Mostrat Todas Las Plantillas
+              </label>
+            </Grid>
+
+            <Grid item xs={3}>
               <Button
                 color="primary"
                 fullWidth
@@ -452,7 +455,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
                 Buscar
               </Button>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <Button fullWidth variant="outlined"
                 startIcon={<CleanIcon />}
 

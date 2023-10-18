@@ -2,10 +2,8 @@
 import {
   Button,
   CircularProgress,
-  FormControl,
   Grid,
-  MenuItem,
-  Select,
+  IconButton,
   TextField,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
@@ -18,7 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../../../api/axios';
 import { confirmarAccion } from '../../deposito/utils/function';
 import { control_error, control_success } from '../../../seguridad/components/SucursalEntidad/utils/control_error_or_success';
-
+import { v4 as uuidv4 } from 'uuid';
+import { DataGrid, GridColumns } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { Dialog } from 'primereact/dialog';
 
 interface TipoPQR {
   cod_tipo_pqr: string;
@@ -37,6 +38,7 @@ const data: TipoPQR[] = [
 ];
 
 export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
+
   const navigate = useNavigate();
   const [loading, set_loading] = useState(false);
   const [tipos_pqr, set_tipos_pqr] = useState<any>(null);
@@ -45,6 +47,18 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   const [tiempoRespuesta, setTiempoRespuesta] = useState<number | null>(null); // Nuevo estado para el valor editable
   const [activador, set_activador] = useState(false);
   const [tipos_pqer, set_tipos_pqer] = useState<any>(null);
+  const [visible, setVisible] = useState<boolean>(false);
+  const primerElementoConsulta = consulta_letra[0];
+  const { cod_tipo_pqr } = primerElementoConsulta;
+  const titulo = <Title title={`Editar Tiempo `} />;
+
+  const handleLimpiarCampos = (): void => {
+    set_consulta_letra(data);
+    setTiempoRespuesta(null);
+    set_PQR_seleccionado('');
+    set_loading(false);
+    handleLimpiarCamposss();
+  };
 
   const fetch_data_get = async (): Promise<void> => {
     try {
@@ -52,7 +66,6 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
       set_tipos_pqr(numero_consulta);
-      console.log(numero_consulta);
     } catch (error) {
       console.error(error);
     }
@@ -71,18 +84,18 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       const res: any = await api.get(url);
       const dato_consulta_letra: any = res.data.data;
       set_consulta_letra(dato_consulta_letra);
+      console.log(dato_consulta_letra)
       const primerElementoConsulta = dato_consulta_letra[0];
       const { tiempo_respuesta_en_dias } = primerElementoConsulta;
+      console.log(tiempo_respuesta_en_dias)
       setTiempoRespuesta(
         tiempo_respuesta_en_dias !== null ? tiempo_respuesta_en_dias : 0
       );
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+
+      control_error(error.response.data.detail);
     }
   };
-
-  const primerElementoConsulta = consulta_letra[0];
-  const { cod_tipo_pqr } = primerElementoConsulta;
 
   const fetch_data_get_buscar_letraaaa = async (): Promise<void> => {
     try {
@@ -93,11 +106,8 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
 
         set_loading(false);
         control_error('El valor de tiempo de respuesta no es válido');
-
-
         return; // Salir de la función sin hacer la solicitud PUT
       }
-
       const updatedDataEntidad: TipoPQR = {
         ...primerElementoConsulta,
         tiempo_respuesta_en_dias: tiempoRespuesta,
@@ -121,9 +131,9 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       control_success('Tiempo de respuesta actualizado correctamente');
 
       set_loading(false);
-    } catch (error:any) {
+    } catch (error: any) {
       control_error(error.response.data.detail);
-    }finally{
+    } finally {
       set_loading(false);
     }
     set_loading(false);
@@ -131,6 +141,32 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   };
 
 
+  const columns: GridColumns = [
+    {
+      field: 'label',
+      headerName: 'Tipos de PQRSDF',
+      width: 200,
+      flex: 1,
+      align: 'center', // Centrar el texto en esta columna
+      headerAlign: 'center', // Alineación centrada en el encabezado
+
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 150,
+      renderCell: (params: any) => (
+        <IconButton
+          onClick={() => {
+            set_PQR_seleccionado(params.row.value);
+            setVisible(true);
+          }}
+        >
+          <EditIcon />
+        </IconButton>
+      ),
+    },
+  ];
   const handleTiempoRespuestaChange = (event: any): void => {
     setTiempoRespuesta(event.target.value); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
@@ -141,18 +177,57 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
     });
   };
 
-  const handleLimpiarCampos = (): void => {
-    set_consulta_letra(data);
-    setTiempoRespuesta(null);
-    set_PQR_seleccionado('');
-    set_loading(false);
-    handleLimpiarCamposss();
-  };
-
   const handleLimpiarCamposss = (): void => {
-
     setTiempoRespuesta(0); // Actualizar el estado con el nuevo valor ingresado por el usuario
   };
+
+  const footerContent = (
+    <>
+      <LoadingButton
+        startIcon={
+          loading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <SaveIcon />
+          )
+        }
+        variant="contained"
+        fullWidth
+        color="success"
+        onClick={() => {
+          void confirmarAccion(
+            handleChange_guardar,
+            '¿Estás seguro de realizar este proceso?'
+          );
+        }}
+        loading={loading}  >
+        Guardar
+      </LoadingButton>
+
+
+      <Button
+        startIcon={<CleanIcon />}
+        fullWidth
+        variant="contained"
+        color="secondary"
+        onClick={handleLimpiarCampos}>
+        limpiar
+      </Button>
+
+      <Button
+        startIcon={<ClearIcon />}
+        fullWidth
+        style={{ margin: 3 }}
+        variant="contained"
+        color="error"
+        onClick={() => {
+          setVisible(false);
+        }}
+      >
+        Salir
+      </Button>
+    </>
+  );
 
   useEffect(() => {
     fetch_data_get().catch((error) => {
@@ -185,7 +260,6 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
   }, [tipos_pqer]);
 
   return (
-    <>
       <Grid
         container
         sx={{
@@ -201,106 +275,72 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
           <Title title="Configuracion Tipos PQRSDF" />
         </Grid>
 
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={4} md={2}>
-            <h5>Registrado Desde:</h5>
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <FormControl fullWidth>
-              <Select
-                value={PQR_seleccionado}
-                onChange={(event): any => {
-                  set_PQR_seleccionado(event.target.value);
-                }} >
-                {tipos_pqr?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+        <Grid item container spacing={1} style={{ marginLeft: 60, marginRight: 60, marginTop: 20 }}>
+
+          <DataGrid
+            density="compact"
+            autoHeight
+            columns={columns}
+            rows={tipos_pqr || []}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            getRowId={(row) => uuidv4()}
+          />
         </Grid>
 
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={4} md={2}>
-            <h5>Codigo de PQRSDF:</h5>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              variant="outlined"
-              size="small"
-              fullWidth
-              name="email_sucursal"
-              value={cod_tipo_pqr}
-              style={{ marginTop: 9, width: '95%' }}
-            />
-          </Grid>
-        </Grid>
+        <Dialog
+          header={titulo}
+          visible={visible}
+          style={{ width: 480 }}
+          closable={false}
+          onHide={(): void => { setVisible(false) }}
+          footer={footerContent}   >
 
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={4} md={2}>
-            <h5>Tiempo de Respuesta:</h5>
+          <Grid item container spacing={1} style={{ margin: 1 }}>
+            <Grid item xs={4.5} >
+              <h5>Codigo de PQRSDF:</h5>
+            </Grid>
+            <Grid item xs={6} >
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                name="email_sucursal"
+                value={cod_tipo_pqr}
+                style={{ marginTop: 9, width: '95%' }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={
-                tiempoRespuesta !== null && tiempoRespuesta !== 0
-                  ? tiempoRespuesta
-                  : ''
-              }
-              onChange={handleTiempoRespuestaChange}
-              style={{ marginTop: 9, width: '95%' }}
-            />
+
+          <Grid item container spacing={1} style={{ margin: 1 }}>
+            <Grid item xs={4.5}>
+              <h5>Tiempo de Respuesta:</h5>
+            </Grid>
+            <Grid item xs={6} >
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={
+                  tiempoRespuesta !== null && tiempoRespuesta !== 0
+                    ? tiempoRespuesta
+                    : ''
+                }
+                onChange={handleTiempoRespuestaChange}
+                style={{ marginTop: 9, width: '95%' }}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </Dialog>
+
 
         <Grid
           container
-          marginTop={2}
-          spacing={2}
-          direction="row"
           justifyContent="flex-end"
         >
-          <Grid item xs={12} sm={2.2}>
-            <LoadingButton
-              startIcon={
-                loading ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : (
-                  <SaveIcon />
-                )
-              }
-              variant="contained"
-              fullWidth
-              color="success"
-              onClick={() => {
-                void confirmarAccion(
-                  handleChange_guardar,
-                  '¿Estás seguro de realizar este proceso?'
-                );
-              }}
-              loading={loading}  >
-              Guardar
-            </LoadingButton>
-          </Grid>
-
-          <Grid item xs={12} sm={2}>
+          <Grid item sm={2.4} >
             <Button
-              startIcon={<CleanIcon />}
-              fullWidth
-              variant="contained"
-              color="secondary"
-              onClick={handleLimpiarCampos}>
-              limpiar
-            </Button>
-          </Grid>
-
-          <Grid item xs={12} sm={2}>
-            <Button
+              style={{ marginTop: 15 }}
               startIcon={<ClearIcon />}
               fullWidth
               variant="contained"
@@ -313,6 +353,6 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    
   );
 };

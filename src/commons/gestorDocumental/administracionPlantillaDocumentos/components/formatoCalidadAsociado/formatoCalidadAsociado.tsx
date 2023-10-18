@@ -58,7 +58,7 @@ export const FormatoCalidadAsociado: React.FC = () => {
       >
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '80%', margin: 4 }}
+            style={{ width: '95%', margin: 4 }}
             variant="outlined"
             label="Formato de calidad asociado"
             value={form.codigo_formato_calidad_asociado}
@@ -69,7 +69,7 @@ export const FormatoCalidadAsociado: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '80%', margin: 4 }}
+            style={{ width: '95%', margin: 4 }}
             variant="outlined"
             label="Version de formato de calidad asociado"
             value={form.version_formato_calidad_asociado}
@@ -83,7 +83,7 @@ export const FormatoCalidadAsociado: React.FC = () => {
           <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label" style={{marginTop:5}} >Seleccionar tipo de acceso</InputLabel>
             <Select
-              style={{ width: '80%', margin: 4 }}
+              style={{ width: '95%', margin: 4 }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Seleccionar tipo de acceso"
