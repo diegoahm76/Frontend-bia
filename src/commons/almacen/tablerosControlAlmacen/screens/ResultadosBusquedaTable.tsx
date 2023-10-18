@@ -102,7 +102,6 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
     let push_data: any = [];
     props.resultado_busqueda.forEach((rb: any) =>{
       rb.detalle.forEach((dt: any) => {
-        dt.fecha_entrada = dayjs(dt.fecha_entrada).format('DD/MM/YYYY HH:mm:ss')
         push_data.push({...rb,...dt})
       });
     });
@@ -192,7 +191,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
                         <TableCell component="th" scope="row">
                           {historyRow.entrada}
                         </TableCell>
-                        <TableCell>{historyRow.fecha_entrada}</TableCell>
+                        <TableCell>{dayjs(historyRow.fecha_entrada).format('DD/MM/YYYY HH:mm:ss')}</TableCell>
                         <TableCell >{historyRow.cantidad}</TableCell>
                       </TableRow>
                     ))}
