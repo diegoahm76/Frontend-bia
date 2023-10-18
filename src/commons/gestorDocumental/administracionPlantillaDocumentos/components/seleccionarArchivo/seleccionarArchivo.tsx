@@ -69,10 +69,7 @@ export const SeleccionarArchivo: React.FC = () => {
     set_file_nombre(null);
   };
 
-  // useEffect(()=>{
-  //   set_file_nombre(null);
-  //   setFileExtension(null);
-  // }),[form.archivo===null]
+
   return (
     <>
       <Grid
@@ -90,9 +87,9 @@ export const SeleccionarArchivo: React.FC = () => {
           <Title title="Seleccionar Archivos" />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} md={4}>
           <TextField
-            style={{ marginTop: 20 }}
+            style={{ width: '95%', marginTop: 20 }}
             variant="outlined"
             label="Nombre de la Plantilla"
             fullWidth
@@ -101,25 +98,58 @@ export const SeleccionarArchivo: React.FC = () => {
             onChange={HandleCompletarDatos}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid xs={12} md={8}>
           <TextField
-            style={{ width: '100%', marginTop: 10 }}
+            style={{ width: '95%', marginTop: 20 }}
             label="Descripción"
             name="descripcion"
             value={form.descripcion}
             onChange={HandleCompletarDatos}
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={3}>
+
+        {file_nombre && form.borrar_text === 1 && (
+          <Grid item  xs={12} sm={7} >
+            <TextField
+              style={{ marginTop: 14, width: '95%' }}
+              variant="outlined"
+              disabled
+              size="small"
+              label="Nombre de la plantilla"
+              value={file_nombre ?? ''}
+              fullWidth
+              name="Numero identificación"
+            />
+          </Grid>
+        )}
+
+        {fileExtension && form.borrar_text === 1 && (
+          <Grid item xs={12} sm={5}>
+            <TextField
+              style={{ marginTop: 14, width: '92%' }}
+              variant="outlined"
+              disabled
+              size="small"
+              label="Extensión de la plantilla"
+              value={fileExtension ?? ''}
+              fullWidth
+            />
+          </Grid>
+        )}
+<Grid
+ container
+ style={{display:'flex', justifyContent:'flex-end',marginRight:50}}
+ >
+
           <Button
-            style={{ marginTop: 10, width: '90%' }}
+            style={{ marginTop: 10, width: 180 }}
             fullWidth
             component="label"
             variant="outlined"
             startIcon={<CloudUploadIcon />}
             htmlFor="file-upload"
           >
-            {form.archivo ? ( // Muestra el botón "Quitar" si hay un archivo seleccionado
+            {form.archivo ? (
               <>
                 Quitar
                 <IconButton
@@ -139,35 +169,10 @@ export const SeleccionarArchivo: React.FC = () => {
               onChange={handleFileChange}
             />
           </Button>
-        </Grid>
-        {file_nombre && form.borrar_text === 1 && (
-          <Grid item xs={12} sm={4} md={3}>
-            <TextField
-              style={{ marginTop: 10, width: '90%' }}
-              variant="outlined"
-              disabled
-              size="small"
-              label="Nombre de la plantilla"
-              value={file_nombre ?? ''}
-              fullWidth
-              name="Numero identificación"
-            />
-          </Grid>
-        )}
 
-        {fileExtension && form.borrar_text === 1 && (
-          <Grid item xs={12} sm={4} md={3}>
-            <TextField
-              style={{ marginTop: 10, width: '90%' }}
-              variant="outlined"
-              disabled
-              size="small"
-              label="Extensión de la plantilla"
-              value={fileExtension ?? ''}
-              fullWidth
-            />
-          </Grid>
-        )}
+</Grid>
+      
+
 
       </Grid>
     </>

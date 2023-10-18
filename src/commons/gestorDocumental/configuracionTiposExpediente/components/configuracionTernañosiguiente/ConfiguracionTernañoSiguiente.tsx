@@ -7,7 +7,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { control_error, control_success } from '../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success';
-import { ModalConfiguracionTiposExpedientes } from '../modalTiposExpedientes/ModalConfiguracionTiposExpedientes';
 import { confirmarAccion } from '../../../deposito/utils/function';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 interface AgnoExpediente {
@@ -39,11 +38,11 @@ const inicial_datos_form: AgnoExpediente = {
 
 
 
-export const ConfiguracionTerna: React.FC = () => {
+export const ConfiguracionTernañosiguiente: React.FC = () => {
 
 
-  const year = new Date().getFullYear();
-
+  const yearr = new Date().getFullYear();
+  const year =yearr+1;
   const [form_data, set_form_data] = useState<AgnoExpediente>(inicial_datos_form);
   const [variable_choise_seccion, set_variable_choise_seccion] = useState<string>("");
   const [variable_serie_subserie, set_variable_serie_subserie] = useState<any>(); // Inicializa variablex con un valor inicial en este caso, una cadena vacía.
@@ -110,7 +109,7 @@ export const ConfiguracionTerna: React.FC = () => {
       return;
     }
     try {
-      const url = `gestor/configuracion-tipos-expendientes/configuracion-tipo-expediente-agno/get-serie-unidad/${variable_serie_subserie}/act/`;
+      const url = `gestor/configuracion-tipos-expendientes/configuracion-tipo-expediente-agno/get-serie-unidad/${variable_serie_subserie}/sig/`;
       const res: any = await api.get(url);
       const datos_consultados: any = res.data.data;
       const { id_config_tipo_expediente_agno, id_cat_serie_undorg_ccd, cantidad_digitos, cod_tipo_expediente, consecutivo_inicial, consecutivo_actual, agno_expediente } = datos_consultados[0];
@@ -212,12 +211,11 @@ export const ConfiguracionTerna: React.FC = () => {
       >
         <Grid item container style={{ margin: 1, display: "flex", justifyContent: "flex-end" }}>
 
-
           <TextField
             variant="outlined"
             size="small"
             fullWidth
-            label="Año Actual"
+            label="Año Siguiente"
             value={year}
             style={{ width: 100, marginRight: 40 }}
             InputProps={{
@@ -228,7 +226,7 @@ export const ConfiguracionTerna: React.FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Title title="Configuracion de Terna Año actual" />
+          <Title title="Configuracion de Terna Año Siguiente" />
         </Grid>
 
         <Grid container style={{ marginTop: 10 }}>
@@ -299,8 +297,6 @@ export const ConfiguracionTerna: React.FC = () => {
             </FormControl>
           </Grid>
         </Grid>
-
-
 
 
 
@@ -377,9 +373,7 @@ export const ConfiguracionTerna: React.FC = () => {
             </Button>
 
           </Grid>
-          <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-          <ModalConfiguracionTiposExpedientes/>
-          </Grid>
+       
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button fullWidth variant="outlined"
               startIcon={<CleanIcon />}

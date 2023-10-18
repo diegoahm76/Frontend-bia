@@ -44,7 +44,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
       const res: any = await api.get(url);
       const [numero_consulta]: any = res.data.data;
       set_info_por_id(numero_consulta);
-      // console.log(numero_consulta);
+       console.log(numero_consulta);
     } catch (error) {
       console.error(error);
     }
@@ -72,7 +72,6 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
   const title = <Title title="Detalle de Planilla " />;
   const {
     id_plantilla_doc,
-    nombre_creador,
     nombre_completo,
     cod_tipo_acceso_display,
     nombre,
@@ -91,7 +90,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
     id_persona_crea_plantilla,
   } = info_por_id;
   // console.log(info_por_id);
-
+  const fechaFormateada = new Date(fecha_creacion).toLocaleDateString();
   useEffect(() => {
     if (typeof buscador_varaiable !== 'undefined' && buscador_varaiable !== 0) {
       Fetch_buscar_info_porId().catch((error) => {
@@ -153,7 +152,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={nombre_creador||""}
+              value={nombre_completo||""}
             />
           </Grid>
           <Grid item xs={12}>
@@ -164,7 +163,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={nombre_completo}
+              value={nombre||""}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -179,17 +178,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
-            <TextField
-              style={{ width: '85%', margin: 6 }}
-              label="Nombre"
-              variant="outlined"
-              size="small"
-              disabled
-              fullWidth
-              value={nombre||""}
-            />
-          </Grid>
+         
           <Grid item xs={12} sm={4}>
             <TextField
               style={{ width: '85%', margin: 6 }}
@@ -232,7 +221,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={activa||""}
+              value={activa?"si":"no"||""}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
@@ -256,7 +245,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={cod_tipo_acceso||""}
+              value={cod_tipo_acceso_display||""}
             />
           </Grid>
       
@@ -268,7 +257,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
               size="small"
               disabled
               fullWidth
-              value={fecha_creacion||""}
+              value={fechaFormateada||""}
             />
           </Grid>
           <Grid item xs={12} sm={3}>

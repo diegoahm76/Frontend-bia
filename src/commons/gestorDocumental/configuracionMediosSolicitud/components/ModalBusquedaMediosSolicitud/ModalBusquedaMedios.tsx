@@ -111,11 +111,6 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
     const columns = [
         {
-            field: 'id_medio_solicitud',
-            headerName: 'ID',
-            width: 100,
-        },
-        {
             field: 'nombre',
             headerName: 'Nombre',
             width: 200,
@@ -295,10 +290,10 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
 
                     <Grid item container spacing={1} style={{ margin: 1 }}>
-                        <Grid item xs={12} sm={4} md={3}>
+                        <Grid item xs={12} sm={4}>
                             <h5>Nombre del Medio de Solicitud:</h5>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={8}>
                             <TextField
                                 variant="outlined"
                                 size="small"
@@ -313,7 +308,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
 
 
-                    <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
+                    <Grid item xs={12} sm={6} md={3} style={{display:"flex",justifyContent:"center",marginTop: 10 }}>
                         <label htmlFor="ingredient4" className="ml-2">
                             Aplica para PQRSDF :
                         </label>
@@ -328,7 +323,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
 
 
-                    <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
+                    <Grid item xs={12} sm={6} md={3} style={{display:"flex",justifyContent:"center",marginTop: 10}}>
                         <label htmlFor="ingredient4" className="ml-2">
                             Aplica para Tramites :
                         </label>
@@ -343,12 +338,12 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
 
 
-                    <Grid item xs={12} sm={6} md={3} style={{ marginTop: 10 }}>
+                    <Grid item xs={12} sm={5.6} md={3} style={{display:"flex",justifyContent:"center",marginTop: 10,marginLeft:-8 }}>
                         <label htmlFor="ingredient4" className="ml-2">
                             Aplica para Otros:
                         </label>
                     </Grid>
-                    <Grid item xs={12} sm={4} md={3} style={{ marginTop: 10 }}>
+                    <Grid item xs={12} sm={2.5} style={{ marginTop: 10 }}>
                         <BasicRating
                             isChecked={checkedOtros}
                             setIsChecked={set_checkedOtros}
@@ -359,7 +354,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
 
 
 
-                    <Grid item xs={6} sm={6} style={{ marginTop: 10 }}>
+                    <Grid item xs={12} sm={6}  style={{display:"flex",justifyContent:"center",marginTop: 10}}>
                         <FormControl fullWidth size="small" style={{ width: "70%" }} >
                             <InputLabel id="activo">activo</InputLabel>
                             <Select
@@ -378,15 +373,16 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={4}>
+                    <Grid container style={{display:"flex",justifyContent:"flex-end"}}>
                         <Button
+                      
                             color='primary'
                             variant='contained'
                             startIcon={<SearchIcon />}
                             fullWidth
                             onClick={handleAplicarFiltro}
 
-                            style={{ width: '80%', margin: 5 }}
+                            style={{ width: 150, marginTop: 14,marginRight:14 }}
                         >
                             Buscar
                         </Button>
