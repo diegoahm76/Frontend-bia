@@ -10,6 +10,8 @@ interface InitialState {
 
   // ? lsta de secciones sin responsable establecido
   seccionesSinResponsable: any;
+  // ? lsta de series sección seleccionada sin responsable
+  seriesSeccionSeleccionadaSinResponsable: any;
 }
 const initialState: InitialState = {
   //! variable de estado para el ccd actual de la busqueda
@@ -17,7 +19,8 @@ const initialState: InitialState = {
   // ? lista de secciones persistentes del ccd nuevo
   seccionesPersistentesCcdNuevo: [],
   // ? lista de secciones sin responsable establecido
-  seccionesSinResponsable: null, //* objeto que contiene el (id_ccd_nuevo, id_ccd_actual y las unidades halladas)
+  seccionesSinResponsable: {}, //* objeto que contiene el (id_ccd_nuevo, id_ccd_actual y las unidades halladas)
+  seriesSeccionSeleccionadaSinResponsable: {},
 };
 
 export const AsigUniRespSlice = createSlice({
@@ -38,12 +41,20 @@ export const AsigUniRespSlice = createSlice({
     setSeccionesSinResponsable: (state, action: PayloadAction<any>) => {
       state.seccionesSinResponsable = action.payload;
     },
+    //* set lista de series de la seccion seleccionada sin responsable
+    setSeriesSeccionSeleccionadaSinResponsable: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.seriesSeccionSeleccionadaSinResponsable = action.payload;
+    },
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetStateUniResp: (state) => {
       state.ccdOrganigramaCurrentBusqueda = null;
       state.seccionesPersistentesCcdNuevo = [];
-      state.seccionesSinResponsable = [];
+      state.seccionesSinResponsable = {};
+      state.seriesSeccionSeleccionadaSinResponsable = [];
     },
   },
 });
@@ -55,6 +66,8 @@ export const {
   setSeccionesPersistentes,
   // ? acciones sobre las secciones sin responsable establecido
   setSeccionesSinResponsable,
+  // ? acciones sobre las series de la seccion seleccionada sin responsable
+  setSeriesSeccionSeleccionadaSinResponsable,
   // ? reset states
   resetStateUniResp,
 } = AsigUniRespSlice.actions;

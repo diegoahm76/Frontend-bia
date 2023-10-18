@@ -3,8 +3,14 @@ import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/Ren
 import { Title } from '../../../../../../../../../components';
 import { Avatar, Grid, IconButton, TextField, Tooltip } from '@mui/material';
 import { VisaulTexto } from './visualTexto/VisualTexto';
-import { useAppSelector } from '../../../../../../../../../hooks';
-import { unidadSeriesColumns } from './columns/unidadSeriesColumns';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
+import {
+  columnsseriesSeccionSeleccionadSinResp,
+  unidadSeriesColumns,
+} from './columns/unidadSeriesColumns';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
@@ -13,15 +19,19 @@ import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { setSeriesSeccionSeleccionadaSinResponsable } from '../../../../toolkit/slice/types/AsignacionUniResp';
 
 export const UnidadesSeries = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* redux states neccesaries
-  const { seccionesSinResponsable } = useAppSelector(
-    (state) => state.AsigUniRespSlice
-  );
+  const { seccionesSinResponsable, seriesSeccionSeleccionadaSinResponsable } =
+    useAppSelector((state) => state.AsigUniRespSlice);
 
   // ? ---- context declaration ----
-  const { secondLoading } = useContext(ModalAndLoadingContext);
+  const { secondLoading, handleThirdLoading, thirdLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ? definicion de la columnas necesarias para el funcionamiento de las tablas
 
@@ -38,18 +48,27 @@ export const UnidadesSeries = (): JSX.Element => {
             <IconButton
               aria-label="select"
               size="large"
-              // disabled={currentPersistenciaSeccionSubseccion}
               onClick={() => {
-                console.log(seccionesSinResponsable);
-
-                console.log();
-
                 void GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE({
                   idUnidadActual: params?.row?.id_unidad_organizacional,
                   idCcdActual: seccionesSinResponsable?.id_ccd_actual,
                   idCcdNuevo: seccionesSinResponsable?.id_ccd_nuevo,
-                }).then((res) => {
-                  console.log(res);
+                  setLoading: handleThirdLoading,
+                }).then((resSeriesDeLaSeccionSeleccionada) => {
+                  console.log(
+                    'resSeriesDeLaSeccionSeleccionada',
+                    resSeriesDeLaSeccionSeleccionada
+                  );
+                  console.log(params.row);
+
+                  // ? set lista de series de la seccion seleccionada sin responsable, y tambien se setea la seccion seleccionada para acceder a esos datos mas adelante, todo lo que contentenga el params.row
+
+                  dispatch(
+                    setSeriesSeccionSeleccionadaSinResponsable({
+                      coincidencias: resSeriesDeLaSeccionSeleccionada,
+                      seccionSeleccionada: params?.row,
+                    })
+                  );
                 });
               }}
             >
@@ -71,7 +90,7 @@ export const UnidadesSeries = (): JSX.Element => {
   // ? columnas para la tabla de secciones del ccd nuevo
   //* -------------
 
-  if (!seccionesSinResponsable?.unidades?.length) return <></>;
+  /*if (!seccionesSinResponsable?.unidades?.length) return <></>;*/
 
   return (
     <>
@@ -115,6 +134,8 @@ export const UnidadesSeries = (): JSX.Element => {
             <Loader altura={300} />
           </Grid>
         </>
+      ) : !seccionesSinResponsable?.unidades?.length ? (
+        <></>
       ) : (
         <>
           <RenderDataGrid
@@ -125,12 +146,33 @@ export const UnidadesSeries = (): JSX.Element => {
         </>
       )}
 
-      {/* debe ponerse la condicional de la carga de este elemento */}
-      {/* <RenderDataGrid
-        title="Catálogo asociado - ${nombreUnidadSeleccionada}"
-        columns={[]}
-        rows={seccionesSinResponsable ?? []}
-      /> */}
+      {thirdLoading ? (
+        <>
+          <Grid
+            container
+            sx={{
+              ...containerStyles,
+              boxShadow: 'none',
+              background: 'none',
+              position: 'static',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Loader altura={300} />
+          </Grid>
+        </>
+      ) : !seccionesSinResponsable?.coincidencias?.length ? (
+        <></>
+      ) : (
+        <>
+          <RenderDataGrid
+            title={''}
+            columns={columnsseriesSeccionSeleccionadSinResp ?? []}
+            rows={seriesSeccionSeleccionadaSinResponsable?.coincidencias ?? []}
+          />
+        </>
+      )}
     </>
   );
 };

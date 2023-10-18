@@ -116,15 +116,21 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
   idUnidadActual,
   idCcdActual,
   idCcdNuevo,
+  setLoading,
 }: {
   idUnidadActual: number;
   idCcdActual: number;
   idCcdNuevo: number;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   try {
+    setLoading(true);
     const url = `gestor/ccd/cat-serie-ccd-actual/get/?id_ccd_actual=${idCcdActual}&id_ccd_nuevo=${idCcdNuevo}&id_unidad_actual=${idUnidadActual}`;
     const { data } = await api.get(url);
-    console.log('data', data);
+
+    const returnedData = data.data.coincidencias || [];
+
+    return returnedData;
   } catch (error: any) {
     console.log(error?.response?.status);
 
@@ -141,5 +147,6 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
     return [];
   } finally {
     //* establecer el loader
+    setLoading(false);
   }
 };
