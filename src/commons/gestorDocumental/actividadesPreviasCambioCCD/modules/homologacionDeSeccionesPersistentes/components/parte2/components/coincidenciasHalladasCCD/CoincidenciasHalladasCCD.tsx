@@ -52,7 +52,6 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
     dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
 
-
     //* si limpian los campos tras la entrada de un nuevo dato a las unidades persistentesP
     dispatch(setHomologacionAgrupacionesSerieSubserie([]));
     dispatch(setAgrupacionesPersistentesSerieSubserie([]));
@@ -152,7 +151,7 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
   }
 
- /* if (generalLoading) {
+  /* if (generalLoading) {
     return (
       <Grid
         container
@@ -178,7 +177,16 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     <>
       <RenderDataGrid
         columns={columns ?? []}
-        rows={rows ?? []}
+        rows={
+          [...homologacionUnidades].reduce((acc: any, curr: any) => {
+            if (curr.iguales) {
+              acc.unshift(curr);
+            } else {
+              acc.push(curr);
+            }
+            return acc;
+          }, []) ?? []
+        }
         title="Coincidencias halladas entre CCD's ( CCD actual / CCD nuevo )"
       />
     </>

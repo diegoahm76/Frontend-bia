@@ -87,8 +87,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
             tieneAgrupaciones = el.tiene_agrupaciones;
           }
 
-          el.tiene_agrupaciones
-            ? !allElements?.persistenciasAgrupaciones.some(
+          el?.tiene_agrupaciones
+            ? !allElements?.persistenciasAgrupaciones?.some(
                 (t: any) =>
                   t.id_unidad_org_actual === el.id_unidad_actual &&
                   t.id_unidad_org_nueva === el.id_unidad_nueva

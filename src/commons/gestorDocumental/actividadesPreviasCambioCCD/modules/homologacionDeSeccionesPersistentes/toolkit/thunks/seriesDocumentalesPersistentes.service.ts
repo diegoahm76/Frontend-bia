@@ -103,10 +103,13 @@ export const getAllElements = async (
         `gestor/ccd/persistencia-agrupaciones-documental-ccd/get/?id_ccd_nuevo=${objeto.id_ccd_nuevo}&id_unidad_actual=${objeto.id_unidad_actual}&id_unidad_nueva=${objeto.id_unidad_nueva}`
       );
 
-      coincidenciasAgrupaciones.push(...resultado1?.data?.data?.coincidencias); // agregar el resultado al array
-      persistenciasAgrupaciones.push(
-        ...resultado2?.data?.data?.agrupaciones_persistentes
+      coincidenciasAgrupaciones?.push(
+        ...(resultado1?.data?.data?.coincidencias || [])
       ); // agregar el resultado al array
+
+      persistenciasAgrupaciones?.push(
+        ...(resultado2?.data?.data?.agrupaciones_persistentes || [])
+      ); // a
     }
 
     console.log({ coincidenciasAgrupaciones, persistenciasAgrupaciones }); // imprimir los resultados en la consola

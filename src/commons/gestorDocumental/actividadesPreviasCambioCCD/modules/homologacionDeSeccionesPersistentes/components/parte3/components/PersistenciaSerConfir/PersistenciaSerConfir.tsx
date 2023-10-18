@@ -66,13 +66,13 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
             ...params?.row,
             persistenciaConfirmada: false,
           },
-        ],
+        ] || [],
         persistenciasAgrupaciones:
           allElements?.persistenciasAgrupaciones.filter(
             (item: any) =>
               item?.id_catalogo_serie_actual !==
               params?.row?.id_catalogo_serie_actual
-          ),
+          ) || [],
       })
     );
 
