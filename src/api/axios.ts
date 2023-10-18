@@ -18,10 +18,10 @@ api.interceptors.request.use(
         request.headers.Authorization = `Bearer ${token}`;
 
         //* interceptar la solicitud por tipo de metodo y mostrar un mensaje de carga
-        console.log(
+       /* console.log(
           `%c ${request.method?.toUpperCase()} ${request.url}`,
-          'color: red; font-weight: bold;'
-        );
+          'color: blue; font-weight: bold;'
+        );*/
 
         return request;
       }else{
