@@ -68,6 +68,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   { id: 'MR', value: 'Mantenimientos realizados' }]
   const lt_tipo_despacho = [{ id: 'DG', value: 'Despacho general' }, { id: 'DV', value: 'Despacho a vivero' }];
   const lt_presentacion = [{ id: "UND", value: "Unidad" }, { id: "BN", value: "Bien" }];
+  const lt_presentacion_b = [{ id: "BD", value: "Bodega" }, { id: "BN", value: "Bien" }];
   // Variables globales
   const [resultado_busqueda, set_resultado_busqueda] = useState<any[]>([]);
   const [lt_unidades_org, set_lt_unidades_org] = useState<any[]>([]);
@@ -786,7 +787,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         label="Presentación"
                         onChange={cambio_presentacion}
                       >
-                        {lt_presentacion.map((lt: any) => (
+                        {lt_presentacion_b.map((lt: any) => (
                           <MenuItem key={lt.id} value={lt.id}>
                             {lt.value}
                           </MenuItem>
