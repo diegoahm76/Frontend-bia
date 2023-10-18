@@ -23,9 +23,7 @@ const initialState: any | any = {
   // ? serie - subserie persistentes (agrupaciones persistentes)
   agrupacionesPersistentesSerieSubserie: [],
 
-
-  // ? relaciones creadas, almacenamiento local
-  relacionesAlmacenamientoLocal: {},
+  allElements: [],
 };
 
 export const HomologacionesSlice = createSlice({
@@ -71,10 +69,10 @@ export const HomologacionesSlice = createSlice({
       state.agrupacionesPersistentesSerieSubserie = action.payload;
     },
 
-    setRelacionesAlmacenamientoLocal: (state, action: PayloadAction<any>) => {
-      state.relacionesAlmacenamientoLocal = action.payload;
+    setAllElements: (state, action: PayloadAction<any>) => {
+      state.allElements = action.payload;
     },
-    
+
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     reset_states: (state) => {
@@ -84,7 +82,7 @@ export const HomologacionesSlice = createSlice({
       state.unidadesPersistentes = [];
       state.homologacionAgrupacionesSerieSubserie = [];
       state.agrupacionesPersistentesSerieSubserie = [];
-      state.relacionesAlmacenamientoLocal = null;
+      state.allElements = [];
     },
   },
 });
@@ -107,9 +105,7 @@ export const {
   // ? serie - subserie persistentes (agrupaciones persistentes)
   setAgrupacionesPersistentesSerieSubserie,
 
-
-  // ? relaciones creada, almacenamiento local
-  setRelacionesAlmacenamientoLocal,
+  setAllElements,
 
   // ? reset states
   reset_states,

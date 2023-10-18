@@ -89,7 +89,6 @@ const FormInputFileController = ({
                 max: rules.max_rule?.rule,
               }}
               render={({
-                field: { onChange, value },
                 fieldState: { error },
               }) => (
                 <FormControl fullWidth>

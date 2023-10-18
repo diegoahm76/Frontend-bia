@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, FormHelperText } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { type Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Title } from "../../../../../components";
 import SearchIcon from '@mui/icons-material/Search';
@@ -189,7 +187,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
 
     const guardar_vinculacion = (): void => {
         if (vinculacion.desvincular === true) {
-            dispatch(desvincular_colaborador(persona.id_persona, { observaciones_desvinculacion: persona_vinculacion.obs_desvincula })).then((response: any) => {
+            dispatch(desvincular_colaborador(persona.id_persona, { observaciones_desvinculacion: persona_vinculacion.obs_desvincula })).then(() => {
                 limpiar_formulario();
             });
             return
@@ -202,13 +200,13 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
             justificacion_cambio_und_org: persona_vinculacion.justificacion
         }
         if (update_vinculo && vinculacion.desvincular === false) {
-            dispatch(actualizar_vinculo(persona.id_persona, formulario)).then((response: any) => {
+            dispatch(actualizar_vinculo(persona.id_persona, formulario)).then(() => {
                 limpiar_formulario();
             })
             return
         }
         if (valida_formulario() && (persona.id_persona !== null && persona.id_persona !== undefined)) {
-            dispatch(vincular_colaborador(persona.id_persona, formulario)).then((response: any) => {
+            dispatch(vincular_colaborador(persona.id_persona, formulario)).then(() => {
                 limpiar_formulario();
             })
         }

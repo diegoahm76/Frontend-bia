@@ -10,11 +10,11 @@ const ContextUnidadxEntidad = createContext<ModalContextInterface>({
   modalHistoricos: false,
   handleModalHistoricos: () => {},
   loadingConsultaT026: false,
-  setloadingConsultaT026: (value: boolean) => {},
+  setloadingConsultaT026: (_value: boolean) => {},
   gridActualANuevo: false,
-  handleGridActualANuevo: (value: boolean) => {},
+  handleGridActualANuevo: (_value: boolean) => {},
   mood: false,
-  handleMood: (value: boolean) => {},
+  handleMood: (_value: boolean) => {},
 });
 
 const ContextUnidadxEntidadProvider: FC<ContextProps> = ({

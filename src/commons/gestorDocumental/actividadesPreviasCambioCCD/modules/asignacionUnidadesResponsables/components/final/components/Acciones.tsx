@@ -8,31 +8,33 @@ import SaveIcon from '@mui/icons-material/Save';
 import { LoadingButton } from '@mui/lab';
 import { Title } from '../../../../../../../../components';
 import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
-import { getOutModule, reset_all } from '../../../../../../../../utils/functions/getOutOfModule';
+import {
+  getOutModule,
+  reset_all,
+} from '../../../../../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
+import { resetStateUniResp } from '../../../toolkit/slice/types/AsignacionUniResp';
 
-export const Acciones: FC<any> = (): JSX.Element | null => {
-
+export const Acciones: FC<any> = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* navigate declaration
   const navigate = useNavigate();
   // ? loading  para los botones guardar y proceder respectivamente
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-/* const {
-    ccdOrganigramaCurrentBusqueda
-  } = useAppSelector((state) => state.HomologacionesSlice);
-  
-*/
-
+  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
+    (state) => state.AsigUniRespSlice
+  );
 
   const handleSubmit = () => {
     setLoadingButton(true);
     console.log('hello from submit');
     setLoadingButton(false);
-  }
-  // if(!ccdOrganigramaCurrentBusqueda) return null;
+  };
+  if (!ccdOrganigramaCurrentBusqueda) return <></>;
 
   return (
     <>
@@ -47,13 +49,13 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
             style={{
               textAlign: 'center',
               justifyContent: 'center',
-              marginTop: '20px'
+              marginTop: '20px',
             }}
           >
             <Grid
               container
               sx={{
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
               spacing={2}
             >
@@ -63,7 +65,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                 sm={12}
                 sx={{
                   // zIndex: 2,
-                  justifyContent: 'center'
+                  justifyContent: 'center',
                 }}
               >
                 <Stack
@@ -76,10 +78,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     color="primary"
                     variant="outlined"
                     startIcon={<CleanIcon />}
-                    onClick={()=>{
-                      reset_all(
-                        [() => {}]
-                      )
+                    onClick={() => {
+                      reset_all([() => dispatch(resetStateUniResp())]);
                     }}
                   >
                     LIMPIAR CAMPOS
@@ -95,19 +95,18 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                     GUARDAR
                   </LoadingButton>
 
-                    <Button
-                      color="error"
-                      variant="contained"
-                      startIcon={<CloseIcon />}
-                      onClick={() => {
-                        getOutModule(
-                          navigate,
-                          [() => {},]
-                        );
-                      }}
-                    >
-                      SALIR DEL MÓDULO
-                    </Button>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    startIcon={<CloseIcon />}
+                    onClick={() => {
+                      getOutModule(navigate, [
+                        () => dispatch(resetStateUniResp()),
+                      ]);
+                    }}
+                  >
+                    SALIR DEL MÓDULO
+                  </Button>
                 </Stack>
               </Grid>
             </Grid>

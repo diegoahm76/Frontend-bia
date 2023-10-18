@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Grid, Typography } from '@mui/material';
+import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import type { IObjConfiguracionAlerta } from '../interfaces/alerta';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import FormSelectController from '../../../../components/partials/form/FormSelectController';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect } from 'react';
@@ -73,42 +73,78 @@ const ConfiguracionAlertasScreen = () => {
                 </Grid>
 
 
-                <FormSelectController
-                    xs={12}
-                    md={8}
-                    control_form={control_configuracion}
-                    control_name={'nombre_clase_alerta'}
-                    default_value=''
-                    rules={{}}
-                    label='Alerta'
-                    disabled={false}
-                    helper_text=''
-                    select_options={configuraciones}
-                    option_label='nombre_clase_alerta'
-                    option_key='nombre_clase_alerta'
-                    multiple={false}
-                    hidden_text={false}
-                    auto_focus={false}
-                />
+
+
+
+                <Grid container >
+                    <Grid item xs={12} sm={6} margin={2}>
+                        <Controller
+                            name="nombre_clase_alerta"
+                            control={control_configuracion}
+                            rules={{ required: true }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <TextField
+                                    margin="dense"
+                                    fullWidth
+                                    select
+                                    size="small"
+                                    label="Alerta"
+                                    variant="outlined"
+                                    disabled={false}
+                                    defaultValue={value}
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!(error == null)}
+                                >
+                                    {configuraciones.map((option) => (
+                                        <MenuItem key={option.nombre_clase_alerta} value={option.nombre_clase_alerta ?? ''}>
+                                            {option.nombre_clase_alerta}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            )}
+                        />
+                    </Grid>
+                </Grid>
+
+                <Grid container >
+                    <Grid item xs={12} sm={6} margin={2}>
+                        <Controller
+                            name="nombre_clase_alerta"
+                            control={control_configuracion}
+                            rules={{ required: true }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    fullWidth
+                                    size="small"
+                                    label="Nombre de Alerta"
+                                    variant="outlined"
+                                    disabled={true}
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!(error == null)}
+
+                                >
+
+                                </TextField>
+                            )}
+                        />
+                    </Grid>
+                </Grid>
+
+
 
                 <FormInputController
                     xs={11}
-                    md={8}
-                    // margin={2}
-                    control_form={control_configuracion}
-                    control_name="nombre_clase_alerta"
-                    default_value={""}
-                    rules={{}}
-                    type="text"
-                    disabled={true}
-                    helper_text=""
-                    hidden_text={null}
-                    label={"Nombre de la alerta"}
-                />
-
-                <FormInputController
-                    xs={11}
-                    md={10}
+                    md={12}
                     // margin={2}
                     control_form={control_configuracion}
                     control_name="descripcion_clase_alerta"
@@ -124,7 +160,7 @@ const ConfiguracionAlertasScreen = () => {
                 />
                 <FormInputController
                     xs={11}
-                    md={10}
+                    md={12}
                     // margin={2}
                     control_form={control_configuracion}
                     control_name="mensaje_base_dia"

@@ -60,7 +60,7 @@ const BuscarModelo = ({
   modal_select_model_title,
   modal_form_filters,
   set_models,
-  reset_values,
+  // reset_values,
   get_filters_models,
   models,
   columns_model,

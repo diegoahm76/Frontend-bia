@@ -43,7 +43,7 @@ interface IProps {
 
 const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar, get_values, handle_selected_expediente }: IProps) => {
 
-    const { trd, tipologias, expedientes } = useAppSelector((state) => state.cierre_expedientes);
+    const { expedientes } = useAppSelector((state) => state.cierre_expedientes);
     const dispatch = useAppDispatch();
 
 
@@ -117,6 +117,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
         const id_serie_origen = get_values('id_serie_origen') ?? '';
         const id_subserie_origen = get_values('id_subserie_origen') ?? '';
         void dispatch(get_busqueda_avanzada_expediente(titulo_expediente, trd_nombre, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
+
     }
 
 
@@ -223,7 +224,6 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                             <TextField
                                                 margin="dense"
                                                 fullWidth
-                                                select
                                                 size="small"
                                                 label="TRD"
                                                 variant="outlined"
@@ -233,11 +233,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 onChange={onChange}
                                                 error={!(error == null)}
                                             >
-                                                {trd.map((option) => (
-                                                    <MenuItem key={option.id_trd_origen} value={option.nombre_tdr_origen ?? ''}>
-                                                        {option.nombre_tdr_origen}
-                                                    </MenuItem>
-                                                ))}
+
                                             </TextField>
                                         )}
                                     />
@@ -364,17 +360,6 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                     />
                                 </Grid>
 
-                                <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
-                                    <LoadingButton
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={mostrar_busqueda_expediente}
-
-                                    >
-                                        Buscar
-                                    </LoadingButton>
-                                </Grid>
 
 
 
@@ -386,27 +371,53 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
 
 
                             <>
-                                <Grid item xs={12}>
-                                    <Title title="Resultados de la búsqueda" />
-                                    {/* <Typography>Resultados de la búsqueda</Typography> */}
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box sx={{ width: '100%' }}>
-                                        <>
-                                            <DataGrid
-                                                density="compact"
-                                                autoHeight
-                                                columns={columns}
-                                                pageSize={10}
-                                                rowsPerPageOptions={[10]}
-                                                rows={expedientes}
-                                                getRowId={(row) => row.id_expediente_documental} />
-                                        </>
-                                    </Box>
-                                </Grid>
+                                {expedientes.length > 0 && (
+                                    <Grid item xs={12}>
+                                        <Title title="Resultados de la búsqueda" />
+                                        {/* <Typography>Resultados de la búsqueda</Typography> */}
+                                    </Grid>
+                                )}
+                                {expedientes.length > 0 && (
+                                    <Grid item xs={12}>
+                                        <Box sx={{ width: '100%' }}>
+                                            <>
+                                                <DataGrid
+                                                    density="compact"
+                                                    autoHeight
+                                                    columns={columns}
+                                                    pageSize={10}
+                                                    rowsPerPageOptions={[10]}
+                                                    rows={expedientes}
+                                                    getRowId={(row) => row.id_expediente_documental} />
+                                            </>
+                                        </Box>
+                                    </Grid>
+                                )}
+
                             </>
+                            <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
+                                <LoadingButton
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={mostrar_busqueda_expediente}
+
+                                >
+                                    Buscar
+                                </LoadingButton>
+                            </Grid>
 
 
+                            <Grid container justifyContent="flex-end">
+
+                                <Grid item margin={2}>
+                                    <Button variant="outlined"
+                                        color="error"
+                                        onClick={handle_close_buscar}>
+                                        Salir
+                                    </Button>
+                                </Grid>
+                            </Grid>
 
                         </Grid>
                     </Grid>

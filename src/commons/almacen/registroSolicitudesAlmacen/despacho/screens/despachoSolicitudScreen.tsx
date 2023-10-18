@@ -59,8 +59,6 @@ const DespachoBienesConsumoScreen = () => {
   const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
   const handle_open_select_model = (): void => { set_open_search_modal(true); };
   const dispatch = useAppDispatch();
-
-
   const initial_values = (): void => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_num_despacho());
@@ -215,14 +213,17 @@ const DespachoBienesConsumoScreen = () => {
       );
     } else {
       set_action('crear');
-      const fecha = new Date(data.fecha_despacho ?? '').toISOString();
+      const current_date = new Date();
+      const formatted_date = `${current_date.getFullYear()}-${(current_date.getMonth() + 1).toString().padStart(2, '0')}-${current_date.getDate().toString().padStart(2, '0')}`;
+      const formatted_time = `${current_date.getHours().toString().padStart(2, '0')}:${current_date.getMinutes().toString().padStart(2, '0')}:${current_date.getSeconds().toString().padStart(2, '0')}`;
+      const formatted_date_time = `${formatted_date} ${formatted_time}`;
 
       const data_edit: IObjDespacho = {
         ...data,
         id_bodega_general: bodega_seleccionada.id_bodega,
         es_despacho_conservacion:
           current_solicitud.es_solicitud_de_conservacion,
-        fecha_despacho: fecha.slice(0, 10),
+        fecha_despacho: formatted_date_time,
         id_solicitud_consumo: current_solicitud.id_solicitud_consumibles,
         fecha_solicitud: current_solicitud.fecha_solicitud,
         numero_solicitud_por_tipo: current_solicitud.nro_solicitud_por_tipo,

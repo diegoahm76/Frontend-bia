@@ -12,7 +12,7 @@ export const Subtitle: React.FC<Props> = ({ title }: Props) => {
         width: '100%',
         height: '40px',
         color: '#fff',
-        fontSize: '15px',
+        fontSize: '12px',
         fontWeight: '900',
         alignContent: 'center',
       }}

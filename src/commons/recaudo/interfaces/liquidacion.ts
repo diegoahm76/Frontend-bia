@@ -49,6 +49,7 @@ export interface Liquidacion {
   id_expediente: Expediente;
   fecha_liquidacion: string;
   vencimiento: string;
+  ciclo_liquidacion: string;
   periodo_liquidacion: string;
   valor: number;
   estado: string;
