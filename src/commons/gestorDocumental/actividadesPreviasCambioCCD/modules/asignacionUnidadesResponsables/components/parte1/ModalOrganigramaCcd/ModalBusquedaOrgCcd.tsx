@@ -66,8 +66,13 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     setLoadingButtonPSD: setLoadingRequest,
   } = useContext(ModalContextPSD);
 
-  //* general loading state
+  //* estas es parala carga de las secciones a las cuales ya se les estableció un responsable previamnete en el módulo de homologación de secciones persistentes
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
+
+  //* para la peticion de las secciones a las cuales no se les ha establecido un responsable
+  const { secondLoading, handleSecondLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -108,8 +113,14 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const unidadesSinResponsable =
         await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
           params.row.id_ccd,
+          handleSecondLoading,
           navigate
         );
+
+      console.log(
+        'estas son las unidades sin responsable',
+        unidadesSinResponsable
+      );
       dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
 
       //* 5
