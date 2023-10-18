@@ -439,7 +439,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
                 checked={checked}
               ></Checkbox>
               <label htmlFor="ingredient4" className="ml-2">
-                Mostrat Todas Las Plantillas
+                Mostrar Todas Las Plantillas
               </label>
             </Grid>
 
