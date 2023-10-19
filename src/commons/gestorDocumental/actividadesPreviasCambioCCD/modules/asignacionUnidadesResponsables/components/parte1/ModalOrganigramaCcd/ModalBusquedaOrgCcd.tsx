@@ -70,7 +70,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   //* para la peticion de las secciones a las cuales no se les ha establecido un responsable
-  const { secondLoading, handleSecondLoading } = useContext(
+  const { handleSecondLoading } = useContext(
     ModalAndLoadingContext
   );
 
@@ -130,6 +130,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const listadoDeAsignaciones = await GET_LISTADO_ASIGNACIONES(
         params.row.id_ccd
       );
+      console.log('busqueda inicial de asignaciones', listadoDeAsignaciones);
     } catch (error) {
       console.error(error);
     }

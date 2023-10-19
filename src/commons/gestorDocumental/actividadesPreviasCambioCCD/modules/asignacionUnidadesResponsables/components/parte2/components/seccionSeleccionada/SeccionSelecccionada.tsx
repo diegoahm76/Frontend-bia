@@ -1,22 +1,31 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, TextField } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import { stylesGrid } from '../../../../../../../permisosSeriesDoc/utils/styles';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useAsignacionesResp } from '../../../../hook/useAsignacionesResp';
 import { Title } from '../../../../../../../../../components';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { useContext } from 'react';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
-
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { setCurrentUnidadAsociada } from '../../../../toolkit/slice/types/AsignacionUniResp';
 export const SeccionSelecccionada = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* hooks
   const { control_asignaciones_resp } = useAsignacionesResp();
 
-  const { seriesSeccionSeleccionadaSinResponsable, unidadCcdAsociado } =
-    useAppSelector((state) => state.AsigUniRespSlice);
+  const {
+    seriesSeccionSeleccionadaSinResponsable,
+    unidadCcdAsociado,
+    currentUnidadAsociada,
+  } = useAppSelector((state) => state.AsigUniRespSlice);
 
   // ? ---- context declaration ----
   const { thirdLoading } = useContext(ModalAndLoadingContext);
@@ -79,11 +88,12 @@ export const SeccionSelecccionada = (): JSX.Element => {
           sm={8}
           sx={{
             ...stylesGrid,
+            textAlign: 'center',
             zIndex: 5,
           }}
         >
           <Controller
-            name="id_unidad_organizacional"
+            name="unidad_organizacional"
             control={control_asignaciones_resp}
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -93,6 +103,7 @@ export const SeccionSelecccionada = (): JSX.Element => {
                   onChange={(selectedOption) => {
                     console.log(selectedOption);
                     onChange(selectedOption);
+                    dispatch(setCurrentUnidadAsociada(selectedOption));
                   }}
                   options={
                     unidadCcdAsociado.map((unidad: any) => ({
@@ -119,6 +130,20 @@ export const SeccionSelecccionada = (): JSX.Element => {
               </div>
             )}
           />
+
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{
+              mt: '1.5rem',
+            }}
+            endIcon={<CheckCircleIcon />}
+            onClick={() => {
+              console.log(currentUnidadAsociada);
+            }}
+          >
+            ACEPTAR
+          </Button>
         </Grid>
       )}
     </>
