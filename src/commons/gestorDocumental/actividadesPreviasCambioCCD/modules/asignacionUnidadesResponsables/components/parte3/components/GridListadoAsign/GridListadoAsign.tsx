@@ -8,7 +8,7 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
-export const GridListadoAsign = (): JSX.Element | null => {
+export const GridListadoAsign = (): JSX.Element => {
   //* redux states declarations
   const { listadoDeAsignaciones } = useAppSelector(
     (state) => state.AsigUniRespSlice
@@ -19,33 +19,35 @@ export const GridListadoAsign = (): JSX.Element | null => {
     ModalAndLoadingContext
   );
 
-  {
-    generalLoading ? (
-      <>
-        <Grid
-          container
-          sx={{
-            ...containerStyles,
-            boxShadow: 'none',
-            background: 'none',
-            position: 'static',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Loader altura={300} />
-        </Grid>
-      </>
-    ) : !listadoDeAsignaciones.length ? (
-      <></>
-    ) : (
-      <>
-        <RenderDataGrid
-          title="Listado de asignaciones (Unidad CCD actual / Unidad responsable CCD nuevo)"
-          columns={columnsGridListado ?? []}
-          rows={listadoDeAsignaciones ?? []}
-        />
-      </>
-    );
-  }
+  return (
+    <>
+      {generalLoading ? (
+        <>
+          <Grid
+            container
+            sx={{
+              ...containerStyles,
+              boxShadow: 'none',
+              background: 'none',
+              position: 'static',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Loader altura={300} />
+          </Grid>
+        </>
+      ) : !listadoDeAsignaciones.length ? (
+        <></>
+      ) : (
+        <>
+          <RenderDataGrid
+            title="Listado de asignaciones (Unidad CCD actual / Unidad responsable CCD nuevo)"
+            columns={columnsGridListado ?? []}
+            rows={listadoDeAsignaciones ?? []}
+          />
+        </>
+      )}
+    </>
+  );
 };
