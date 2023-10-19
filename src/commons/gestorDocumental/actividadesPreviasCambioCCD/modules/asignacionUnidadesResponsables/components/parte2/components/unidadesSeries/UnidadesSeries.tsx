@@ -14,12 +14,20 @@ import {
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
-import { GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE } from '../../../../toolkit/thunks/seccPendientesAndCat.service';
+import {
+  GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE,
+  GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP,
+} from '../../../../toolkit/thunks/seccPendientesAndCat.service';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { setSeriesSeccionSeleccionadaSinResponsable } from '../../../../toolkit/slice/types/AsignacionUniResp';
+import {
+  setSeriesSeccionSeleccionadaSinResponsable,
+  setUnidadeCcdAsociado,
+} from '../../../../toolkit/slice/types/AsignacionUniResp';
+import { control } from 'leaflet';
+import { control_error } from '../../../../../../../../../helpers';
 
 export const UnidadesSeries = (): JSX.Element => {
   //* dispatch declaration
@@ -33,8 +41,46 @@ export const UnidadesSeries = (): JSX.Element => {
     ModalAndLoadingContext
   );
 
-  // ? definicion de la columnas necesarias para el funcionamiento de las tablas
+  //* ---------------- FUNCTIONS ------------------------
 
+  const handleRequest = async (paramsRow: any) => {
+    try {
+      const { id_unidad_organizacional } = paramsRow;
+      const { id_ccd_actual, id_ccd_nuevo } = seccionesSinResponsable;
+
+      const [coincidencias, unidadesRelacionadas] = await Promise.all([
+        GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE({
+          idUnidadActual: id_unidad_organizacional,
+          idCcdActual: id_ccd_actual,
+          idCcdNuevo: id_ccd_nuevo,
+          setLoading: handleThirdLoading,
+        }),
+        GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP({
+          idCcdNuevo: id_ccd_nuevo,
+          setLoading: handleThirdLoading,
+        }),
+      ]);
+
+      // ? Setear la lista de series de la sección seleccionada sin responsable, y también se setea la sección seleccionada para acceder a esos datos más adelante, todo lo que contenga el params.row
+      dispatch(
+        setSeriesSeccionSeleccionadaSinResponsable({
+          coincidencias,
+          seccionSeleccionada: paramsRow,
+        })
+      );
+
+      dispatch(setUnidadeCcdAsociado(unidadesRelacionadas));
+    } catch (err) {
+      control_error(
+        'Ha ocurrido un error al intentar acceder a la información'
+      );
+
+      dispatch(setSeriesSeccionSeleccionadaSinResponsable({}));
+      dispatch(setUnidadeCcdAsociado([]));
+    }
+  };
+
+  // ? definicion de la columnas necesarias para el funcionamiento de las tablas
   // ? columnas para la tabla de secciones del ccd actual
   const columnsSeccionCcActual: any[] = [
     ...unidadSeriesColumns,
@@ -44,33 +90,11 @@ export const UnidadesSeries = (): JSX.Element => {
       width: 150,
       renderCell: (params: GridValueGetterParams) => {
         return (
-          <Tooltip title="Seleccionar persistencia">
+          <Tooltip title="Seleccionar serie">
             <IconButton
               aria-label="select"
               size="large"
-              onClick={() => {
-                void GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE({
-                  idUnidadActual: params?.row?.id_unidad_organizacional,
-                  idCcdActual: seccionesSinResponsable?.id_ccd_actual,
-                  idCcdNuevo: seccionesSinResponsable?.id_ccd_nuevo,
-                  setLoading: handleThirdLoading,
-                }).then((resSeriesDeLaSeccionSeleccionada) => {
-                  console.log(
-                    'resSeriesDeLaSeccionSeleccionada',
-                    resSeriesDeLaSeccionSeleccionada
-                  );
-                  console.log(params.row);
-
-                  // ? set lista de series de la seccion seleccionada sin responsable, y tambien se setea la seccion seleccionada para acceder a esos datos mas adelante, todo lo que contentenga el params.row
-
-                  dispatch(
-                    setSeriesSeccionSeleccionadaSinResponsable({
-                      coincidencias: resSeriesDeLaSeccionSeleccionada,
-                      seccionSeleccionada: params?.row,
-                    })
-                  );
-                });
-              }}
+              onClick={() => handleRequest(params.row)}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DoneAllIcon
@@ -85,25 +109,6 @@ export const UnidadesSeries = (): JSX.Element => {
           </Tooltip>
         );
       },
-    },
-  ];
-  // ? columnas para la tabla de secciones del ccd nuevo
-  //* -------------
-
-  /*if (!seccionesSinResponsable?.unidades?.length) return <></>;*/
-
-  [
-    {
-      id_unidad_organizacional: 5382,
-      codigo: '102',
-      nombre: 'Unidad 3',
-      id_organigrama: 158,
-    },
-    {
-      id_unidad_organizacional: 5384,
-      codigo: '104',
-      nombre: 'Unidad 4.0',
-      id_organigrama: 158,
     },
   ];
 

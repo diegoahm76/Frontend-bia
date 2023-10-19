@@ -4,6 +4,7 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../api/axios';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { control_success } from '../../../../../../../helpers';
 
 export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
   idCcdNuevo: number,
@@ -151,18 +152,24 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
   }
 };
 
-
-export const GET_UNIDADES_ORGNAIZACIONALES = async (
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP = async ({
+  idCcdNuevo,
+  setLoading,
+}: {
+  idCcdNuevo: number;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   try {
     setLoading(true);
-    const url = `gestor/ccd/unidades-organizacionales/get/`;
+    const url = `gestor/ccd/unidades-ccd-nuevo/get/${176}`;
     const { data } = await api.get(url);
 
-    const returnedData = data.data.unidades || [];
+    if (data?.data.length > 0) {
+      control_success('Unidades organizacionales encontradas' || data?.detail);
+      return data?.data;
+    }
 
-    return returnedData;
+    return [];
   } catch (error: any) {
     console.log(error?.response?.status);
 
@@ -181,4 +188,4 @@ export const GET_UNIDADES_ORGNAIZACIONALES = async (
     //* establecer el loader
     setLoading(false);
   }
-}
+};

@@ -12,6 +12,8 @@ interface InitialState {
   seccionesSinResponsable: any;
   // ? lsta de series sección seleccionada sin responsable
   seriesSeccionSeleccionadaSinResponsable: any;
+  // ? lista de unidades del ccd asociado
+  unidadCcdAsociado: any[];
 }
 const initialState: InitialState = {
   //! variable de estado para el ccd actual de la busqueda
@@ -21,6 +23,8 @@ const initialState: InitialState = {
   // ? lista de secciones sin responsable establecido
   seccionesSinResponsable: {}, //* objeto que contiene el (id_ccd_nuevo, id_ccd_actual y las unidades halladas)
   seriesSeccionSeleccionadaSinResponsable: {},
+  // ? lista de unidades del ccd asociado
+  unidadCcdAsociado: [],
 };
 
 export const AsigUniRespSlice = createSlice({
@@ -49,12 +53,17 @@ export const AsigUniRespSlice = createSlice({
       state.seriesSeccionSeleccionadaSinResponsable = action.payload;
     },
 
+    setUnidadeCcdAsociado: (state, action: PayloadAction<any>) => {
+      state.unidadCcdAsociado = action.payload;
+    },
+
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetStateUniResp: (state) => {
       state.ccdOrganigramaCurrentBusqueda = null;
       state.seccionesPersistentesCcdNuevo = [];
       state.seccionesSinResponsable = {};
       state.seriesSeccionSeleccionadaSinResponsable = {};
+      state.unidadCcdAsociado = [];
     },
   },
 });
@@ -68,6 +77,8 @@ export const {
   setSeccionesSinResponsable,
   // ? acciones sobre las series de la seccion seleccionada sin responsable
   setSeriesSeccionSeleccionadaSinResponsable,
+  // ? acciones sobre las unidades del ccd asociado
+  setUnidadeCcdAsociado,
   // ? reset states
   resetStateUniResp,
 } = AsigUniRespSlice.actions;
