@@ -150,3 +150,35 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
     setLoading(false);
   }
 };
+
+
+export const GET_UNIDADES_ORGNAIZACIONALES = async (
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  try {
+    setLoading(true);
+    const url = `gestor/ccd/unidades-organizacionales/get/`;
+    const { data } = await api.get(url);
+
+    const returnedData = data.data.unidades || [];
+
+    return returnedData;
+  } catch (error: any) {
+    console.log(error?.response?.status);
+
+    if (error?.response?.status === 500) {
+      void Swal.fire({
+        icon: 'warning',
+        title: '¡ATENCIÓN!',
+        text: 'No hay unidades organizacionales, seleccione una unidad diferente para continuar',
+        showCloseButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+    }
+    return [];
+  } finally {
+    //* establecer el loader
+    setLoading(false);
+  }
+}

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import Swal from 'sweetalert2';
 import { api } from '../../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../../helpers';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 const HOMOLOGACION_UNIDADES_URL = (idCcdNuevo: number) =>
   `gestor/ccd/get-homologacion-ccd/${idCcdNuevo}`;
@@ -8,7 +10,8 @@ const ERROR_MESSAGE = 'Ha ocurrido un error al obtener los datos';
 
 export const fnGetHomologacionUnidades = async (
   idCcdNuevo: number,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  reset_states: () => void
 ): Promise<any> => {
   try {
     setLoading(true);
@@ -18,6 +21,20 @@ export const fnGetHomologacionUnidades = async (
     if (data?.success) {
       control_success(data?.detail);
       console.log(data.data);
+
+      if (data.data?.coincidencias?.length === 0) {
+        await Swal.fire({
+          icon: 'warning',
+          title: '¡ATENCIÓN!',
+          text: 'No hay unidades coincidentes en este CCD, seleccione un CCD diferente para continuar',
+          showCloseButton: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        });
+        reset_states();
+        return;
+      }
+
       return data?.data;
     }
 
@@ -36,7 +53,10 @@ export const fnGetHomologacionUnidades = async (
     setLoading(false);
   }
 };
-export const fnGetUnidadesPersistentes = async (idCcdNuevo: number, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const fnGetUnidadesPersistentes = async (
+  idCcdNuevo: number,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   try {
     setLoading(true);
     const url = `gestor/ccd/persistencia-unidades-ccd/get/${idCcdNuevo}`;
@@ -59,8 +79,7 @@ export const fnGetUnidadesPersistentes = async (idCcdNuevo: number, setLoading: 
       unidades_persistentes: [],
       // Agrega aquí cualquier otro campo que devuelva la función
     };
-  }
-  finally {
+  } finally {
     setLoading(false);
   }
 };

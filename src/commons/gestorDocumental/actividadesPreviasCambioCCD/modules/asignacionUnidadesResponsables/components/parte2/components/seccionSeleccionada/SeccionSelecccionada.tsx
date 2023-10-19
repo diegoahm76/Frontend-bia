@@ -47,6 +47,11 @@ export const SeccionSelecccionada = (): JSX.Element => {
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
+
+          {/* se le debe establecer el loader de la peticiones de las unidades organizacionales relaciadas al ccd */}
+
+
+
       <Grid
         item
         xs={12}

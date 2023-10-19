@@ -45,6 +45,7 @@ import {
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
   setUnidadesPersistentes,
+  reset_states,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import {
   fnGetHomologacionUnidades,
@@ -68,12 +69,13 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     dispatch(setHomologacionAgrupacionesSerieSubserie([]));
     dispatch(setAgrupacionesPersistentesSerieSubserie([]));
     dispatch(setCurrentPersistenciaSeccionSubseccion(null));
-    dispatch(setAllElements({}))
+    dispatch(setAllElements({}));
 
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
         params.row.id_ccd,
-        handleGeneralLoading
+        handleGeneralLoading,
+        () => dispatch(reset_states())
       );
       // ! se mezcla la información necesaria para poder tener todos los datos disponibles
       const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
