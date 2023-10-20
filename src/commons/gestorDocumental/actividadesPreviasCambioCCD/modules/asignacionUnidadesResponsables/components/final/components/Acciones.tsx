@@ -25,15 +25,36 @@ export const Acciones: FC<any> = (): JSX.Element => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // ! states from redux
-  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
-    (state) => state.AsigUniRespSlice
-  );
+  const {
+    ccdOrganigramaCurrentBusqueda,
+    listadoDeAsignaciones,
+    seriesSeccionSeleccionadaSinResponsable,
+  } = useAppSelector((state) => state.AsigUniRespSlice);
 
+  /*"id_ccd_nuevo": 176,
+    "unidades_responsables":[
+        {
+        "id_unidad_actual":5384,
+        "id_unidad_nueva":5388
+        }
+    ]*/
   const handleSubmit = () => {
     setLoadingButton(true);
-    console.log('hello from submit');
+    const dataToSend = {
+      id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
+      unidades_responsables: listadoDeAsignaciones?.map((element: any) => {
+        return {
+          id_unidad_actual:
+            seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+              ?.id_unidad_organizacional,
+          id_unidad_nueva: element.id_unidad_seccion_nueva,
+        };
+      }),
+    };
+    console.log(dataToSend);
     setLoadingButton(false);
   };
+
   if (!ccdOrganigramaCurrentBusqueda) return <></>;
 
   return (

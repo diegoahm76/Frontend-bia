@@ -12,6 +12,7 @@ interface InitialState {
   seccionesSinResponsable: any;
   // ? lsta de series sección seleccionada sin responsable
   seriesSeccionSeleccionadaSinResponsable: any;
+  currentSeccionSeleccionadaSinResponsable: any;
   // ? lista de unidades del ccd asociado
   unidadCcdAsociado: any[];
   //* curent unidad asociada
@@ -27,6 +28,7 @@ const initialState: InitialState = {
   // ? lista de secciones sin responsable establecido
   seccionesSinResponsable: {}, //* objeto que contiene el (id_ccd_nuevo, id_ccd_actual y las unidades halladas)
   seriesSeccionSeleccionadaSinResponsable: {},
+  currentSeccionSeleccionadaSinResponsable: null,
   // ? lista de unidades del ccd asociado
   unidadCcdAsociado: [],
   //* curent unidad asociada
@@ -61,6 +63,13 @@ export const AsigUniRespSlice = createSlice({
       state.seriesSeccionSeleccionadaSinResponsable = action.payload;
     },
 
+    setCurrentSeccionSeleccionadaSinResponsable: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.currentSeccionSeleccionadaSinResponsable = action.payload;
+    },
+
     setUnidadeCcdAsociado: (state, action: PayloadAction<any>) => {
       state.unidadCcdAsociado = action.payload;
     },
@@ -81,6 +90,7 @@ export const AsigUniRespSlice = createSlice({
       state.seccionesPersistentesCcdNuevo = [];
       state.seccionesSinResponsable = {};
       state.seriesSeccionSeleccionadaSinResponsable = {};
+      state.currentSeccionSeleccionadaSinResponsable = null;
       state.unidadCcdAsociado = [];
       state.currentUnidadAsociada = null;
       state.listadoDeAsignaciones = [];
@@ -95,9 +105,11 @@ export const {
   setSeccionesPersistentes,
   // ? acciones sobre las secciones sin responsable establecido
   setSeccionesSinResponsable,
+  //* acciones sobre las series de la seccion seleccionada sin responsable
+  setCurrentSeccionSeleccionadaSinResponsable,
   // ? acciones sobre las series de la seccion seleccionada sin responsable
-  setSeriesSeccionSeleccionadaSinResponsable,
   // ? acciones sobre las unidades del ccd asociado
+  setSeriesSeccionSeleccionadaSinResponsable,
   setUnidadeCcdAsociado,
   //* curent unidad asociada
   setCurrentUnidadAsociada,

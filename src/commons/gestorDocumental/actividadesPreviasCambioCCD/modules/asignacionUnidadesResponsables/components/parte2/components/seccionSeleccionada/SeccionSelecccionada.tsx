@@ -10,14 +10,11 @@ import {
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import {
-  setCurrentUnidadAsociada,
-  setListadoDeAsignaciones,
-} from '../../../../toolkit/slice/types/AsignacionUniResp';
+import { setListadoDeAsignaciones } from '../../../../toolkit/slice/types/AsignacionUniResp';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 export const SeccionSelecccionada = (): JSX.Element => {
   //* dispatch declaration
@@ -35,6 +32,9 @@ export const SeccionSelecccionada = (): JSX.Element => {
 
   // ? ---- context declaration ----
   const { thirdLoading } = useContext(ModalAndLoadingContext);
+
+  // ? useStates necesarios
+  const [form, setForm] = useState<any>();
 
   // ? useeffect para cargar el elemento seleccionado
   useEffect(() => {
@@ -131,11 +131,13 @@ export const SeccionSelecccionada = (): JSX.Element => {
                   onChange={(selectedOption) => {
                     console.log(selectedOption);
                     onChange(selectedOption);
+                    setForm(selectedOption);
                     // dispatch(setCurrentUnidadAsociada(selectedOption));
                   }}
                   options={
                     unidadCcdAsociado.map((unidad: any) => ({
                       ...unidad,
+                      id_unidad_seccion_nueva: unidad?.id_unidad_organizacional,
                       label: unidad?.nombre,
                       value: unidad?.id_unidad_organizacional,
                     })) as any[]
@@ -170,11 +172,10 @@ export const SeccionSelecccionada = (): JSX.Element => {
               const isDuplicate = listadoDeAsignaciones?.some(
                 (element) =>
                   element?.id_unidad_seccion_nueva ===
-                  control_asignaciones_resp._formValues?.unidad_organizacional
-                    ?.id_unidad_seccion_nueva
+                  form?.id_unidad_seccion_nueva
               );
               console.log(isDuplicate);
-              console.log(control_asignaciones_resp._formValues);
+              console.log(form?.id_unidad_seccion_nueva);
 
               if (isDuplicate) {
                 control_warning(
