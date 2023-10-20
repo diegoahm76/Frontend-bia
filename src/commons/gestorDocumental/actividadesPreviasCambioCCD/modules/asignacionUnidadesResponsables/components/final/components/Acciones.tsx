@@ -31,13 +31,13 @@ export const Acciones: FC<any> = (): JSX.Element => {
     seriesSeccionSeleccionadaSinResponsable,
   } = useAppSelector((state) => state.AsigUniRespSlice);
 
-  /*"id_ccd_nuevo": 176,
+  /* "id_ccd_nuevo": 176,
     "unidades_responsables":[
         {
         "id_unidad_actual":5384,
         "id_unidad_nueva":5388
         }
-    ]*/
+    ] */
   const handleSubmit = () => {
     setLoadingButton(true);
     const dataToSend = {
