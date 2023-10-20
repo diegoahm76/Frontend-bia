@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
 import { columnsAgrupCcd } from './columns/columnsAgrupCcd';
-import { Avatar, IconButton, Tooltip, Typography } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setHomologacionAgrupacionesSerieSubserie,
-  setRelacionesAlmacenamientoLocal,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { control_success } from '../../../../../../../../../helpers';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
 export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   //* dispatch declaration
@@ -25,8 +26,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
   const {
     homologacionAgrupacionesSerieSubserie,
     agrupacionesPersistentesSerieSubserie,
-    relacionesAlmacenamientoLocal,
-    currentPersistenciaSeccionSubseccion,
+    allElements,
   } = useAppSelector((state) => state.HomologacionesSlice);
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
@@ -53,35 +53,24 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
       setHomologacionAgrupacionesSerieSubserie(nuevaHomologacionAgrupaciones)
     );
 
-    // objeto local
-    // const objetoLocal = {
-    //   ...relacionesAlmacenamientoLocal,
-    //   [params?.row?.id_catalogo_serie_actual]: {
-    //     ...params?.row,
-    //     persistenciaConfirmada: true,
-    //   },
-    // };
-    // dispatch(setRelacionesAlmacenamientoLocal(objetoLocal));
-
-  dispatch(
-      setRelacionesAlmacenamientoLocal({
-        ...relacionesAlmacenamientoLocal,
-        [params?.row?.id_unidad_org_actual]: {
-          ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-          agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-          homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
-        },
+    dispatch(
+      setAllElements({
+        coincidenciasAgrupaciones:
+          allElements?.coincidenciasAgrupaciones?.filter(
+            (item: any) =>
+              item?.id_catalogo_serie_actual !==
+              params?.row?.id_catalogo_serie_actual
+          ) || [],
+        persistenciasAgrupaciones:
+          [
+            ...allElements?.persistenciasAgrupaciones,
+            {
+              ...params?.row,
+              persistenciaConfirmada: true,
+            },
+          ] || [],
       })
     );
-
-/*    console.log({
-      ...relacionesAlmacenamientoLocal,
-      [params?.row?.id_unidad_org_actual]: {
-        ...relacionesAlmacenamientoLocal[params?.row?.id_unidad_org_actual],
-        agrupacionesPersistentesSerieSubserie: nuevasAgrupacionesPersistentes,
-        // homologacionAgrupacionesSerieSubserie: nuevaHomologacionAgrupaciones,
-      },
-    }); */
     control_success('Persistencia confirmada');
   };
   // ? ---- ESPACIO PARA FUNCIONES CLOSED ----
@@ -153,7 +142,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     },
   ];
 
-  const rows = [...homologacionAgrupacionesSerieSubserie]?.sort(
+  /*  const rows = [...homologacionAgrupacionesSerieSubserie]?.sort(
     (a: any, b: any) => {
       if (a?.iguales && !b?.iguales) {
         return -1;
@@ -163,18 +152,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
         return 0;
       }
     }
-  );
-
-
-
-
-  if (
-    Object.keys(relacionesAlmacenamientoLocal).some(
-      (key) =>
-        relacionesAlmacenamientoLocal[key] ===
-        currentPersistenciaSeccionSubseccion.id_unidad_actual
-    )
-  ) return null;
+  );*/
 
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
 
@@ -182,7 +160,16 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     <>
       <RenderDataGrid
         columns={columns || []}
-        rows={rows || []}
+        rows={
+          [...homologacionAgrupacionesSerieSubserie].reduce((acc, curr) => {
+            if (curr?.iguales) {
+              acc.unshift(curr);
+            } else {
+              acc.push(curr);
+            }
+            return acc;
+          }, []) || []
+        }
         title="Agrupaciones documentales coincidentes entre CCD ( CCD actual / CCD nuevo )"
       />
     </>

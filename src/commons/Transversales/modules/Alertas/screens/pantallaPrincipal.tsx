@@ -307,7 +307,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               rows={filtered_rows}
               pageSize={10}
               rowsPerPageOptions={[10]}
-              getRowId={(row) => uuidv4()}
+              getRowId={(_row) => uuidv4()}
             />
           </Box>
         </Grid>

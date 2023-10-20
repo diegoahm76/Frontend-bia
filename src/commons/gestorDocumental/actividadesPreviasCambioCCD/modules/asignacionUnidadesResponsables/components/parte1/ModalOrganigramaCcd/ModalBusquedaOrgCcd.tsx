@@ -39,6 +39,16 @@ import { containerStyles } from './../../../../../../tca/screens/utils/constants
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { getCcdActual } from '../../../toolkit/thunks/busquedaOrgCcd.service';
 import { useNavigate } from 'react-router-dom';
+import {
+  resetStateUniResp,
+  setCcdOrganigramaCurrent,
+  setSeccionesPersistentes,
+  setSeccionesSinResponsable,
+} from '../../../toolkit/slice/types/AsignacionUniResp';
+import { getSeccionesPersistentesCcdNuevo } from '../../../toolkit/thunks/seccPersistentesCcdNuevo.service';
+import { GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE } from '../../../toolkit/thunks/seccPendientesAndCat.service';
+import { GET_LISTADO_ASIGNACIONES } from '../../../toolkit/thunks/listadoDeAsignaciones.service';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -49,50 +59,20 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
   // ? ---- context declaration ----
-  const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
-    useContext(ModalContextPSD);
+  const {
+    modalSeleccionCCD_PSD,
+    handleSeleccionCCD_PSD,
+    loadingButtonPSD,
+    setLoadingButtonPSD: setLoadingRequest,
+  } = useContext(ModalContextPSD);
 
-  /*  const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
-    try {
-      const resHomologacionesUnidades = await fnGetHomologacionUnidades(
-        params.row.id_ccd
-      );
-      console.log(resHomologacionesUnidades);
-      // ! se mezcla la información necesaria para poder tener todos los datos disponibles
-      const infoToReturn =
-        resHomologacionesUnidades?.coincidencias.map((item: any) => {
-          return {
-            ...item,
-            mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
-            id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
-            id_ccd_nuevo: params.row.id_ccd,
-          };
-        }) || [];
+  //* estas es parala carga de las secciones a las cuales ya se les estableció un responsable previamnete en el módulo de homologación de secciones persistentes
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
-      if (resHomologacionesUnidades?.mismo_organigrama) {
-        dispatch(setUnidadesPersistentes(infoToReturn));
-      } else {
-        dispatch(setHomologacionUnidades(infoToReturn));
-
-        const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
-          params.row.id_ccd
-        );
-        console.log(resUnidadesPersistentes);
-        dispatch(
-          setUnidadesPersistentes(
-            resUnidadesPersistentes?.unidades_persistentes.map(
-              (seccionPersistente: any) => ({
-                ...seccionPersistente,
-                mismo_organigrama: resHomologacionesUnidades?.mismo_organigrama,
-              })
-            )
-          )
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }; */
+  //* para la peticion de las secciones a las cuales no se les ha establecido un responsable
+  const { secondLoading, handleSecondLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -101,10 +81,53 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const resHomologacionesUnidades = await getCcdActual(params, navigate);
       if (resHomologacionesUnidades) {
         console.log(' no se puede continuar con la ejecución del módulo');
+        dispatch(resetStateUniResp());
         return;
       }
 
-      console.log('siuuuuu bitch');
+      // ! OPERACIONES A REALIZAR SI EL CCD SELECCIONADO NO DERIVA DEL MISMO ORGANIGRAMA
+
+      /*
+        1. seleccionar el params.row como current element
+        2. get unidades que persistiran del ccd nuevo establecidas en el módulo de homologación de secciones persistentes
+        3. set unidades que persistiran del ccd nuevo establecidas en el módulo de homologación de secciones persistentes
+
+        4. get unidades sin responsable establecido u homologado
+        5. get listado de asignaciones en base a ese ccd nuevo
+      */
+
+      //* 1
+      dispatch(setCcdOrganigramaCurrent(params.row));
+
+      //* 2
+      const seccionesPersistentes = await getSeccionesPersistentesCcdNuevo(
+        params.row.id_ccd,
+        handleGeneralLoading
+      );
+
+      //* 3
+      dispatch(setSeccionesPersistentes(seccionesPersistentes));
+
+      // *4
+
+      const unidadesSinResponsable =
+        await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
+          params.row.id_ccd,
+          handleSecondLoading,
+          navigate
+        );
+
+      console.log(
+        'estas son las unidades sin responsable',
+        unidadesSinResponsable
+      );
+      dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
+
+      //* 5
+
+      const listadoDeAsignaciones = await GET_LISTADO_ASIGNACIONES(
+        params.row.id_ccd
+      );
     } catch (error) {
       console.error(error);
     }
@@ -153,22 +176,12 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                console.log(params.row);
-                //* si limpia el estado local que almacenaba valores
-                // dispatch(setRelacionesAlmacenamientoLocal({}));
-                // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
-                // dispatch(setCcdOrganigramaCurrent(params.row));
-
-                //* se hace la petición de los siguientes servicios
-                // ? 1. homologación de unidades
-                // ? 2. unidades persistentes
-
-                /* tomar en cuenta lo siguiente, si la propiedad mismo organigrama del servicio homologacion de unidades está en true, el estado que actualiza la homologacón de unidades no debe llenarse, por el contrario se llenará el estado de unidades persistentes pero con la información que traía el servicio de HOMOLOGACIÓN DE UNIDADES  */
-
-                handleCcdConincidenteConIdOrganigrama(params);
-
-                // ! se cierra el modal
+                // console.log(params.row);
                 handleSeleccionCCD_PSD(false);
+                handleCcdConincidenteConIdOrganigrama(params).then(() => {
+                  // ? se limpian las opciones del modal y se cierra el modal
+                  setccdList([]);
+                });
               }}
             >
               <Avatar

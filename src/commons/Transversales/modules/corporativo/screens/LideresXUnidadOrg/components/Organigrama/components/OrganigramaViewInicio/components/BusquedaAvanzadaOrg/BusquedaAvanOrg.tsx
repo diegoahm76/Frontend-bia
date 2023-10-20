@@ -325,18 +325,11 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <div>
                       <Select
                         value={value}
                         onChange={(selectedOption) => {
-                          /* void get_catalogo_TRD_service(
-                            selectedOption.value
-                          ).then((res) => {
-                            console.log(res);
-                            dispatch(set_catalog_trd_action(res));
-                          }); */
                           onChange(selectedOption);
                         }}
                         options={[
@@ -389,7 +382,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => uuidv4()}
+              getRowId={(_row) => uuidv4()}
             />
           </DialogContent>
           <Divider />

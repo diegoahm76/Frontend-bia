@@ -64,7 +64,6 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
         repeticiones_suspendidas,
         nivel_prioridad
     } = alerta_idTo_find;
-   
 
 
 

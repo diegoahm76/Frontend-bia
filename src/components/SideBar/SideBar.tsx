@@ -91,7 +91,7 @@ export const SideBar: FC<SideBarProps> = ({
   const handle_close_dialog_user = (): void => set_dialog_open(false);
   const handle_click = (): void => set_open(!open);
 
-  const open_collapse = (obj: Menu, key: number): void => {
+  const open_collapse = (_obj: Menu, key: number): void => {
     // console.log('open_collapse000', /* obj, */ key);
     set_permisos((prevPermisos) =>
       prevPermisos.map((menu, index) => {
@@ -102,7 +102,7 @@ export const SideBar: FC<SideBarProps> = ({
   };
 
   const open_collapse_sbm = (
-    obj: MenuElement,
+    _obj: MenuElement,
     key: number,
     key_modulo: number
   ): void => {
@@ -126,7 +126,7 @@ export const SideBar: FC<SideBarProps> = ({
   };
 
   const open_collapse_sbm2 = (
-    obj: MenuElement,
+    _obj: MenuElement,
     key: number,
     key_modulo: number,
     key_submenu: number

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Avatar, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import {
   useAppDispatch,
   useAppSelector,
@@ -11,22 +11,23 @@ import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCc
 import { control_success } from '../../../../../../../../../helpers';
 import {
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
-  setRelacionesAlmacenamientoLocal,
   setUnidadesPersistentes,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { Grid } from 'blockly';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import {
   fnGetAgrupacionesCoincidetesCcd,
   fnGetPersistenciasConfirmadas,
+  getAllElements,
 } from '../../../../toolkit/thunks/seriesDocumentalesPersistentes.service';
 import Swal from 'sweetalert2';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
 
 export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   // ? dispatch declaration
@@ -37,35 +38,30 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
     unidadesPersistentes,
     homologacionUnidades,
     agrupacionesPersistentesSerieSubserie,
-    relacionesAlmacenamientoLocal,
     homologacionAgrupacionesSerieSubserie,
+    currentPersistenciaSeccionSubseccion,
   } = useAppSelector((state) => state.HomologacionesSlice);
+
+  // ? context declaration
+  const { generalLoading, handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
 
   // ? eliminación de persitencia sin validación
 
   const eliminarPersistencia = (
-    relacionesAlmacenamientoLocal: any[],
     unidadesPersistentes: any[],
     idUnidadActual: number
   ) => {
     // ? si existe el valor en el local storage se asigna el valor al estado correspondiente
-    const nuevasUnidadesPersistentes = Object.keys(
-      relacionesAlmacenamientoLocal
-    ).some((key) => key === idUnidadActual.toString())
-      ? relacionesAlmacenamientoLocal[
-          idUnidadActual
-        ].homologacionAgrupacionesSerieSubserie.filter(
-          (item: any) => item?.id_unidad_org_actual !== idUnidadActual
-        )
-      : homologacionAgrupacionesSerieSubserie?.filter(
-          (item: any) => item?.id_unidad_org_actual !== idUnidadActual
-        );
+    const nuevasUnidadesPersistentes =
+      homologacionAgrupacionesSerieSubserie?.filter(
+        (item: any) => item?.id_unidad_org_actual !== idUnidadActual
+      );
 
     console.log(nuevasUnidadesPersistentes);
-
-    //    console.log(objetoLocal);
 
     dispatch(
       setHomologacionAgrupacionesSerieSubserie(nuevasUnidadesPersistentes)
@@ -89,42 +85,43 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   ) => {
     const { row } = params;
 
-    const nuevasAgrupacionesPersistentes = Object.keys(
-      relacionesAlmacenamientoLocal
-    ).some((key) => key === row?.id_unidad_actual.toString())
-      ? relacionesAlmacenamientoLocal[
-          row?.id_unidad_actual
-        ]?.agrupacionesPersistentesSerieSubserie?.filter(
-          (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
-        )
-      : agrupacionesPersistentesSerieSubserie?.filter(
-          (item: any) => item?.id_unidad_org_actual === row?.id_unidad_actual
-        );
+    void fnGetPersistenciasConfirmadas({
+      id_ccd_nuevo: row?.id_ccd_nuevo,
+      id_unidad_actual: row?.id_unidad_actual,
+      id_unidad_nueva: row?.id_unidad_nueva,
+      setLoading: handleGeneralLoading,
+    })
+      .then((resAgrupacionesPersistentes: any) => {
+        console.log(resAgrupacionesPersistentes);
 
-    if (nuevasAgrupacionesPersistentes?.length > 0) {
-      //* si hay un valor coincida no se elimina
-      void Swal.fire({
-        title: 'Atención',
-        text: `No puede eliminar la persistencia confirmada de secciones, ya que tiene ${nuevasAgrupacionesPersistentes?.length} valor(es) asociado(s) en la persistencia confirmada de series, elimine primero la(s) relacion(es).`,
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
+        if (resAgrupacionesPersistentes?.length > 0) {
+          void Swal.fire({
+            title: 'Atención',
+            text: `No puede eliminar la persistencia confirmada de la unidad con código ${row?.cod_unidad_actual} - ${row?.nom_unidad_actual} porque tiene agrupaciones persistentes, elimine primero las agrupaciones persistentes`,
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+          });
+          return;
+        } else {
+          const nuevasUnidadesPersistentes = eliminarPersistencia(
+            unidadesPersistentes,
+            row?.id_unidad_actual
+          );
+
+          control_success('Persistencia eliminada');
+          dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
+          //* se actualiza tambien la tabla de las homologaciones si se pasa a este caso, en caso contrario no lo hace
+          dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
+
+          //* se quita la persistencia marcada como current
+          dispatch(setCurrentPersistenciaSeccionSubseccion(null));
+        }
+
+        //* asignar esas persistencias al estado si ya existen
+      })
+      .catch((err: any) => {
+        console.log(err);
       });
-      return;
-    }
-
-    const nuevasUnidadesPersistentes = eliminarPersistencia(
-      relacionesAlmacenamientoLocal,
-      unidadesPersistentes,
-      row?.id_unidad_actual
-    );
-
-    control_success('Persistencia eliminada');
-    dispatch(setUnidadesPersistentes(nuevasUnidadesPersistentes));
-    //* se actualiza tambien la tabla de las homologaciones si se pasa a este caso, en caso contrario no lo hace
-    dispatch(setHomologacionUnidades(nuevaHomologacionUnidades));
-
-    //* se quita la persistencia marcada como current
-    dispatch(setCurrentPersistenciaSeccionSubseccion(null));
   };
 
   // ! eliminación de persistencias confirmadas
@@ -198,13 +195,15 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
             <IconButton
               aria-label="select"
               size="large"
+              disabled={currentPersistenciaSeccionSubseccion}
               onClick={() => {
                 console.log(params?.row);
+                void getAllElements(unidadesPersistentes, handleGeneralLoading).then((res) => {
+                  dispatch(setAllElements(res))
+                })
                 //* se limpian tambien los estados consecuentes luego de la elección de las agrupaciones coincidentes o persistentes
 
                 //? revisar la necesidad de estos dos estados ya que se debe mantener en memoria esos elememtos para poder hacer la comparación de los elementos que se van a homologar
-                /* dispatch(setHomologacionAgrupacionesSerieSubserie([]));
-                dispatch(setAgrupacionesPersistentesSerieSubserie([])); */
 
                 const {
                   //* datos para traer las agrupaciones coincidentes del ccd
@@ -233,32 +232,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   })
                 );
 
-                // ! crear estado para almacenar la row actual seleccionada y de esa manera mostrar los datos correspondientes que necesito
-
-                // ? acá primero entro a hacer la comprobación de las persistencias que se han almacena en local storage para poder asignarlas al estado correspondiente
-                // ? si no hay nada en el local,se llaman los servicios para asginar valor
-
-                if (
-                  Object.keys(relacionesAlmacenamientoLocal).some(
-                    (key) => key === id_unidad_actual.toString()
-                  )
-                ) {
-                  console.log('existe');
-                  dispatch(
-                    setHomologacionAgrupacionesSerieSubserie(
-                      relacionesAlmacenamientoLocal[id_unidad_actual]
-                        .homologacionAgrupacionesSerieSubserie || []
-                    )
-                  );
-                  dispatch(
-                    setAgrupacionesPersistentesSerieSubserie(
-                      relacionesAlmacenamientoLocal[id_unidad_actual]
-                        .agrupacionesPersistentesSerieSubserie || []
-                    )
-                  );
-                  return;
-                }
-
                 // id_unidad_actual - secciones
                 // id_unidad_org_actual - series
 
@@ -267,6 +240,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_ccd_nuevo,
                   id_unidad_actual,
                   id_unidad_nueva,
+                  setLoading: handleGeneralLoading,
                 }).then((resCoincidenciasAgrupacionesDocumentales: any) => {
                   console.log(resCoincidenciasAgrupacionesDocumentales);
 
@@ -276,43 +250,6 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                       resCoincidenciasAgrupacionesDocumentales
                     )
                   );
-
-                  if (resCoincidenciasAgrupacionesDocumentales?.length > 0) {
-                    dispatch(
-                      setRelacionesAlmacenamientoLocal({
-                        ...relacionesAlmacenamientoLocal,
-                        [params?.row?.id_unidad_actual]: {
-                          ...relacionesAlmacenamientoLocal[
-                            params?.row?.id_unidad_actual
-                          ],
-                          homologacionAgrupacionesSerieSubserie: [
-                            ...(relacionesAlmacenamientoLocal[
-                              params?.row?.id_unidad_actual
-                            ]?.homologacionAgrupacionesSerieSubserie ||
-                              homologacionAgrupacionesSerieSubserie),
-                            ...resCoincidenciasAgrupacionesDocumentales,
-                          ],
-                        },
-                      })
-                    );
-
-                    //* console.log de los datos necesarios
-                    console.log({
-                      ...relacionesAlmacenamientoLocal,
-                      [params?.row?.id_unidad_actual]: {
-                        ...relacionesAlmacenamientoLocal[
-                          params?.row?.id_unidad_actual
-                        ],
-                        homologacionAgrupacionesSerieSubserie: [
-                          ...(relacionesAlmacenamientoLocal[
-                            params?.row?.id_unidad_actual
-                          ]?.homologacionAgrupacionesSerieSubserie ||
-                            homologacionAgrupacionesSerieSubserie),
-                          resCoincidenciasAgrupacionesDocumentales,
-                        ],
-                      },
-                    });
-                  }
                 });
 
                 //* tambien se debe hacer la petición de las series con persitencias confirmadas en caso de que alguna vez ya se haya hecho
@@ -322,59 +259,34 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_ccd_nuevo,
                   id_unidad_actual,
                   id_unidad_nueva,
+                  setLoading: handleGeneralLoading,
                 })
                   .then((resAgrupacionesPersistentes: any) => {
                     console.log(resAgrupacionesPersistentes);
                     dispatch(
                       setAgrupacionesPersistentesSerieSubserie(
-                        resAgrupacionesPersistentes || []
+                        [...resAgrupacionesPersistentes,/*{
+                          "id_unidad_org_actual": 5383,
+                          "id_catalogo_serie_actual": 10874545,
+                          "id_serie_actual": 295,
+                          "cod_serie_actual": "1",
+                          "nombre_serie_actual": "ser 1aw",
+                          "id_subserie_actual": null,
+                          "cod_subserie_actual": null,
+                          "nombre_subserie_actual": null,
+                          "id_unidad_org_nueva": 5387,
+                          "id_catalogo_serie_nueva": 1046599,
+                          "id_serie_nueva": 299,
+                          "cod_serie_nueva": "1",
+                          "nombre_serie_nueva": "seriwwe 1",
+                          "id_subserie_nueva": null,
+                          "cod_subserie_nueva": null,
+                          "nombre_subserie_nueva": null,
+                          "iguales": false
+                      }*/] || []
                       )
                     );
                     //* asignar esas persistencias al estado si ya existen
-
-                    if (resAgrupacionesPersistentes?.length > 0) {
-                      dispatch(
-                        setRelacionesAlmacenamientoLocal({
-                          ...relacionesAlmacenamientoLocal,
-                          [params?.row?.id_unidad_actual]: {
-                            ...relacionesAlmacenamientoLocal[
-                              params?.row?.id_unidad_actual
-                            ],
-                            agrupacionesPersistentesSerieSubserie: [
-                              ...(relacionesAlmacenamientoLocal[
-                                params?.row?.id_unidad_actual
-                              ]?.agrupacionesPersistentesSerieSubserie ||
-                                agrupacionesPersistentesSerieSubserie),
-                              ...resAgrupacionesPersistentes,
-                            ],
-                            /*homologacionAgrupacionesSerieSubserie: [
-                              ...(relacionesAlmacenamientoLocal[
-                                params?.row?.id_unidad_actual
-                              ]?.homologacionAgrupacionesSerieSubserie ||
-                                homologacionAgrupacionesSerieSubserie),
-                              ...resAgrupacionesPersistentes,
-                            ],*/
-                          },
-                        })
-                      );
-
-                      //* console.log de los datos necesarios
-                      console.log({
-                        ...relacionesAlmacenamientoLocal,
-                        [params?.row?.id_unidad_actual]: {
-                          ...relacionesAlmacenamientoLocal[
-                            params?.row?.id_unidad_actual
-                          ],
-                          agrupacionesPersistentesSerieSubserie: [
-                            ...(relacionesAlmacenamientoLocal[
-                              params?.row?.id_unidad_actual
-                            ]?.agrupacionesPersistentesSerieSubserie ||
-                              agrupacionesPersistentesSerieSubserie),
-                            resAgrupacionesPersistentes,
-                          ],
-                        },
-                      });
-                    }
                   })
                   .catch((err: any) => {
                     console.log(err);
@@ -383,8 +295,14 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DoneAllIcon
+                  titleAccess={
+                    currentPersistenciaSeccionSubseccion &&
+                    'Ya hay una persistencia seleccionada, limpie la selección para poder seleccionar otra persistencia'
+                  }
                   sx={{
-                    color: 'green',
+                    color: currentPersistenciaSeccionSubseccion
+                      ? 'gray'
+                      : 'green',
                     width: '18px',
                     height: '18px',
                   }}
@@ -398,33 +316,31 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
   ];
 
   {
+    /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
+  }
+
+ /* if (generalLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: 'none',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={200} />
+      </Grid>
+    );
+  }*/
+  {
     /* si no hay unidades persistentes este componente no se visualiza */
   }
 
   if (unidadesPersistentes?.length === 0) return <></>;
-
-  {
-    /*  cuando el loading esté en true se debe mostrar el loading necesario para que se muestre la carga progresiva del componente */
-  }
-
-  /*
-  if (isLoadingSeccionSub) {
-    return (
-      <Grid
-      container
-      sx={{
-        ...containerStyles,
-        boxShadow: 'none',
-        background: 'none',
-        position: 'static',
-        display: 'flex',
-        justifyContent: 'center'
-      }}
-    >
-      <Loader altura={200} />
-    </Grid>
-    );
-  } */
 
   return (
     <>

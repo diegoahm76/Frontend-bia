@@ -11,6 +11,7 @@ import {
   functionGetCcdAsignacionUnidadesResp,
   getCcdActual,
 } from '../../../../toolkit/thunks/busquedaOrgCcd.service';
+import { useAppSelector } from '../../../../../../../../../hooks';
 // import { useAppSelector } from '../../../../../../../../../../hooks';
 
 export const VistaCcdSeccionesResp: FC<any> = (params: any): JSX.Element => {
@@ -18,10 +19,10 @@ export const VistaCcdSeccionesResp: FC<any> = (params: any): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
   // ! states from redux
-  /*  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
-    (state) => state.HomologacionesSlice
+  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
+    (state) => state.AsigUniRespSlice
   );
-*/
+
   // ? context necesarios
   const { handleSeleccionCCD_PSD, setLoadingButtonPSD: setLoadingRequest } =
     useContext(ModalContextPSD);
@@ -35,7 +36,7 @@ export const VistaCcdSeccionesResp: FC<any> = (params: any): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={/* ccdOrganigramaCurrentBusqueda?.nombre ?? */ ''}
+          value={ccdOrganigramaCurrentBusqueda?.nombre || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -46,7 +47,7 @@ export const VistaCcdSeccionesResp: FC<any> = (params: any): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={/* ccdOrganigramaCurrentBusqueda?.version || */ ''}
+          value={ccdOrganigramaCurrentBusqueda?.version || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -57,24 +58,11 @@ export const VistaCcdSeccionesResp: FC<any> = (params: any): JSX.Element => {
           startIcon={<SearchIcon />}
           onClick={() => {
             handleSeleccionCCD_PSD(true);
-
             void functionGetCcdAsignacionUnidadesResp(
               setLoadingRequest,
               navigate
             ).then((resBusquedaCcd: any) => {
-              // console.log(data);
               setccdList(resBusquedaCcd);
-
-             /* void getCcdActual().then((resCcdActual: any) => {
-                resBusquedaCcd.map((el: { id_organigrama: number }) => {
-                  if (el.id_organigrama === resCcdActual.id_organigrama) {
-                    console.log('entró, id organigrama igual comprobado');
-                  } else {
-                    console.log('no entró, id organigrama no igual');
-                  }
-                });
-              });
-*/
             });
           }}
         >

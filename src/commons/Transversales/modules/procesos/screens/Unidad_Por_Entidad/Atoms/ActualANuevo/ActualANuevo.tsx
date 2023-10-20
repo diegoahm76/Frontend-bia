@@ -42,7 +42,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
   const {
     asignacionConsultaTablaTemporal,
     controlFaseEntrada,
-    unidadesSeleccionadas /* organigrama_current */
   } = useAppSelector((state) => state.u_x_e_slice);
 
   //! use_u_x_entidad hooks
@@ -195,7 +194,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
       } else {
         const organigramasDisponibles = await getOrganigramasDispobibles();
         setOrganigramasDisponibles(
-          filtrarOrganigramas(organigramasDisponibles, navigate)
+          filtrarOrganigramas(organigramasDisponibles)
         );
         // console.log('organigramasDisponibles', organigramasDisponibles);
       }
@@ -253,8 +252,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
                   control={control_opcion_actual_a_nuevo}
                   rules={{ required: true }}
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <div>
                       <Select
@@ -301,7 +298,6 @@ export const ActualANuevo: FC = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <div>
                       <Select

@@ -121,8 +121,8 @@ export const getCcdActual = async (
     const { data } = await api.get(url);
     const ccdActual = data?.data?.find((element: any) => element?.actual);
 
-    console.log(ccdActual?.id_organigrama);
-    console.log(params.row.id_organigrama);
+    /*    console.log(ccdActual?.id_organigrama);
+    console.log(params.row.id_organigrama); */
 
     if (params.row.id_organigrama === ccdActual?.id_organigrama) {
       void Swal.fire({
@@ -139,13 +139,11 @@ export const getCcdActual = async (
         confirmButtonColor: '#042F4A',
         allowEscapeKey: false,
       }).then((result: any) => {
-
         if (result.isConfirmed) {
           navigate(
             '/app/gestor_documental/activacion_instrumentos_archivisticos'
           );
         }
-        window.location.reload();
       });
       return true;
     } else {

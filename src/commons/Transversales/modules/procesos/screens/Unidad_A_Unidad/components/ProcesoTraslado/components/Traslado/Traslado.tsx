@@ -114,12 +114,12 @@ export const Traslado: FC<any> = (): JSX.Element => {
         void TrasladoMasivoUnidadAUnidad(
           dataToSend,
           setLoadingTrasladoMasivo
-        ).then((res) => {
+        ).then((_res) => {
           //* realizar la peticion para refresecar el grid con las personas actualizadas de la unidad
           void getListPersonasUnidades(
             unidad_anterior_current,
             setviweGridDataPersons
-          ).then((res) => {
+          ).then((_res) => {
             setSelectedItems([]);
             setshowSecondPart(false);
             cleanFormAndGrid();

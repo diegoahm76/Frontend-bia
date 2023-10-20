@@ -14,12 +14,12 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
   id_ccd_nuevo,
   id_unidad_actual,
   id_unidad_nueva,
+  setLoading,
 }: IGetAgrupacionesCoincidetesCcd): Promise<any> => {
   try {
+    setLoading(true);
     const url = `gestor/ccd/get-homologacion-cat-serie-ccd/?id_ccd_actual=${id_ccd_actual}&id_ccd_nuevo=${id_ccd_nuevo}&id_unidad_actual=${id_unidad_actual}&id_unidad_nueva=${id_unidad_nueva}`;
     const { data } = await api.get(url);
-
-    console.log(data);
     const coincidencias = [...(data?.data?.coincidencias ?? [])];
 
     if (coincidencias.length > 0) {
@@ -32,7 +32,14 @@ export const fnGetAgrupacionesCoincidetesCcd = async ({
 
     return coincidencias;
   } catch (error: any) {
-    throw error;
+    // throw error;
+    if (error?.response?.status === 500) {
+      control_warning('Sin coincidencias documentales de CCD');
+      return [];
+    }
+    return [];
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -46,8 +53,10 @@ export const fnGetPersistenciasConfirmadas = async ({
   id_ccd_nuevo,
   id_unidad_actual,
   id_unidad_nueva,
+  setLoading,
 }: IGetAgrupacionesCoincidetesCcdWithoutActual): Promise<any> => {
   try {
+    setLoading(true);
     const url = `gestor/ccd/persistencia-agrupaciones-documental-ccd/get/?id_ccd_nuevo=${id_ccd_nuevo}&id_unidad_actual=${id_unidad_actual}&id_unidad_nueva=${id_unidad_nueva}`;
     const res = await api.get(url);
 
@@ -56,10 +65,6 @@ export const fnGetPersistenciasConfirmadas = async ({
       return [];
     }
 
-  /*  const coincidencias = [
-      ...(res?.data?.data?.agrupaciones_persistentes || []),
-    ];
-*/
     if (res?.data?.data?.agrupaciones_persistentes?.length > 0) {
       control_success('coincidencias documentales de CCD encontradas');
       return res?.data?.data?.agrupaciones_persistentes;
@@ -69,10 +74,52 @@ export const fnGetPersistenciasConfirmadas = async ({
       );
       return [];
     }
-
   } catch (error: any) {
-    console.log('un error ocurrió');
-    control_warning(error?.response?.data?.detail);
+    if (error?.response?.status === 500) {
+      control_warning('Sin persistencias confirmadas');
+      return [];
+    }
     return [];
+  } finally {
+    setLoading(false);
+  }
+};
+
+export const getAllElements = async (
+  unidadesPersistentes: any,
+  setLoading: any
+): Promise<any> => {
+  try {
+    const coincidenciasAgrupaciones = [];
+    const persistenciasAgrupaciones = [];
+    for (let i = 0; i < unidadesPersistentes.length; i++) {
+      setLoading(true);
+      const objeto = unidadesPersistentes[i];
+      const resultado1 = await api.get(
+        `gestor/ccd/get-homologacion-cat-serie-ccd/?id_ccd_actual=${objeto.id_ccd_actual}&id_ccd_nuevo=${objeto.id_ccd_nuevo}&id_unidad_actual=${objeto.id_unidad_actual}&id_unidad_nueva=${objeto.id_unidad_nueva}`
+      );
+
+      const resultado2 = await api.get(
+        `gestor/ccd/persistencia-agrupaciones-documental-ccd/get/?id_ccd_nuevo=${objeto.id_ccd_nuevo}&id_unidad_actual=${objeto.id_unidad_actual}&id_unidad_nueva=${objeto.id_unidad_nueva}`
+      );
+
+      coincidenciasAgrupaciones?.push(
+        ...(resultado1?.data?.data?.coincidencias || [])
+      ); // agregar el resultado al array
+
+      persistenciasAgrupaciones?.push(
+        ...(resultado2?.data?.data?.agrupaciones_persistentes || [])
+      ); // a
+    }
+
+    console.log({ coincidenciasAgrupaciones, persistenciasAgrupaciones }); // imprimir los resultados en la consola
+    return {
+      coincidenciasAgrupaciones,
+      persistenciasAgrupaciones,
+    }; // devolver los resultados
+  } catch (error: any) {
+    throw error;
+  } finally {
+    setLoading(false);
   }
 };

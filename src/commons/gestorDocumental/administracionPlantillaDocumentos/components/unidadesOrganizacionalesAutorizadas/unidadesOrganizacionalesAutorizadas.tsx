@@ -3,7 +3,7 @@ import { Button, FormControl, Grid, IconButton, MenuItem, Select, Tooltip } from
 import { Title } from '../../../../../components/Title';
 import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColumns } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -36,12 +36,6 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
         // Agrega el elemento seleccionado a la alerta
         set_alerta([...alerta, selectedItem]);
   
-        // // Crea un nuevo objeto con la propiedad id_unidad_organizacional
-        // const unidadOrganizacional = { id_unidad_organizacional: selectedItem.id_unidad_organizacional };
-  
-        // // Agrega el nuevo objeto a variable_concatenada
-        // set_variable_concatenada([...variable_concatenada, unidadOrganizacional]);
-  
         set_form({
           ...form,
           // acceso_unidades: [...variable_concatenada, unidadOrganizacional],
@@ -49,7 +43,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
         });
       } else {
         // El elemento ya existe en variable_concatenada, puedes mostrar un mensaje o realizar otra acción
-        control_warning('El elemento ya existe en variable_concatenada.');
+        control_warning('El elemento ya ha sido agregado');
       }
     }
   };
@@ -59,13 +53,6 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
     const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
     set_alerta(updatedAlerta);
 
-    // const updatedAccessUnits = form.acceso_unidades.filter((item) => item.id_unidad_organizacional !== id);
-
-    // set_variable_concatenada(updatedAccessUnits);
-  // set_form({
-  //   ...form,
-  //   acceso_unidades: updatedAccessUnits,
-  // });
   set_form({
     ...form,
     acceso_unidades_dos: updatedAlerta,
@@ -88,18 +75,14 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
 
 
-  const columns = [
+  const columns:GridColumns = [
     {
       field: 'nombre',
-      headerName: 'ID Unidad Organizacional',
+      headerName: 'Unidad Organizacional',
       width: 200,
       flex: 1,
-    },
-    {
-      field: 'id_unidad_organizacional',
-      headerName: 'ID Unidad Organizacional',
-      width: 200,
-      flex: 1,
+      align: 'center', // Centrar el texto en esta columna
+      headerAlign: 'center', // Alineación centrada en el encabezado
     },
     {
       field: 'acciones',
@@ -144,10 +127,10 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
         </Grid>
 
         <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={12} sm={4} md={2}>
+          <Grid item  xs={2.5}>
             <h5>Unidad organizacional :</h5>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <Select
                 style={{ height: 50 }}
@@ -172,14 +155,14 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
 
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+          <Grid item xs={12} sm={3}>
             <Button fullWidth variant="contained" onClick={() => handleAcumularDatos()} >
               Agregar
             </Button>
           </Grid>
         </Grid>
      
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{marginLeft:70,marginRight:70}}>
           <DataGrid
             density="compact"
             autoHeight

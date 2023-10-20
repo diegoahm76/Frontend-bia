@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button, Grid, TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { control_error } from "./utils/control_error_or_success";
 import { api } from "../../../../api/axios";
 import { Title } from "../../../../components";
- import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { IDataentidad } from "./utils/interfac";
  
@@ -71,13 +70,6 @@ export const SucursalEntidad: React.FC = () => {
                     value={razon_social.toString()}
                 />
             </Grid>
-            {/* <Grid item xs={12} sm={1} >
-                <Button
-                    variant="contained" disabled
-                >
-                    <SearchIcon />
-                </Button>
-            </Grid> */}
       
       </> 
     );

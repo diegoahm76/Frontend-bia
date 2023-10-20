@@ -51,13 +51,11 @@ const FormDatePickerController = ({
   hidden_text,
   min_date,
   max_date,
-  format,
-  margin,
 }: IProps) => {
   return (
     <>
       {!(hidden_text ?? false) && (
-        <Grid item xs={xs} md={md} margin={margin ?? 0}>
+        <Grid item xs={xs} md={md} margin={0}>
           <Controller
             name={control_name}
             control={control_form}
