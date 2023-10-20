@@ -23,8 +23,8 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <div id="next-app-container"></div>
-    <i class="material-icons" id="next-app-icon">chat</i>
+   <!-- <div id="next-app-container"></div>
+    <i class="material-icons" id="next-app-icon">chat</i>-->
     <style>
       #next-app-container .loader {
         position: fixed;
@@ -87,7 +87,7 @@
       }
     </style>
   </body>
-  <script>
+<!--  <script>
     let isNextAppOpen = false;
     const nextAppContainer = document.getElementById('next-app-container');
     const nextAppIcon = document.getElementById('next-app-icon');
@@ -121,5 +121,17 @@
         });
       }
     });
-  </script>
+  </script>-->
+  <script>
+    window.embeddedChatbotConfig = {
+    chatbotId: "xA8BJ-YG5omgzQFKeuVrD",
+    domain: "www.chatbase.co"
+    }
+    </script>
+    <script
+    src="https://www.chatbase.co/embed.min.js"
+    chatbotId="xA8BJ-YG5omgzQFKeuVrD"
+    domain="www.chatbase.co"
+    defer>
+    </script>
 </html>

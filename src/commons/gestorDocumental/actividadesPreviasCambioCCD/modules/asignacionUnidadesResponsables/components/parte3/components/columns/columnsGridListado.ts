@@ -13,7 +13,7 @@ export const columnsGridListado: any[] = [
   {
     field: 'cod_unidad_actual',
     headerName: 'Cód. unidad actual',
-    minWidth: 100,
+    minWidth: 200,
   },
   {
     headerName: 'Unidad actual',
@@ -23,7 +23,7 @@ export const columnsGridListado: any[] = [
   {
     headerName: 'Cód. unidad nueva',
     field: 'cod_unidad_nueva',
-    minWidth: 100,
+    minWidth: 200,
   },
   {
     headerName: 'Unidad nueva',
