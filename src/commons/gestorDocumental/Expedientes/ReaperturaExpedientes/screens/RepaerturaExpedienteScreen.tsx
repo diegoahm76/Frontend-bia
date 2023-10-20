@@ -1,26 +1,32 @@
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Box, Button, Grid, TextField, } from '@mui/material';
+import { Box, Button, FilledTextFieldProps, Grid, OutlinedTextFieldProps, StandardTextFieldProps, TextField, TextFieldVariants, } from '@mui/material';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
-import { IObjArchivoExpediente, IObjCierreExpediente as FormValues, IObjExpedientes, IObjCierreExpediente } from '../interfaces/cierreExpedientes';
 import FormInputController from '../../../../../components/partials/form/FormInputController';
 import { LoadingButton } from '@mui/lab';
-import BuscarExpediente from '../components/buscarExpediente';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import ArchivoSoporte from '../components/archivoSoporte';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { cerrar_expediente, get_archivos_id_expediente } from '../store/thunks/cierreExpedientesthunks';
 import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
-
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { IObjReaperturaExpediente, IObjExpedientes, IObjArchivoExpediente, IObjInformacionReapertura } from '../../cierreExpediente/interfaces/cierreExpedientes';
+import BuscarExpedienteReapertura from '../components/BuscarExpedienteReapertura';
+import ArchivoSoporteReapertura from '../components/archivoSoporteReapertura';
+import { get_archivos_id_expediente, get_informacion_reapertura, reapertura_expediente, } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
+import { DatePicker } from '@mui/lab';
+import { Typography } from '@mui/material';
+import { JSX } from 'react/jsx-runtime';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const CierreExpedientesScreen = () => {
-    const { current_archivo_expediente, archivos_por_expedientes } = useAppSelector((state) => state.cierre_expedientes);
+const ReaperturaExpedienteScreen = () => {
+    const { current_archivo_expediente, archivos_por_expedientes, informacion_reapertura } = useAppSelector((state) => state.cierre_expedientes);
 
-    const { control: control_cierre_expediente, getValues: get_values, reset: reset_cierre_expediente, handleSubmit: handle_cierre_expediente } = useForm<IObjCierreExpediente>();
+    const { control: control_reapertura_expediente, getValues: get_values, reset: reset_reapertura_expediente, handleSubmit: handle_reapertura_expediente } = useForm<IObjReaperturaExpediente>();
+
     const { control: control_archivo_expediente, getValues: get_values_archivo, handleSubmit: handle_submit_archivo, reset: reset_archivo_expediente } = useForm<IObjArchivoExpediente>();
+
+    const { control: control_informacion, reset: reset_informacion } = useForm<IObjInformacionReapertura>();
+
 
     const [open_modal, set_open_modal] = useState(false);
     const [open_modal_archivo, set_open_modal_archivo] = useState(false);
@@ -30,10 +36,10 @@ const CierreExpedientesScreen = () => {
 
 
 
-    const handle_buscar = () => {
+    const handle_buscar_reapertura = () => {
         set_open_modal(true);
     };
-    const handle_close_buscar = () => {
+    const handle_close_buscar_reapertura = () => {
         set_open_modal(false);
     };
 
@@ -49,14 +55,14 @@ const CierreExpedientesScreen = () => {
         reset_archivo_expediente(current_archivo_expediente)
     }, [current_archivo_expediente]);
 
-    const handle_selected_expediente = (expediente: IObjExpedientes) => {
-        set_selected_expediente(expediente);
+    const handle_selected_expediente = (expediente_reapertura: IObjExpedientes) => {
+        set_selected_expediente(expediente_reapertura);
 
     };
 
     useEffect(() => {
         console.log(selected_expediente)
-        reset_cierre_expediente(selected_expediente);
+        reset_reapertura_expediente(selected_expediente);
     }, [selected_expediente]);
 
 
@@ -78,13 +84,26 @@ const CierreExpedientesScreen = () => {
 
 
 
+
+
     useEffect(() => {
         if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
             console.log(selected_expediente);
-            reset_cierre_expediente(selected_expediente);
-            void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
+            reset_reapertura_expediente(selected_expediente);
+            void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental)
+            );
+            void dispatch(get_informacion_reapertura(selected_expediente.id_expediente_documental));
         }
     }, [selected_expediente]);
+
+    useEffect(() => {
+        reset_informacion(informacion_reapertura);
+    }, [informacion_reapertura]);
+
+
+
+
+
 
     const columns: GridColDef[] = [
         {
@@ -122,24 +141,17 @@ const CierreExpedientesScreen = () => {
 
     ];
 
-    const on_submit_cerrar_expediente = (data: FormValues): void => {
+    const on_submit_reapertura_expediente = (data: IObjReaperturaExpediente): void => {
 
         if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
-            const form_data: any = new FormData();
-            const current_date = new Date();
-            const formatted_date = `${current_date.getFullYear()}-${(current_date.getMonth() + 1).toString().padStart(2, '0')}-${current_date.getDate().toString().padStart(2, '0')}`;
-            const formatted_time = `${current_date.getHours().toString().padStart(2, '0')}:${current_date.getMinutes().toString().padStart(2, '0')}:${current_date.getSeconds().toString().padStart(2, '0')}`;
-            const formatted_date_time = `${formatted_date} ${formatted_time}`;
-            form_data.append('fecha_actual', formatted_date_time);
-            form_data.append('id_expediente_doc', selected_expediente.id_expediente_documental)
-            form_data.append('justificacion_cierre_reapertura', data.justificacion_cierre_reapertura)
-            // const data_cerrar = {
-            //     id_expediente_doc: selected_expediente.id_expediente_documental,
-            //     fecha_actual: formatted_date_time
 
-            // }
+            const data_cerrar = {
+                ...data,
+                id_expediente_doc: selected_expediente.id_expediente_documental,
 
-            void dispatch(cerrar_expediente(form_data));
+            }
+
+            void dispatch(reapertura_expediente(data_cerrar));
         }
 
 
@@ -165,13 +177,13 @@ const CierreExpedientesScreen = () => {
         >
 
 
-            <Grid container spacing={2} justifyContent="center">
-                <Title title="CIERRE DE EXPEDIENTES" />
+            <Grid container spacing={2} justifyContent="center" >
+                <Title title="REAPERTURA DE EXPEDIENTES" />
                 <FormInputController
                     xs={12}
                     md={4}
                     margin={0}
-                    control_form={control_cierre_expediente}
+                    control_form={control_archivo_expediente}
                     control_name="titulo_expediente"
                     default_value=''
                     rules={{}}
@@ -179,13 +191,13 @@ const CierreExpedientesScreen = () => {
                     disabled={false}
                     helper_text=""
                     hidden_text={null}
-                    label={"Expediente"}
+                    label={"Expediente Cerrado"}
                 />
 
                 <Grid item xs={12} sm={4}>
                     <LoadingButton
                         variant="contained"
-                        onClick={handle_buscar}
+                        onClick={handle_buscar_reapertura}
                         disabled={false}
                     >
                         Buscar
@@ -196,8 +208,7 @@ const CierreExpedientesScreen = () => {
                 <FormDatePickerController
                     xs={12}
                     md={3.5}
-                    margin={2}
-                    control_form={control_cierre_expediente}
+                    control_form={control_archivo_expediente}
                     control_name={'fecha_actual'}
                     default_value={''}
                     rules={{}}
@@ -209,7 +220,7 @@ const CierreExpedientesScreen = () => {
                 {/* <Grid item xs={12} sm={3.5} >
                     <Controller
                         name="fecha_actual"
-                        control={control_cierre_expediente}
+                        control={control_reapertura_expediente}
                         rules={{ required: true }}
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                             <TextField
@@ -231,48 +242,80 @@ const CierreExpedientesScreen = () => {
 
                 {open_modal && (
                     <Grid item xs={12} marginY={1}>
-                        <BuscarExpediente
-                            control_cierre_expediente={control_cierre_expediente}
+                        <BuscarExpedienteReapertura
+                            control_reapertura_expediente={control_reapertura_expediente}
                             open={open_modal}
-                            handle_close_buscar={handle_close_buscar}
+                            handle_close_buscar_reapertura={handle_close_buscar_reapertura}
                             get_values={get_values}
                             handle_selected_expediente={handle_selected_expediente}
-
                         />
                     </Grid>
                 )}
             </Grid>
 
             <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12} sm={6} marginTop={2} margin={2}>
-                    <Controller
-                        name="justificacion_cierre_reapertura"
-                        control={control_cierre_expediente}
-                        rules={{ required: true }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                fullWidth
-                                multiline
-                                rows={2}
-                                label="Observación"
-                                variant="outlined"
-                                disabled={false}
-                                defaultValue={value}
-                                value={value}
-                                onChange={onChange}
-                                error={!(error == null)}
+                {selected_expediente?.id_expediente_documental && (
+                    <Grid item xs={12} sm={8} marginTop={3} >
+                        <Controller
+                            name="nombre_persona_cierra"
+                            control={control_informacion}
+                            rules={{ required: true }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    fullWidth
+                                    multiline
+                                    rows={2}
+                                    variant="outlined"
+                                    disabled={true}
+                                    defaultValue={value}
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!(error == null)}
 
-                            >
+                                >
 
-                            </TextField>
-                        )}
-                    />
-                </Grid>
+                                </TextField>
+                            )}
+                        />
+                    </Grid>
+                )}
+                {selected_expediente?.id_expediente_documental && (
+                    <Grid item xs={12} sm={8} >
+
+                        <Typography variant="body1">Observación del Cierre</Typography>
+                        <Controller
+                            name="cierre_expediente.justificacion_cierre_reapertura"
+                            control={control_informacion}
+                            rules={{ required: true }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    fullWidth
+                                    multiline
+                                    rows={2}
+                                    disabled={true}
+                                    variant="outlined"
+                                    defaultValue={value}
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!(error == null)}
+
+                                >
+
+                                </TextField>
+                            )}
+                        />
+                    </Grid>
+                )}
                 {selected_expediente?.id_expediente_documental && (
 
                     <Grid item xs={12} sm={6} margin={2}>
@@ -301,14 +344,15 @@ const CierreExpedientesScreen = () => {
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
                                 rows={archivos_por_expedientes}
-                                getRowId={(row) => row.orden_en_expediente} />
+                                getRowId={(row) => row.orden_en_expediente}
+                            />
                         </>
                     </Box>
                 )}
             </Grid>
 
             {selected_expediente?.id_expediente_documental && (
-                <Grid container spacing={2} margin={8} justifyContent="center">
+                <Grid container spacing={4} margin={2} marginRight={20} justifyContent="flex-end">
                     <LoadingButton
                         variant="contained"
                         onClick={handle_adjuntar_archivo}
@@ -319,7 +363,7 @@ const CierreExpedientesScreen = () => {
                 </Grid>
             )}
             {open_modal_archivo && (
-                <ArchivoSoporte
+                <ArchivoSoporteReapertura
                     control_archivo_expediente={control_archivo_expediente}
                     open={open_modal_archivo}
                     handle_close_adjuntar_archivo={handle_close_adjuntar_archivo}
@@ -329,22 +373,58 @@ const CierreExpedientesScreen = () => {
                     set_selected_expediente={set_selected_expediente}
                 />
             )}
+
+
+            <Grid container spacing={2} justifyContent="center">
+                <Grid item xs={12} sm={8} marginTop={3} >
+                    <Controller
+                        name="justificacion_reapertura"
+                        control={control_reapertura_expediente}
+                        rules={{ required: true }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                fullWidth
+                                multiline
+                                rows={2}
+                                variant="outlined"
+                                label={'Justificación de Reapertura'}
+                                disabled={false}
+                                defaultValue={value}
+                                value={value}
+                                onChange={onChange}
+                                error={!(error == null)}
+
+                            >
+
+                            </TextField>
+                        )}
+                    />
+
+                </Grid>
+
+            </Grid>
             <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
                 <Grid item margin={2}>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handle_cierre_expediente(on_submit_cerrar_expediente)}
+                        onClick={handle_reapertura_expediente(on_submit_reapertura_expediente)}
 
                     >
-                        Guardar Cierre
+                        Guardar Reapertura
                     </Button>
                 </Grid>
 
                 <Grid item margin={2}>
                     <Button variant="outlined"
                         color="error"
-                        onClick={handle_close_buscar}>
+                    //   onClick={handle_close_buscar}
+                    >
                         Salir
                     </Button>
                 </Grid>
@@ -360,6 +440,6 @@ const CierreExpedientesScreen = () => {
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default CierreExpedientesScreen;
+export default ReaperturaExpedienteScreen;
 
 

@@ -5,6 +5,7 @@ export interface ICierreExpedientes {
   expedientes: IObjExpedientes[];
   current_archivo_expediente: IObjArchivoExpediente;
   archivos_por_expedientes: IObjarchivo[];
+  informacion_reapertura: IObjInformacionReapertura;
 }
 
 export interface IObjCierreExpediente {
@@ -67,4 +68,26 @@ export interface IObjarchivo {
   id_expediente_documental?: number | null;
   nombre_asignado_documento?: string | null;
   id_tipologia_documental?: string | null;
+  nombre_tipologia?: string | null;
+}
+
+export interface IObjReaperturaExpediente {
+  fecha_actual?: string | null;
+  titulo_expediente?: string | null;
+  id_expediente_doc?: number | null;
+  justificacion_reapertura?: string | null;
+}
+
+export interface IObjInformacionReapertura {
+  titulo_expediente?: string | null;
+  nombre_persona_cierra?: string | null;
+  cierre_expediente: {
+    id_cierre_reapertura_exp?: number | null;
+    cod_operacion?: string | null;
+    fecha_cierre_reapertura?: string | null;
+    justificacion_cierre_reapertura?: string | null;
+    cod_etapa_archivo_pre_reapertura: null;
+    id_expediente_doc?: number | null;
+    id_persona_cierra_reabre?: number | null;
+  };
 }

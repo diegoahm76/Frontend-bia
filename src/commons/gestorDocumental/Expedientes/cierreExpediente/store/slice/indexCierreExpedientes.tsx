@@ -1,10 +1,25 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { ICierreExpedientes, IObjarchivo, IObjArchivoExpediente, IObjCierreExpediente, IObjExpedientes, IObjTRD, IObTipologia } from '../../interfaces/cierreExpedientes';
-import dayjs from 'dayjs';
+import { ICierreExpedientes, IObjarchivo, IObjArchivoExpediente, IObjCierreExpediente, IObjExpedientes, IObjInformacionReapertura, IObjTRD, IObTipologia } from '../../interfaces/cierreExpedientes';
+
 
 const initial_state_current_cierre_expediente: IObjCierreExpediente = {
     fecha_actual: (new Date().toString()),
+    id_expediente_doc: null,
 
+
+}
+const initial_state_informacion_reapertura: IObjInformacionReapertura = {
+    titulo_expediente: null,
+    nombre_persona_cierra: null,
+    cierre_expediente: {
+        id_cierre_reapertura_exp: null,
+        cod_operacion: null,
+        fecha_cierre_reapertura: null,
+        justificacion_cierre_reapertura: null,
+        cod_etapa_archivo_pre_reapertura: null,
+        id_expediente_doc: null,
+        id_persona_cierra_reabre: null,
+    }
 }
 
 const initial_state_current_archivo_expediente: IObjArchivoExpediente = {
@@ -32,6 +47,9 @@ export const initial_state: ICierreExpedientes = {
     expedientes: [],
     archivos_por_expedientes: [],
     current_archivo_expediente: initial_state_current_archivo_expediente,
+    informacion_reapertura: initial_state_informacion_reapertura,
+
+
 }
 
 export const cierre_expedientes_slice = createSlice({
@@ -75,9 +93,15 @@ export const cierre_expedientes_slice = createSlice({
         ) => {
             state.archivos_por_expedientes = action.payload;
         },
+        set_informacion_reapertura: (
+            state: ICierreExpedientes,
+            action: PayloadAction<IObjInformacionReapertura>
+        ) => {
+            state.informacion_reapertura = action.payload;
+        },
     }
 })
 
 export const {
-    set_current_cierre_expedientes, set_trd, set_tipologias, set_expedientes, set_current_archivo_expediente, set_archivos_por_expediente,
+    set_current_cierre_expedientes, set_trd, set_tipologias, set_expedientes, set_current_archivo_expediente, set_archivos_por_expediente, set_informacion_reapertura
 } = cierre_expedientes_slice.actions;
