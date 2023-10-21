@@ -44,9 +44,7 @@ export const Acciones: FC<any> = (): JSX.Element => {
       id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
       unidades_responsables: listadoDeAsignaciones?.map((element: any) => {
         return {
-          id_unidad_actual:
-            seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
-              ?.id_unidad_organizacional,
+          id_unidad_actual: element?.id_unidad_seccion_actual,
           id_unidad_nueva: element.id_unidad_seccion_nueva,
         };
       }),

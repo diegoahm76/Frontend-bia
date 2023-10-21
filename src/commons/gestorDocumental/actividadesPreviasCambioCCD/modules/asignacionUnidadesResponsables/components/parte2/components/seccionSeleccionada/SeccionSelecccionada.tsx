@@ -46,8 +46,12 @@ export const SeccionSelecccionada = (): JSX.Element => {
           element?.id_unidad_seccion_nueva ===
           currentUnidadAsociada?.id_unidad_seccion_nueva
       );
+      console.log('elemento encontrado' + elementFounded);
       reset_asignaciones_resp({
         unidad_organizacional: {
+          id_unidad_seccion_actual:
+            elementFounded?.id_unidad_organizacional ||
+            elementFounded?.id_unidad_seccion_actual,
           id_unidad_seccion_nueva:
             elementFounded?.id_unidad_organizacional ||
             elementFounded?.id_unidad_seccion_nueva,
@@ -136,7 +140,11 @@ export const SeccionSelecccionada = (): JSX.Element => {
                   }}
                   options={
                     unidadCcdAsociado.map((unidad: any) => ({
-                      ...unidad,
+                      // ...unidad,
+                      codigo: unidad.codigo,
+                      id_unidad_seccion_actual:
+                        seriesSeccionSeleccionadaSinResponsable
+                          ?.seccionSeleccionada?.id_unidad_organizacional,
                       id_unidad_seccion_nueva: unidad?.id_unidad_organizacional,
                       label: unidad?.nombre,
                       value: unidad?.id_unidad_organizacional,
@@ -171,15 +179,20 @@ export const SeccionSelecccionada = (): JSX.Element => {
             onClick={() => {
               const isDuplicate = listadoDeAsignaciones?.some(
                 (element) =>
-                  element?.id_unidad_seccion_nueva ===
-                  form?.id_unidad_seccion_nueva
+                  element?.id_unidad_seccion_actual ===
+                  seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                    ?.id_unidad_organizacional
               );
               console.log(isDuplicate);
               console.log(form?.id_unidad_seccion_nueva);
+              console.log(listadoDeAsignaciones);
+              console.log(
+                seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+              );
 
               if (isDuplicate) {
                 control_warning(
-                  'El elemento ya se encuentra en la lista, porfavor seleccione otro o elimine el elemento de la lista'
+                  'Una unidad actual no puede tener más de una unidad nueva asignada (responsable)'
                 );
                 // o enviar una notificación con react-toastify u otra biblioteca similar
               } else {
@@ -191,10 +204,13 @@ export const SeccionSelecccionada = (): JSX.Element => {
                           ?.seccionSeleccionada?.codigo,
                       cod_unidad_nueva:
                         control_asignaciones_resp._formValues
-                          ?.unidad_organizacional?.value,
+                          ?.unidad_organizacional?.codigo,
                       id_unidad_seccion_nueva:
                         control_asignaciones_resp._formValues
                           ?.unidad_organizacional?.value,
+                      id_unidad_seccion_actual:
+                        seriesSeccionSeleccionadaSinResponsable
+                          ?.seccionSeleccionada?.id_unidad_organizacional,
                       nom_unidad_actual:
                         seriesSeccionSeleccionadaSinResponsable
                           ?.seccionSeleccionada?.nombre,
@@ -208,8 +224,8 @@ export const SeccionSelecccionada = (): JSX.Element => {
                       index ===
                       self?.findIndex(
                         (t) =>
-                          t?.id_unidad_seccion_nueva ===
-                          element?.id_unidad_seccion_nueva
+                          t?.id_unidad_seccion_actual ===
+                          element?.id_unidad_seccion_actual
                       )
                   );
                 dispatch(setListadoDeAsignaciones(elementToAddWithValidation));

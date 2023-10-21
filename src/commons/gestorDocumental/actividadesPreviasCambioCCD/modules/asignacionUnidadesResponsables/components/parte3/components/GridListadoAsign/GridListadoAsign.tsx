@@ -38,7 +38,7 @@ export const GridListadoAsign = (): JSX.Element => {
     console.log(params.row);
     const filteredElementsToDelete = listadoDeAsignaciones.filter(
       (element) =>
-        element.id_unidad_seccion_nueva !== params.row.id_unidad_seccion_nueva
+        element.id_unidad_seccion_actual !== params.row.id_unidad_seccion_actual
     );
 
     dispatch(setListadoDeAsignaciones(filteredElementsToDelete));
