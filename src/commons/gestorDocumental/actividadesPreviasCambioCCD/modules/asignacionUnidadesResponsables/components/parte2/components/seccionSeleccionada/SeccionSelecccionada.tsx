@@ -14,7 +14,10 @@ import { useContext, useEffect, useState } from 'react';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { setListadoDeAsignaciones } from '../../../../toolkit/slice/types/AsignacionUniResp';
+import {
+  setCurrentUnidadAsociada,
+  setListadoDeAsignaciones,
+} from '../../../../toolkit/slice/types/AsignacionUniResp';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 export const SeccionSelecccionada = (): JSX.Element => {
   //* dispatch declaration
@@ -38,29 +41,81 @@ export const SeccionSelecccionada = (): JSX.Element => {
 
   // ? useeffect para cargar el elemento seleccionado
   useEffect(() => {
-    if (currentUnidadAsociada) {
-      console.log('unidas responsable seleccionada para edicion');
-      console.log(currentUnidadAsociada);
-      const elementFounded = listadoDeAsignaciones?.find(
-        (element) =>
-          element?.id_unidad_seccion_nueva ===
-          currentUnidadAsociada?.id_unidad_seccion_nueva
+    console.log('unidas responsable seleccionada para edicion');
+    console.log(currentUnidadAsociada);
+    const elementFounded = listadoDeAsignaciones?.find(
+      (element) =>
+        element?.id_unidad_seccion_actual ===
+        currentUnidadAsociada?.id_unidad_seccion_actual
+    );
+    console.log(elementFounded);
+    reset_asignaciones_resp({
+      unidad_organizacional: {
+        codigo: elementFounded?.cod_unidad_nueva,
+        id_unidad_seccion_actual:
+          elementFounded?.id_unidad_organizacional ||
+          elementFounded?.id_unidad_seccion_actual,
+        id_unidad_seccion_nueva:
+          elementFounded?.id_unidad_organizacional ||
+          elementFounded?.id_unidad_seccion_nueva,
+        label: elementFounded?.nom_unidad_nueva,
+        value: elementFounded?.id_unidad_seccion_nueva,
+      },
+    });
+    // setForm(elementFounded);
+  }, [currentUnidadAsociada, setCurrentUnidadAsociada, dispatch]);
+
+  // ? handle add or edit element, se debe revisar la operación de edición y la validacion de agregar el elemento , ya que la creación de datos y la edición de datos formar conjuntos de datos diferentes
+
+  const handleElement = () => {
+    const isDuplicate = listadoDeAsignaciones?.some(
+      (element) =>
+        element?.id_unidad_seccion_actual ===
+        seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+          ?.id_unidad_organizacional
+    );
+
+    if (isDuplicate && !currentUnidadAsociada) {
+      control_warning(
+        'Una unidad actual no puede tener más de una unidad nueva asignada (responsable)'
       );
-      console.log('elemento encontrado' + elementFounded);
-      reset_asignaciones_resp({
-        unidad_organizacional: {
-          id_unidad_seccion_actual:
-            elementFounded?.id_unidad_organizacional ||
-            elementFounded?.id_unidad_seccion_actual,
-          id_unidad_seccion_nueva:
-            elementFounded?.id_unidad_organizacional ||
-            elementFounded?.id_unidad_seccion_nueva,
-          label: elementFounded?.nom_unidad_nueva,
-          value: elementFounded?.id_unidad_seccion_nueva,
-        },
-      });
+      // o enviar una notificación con react-toastify u otra biblioteca similar
+    } else {
+      const elementToAddWithValidation = listadoDeAsignaciones
+        ?.concat({
+          ...{
+            cod_unidad_actual:
+              seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                ?.codigo,
+            cod_unidad_nueva:
+              control_asignaciones_resp._formValues?.unidad_organizacional
+                ?.codigo,
+            id_unidad_seccion_nueva:
+              control_asignaciones_resp._formValues?.unidad_organizacional
+                ?.value,
+            id_unidad_seccion_actual:
+              seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                ?.id_unidad_organizacional,
+            nom_unidad_actual:
+              seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                ?.nombre,
+            nom_unidad_nueva:
+              control_asignaciones_resp._formValues?.unidad_organizacional
+                ?.label,
+          },
+        })
+        ?.filter(
+          (element, index, self) =>
+            index ===
+            self?.findIndex(
+              (t) =>
+                t?.id_unidad_seccion_actual ===
+                element?.id_unidad_seccion_actual
+            )
+        );
+      dispatch(setListadoDeAsignaciones(elementToAddWithValidation));
     }
-  }, [currentUnidadAsociada]);
+  };
 
   if (!seriesSeccionSeleccionadaSinResponsable?.coincidencias?.length)
     return <></>;
@@ -133,7 +188,7 @@ export const SeccionSelecccionada = (): JSX.Element => {
                 <Select
                   value={value}
                   onChange={(selectedOption) => {
-                    console.log(selectedOption);
+                    // console.log(selectedOption);
                     onChange(selectedOption);
                     setForm(selectedOption);
                     // dispatch(setCurrentUnidadAsociada(selectedOption));
@@ -176,63 +231,9 @@ export const SeccionSelecccionada = (): JSX.Element => {
               mt: '1.5rem',
             }}
             endIcon={<CheckCircleIcon />}
-            onClick={() => {
-              const isDuplicate = listadoDeAsignaciones?.some(
-                (element) =>
-                  element?.id_unidad_seccion_actual ===
-                  seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
-                    ?.id_unidad_organizacional
-              );
-              console.log(isDuplicate);
-              console.log(form?.id_unidad_seccion_nueva);
-              console.log(listadoDeAsignaciones);
-              console.log(
-                seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
-              );
-
-              if (isDuplicate) {
-                control_warning(
-                  'Una unidad actual no puede tener más de una unidad nueva asignada (responsable)'
-                );
-                // o enviar una notificación con react-toastify u otra biblioteca similar
-              } else {
-                const elementToAddWithValidation = listadoDeAsignaciones
-                  ?.concat({
-                    ...{
-                      cod_unidad_actual:
-                        seriesSeccionSeleccionadaSinResponsable
-                          ?.seccionSeleccionada?.codigo,
-                      cod_unidad_nueva:
-                        control_asignaciones_resp._formValues
-                          ?.unidad_organizacional?.codigo,
-                      id_unidad_seccion_nueva:
-                        control_asignaciones_resp._formValues
-                          ?.unidad_organizacional?.value,
-                      id_unidad_seccion_actual:
-                        seriesSeccionSeleccionadaSinResponsable
-                          ?.seccionSeleccionada?.id_unidad_organizacional,
-                      nom_unidad_actual:
-                        seriesSeccionSeleccionadaSinResponsable
-                          ?.seccionSeleccionada?.nombre,
-                      nom_unidad_nueva:
-                        control_asignaciones_resp._formValues
-                          ?.unidad_organizacional?.label,
-                    },
-                  })
-                  ?.filter(
-                    (element, index, self) =>
-                      index ===
-                      self?.findIndex(
-                        (t) =>
-                          t?.id_unidad_seccion_actual ===
-                          element?.id_unidad_seccion_actual
-                      )
-                  );
-                dispatch(setListadoDeAsignaciones(elementToAddWithValidation));
-              }
-            }}
+            onClick={() => handleElement()}
           >
-            ACEPTAR
+            {currentUnidadAsociada ? 'Editar' : 'Agregar'}
           </Button>
         </Grid>
       )}

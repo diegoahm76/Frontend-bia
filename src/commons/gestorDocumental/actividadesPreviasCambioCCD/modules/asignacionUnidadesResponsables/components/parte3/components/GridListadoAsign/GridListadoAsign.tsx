@@ -49,7 +49,24 @@ export const GridListadoAsign = (): JSX.Element => {
   const handleEditElememt = (params: GridValueGetterParams) => {
     console.log(params.row);
     dispatch(setCurrentUnidadAsociada(params.row));
-    console.log('elemento seleccionado para realizar edición');
+
+    //* lista para actualizar
+
+    const listaEditada = listadoDeAsignaciones.map((row) =>
+      row.id_unidad_seccion_actual === params.row.id_unidad_seccion_actual
+        ? {
+            ...row,
+            id_unidad_seccion_nueva: params.row.id_unidad_seccion_nueva,
+            cod_unidad_nueva: params.row.cod_unidad_nueva,
+            nombre_unidad_nueva: params.row.nombre_unidad_nueva,
+            id_seccion_nueva: params.row.id_seccion_nueva,
+            cod_seccion_nueva: params.row.cod_seccion_nueva,
+            nombre_seccion_nueva: params.row.nombre_seccion_nueva,
+          }
+        : row
+    );
+
+    dispatch(setListadoDeAsignaciones(listaEditada));
   };
 
   //* columns edicion y borrado necesarias
