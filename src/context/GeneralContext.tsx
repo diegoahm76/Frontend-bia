@@ -19,6 +19,12 @@ export const ModalAndLoadingProvider: FC<any> = ({
   const { isLoading: secondLoading, handleLoading: handleSecondLoading } =
     useModalAndLoading('', 'isLoading');
 
+  const { isLoading: thirdLoading, handleLoading: handleThirdLoading } =
+    useModalAndLoading('', 'isLoading');
+
+  const { isLoading: fourthLoading, handleLoading: handleFourthLoading } =
+    useModalAndLoading('', 'isLoading');
+
   //! you can add more call to hook if needed...
   // ? value object to return the data
   const value = {
@@ -35,6 +41,12 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* second loading
     secondLoading,
     handleSecondLoading,
+    //* third loading
+    thirdLoading,
+    handleThirdLoading,
+    //* fourth loading
+    fourthLoading,
+    handleFourthLoading,
   };
   return (
     <ModalAndLoadingContext.Provider value={value}>
