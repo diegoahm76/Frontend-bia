@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, Close, ManageAccounts, Help, Save, Article, Info } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -144,29 +145,29 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         return modal_asignacion ? (
           <FormControl fullWidth sx={{ minWidth: 110 }}>
             <InputLabel>Seleccionar</InputLabel>
-              <Select
-                size='small'
-                label="Seleccionar"
-                defaultValue={params.value}
-                onChange={(event: event) => {
-                  const { value } = event.target
-                  for(let i=0; i<funcionarios_options.length; i++){
-                    if(funcionarios_options[i].nombre_funcionario === value){
-                      set_funcionario_selected(funcionarios_options[i].id_persona);
-                      set_facilidad_selected(params.row.id_facilidad);
-                      handle_open();
-                    }
+            <Select
+              size='small'
+              label="Seleccionar"
+              defaultValue={params.value}
+              onChange={(event: event) => {
+                const { value } = event.target
+                for (let i = 0; i < funcionarios_options.length; i++) {
+                  if (funcionarios_options[i].nombre_funcionario === value) {
+                    set_funcionario_selected(funcionarios_options[i].id_persona);
+                    set_facilidad_selected(params.row.id_facilidad);
+                    handle_open();
                   }
-                }}
-              >
-                {
-                  funcionarios_options.map((funcionario) => (
-                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>
-                      {funcionario.nombre_funcionario}
-                    </MenuItem>
-                  ))
                 }
-              </Select>
+              }}
+            >
+              {
+                funcionarios_options.map((funcionario) => (
+                  <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>
+                    {funcionario.nombre_funcionario}
+                  </MenuItem>
+                ))
+              }
+            </Select>
           </FormControl>
         ) : (
           <>
@@ -204,6 +205,18 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   useEffect(() => {
     set_visible_rows(facilidades)
   }, [facilidades])
+  const [searchId, setSearchId] = useState('');
+
+  const handleSearch = () => {
+    let filteredData = [...facilidades];
+    if (search) {
+      filteredData = filteredData.filter(facilidad => facilidad.nombre_de_usuario.toLowerCase().includes(search.toLowerCase()));
+    }
+    if (searchId) {
+      filteredData = filteredData.filter(facilidad => facilidad.identificacion.toLowerCase().includes(searchId.toLowerCase()));
+    }
+    set_visible_rows(filteredData);
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -213,7 +226,36 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         spacing={2}
         sx={{ mb: '20px' }}
       >
-        <FormControl sx={{ minWidth: 130 }}>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            value={search}
+            onChange={e => set_search(e.target.value)}
+            label="Buscar por nombre de usuario"
+            variant="outlined"
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            value={searchId}
+            onChange={e => setSearchId(e.target.value)}
+            label="Buscar por identificación"
+            variant="outlined"
+            fullWidth
+            size="small"
+          />
+          </Grid>
+        <Grid item    xs={12} sm={1}>
+          <Button variant="contained" color="primary"  startIcon={<SearchOutlined />} onClick={handleSearch}>
+            Buscar
+          </Button>
+        </Grid>
+
+        {/* <Button variant="contained" color="secondary" onClick={() => { set_filter(''), set_search('') }}>
+        Limpiar búsqueda
+      </Button> */}
+        {/* <FormControl sx={{ minWidth: 130 }}>
           <InputLabel>Filtrar por: </InputLabel>
             <Select
               label="Filtrar por: "
@@ -226,8 +268,8 @@ export const TablaFacilidadesAdmin: React.FC = () => {
               <MenuItem value='nombre_de_usuario'>Nombre Usuario</MenuItem>
               <MenuItem value='identificacion'>Identificación</MenuItem>
             </Select>
-        </FormControl>
-        <TextField
+        </FormControl> */}
+        {/* <TextField
           required
           label="Búsqueda"
           size="medium"
@@ -235,8 +277,8 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             const { value } = event.target
             set_search(value)
           }}
-        />
-        <Button
+        /> */}
+        {/* <Button
           color='primary'
           variant='contained'
           startIcon={<SearchOutlined />}
@@ -249,7 +291,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
           }}
         >
           Buscar
-        </Button>
+        </Button> */}
         <Button
           color='primary'
           variant='outlined'
@@ -309,11 +351,11 @@ export const TablaFacilidadesAdmin: React.FC = () => {
               </Grid>
               <Grid item textAlign="center" xs={12}>
                 <strong>
-                {
-                  asignacion ?
-                  '¿Está seguro de realizar la asignación de usuario?' :
-                  '¿Está seguro de realizar la reasignación de usuario?'
-                }
+                  {
+                    asignacion ?
+                      '¿Está seguro de realizar la asignación de usuario?' :
+                      '¿Está seguro de realizar la reasignación de usuario?'
+                  }
                 </strong>
               </Grid>
             </Grid>
@@ -343,7 +385,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             startIcon={<Save />}
             onClick={() => {
               try {
-                void put_asignacion_funcionario(facilidad_selected, {id_funcionario: funcionario_selected});
+                void put_asignacion_funcionario(facilidad_selected, { id_funcionario: funcionario_selected });
                 handle_open_sub();
                 set_modal_option('si');
                 handle_close();
@@ -368,17 +410,17 @@ export const TablaFacilidadesAdmin: React.FC = () => {
               </Grid>
               <Grid item textAlign="center" xs={12}>
                 <strong>
-                {
-                  modal_option === 'si' && asignacion ? (
-                    <DialogTitle>Asignación ejecutada con éxito</DialogTitle>
-                  ) : modal_option === 'no' && asignacion ? (
-                    <DialogTitle>Asignación cancelada</DialogTitle>
-                  ) : modal_option === 'si' && !asignacion ? (
-                    <DialogTitle>Reasignación ejecutada con éxito</DialogTitle>
-                  ) : modal_option === 'no' && !asignacion ? (
-                    <DialogTitle>Reasignación cancelada</DialogTitle>
-                  ) : null
-                }
+                  {
+                    modal_option === 'si' && asignacion ? (
+                      <DialogTitle>Asignación ejecutada con éxito</DialogTitle>
+                    ) : modal_option === 'no' && asignacion ? (
+                      <DialogTitle>Asignación cancelada</DialogTitle>
+                    ) : modal_option === 'si' && !asignacion ? (
+                      <DialogTitle>Reasignación ejecutada con éxito</DialogTitle>
+                    ) : modal_option === 'no' && !asignacion ? (
+                      <DialogTitle>Reasignación cancelada</DialogTitle>
+                    ) : null
+                  }
                 </strong>
               </Grid>
             </Grid>

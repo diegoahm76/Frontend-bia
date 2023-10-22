@@ -21,14 +21,13 @@ interface IProps {
   fecha_vencimiento: dayjs.Dayjs;
   id_liquidacion_pdf: string;
   detalles_ciclos: string[];
-  detalles_periodos: DetallesPeriodos;
+  periodos: string[];
   tamano_detalles: boolean;
   handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
   handle_submit_liquidacion: () => void;
   set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
   set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
-  set_periodo_actual: Dispatch<SetStateAction<DetallePeriodo>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -42,24 +41,14 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   fecha_vencimiento,
   id_liquidacion_pdf,
   detalles_ciclos,
-  detalles_periodos,
+  periodos,
   tamano_detalles,
   handle_input_form_liquidacion_change,
   handle_select_form_liquidacion_change,
   handle_submit_liquidacion,
   set_fecha_liquidacion,
   set_fecha_vencimiento,
-  set_periodo_actual
 }: IProps) => {
-  const [periodos, set_periodos] = useState<string[]>([]);
-
-  useEffect(() => {
-    const ciclo = form_liquidacion.ciclo_liquidacion;
-    if (ciclo) {
-      set_periodos(detalles_periodos[ciclo].periodos);
-      set_periodo_actual(detalles_periodos[ciclo]);
-    }
-  }, [form_liquidacion.ciclo_liquidacion]);
 
   const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
     if (date !== null) {
@@ -70,19 +59,6 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_vencimiento(date);
-    }
-  };
-
-  const handle_print_bill = (): void => {
-    if (id_liquidacion_pdf) {
-      api.get(`recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`)
-        .then((response) => {
-          console.log(response);
-          window.open(response.config.url, '_blank', 'rel=noopener noreferrer');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     }
   };
 
@@ -230,7 +206,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 variant="contained"
                 fullWidth
                 startIcon={<PrintIcon />}
-                onClick={handle_print_bill}
+                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Imprimir recibo
               </Button>

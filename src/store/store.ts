@@ -3,7 +3,6 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { persistReducer } from "redux-persist";
 
-
 import { layout_slice } from "./layoutSlice";
 import { auth_slice } from "../commons/auth/store/authSlice";
 import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
@@ -52,13 +51,16 @@ import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/Deudores
 import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
 import { ctrlAccesoExpSlice } from "../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice";
 import { HomologacionesSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/homologacionDeSeccionesPersistentes/toolkit/slice/HomologacionesSeriesSlice";
-import { expedientes_slice } from "../commons/gestorDocumental/Expedientes/store/slice/indexExpedientes";
 import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
 import { cierre_expedientes_slice } from "../commons/gestorDocumental/Expedientes/cierreExpediente/store/slice/indexCierreExpedientes";
 import { archivo_fisico_slice } from "../commons/gestorDocumental/archivoFisico/store/slice/indexArchivoFisico";
 import { configuracion_tiempo_respuesta_slice } from "../commons/gestorDocumental/confiTiemposRespuestaPlazoAccion/store/slice/indexConfiTiemposRespPlazoAccion";
 import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/toolkit/slice/types/AsignacionUniResp";
+<<<<<<< HEAD
+import { reportes_documentacion_slice } from "../commons/gestorDocumental/reportesDocumentacionPermisos/store/slice/indexReporteDocumentacion";
+=======
 import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
+>>>>>>> origin
 
 const persist_config = {
   key: "macarenia_app",
@@ -131,15 +133,19 @@ const app_reducers = combineReducers({
   // ? homologación de series del ccd
   HomologacionesSlice: HomologacionesSlice.reducer,
   // ? homologación de series del ccd
-  expedientes: expedientes_slice.reducer,
+  // expedientes: expedientes_slice.reducer,
   cierre_expedientes: cierre_expedientes_slice.reducer,
   archivo_fisico: archivo_fisico_slice.reducer,
   confi_tiempo_respuesta: configuracion_tiempo_respuesta_slice.reducer,
   //* asignacion de unidades responsables
   AsigUniRespSlice: AsigUniRespSlice.reducer,
   //* asignacion de unidades responsables
+<<<<<<< HEAD
+  reportes_documentacion: reportes_documentacion_slice.reducer,
+=======
   // ? Delegacion oficinas responsables del ccd
   DelOfiResSlice: DelOfiResSlice.reducer,
+>>>>>>> origin
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

@@ -11,6 +11,7 @@ export interface IProps {
     setSelectedEncuestaId: any;
     handleClear: any;
     setShowContent: any;
+    
 }
 export interface Pregunta {
     opciones_rta: Array<{ opcion_rta: string }>;
@@ -43,3 +44,7 @@ export const initialFormData = {
         { redaccion_pregunta: "", opciones_rta: [] }
     ]
 };
+export interface OpcionRta {
+    id_opcion_rta?: number;  // el ID puede ser opcional (undefined) para nuevos elementos.
+    opcion_rta: string;
+  };

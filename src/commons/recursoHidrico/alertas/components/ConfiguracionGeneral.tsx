@@ -53,7 +53,7 @@ export const ConfiguracionGeneral: FC<any> = ({ title }: any): JSX.Element => {
             <Grid
               item
               xs={12}
-              sm={6}
+              sm={12}
               sx={{
                 marginTop: '25px',
                 marginBottom: '10px',
@@ -106,12 +106,15 @@ export const ConfiguracionGeneral: FC<any> = ({ title }: any): JSX.Element => {
               />
             </Grid>
             <Grid
+             
+            >
+            <Grid
               sx={{
                 marginBottom: '10px',
                 width: 'auto',
               }}
               item
-              xs={12}
+              xs={6}
               sm={6}
             >
               <Controller
@@ -183,7 +186,7 @@ export const ConfiguracionGeneral: FC<any> = ({ title }: any): JSX.Element => {
                 )}
               />
             </Grid>
-
+            </Grid>
             {/* estado actual de la alerta */}
 
             <Grid

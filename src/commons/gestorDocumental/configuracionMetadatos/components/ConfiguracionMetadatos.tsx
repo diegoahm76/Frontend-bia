@@ -19,6 +19,7 @@ import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import FormButton from '../../../../components/partials/form/FormButton';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import ValoresMetadatos from './ListaValores';
 
 
 
@@ -334,26 +335,40 @@ const ConfiguracionMetadatos = () => {
                     hidden_text={null}
                     label={"Valor máximo"}
                 />
-                <FormInputController
-                    xs={12}
-                    md={2}
-                    margin={0}
-                    marginTop={2}
-                    control_form={control_metadatos}
-                    control_name="orden_aparicion"
-                    default_value=''
-                    rules={{}}
-                    type='number'
-                    disabled={false}
-                    hidden_text={null}
-                    label={"Órden de aparición"}
-                    helper_text={''}
-                />
+
 
             </Grid>
 
             <Grid container spacing={2} alignItems="center">
 
+                <Grid item xs={12} sm={2} marginTop={2}>
+                    <Controller
+                        name="orden_aparicion"
+                        control={control_metadatos}
+                        rules={{ required: true }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                fullWidth
+                                size="small"
+                                label="Órden"
+                                variant="outlined"
+                                disabled={false}
+                                defaultValue={value}
+                                value={value}
+                                onChange={onChange}
+                                error={!(error == null)}
+
+                            >
+
+                            </TextField>
+                        )}
+                    />
+                </Grid>
                 <Grid item xs={12} sm={2} marginTop={2}>
                     <Controller
                         name="esObligatorio"
@@ -490,67 +505,13 @@ const ConfiguracionMetadatos = () => {
                 </Grid>
             </Grid>
             {agregar_valor && (
-                <Grid container spacing={2} marginTop={2}>
-
-
-                    <FormInputController
-                        xs={12}
-                        md={2}
-                        margin={0}
-                        control_form={control_valores}
-                        control_name="valor_a_mostrar"
-                        default_value=''
-                        rules={{}}
-                        type='text'
-                        disabled={false}
-                        hidden_text={null}
-                        label={"Valor"}
-                        helper_text={''}
-                    />
-
-
-                    {/* <FormInputController
-                        xs={12}
-                        md={2}
-                        margin={0}
-                        control_form={control_valores}
-                        control_name="orden_dentro_de_lista"
-                        default_value=''
-                        rules={{}}
-                        type='text'
-                        disabled={false}
-                        hidden_text={null}
-                        label={"Nuevo Órden"}
-                        helper_text={''}
-                    /> */}
-                    <Grid item>
-                        <Button variant="contained"
-                            color="success"
-                            onClick={handle_submit_valores(on_submit_agregar_valor)}>
-                            Guardar valor
-                        </Button>
-                    </Grid>
-
-                </Grid>
+                <ValoresMetadatos />
             )}
 
-            {agregar_valor && (
-                <Grid container marginTop={2} xs={6}>
 
 
-                    <DataGrid
-                        density="compact"
-                        autoHeight
-                        columns={colums_valores_metadatos}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
-                        experimentalFeatures={{ newEditingApi: true }}
-                        getRowId={(row) => row.id_lista_valor_metadato_pers}
-                        rows={valores_metadatos}
-                    />
 
-                </Grid>
-            )}
+
             <ListadoMetadatos
                 handle_edit_click={handle_edit_click} />
             <Grid
