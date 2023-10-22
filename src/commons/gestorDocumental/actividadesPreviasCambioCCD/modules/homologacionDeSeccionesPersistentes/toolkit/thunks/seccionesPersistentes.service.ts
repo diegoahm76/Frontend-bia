@@ -22,7 +22,8 @@ export const fnGetHomologacionUnidades = async (
       control_success(data?.detail);
       console.log(data.data);
 
-      if (data.data?.coincidencias?.length === 0) {
+      //* la validacion debe hacerse si tanto unidades conincidentes como unidades persistentes estan vacias, caso contrario la validación no se debe hacer ya que genera traumatismo en el desaarrollo y uso del módulo
+      /* if (data.data?.coincidencias?.length === 0) {
         await Swal.fire({
           icon: 'warning',
           title: '¡ATENCIÓN!',
@@ -33,7 +34,7 @@ export const fnGetHomologacionUnidades = async (
         });
         reset_states();
         return;
-      }
+      }*/
 
       return data?.data;
     }

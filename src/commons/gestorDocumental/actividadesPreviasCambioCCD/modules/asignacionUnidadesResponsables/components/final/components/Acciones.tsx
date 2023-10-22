@@ -77,7 +77,9 @@ export const Acciones: FC<any> = (): JSX.Element => {
       await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
         ccdOrganigramaCurrentBusqueda?.id_ccd,
         handleSecondLoading,
-        navigate
+        navigate,
+        dispatch,
+        () => resetStateUniResp()
       ).then((res) => {
         dispatch(setSeccionesSinResponsable(res));
       });

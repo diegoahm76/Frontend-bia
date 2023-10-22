@@ -9,7 +9,9 @@ import { control_success } from '../../../../../../../helpers';
 export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
   idCcdNuevo: number,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  navigate?: any
+  navigate?: any,
+  dispatch?: any,
+  callback?: any
 ) => {
   try {
     setLoading(true);
@@ -102,6 +104,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
           navigate(
             '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/homologacion_secciones_persistentes'
           );
+          dispatch(callback());
         }
       });
     }

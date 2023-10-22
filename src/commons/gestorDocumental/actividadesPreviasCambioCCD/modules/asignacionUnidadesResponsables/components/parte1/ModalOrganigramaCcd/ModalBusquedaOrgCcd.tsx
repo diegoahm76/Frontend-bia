@@ -115,8 +115,10 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
           params.row.id_ccd,
           handleSecondLoading,
-          navigate
-        );
+          navigate,
+          dispatch,
+          () => resetStateUniResp()
+        )
 
       console.log(
         'estas son las unidades sin responsable',

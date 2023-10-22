@@ -52,6 +52,7 @@ import {
   fnGetUnidadesPersistentes,
 } from '../../../../toolkit/thunks/seccionesPersistentes.service';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import Swal from 'sweetalert2';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -82,6 +83,22 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         params.row.id_ccd,
         handleGeneralLoading
       );
+
+      if (
+        resHomologacionesUnidades?.coincidencias.length === 0 &&
+        resUnidadesPersistentes?.unidades_persistentes.length === 0
+      ) {
+        await Swal.fire({
+          icon: 'warning',
+          title: '¡ATENCIÓN!',
+          text: 'No hay unidades coincidentes y/o persistentes para este CCD, seleccione un CCD diferente para continuar',
+          showCloseButton: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        });
+        dispatch(reset_states());
+        return;
+      }
 
       const infoToReturn =
         resHomologacionesUnidades?.coincidencias.map((item: any) => {
