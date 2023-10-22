@@ -41,7 +41,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
             await Swal.fire({
               icon: 'warning',
               title: '¡ATENCIÓN!',
-              text: 'No hay unidades pendientes por confirmar en este CCD, seleccione un CCD diferente para continuar',
+              text: 'No hay unidades pendientes por confirmar en este CCD',
               showCloseButton: true,
               allowOutsideClick: false,
               allowEscapeKey: false,
@@ -65,7 +65,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
       await Swal.fire({
         icon: 'warning',
         title: '¡ATENCIÓN!',
-        text: 'No hay unidades pendientes por confirmar en este CCD, seleccione un CCD diferente para continuar',
+        text: 'No hay unidades pendientes por confirmar en este CCD',
         showCloseButton: true,
         allowOutsideClick: false,
         allowEscapeKey: false,

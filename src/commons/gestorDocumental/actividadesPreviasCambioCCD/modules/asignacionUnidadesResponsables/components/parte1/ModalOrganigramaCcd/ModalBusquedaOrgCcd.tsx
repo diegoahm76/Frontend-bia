@@ -42,6 +42,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   resetStateUniResp,
   setCcdOrganigramaCurrent,
+  setListadoDeAsignaciones,
   setSeccionesPersistentes,
   setSeccionesSinResponsable,
 } from '../../../toolkit/slice/types/AsignacionUniResp';
@@ -70,9 +71,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   //* para la peticion de las secciones a las cuales no se les ha establecido un responsable
-  const { handleSecondLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -130,6 +129,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const listadoDeAsignaciones = await GET_LISTADO_ASIGNACIONES(
         params.row.id_ccd
       );
+
+      dispatch(setListadoDeAsignaciones(listadoDeAsignaciones));
       console.log('busqueda inicial de asignaciones', listadoDeAsignaciones);
     } catch (error) {
       console.error(error);

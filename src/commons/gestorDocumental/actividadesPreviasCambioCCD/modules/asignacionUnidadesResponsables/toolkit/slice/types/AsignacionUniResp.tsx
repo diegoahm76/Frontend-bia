@@ -94,6 +94,7 @@ export const AsigUniRespSlice = createSlice({
       state.unidadCcdAsociado = [];
       state.currentUnidadAsociada = null;
       state.listadoDeAsignaciones = [];
+      
     },
   },
 });

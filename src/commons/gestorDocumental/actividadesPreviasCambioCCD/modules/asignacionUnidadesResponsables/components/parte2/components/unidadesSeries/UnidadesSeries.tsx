@@ -23,10 +23,10 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import {
+  setCurrentUnidadAsociada,
   setSeriesSeccionSeleccionadaSinResponsable,
   setUnidadeCcdAsociado,
 } from '../../../../toolkit/slice/types/AsignacionUniResp';
-import { control } from 'leaflet';
 import { control_error } from '../../../../../../../../../helpers';
 
 export const UnidadesSeries = (): JSX.Element => {
@@ -44,9 +44,9 @@ export const UnidadesSeries = (): JSX.Element => {
   //* ---------------- FUNCTIONS ------------------------
 
   const handleRequest = async (paramsRow: any) => {
+    dispatch(setCurrentUnidadAsociada(null));
     try {
-
-      console.log(paramsRow)
+      console.log(paramsRow);
       const { id_unidad_organizacional } = paramsRow;
       const { id_ccd_actual, id_ccd_nuevo } = seccionesSinResponsable;
 
@@ -189,7 +189,12 @@ export const UnidadesSeries = (): JSX.Element => {
       ) : (
         <>
           <RenderDataGrid
-            title={`Cátalogo asociado - ( ${seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada?.nombre} )`}
+            title={`Cátalogo asociado - ( ${
+              seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                ?.nombre ||
+              seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                ?.nom_unidad_actual
+            } )`}
             columns={columnsseriesSeccionSeleccionadSinResp ?? []}
             rows={seriesSeccionSeleccionadaSinResponsable?.coincidencias ?? []}
           />

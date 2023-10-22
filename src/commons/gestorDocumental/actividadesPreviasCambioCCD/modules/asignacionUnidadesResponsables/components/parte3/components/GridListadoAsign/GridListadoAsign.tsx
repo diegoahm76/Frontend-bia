@@ -17,23 +17,76 @@ import { type GridValueGetterParams } from '@mui/x-data-grid';
 import {
   setCurrentUnidadAsociada,
   setListadoDeAsignaciones,
+  setSeriesSeccionSeleccionadaSinResponsable,
+  setUnidadeCcdAsociado,
 } from '../../../../toolkit/slice/types/AsignacionUniResp';
-import { control_success } from '../../../../../../../../../helpers';
+import {
+  control_error,
+  control_success,
+} from '../../../../../../../../../helpers';
+import {
+  GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE,
+  GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP,
+} from '../../../../toolkit/thunks/seccPendientesAndCat.service';
+import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
 
 export const GridListadoAsign = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* redux states declarations
-  const { listadoDeAsignaciones } = useAppSelector(
+  const { listadoDeAsignaciones, seccionesSinResponsable } = useAppSelector(
     (state) => state.AsigUniRespSlice
   );
 
   //* context
-  const { generalLoading, handleGeneralLoading } = useContext(
+  const { generalLoading, handleThirdLoading } = useContext(
     ModalAndLoadingContext
   );
 
   //* ------- FUNCTIONS SPACE ------------
+
+  const handleRequest = async (paramsRow: any) => {
+    try {
+      console.log(paramsRow);
+      const { id_unidad_seccion_actual } = paramsRow;
+      const { id_ccd_actual, id_ccd_nuevo } = seccionesSinResponsable;
+
+      const [coincidencias, unidadesRelacionadas] = await Promise.all([
+        GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE({
+          idUnidadActual: id_unidad_seccion_actual,
+          idCcdActual: id_ccd_actual,
+          idCcdNuevo: id_ccd_nuevo,
+          setLoading: handleThirdLoading,
+        }),
+        GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP({
+          idCcdNuevo: id_ccd_nuevo,
+          setLoading: handleThirdLoading,
+        }),
+      ]);
+
+
+      console.log(coincidencias);
+      console.log(unidadesRelacionadas);
+
+      // ? Setear la lista de series de la sección seleccionada sin responsable, y también se setea la sección seleccionada para acceder a esos datos más adelante, todo lo que contenga el params.row
+      dispatch(
+        setSeriesSeccionSeleccionadaSinResponsable({
+          coincidencias,
+          seccionSeleccionada: paramsRow,
+        })
+      );
+
+      dispatch(setUnidadeCcdAsociado(unidadesRelacionadas));
+    } catch (err) {
+      control_error(
+        'Ha ocurrido un error al intentar acceder a la información'
+      );
+
+      dispatch(setSeriesSeccionSeleccionadaSinResponsable({}));
+      dispatch(setUnidadeCcdAsociado([]));
+    }
+  };
+
   const handleDelete = (params: GridValueGetterParams) => {
     console.log(params.row);
     const filteredElementsToDelete = listadoDeAsignaciones.filter(
@@ -44,29 +97,13 @@ export const GridListadoAsign = (): JSX.Element => {
     dispatch(setListadoDeAsignaciones(filteredElementsToDelete));
 
     control_success('el elemento ha sido eliminado de forma exitosa');
+    control_info('no olvides guardar los cambios')
   };
 
   const handleEditElememt = (params: GridValueGetterParams) => {
-    console.log(params.row);
-    dispatch(setCurrentUnidadAsociada(params.row));
-
-    //* lista para actualizar
-
-    const listaEditada = listadoDeAsignaciones.map((row) =>
-      row.id_unidad_seccion_actual === params.row.id_unidad_seccion_actual
-        ? {
-            ...row,
-            id_unidad_seccion_nueva: params.row.id_unidad_seccion_nueva,
-            cod_unidad_nueva: params.row.cod_unidad_nueva,
-            nombre_unidad_nueva: params.row.nombre_unidad_nueva,
-            id_seccion_nueva: params.row.id_seccion_nueva,
-            cod_seccion_nueva: params.row.cod_seccion_nueva,
-            nombre_seccion_nueva: params.row.nombre_seccion_nueva,
-          }
-        : row
-    );
-
-    dispatch(setListadoDeAsignaciones(listaEditada));
+    void handleRequest(params.row).then(() => {
+      dispatch(setCurrentUnidadAsociada(params.row));
+    });
   };
 
   //* columns edicion y borrado necesarias
