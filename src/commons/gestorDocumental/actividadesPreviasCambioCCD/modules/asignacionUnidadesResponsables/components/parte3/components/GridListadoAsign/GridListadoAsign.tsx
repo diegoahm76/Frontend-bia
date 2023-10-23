@@ -64,7 +64,6 @@ export const GridListadoAsign = (): JSX.Element => {
         }),
       ]);
 
-
       console.log(coincidencias);
       console.log(unidadesRelacionadas);
 
@@ -97,7 +96,7 @@ export const GridListadoAsign = (): JSX.Element => {
     dispatch(setListadoDeAsignaciones(filteredElementsToDelete));
 
     control_success('el elemento ha sido eliminado de forma exitosa');
-    control_info('no olvides guardar los cambios')
+    control_info('no olvides guardar los cambios');
   };
 
   const handleEditElememt = (params: GridValueGetterParams) => {
