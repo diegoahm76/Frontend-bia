@@ -61,7 +61,7 @@ export const get_filtro_cartera_edades = createAsyncThunk('reportes_recaudo/filt
   const { data } = await api.get(`recaudo/reportes/reporte-cartera-edades/?rango_edad=${filtro.valor}`)
   return data.data
 })
-
+ //
 // Ver Reporte General Cartera por Fecha de Corte
 export const get_cartera_fecha = createAsyncThunk('reportes_recaudo/cartera_fecha', async (fecha: string| Date | null) => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

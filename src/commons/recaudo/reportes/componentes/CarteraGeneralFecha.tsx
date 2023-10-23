@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Grid, Box, Stack, TextField, Button, FormControl } from '@mui/material';
 import { FileDownloadOutlined, SearchOutlined } from '@mui/icons-material';
@@ -97,7 +98,23 @@ export const CarteraGeneralFecha: React.FC = () => {
   useEffect(() => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+       console.log("11111");
+      console.log(get_cartera_fecha);
+      console.log(reportes_recaudo);
+    }, 10000); // 20 segundos en milisegundos
 
+    // Limpiar el intervalo cuando el componente se desmonte
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+
+
+    
   useEffect(() => {
     // if (visible_rows.length !== 0) {
       if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
@@ -178,7 +195,7 @@ export const CarteraGeneralFecha: React.FC = () => {
       },
     },
   ];
-
+ 
   return (
     <Grid
       container
@@ -193,7 +210,7 @@ export const CarteraGeneralFecha: React.FC = () => {
       }}
     >
       <Grid item xs={12} >
-
+        
         <Title title={`Informe General de Cartera - Totalizado a fecha de corte seleccionada `} />
       </Grid>
       <Grid item marginTop={2} xs={12}>
@@ -266,7 +283,7 @@ export const CarteraGeneralFecha: React.FC = () => {
             </Stack>
           </Stack>
           {
-  visible_rows && visible_rows.length !== undefined && visible_rows.length !== 0 ? (
+  // visible_rows && visible_rows.length !== undefined && visible_rows.length !== 0 ? (
               <Stack
                 direction='column'
                 justifyContent='center'
@@ -338,7 +355,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                   </Grid>
                 </Box>
               </Stack>
-            ) : null
+            // ) : null
           }
         </Box>
       </Grid>
