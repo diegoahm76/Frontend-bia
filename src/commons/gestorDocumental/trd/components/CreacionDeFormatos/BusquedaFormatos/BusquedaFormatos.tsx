@@ -21,7 +21,7 @@ import {
   Checkbox,
   Typography,
   Tooltip,
-  ButtonGroup
+  ButtonGroup,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -40,7 +40,7 @@ import {
   create_formato_by_tipo_medio_service,
   delete_formato_by_tipo_medio_service,
   edit_formato_by_tipo_medio_service,
-  get_formatos_by_tipo_medio_by_format_and_name
+  get_formatos_by_tipo_medio_by_format_and_name,
 } from '../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columsTRD } from './utils/colums';
 import { options_search_trd } from './utils/options';
@@ -68,7 +68,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
 
     // ? state button to manage create or update documental type format
     set_title_button,
-    title_button
+    title_button,
   } = use_trd();
 
   //! context for the modal interacion
@@ -79,7 +79,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   const onSubmitCreateFormate = async () => {
     const {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
-      nombre
+      nombre,
     } = data_format_documental_type_watch_form;
     console.log('cod_tipo_medio_doc', cod_tipo_medio_doc);
 
@@ -87,7 +87,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       await dispatch(
         create_formato_by_tipo_medio_service({
           cod_tipo_medio_doc,
-          nombre
+          nombre,
         })
       );
 
@@ -109,7 +109,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
       nombre,
       activo,
-      id_formato_tipo_medio
+      id_formato_tipo_medio,
     } = data_format_documental_type_watch_form;
 
     try {
@@ -118,7 +118,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           cod_tipo_medio_doc,
           nombre,
           activo,
-          id_formato_tipo_medio
+          id_formato_tipo_medio,
         })
       );
 
@@ -135,7 +135,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   };
   // ?  function that allow us to delete a format documental type
   const deleteFormat = async ({
-    row: { id_formato_tipo_medio, cod_tipo_medio_doc }
+    row: { id_formato_tipo_medio, cod_tipo_medio_doc },
   }: any) => {
     try {
       await dispatch(
@@ -167,7 +167,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           <Chip label="Si" color="error" variant="outlined" />
         ) : (
           <Chip label="No" color="info" variant="outlined" />
-        )
+        ),
     },
     {
       headerName: 'Registro precargado',
@@ -180,7 +180,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           <Chip label="Si" color="error" variant="outlined" />
         ) : (
           <Chip label="No" color="info" variant="outlined" />
-        )
+        ),
     },
     {
       headerName: 'Activo',
@@ -193,62 +193,91 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           <Chip label="Si" color="error" variant="outlined" />
         ) : (
           <Chip label="No" color="info" variant="outlined" />
-        )
+        ),
     },
+
     {
       headerName: 'Acciones',
       field: 'accion',
       minWidth: 150,
       maxWidth: 170,
       flex: 1,
-      renderCell: (params: any) =>
-        params.row.registro_precargado ||
-        params.row.item_ya_usado !== false ? null : (
-          <>
+      renderCell: (params: any) => (
+        <>
+        <Tooltip title = "Editar formato tipo de medio">
+          <IconButton
+            onClick={() => {
+              if (
+                params.row.registro_precargado ||
+                params.row.item_ya_usado !== false
+              ) {
+                control_warning('No se puede editar el formato tipo de medio');
+                return;
+              }
+
+              reset_format_documental_type({
+                nombre: params.row.nombre,
+                'cod-tipo-medio': {
+                  label: params.row.tipo_medio_doc,
+                  value: 0,
+                  'cod-tipo-medio': params.row.cod_tipo_medio_doc,
+                },
+                activo: params.row.activo,
+                id_formato_tipo_medio: params.row.id_formato_tipo_medio,
+              });
+              set_title_button('Actualizar');
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <EditIcon
+                sx={{
+                  color:
+                    params.row.registro_precargado ||
+                    params.row.item_ya_usado !== false
+                      ? 'gray'
+                      : 'primary.main',
+                  width: '18px',
+                  height: '18px',
+                }}
+              />
+            </Avatar>
+          </IconButton>
+          </Tooltip>
+
+          <Tooltip title = "Eliminar formato tipo de medio">
             <IconButton
               onClick={() => {
-                reset_format_documental_type({
-                  nombre: params.row.nombre,
-                  'cod-tipo-medio': {
-                    label: params.row.tipo_medio_doc,
-                    value: 0,
-                    'cod-tipo-medio': params.row.cod_tipo_medio_doc
-                  },
-                  activo: params.row.activo,
-                  id_formato_tipo_medio: params.row.id_formato_tipo_medio
-                });
-                set_title_button('Actualizar');
-              }}
-            >
-              <Avatar sx={AvatarStyles} variant="rounded">
-                <EditIcon
-                  titleAccess="Editar formato tipo de medio"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
+                if (
+                  params.row.registro_precargado ||
+                  params.row.item_ya_usado !== false
+                ) {
+                  control_warning(
+                    'No se puede eliminar el formato tipo de medio'
+                  );
+                  return;
+                }
 
-
-            <>
-
-
-            <IconButton
-              onClick={() => {
                 void deleteFormat(params);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DeleteIcon
-                  titleAccess="Eliminar formato tipo de medio"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{
+                    color:
+                      params.row.registro_precargado ||
+                      params.row.item_ya_usado !== false
+                        ? 'gray'
+                        : 'red',
+                    width: '18px',
+                    height: '18px',
+                  }}
                 />
               </Avatar>
             </IconButton>
-
-            </>
-          </>
-        )
-    }
+          </Tooltip>
+        </>
+      ),
+    },
   ];
 
   return (
@@ -260,14 +289,14 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         borderRadius: '15px',
         p: '20px',
         mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26'
+        boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
       <Grid item xs={12}>
         <Title title="Módulo de administración de formatos por tipo de medio" />
         <form
           style={{
-            marginTop: '20px'
+            marginTop: '20px',
           }}
           onSubmit={(e) => {
             e.preventDefault();
@@ -285,7 +314,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <div>
                     <Select
@@ -303,7 +332,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                           fontWeight: 'thin',
                           fontSize: '0.75rem',
                           marginTop: '0.25rem',
-                          marginLeft: '0.25rem'
+                          marginLeft: '0.25rem',
                         }}
                       >
                         Formato de tipo de medio documental
@@ -320,7 +349,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth
@@ -346,7 +375,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 xs={4}
                 sm={4}
                 sx={{
-                  ml: '-25rem'
+                  ml: '-25rem',
                 }}
               >
                 {title_button === 'Actualizar' ? (
@@ -356,7 +385,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                     defaultValue=""
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
+                      fieldState: { error },
                     }) => (
                       <FormControl fullWidth>
                         <FormControlLabel
@@ -383,7 +412,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                                       width: '1.2rem',
                                       height: '1.2rem',
                                       ml: '0.5rem',
-                                      color: 'green'
+                                      color: 'green',
                                     }}
                                   />
                                 </Tooltip>
@@ -400,7 +429,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                                       width: '1.2rem',
                                       height: '1.2rem',
                                       ml: '0.5rem',
-                                      color: 'orange'
+                                      color: 'orange',
                                     }}
                                   />
                                 </Tooltip>
@@ -470,10 +499,21 @@ export const AdmnistrarFormatos = (): JSX.Element => {
             {data_format_documental_type.length > 0 ? (
               <Grid item xs={12}>
                 <ButtonGroup
-                  style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
                 >
-                  {download_xls({ nurseries: data_format_documental_type, columns: columns_creacion_formatos })}
-                  {download_pdf({ nurseries: data_format_documental_type, columns: columns_creacion_formatos, title: title_button  })}
+                  {download_xls({
+                    nurseries: data_format_documental_type,
+                    columns: columns_creacion_formatos,
+                  })}
+                  {download_pdf({
+                    nurseries: data_format_documental_type,
+                    columns: columns_creacion_formatos,
+                    title: title_button,
+                  })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
