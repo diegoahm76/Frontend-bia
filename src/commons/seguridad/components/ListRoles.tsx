@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import DetailIcon from '@mui/icons-material/Visibility';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { control_error, control_success } from '../../../helpers';
@@ -76,7 +76,8 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
     {
       headerName: 'Descripción',
       field: 'descripcion_rol',
-      minWidth: 300,flex: 1,
+      minWidth: 300,
+      flex: 1,
     },
     // {
     //   headerName: 'Estado',
@@ -131,7 +132,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               variant="rounded"
             >
               <DeleteIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                sx={{ color: 'red', width: '18px', height: '18px' }}
               />
             </Avatar>
           </IconButton>

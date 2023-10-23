@@ -98,8 +98,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           cod_tipo_medio_doc
         )
       );
-      // reset_all_format_documental_type_modal();
-      // set_title_button('Actualizar');
     } catch (err) {
       console.log(err);
     }
@@ -131,7 +129,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           cod_tipo_medio_doc
         )
       );
-      // reset_all_format_documental_type_modal();
     } catch (err) {
       console.log(err);
     }
@@ -230,6 +227,11 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 />
               </Avatar>
             </IconButton>
+
+
+            <>
+
+
             <IconButton
               onClick={() => {
                 void deleteFormat(params);
@@ -242,6 +244,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 />
               </Avatar>
             </IconButton>
+
+            </>
           </>
         )
     }
