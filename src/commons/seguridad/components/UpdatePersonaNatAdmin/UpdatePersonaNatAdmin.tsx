@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import {
   Grid,
@@ -31,7 +32,7 @@ import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
   editar_persona_natural,
-} from '../../request/Request'
+} from '../../request/Request';
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 import { DatosVinculacion } from '../../../auth/components/DataVinculación';
@@ -111,20 +112,37 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
   const acepta_notificacion_email =
-    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
+    watch('acepta_notificacion_email') ??
+    data?.acepta_notificacion_email ??
+    false;
   const acepta_notificacion_sms =
     watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
   const handle_change_autocomplete = (
-   // event: any,
-    value: ClaseTercero[],
-   // reason: AutocompleteChangeReason,
-   // details?: AutocompleteChangeDetails<ClaseTercero>
+    event: React.ChangeEvent<{}>,
+    value: any,
+    reason: any,
+    details?: any
   ): void => {
-    set_value(
-      'datos_clasificacion_persona',
-      value.map((e) => e.value)
-    );
-    set_clase_tercero_persona(value);
+    console.log(reason);
+    if (reason === 'selectOption') {
+      const newValue = details?.option;
+      console.log(newValue);
+
+      if (newValue) {
+        set_value('datos_clasificacion_persona', newValue);
+        set_clase_tercero_persona((prevValue) => [
+          ...prevValue,
+          { value: newValue?.value, label: newValue?.label },
+        ]);
+      }
+    } else if (reason === 'removeOption') {
+      const removedValue = details?.option?.value;
+      if (removedValue) {
+        set_clase_tercero_persona((prevValue) =>
+          prevValue.filter((item) => item.value !== removedValue)
+        );
+      }
+    }
   };
   // abre modal historial de autorizacion
   const handle_open_dialog_autorizacion = (): void => {
@@ -169,9 +187,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
       }
     }
   };
-  const get_datos_clase_tercero_persona = async (
-    id: number
-  ): Promise<void> => {
+  const get_datos_clase_tercero_persona = async (id: number): Promise<void> => {
     try {
       const response = await consultar_clase_tercero_persona(id);
       if (response?.length > 0) {
@@ -197,7 +213,6 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
   useEffect(() => {
     if (data !== undefined) {
       const timeout = setTimeout(() => {
-
         set_value('tipo_persona', data.tipo_persona);
         set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
         set_value('fecha_nacimiento', data.fecha_nacimiento);
@@ -205,7 +220,10 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
         set_value('sexo', data.sexo);
         set_value('estado_civil', data.estado_civil);
         set_value('departamento_expedicion', data.cod_departamento_expedicion);
-        set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
+        set_value(
+          'cod_municipio_expedicion_id',
+          data.cod_municipio_expedicion_id
+        );
         // residencia
         set_value('pais_residencia', data.pais_residencia);
         set_value('departamento_residencia', data.cod_departamento_residencia);
@@ -214,10 +232,19 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
         set_value('direccion_residencia_ref', data.direccion_residencia_ref);
         // notificaciones
         set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-        set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
-        set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
+        set_value(
+          'cod_departamento_notificacion',
+          data.cod_departamento_notificacion
+        );
+        set_value(
+          'cod_municipio_notificacion_nal',
+          data.cod_municipio_notificacion_nal
+        );
         set_value('direccion_notificaciones', data.direccion_notificaciones);
-        set_value('complemento_direccion', data.direccion_notificacion_referencia);
+        set_value(
+          'complemento_direccion',
+          data.direccion_notificacion_referencia
+        );
         set_value('email', data.email);
         set_value('telefono_celular', data.telefono_celular);
 
@@ -234,8 +261,9 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
           void get_datos_clase_tercero_persona(data?.id_persona);
         }
       }, 1000);
-      return () => { clearTimeout(timeout); };
-
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, [data]);
 
@@ -250,7 +278,9 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
       reset(); // limpiar formulario
     } catch (error) {
       set_loading(false);
-      control_error('hubo un error al actualizar los datos, intentelo de nuevo');
+      control_error(
+        'hubo un error al actualizar los datos, intentelo de nuevo'
+      );
     }
   });
 
@@ -377,7 +407,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
-                    color='warning'
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_datos_r();
@@ -516,7 +546,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
-                    color='warning'
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_direcciones();
@@ -665,7 +695,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                 >
                   <Button
                     variant="outlined"
-                    color='warning'
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_historico_email();
@@ -817,8 +847,8 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                   spacing={2}
                 >
                   <Button
-                   variant="outlined"
-                    color='warning'
+                    variant="outlined"
+                    color="warning"
                     startIcon={<RemoveRedEyeIcon />}
                     onClick={() => {
                       handle_open_dialog_autorizacion();
