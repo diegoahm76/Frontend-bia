@@ -130,6 +130,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
 
       if (newValue) {
         set_value('datos_clasificacion_persona', newValue);
+
         set_clase_tercero_persona((prevValue) => [
           ...prevValue,
           { value: newValue?.value, label: newValue?.label },
@@ -269,10 +270,18 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
 
   const on_submit_update_natural = handle_submit(async (datos: any) => {
     try {
+      const dataToSend = {
+        ...datos,
+        datos_clasificacion_persona: clase_tercero_persona.map((item) => (item.value)),
+      };
+      console.log(dataToSend);
       set_loading(true);
       delete datos.dpto_notifiacion;
       datos.ubicacion_georeferenciada = '';
-      await editar_persona_natural(data?.id_persona, datos as DataNaturaUpdate);
+      await editar_persona_natural(
+        data?.id_persona,
+        dataToSend as DataNaturaUpdate
+      );
       control_success('Los datos se actualizaron correctamente');
       set_loading(false);
       reset(); // limpiar formulario
