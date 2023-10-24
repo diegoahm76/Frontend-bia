@@ -23,17 +23,15 @@ import { Controller, useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import { get_busqueda_avanzada_expediente, get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
+import { get_busqueda_avanzada_expediente_cerrado, get_tipologias, get_trd } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
 
 interface IProps {
 
-    control_cierre_expediente: any;
+    control_reapertura_expediente: any;
     open: any;
-    handle_close_buscar: any;
+    handle_close_buscar_reapertura: any;
     get_values: any;
     handle_selected_expediente: any;
 
@@ -41,7 +39,7 @@ interface IProps {
 
 
 
-const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar, get_values, handle_selected_expediente }: IProps) => {
+const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handle_close_buscar_reapertura, get_values, handle_selected_expediente }: IProps) => {
 
     const { expedientes } = useAppSelector((state) => state.cierre_expedientes);
     const dispatch = useAppDispatch();
@@ -116,7 +114,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
         const fecha_apertura_expediente = get_values('fecha_apertura_expediente') ?? '';
         const id_serie_origen = get_values('id_serie_origen') ?? '';
         const id_subserie_origen = get_values('id_subserie_origen') ?? '';
-        void dispatch(get_busqueda_avanzada_expediente(titulo_expediente, trd_nombre, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
+        void dispatch(get_busqueda_avanzada_expediente_cerrado(titulo_expediente, trd_nombre, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
 
     }
 
@@ -133,7 +131,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                     Buscar
                 </Button>
             </Grid>
-            <Dialog fullWidth maxWidth="lg" open={open} onClose={handle_close_buscar} >
+            <Dialog fullWidth maxWidth="lg" open={open} onClose={handle_close_buscar_reapertura} >
                 <DialogContent>
                     <Grid
                         container
@@ -149,14 +147,14 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                             marginLeft: '-5px',
                         }}
                     >
-                        <Title title="BÚSQUEDA DE EXPEDIENTES ABIERTOS" />
+                        <Title title="BÚSQUEDA DE EXPEDIENTES CERRADOS" />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
                             <Grid container justifyContent="center">
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
                                     <Controller
                                         name="titulo_expediente"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         rules={{ required: true }}
                                         render={({
                                             field: { onChange, value },
@@ -185,7 +183,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
                                     <Controller
                                         name="codigo_exp_und_serie_subserie"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         rules={{ required: true }}
                                         render={({
                                             field: { onChange, value },
@@ -214,7 +212,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
                                     <Controller
                                         name="trd_nombre"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         defaultValue=""
                                         rules={{ required: true }}
                                         render={({
@@ -225,7 +223,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 margin="dense"
                                                 fullWidth
                                                 size="small"
-                                                label="TRD"
+                                                label="TRD/Fecha"
                                                 variant="outlined"
                                                 disabled={false}
                                                 defaultValue={value}
@@ -247,7 +245,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12} sm={3.5} margin={2}>
                                     <Controller
                                         name="fecha_apertura_expediente"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         rules={{ required: true }}
                                         render={({
                                             field: { onChange, value },
@@ -276,7 +274,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
                                     <Controller
                                         name="id_serie_origen"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         rules={{ required: true }}
                                         render={({
                                             field: { onChange, value },
@@ -305,7 +303,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
                                     <Controller
                                         name="id_subserie_origen"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         rules={{ required: true }}
                                         render={({
                                             field: { onChange, value },
@@ -334,7 +332,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item xs={12} sm={6} marginTop={2} margin={2}>
                                     <Controller
                                         name="palabras_clave_expediente"
-                                        control={control_cierre_expediente}
+                                        control={control_reapertura_expediente}
                                         rules={{ required: true }}
                                         render={({
                                             field: { onChange, value },
@@ -411,7 +409,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                 <Grid item margin={2}>
                                     <Button variant="outlined"
                                         color="error"
-                                        onClick={handle_close_buscar}>
+                                        onClick={handle_close_buscar_reapertura}>
                                         Salir
                                     </Button>
                                 </Grid>
@@ -426,4 +424,4 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
     );
 };
 
-export default BuscarExpediente;
+export default BuscarExpedienteReapertura;

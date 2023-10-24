@@ -4,11 +4,26 @@ import { useModalAndLoading } from '../hooks/useModalAndLoading/useModalAndLoadi
 
 export const ModalAndLoadingContext = createContext<any>({});
 
-export const ModalAndLoadingProvider: FC<any> = ({ children }: any) : JSX.Element => {
-    // ? hook to manage the loader for the section / sub section selection
-    const { isLoading: isLoadingSeccionSub , handleLoading: handleModalSecSub } = useModalAndLoading('', 'isLoading');
-    const { isLoading: isLoadingSerieSubserie , handleLoading: handleSerieSubserie } = useModalAndLoading('', 'isLoading');
-    const { isLoading: generalLoading, handleLoading: handleGeneralLoading } = useModalAndLoading('', 'isLoading');
+export const ModalAndLoadingProvider: FC<any> = ({
+  children,
+}: any): JSX.Element => {
+  // ? hook to manage the loader for the section / sub section selection
+  const { isLoading: isLoadingSeccionSub, handleLoading: handleModalSecSub } =
+    useModalAndLoading('', 'isLoading');
+  const {
+    isLoading: isLoadingSerieSubserie,
+    handleLoading: handleSerieSubserie,
+  } = useModalAndLoading('', 'isLoading');
+  const { isLoading: generalLoading, handleLoading: handleGeneralLoading } =
+    useModalAndLoading('', 'isLoading');
+  const { isLoading: secondLoading, handleLoading: handleSecondLoading } =
+    useModalAndLoading('', 'isLoading');
+
+  const { isLoading: thirdLoading, handleLoading: handleThirdLoading } =
+    useModalAndLoading('', 'isLoading');
+
+  const { isLoading: fourthLoading, handleLoading: handleFourthLoading } =
+    useModalAndLoading('', 'isLoading');
 
   //! you can add more call to hook if needed...
   // ? value object to return the data
@@ -21,8 +36,18 @@ export const ModalAndLoadingProvider: FC<any> = ({ children }: any) : JSX.Elemen
     handleSerieSubserie,
     //* carga general
     generalLoading,
-    handleGeneralLoading
-  }
+    handleGeneralLoading,
+
+    //* second loading
+    secondLoading,
+    handleSecondLoading,
+    //* third loading
+    thirdLoading,
+    handleThirdLoading,
+    //* fourth loading
+    fourthLoading,
+    handleFourthLoading,
+  };
   return (
     <ModalAndLoadingContext.Provider value={value}>
       {children}

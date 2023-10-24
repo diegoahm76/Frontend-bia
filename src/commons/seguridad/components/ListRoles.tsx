@@ -22,10 +22,11 @@ import {
   TableCell,
   Paper,
   TableBody,
+  Tooltip,
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import DetailIcon from '@mui/icons-material/Visibility';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { control_error, control_success } from '../../../helpers';
@@ -41,6 +42,7 @@ import { Title } from '../../../components/Title';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
+import CloseIcon from '@mui/icons-material/Close';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -70,13 +72,14 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
     {
       headerName: 'Nombre',
       field: 'nombre_rol',
-      minWidth: 300,
+      minWidth: 350,
       flex: 1,
     },
     {
       headerName: 'Descripción',
       field: 'descripcion_rol',
-      minWidth: 300,flex: 1,
+      minWidth: 450,
+      flex: 1,
     },
     // {
     //   headerName: 'Estado',
@@ -93,67 +96,74 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
     {
       headerName: 'Acciones',
       field: 'accion',
-      minWidth: 150,
+      minWidth: 120,
       flex: 1,
       renderCell: (params: any) => (
         <>
-          <IconButton
-            onClick={() => {
-              on_edit('2', params.row);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+          <Tooltip title="Editar" placement="top" arrow>
+            <IconButton
+              onClick={() => {
+                on_edit('2', params.row);
               }}
-              variant="rounded"
             >
-              <EditIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              void confirm_delete_rol(params.row);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <EditIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Eliminar" placement="top" arrow>
+            <IconButton
+              onClick={() => {
+                void confirm_delete_rol(params.row);
               }}
-              variant="rounded"
             >
-              <DeleteIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              void view_detail(params.row);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <DeleteIcon
+                  sx={{ color: 'red', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Ver detalle" placement="top" arrow>
+            <IconButton
+              onClick={() => {
+                void view_detail(params.row);
               }}
-              variant="rounded"
             >
-              <DetailIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <DetailIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
@@ -223,30 +233,26 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
     }
   };
 
-
   useEffect(() => {
     void get_data();
   }, []);
 
   return (
-    <>  <Grid container justifyContent="flex-end" >
-      <Grid item  >
-          
-        <ButtonGroup >
-          {download_xls({ nurseries: roles, columns })}
-          {download_pdf({ nurseries: roles, columns, title: 'Roles' })}
-
-        </ButtonGroup> 
-
+    <>
+      {' '}
+      <Grid container justifyContent="flex-end">
+        <Grid item>
+          <ButtonGroup>
+            {download_xls({ nurseries: roles, columns })}
+            {download_pdf({ nurseries: roles, columns, title: 'Roles' })}
+          </ButtonGroup>
+        </Grid>
       </Grid>
-
-    </Grid>
       <Grid container justifyContent="center" marginTop={2}>
         {is_loading ? (
           <CircularProgress />
         ) : (
           <Box sx={{ width: '100%' }}>
-             
             <DataGrid
               density="compact"
               autoHeight
@@ -300,6 +306,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                 </Button>
               </DialogActions>
             </Dialog>
+            {/* dialogo de personas */}
             <Dialog
               open={open_detail}
               onClose={handle_close}
@@ -308,105 +315,101 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               fullWidth
               maxWidth={'md'}
             >
-
-<Grid
+              <Grid
                 container
                 spacing={2}
                 sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px', mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                    marginTop: '20px',
-                    marginLeft: '14px',
-                    width: "860px"
+                  position: 'relative',
+                  background: '#FAFAFA',
+                  borderRadius: '15px',
+                  p: '20px',
+                  mb: '20px',
+                  boxShadow: '0px 3px 6px #042F4A26',
+                  marginTop: '20px',
+                  marginLeft: '14px',
+                  width: '860px',
                 }}
-            >
-
-              {/* <DialogTitle id="alert-dialog-title" textAlign="center"> */}
-                <Title title={rol.nombre_rol} />
-              {/* </DialogTitle> */}
-            </Grid>
-
+              >
+                <Title title={`Rol: ${rol.nombre_rol}`} />
+              </Grid>
 
               <Grid
                 container
                 spacing={2}
                 sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px', mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                    marginTop: '6px',
-                    marginLeft: '14px',
-                    width: "860px"
+                  position: 'relative',
+                  background: '#FAFAFA',
+                  borderRadius: '15px',
+                  p: '20px',
+                  mb: '20px',
+                  boxShadow: '0px 3px 6px #042F4A26',
+                  marginTop: '6px',
+                  marginLeft: '14px',
+                  width: '860px',
                 }}
-            >
-
-            
-              <DialogContent>
-                {is_loading_detail ? (
-                  <>
-                    <Grid container justifyContent="center">
-                      <CircularProgress />
-                    </Grid>
-                    <Typography textAlign="center">
-                      Cargando, por favor espere...
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <DialogContentText>
-                      <Typography variant="body1" mb={2}>
-                        <Title title= "Usuarios asignados al rol"></Title>
+              >
+                <DialogContent>
+                  {is_loading_detail ? (
+                    <>
+                      <Grid container justifyContent="center">
+                        <CircularProgress sx={{ mb: 1 }} />
+                      </Grid>
+                      <Typography textAlign="center" sx={{ mt: 2 }}>
+                        Cargando, por favor espere...
                       </Typography>
-                    </DialogContentText>
-                    <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="center">Usuario</TableCell>
-                            <TableCell align="center">
-                              Nombres y apellidos
-                            </TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows.map((row) => (
-                            <TableRow
-                              key={row.id_persona}
-                              sx={{
-                                '&:last-child td, &:last-child th': {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                              >
-                                {row.nombre_usuario}
-                              </TableCell>
+                    </>
+                  ) : (
+                    <>
+                      <DialogContentText>
+                        <Typography variant="body1" mb={2}>
+                          <Title title="Usuarios asignados al rol"></Title>
+                        </Typography>
+                      </DialogContentText>
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align="center">Usuario</TableCell>
                               <TableCell align="center">
-                                {row.nombre_persona}
+                                Nombres y apellidos
                               </TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </>
-                )}
-              </DialogContent>
+                          </TableHead>
+                          <TableBody>
+                            {rows.map((row) => (
+                              <TableRow
+                                key={row.id_persona}
+                                sx={{
+                                  '&:last-child td, &:last-child th': {
+                                    border: 0,
+                                  },
+                                }}
+                              >
+                                <TableCell
+                                  align="center"
+                                  component="th"
+                                  scope="row"
+                                >
+                                  {row.nombre_usuario}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.nombre_persona}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </>
+                  )}
+                </DialogContent>
               </Grid>
               <DialogActions>
                 <Button
                   onClick={handle_close}
                   variant="outlined"
-                  color="success"
+                  color="error"
+                  startIcon={<CloseIcon />}
                 >
                   Cerrar
                 </Button>

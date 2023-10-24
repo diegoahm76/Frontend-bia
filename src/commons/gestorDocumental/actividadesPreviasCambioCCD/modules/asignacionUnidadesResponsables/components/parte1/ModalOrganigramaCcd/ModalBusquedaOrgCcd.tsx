@@ -42,6 +42,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   resetStateUniResp,
   setCcdOrganigramaCurrent,
+  setListadoDeAsignaciones,
   setSeccionesPersistentes,
   setSeccionesSinResponsable,
 } from '../../../toolkit/slice/types/AsignacionUniResp';
@@ -66,8 +67,11 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     setLoadingButtonPSD: setLoadingRequest,
   } = useContext(ModalContextPSD);
 
-  //* general loading state
+  //* estas es parala carga de las secciones a las cuales ya se les estableció un responsable previamnete en el módulo de homologación de secciones persistentes
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
+
+  //* para la peticion de las secciones a las cuales no se les ha establecido un responsable
+  const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
   const handleCcdConincidenteConIdOrganigrama = async (
     params: GridValueGetterParams
@@ -79,6 +83,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         dispatch(resetStateUniResp());
         return;
       }
+      //* se limpian los estados al cambio de CCD para que no se "pise" la información
+      dispatch(resetStateUniResp());
 
       // ! OPERACIONES A REALIZAR SI EL CCD SELECCIONADO NO DERIVA DEL MISMO ORGANIGRAMA
 
@@ -108,8 +114,16 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const unidadesSinResponsable =
         await GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE(
           params.row.id_ccd,
-          navigate
-        );
+          handleSecondLoading,
+          navigate,
+          dispatch,
+          () => resetStateUniResp()
+        )
+
+      console.log(
+        'estas son las unidades sin responsable',
+        unidadesSinResponsable
+      );
       dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
 
       //* 5
@@ -117,6 +131,9 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       const listadoDeAsignaciones = await GET_LISTADO_ASIGNACIONES(
         params.row.id_ccd
       );
+
+      dispatch(setListadoDeAsignaciones(listadoDeAsignaciones));
+      console.log('busqueda inicial de asignaciones', listadoDeAsignaciones);
     } catch (error) {
       console.error(error);
     }
