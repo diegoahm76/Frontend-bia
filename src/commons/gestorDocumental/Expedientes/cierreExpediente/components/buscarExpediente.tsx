@@ -366,6 +366,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
 
 
 
+
                             </Grid>
 
 
@@ -396,19 +397,16 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
 
                             </>
                             <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
-                                <LoadingButton
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={mostrar_busqueda_expediente}
+                                <Grid item margin={2}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={mostrar_busqueda_expediente}
 
-                                >
-                                    Buscar
-                                </LoadingButton>
-                            </Grid>
-
-
-                            <Grid container justifyContent="flex-end">
+                                    >
+                                        Buscar
+                                    </Button>
+                                </Grid>
 
                                 <Grid item margin={2}>
                                     <Button variant="outlined"
@@ -418,6 +416,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                     </Button>
                                 </Grid>
                             </Grid>
+
 
                         </Grid>
                     </Grid>

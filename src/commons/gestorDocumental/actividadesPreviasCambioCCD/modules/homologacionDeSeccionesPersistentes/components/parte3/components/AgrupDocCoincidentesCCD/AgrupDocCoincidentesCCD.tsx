@@ -28,7 +28,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     agrupacionesPersistentesSerieSubserie,
     allElements,
   } = useAppSelector((state) => state.HomologacionesSlice);
-  
+
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
   const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
     console.log(params?.row);
@@ -56,18 +56,19 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     dispatch(
       setAllElements({
         coincidenciasAgrupaciones:
-          allElements?.coincidenciasAgrupaciones.filter(
+          allElements?.coincidenciasAgrupaciones?.filter(
             (item: any) =>
               item?.id_catalogo_serie_actual !==
               params?.row?.id_catalogo_serie_actual
-          ),
-        persistenciasAgrupaciones: [
-          ...allElements?.persistenciasAgrupaciones,
-          {
-            ...params?.row,
-            persistenciaConfirmada: true,
-          },
-        ],
+          ) || [],
+        persistenciasAgrupaciones:
+          [
+            ...allElements?.persistenciasAgrupaciones,
+            {
+              ...params?.row,
+              persistenciaConfirmada: true,
+            },
+          ] || [],
       })
     );
     control_success('Persistencia confirmada');
@@ -141,7 +142,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     },
   ];
 
-  const rows = [...homologacionAgrupacionesSerieSubserie]?.sort(
+  /*  const rows = [...homologacionAgrupacionesSerieSubserie]?.sort(
     (a: any, b: any) => {
       if (a?.iguales && !b?.iguales) {
         return -1;
@@ -151,7 +152,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
         return 0;
       }
     }
-  );
+  );*/
 
   if (homologacionAgrupacionesSerieSubserie?.length === 0) return null;
 
@@ -159,7 +160,16 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
     <>
       <RenderDataGrid
         columns={columns || []}
-        rows={rows || []}
+        rows={
+          [...homologacionAgrupacionesSerieSubserie].reduce((acc, curr) => {
+            if (curr?.iguales) {
+              acc.unshift(curr);
+            } else {
+              acc.push(curr);
+            }
+            return acc;
+          }, []) || []
+        }
         title="Agrupaciones documentales coincidentes entre CCD ( CCD actual / CCD nuevo )"
       />
     </>

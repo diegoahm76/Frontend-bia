@@ -27,6 +27,7 @@ import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
+import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 
@@ -135,6 +136,11 @@ const routes = [
     path: 'configuracion_tiempo_respuesta/',
     name: 'configuracion_tiempo_respuesta',
     component: () => <ConfiTiempoRespuestaRoutes />,
+  },
+  {
+    path: 'reportes_documentacion/',
+    name: 'reportes_documentacion',
+    component: () => <ReportesDocumentacionRoutes />,
   },
 ];
 

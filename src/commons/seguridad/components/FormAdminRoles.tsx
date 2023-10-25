@@ -34,6 +34,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AxiosError } from 'axios';
 import type { ResponseServer } from '../../../interfaces/globalModels';
+import { VisaulTexto } from '../../gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
 
 interface Props {
   on_create: () => void;
@@ -360,7 +361,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
               variant="contained"
               color="success"
               disabled={is_saving || permisos_rol.length === 0}
-              startIcon={<SaveIcon />}
+              endIcon={<SaveIcon />}
             >
               GUARDAR
             </Button>
@@ -373,42 +374,59 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
             spacing={2}
           >
             {is_loading ? (
-              <CircularProgress />
+              <CircularProgress
+                sx={{
+                  color: 'primary.main',
+                  mt: '30px',
+                }}
+              />
             ) : (
               <>
                 <Grid item xs={12}>
-                  <Typography variant="h5">lista de permisos</Typography>
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      fontSize: '1.2rem',
+                      mt: '20px',
+                    }}
+                    paragraph
+                  >
+                    LISTA DE PERMISOS
+                  </Typography>
                 </Grid>
-                {permisos.map((e, k) => {
+                {permisos.map((subsistema, index) => {
                   return (
-                    <Grid item xs={12} key={k}>
-                      <Accordion expanded={e.checked}>
+                    <Grid item xs={12} key={index}>
+                      <Accordion expanded={subsistema.checked}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
-                          id={e.desc_subsistema}
+                          id={subsistema.desc_subsistema}
                           onClick={() => {
-                            checked_modulo(e, k);
+                            checked_modulo(subsistema, index);
                           }}
                         >
-                          <Typography>{e.desc_subsistema}</Typography>
+                          <Typography>{subsistema.desc_subsistema}</Typography>
                         </AccordionSummary>
                         <Divider />
                         <AccordionDetails>
                           <Grid container px={3} spacing={2}>
-                            {e.modulos.map((m, i) => {
+                            {subsistema.modulos.map((modulo, i) => {
                               return (
                                 <Grid item xs={12} sm={6} key={i}>
-                                  <Accordion expanded={m.checked}>
+                                  <Accordion expanded={modulo.checked}>
                                     <AccordionSummary
                                       expandIcon={<ExpandMoreIcon />}
                                       aria-controls="panel1a-content"
-                                      id={m.nombre_modulo}
+                                      id={modulo.nombre_modulo}
                                       onClick={() => {
-                                        checked_item(m, i, k);
+                                        checked_item(modulo, i, index);
                                       }}
                                     >
-                                      <Typography>{m.nombre_modulo}</Typography>
+                                      <Typography>
+                                        {modulo.nombre_modulo}
+                                      </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
                                       <div>
@@ -418,8 +436,8 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                                       </div>
                                       <div>
                                         {render_actions(
-                                          m.permisos,
-                                          m.nombre_modulo
+                                          modulo.permisos,
+                                          modulo.nombre_modulo
                                         )}
                                       </div>
                                     </AccordionDetails>

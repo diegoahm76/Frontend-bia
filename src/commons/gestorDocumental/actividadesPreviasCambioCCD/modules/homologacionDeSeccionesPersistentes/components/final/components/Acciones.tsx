@@ -50,29 +50,6 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
   const handleSubmit = () => {
     //* se crea el objeto a enviar al servicio
-
-    /* const dataToSend = {
-      id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
-      unidades_persistentes: unidadesPersistentes.map((el: any) => ({
-        id_unidad_actual: el.id_unidad_actual,
-        id_unidad_nueva: el.id_unidad_nueva,
-        tiene_agrupaciones:
-        el.tiene_agrupaciones
-          ? !homologacionAgrupacionesSerieSubserie.some(
-              (t: any) =>
-                t.id_unidad_org_actual === el.id_unidad_actual &&
-                t.id_unidad_org_nueva === el.id_unidad_nueva
-            )
-          : el?.tiene_agrupaciones ?? false,
-      })),
-      catalagos_persistentes: agrupacionesPersistentesSerieSubserie.map(
-        (el: any) => ({
-          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
-          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
-        })
-      ),
-    };*/
-
     const dataToSend = {
       id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,
       unidades_persistentes: unidadesPersistentes.map((el: any) => {
@@ -87,8 +64,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
             tieneAgrupaciones = el.tiene_agrupaciones;
           }
 
-          el.tiene_agrupaciones
-            ? !allElements?.persistenciasAgrupaciones.some(
+          el?.tiene_agrupaciones
+            ? !allElements?.persistenciasAgrupaciones?.some(
                 (t: any) =>
                   t.id_unidad_org_actual === el.id_unidad_actual &&
                   t.id_unidad_org_nueva === el.id_unidad_nueva
@@ -103,21 +80,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
         };
       }),
       catalagos_persistentes: allElements?.persistenciasAgrupaciones || [],
-
-      /* 
-      agrupacionesPersistentesSerieSubserie.map(
-        (el: any) => ({
-          id_catalogo_serie_actual: el.id_catalogo_serie_actual,
-          id_catalogo_serie_nueva: el.id_catalogo_serie_nueva,
-        })
-      ), */
     };
-
-    console.log('soy data to senddddddd', dataToSend);
-
-    /*dispatch(setHomologacionAgrupacionesSerieSubserie([]));
-    dispatch(setAgrupacionesPersistentesSerieSubserie([]));
-    dispatch(setCurrentPersistenciaSeccionSubseccion(null));*/
 
     // ! funcion de envío de datos
     void postPersistenciasConfirmadas({
@@ -127,7 +90,8 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       //* se hace el llamado de nuevo a todos los servicios para actualizar los datos
       void fnGetHomologacionUnidades(
         ccdOrganigramaCurrentBusqueda?.id_ccd,
-        handleGeneralLoading
+        handleGeneralLoading,
+        () => dispatch(reset_states())
       );
       void fnGetUnidadesPersistentes(
         ccdOrganigramaCurrentBusqueda?.id_ccd,

@@ -188,8 +188,6 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
       const url = `gestor/trd/formatos/get-by-params/?nombre=${
         name || ''
       }&cod-tipo-medio=${cod_tipo_medio || ''}`;
-      // console.log(url, 'url')
-
       const { data } = await api.get(url);
 
       control_success(

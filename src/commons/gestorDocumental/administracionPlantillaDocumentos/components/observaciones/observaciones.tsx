@@ -2,9 +2,11 @@
 import {
   Button,
   FormControl,
+  FormControlLabel,
   Grid,
   MenuItem,
   Select,
+  Switch,
   TextField,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -48,12 +50,12 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       formData.append('nombre', form.nombre);
       formData.append('descripcion', form.descripcion);
 
-   if (form.asociada_a_tipologia_doc_trd==="True") {
+      if (form.asociada_a_tipologia_doc_trd === "True") {
         formData.append('id_tipologia_doc_trd', form.id_tipologia_doc_trd.toString());
       } else {
         formData.append('otras_tipologias', form.otras_tipologias.toString());
       }
-     formData.append('asociada_a_tipologia_doc_trd', form.asociada_a_tipologia_doc_trd.toString());
+      formData.append('asociada_a_tipologia_doc_trd', form.asociada_a_tipologia_doc_trd.toString());
 
       formData.append('cod_tipo_acceso', form.cod_tipo_acceso);
       formData.append('codigo_formato_calidad_asociado', form.codigo_formato_calidad_asociado.toString());
@@ -91,7 +93,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       const formData = new FormData();
 
 
-      if (form.asociada_a_tipologia_doc_trd==="True") {
+      if (form.asociada_a_tipologia_doc_trd === "True") {
         formData.append('id_tipologia_doc_trd', form.id_tipologia_doc_trd.toString());
       } else {
         formData.append('otras_tipologias', form.otras_tipologias.toString());
@@ -140,6 +142,11 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
     set_form(valores_defecto);
 
   }
+  const getSwitchColors = (activa: boolean) => {
+    return activa
+      ? { color: 'success', background: 'green', label: 'Si' }
+      : { color: 'error', background: 'red', label: 'No' };
+  };
 
 
 
@@ -176,26 +183,38 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
           />
         </Grid>
 
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item xs={2} >
+        <Grid item container spacing={1} style={{ marginLeft: 15 }}>
+          <Grid item xs={1} >
             <h5>Activo</h5>
           </Grid>
-          <Grid item xs={10} sm={4}>
+          <Grid item xs={10} sm={4} style={{marginTop:14}}>
 
-            <FormControl fullWidth>
-              <Select
-                labelId="demo-simple-select-label-2"
-                name="activa"
-                id="demo-simple-select-2"
-                value={form.activa.toString()} // Convierte el valor booleano a cadena de texto
-                onChange={(event) => {
-                  HandleCompletarDatos(event);
-                }}
-              >
-                <MenuItem value="true">Si</MenuItem> {/* Utiliza cadenas de texto */}
-                <MenuItem value="false">No</MenuItem> {/* Utiliza cadenas de texto */}
-              </Select>
-            </FormControl>
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={form.activa === true}
+                  onChange={(event) => {
+                    HandleCompletarDatos({
+                      target: {
+                        name: 'activa',
+                        value: event.target.checked,
+                      },
+                    });
+                  }}
+                  color={getSwitchColors(form.activa).color as "success" | "warning"}
+                />
+              }
+              label={getSwitchColors(form.activa).label}
+              sx={{
+                '& .Mui-checked': {
+                  color: 'white',
+                },
+                [`& .Mui-checked.Mui-${getSwitchColors(form.activa).color}`]: {
+                  backgroundColor: getSwitchColors(form.activa).background,
+                },
+              }}
+            />
 
           </Grid>
         </Grid>

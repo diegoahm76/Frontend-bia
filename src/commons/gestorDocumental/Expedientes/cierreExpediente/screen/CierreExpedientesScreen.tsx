@@ -3,40 +3,31 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Box, Button, Grid, TextField, } from '@mui/material';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../../components/Title';
-import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
 import { Controller, useForm } from 'react-hook-form';
-import { IObjArchivoExpediente, IObjCierreExpediente, IObjExpedientes } from '../interfaces/cierreExpedientes';
+import { IObjArchivoExpediente, IObjCierreExpediente as FormValues, IObjExpedientes, IObjCierreExpediente } from '../interfaces/cierreExpedientes';
 import FormInputController from '../../../../../components/partials/form/FormInputController';
 import { LoadingButton } from '@mui/lab';
 import BuscarExpediente from '../components/buscarExpediente';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ArchivoSoporte from '../components/archivoSoporte';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_archivos_id_expediente } from '../store/thunks/cierreExpedientesthunks';
+import { cerrar_expediente, get_archivos_id_expediente } from '../store/thunks/cierreExpedientesthunks';
+import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const CierreExpedientesScreen = () => {
     const { current_archivo_expediente, archivos_por_expedientes } = useAppSelector((state) => state.cierre_expedientes);
 
-    const { control: control_cierre_expediente, getValues: get_values, reset: reset_cierre_expediente } = useForm<IObjCierreExpediente>();
+    const { control: control_cierre_expediente, getValues: get_values, reset: reset_cierre_expediente, handleSubmit: handle_cierre_expediente } = useForm<IObjCierreExpediente>();
     const { control: control_archivo_expediente, getValues: get_values_archivo, handleSubmit: handle_submit_archivo, reset: reset_archivo_expediente } = useForm<IObjArchivoExpediente>();
 
     const [open_modal, set_open_modal] = useState(false);
     const [open_modal_archivo, set_open_modal_archivo] = useState(false);
-    const [current_date, set_current_date] = useState(new Date().toLocaleDateString());
     const [selected_expediente, set_selected_expediente] = useState<IObjExpedientes>();
     const [selected_archivo_soporte, set_selected_archivo_soporte] = useState<IObjArchivoExpediente>();
     const dispatch = useAppDispatch();
 
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            set_current_date(new Date().toLocaleDateString());
-        }, 60000);
-        // Limpia el intervalo cuando el componente se desmonta
-        return () => clearInterval(interval);
-    }, []);
 
 
     const handle_buscar = () => {
@@ -131,7 +122,29 @@ const CierreExpedientesScreen = () => {
 
     ];
 
+    const on_submit_cerrar_expediente = (data: FormValues): void => {
 
+        if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
+            const form_data: any = new FormData();
+            const current_date = new Date();
+            const formatted_date = `${current_date.getFullYear()}-${(current_date.getMonth() + 1).toString().padStart(2, '0')}-${current_date.getDate().toString().padStart(2, '0')}`;
+            const formatted_time = `${current_date.getHours().toString().padStart(2, '0')}:${current_date.getMinutes().toString().padStart(2, '0')}:${current_date.getSeconds().toString().padStart(2, '0')}`;
+            const formatted_date_time = `${formatted_date} ${formatted_time}`;
+            form_data.append('fecha_actual', formatted_date_time);
+            form_data.append('id_expediente_doc', selected_expediente.id_expediente_documental)
+            form_data.append('justificacion_cierre_reapertura', data.justificacion_cierre_reapertura)
+            // const data_cerrar = {
+            //     id_expediente_doc: selected_expediente.id_expediente_documental,
+            //     fecha_actual: formatted_date_time
+
+            // }
+
+            void dispatch(cerrar_expediente(form_data));
+        }
+
+
+
+    }
 
 
     return (
@@ -153,7 +166,8 @@ const CierreExpedientesScreen = () => {
 
 
             <Grid container spacing={2} justifyContent="center">
-                <Title title="CIERRE DE EXPEDIENTES" /><FormInputController
+                <Title title="CIERRE DE EXPEDIENTES" />
+                <FormInputController
                     xs={12}
                     md={4}
                     margin={0}
@@ -181,17 +195,39 @@ const CierreExpedientesScreen = () => {
 
                 <FormDatePickerController
                     xs={12}
-                    md={3}
-                    margin={0}
+                    md={3.5}
+                    margin={2}
                     control_form={control_cierre_expediente}
                     control_name={'fecha_actual'}
-                    default_value=''
+                    default_value={''}
                     rules={{}}
-                    label={'Fecha'}
-                    disabled={true}
+                    label={'Fecha de creación Documento'}
+                    disabled={false}
                     format={'YYYY-MM-DD'}
                     helper_text={''}
                 />
+                {/* <Grid item xs={12} sm={3.5} >
+                    <Controller
+                        name="fecha_actual"
+                        control={control_cierre_expediente}
+                        rules={{ required: true }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                fullWidth
+                                size="small"
+                                label="Fecha"
+                                variant="outlined"
+                                disabled={true}
+                                value={get_current_date().split(' ')[0]}
+                                onChange={onChange}
+                                error={!!error}
+                            />
+                        )}
+                    />
+                </Grid> */}
+
 
                 {open_modal && (
                     <Grid item xs={12} marginY={1}>
@@ -293,8 +329,29 @@ const CierreExpedientesScreen = () => {
                     set_selected_expediente={set_selected_expediente}
                 />
             )}
+            <Grid container spacing={2} marginTop={2} justifyContent="flex-end">
+                <Grid item margin={2}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handle_cierre_expediente(on_submit_cerrar_expediente)}
+
+                    >
+                        Guardar Cierre
+                    </Button>
+                </Grid>
+
+                <Grid item margin={2}>
+                    <Button variant="outlined"
+                        color="error"
+                        onClick={handle_close_buscar}>
+                        Salir
+                    </Button>
+                </Grid>
+            </Grid>
 
         </Grid>
+
     )
 
 

@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import CierreExpedientesScreen from '../cierreExpediente/screen/CierreExpedientesScreen';
 import { UserProvider } from '../../deposito/Estantes/context/context';
+import ReaperturaExpedienteScreen from '../ReaperturaExpedientes/screens/RepaerturaExpedienteScreen';
 import { AperturaExpedientesScreen } from '../aperturaExpedientes/screens/AperturaExpedientesScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -13,6 +14,10 @@ export const ExpedientesRoutes = (): ReactElement => {
         <Route
           path="cierre_expedientes/*"
           element={<CierreExpedientesScreen />}
+        />
+        <Route
+          path="reapertura_expedientes/*"
+          element={<ReaperturaExpedienteScreen />}
         />
         <Route
           path="apertura_expedientes/*"
