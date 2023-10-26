@@ -1,18 +1,18 @@
 import {
   type BaseSyntheticEvent,
   type Dispatch,
-  type SetStateAction
+  type SetStateAction,
 } from 'react';
 import type {
   FieldErrors,
   UseFormRegister,
-  UseFormReset
+  UseFormReset,
 } from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 import {
   type AutocompleteChangeDetails,
   type AutocompleteChangeReason,
-  type SelectChangeEvent
+  type SelectChangeEvent,
 } from '@mui/material';
 
 export interface IList2 {
@@ -74,6 +74,7 @@ export interface DataAadminUser {
   fecha_activación_inicial: string | null;
   creado_desde_portal: boolean;
   persona_que_creo: string | null;
+  sucursal_asignada: any;
 }
 
 export interface DataCreateUser {
@@ -181,6 +182,11 @@ export interface AdminUserHook {
   reset_admin_user: UseFormReset<DataAadminUser>;
   clean_user_info: () => void;
   watch_admin_user: any;
+
+  setListaSucursales: any;
+  listaSucursales: any;
+  sucursalSelected: any;
+  setSucursalSelected: any;
 }
 
 export interface EstadoCivil {

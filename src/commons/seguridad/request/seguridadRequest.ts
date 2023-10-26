@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { api } from '../../../api/axios';
 import type {
   HistoricoCambioEstadosUser,
@@ -7,14 +8,14 @@ import type {
   // DataCreateUser,
   // DataEditUser,
   PermisosRol,
-  Rol
+  Rol,
 } from '../interfaces';
 
 import type {
   ResponseServer,
   HistoricoDatosRestringidos,
   IList,
-  ResponseThunks
+  ResponseThunks,
 } from '../../../interfaces/globalModels';
 import type { AxiosError, AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
@@ -24,8 +25,9 @@ import type {
   DelegarSuper,
   InfoPersonal,
   PermisosRolEdit,
-  UsersRol
+  UsersRol,
 } from '../interfaces/seguridadModels';
+import { control_success } from '../../../helpers';
 
 export const change_super_user = (): DelegarSuper => {
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
@@ -37,7 +39,7 @@ export const change_super_user = (): DelegarSuper => {
     set_loading(true);
     try {
       const {
-        data: { data: res_tipo_documento }
+        data: { data: res_tipo_documento },
       } = await get_tipo_documento();
       set_tipo_documento_opt(res_tipo_documento);
     } catch (err) {
@@ -56,7 +58,7 @@ export const change_super_user = (): DelegarSuper => {
     tipo_documento,
     loading,
     get_selects_options,
-    set_tipo_documento
+    set_tipo_documento,
   };
 };
 
@@ -138,13 +140,13 @@ export const users_request = async (
 ): Promise<ResponseThunks<Users[]>> => {
   try {
     const {
-      data: { data }
+      data: { data },
     } = await api.get<ResponseServer<Users[]>>(
       `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=${nombre_de_usuario}`
     );
     return {
       ok: true,
-      data
+      data,
     };
   } catch (error: any) {
     const { response } = error as AxiosError<AxiosResponse>;
@@ -152,7 +154,7 @@ export const users_request = async (
     control_error(data.detail);
     return {
       ok: false,
-      error_message: data.detail
+      error_message: data.detail,
     };
   }
 };
@@ -166,13 +168,13 @@ export const persons_request = async (
 ): Promise<ResponseThunks<Users[]>> => {
   try {
     const {
-      data: { data }
+      data: { data },
     } = await api.get<ResponseServer<Users[]>>(
       `personas/get-personas-filters-admin-user/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social&nombre_comercial`
     );
     return {
       ok: true,
-      data
+      data,
     };
   } catch (error: any) {
     const { response } = error as AxiosError<AxiosResponse>;
@@ -180,7 +182,7 @@ export const persons_request = async (
     control_error(data.detail);
     return {
       ok: false,
-      error_message: data.detail
+      error_message: data.detail,
     };
   }
 };
@@ -193,13 +195,13 @@ export const user_historico_cambios_estado = async (
   try {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const {
-      data: { data }
+      data: { data },
     } = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
       `users/historico-activacion/${id_usuario}/`
     );
     return {
       ok: true,
-      data
+      data,
     };
   } catch (error) {
     const { response } = error as AxiosError<AxiosResponse>;
@@ -207,7 +209,7 @@ export const user_historico_cambios_estado = async (
     control_error(data.detail);
     return {
       ok: false,
-      error_message: data.detail
+      error_message: data.detail,
     };
   }
 };
@@ -256,14 +258,9 @@ export const get_person_user_or_users_by_document = async (
   );
 };
 
-// editar datos de acceso 
-export const editar_datos_acceso = async (
-  datos: FormData
-): Promise<any> => {
-  const response = await api.patch(
-    `users/profile/update/`,
-    datos
-  );
+// editar datos de acceso
+export const editar_datos_acceso = async (datos: FormData): Promise<any> => {
+  const response = await api.patch(`users/profile/update/`, datos);
   return response.data;
 };
 export const get_users_rol = async (
@@ -272,19 +269,15 @@ export const get_users_rol = async (
   return await api.get(`roles/detail_usuarios_rol/${id_rol}/`);
 };
 
-
-
-
 // ? request añadida para traer los datos de una sucursal
 
-export const get_sucursales_to_user = async () : Promise<any> => {
-  try{
-    const url = 'transversal/sucursales/sucursales-empresa-lista/3'
-    const {data} = await api.get(url)
-    console.log('data de sucursales', data)
-    return data
-  }catch(err){
-    console.error(err)
-    throw err;
+export const getSucursalesToUser = async (): Promise<any> => {
+  try {
+    const url = 'transversal/sucursales/sucursales-empresa-lista/3';
+    const response = await api.get(url);
+    return response.data?.data;
+  } catch (error: any) {
+    control_error(error?.response?.data?.detail);
+    return [];
   }
-}
+};

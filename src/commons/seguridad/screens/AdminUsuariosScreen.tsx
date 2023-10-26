@@ -62,7 +62,11 @@ const initial_state_data_register: DataAadminUser = {
   fecha_creacion: '',
   fecha_activación_inicial: '',
   creado_desde_portal: false,
-  persona_que_creo: ''
+  persona_que_creo: '',
+  sucursal_asignada: {
+    value: 0,
+    label: ''
+  },
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -88,6 +89,10 @@ export const initial_state_data_register: any = {
 };
 
 export const use_admin_users = (): AdminUserHook => {
+  //* nuevo useState
+  const [listaSucursales, setListaSucursales] = useState<any[]>([]);
+  const [sucursalSelected, setSucursalSelected] = useState<any>();
+
   const dispatch = useDispatch();
   const [loading, set_loading] = useState<boolean>(false);
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
@@ -175,6 +180,8 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
+    console.log('datoooooooooooooooooooooooooooos', sucursalSelected);
+
     try {
       set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
@@ -222,6 +229,11 @@ export const use_admin_users = (): AdminUserHook => {
         data_update_user.append(
           'justificacion_bloqueo',
           data_register.bloqueado_justificacion_cambio ?? ''
+        );
+
+        data_update_user.append(
+          'sucursal_defecto',
+          sucursalSelected?.id_sucursal_empresa?.toString()
         );
 
         // Actualización de usuario Persona Natural
@@ -622,5 +634,11 @@ export const use_admin_users = (): AdminUserHook => {
     set_loading_inputs,
     reset_admin_user,
     clean_user_info,
+
+    //* nuevos export
+    listaSucursales,
+    setListaSucursales,
+    sucursalSelected,
+    setSucursalSelected,
   };
 };
