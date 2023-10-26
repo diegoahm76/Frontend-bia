@@ -180,6 +180,7 @@ export interface AdminUserHook {
   set_numero_documento: Dispatch<SetStateAction<string>>;
   reset_admin_user: UseFormReset<DataAadminUser>;
   clean_user_info: () => void;
+  watch_admin_user: any;
 }
 
 export interface EstadoCivil {

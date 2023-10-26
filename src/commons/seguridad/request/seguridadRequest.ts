@@ -271,3 +271,20 @@ export const get_users_rol = async (
 ): Promise<AxiosResponse<ResponseServer<UsersRol[]>>> => {
   return await api.get(`roles/detail_usuarios_rol/${id_rol}/`);
 };
+
+
+
+
+// ? request añadida para traer los datos de una sucursal
+
+export const get_sucursales_to_user = async () : Promise<any> => {
+  try{
+    const url = 'transversal/sucursales/sucursales-empresa-lista/3'
+    const {data} = await api.get(url)
+    console.log('data de sucursales', data)
+    return data
+  }catch(err){
+    console.error(err)
+    throw err;
+  }
+}
