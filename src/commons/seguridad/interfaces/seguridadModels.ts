@@ -278,6 +278,7 @@ export interface ISeguridadInfo {
   data_person_search: InfoPersonal;
   user_info: Users;
   legal_person: DataPersonas;
+  
 }
 
 export interface SuperUser {

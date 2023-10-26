@@ -467,6 +467,7 @@ export const use_admin_users = (): AdminUserHook => {
         persona_que_creo: `${user_info.primer_nombre_usuario_creador ?? ''} ${
           user_info.primer_apellido_usuario_creador ?? ''
         }`,
+        sucursal_asignada: user_info.sucursal_asignada,
       });
       set_value_admin_user('tipo_documento', user_info.tipo_documento);
       set_value_admin_user('numero_documento', user_info.numero_documento);
