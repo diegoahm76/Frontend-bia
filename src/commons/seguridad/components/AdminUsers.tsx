@@ -517,7 +517,10 @@ export const AdminUsers: React.FC = () => {
                           value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
                             console.log(selectedOption);
-                            set_value_admin_user('sucursal_defecto', selectedOption);
+                            set_value_admin_user(
+                              'sucursal_defecto',
+                              selectedOption
+                            );
                           }}
                           options={listaSucursales as any}
                           placeholder="Seleccionar"
@@ -527,7 +530,7 @@ export const AdminUsers: React.FC = () => {
                               zIndex: 99999,
                             }),
                           }}
-                          menuPlacement='top'
+                          menuPlacement="top"
                         />
                         <label>
                           <small
