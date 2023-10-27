@@ -60,6 +60,7 @@ export const AdminUsers: React.FC = () => {
     listaSucursales,
     setListaSucursales,
     setSucursalSelected,
+    set_value_admin_user,
   } = use_admin_users();
 
   const watch_exe = watch_admin_user();
@@ -76,7 +77,7 @@ export const AdminUsers: React.FC = () => {
         return {
           ...sucursal,
           value: sucursal.id_sucursal_empresa,
-          label: sucursal.direccion,
+          label: sucursal.descripcion_sucursal,
         };
       });
 
@@ -316,14 +317,14 @@ export const AdminUsers: React.FC = () => {
                       name="tipo_usuario"
                       value={tipo_usuario}
                       options={tipo_usuario_opt}
-                      /* disabled={
+                      disabled={
                         tipo_persona === 'J'
                           ? true
                           : tipo_persona === 'N' &&
                             tipo_usuario === 'I' &&
                             action_admin_users === 'EDIT' &&
                             true
-                      }*/
+                      }
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -512,11 +513,11 @@ export const AdminUsers: React.FC = () => {
                         }}
                       >
                         <Select
-                          {...register_admin_user('sucursal_asignada')}
-                          value={watch_exe.sucursal_asignada}
+                          {...register_admin_user('sucursal_defecto')}
+                          value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
                             console.log(selectedOption);
-                            setSucursalSelected(selectedOption);
+                            set_value_admin_user('sucursal_defecto', selectedOption);
                           }}
                           options={listaSucursales as any}
                           placeholder="Seleccionar"

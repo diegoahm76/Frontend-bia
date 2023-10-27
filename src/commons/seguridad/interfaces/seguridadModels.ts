@@ -74,7 +74,7 @@ export interface DataAadminUser {
   fecha_activación_inicial: string | null;
   creado_desde_portal: boolean;
   persona_que_creo: string | null;
-  sucursal_asignada: any;
+  sucursal_defecto: any;
 }
 
 export interface DataCreateUser {
@@ -131,6 +131,7 @@ export interface UserCreate {
   success: boolean;
 }
 export interface AdminUserHook {
+  set_value_admin_user: any;
   errors_admin_users: FieldErrors<DataAadminUser>;
   action_admin_users: string;
   user_info: Users;
@@ -222,6 +223,8 @@ export interface SeguridadSlice {
 }
 
 export interface Users {
+  descripcion_sucursal_empresa: any;
+  id_sucursal_empresa: any;
   id_usuario: number;
   nombre_de_usuario: string;
   persona: number;

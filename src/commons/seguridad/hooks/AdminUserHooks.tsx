@@ -180,8 +180,6 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
-    console.log('datoooooooooooooooooooooooooooos', sucursalSelected);
-
     try {
       set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
@@ -233,7 +231,7 @@ export const use_admin_users = (): AdminUserHook => {
 
         data_update_user.append(
           'sucursal_defecto',
-          sucursalSelected?.id_sucursal_empresa?.toString()
+          watch_admin_user('sucursal_defecto')?.value ?? ''
         );
 
         // Actualización de usuario Persona Natural
@@ -252,7 +250,7 @@ export const use_admin_users = (): AdminUserHook => {
     }
   });
 
-  // Establece los valores del formulario
+  //*  ----------- Establece los valores del formulario -----------------
   const set_value_form = (name: string, value: string): void => {
     value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
     set_data_register({
@@ -262,6 +260,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_value_admin_user(name as keys_object, value);
   };
 
+  //* ----------- Cambio de valores en los selects -----------------
   const on_change = (e: SelectChangeEvent<string>): void => {
     switch (e.target.name) {
       case 'tipo_usuario':
@@ -293,6 +292,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_value_form(e.target.name, e.target.value);
   };
 
+  //* ----------- Cambio de valores en los selects -----------------
   const handle_change_autocomplete = (
     _event: any,
     value: IList2[],
@@ -307,11 +307,12 @@ export const use_admin_users = (): AdminUserHook => {
     set_roles(value);
   };
 
-  // Cambio inputs
+  //* ----------- Cambio inputs -----------------
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
     set_value_form(e.target.name, e.target.value);
   };
 
+  //* ----------- Cambio de imagen -----------------
   const handle_image_select = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -341,6 +342,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
+      console.log('data_person_search', data_person_search);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -411,6 +413,8 @@ export const use_admin_users = (): AdminUserHook => {
 
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
+    console.log('user_info', user_info);
+
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (user_info.id_usuario !== 0) {
@@ -467,7 +471,10 @@ export const use_admin_users = (): AdminUserHook => {
         persona_que_creo: `${user_info.primer_nombre_usuario_creador ?? ''} ${
           user_info.primer_apellido_usuario_creador ?? ''
         }`,
-        sucursal_asignada: user_info.sucursal_asignada,
+        sucursal_defecto: {
+          value: user_info?.id_sucursal_empresa,
+          label: user_info?.descripcion_sucursal_empresa,
+        },
       });
       set_value_admin_user('tipo_documento', user_info.tipo_documento);
       set_value_admin_user('numero_documento', user_info.numero_documento);
@@ -526,6 +533,18 @@ export const use_admin_users = (): AdminUserHook => {
       set_tipo_documento(user_info.tipo_documento);
       set_numero_documento(user_info.numero_documento);
       set_data_disponible(true);
+      /*      setSucursalSelected({
+        value: user_info?.id_sucursal_empresa,
+        label: user_info?.descripcion_sucursal_empresa,
+      });*/
+  /*    watch_admin_user('sucursal_defecto').value = {
+        value: user_info?.id_sucursal_empresa,
+        label: user_info?.descripcion_sucursal_empresa,
+      };*/
+      set_value_admin_user('sucursal_defecto', {
+        value: user_info?.id_sucursal_empresa,
+        label: user_info?.descripcion_sucursal_empresa,
+      });
       dispatch(set_action_admin_users('EDIT'));
     }
   }, [user_info]);
@@ -575,6 +594,7 @@ export const use_admin_users = (): AdminUserHook => {
     }
   }, [roles, tipo_usuario]);
 
+  //* ---------- limpiar la información del usuario -------------
   const clean_user_info = (): void => {
     reset_admin_user(initial_state_data_register);
     set_tipo_persona('N');
@@ -594,6 +614,7 @@ export const use_admin_users = (): AdminUserHook => {
     watch_admin_user,
     errors_admin_users,
     action_admin_users,
+    set_value_admin_user,
     user_info,
     loading_create_or_update,
     loading_inputs,
@@ -618,7 +639,6 @@ export const use_admin_users = (): AdminUserHook => {
     tipo_documento,
     numero_documento,
     tipo_persona_opt,
-    // rol_fixed,
     set_historial_cambios_estado_is_active,
     set_numero_documento,
     set_users_x_person_is_active,

@@ -63,7 +63,7 @@ const initial_state_data_register: DataAadminUser = {
   fecha_activación_inicial: '',
   creado_desde_portal: false,
   persona_que_creo: '',
-  sucursal_asignada: {
+  sucursal_defecto: {
     value: 0,
     label: ''
   },
