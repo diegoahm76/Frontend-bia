@@ -374,7 +374,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                     size="small"
                     onChange={onChange}
                     value={value}
-                    error={!!errors}
+                    
+                    error={!!errors.numero_documento}
                     helperText={
                       errors.numero_documento?.type === 'required'
                         ? 'Este campo es obligatorio'

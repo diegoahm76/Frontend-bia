@@ -66,7 +66,8 @@ export const get_filtro_cartera_edades = createAsyncThunk('reportes_recaudo/filt
 export const get_cartera_fecha = createAsyncThunk('reportes_recaudo/cartera_fecha', async (fecha: string| Date | null) => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const { data } = await api.get(`recaudo/reportes/reporte-general-cartera/${fecha}/`)
-  return data.data
+  console.log(data)
+  return data?.results?.data
 })
 
 export const reportes_recaudo_slice = createSlice({

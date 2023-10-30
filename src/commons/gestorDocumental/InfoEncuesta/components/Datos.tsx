@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
- import { ApexOptions } from "apexcharts";
+import { ApexOptions } from "apexcharts";
 import { GraficaBar } from "./GraficaBar";
 import { Graficapie } from "./Graficapie";
 import { DataGrid } from '@mui/x-data-grid';
@@ -17,11 +17,11 @@ import { ConteoEncuesta, Encuesta, miEstilo } from "../interfaces/types";
 import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
 import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 import { ButtonSalir } from "./Salir";
+import Logou from "./logo";
 
 export const Datos: React.FC = () => {
-
   const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null);
-   interface ReporteTiposUsuario {
+  interface ReporteTiposUsuario {
     success: boolean;
     detail: string;
     data: {
@@ -33,7 +33,6 @@ export const Datos: React.FC = () => {
     };
   }
   const [reporteTiposUsuario, setReporteTiposUsuario] = useState<ReporteTiposUsuario | null>(null);
-
   const fetchReporteTiposUsuario = async (): Promise<void> => {
     try {
       const url = `/gestor/encuestas/reporte_tipos_usuario/get/${selectedEncuestaId}/`;
@@ -43,13 +42,11 @@ export const Datos: React.FC = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchReporteTiposUsuario();
   }, [selectedEncuestaId]);
   const categoriesTiposUsuario = reporteTiposUsuario?.data.registros.map(registro => registro.nombre) || [];
   const dataTotalsTiposUsuario = reporteTiposUsuario?.data.registros.map(registro => registro.total) || [];
-
   const chartDataTiposUsuario: ApexOptions = {
     chart: {
       type: 'bar',
@@ -83,18 +80,14 @@ export const Datos: React.FC = () => {
       categories: categoriesTiposUsuario,
     }
   };
-
   const seriesTiposUsuario = [
     {
       name: 'Total por Tipo de Usuario',
       data: dataTotalsTiposUsuario,
-      
+
     }
   ];
-
-
   const [encuestas, setEncuestas] = useState<Encuesta[]>([]);
-
   useEffect(() => {
     const fetchEncuestas = async (): Promise<void> => {
       try {
@@ -108,10 +101,6 @@ export const Datos: React.FC = () => {
 
     fetchEncuestas();
   }, []);
-
- 
-
-
   const [conteoEncuesta, setConteoEncuesta] = useState<ConteoEncuesta | null>(null);
 
   const fetchConteoEncuesta = async (): Promise<void> => {
@@ -158,22 +147,36 @@ export const Datos: React.FC = () => {
     { field: "opcion_rta", headerName: "Opción de Respuesta", width: 200 },
     { field: "total", headerName: "Total", width: 120 },
   ];
+  const [showHeader, setShowHeader] = useState(false); // Controla la visualización del h1 "Hola Mundo"
+  const [showButton, setShowButton] = useState(true); // Controla la visualización del botón
 
+  const handlePrint = () => {
+    setShowHeader(true);// Mostrar el h1 "Hola Mundo"
 
+    setTimeout(() => {
+      window.print(); // Inicia la impresión
+
+      setTimeout(() => {
+        setShowHeader(false);
+        // setShowButton(false); // Oculta el botón después de 2 segundos
+      }, 150);
+    }, 1000); // Se utiliza un timeout para dar tiempo al re-renderizado de React
+  };
   return (
     <>
-
       <Grid container
         spacing={2} m={2} p={2}
         sx={miEstilo}
       >
-        <Grid item xs={12}  >
+        <>
+          {showHeader && <Logou />}
 
+        </>
+        {/* {showMessage &&  <Logou/> } */}
+        <Grid item xs={12}  >
           <Title title="Informe de encuesta" />
         </Grid>
-    
         {/* <h1>{selectedEncuestaId}</h1> */}
-
         <Grid item xs={12} sm={4}>
           <FormControl required size="small" fullWidth>
             <InputLabel>Encuesta</InputLabel>
@@ -191,9 +194,6 @@ export const Datos: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
-
-
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
@@ -204,16 +204,16 @@ export const Datos: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={10} ></Grid>
         <Grid item xs={12} sm={2} >
-           <ButtonGroup style={{ margin: 5,}}>
-              {download_xls({ nurseries: rows, columns })}
-              {download_pdf({
-                nurseries: rows,
-                columns,
-                title: 'Mis alertas',
-              })}
-            </ButtonGroup>
+          <ButtonGroup style={{ margin: 5, }}>
+            {download_xls({ nurseries: rows, columns })}
+            {download_pdf({
+              nurseries: rows,
+              columns,
+              title: 'Mis alertas',
+            })}
+          </ButtonGroup>
         </Grid>
-       
+
         <Grid item xs={12}>
           <DataGrid density="compact"
             autoHeight
@@ -225,24 +225,24 @@ export const Datos: React.FC = () => {
 
       </Grid>
       {selectedEncuestaId ? (
-      <Grid container
-        spacing={2} m={2} p={2}
-        sx={miEstilo}
-      >
-        <Grid item xs={12} marginTop={2} sm={6}>
-          <ReactApexChart options={chartDataTiposUsuario} series={seriesTiposUsuario} type="bar" height={330} />
-        </Grid>
-        <Grid item xs={12} marginTop={2} sm={6}>
-          <GraficaBar selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica barras */}
-        </Grid>
-        <Grid item xs={12} marginTop={4} sm={6}>
-          <Graficapie selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica torta */}
-        </Grid>
-        <Grid item xs={12} marginTop={4} sm={6}>
-          <GraficaArea selectedEncuestaId={selectedEncuestaId} />           {/* Renderiza la gráfica area */}
-        </Grid>
+        <Grid container
+          spacing={2} m={2} p={2}
+          sx={miEstilo}
+        >
+          <Grid item xs={12} marginTop={2} sm={6}>
+            <ReactApexChart options={chartDataTiposUsuario} series={seriesTiposUsuario} type="bar" height={330} />
+          </Grid>
+          <Grid item xs={12} marginTop={2} sm={6}>
+            <GraficaBar selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica barras */}
+          </Grid>
+          <Grid item xs={12} marginTop={4} sm={6}>
+            <Graficapie selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica torta */}
+          </Grid>
+          <Grid item xs={12} marginTop={4} sm={6}>
+            <GraficaArea selectedEncuestaId={selectedEncuestaId} />           {/* Renderiza la gráfica area */}
+          </Grid>
 
-      </Grid>
+        </Grid>
       ) : null}
       <Grid container
         spacing={2} m={2} p={2}
@@ -255,15 +255,12 @@ export const Datos: React.FC = () => {
         }}
       > <Grid item xs={12} sm={9}></Grid>
         <Grid item xs={12} sm={1.5}>
-          <Button startIcon={<PrintIcon />}  onClick={() => { window.print() }} fullWidth variant="outlined"    >
-            imprimir
-          </Button>
+          {showButton && (
+            <Button startIcon={<PrintIcon />} onClick={handlePrint} fullWidth variant="outlined">
+              imprimir
+            </Button>
+          )}
         </Grid>
-        {/* <Grid item xs={12} sm={1.5}>
-          <Button startIcon={<DownloadIcon />} fullWidth variant="contained"    >
-            descargar
-          </Button>
-        </Grid> */}
         <Grid item xs={12} sm={1.5}>
           <ButtonSalir />
         </Grid>

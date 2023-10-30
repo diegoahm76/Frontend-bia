@@ -99,18 +99,18 @@ export const CarteraGeneralFecha: React.FC = () => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
   
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-       console.log("11111");
-      console.log(get_cartera_fecha);
-      console.log(reportes_recaudo);
-    }, 10000); // 20 segundos en milisegundos
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //      console.log("11111");
+  //     console.log(get_cartera_fecha);
+  //     console.log(reportes_recaudo);
+  //   }, 10000); // 20 segundos en milisegundos
 
-    // Limpiar el intervalo cuando el componente se desmonte
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  //   // Limpiar el intervalo cuando el componente se desmonte
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
 
 
@@ -161,7 +161,7 @@ export const CarteraGeneralFecha: React.FC = () => {
     {
       field: 'codigo_contable',
       headerName: 'Código Contable',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -171,7 +171,7 @@ export const CarteraGeneralFecha: React.FC = () => {
     {
       field: 'concepto_deuda',
       headerName: 'Concepto Deuda',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -181,7 +181,7 @@ export const CarteraGeneralFecha: React.FC = () => {
     {
       field: 'valor_sancion',
       headerName: 'Total',
-      width: 170,
+      width: 170,flex: 1,
       renderCell: (params) => {
         const precio_cop = new Intl.NumberFormat("es-ES", {
           style: "currency",
@@ -210,7 +210,7 @@ export const CarteraGeneralFecha: React.FC = () => {
       }}
     >
       <Grid item xs={12} >
-        
+
         <Title title={`Informe General de Cartera - Totalizado a fecha de corte seleccionada `} />
       </Grid>
       <Grid item marginTop={2} xs={12}>

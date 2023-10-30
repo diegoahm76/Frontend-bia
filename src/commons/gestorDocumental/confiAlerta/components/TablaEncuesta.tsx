@@ -45,6 +45,8 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
 
         setEncuestas(filteredEncuestas);
     };
+
+    
     useEffect(() => {
         fetchEncuestas(); // Llama a fetchEncuestas al montar el componente
     }, []);
@@ -115,9 +117,9 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             <Grid item xs={5.3}>
             </Grid>
             <Grid item marginTop={2} xs={12} sm={2}>
-                {/* <Button startIcon={<AddIcon />} variant="outlined" onClick={() => setShowContent(true)}>
+                <Button startIcon={<AddIcon />} variant="outlined" onClick={() => setShowContent(true)}>
                     Crear encuesta
-                </Button> */}
+                </Button>
             </Grid>
             <Divider
                 style={{
@@ -129,12 +131,12 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             />
             <Grid item xs={12} marginTop={2}>
                 <DataGrid
-                    density="compact"
                     autoHeight
-                    columns={columns}
-                    rows={encuestas}
                     pageSize={10}
+                    columns={columns}
+                    density="compact"
                     rowsPerPageOptions={[10]}
+                    rows={encuestas}
                     getRowId={(row) => row.id_encabezado_encuesta}
                 />
             </Grid>

@@ -27,6 +27,7 @@ import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
+import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 
@@ -120,6 +121,12 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuasta_Routes />,
   },
+  {
+    path: 'encuesta_asignacion/',
+    name: 'encuesta_asignacion',
+    component: () => <Encuasta_Routess />,
+  },
+  
   {
     path: 'expedientes/',
     name: 'expedientes',
