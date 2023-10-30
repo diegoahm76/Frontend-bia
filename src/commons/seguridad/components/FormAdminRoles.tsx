@@ -95,11 +95,10 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
   const on_submit = handle_submit(async (data_form) => {
     set_is_saving(true);
     try {
-      console.log(data_form);
       const temp_permisos: PermisosRolEdit[] = permisos_rol.map((e) => {
         return { id_permisos_modulo: e.id_permiso_modulo };
       });
-      console.log('temp_permisos', permisos_rol);
+      // console.log('temp_permisos', permisos_rol);
 
       // Validación de permisos
       const permisos_ids = permisos_rol.map((e) => e.id_permiso_modulo);
@@ -112,8 +111,22 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         return;
       }
 
-      /*  if (rol_edit?.id_rol === 0) {
-        const { data } = await create_rol(data_form as Rol);
+      /* console.log('dataform modified', {
+        nombre_rol:
+          permisos_ids.includes(100) || permisos_ids.includes(95)
+            ? `zCamunda - ${data_form.nombre_rol}`
+            : data_form.nombre_rol,
+        descripcion_rol: data_form.descripcion_rol,
+      } as Rol);*/
+
+      if (rol_edit?.id_rol === 0) {
+        const { data } = await create_rol({
+          nombre_rol:
+            permisos_ids.includes(100) || permisos_ids.includes(95)
+              ? `zCamunda - ${data_form.nombre_rol}`
+              : data_form.nombre_rol,
+          descripcion_rol: data_form.descripcion_rol,
+        } as Rol);
         permisos_rol.forEach((e) => {
           e.id_rol = data.id_rol;
         });
@@ -123,7 +136,14 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         control_success('Rol creado');
       } else {
         const { data: res_rol } = await update_rol(
-          data_form as Rol,
+          {
+            nombre_rol: data_form.nombre_rol.includes('zCamunda')
+              ? data_form.nombre_rol
+              : permisos_ids.includes(100) || permisos_ids.includes(95)
+              ? `zCamunda - ${data_form.nombre_rol}`
+              : data_form.nombre_rol,
+            descripcion_rol: data_form.descripcion_rol,
+          } as Rol,
           rol_edit?.id_rol ?? 0
         );
 
@@ -139,7 +159,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         control_success(data.detail);
       }
 
-      on_create();*/
+      on_create();
     } catch (error) {
       const { response } = error as AxiosError<ResponseServer<any>>;
       control_error(response?.data.detail);
