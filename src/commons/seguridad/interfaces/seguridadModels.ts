@@ -1,18 +1,18 @@
 import {
   type BaseSyntheticEvent,
   type Dispatch,
-  type SetStateAction
+  type SetStateAction,
 } from 'react';
 import type {
   FieldErrors,
   UseFormRegister,
-  UseFormReset
+  UseFormReset,
 } from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 import {
   type AutocompleteChangeDetails,
   type AutocompleteChangeReason,
-  type SelectChangeEvent
+  type SelectChangeEvent,
 } from '@mui/material';
 
 export interface IList2 {
@@ -74,6 +74,7 @@ export interface DataAadminUser {
   fecha_activación_inicial: string | null;
   creado_desde_portal: boolean;
   persona_que_creo: string | null;
+  sucursal_defecto: any;
 }
 
 export interface DataCreateUser {
@@ -130,6 +131,7 @@ export interface UserCreate {
   success: boolean;
 }
 export interface AdminUserHook {
+  set_value_admin_user: any;
   errors_admin_users: FieldErrors<DataAadminUser>;
   action_admin_users: string;
   user_info: Users;
@@ -181,6 +183,11 @@ export interface AdminUserHook {
   reset_admin_user: UseFormReset<DataAadminUser>;
   clean_user_info: () => void;
   watch_admin_user: any;
+
+  setListaSucursales: any;
+  listaSucursales: any;
+  sucursalSelected: any;
+  setSucursalSelected: any;
 }
 
 export interface EstadoCivil {
@@ -216,6 +223,8 @@ export interface SeguridadSlice {
 }
 
 export interface Users {
+  descripcion_sucursal_empresa: any;
+  id_sucursal_empresa: any;
   id_usuario: number;
   nombre_de_usuario: string;
   persona: number;
@@ -272,6 +281,7 @@ export interface ISeguridadInfo {
   data_person_search: InfoPersonal;
   user_info: Users;
   legal_person: DataPersonas;
+  
 }
 
 export interface SuperUser {

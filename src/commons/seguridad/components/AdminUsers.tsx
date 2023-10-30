@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   Box,
   Grid,
@@ -18,10 +19,11 @@ import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstadoUser';
 import { use_admin_users } from '../hooks/AdminUserHooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EditIcon from '@mui/icons-material/Edit';
-import { get_sucursales_to_user } from '../request/seguridadRequest';
+import { getSucursalesToUser } from '../request/seguridadRequest';
+import Select from 'react-select';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsers: React.FC = () => {
   const {
@@ -55,15 +57,35 @@ export const AdminUsers: React.FC = () => {
     set_historial_cambios_estado_is_active,
     clean_user_info,
     watch_admin_user,
+    listaSucursales,
+    setListaSucursales,
+    setSucursalSelected,
+    set_value_admin_user,
   } = use_admin_users();
 
   const watch_exe = watch_admin_user();
+
   useEffect(() => {
     clean_user_info();
   }, []);
 
   useEffect(() => {
-    void get_sucursales_to_user();
+    // Call the getSucursalesToUser function to fetch the list of sucursales
+    void getSucursalesToUser().then((resSucursales: any[]) => {
+      // Map over the sucursales array to create a new array of objects with 'value' and 'label' properties
+      const sucursualesToUse = resSucursales?.map((sucursal) => {
+        return {
+          ...sucursal,
+          value: sucursal.id_sucursal_empresa,
+          label: sucursal.descripcion_sucursal,
+        };
+      });
+
+      console.log(sucursualesToUse);
+
+      // Update the component state with the new list of sucursales
+      setListaSucursales(sucursualesToUse);
+    });
   }, [watch_exe.tipo_usuario]);
 
   return (
@@ -239,22 +261,6 @@ export const AdminUsers: React.FC = () => {
                       onChange={handle_change}
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sm={6} md={6}>
-                    <InputLabel htmlFor="imagen_usuario">
-                      Subir imagen de usuario
-                    </InputLabel>
-                    <Input
-                      id="imagen_usuario"
-                      type="file"
-                      autoFocus
-                      // value={data_register.imagen_usuario}
-                      {...register_admin_user('imagen_usuario')}
-                      error={Boolean(errors_admin_users.imagen_usuario)}
-                      inputProps={{ accept: 'image/*' }}
-                      onChange={handle_image_select}
-                    />
-                  </Grid> */}
-
                   <Grid item xs={12} sm={6} md={6}>
                     <Button
                       fullWidth
@@ -311,14 +317,14 @@ export const AdminUsers: React.FC = () => {
                       name="tipo_usuario"
                       value={tipo_usuario}
                       options={tipo_usuario_opt}
-                      /* disabled={
+                      disabled={
                         tipo_persona === 'J'
                           ? true
                           : tipo_persona === 'N' &&
                             tipo_usuario === 'I' &&
                             action_admin_users === 'EDIT' &&
                             true
-                      }*/
+                      }
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -347,39 +353,6 @@ export const AdminUsers: React.FC = () => {
                         onChange={handle_change_autocomplete as any}
                       />
                     )}
-                    {/* {roles_opt.length > 0 && (
-                      <Autocomplete
-                        disabled={tipo_usuario === 'E' && true}
-                        multiple
-                        fullWidth
-                        options={roles_opt}
-                        getOptionLabel={(option) => option?.label}
-                        isOptionEqualToValue={(option, value) =>
-                          option.value === value.value
-                        }
-                        value={roles ?? []}
-                        renderTags={(tagValue, getTagProps) =>
-                          tagValue.map((option, index) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <Chip
-                              label={option.label}
-                              {...getTagProps({ index })}
-                              disabled={rol_fixed.includes(option)}
-                            />
-                          ))
-                        }
-                        renderInput={(params) => (
-                          <TextField
-                            key={params.id}
-                            {...params}
-                            label="Selección de roles"
-                            placeholder="Roles asignados"
-                          />
-                        )}
-                        {...register_admin_user('roles')}
-                        onChange={handle_change_autocomplete}
-                      />
-                    )} */}
                   </Grid>
                 </Grid>
               </>
@@ -516,20 +489,63 @@ export const AdminUsers: React.FC = () => {
                 {/* espacio de trabajo */}
 
                 {watch_exe.tipo_usuario === 'I' && (
-                  <Grid container spacing={2} sx={{ mt: '20px' }}>
-                    <Box sx={{ ml: '16px', width: '100%' }}>
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{
+                      mt: '20px',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        ml: '16px',
+                        width: '100%',
+                      }}
+                    >
                       <Title title="Asignación de sucursal" />
                     </Box>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <TextField
-                        disabled
-                        fullWidth
-                        size="small"
-                        label="Fecha de creación"
-                        value={data_register.fecha_creacion}
-                        {...register_admin_user('fecha_creacion')}
-                        onChange={handle_change}
-                      />
+                    <Grid item xs={12} sm={12} md={12}>
+                      <div
+                        style={{
+                          padding: '10px',
+                          justifyContent: 'center',
+                          zIndex: 99999,
+                        }}
+                      >
+                        <Select
+                          {...register_admin_user('sucursal_defecto')}
+                          value={watch_exe.sucursal_defecto}
+                          onChange={(selectedOption) => {
+                            console.log(selectedOption);
+                            set_value_admin_user(
+                              'sucursal_defecto',
+                              selectedOption
+                            );
+                          }}
+                          options={listaSucursales as any}
+                          placeholder="Seleccionar"
+                          styles={{
+                            control: (base) => ({
+                              ...base,
+                              zIndex: 99999,
+                            }),
+                          }}
+                          menuPlacement="top"
+                        />
+                        <label>
+                          <small
+                            style={{
+                              color: 'rgba(0, 0, 0, 0.6)',
+                              fontWeight: 'thin',
+                              fontSize: '0.75rem',
+                              marginTop: '0.25rem',
+                              marginLeft: '0.25rem',
+                            }}
+                          >
+                            Seleccione sucursal a asignar
+                          </small>
+                        </label>
+                      </div>
                     </Grid>
                   </Grid>
                 )}

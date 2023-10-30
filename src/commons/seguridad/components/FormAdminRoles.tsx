@@ -35,6 +35,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AxiosError } from 'axios';
 import type { ResponseServer } from '../../../interfaces/globalModels';
 import { VisaulTexto } from '../../gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
+import Swal from 'sweetalert2';
 
 interface Props {
   on_create: () => void;
@@ -94,8 +95,38 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
   const on_submit = handle_submit(async (data_form) => {
     set_is_saving(true);
     try {
+      const temp_permisos: PermisosRolEdit[] = permisos_rol.map((e) => {
+        return { id_permisos_modulo: e.id_permiso_modulo };
+      });
+      // console.log('temp_permisos', permisos_rol);
+
+      // Validación de permisos
+      const permisos_ids = permisos_rol.map((e) => e.id_permiso_modulo);
+      if (permisos_ids.includes(100) && permisos_ids.includes(95)) {
+        await Swal.fire({
+          title: 'Error',
+          text: 'No pueden enviar permisos de trámites y servicios y manipulación de trámites y servicios al mismo tiempo',
+          icon: 'error',
+        });
+        return;
+      }
+
+      /* console.log('dataform modified', {
+        nombre_rol:
+          permisos_ids.includes(100) || permisos_ids.includes(95)
+            ? `zCamunda - ${data_form.nombre_rol}`
+            : data_form.nombre_rol,
+        descripcion_rol: data_form.descripcion_rol,
+      } as Rol);*/
+
       if (rol_edit?.id_rol === 0) {
-        const { data } = await create_rol(data_form as Rol);
+        const { data } = await create_rol({
+          nombre_rol:
+            permisos_ids.includes(100) || permisos_ids.includes(95)
+              ? `zCamunda - ${data_form.nombre_rol}`
+              : data_form.nombre_rol,
+          descripcion_rol: data_form.descripcion_rol,
+        } as Rol);
         permisos_rol.forEach((e) => {
           e.id_rol = data.id_rol;
         });
@@ -105,7 +136,14 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         control_success('Rol creado');
       } else {
         const { data: res_rol } = await update_rol(
-          data_form as Rol,
+          {
+            nombre_rol: data_form.nombre_rol.includes('zCamunda')
+              ? data_form.nombre_rol
+              : permisos_ids.includes(100) || permisos_ids.includes(95)
+              ? `zCamunda - ${data_form.nombre_rol}`
+              : data_form.nombre_rol,
+            descripcion_rol: data_form.descripcion_rol,
+          } as Rol,
           rol_edit?.id_rol ?? 0
         );
 
