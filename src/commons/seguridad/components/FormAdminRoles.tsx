@@ -137,11 +137,12 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
       } else {
         const { data: res_rol } = await update_rol(
           {
-            nombre_rol: data_form.nombre_rol.includes('zCamunda')
-              ? data_form.nombre_rol
-              : permisos_ids.includes(100) || permisos_ids.includes(95)
-              ? `zCamunda - ${data_form.nombre_rol}`
-              : data_form.nombre_rol,
+            nombre_rol:
+              !permisos_ids.includes(100) && !permisos_ids.includes(95)
+                ? data_form.nombre_rol.replace('zCamunda - ', '')
+                : data_form.nombre_rol.includes('zCamunda')
+                ? data_form.nombre_rol
+                : `zCamunda - ${data_form.nombre_rol}`,
             descripcion_rol: data_form.descripcion_rol,
           } as Rol,
           rol_edit?.id_rol ?? 0

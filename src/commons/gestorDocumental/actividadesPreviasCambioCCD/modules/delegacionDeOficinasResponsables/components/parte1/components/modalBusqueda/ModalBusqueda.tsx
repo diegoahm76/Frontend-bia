@@ -18,10 +18,7 @@ import {
   Stack,
   Tooltip,
 } from '@mui/material';
-import {
-  DataGrid,
-  type GridColDef,
-} from '@mui/x-data-grid';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 
 //* icons
@@ -33,10 +30,15 @@ import { columnnsSelCCDPSD } from '../../../../../../../permisosSeriesDoc/compon
 import { Title } from '../../../../../../../../../components';
 import { download_xls } from '../../../../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { setCcdOrganigramaCurrentAsiOfiResp } from '../../../../toolkit/slice/DelOfiResSlice';
+import { validacionInicialDataPendientePorPersistir } from '../../../../toolkit/thunks/validacionInicial.thunks';
+import Swal from 'sweetalert2';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -48,19 +50,43 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
-
-
-  const handleSeleccionCcdOficinasResponsables = (params: any) => {
+  const handleSeleccionCcdOficinasResponsables = async (params: any) => {
     const { row } = params;
     const { id, nombre, version, nombre_organigrama, version_organigrama } =
       row;
     console.log(row);
 
+    const validacionSeccionesPendientes =
+      await validacionInicialDataPendientePorPersistir(params?.row?.id_ccd);
+
+    //* se realiza el disparo de una alerta si la validacion.data es true
+    if (validacionSeccionesPendientes?.data.length) {
+      await Swal.fire({
+        title: '¿Está seguro de seleccionar este CCD?',
+        text: `El CCD seleccionado tiene secciones pendientes por persistir, por lo tanto, se perderán los cambios realizados en dichas secciones. ¿Desea continuar?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, continuar',
+        cancelButtonText: 'No, cancelar',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          //* se selecciona el elemento seleccionado como actual dentro del módulo
+          dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
+          handleSeleccionCCD_PSD(false);
+          return;
+        }
+      });
+
+      return;
+    }
+
+    console.log(validacionSeccionesPendientes);
+
     //* se selecciona el elemento seleccionado como actual dentro del módulo
 
-   dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
-
-
+    dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
   };
 
   const columns_ccds: GridColDef[] = [
@@ -107,7 +133,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
             <IconButton
               onClick={() => {
                 handleSeleccionCcdOficinasResponsables(params);
-                // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
               }}
             >
@@ -205,4 +230,3 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     </Dialog>
   );
 };
-
