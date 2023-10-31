@@ -123,6 +123,7 @@ export const useAlertaHook = () => {
       tiene_usuario: false,
       digito_verificacion: '',
       cod_naturaleza_empresa: '',
+      tipo_usuario:'',
     });
   };
   const limpiar_alertas = () => {
@@ -150,6 +151,7 @@ export const useAlertaHook = () => {
     },
   ]);
 
+  
   // * UseEffect
 
   useEffect(() => {

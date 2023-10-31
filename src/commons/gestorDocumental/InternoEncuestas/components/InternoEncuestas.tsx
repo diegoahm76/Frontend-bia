@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, ButtonGroup, Divider, Grid, } from '@mui/material';
 import type React from 'react';
-import { miEstilo } from '../interfaces/types';
 import { api } from '../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
@@ -18,7 +17,15 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { TextField } from '@material-ui/core';
 import SearchIcon from '@mui/icons-material/Search';
 
-
+export const miEstilo = {
+    position: 'relative',
+    background: '#FAFAFA',
+    borderRadius: '15px',
+    p: '20px',
+    m: '10px 0 20px 0',
+    mb: '20px',
+    boxShadow: '0px 3px 6px #042F4A26',
+  };
 interface AsignacionEncuestaUsuario {
     id_asignar_encuesta: number;
     nombre_completo: string;
@@ -33,7 +40,7 @@ export interface IProps {
     setSelectedEncuestaId: any;
 
 }
-export const TablaEncuestaAsignada: React.FC<IProps> = ({ selectedEncuestaId, setSelectedEncuestaId }) => {
+export const TablaEncuestaInterno: React.FC<IProps> = ({ selectedEncuestaId, setSelectedEncuestaId }) => {
 
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuestaUsuario[]>([]);
     const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);

@@ -126,6 +126,7 @@ export const useAlertaHook = () => {
       nombre_comercial: '',
       tiene_usuario: false,
       digito_verificacion: '',
+      tipo_usuario:'',
       cod_naturaleza_empresa: '',
     });
   };

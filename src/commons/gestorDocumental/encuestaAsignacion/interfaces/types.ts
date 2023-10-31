@@ -5,6 +5,7 @@ export interface Persona {
     segundo_nombre: string;
     primer_apellido: string;
     segundo_apellido: string;
+    tipo_usuario:string;
 };
 export interface Encuesta {
     id_encabezado_encuesta: number;
