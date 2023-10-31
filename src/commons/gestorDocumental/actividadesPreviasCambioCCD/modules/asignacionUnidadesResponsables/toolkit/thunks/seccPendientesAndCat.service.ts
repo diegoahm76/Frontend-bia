@@ -4,11 +4,14 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../api/axios';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { control_success } from '../../../../../../../helpers';
 
 export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
   idCcdNuevo: number,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  navigate?: any
+  navigate?: any,
+  dispatch?: any,
+  callback?: any
 ) => {
   try {
     setLoading(true);
@@ -40,7 +43,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
             await Swal.fire({
               icon: 'warning',
               title: '¡ATENCIÓN!',
-              text: 'No hay unidades pendientes por confirmar en este CCD, seleccione un CCD diferente para continuar',
+              text: 'No hay unidades pendientes por confirmar en este CCD',
               showCloseButton: true,
               allowOutsideClick: false,
               allowEscapeKey: false,
@@ -64,7 +67,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
       await Swal.fire({
         icon: 'warning',
         title: '¡ATENCIÓN!',
-        text: 'No hay unidades pendientes por confirmar en este CCD, seleccione un CCD diferente para continuar',
+        text: 'No hay unidades pendientes por confirmar en este CCD',
         showCloseButton: true,
         allowOutsideClick: false,
         allowEscapeKey: false,
@@ -101,6 +104,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
           navigate(
             '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/homologacion_secciones_persistentes'
           );
+          dispatch(callback());
         }
       });
     }
@@ -116,15 +120,21 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
   idUnidadActual,
   idCcdActual,
   idCcdNuevo,
+  setLoading,
 }: {
   idUnidadActual: number;
   idCcdActual: number;
   idCcdNuevo: number;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   try {
+    setLoading(true);
     const url = `gestor/ccd/cat-serie-ccd-actual/get/?id_ccd_actual=${idCcdActual}&id_ccd_nuevo=${idCcdNuevo}&id_unidad_actual=${idUnidadActual}`;
     const { data } = await api.get(url);
-    console.log('data', data);
+
+    const returnedData = data.data.coincidencias || [];
+
+    return returnedData;
   } catch (error: any) {
     console.log(error?.response?.status);
 
@@ -141,5 +151,44 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
     return [];
   } finally {
     //* establecer el loader
+    setLoading(false);
+  }
+};
+
+export const GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP = async ({
+  idCcdNuevo,
+  setLoading,
+}: {
+  idCcdNuevo: number;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  try {
+    setLoading(true);
+    const url = `gestor/ccd/unidades-ccd-nuevo/get/${176}`;
+    const { data } = await api.get(url);
+
+    if (data?.data.length > 0) {
+      control_success('Unidades organizacionales encontradas' || data?.detail);
+      return data?.data;
+    }
+
+    return [];
+  } catch (error: any) {
+    console.log(error?.response?.status);
+
+    if (error?.response?.status === 500) {
+      void Swal.fire({
+        icon: 'warning',
+        title: '¡ATENCIÓN!',
+        text: 'No hay unidades organizacionales, seleccione una unidad diferente para continuar',
+        showCloseButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+    }
+    return [];
+  } finally {
+    //* establecer el loader
+    setLoading(false);
   }
 };
