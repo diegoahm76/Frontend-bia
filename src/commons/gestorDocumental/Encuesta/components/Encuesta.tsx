@@ -299,7 +299,7 @@ export const Encuesta: React.FC = () => {
                                 >
                                     <FormControlLabel value="I" control={<Radio />} label="Identificado" />
                                     <FormControlLabel value="A" control={<Radio />} label="Anonimo" />
-                                    <FormControlLabel value="R" control={<Radio />} label="Registrado" />
+                                    {/* <FormControlLabel value="R" control={<Radio />} label="Registrado" /> */}
                                 </RadioGroup>
                             </FormControl>
                         </Grid>

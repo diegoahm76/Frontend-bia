@@ -325,8 +325,7 @@ export const EncuestaInterno: React.FC = () => {
                                     <Select
                                         label="Tipo de Documento"
                                         name="id_tipo_documento_usuario"
-                                        disabled={formData.tipo_usuario === 'A'}
-                                        value={formData.id_tipo_documento_usuario}
+                                        disabled                                        value={formData.id_tipo_documento_usuario}
                                         onChange={handleInputChange}
                                     >
                                         {tiposDocumento.map((tipoDoc) => (
@@ -339,7 +338,7 @@ export const EncuestaInterno: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     value={formData.nro_documento_id}
                                     label="Numero identificación "
                                     onChange={handleInputChange}
@@ -352,7 +351,7 @@ export const EncuestaInterno: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     value={formData.nombre_completo}
                                     onChange={handleInputChange}
                                     label="Nombre completo"
@@ -372,7 +371,7 @@ export const EncuestaInterno: React.FC = () => {
                                         name="cod_sexo"
                                         value={formData.cod_sexo}
                                         onChange={handleInputChange}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                     >
                                         {sexos.map((sexo) => (
                                             <MenuItem key={sexo.value} value={sexo.value}>
@@ -392,7 +391,7 @@ export const EncuestaInterno: React.FC = () => {
                                         name="rango_edad"
                                         value={formData.rango_edad}
                                         onChange={handleInputChange}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                     >
                                         {rangoEdad.map((rango) => (
                                             <MenuItem key={rango.value} value={rango.value}>
@@ -405,7 +404,7 @@ export const EncuestaInterno: React.FC = () => {
 
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     onChange={handleInputChange}
                                     value={formData.email}
                                     variant="outlined"
@@ -416,7 +415,7 @@ export const EncuestaInterno: React.FC = () => {
                                 />
                             </Grid> <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     variant="outlined"
                                     size="small"
                                     label="Telefono  "
@@ -433,7 +432,7 @@ export const EncuestaInterno: React.FC = () => {
                                         label="país"
                                         name="id_pais_para_extranjero"
                                         value={formData.id_pais_para_extranjero}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                         onChange={(event) => {
                                             const selectedValue = event.target.value as string;
                                             setselected_pais(selectedValue);
@@ -460,7 +459,7 @@ export const EncuestaInterno: React.FC = () => {
                                             const selectedValue = event.target.value as string;
                                             setselected_departamento(selectedValue);
                                         }}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
 
                                     >
                                         {departamentos.map((departamento) => (
@@ -478,7 +477,7 @@ export const EncuestaInterno: React.FC = () => {
                                         label="Municipio"
                                         onChange={handleInputChange}
                                         name="id_municipio_para_nacional"
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                         value={formData.id_municipio_para_nacional}
                                         inputProps={{ shrink: true }}
                                     >
