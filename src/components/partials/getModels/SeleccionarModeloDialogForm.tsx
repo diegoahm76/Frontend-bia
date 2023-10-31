@@ -292,6 +292,7 @@ const SeleccionarModeloDialogForm = ({
                             borderRadius: '15px',
                             p: '20px',
                             mb: '20px',
+                            
                             boxShadow: '0px 3px 6px #042F4A26',
                             marginLeft: '-6px',
                         }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
