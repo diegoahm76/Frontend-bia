@@ -190,6 +190,7 @@ export interface InfoPersona {
   nombre_comercial: string;
   tiene_usuario: boolean;
   digito_verificacion: string;
+  tipo_usuario: string;
   cod_naturaleza_empresa: string;
 }
 

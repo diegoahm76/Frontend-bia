@@ -12,12 +12,12 @@ import { control_error, control_success } from "../../../../helpers";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import { RadioGroup, FormControlLabel, Radio, Typography, } from "@mui/material";
 import { FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
-import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../interfaces/types";
-import { fetch_data_dptos_encuestas, fetch_data_municipio_encuestas, fetch_data_pais_encuestas } from "../services/encuestas.service";
-import { TablaEncuestaAsignada } from "./TablaEncuestaAsignada";
 import ReplyIcon from '@mui/icons-material/Reply';
+import { TablaEncuestaInterno } from "./InternoEncuestas";
+import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../../Encuesta/interfaces/types";
+import { fetch_data_dptos_encuestas, fetch_data_municipio_encuestas, fetch_data_pais_encuestas } from "../../Encuesta/services/encuestas.service";
 
-export const Encuesta: React.FC = () => {
+export const EncuestaInterno: React.FC = () => {
 
     const initialFormData = {
         id_encuesta: 104,
@@ -26,7 +26,7 @@ export const Encuesta: React.FC = () => {
         cod_sexo: "",
         telefono: "",
         rango_edad: "",
-        tipo_usuario: "",
+        tipo_usuario: "R",
         nombre_completo: "",
         nro_documento_id: "",
         id_pais_para_extranjero: "",
@@ -137,7 +137,13 @@ export const Encuesta: React.FC = () => {
         }
         return true;
     };
-
+  useEffect(() => {
+        void fetchUsuarioRegistrado().then((response) => {
+            setUsuarioData(response); // Establece los datos del usuario obtenidos de la respuesta
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, []);
     const sendEncuestaResponse = async (): Promise<void> => {
         if (!validateFormData()) {
             return; // Si la validación falla, no continuamos con el envío
@@ -287,7 +293,7 @@ export const Encuesta: React.FC = () => {
                     >
                         {/* <img style={{ width: 45 }} src="../image/botones/logoCormaca.png" alt="XLS Button" /> */}
                         <Title title="Encuesta satisfacción al usuario" />
-                        <Grid item xs={12} marginTop={1} sm={12}>
+                        {/* <Grid item xs={12} marginTop={1} sm={12}>
                             <FormControl>
                                 <FormLabel id="demo-row-radio-buttons-group-label">Tipo de Usuario</FormLabel>
                                 <RadioGroup
@@ -299,10 +305,10 @@ export const Encuesta: React.FC = () => {
                                 >
                                     <FormControlLabel value="I" control={<Radio />} label="Identificado" />
                                     <FormControlLabel value="A" control={<Radio />} label="Anonimo" />
-                                    {/* <FormControlLabel value="R" control={<Radio />} label="Registrado" /> */}
+                                    <FormControlLabel value="R" control={<Radio />} label="Registrado" />
                                 </RadioGroup>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                     </Grid>
 
@@ -319,8 +325,7 @@ export const Encuesta: React.FC = () => {
                                     <Select
                                         label="Tipo de Documento"
                                         name="id_tipo_documento_usuario"
-                                        disabled={formData.tipo_usuario === 'A'}
-                                        value={formData.id_tipo_documento_usuario}
+                                        disabled                                        value={formData.id_tipo_documento_usuario}
                                         onChange={handleInputChange}
                                     >
                                         {tiposDocumento.map((tipoDoc) => (
@@ -333,7 +338,7 @@ export const Encuesta: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     value={formData.nro_documento_id}
                                     label="Numero identificación "
                                     onChange={handleInputChange}
@@ -346,7 +351,7 @@ export const Encuesta: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     value={formData.nombre_completo}
                                     onChange={handleInputChange}
                                     label="Nombre completo"
@@ -366,7 +371,7 @@ export const Encuesta: React.FC = () => {
                                         name="cod_sexo"
                                         value={formData.cod_sexo}
                                         onChange={handleInputChange}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                     >
                                         {sexos.map((sexo) => (
                                             <MenuItem key={sexo.value} value={sexo.value}>
@@ -386,7 +391,7 @@ export const Encuesta: React.FC = () => {
                                         name="rango_edad"
                                         value={formData.rango_edad}
                                         onChange={handleInputChange}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                     >
                                         {rangoEdad.map((rango) => (
                                             <MenuItem key={rango.value} value={rango.value}>
@@ -399,7 +404,7 @@ export const Encuesta: React.FC = () => {
 
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     onChange={handleInputChange}
                                     value={formData.email}
                                     variant="outlined"
@@ -410,7 +415,7 @@ export const Encuesta: React.FC = () => {
                                 />
                             </Grid> <Grid item xs={12} sm={4}>
                                 <TextField
-                                    disabled={formData.tipo_usuario === 'A'}
+                               disabled
                                     variant="outlined"
                                     size="small"
                                     label="Telefono  "
@@ -427,7 +432,7 @@ export const Encuesta: React.FC = () => {
                                         label="país"
                                         name="id_pais_para_extranjero"
                                         value={formData.id_pais_para_extranjero}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                         onChange={(event) => {
                                             const selectedValue = event.target.value as string;
                                             setselected_pais(selectedValue);
@@ -454,7 +459,7 @@ export const Encuesta: React.FC = () => {
                                             const selectedValue = event.target.value as string;
                                             setselected_departamento(selectedValue);
                                         }}
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
 
                                     >
                                         {departamentos.map((departamento) => (
@@ -472,7 +477,7 @@ export const Encuesta: React.FC = () => {
                                         label="Municipio"
                                         onChange={handleInputChange}
                                         name="id_municipio_para_nacional"
-                                        disabled={formData.tipo_usuario === 'A'}
+                                   disabled
                                         value={formData.id_municipio_para_nacional}
                                         inputProps={{ shrink: true }}
                                     >
@@ -573,7 +578,7 @@ export const Encuesta: React.FC = () => {
                 </>
 
             ) : (
-                <TablaEncuestaAsignada selectedEncuestaId={selectedEncuestaId} setSelectedEncuestaId={setSelectedEncuestaId} />
+                <TablaEncuestaInterno selectedEncuestaId={selectedEncuestaId} setSelectedEncuestaId={setSelectedEncuestaId} />
 
 
             )}

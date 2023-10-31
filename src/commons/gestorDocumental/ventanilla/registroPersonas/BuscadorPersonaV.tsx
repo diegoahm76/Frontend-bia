@@ -252,8 +252,10 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
           tiene_usuario: false,
           digito_verificacion: '',
           cod_naturaleza_empresa: '',
+          tipo_usuario:'',
         };
         onResult(new_data);
+        
       }
     } catch (error) {
       const temp_error = error as AxiosError;
