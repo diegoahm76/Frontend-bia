@@ -19,28 +19,23 @@ api.interceptors.request.use(
 
         //* interceptar la solicitud por tipo de metodo y mostrar un mensaje de carga
 
-       /* console.log(
+        /* console.log(
           `%c ${request.method?.toUpperCase()} ${request.url}`,
-<<<<<<< HEAD
           "color: red; font-weight: bold;"
         );
-=======
           'color: blue; font-weight: bold;'
         );*/
 
->>>>>>> origin
-
         return request;
-      }else{
+      } else {
         // Limpiar el caché de la web
-        await caches.delete('bia-v2');
-        window.location.href = '/#/auth/login';
+        await caches.delete("bia-v2");
+        window.location.href = "/#/auth/login";
         control_warning(
-          'Su sesión ha expirado, por favor vuelva a iniciar sesión'
+          "Su sesión ha expirado, por favor vuelva a iniciar sesión"
         );
       }
 
-<<<<<<< HEAD
       // Limpiar el caché de la web
       await caches.delete("bia-v2");
 
@@ -48,13 +43,11 @@ api.interceptors.request.use(
       control_warning(
         "Su sesión ha expirado, por favor vuelva a iniciar sesión"
       );
-=======
 
       /*window.location.href = '/#/auth/login';
       control_warning(
         'Su sesión ha expirado, por favor vuelva a iniciar sesión'
       );*/
->>>>>>> origin
       // throw new Error('No se ha encontrado un token de autenticación');
     } catch (e) {
       console.log(e);

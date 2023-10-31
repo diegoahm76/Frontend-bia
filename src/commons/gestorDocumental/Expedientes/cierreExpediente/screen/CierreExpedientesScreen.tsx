@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Box, Button, Grid, TextField, } from '@mui/material';
+import { Box, Button, Grid, IconButton, TextField, Tooltip, } from '@mui/material';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,8 +11,11 @@ import BuscarExpediente from '../components/buscarExpediente';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ArchivoSoporte from '../components/archivoSoporte';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { cerrar_expediente, get_archivos_id_expediente } from '../store/thunks/cierreExpedientesthunks';
+import { cerrar_expediente, delete_file, get_archivos_id_expediente } from '../store/thunks/cierreExpedientesthunks';
 import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
+import { initial_state_current_archivo_expediente, set_current_archivo_expediente } from '../store/slice/indexCierreExpedientes';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -39,6 +42,7 @@ const CierreExpedientesScreen = () => {
 
     const handle_adjuntar_archivo = () => {
         set_open_modal_archivo(true);
+        dispatch(set_current_archivo_expediente(initial_state_current_archivo_expediente))
     };
     const handle_close_adjuntar_archivo = () => {
         set_open_modal_archivo(false);
@@ -63,17 +67,11 @@ const CierreExpedientesScreen = () => {
 
 
     const handle_selected_arrchivo_expediente = (archivo: IObjArchivoExpediente) => {
-        set_selected_archivo_soporte(archivo);
+        dispatch(set_current_archivo_expediente(archivo));
         set_open_modal_archivo(true);
 
 
     };
-
-
-    useEffect(() => {
-        console.log(selected_archivo_soporte)
-        reset_archivo_expediente(selected_archivo_soporte);
-    }, [selected_archivo_soporte]);
 
 
 
@@ -105,16 +103,55 @@ const CierreExpedientesScreen = () => {
             width: 350,
         },
         {
-            field: 'acciones',
-            headerName: 'ACCIONES',
+            field: 'Editar',
+            headerName: 'EDITAR',
             width: 100,
             renderCell: (params) => (
-                <Button
-                    onClick={() => handle_selected_arrchivo_expediente(params.row)}
-                    startIcon={<PlaylistAddCheckIcon />}
-                >
+                <>
+                    <Tooltip title="Editar">
+                        <Button
+                            onClick={() => handle_selected_arrchivo_expediente(params.row)}
+                            startIcon={<EditIcon />}
+                        >
 
-                </Button>
+                        </Button>
+                    </Tooltip>
+
+                </>
+            ),
+
+        },
+        {
+            field: 'acciones',
+            headerName: 'ELIMINAR',
+            width: 100,
+            renderCell: (params) => (
+                <>
+
+                    <Tooltip title="Eliminar">
+                        <Button
+                            aria-label="delete"
+                            size="small"
+
+
+                            onClick={() => {
+                                if (current_archivo_expediente.id_expediente_documental !== undefined && current_archivo_expediente.id_expediente_documental !== null) {
+                                    dispatch(delete_file(params.row.id_documento_de_archivo_exped, current_archivo_expediente.id_expediente_documental))
+                                }
+
+                            }}
+                        >
+                            <DeleteIcon
+                                titleAccess="Eliminar"
+                                sx={{
+                                    color: 'red',
+                                    width: '18px',
+                                    height: '18px',
+                                }}
+                            />
+                        </Button>
+                    </Tooltip>
+                </>
             ),
 
         },
@@ -133,13 +170,8 @@ const CierreExpedientesScreen = () => {
             form_data.append('fecha_actual', formatted_date_time);
             form_data.append('id_expediente_doc', selected_expediente.id_expediente_documental)
             form_data.append('justificacion_cierre_reapertura', data.justificacion_cierre_reapertura)
-            // const data_cerrar = {
-            //     id_expediente_doc: selected_expediente.id_expediente_documental,
-            //     fecha_actual: formatted_date_time
-
-            // }
-
             void dispatch(cerrar_expediente(form_data));
+
         }
 
 
@@ -206,28 +238,6 @@ const CierreExpedientesScreen = () => {
                     format={'YYYY-MM-DD'}
                     helper_text={''}
                 />
-                {/* <Grid item xs={12} sm={3.5} >
-                    <Controller
-                        name="fecha_actual"
-                        control={control_cierre_expediente}
-                        rules={{ required: true }}
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                fullWidth
-                                size="small"
-                                label="Fecha"
-                                variant="outlined"
-                                disabled={true}
-                                value={get_current_date().split(' ')[0]}
-                                onChange={onChange}
-                                error={!!error}
-                            />
-                        )}
-                    />
-                </Grid> */}
-
 
                 {open_modal && (
                     <Grid item xs={12} marginY={1}>
@@ -266,6 +276,9 @@ const CierreExpedientesScreen = () => {
                                 value={value}
                                 onChange={onChange}
                                 error={!(error == null)}
+                                sx={{
+                                    backgroundColor: 'white',
+                                }}
 
                             >
 
@@ -273,51 +286,50 @@ const CierreExpedientesScreen = () => {
                         )}
                     />
                 </Grid>
-                {selected_expediente?.id_expediente_documental && (
+                {selected_expediente?.id_expediente_documental &&
+                    <>
+                        <Grid item xs={12} sm={6} margin={2}>
+                            <label style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%' }}>
+                                <small
+                                    style={{
+                                        color: 'black',
+                                        fontSize: '1rem',
 
-                    <Grid item xs={12} sm={6} margin={2}>
-                        <label style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%' }}>
-                            <small
-                                style={{
-                                    color: 'black',
-                                    fontSize: '1rem',
+                                    }}
+                                >
+                                    ARCHIVOS DE SOPORTE
+                                </small>
+                            </label>
+                        </Grid>
 
-                                }}
+                        <Box sx={{ width: '70%' }} >
+                            <Title title="RESULTADOS DE LA BÚSQUEDA" />
+                            <>
+                                <DataGrid
+                                    density="compact"
+                                    autoHeight
+                                    columns={columns}
+                                    pageSize={10}
+                                    rowsPerPageOptions={[10]}
+                                    rows={archivos_por_expedientes}
+                                    getRowId={(row) => row.orden_en_expediente} />
+                            </>
+                        </Box>
+
+                        <Grid container spacing={2} margin={8} justifyContent="center">
+                            <LoadingButton
+                                variant="contained"
+                                onClick={handle_adjuntar_archivo}
+                                disabled={false}
                             >
-                                ARCHIVOS DE SOPORTE
-                            </small>
-                        </label>
-                    </Grid>
-                )}
-
-                {selected_expediente?.id_expediente_documental && (
-                    <Box sx={{ width: '70%' }} >
-                        <Title title="RESULTADOS DE LA BÚSQUEDA" />
-                        <>
-                            <DataGrid
-                                density="compact"
-                                autoHeight
-                                columns={columns}
-                                pageSize={10}
-                                rowsPerPageOptions={[10]}
-                                rows={archivos_por_expedientes}
-                                getRowId={(row) => row.orden_en_expediente} />
-                        </>
-                    </Box>
-                )}
+                                Agregar Archivo
+                            </LoadingButton>
+                        </Grid>
+                    </>
+                }
             </Grid>
 
-            {selected_expediente?.id_expediente_documental && (
-                <Grid container spacing={2} margin={8} justifyContent="center">
-                    <LoadingButton
-                        variant="contained"
-                        onClick={handle_adjuntar_archivo}
-                        disabled={false}
-                    >
-                        Agregar Archivo
-                    </LoadingButton>
-                </Grid>
-            )}
+
             {open_modal_archivo && (
                 <ArchivoSoporte
                     control_archivo_expediente={control_archivo_expediente}

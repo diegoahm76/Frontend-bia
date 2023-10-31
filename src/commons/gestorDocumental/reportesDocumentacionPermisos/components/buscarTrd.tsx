@@ -75,6 +75,7 @@ const BuscarTrd = ({ control_trd, open, handle_close_buscar, get_values, handle_
                 <Button
                     onClick={() => handle_selected_trd(params.row)}
                     startIcon={<PlaylistAddCheckIcon />}
+                    title="Seleccionar"
                 >
 
                 </Button>
