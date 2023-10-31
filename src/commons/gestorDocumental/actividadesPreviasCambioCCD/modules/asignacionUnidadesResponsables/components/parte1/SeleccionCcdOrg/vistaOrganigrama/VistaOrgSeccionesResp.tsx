@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import {  Grid, TextField } from '@mui/material';
-import {  type FC } from 'react';
+import { Grid, TextField } from '@mui/material';
+import { type FC } from 'react';
 import { stylesGrid } from '../../../../../../../permisosSeriesDoc/utils/styles';
-
+import { useAppSelector } from '../../../../../../../../../hooks';
 
 export const VistaOrgSeccionesResp: FC<any> = (): JSX.Element => {
-    // ! states from redux
- // const { ccdOrganigramaCurrentBusqueda } = useAppSelector((state) => state.HomologacionesSlice);
+  // ! states from redux
+  const { ccdOrganigramaCurrentBusqueda } = useAppSelector(
+    (state: any) => state.AsigUniRespSlice
+  );
 
   return (
     <>
@@ -18,7 +20,7 @@ export const VistaOrgSeccionesResp: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-         value={''}
+          value={ccdOrganigramaCurrentBusqueda?.nombre_organigrama || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>
@@ -29,7 +31,7 @@ export const VistaOrgSeccionesResp: FC<any> = (): JSX.Element => {
           size="small"
           variant="outlined"
           disabled={true}
-          value={''}
+          value={ccdOrganigramaCurrentBusqueda?.version_organigrama || ''}
           InputLabelProps={{ shrink: true }}
         />
       </Grid>

@@ -5,7 +5,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LoadingButton } from '@mui/lab';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import {
     Avatar,
     Box,
@@ -21,14 +22,14 @@ import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { crear_archivo_soporte, get_archivos_id_expediente, get_tipologias, get_trd } from '../store/thunks/cierreExpedientesthunks';
-import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
+import { crear_archivo_soporte, get_archivos_id_expediente, get_tipologias, get_trd, update_file } from '../store/thunks/cierreExpedientesthunks';
 import { IList } from '../../../../../interfaces/globalModels';
 import { api } from '../../../../../api/axios';
 import FormInputFileController from '../../../../../components/partials/form/FormInputFileController';
-import { set_current_archivo_expediente, } from '../store/slice/indexCierreExpedientes';
+import { initial_state_current_archivo_expediente, set_current_archivo_expediente, } from '../store/slice/indexCierreExpedientes';
 import { type IObjArchivoExpediente as FormValues } from '../interfaces/cierreExpedientes';
-import { IDeposito } from '../../../deposito/interfaces/deposito';
+import FormDatePickerControllerV from '../../../../../components/partials/form/FormDatePickerControllerv';
+import FormButton from '../../../../../components/partials/form/FormButton';
 interface IProps {
 
     control_archivo_expediente: any;
@@ -43,16 +44,16 @@ interface IProps {
 
 
 
-const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjuntar_archivo, get_values_archivo, handle_submit_archivo, selected_expediente, set_selected_expediente }: IProps) => {
+const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjuntar_archivo, get_values_archivo, handle_submit_archivo, selected_expediente, }: IProps) => {
 
-    const { trd, tipologias, expedientes, current_archivo_expediente } = useAppSelector((state) => state.cierre_expedientes);
+    const { tipologias, current_archivo_expediente } = useAppSelector((state) => state.cierre_expedientes);
     const dispatch = useAppDispatch();
     const [tipo_origen, set_tipo_origen] = useState<IList[]>([]);
     const [tipo_archivo, set_tipo_archivo] = useState<IList[]>([]);
     const [mostrar_campos_consecutivo, set_mostrar_campos_consecutivo] = useState(true);
     const [file, set_file] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>('');
-
+    const [action, set_action] = useState<string>("guardar");
 
 
     const text_choise_adapter: any = (dataArray: string[]) => {
@@ -98,8 +99,17 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
             }
         }
     }, [file]);
-    useEffect(() => {
 
+
+
+
+    useEffect(() => {
+        if (current_archivo_expediente.id_documento_de_archivo_exped !== null) {
+            set_action("editar")
+        } else {
+            set_action("guardar")
+
+        }
 
         if (current_archivo_expediente.file !== null) {
             if (typeof current_archivo_expediente.file === 'string') {
@@ -110,9 +120,8 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         } else {
             set_file_name('');
         }
-
+        console.log(current_archivo_expediente)
     }, [current_archivo_expediente]);
-
 
 
 
@@ -165,14 +174,18 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
     }, [])
 
     const on_submit = (data: FormValues): void => {
-        console.log(data.fecha_creacion_doc)
+
         const form_data: any = new FormData();
+        const current_date = new Date();
+        const formatted_date = `${current_date.getFullYear()}-${(current_date.getMonth() + 1).toString().padStart(2, '0')}-${current_date.getDate().toString().padStart(2, '0')}`;
+        const formatted_time = `${current_date.getHours().toString().padStart(2, '0')}:${current_date.getMinutes().toString().padStart(2, '0')}:${current_date.getSeconds().toString().padStart(2, '0')}`;
+        const formatted_date_time = `${formatted_date} ${formatted_time}`;
         form_data.append('nombre_asignado_documento', data.nombre_asignado_documento);
         form_data.append('nro_folios_del_doc', data.nro_folios_del_doc);
         form_data.append('tiene_consecutivo_documento', data.tiene_consecutivo_documento);
         form_data.append('cod_origen_archivo', data.cod_origen_archivo);
         form_data.append('codigo_tipologia_doc_prefijo', data.codigo_tipologia_doc_prefijo);
-        form_data.append('fecha_creacion_doc', data.fecha_creacion_doc);
+        form_data.append('fecha_creacion_doc', formatted_date_time);
         form_data.append('codigo_tipologia_doc_agno', data.codigo_tipologia_doc_agno);
         form_data.append('codigo_tipologia_doc_consecutivo', data.codigo_tipologia_doc_consecutivo);
         form_data.append('cod_categoria_archivo', data.cod_categoria_archivo);
@@ -181,13 +194,25 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         form_data.append('descripcion', data.descripcion);
         form_data.append('palabras_clave_documento', data.palabras_clave_documento);
         form_data.append('file', file === null ? '' : file);
-        form_data.append('id_expediente_documental', selected_expediente.id_expediente_documental)
+        form_data.append('id_expediente_documental', selected_expediente.id_expediente_documental);
+        console.log(data)
+        console.log('Data antes de la acción:', data);
 
-        void dispatch(crear_archivo_soporte(form_data));
-        console.log('crear')
-        void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
-        //  set_selected_expediente(initial_state_current_archivo_expediente)
+        if (data.id_documento_de_archivo_exped === null) {
+            {
+                void dispatch(crear_archivo_soporte(form_data));
+                void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
 
+
+                dispatch(set_current_archivo_expediente(initial_state_current_archivo_expediente))
+            }
+
+        } else {
+            if (data.id_documento_de_archivo_exped !== undefined && data.id_documento_de_archivo_exped !== null) {
+                void dispatch(update_file(data.id_documento_de_archivo_exped, form_data));
+                dispatch(set_current_archivo_expediente(initial_state_current_archivo_expediente))
+            }
+        }
 
 
     };
@@ -223,11 +248,13 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                             marginLeft: '-5px',
                         }}
                     >
-                        <Title title="AGREGAR ARCHIVO DE SOPORTE" />
+
+
+                        <Title title={selected_expediente.id_documento_de_archivo_exped === null ? "AGREGAR ARCHIVO DE SOPORTE" : "EDITAR ARCHIVO DE SOPORTE"} />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
                             <Grid container justifyContent="center">
-                                <Grid item xs={12} sm={3.5} marginTop={2} >
+                                <Grid item xs={12} sm={3.5} marginTop={2}  >
                                     <Controller
                                         name="nombre_asignado_documento"
                                         control={control_archivo_expediente}
@@ -248,6 +275,12 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
+
 
                                             >
 
@@ -256,21 +289,23 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                     />
                                 </Grid>
 
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
+                                    <FormDatePickerControllerV
+                                        xs={0}
+                                        md={0}
+                                        margin={0}
+                                        marginTop={3}
+                                        control_form={control_archivo_expediente}
+                                        control_name={'fecha_creacion_doc'}
+                                        default_value={''}
+                                        rules={{}}
+                                        label={'Fecha de creación Documento'}
+                                        disabled={false}
+                                        format={'YYYY-MM-DD'}
+                                        helper_text={''}
+                                    />
 
-                                <FormDatePickerController
-                                    xs={12}
-                                    md={3.5}
-                                    margin={2}
-                                    control_form={control_archivo_expediente}
-                                    control_name={'fecha_creacion_doc'}
-                                    default_value={''}
-                                    rules={{}}
-                                    label={'Fecha de creación Documento'}
-                                    disabled={false}
-                                    format={'YYYY-MM-DD'}
-                                    helper_text={''}
-                                />
-
+                                </Grid>
 
                                 <Grid item xs={12} sm={3.5} marginTop={2}  >
                                     <Controller
@@ -294,6 +329,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 {tipologias.map((option) => (
                                                     <MenuItem key={option.id_tipologia_documental} value={option.nombre ?? ''}>
@@ -335,6 +375,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                     onChange(numericValue);
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
 
                                             </TextField>
@@ -367,6 +412,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                     handle_tiene_consecutivo(e);
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 <MenuItem value="true">SI</MenuItem>
                                                 <MenuItem value="false">NO</MenuItem>
@@ -398,6 +448,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 {tipo_origen.map((option) => (
                                                     <MenuItem key={option.label} value={option.value ?? ''}>
@@ -434,6 +489,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                     value={value}
                                                     onChange={onChange}
                                                     error={!(error == null)}
+                                                    sx={{
+                                                        backgroundColor: 'white',
+                                                    }}
+
+                                                    InputLabelProps={{ shrink: true }}
                                                 >
 
                                                 </TextField>
@@ -466,6 +526,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                         onChange(numericValue);
                                                     }}
                                                     error={!(error == null)}
+                                                    sx={{
+                                                        backgroundColor: 'white',
+                                                    }}
+
+                                                    InputLabelProps={{ shrink: true }}
                                                 >
                                                 </TextField>
                                             )}
@@ -494,6 +559,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                     value={value}
                                                     onChange={onChange}
                                                     error={!(error == null)}
+                                                    sx={{
+                                                        backgroundColor: 'white',
+                                                    }}
+
+                                                    InputLabelProps={{ shrink: true }}
                                                 >
 
                                                 </TextField>
@@ -527,6 +597,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
 
                                                 {tipo_archivo.map((option) => (
@@ -563,9 +638,13 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 value={value}
                                                 onChange={(e) => {
                                                     onChange(e);
-                                                    handle_tiene_consecutivo(e);
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 <MenuItem value="true">SI</MenuItem>
                                                 <MenuItem value="false">NO</MenuItem>
@@ -597,8 +676,8 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 rows={2}
                                                 variant="outlined"
                                                 disabled={false}
-                                                defaultValue={value}
-                                                value={value}
+                                                defaultValue={initial_state_current_archivo_expediente.asunto}
+                                                value={current_archivo_expediente.asunto}
                                                 onChange={(e) => {
                                                     const inputValue = e.target.value;
                                                     if (inputValue.length <= 50) {
@@ -606,6 +685,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                     }
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                                 inputProps={{
                                                     maxLength: 50 // Establece el límite máximo de caracteres
                                                 }}
@@ -643,6 +727,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                     }
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                                 inputProps={{
                                                     maxLength: 200 // Establece el límite máximo de caracteres
                                                 }}
@@ -675,6 +764,11 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -711,12 +805,17 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="flex-end">
+
+
                         <Grid item margin={2}>
-                            <Button variant="contained"
-                                color="success"
-                                onClick={handle_submit_archivo(on_submit)}>
-                                Guardar
-                            </Button>
+                            <FormButton
+                                variant_button="contained"
+                                on_click_function={handle_submit_archivo(on_submit)}
+                                icon_class={action === "guardar" ? <SaveIcon /> : <EditIcon />}
+                                label={action}
+                                type_button="button"
+                            />
+
                         </Grid>
                         <Grid item margin={2}>
                             <Button variant="outlined"
@@ -725,6 +824,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                                 Salir
                             </Button>
                         </Grid>
+
                     </Grid>
                 </DialogContent>
             </Dialog>

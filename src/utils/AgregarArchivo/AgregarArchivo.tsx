@@ -90,7 +90,7 @@ export const AgregarArchivo = ({ multiple }: Iprops) => {
         </>
       )}
       {multiple &&
-        archivos.map((file: any, index: any) => (
+        archivos.map((_file: any, index: any) => (
           <Fragment key={index}>
             <Grid item xs={12} sm={6}>
               <Button

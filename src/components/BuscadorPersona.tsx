@@ -380,7 +380,6 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     label="Número de documento *"
@@ -466,7 +465,6 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   rules={{ required: false }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error },
                   }) => (
                     <TextField
                       label="Número de documento *"

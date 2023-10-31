@@ -34,6 +34,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AxiosError } from 'axios';
 import type { ResponseServer } from '../../../interfaces/globalModels';
+import { VisaulTexto } from '../../gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
+import Swal from 'sweetalert2';
 
 interface Props {
   on_create: () => void;
@@ -93,8 +95,38 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
   const on_submit = handle_submit(async (data_form) => {
     set_is_saving(true);
     try {
+      const temp_permisos: PermisosRolEdit[] = permisos_rol.map((e) => {
+        return { id_permisos_modulo: e.id_permiso_modulo };
+      });
+      // console.log('temp_permisos', permisos_rol);
+
+      // Validación de permisos
+      const permisos_ids = permisos_rol.map((e) => e.id_permiso_modulo);
+      if (permisos_ids.includes(100) && permisos_ids.includes(95)) {
+        await Swal.fire({
+          title: 'Error',
+          text: 'No pueden enviar permisos de trámites y servicios y manipulación de trámites y servicios al mismo tiempo',
+          icon: 'error',
+        });
+        return;
+      }
+
+      /* console.log('dataform modified', {
+        nombre_rol:
+          permisos_ids.includes(100) || permisos_ids.includes(95)
+            ? `zCamunda - ${data_form.nombre_rol}`
+            : data_form.nombre_rol,
+        descripcion_rol: data_form.descripcion_rol,
+      } as Rol);*/
+
       if (rol_edit?.id_rol === 0) {
-        const { data } = await create_rol(data_form as Rol);
+        const { data } = await create_rol({
+          nombre_rol:
+            permisos_ids.includes(100) || permisos_ids.includes(95)
+              ? `zCamunda - ${data_form.nombre_rol}`
+              : data_form.nombre_rol,
+          descripcion_rol: data_form.descripcion_rol,
+        } as Rol);
         permisos_rol.forEach((e) => {
           e.id_rol = data.id_rol;
         });
@@ -104,7 +136,15 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         control_success('Rol creado');
       } else {
         const { data: res_rol } = await update_rol(
-          data_form as Rol,
+          {
+            nombre_rol:
+              !permisos_ids.includes(100) && !permisos_ids.includes(95)
+                ? data_form.nombre_rol.replace('zCamunda - ', '')
+                : data_form.nombre_rol.includes('zCamunda')
+                ? data_form.nombre_rol
+                : `zCamunda - ${data_form.nombre_rol}`,
+            descripcion_rol: data_form.descripcion_rol,
+          } as Rol,
           rol_edit?.id_rol ?? 0
         );
 
@@ -360,7 +400,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
               variant="contained"
               color="success"
               disabled={is_saving || permisos_rol.length === 0}
-              startIcon={<SaveIcon />}
+              endIcon={<SaveIcon />}
             >
               GUARDAR
             </Button>
@@ -373,42 +413,59 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
             spacing={2}
           >
             {is_loading ? (
-              <CircularProgress />
+              <CircularProgress
+                sx={{
+                  color: 'primary.main',
+                  mt: '30px',
+                }}
+              />
             ) : (
               <>
                 <Grid item xs={12}>
-                  <Typography variant="h5">lista de permisos</Typography>
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      fontSize: '1.2rem',
+                      mt: '20px',
+                    }}
+                    paragraph
+                  >
+                    LISTA DE PERMISOS
+                  </Typography>
                 </Grid>
-                {permisos.map((e, k) => {
+                {permisos.map((subsistema, index) => {
                   return (
-                    <Grid item xs={12} key={k}>
-                      <Accordion expanded={e.checked}>
+                    <Grid item xs={12} key={index}>
+                      <Accordion expanded={subsistema.checked}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
-                          id={e.desc_subsistema}
+                          id={subsistema.desc_subsistema}
                           onClick={() => {
-                            checked_modulo(e, k);
+                            checked_modulo(subsistema, index);
                           }}
                         >
-                          <Typography>{e.desc_subsistema}</Typography>
+                          <Typography>{subsistema.desc_subsistema}</Typography>
                         </AccordionSummary>
                         <Divider />
                         <AccordionDetails>
                           <Grid container px={3} spacing={2}>
-                            {e.modulos.map((m, i) => {
+                            {subsistema.modulos.map((modulo, i) => {
                               return (
                                 <Grid item xs={12} sm={6} key={i}>
-                                  <Accordion expanded={m.checked}>
+                                  <Accordion expanded={modulo.checked}>
                                     <AccordionSummary
                                       expandIcon={<ExpandMoreIcon />}
                                       aria-controls="panel1a-content"
-                                      id={m.nombre_modulo}
+                                      id={modulo.nombre_modulo}
                                       onClick={() => {
-                                        checked_item(m, i, k);
+                                        checked_item(modulo, i, index);
                                       }}
                                     >
-                                      <Typography>{m.nombre_modulo}</Typography>
+                                      <Typography>
+                                        {modulo.nombre_modulo}
+                                      </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
                                       <div>
@@ -418,8 +475,8 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                                       </div>
                                       <div>
                                         {render_actions(
-                                          m.permisos,
-                                          m.nombre_modulo
+                                          modulo.permisos,
+                                          modulo.nombre_modulo
                                         )}
                                       </div>
                                     </AccordionDetails>

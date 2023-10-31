@@ -38,18 +38,21 @@ import { useAppDispatch } from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import {
-  reset_states,
   setAgrupacionesPersistentesSerieSubserie,
+  setAllElements,
   setCcdOrganigramaCurrent,
+  setCurrentPersistenciaSeccionSubseccion,
   setHomologacionAgrupacionesSerieSubserie,
   setHomologacionUnidades,
-  setRelacionesAlmacenamientoLocal,
   setUnidadesPersistentes,
+  reset_states,
 } from '../../../../toolkit/slice/HomologacionesSeriesSlice';
 import {
   fnGetHomologacionUnidades,
   fnGetUnidadesPersistentes,
 } from '../../../../toolkit/thunks/seccionesPersistentes.service';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import Swal from 'sweetalert2';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
@@ -60,20 +63,43 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   // ? ---- context declaration ----
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleHomologacionUnidades = async (params: GridValueGetterParams) => {
     //* se limpian todos los estados que se relacionan con la homologación de unidades
-    // dispatch(setCcdOrganigramaCurrent(params.row));
-    // dispatch(setRelacionesAlmacenamientoLocal({}));
     dispatch(setHomologacionAgrupacionesSerieSubserie([]));
     dispatch(setAgrupacionesPersistentesSerieSubserie([]));
+    dispatch(setCurrentPersistenciaSeccionSubseccion(null));
+    dispatch(setAllElements({}));
 
     try {
       const resHomologacionesUnidades = await fnGetHomologacionUnidades(
-        params.row.id_ccd
+        params.row.id_ccd,
+        handleGeneralLoading,
+        () => dispatch(reset_states())
       );
-      console.log(resHomologacionesUnidades);
       // ! se mezcla la información necesaria para poder tener todos los datos disponibles
+      const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
+        params.row.id_ccd,
+        handleGeneralLoading
+      );
+
+      if (
+        resHomologacionesUnidades?.coincidencias.length === 0 &&
+        resUnidadesPersistentes?.unidades_persistentes.length === 0
+      ) {
+        await Swal.fire({
+          icon: 'warning',
+          title: '¡ATENCIÓN!',
+          text: 'No hay unidades coincidentes y/o persistentes para este CCD, seleccione un CCD diferente para continuar',
+          showCloseButton: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        });
+        dispatch(reset_states());
+        return;
+      }
+
       const infoToReturn =
         resHomologacionesUnidades?.coincidencias.map((item: any) => {
           return {
@@ -85,13 +111,24 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
         }) || [];
 
       if (resHomologacionesUnidades?.mismo_organigrama) {
-        dispatch(setUnidadesPersistentes(infoToReturn));
+        dispatch(
+          setUnidadesPersistentes(
+            infoToReturn.length > 0
+              ? infoToReturn
+              : resUnidadesPersistentes?.unidades_persistentes.map(
+                  (seccionPersistente: any) => ({
+                    ...seccionPersistente,
+                    mismo_organigrama:
+                      resHomologacionesUnidades?.mismo_organigrama,
+                    id_ccd_actual: resHomologacionesUnidades?.id_ccd_actual,
+                    id_ccd_nuevo: params.row.id_ccd,
+                  })
+                )
+          )
+        );
       } else {
         dispatch(setHomologacionUnidades(infoToReturn));
 
-        const resUnidadesPersistentes = await fnGetUnidadesPersistentes(
-          params.row.id_ccd
-        );
         console.log(resUnidadesPersistentes);
         //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
         /*
@@ -162,7 +199,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
               onClick={() => {
                 console.log(params.row);
                 //* si limpia el estado local que almacenaba valores
-                dispatch(setRelacionesAlmacenamientoLocal({}));
+                dispatch(setHomologacionUnidades([]));
+                dispatch(setUnidadesPersistentes([]));
                 // ? asignación de valores "actuales" según la búsqueda de los ccd's y organigramas
                 dispatch(setCcdOrganigramaCurrent(params.row));
 

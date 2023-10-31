@@ -19,7 +19,7 @@ export const ModalAtom: React.FC<ModalProps> = ({
 
   const findById = <T extends { id: number }>(
     array: T[],
-    id: number,
+    _id: number,
     selector: (item: T) => boolean
   ) => {
     return array.find(selector);

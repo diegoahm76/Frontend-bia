@@ -69,8 +69,6 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   defaultValue=""
                   rules={{ required: true }}
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <TextField
                       fullWidth
@@ -91,8 +89,6 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   defaultValue=""
                   rules={{ required: true }}
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <TextField
                       fullWidth
@@ -115,8 +111,6 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   name="verison"
                   control={control_organigrama_anterior}
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <TextField
                       fullWidth
@@ -136,8 +130,6 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   control={control_organigrama_anterior}
                   defaultValue=""
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <TextField
                       fullWidth
@@ -163,8 +155,6 @@ export const OrgAnteriorScreen = (): JSX.Element => {
                   control={control_organigrama_anterior}
                   defaultValue=""
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <TextField
                       fullWidth

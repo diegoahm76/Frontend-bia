@@ -245,7 +245,7 @@ export const SeleccionLider = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: {  }
                   }) => (
                     <div>
                       <Select
@@ -301,7 +301,7 @@ export const SeleccionLider = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { }
                   }) => (
                     <div>
                       <Select
@@ -348,7 +348,7 @@ export const SeleccionLider = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: {  }
                   }) => (
                     <TextField
                       fullWidth
@@ -371,7 +371,7 @@ export const SeleccionLider = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: {  }
                   }) => (
                     <TextField
                       fullWidth
@@ -449,7 +449,7 @@ export const SeleccionLider = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { }
                   }) => (
                     <TextField
                       fullWidth

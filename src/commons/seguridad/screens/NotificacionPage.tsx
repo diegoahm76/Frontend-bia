@@ -20,10 +20,8 @@ export const NotificacionPage: React.FC = () => {
   const {
     register,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    handleSubmit: handle_submit,
     setValue: set_value,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    formState: { errors },
     watch
   } = useForm();
 

@@ -212,7 +212,6 @@ export const ProcesoARealizar: FC = (): JSX.Element => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
                   }) => (
                     <div>
                       <Select

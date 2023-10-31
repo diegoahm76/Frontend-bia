@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { produce } from 'immer';
 import { type DataPersonas } from '../../../interfaces/globalModels';
 import type {
   ISeguridadInfo,
@@ -77,6 +76,8 @@ export const initial_state_user_info: Users = {
       label: '',
     },
   ],
+  descripcion_sucursal_empresa: undefined,
+  id_sucursal_empresa: undefined
 };
 
 const initial_legal_person: DataPersonas = {

@@ -281,6 +281,11 @@ export const EditarCartera: React.FC<IProps> = ({
                       label='Etapas'
                       name="id_flujo_destino"
                       value={id_flujo_destino}
+                      MenuProps={{
+                        style: {
+                          maxHeight: 224,
+                        }
+                      }}
                       onChange={handle_select_change}
                     >
                       {flujos_destino.map(({ id, id_etapa_destino: { etapa } }) => (
@@ -320,6 +325,11 @@ export const EditarCartera: React.FC<IProps> = ({
                       label='Subetapas'
                       name="id_subetapa_destino"
                       value={id_subetapa_destino}
+                      MenuProps={{
+                        style: {
+                          maxHeight: 224,
+                        }
+                      }}
                       onChange={handle_select_change}
                     >
                       {subetapas.map(({ id_categoria: { id, categoria } }) => (

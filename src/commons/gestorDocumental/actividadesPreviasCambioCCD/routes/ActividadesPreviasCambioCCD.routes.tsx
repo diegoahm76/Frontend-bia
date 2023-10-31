@@ -2,9 +2,9 @@
 import React from 'react';
 import { Page404 } from '../../../../screens/404';
 import { Route, Routes } from 'react-router-dom';
-import { AsignacionUnidadesResponsables as AsignacionUnidadesResponsablesMainScreen } from '../modules/asignacionUnidadesResponsables/screen/AsignacionUnidadesResponsables';
+import { AsignacionUnidadesResponsables as AsignacionUnidadesResponsablesMainScreen } from '../modules/asignacionUnidadesResponsables/screen/AsignacionUniResp';
 import { HomologacionDeSeccionesPersistentes as HomologacionDeSeccionesPersistentesMainScreen } from '../modules/homologacionDeSeccionesPersistentes/screen/HomologacionDeSeccionesPersistentes';
-import { DelegacionOficinasResponsablesScreen } from '../modules/delegacionDeOficinasResponsables/screen/DelegacionOficinasResponsablesScreen';
+import { DeleOfiRespScreen as DelegeacionOficinasResponsablesMainScreen } from '../modules/delegacionDeOficinasResponsables/screen/DeleOfiRespScreen';
 
 interface RouteType {
   path: string;
@@ -32,7 +32,7 @@ export const ActividadesPreviasCambioCCDRoutes = () => {
       path: '/delegacion_oficinas_responsables_expedientes',
       element: () => (
         <>
-          <DelegacionOficinasResponsablesScreen />
+          <DelegeacionOficinasResponsablesMainScreen />
         </>
       ),
     },
