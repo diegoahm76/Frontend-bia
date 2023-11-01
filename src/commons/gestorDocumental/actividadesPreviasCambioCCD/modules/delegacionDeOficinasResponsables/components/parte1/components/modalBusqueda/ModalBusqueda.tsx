@@ -39,10 +39,13 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import { setCcdOrganigramaCurrentAsiOfiResp } from '../../../../toolkit/slice/DelOfiResSlice';
 import { validacionInicialDataPendientePorPersistir } from '../../../../toolkit/thunks/validacionInicial.thunks';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
+  //* navigate declaration
+  const navigate = useNavigate();
   const { ccdList, setccdList } = params;
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
@@ -61,20 +64,26 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
     //* se realiza el disparo de una alerta si la validacion.data es true
     if (validacionSeccionesPendientes?.data.length) {
-      const dataString = validacionSeccionesPendientes.data.join(', ');
+      // const dataString = validacionSeccionesPendientes.data.join(', ');
+      let array = Array.from({ length: 0 }, (_, i) => ({ // ponerle una longitud > 0 para simular los datos
+        codigo: 'CCD' + i,
+        nombre: `nombre${i}`
+      }));
 
       const htmlText = `
-      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <p>asigne un responsable a ésta(s) unidad(es) de tipo de sección / subsección para continuar en este módulo.</p>
-        <p>CCD seleccionado : Nombre: ${nombre} - Versión: ${version}</p>
-        <ul>
-          ${validacionSeccionesPendientes.data.map((el: any) => {
-            return `<li
-              style="list-style-type: none; font-weight: bold;"
-            >Unidad: ${el.codigo} ${el.nombre}</li>`;
-          })}
-        </ul>
-      `;
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <p>asigne un responsable a ésta(s) unidad(es) de tipo de sección / subsección para continuar en este módulo.</p>
+          <p><b>CCD seleccionado :</b> Nombre: ${nombre} - Versión: ${version}</p>
+          <ul style = "padding:0">
+            ${[...validacionSeccionesPendientes.data, ...array]
+              .map((el: any) => {
+                return `<li
+                style="list-style: none; margin-top:5px;"
+              >Unidad: <b>${el.codigo}</b> - ${el.nombre}</li>`;
+              })
+              .join('')}
+          </ul>
+        `;
 
       await Swal.fire({
         title: 'No puede seleccionar este CCD',
@@ -90,8 +99,13 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           //* se selecciona el elemento seleccionado como actual dentro del módulo
-          dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
-          handleSeleccionCCD_PSD(false);
+
+          //* debe ir al módulo de asignación de unidades responsables
+          navigate('/app/gestor_documental/ccd/actividades_previas_cambio_ccd/asignaciones_unidades_responsables');
+
+
+         /* dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
+          handleSeleccionCCD_PSD(false);*/
           return;
         }
       });
