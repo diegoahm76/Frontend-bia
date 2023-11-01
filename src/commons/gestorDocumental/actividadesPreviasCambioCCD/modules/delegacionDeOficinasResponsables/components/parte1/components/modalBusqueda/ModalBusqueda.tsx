@@ -61,13 +61,30 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
     //* se realiza el disparo de una alerta si la validacion.data es true
     if (validacionSeccionesPendientes?.data.length) {
+      const dataString = validacionSeccionesPendientes.data.join(', ');
+
+      const htmlText = `
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <p>asigne un responsable a ésta(s) unidad(es) de tipo de sección / subsección para continuar en este módulo.</p>
+        <p>CCD seleccionado : Nombre: ${nombre} - Versión: ${version}</p>
+        <ul>
+          ${validacionSeccionesPendientes.data.map((el: any) => {
+            return `<li
+              style="list-style-type: none; font-weight: bold;"
+            >Unidad: ${el.codigo} ${el.nombre}</li>`;
+          })}
+        </ul>
+      `;
+
       await Swal.fire({
-        title: '¿Está seguro de seleccionar este CCD?',
-        text: `El CCD seleccionado tiene secciones pendientes por persistir, por lo tanto, se perderán los cambios realizados en dichas secciones. ¿Desea continuar?`,
+        title: 'No puede seleccionar este CCD',
+        html: htmlText,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Si, continuar',
-        cancelButtonText: 'No, cancelar',
+        allowOutsideClick: false,
+        confirmButtonText: 'Ir a módulo de asignación de unidades responsables',
+        cancelButtonText:
+          'Ir al módulo de homologación de secciones persistentes',
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
       }).then(async (result) => {
@@ -81,7 +98,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
 
       return;
     }
-
     console.log(validacionSeccionesPendientes);
 
     //* se selecciona el elemento seleccionado como actual dentro del módulo
