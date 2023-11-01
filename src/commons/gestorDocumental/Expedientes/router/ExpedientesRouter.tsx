@@ -4,7 +4,7 @@ import { Page404 } from '../../../../screens/404';
 import CierreExpedientesScreen from '../cierreExpediente/screen/CierreExpedientesScreen';
 import { UserProvider } from '../../deposito/Estantes/context/context';
 import ReaperturaExpedienteScreen from '../ReaperturaExpedientes/screens/RepaerturaExpedienteScreen';
-import { AperturaExpedientesScreen } from '../aperturaExpedientes/screens/AperturaExpedientesScreen';
+import { ExpedientesScreen } from '../aperturaExpedientes/screens/ExpedientesScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedientesRoutes = (): ReactElement => {
@@ -21,7 +21,7 @@ export const ExpedientesRoutes = (): ReactElement => {
         />
         <Route
           path="apertura_expedientes/*"
-          element={<AperturaExpedientesScreen />}
+          element={<ExpedientesScreen />}
         />
         <Route path="/*" element={<Page404 />} />
       </Routes>
