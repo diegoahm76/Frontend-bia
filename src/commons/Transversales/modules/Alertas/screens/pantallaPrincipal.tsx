@@ -68,7 +68,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       set_alertas_leidas_icono(AlertasLeidas.length);
       setNumeroDeAlertas(AlertasNoLeidas.length)
       set_bandeja_alerta(data.data);
-
+console.log(data)
       return data.data;
     } catch (error) {
       // console.error(error);
@@ -111,13 +111,14 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       headerName: 'Fecha',
       width: 80,
       valueGetter: (params: any) =>
-        ModificadorFormatoFecha(params.row.fecha_hora),
+        params.row.fecha_hora ? ModificadorFormatoFecha(params.row.fecha_hora) : 'Sin fecha',
     },
     {
       field: 'fecha_horaa',
       headerName: 'Hora',
       width: 80,
-      valueGetter: (params: any) => obtenerHoraDeFecha(params.row.fecha_hora),
+      valueGetter: (params: any) =>
+        params.row.fecha_hora ? obtenerHoraDeFecha(params.row.fecha_hora) : 'Sin hora',
     },
     {
       field: 'nombre_clase_alerta',
@@ -140,13 +141,12 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       valueGetter: (params: any) =>
         ModificadorFormatoFecha(params.row.fecha_envio_email),
     },
-
     {
       field: 'nombre_modulo',
       headerName: 'Nombre Módulo',
       width: 200,
       valueGetter: (params: any) => {
-        const ruta = params.value.replace('/#/app/', ''); // Eliminar "/#/app/"
+        const ruta = (params.value || '').replace('/#/app/', ''); // Eliminar "/#/app/" si existe
         const firstPart = ruta.split('/')[0]; // Obtener la primera palabra después de eliminar '/#/app/'
         const valorModificado = firstPart.replace(/_/g, ' '); // Reemplazar las barras bajas (_) por espacios
         return valorModificado;
@@ -185,7 +185,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               params.row.nombre_modulo.trim() !== '' ? (
                 <Button
                   onClick={() => {
-                    const ruta = params.row.nombre_modulo.replace('/#', ''); // Eliminar "/#/app/"
+                    const ruta = (params.row.nombre_modulo || '').replace('/#', ''); // Eliminar "/#/app/"
                     navigate(ruta);
                   }}
                 >
@@ -304,7 +304,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               density="compact"
               autoHeight
               columns={columns as any}
-              rows={filtered_rows}
+              rows={filtered_rows||""}
               pageSize={10}
               rowsPerPageOptions={[10]}
               getRowId={(_row) => uuidv4()}

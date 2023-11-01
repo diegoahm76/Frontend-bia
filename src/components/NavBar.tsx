@@ -18,6 +18,7 @@ import type { AuthSlice } from '../commons/auth/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { useContext } from 'react';
 import { AlertasContext } from '../commons/Transversales/modules/Alertas/context/AlertasContext';
+import { PerfilPersonaIngresa } from './PerfilPersonaIngresa';
 
 
 interface Props {
@@ -27,9 +28,7 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
 
-  const {
-    numeroDeAlertas,
-  } = useContext(AlertasContext)
+  const { numeroDeAlertas } = useContext(AlertasContext)
  
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -92,6 +91,8 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             >
               <MenuIcon sx={{ color: '#FAFAFA', ml: '0 !import' }} />
             </IconButton>
+
+           
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -110,9 +111,29 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                 }}
               />
             </IconButton>
+           
             <IconButton onClick={handle_direct_home}>
               <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
-            </IconButton>
+            </IconButton> 
+            
+
+
+
+
+
+            <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  }}
+>
+  <PerfilPersonaIngresa modo={mod_dark} />
+</div>
+
+
+           
           </Stack>
           <Stack spacing={2} direction="row">
             <IconButton onClick={handle_button_mod_dark}>
