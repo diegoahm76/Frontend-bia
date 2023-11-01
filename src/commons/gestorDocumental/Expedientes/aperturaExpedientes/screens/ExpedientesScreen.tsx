@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { AperturaExpedientesScreen } from "./AperturaExpedientesScreen";
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import AnularExpedienteModal from "./AnularExpediente";
+import BuscarExpediente from "./BuscarExpediente";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -31,32 +32,23 @@ export const ExpedientesScreen: React.FC = () => {
     const msj_error = "El campo es obligatorio."
     const min_date = dayjs().dayOfYear(1);
     const max_date = dayjs();
-    const lt_config_expediente = [{ id: 'S', nombre: 'Simple' }, { id: 'C', nombre: 'Complejo' }];
     const [lt_unidades_org, set_lt_unidades_org] = useState<any[]>([]);
     const [titulo_accion, set_titulo_accion] = useState<string>("Creación de expdientes");
-    const [tdr, set_tdr] = useState<any>({});
-    const [lt_seccion, set_lt_seccion] = useState<any>([]);
-    const [seccion, set_seccion] = useState<string>("");
     const [palabras_clave, set_palabras_clave] = useState<string>("");
     const [lt_palabras_clave, set_lt_palabras_clave] = useState<any>([]);
-    const [msj_error_seccion, set_msj_error_seccion] = useState<string>("");
-    const [lt_serie, set_lt_serie] = useState<any>([]);
-    const [serie, set_serie] = useState<string>("");
-    const [msj_error_serie, set_msj_error_serie] = useState<string>("");
-    const [tipo_expediente, set_tipo_expediente] = useState<string>("");
-    const [msj_error_tipo_expediente, set_msj_error_tipo_expediente] = useState<string>("");
     const [error_fecha_creacion, set_msj_error_fecha_creacion] = useState<boolean>(false);
     const [expediente, set_expediente] = useState<any>(null);
     const [usuario, set_usuario] = useState<any>(null);
     const [fecha_creacion, set_fecha_creacion] = useState<Dayjs>(dayjs());
     const [titulo, set_titulo] = useState<string>("");
-    const [msj_error_titulo, set_msj_error_titulo] = useState<string>("");
+    const [msj_error_titulo, set_msj_error_titulo] = useState<boolean>(false);
     const [descripcion, set_descripcion] = useState<string>("");
     const [und_organizacional, set_und_organizacional] = useState<string>("");
     const [msj_error_und_organizacional, set_msj_error_und_organizacional] = useState<string>("");
     const [persona_titular, set_persona_titular] = useState<any>({});
     const [persona_resp, set_persona_resp] = useState<any>({});
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
+    const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
 
     useEffect(() => {
@@ -100,7 +92,9 @@ export const ExpedientesScreen: React.FC = () => {
     const cambio_titulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_titulo(e.target.value);
         if (e.target.value !== null && e.target.value !== "")
-            set_msj_error_titulo("");
+            set_msj_error_titulo(false);
+        else
+            set_msj_error_titulo(true);
     };
 
     const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,9 +126,6 @@ export const ExpedientesScreen: React.FC = () => {
     useEffect(() => {
         if(limpiar){
             set_und_organizacional("");
-            set_seccion("");
-            set_serie("");
-            set_tipo_expediente("");
             set_titulo("");
             set_descripcion("");
             set_persona_resp({});
@@ -474,22 +465,11 @@ export const ExpedientesScreen: React.FC = () => {
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
-                                onClick={() => {
-                                    //     set_buscar_programacion_is_active(true);
-                                    //     set_title_programacion('Buscar programación de computadores');
-                                }}
+                                onClick={() => { set_abrir_modal_buscar(true); }}
                             >
                                 Buscar expediente
                             </Button>
-                            {/* {buscar_programacion_is_active && (
-                                <BuscarProgramacionComponent
-                                    is_modal_active={buscar_programacion_is_active}
-                                    set_is_modal_active={set_buscar_programacion_is_active}
-                                    title={title_programacion}
-                                    prog_details={set_prog_details}
-                                    parent_details={set_details_state} 
-                                    tipo_articulo={"computadores"}/>
-                            )} */}
+                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={undefined}></BuscarExpediente>}
                         </Stack>
                     </Box>
                 </Grid>
