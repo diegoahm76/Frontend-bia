@@ -88,6 +88,12 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       width: 170,
     },
     {
+      field: 'tipo_usuario',
+      headerName: 'tipo usuario',
+      sortable: true,
+      width: 170,
+    },
+    {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
       width: 80,
@@ -152,6 +158,14 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       sortable: true,
       width: 170,
     },
+    {
+      field: 'tipo_usuario',
+      headerName: 'tipo_usuario',
+      sortable: true,
+      width: 170,
+    },
+
+
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -280,6 +294,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
           tiene_usuario: false,
           digito_verificacion: '',
           cod_naturaleza_empresa: '',
+          tipo_usuario:'',
         };
         onResult(new_data);
       }
@@ -373,7 +388,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                     size="small"
                     onChange={onChange}
                     value={value}
-                    error={!!errors}
+                    
+                    error={!!errors.numero_documento}
                     helperText={
                       errors.numero_documento?.type === 'required'
                         ? 'Este campo es obligatorio'

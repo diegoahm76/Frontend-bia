@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
+import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, ButtonGroup } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -11,6 +12,8 @@ import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/R
 import { faker } from '@faker-js/faker';
 import JsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface RootState {
   reportes_recaudo: {
@@ -26,58 +29,64 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [total, set_total] = useState(0);
   const [values, set_values] = useState([]);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
-  const [data, set_data] = useState([]);
-  const [page, set_page] = useState(1);
+  const [data, set_data] = useState<CarteraDetallada[]>([]);
+  const [page, set_page] = useState(0);
+  const [pages, set_pages] = useState<number[]>([]);
   const [total_pages, set_total_pages] = useState(1);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const fetchData = (page_number: number) => {
     // Realiza la solicitud HTTP utilizando la página especificada
-    fetch(`https://back-end-bia-beta.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number}`)
+    fetch(`https://back-end-bia-beta.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number + 1}`)
       .then((response) => response.json())
       .then((responseData) => {
         // Extrae la propiedad "data" de la respuesta JSON
         const data = responseData.results.data;
         const total_pages = Math.ceil(responseData.count / 10); // Supongo 10 elementos por página
-        set_data(data);
-        set_total_pages(total_pages);
+        const number = page_number + 1
+        console.log(number, pages)
+        if (pages.length === 0) {
+          set_pages([...pages, number])
+          set_data(data);
+          set_total_pages(total_pages);
+
+        } else {
+          if (pages.indexOf(number) === -1) {
+            set_pages([...pages, number])
+            set_data((prevRows) => [...prevRows, ...data]);
+            set_total_pages(total_pages);
+
+          }
+        }
+
       })
       .catch((error) => {
         console.error('Error al obtener los datos:', error);
       });
-  };
 
-  const handle_next_page = () => {
-    // Maneja la paginación siguiente
-    if (page < total_pages) {
-      set_page(page + 1);
-    }
   };
-
-  const handle_prev_page = () => {
-    // Maneja la paginación anterior
-    if (page > 1) {
-      set_page(page - 1);
-    }
-  };
-
   useEffect(() => {
-    fetchData(page);
-  }, [page]);
-
-  // useEffect(() => {
-  //   dispatch(get_cartera_detallada())
-  // }, []);
-
-
-  useEffect(() => {
-    if (visible_rows.length !== 0) {
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any);
-      const new_total_pages = Math.ceil(visible_rows.length / 10); // Calcular el número total de páginas
-      set_total_pages(new_total_pages);
+    if (visible_rows && visible_rows.length !== undefined) {
+      let total = 0;
+      for (let i = 0; i < visible_rows.length; i++) {
+        if (visible_rows[i].valor_sancion) {
+          total = total + parseFloat(visible_rows[i].valor_sancion);
+        }
+      }
+      set_total(total);
     }
   }, [visible_rows]);
+
+  // useEffect(() => {
+  //   if(visible_rows.length !== 0) {
+  //     let total = 0
+  //     for(let i=0; i< visible_rows.length; i++){
+  //       total = total + parseFloat(visible_rows[i].valor_sancion)
+  //       set_total(total)
+  //     }
+  //   }
+  // }, [visible_rows])
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -130,6 +139,16 @@ export const TablaCarteraDetallada: React.FC = () => {
   }
 
   const columns: GridColDef[] = [
+    // {
+    //   field: 'id',
+    //   headerName: 'id',
+    //   width: 150,
+    //   renderCell: (params) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       {params.value}
+    //     </div>
+    //   ),
+    // },
     {
       field: 'codigo_contable',
       headerName: 'Código Contable',
@@ -217,7 +236,6 @@ export const TablaCarteraDetallada: React.FC = () => {
       }
     },
   ];
-  console.log(visible_rows)
 
 
   useEffect(() => {
@@ -225,21 +243,69 @@ export const TablaCarteraDetallada: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if (visible_rows.length !== 0) {
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    if (visible_rows && visible_rows.length !== undefined) {
+      set_values(
+        visible_rows.map((obj) => Object.values(obj)) as any
+      );
     }
-  }, [visible_rows])
+  }, [visible_rows]);
 
+  // useEffect(() => {
+  //   if(visible_rows.length !== 0){
+  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+  //   }
+  // }, [visible_rows])
+  useEffect(() => {
+    set_visible_rows(reportes_recaudo)
+  }, [reportes_recaudo])
+  const [searchId, setSearchId] = useState('');
 
-
+  const handleSearch = () => {
+    let filteredData = [...reportes_recaudo];
+    if (search) {
+      filteredData = filteredData.filter(facilidad => facilidad.nombre_deudor.toLowerCase().includes(search.toLowerCase()));
+    }
+    if (searchId) {
+      filteredData = filteredData.filter(facilidad => facilidad.identificacion.toLowerCase().includes(searchId.toLowerCase()));
+    }
+    set_visible_rows(filteredData);
+  };
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
-        direction="row"
-        justifyContent="space-between"
-        sx={{ mb: '20px' }}
+      direction="row"
+      justifyContent="left"
+      spacing={2}
+      sx={{ mb: '20px' }}
       >
-        <Stack
+        <Grid item xs={12} sm={3}>
+          <TextField
+            style={{ marginTop: '10px' }}
+            value={search}
+            onChange={e => set_search(e.target.value)}
+            label="Buscar por nombre de deudor"
+            variant="outlined"
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            value={searchId}
+            style={{ marginTop: '10px' }}
+            onChange={e => setSearchId(e.target.value)}
+            label="Buscar por identificación"
+            variant="outlined"
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Button variant="contained" style={{ marginTop: '10px' }} color="primary" fullWidth startIcon={<SearchOutlined />} onClick={handleSearch}>
+            Buscar
+          </Button>
+        </Grid>
+        {/* <Stack
           direction="row"
           justifyContent="left"
           spacing={2}
@@ -295,8 +361,8 @@ export const TablaCarteraDetallada: React.FC = () => {
           >
             Mostrar Todo
           </Button>
-        </Stack>
-        <Stack
+        </Stack> */}
+        {/* <Stack
           direction="row"
           justifyContent="right"
           spacing={2}
@@ -317,57 +383,68 @@ export const TablaCarteraDetallada: React.FC = () => {
           >
             Exportar PDF
           </Button>
-        </Stack>
+        </Stack> */}
+        <Grid item xs={12}  sm={2} ></Grid>
+        <Grid item xs={12}  sm={1} >
+          <ButtonGroup fullWidth >
+            {download_xls({ nurseries: visible_rows, columns })}
+            {download_pdf({
+              nurseries: visible_rows,
+              columns,
+              title: 'Mis alertas',
+            })}
+          </ButtonGroup>
+        </Grid>
       </Stack>
-      <div id='report'>
-        {
-          visible_rows.length !== 0 ? (
-            <Grid
-              container
-              sx={{
-                position: 'relative',
-                background: '#FAFAFA',
-                borderRadius: '15px',
-                p: '20px',
-                mb: '20px',
-                boxShadow: '0px 3px 6px #042F4A26',
-              }}
-            >
-              <Grid item xs={12}>
-                <Grid item>
-                  <Box sx={{ width: '100%' }}>
-                    <DataGrid
-                      rows={data}
-                      columns={columns}
-                      pageSize={10}
-                      checkboxSelection
-                      pagination
-                      onPageChange={(newPage) => set_page(newPage)}
-                      rowCount={data.length}
-                    />
-                    <button onClick={handle_prev_page} disabled={page === 1}>Página anterior</button>
-                    <button onClick={handle_next_page} disabled={page === total_pages}>Página siguiente</button>
-                  </Box>
-                </Grid>
-                <Stack
-                  direction="row"
-                  display='flex'
-                  justifyContent='flex-end'
-                >
-                  <Grid item xs={12} sm={2.5} mt='30px'>
-                    <TextField
-                      label={<strong>Total General</strong>}
-                      size="small"
-                      fullWidth
-                      value={total_cop}
-                    />
-                  </Grid>
-                </Stack>
-              </Grid>
+
+      {visible_rows && visible_rows.length !== undefined ? (
+        // <Grid
+        //   container
+        //   sx={{
+        //     position: 'relative',
+        //     background: '#FAFAFA',
+        //     borderRadius: '15px',
+        //     p: '20px',
+        //     mb: '20px',
+        //     boxShadow: '0px 3px 6px #042F4A26',
+        //   }}
+        // >
+        <Grid item xs={12}>
+          <Grid item>
+            {/* <Box sx={{ width: '100%', height: '400px' }}> */}
+            <DataGrid
+              autoHeight
+              disableSelectionOnClick
+              rows={visible_rows || []}
+              columns={columns}
+              pageSize={10}
+              page={page}
+              rowCount={total_pages}
+              pagination
+              onPageChange={(params) => set_page(params)}
+            />
+
+
+            {/* </Box> */}
+          </Grid>
+          <Stack
+            direction="row"
+            display='flex'
+            justifyContent='flex-end'
+          >
+            <Grid item xs={12} sm={2.5} mt='30px'>
+              <TextField
+                label={<strong>Total General</strong>}
+                size="small"
+                fullWidth
+                value={total_cop}
+              />
             </Grid>
-          ) : null
-        }
-      </div>
+          </Stack>
+        </Grid>
+        // </Grid>
+      ) : null
+      }
     </Box>
   );
 }

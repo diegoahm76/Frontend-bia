@@ -198,7 +198,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                 control_success("Cargo actualizado correctamente");
                 setValue("");
                 set_persona(undefined);
-
+                setVisible(false);
             })
             .catch((error: any) => {
 

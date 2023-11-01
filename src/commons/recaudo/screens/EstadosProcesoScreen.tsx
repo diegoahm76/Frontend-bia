@@ -6,6 +6,8 @@ import { useState, type SyntheticEvent, useEffect } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { CrearAtributoModal } from "../components/estadosProceso/CrearAtributoModal";
 import type { AtributoEtapa, CategoriaAtributo, EtapaProceso, FormDataCategoria } from "../interfaces/proceso";
 import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
@@ -222,7 +224,7 @@ export const EstadosProcesoScreen: React.FC = () => {
   useEffect(() => {
     api.get('recaudo/procesos/categoria-atributos')
       .then((response) => {
-        set_rows_categorias_atributos(response.data.data);
+        group_categorias(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -243,6 +245,19 @@ export const EstadosProcesoScreen: React.FC = () => {
 
   const handle_change = (event: SyntheticEvent, new_value: string): void => {
     set_position_tab_organigrama(new_value);
+  };
+
+  const group_categorias = (categorias: CategoriaAtributo[]): void => {
+    const categorias_sorted_by_order: CategoriaAtributo[] = categorias.sort((categoria1, categoria2) => {
+      if (categoria1.orden < categoria2.orden) {
+        return -1
+      }
+      if (categoria1.orden > categoria2.orden) {
+        return 1
+      }
+      return 0;
+    });
+    set_rows_categorias_atributos(categorias_sorted_by_order);
   };
 
   const group_atributos = (atributos: AtributoEtapa[]): void => {
@@ -284,7 +299,7 @@ export const EstadosProcesoScreen: React.FC = () => {
   const update_categorias = (): void => {
     api.get('recaudo/procesos/categoria-atributos')
       .then((response) => {
-        set_rows_categorias_atributos(response.data.data);
+        group_categorias(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -301,6 +316,42 @@ export const EstadosProcesoScreen: React.FC = () => {
           console.log(error);
         });
     }
+  };
+
+  const go_up = (categoria: CategoriaAtributo): void => {
+    if (categoria.orden > 1) {
+      api.put(`recaudo/procesos/categoria-atributos/${categoria.id}/`, {
+        orden: categoria.orden - 1,
+      })
+        .then((response) => {
+          update_atributos_etapa();
+          update_categorias();
+          set_notification_info({ type: 'success', message: `Se actualizó el orden de la subetapa "${response.data.categoria as string}".` });
+          set_open_notification_modal(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          set_notification_info({ type: 'error', message: 'Hubo un error.' });
+          set_open_notification_modal(true);
+        });
+    }
+  };
+
+  const go_down = (categoria: CategoriaAtributo): void => {
+    api.put(`recaudo/procesos/categoria-atributos/${categoria.id}/`, {
+      orden: categoria.orden + 1,
+    })
+      .then((response) => {
+        update_atributos_etapa();
+        update_categorias();
+        set_notification_info({ type: 'success', message: `Se actualizó el orden de la subetapa "${response.data.categoria as string}".` });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
+      });
   };
 
   const delete_categoria_atributos = (categoria: CategoriaAtributo): void => {
@@ -363,7 +414,7 @@ export const EstadosProcesoScreen: React.FC = () => {
       .then((response) => {
         update_categorias();
         set_form_data_categoria({ categoria: '', orden: '' });
-        set_notification_info({ type: 'success', message: `Se creó correctamente la categoría "${response.data.categoria as string}".` });
+        set_notification_info({ type: 'success', message: `Se creó correctamente la subetapa "${response.data.categoria as string}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -374,11 +425,11 @@ export const EstadosProcesoScreen: React.FC = () => {
   };
 
   const submit_updated_categoria = (): void => {
-    api.put(`recaudo/procesos/categoria-atributos/${id_update_categoria}`, form_data_categoria)
+    api.put(`recaudo/procesos/categoria-atributos/${id_update_categoria}/`, form_data_categoria)
       .then((response) => {
         update_categorias();
         set_form_data_categoria({ categoria: '', orden: '' });
-        set_notification_info({ type: 'success', message: `Se actualizó correctamente la categoría "${response.data.categoria as string}".` });
+        set_notification_info({ type: 'success', message: `Se actualizó correctamente la subetapa "${response.data.categoria as string}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -471,24 +522,13 @@ export const EstadosProcesoScreen: React.FC = () => {
                   </Grid>
                 </Stack>
                 <Box sx={{ width: '100%' }}>
-                  {/* <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={rows_atributos_etapa}
-                    columns={columns_atributos_etapa}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id}
-                    components={{ Toolbar: GridToolbar }}
-                  /> */}
                   {rows_atributos_etapa.map((arreglo_atributos, index) => (
                     <Stack
                       key={index}
                       direction={'row'}
                       alignItems={'flex-start'}
                     >
-                      <CollapsibleButton texto_boton={arreglo_atributos[0].id_categoria.categoria}>
+                      <CollapsibleButton texto_boton={`(${arreglo_atributos[0].id_categoria.orden}) ${arreglo_atributos[0].id_categoria.categoria}`}>
                         <DataGrid
                           density="compact"
                           autoHeight
@@ -501,6 +541,24 @@ export const EstadosProcesoScreen: React.FC = () => {
                           components={{ Toolbar: GridToolbar }}
                         />
                       </CollapsibleButton>
+                      <Tooltip title='Subir Orden' sx={{ mt: '18px' }}>
+                        <IconButton
+                          onClick={() => {
+                            go_up(arreglo_atributos[0].id_categoria);
+                          }}
+                        >
+                          <ArrowUpwardIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Bajar Orden' sx={{ mt: '18px' }}>
+                        <IconButton
+                          onClick={() => {
+                            go_down(arreglo_atributos[0].id_categoria);
+                          }}
+                        >
+                          <ArrowDownwardIcon />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title='Eliminar' sx={{ mt: '18px' }}>
                         <IconButton
                           onClick={() => {

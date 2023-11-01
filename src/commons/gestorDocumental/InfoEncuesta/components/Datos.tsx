@@ -1,93 +1,199 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, Button } from "@mui/material";
-import { Title } from "../../../../components";
-import { InputLabel, MenuItem, Select, } from "@mui/material";
-import { DataGrid } from '@mui/x-data-grid';
-import { Line } from 'react-chartjs-2';
+import { ApexOptions } from "apexcharts";
 import { GraficaBar } from "./GraficaBar";
 import { Graficapie } from "./Graficapie";
+import { DataGrid } from '@mui/x-data-grid';
 import { GraficaArea } from "./GraficaArea";
-import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
+import { useState, useEffect } from 'react';
+import { api } from '../../../../api/axios';
+import ReactApexChart from "react-apexcharts";
+import { Title } from "../../../../components";
 import PrintIcon from '@mui/icons-material/Print';
 import DownloadIcon from '@mui/icons-material/Download';
-// eslint-disable-next-line @typescript-eslint/naming-convention
+import { FormControl, Grid, Button, ButtonGroup } from "@mui/material";
+import { InputLabel, MenuItem, Select, } from "@mui/material";
+import { ConteoEncuesta, Encuesta, miEstilo } from "../interfaces/types";
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
+import { ButtonSalir } from "./Salir";
+import Logou from "./logo";
+
 export const Datos: React.FC = () => {
+  const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null);
+  interface ReporteTiposUsuario {
+    success: boolean;
+    detail: string;
+    data: {
+      registros: {
+        nombre: string;
+        total: number;
+      }[];
+      total: number;
+    };
+  }
+  const [reporteTiposUsuario, setReporteTiposUsuario] = useState<ReporteTiposUsuario | null>(null);
+  const fetchReporteTiposUsuario = async (): Promise<void> => {
+    try {
+      const url = `/gestor/encuestas/reporte_tipos_usuario/get/${selectedEncuestaId}/`;
+      const res = await api.get<ReporteTiposUsuario>(url);
+      setReporteTiposUsuario(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchReporteTiposUsuario();
+  }, [selectedEncuestaId]);
+  const categoriesTiposUsuario = reporteTiposUsuario?.data.registros.map(registro => registro.nombre) || [];
+  const dataTotalsTiposUsuario = reporteTiposUsuario?.data.registros.map(registro => registro.total) || [];
+  const chartDataTiposUsuario: ApexOptions = {
+    chart: {
+      type: 'bar',
+      height: 430
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,  // Hazlo vertical
+        dataLabels: {
+          position: 'top',
+        },
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      offsetX: -6,
+      style: {
+        fontSize: '14px',
+        colors: ['#fff']
+      }
+    },
+    stroke: {
+      show: true,
+      colors: ['#fff']
+    },
+    tooltip: {
+      shared: true,
+      intersect: false
+    },
+    xaxis: {
+      categories: categoriesTiposUsuario,
+    }
+  };
+  const seriesTiposUsuario = [
+    {
+      name: 'Total por Tipo de Usuario',
+      data: dataTotalsTiposUsuario,
 
-  const rows = [
-    { id: 1, pregunta_Nro: '1', texto_pregunta: "pregunta 1", opcion_respuesta: " R 1 ", cantidad_respuestas: "1 %" },
-    { id: 2, pregunta_Nro: '2', texto_pregunta: "pregunta 2", opcion_respuesta: " R 2 ", cantidad_respuestas: "2 %" },
-    { id: 3, pregunta_Nro: '3', texto_pregunta: "pregunta 3", opcion_respuesta: " R 3 ", cantidad_respuestas: "3 %" },
-    { id: 4, pregunta_Nro: '4', texto_pregunta: "pregunta 4", opcion_respuesta: " R 4 ", cantidad_respuestas: "4 %" },
-    { id: 5, pregunta_Nro: '5', texto_pregunta: "pregunta 5", opcion_respuesta: " R 5 ", cantidad_respuestas: "5 %" },
-    { id: 6, pregunta_Nro: '6', texto_pregunta: "pregunta 6", opcion_respuesta: " R 6 ", cantidad_respuestas: "6 %" },
-    // Agrega más filas según tus datos
+    }
   ];
+  const [encuestas, setEncuestas] = useState<Encuesta[]>([]);
+  useEffect(() => {
+    const fetchEncuestas = async (): Promise<void> => {
+      try {
+        const url = "/gestor/encuestas/encuesta_realizadas/get/";
+        const res = await api.get<{ data: Encuesta[] }>(url);
+        setEncuestas(res.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  // Columnas de la datagrid
-  const columns = [
-    { field: 'pregunta_Nro', headerName: 'No. pregunta ', width: 200, flex: 1, },
-    { field: 'texto_pregunta', headerName: 'Texto de pregunta', width: 200, flex: 1, },
-    { field: 'opcion_respuesta', headerName: 'Opción respuesta', width: 200, flex: 1, },
-    { field: 'cantidad_respuestas', headerName: 'Cantidad respuestas', width: 200, flex: 1, },
+    fetchEncuestas();
+  }, []);
+  const [conteoEncuesta, setConteoEncuesta] = useState<ConteoEncuesta | null>(null);
 
-  ];
+  const fetchConteoEncuesta = async (): Promise<void> => {
+    try {
+      const url = `/gestor/encuestas/conteo_encuesta/get/${selectedEncuestaId}/`;
+      const res = await api.get<ConteoEncuesta>(url);
+      setConteoEncuesta(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
 
-  const chartData = {
-    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
-    datasets: [
-      {
-        label: 'Dataset 1',
-        data: [10, 40, 37, 50, 27, 60], // Reemplaza estos valores con tus datos reales
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-      {
-        label: 'Dataset 2',
-        data: [5, 35, 55, 25, 45, 0], // Reemplaza estos valores con tus datos reales
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-    ],
+    fetchConteoEncuesta();
+  }, [selectedEncuestaId]);
+
+  const generateRows = (): any[] => {
+    let rows: any[] = [];
+
+    if (conteoEncuesta?.data && Array.isArray(conteoEncuesta.data.preguntas)) {
+      conteoEncuesta.data.preguntas.forEach((pregunta) => {
+        if (pregunta.opciones && Array.isArray(pregunta.opciones)) {
+          pregunta.opciones.forEach((opcion) => {
+            rows.push({
+              id: opcion.id_opcion_rta,
+              ordenamiento: pregunta.ordenamiento,
+              redaccion_pregunta: pregunta.redaccion_pregunta,
+              opcion_rta: opcion.opcion_rta,
+              total: opcion.total,
+            });
+          });
+        }
+      });
+    }
+
+    return rows;
   };
 
-  const miEstilo = {
-    position: 'relative',
-    background: '#FAFAFA',
-    borderRadius: '15px',
-    p: '20px',
-    m: '10px 0 20px 0',
-    mb: '20px',
-    boxShadow: '0px 3px 6px #042F4A26',
+
+  const rows = generateRows();
+  const columns = [
+    { field: "ordenamiento", headerName: "Pregunta Numero", width: 150 },
+    { field: "redaccion_pregunta", headerName: "Redacción de Pregunta", flex: 1 },
+    { field: "opcion_rta", headerName: "Opción de Respuesta", width: 200 },
+    { field: "total", headerName: "Total", width: 120 },
+  ];
+  const [showHeader, setShowHeader] = useState(false); // Controla la visualización del h1 "Hola Mundo"
+  const [showButton, setShowButton] = useState(true); // Controla la visualización del botón
+
+  const handlePrint = () => {
+    setShowHeader(true);// Mostrar el h1 "Hola Mundo"
+
+    setTimeout(() => {
+      window.print(); // Inicia la impresión
+
+      setTimeout(() => {
+        setShowHeader(false);
+        // setShowButton(false); // Oculta el botón después de 2 segundos
+      }, 150);
+    }, 1000); // Se utiliza un timeout para dar tiempo al re-renderizado de React
   };
   return (
     <>
-
       <Grid container
         spacing={2} m={2} p={2}
         sx={miEstilo}
       >
-        <Grid item xs={12}  >
+        <>
+          {showHeader && <Logou />}
 
+        </>
+        {/* {showMessage &&  <Logou/> } */}
+        <Grid item xs={12}  >
           <Title title="Informe de encuesta" />
         </Grid>
-
+        {/* <h1>{selectedEncuestaId}</h1> */}
         <Grid item xs={12} sm={4}>
-          <FormControl fullWidth size="small">
-            <InputLabel  >selecione encuesta </InputLabel>
+          <FormControl required size="small" fullWidth>
+            <InputLabel>Encuesta</InputLabel>
             <Select
-              id="es-principal-select"
-              required
-              label="selecione encuesta "
-
+              label="Encuesta"
+              name="nombre_encuesta"
+              value={selectedEncuestaId}
+              onChange={(e) => setSelectedEncuestaId(Number(e.target.value))}
             >
-              <MenuItem value="encuesta 1" >encuesta 1</MenuItem>
-              <MenuItem value="encuesta 2">encuesta 2</MenuItem>
+              {encuestas.map((encuesta) => (
+                <MenuItem key={encuesta.id_encabezado_encuesta} value={encuesta.id_encabezado_encuesta}>
+                  {encuesta.nombre_encuesta}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
-
-
       </Grid>
       <Grid container
         spacing={2} m={2} p={2}
@@ -96,37 +202,48 @@ export const Datos: React.FC = () => {
         <Grid item xs={12}  >
           <Title title="Datos generales  " />
         </Grid>
+        <Grid item xs={12} sm={10} ></Grid>
+        <Grid item xs={12} sm={2} >
+          <ButtonGroup style={{ margin: 5, }}>
+            {download_xls({ nurseries: rows, columns })}
+            {download_pdf({
+              nurseries: rows,
+              columns,
+              title: 'Mis alertas',
+            })}
+          </ButtonGroup>
+        </Grid>
 
-        <Grid item xs={12}  >
-          <DataGrid
-            density="compact"
+        <Grid item xs={12}>
+          <DataGrid density="compact"
             autoHeight
             rows={rows}
             columns={columns}
-            rowsPerPageOptions={[5]}
-            pageSize={5} // Cantidad de filas por página
-            disableSelectionOnClick // Desactiva la selección al hacer clic en una fila
-          />
-        </Grid>
-      </Grid>
-      <Grid container
-        spacing={2} m={2} p={2}
-        sx={miEstilo}
-      >
-        <Grid item xs={12} marginTop={2} sm={6}>
-          <Line data={chartData} /> {/* Renderiza la gráfica liena */}
-        </Grid>
-        <Grid item xs={12} marginTop={2} sm={6}>
-          <GraficaBar />            {/* Renderiza la gráfica barras */}
-        </Grid>
-        <Grid item xs={12} marginTop={4} sm={6}>
-          <Graficapie />            {/* Renderiza la gráfica torta */}
-        </Grid>
-        <Grid item xs={12} marginTop={4} sm={6}>
-          <GraficaArea />           {/* Renderiza la gráfica area */}
+            getRowId={(row) => row.id}
+            pageSize={5} />
         </Grid>
 
       </Grid>
+      {selectedEncuestaId ? (
+        <Grid container
+          spacing={2} m={2} p={2}
+          sx={miEstilo}
+        >
+          <Grid item xs={12} marginTop={2} sm={6}>
+            <ReactApexChart options={chartDataTiposUsuario} series={seriesTiposUsuario} type="bar" height={330} />
+          </Grid>
+          <Grid item xs={12} marginTop={2} sm={6}>
+            <GraficaBar selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica barras */}
+          </Grid>
+          <Grid item xs={12} marginTop={4} sm={6}>
+            <Graficapie selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica torta */}
+          </Grid>
+          <Grid item xs={12} marginTop={4} sm={6}>
+            <GraficaArea selectedEncuestaId={selectedEncuestaId} />           {/* Renderiza la gráfica area */}
+          </Grid>
+
+        </Grid>
+      ) : null}
       <Grid container
         spacing={2} m={2} p={2}
         sx={{
@@ -136,30 +253,18 @@ export const Datos: React.FC = () => {
           p: '20px', m: '10px 0 20px 0', mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
-      >
-
-        <Grid item xs={12} sm={1.2}>
-          <Button startIcon={<PrintIcon />} fullWidth variant="outlined"    >
-            imprimir
-          </Button>
+      > <Grid item xs={12} sm={9}></Grid>
+        <Grid item xs={12} sm={1.5}>
+          {showButton && (
+            <Button startIcon={<PrintIcon />} onClick={handlePrint} fullWidth variant="outlined">
+              imprimir
+            </Button>
+          )}
         </Grid>
-        <Grid item xs={12} sm={1.3}>
-          <Button startIcon={<DownloadIcon />} fullWidth variant="contained"    >
-            descargar
-          </Button>
-        </Grid>
-
-
-
-
-        <Grid item xs={12} sm={1}>
+        <Grid item xs={12} sm={1.5}>
           <ButtonSalir />
         </Grid>
-
-
       </Grid>
-
-
     </>
   );
 };

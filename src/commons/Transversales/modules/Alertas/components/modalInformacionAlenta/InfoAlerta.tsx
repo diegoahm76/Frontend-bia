@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog } from 'primereact/dialog';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Button, Grid, TextField, Tooltip} from "@mui/material";
+import { Button, Grid, TextField, Tooltip } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { ModificadorFormatoFecha } from "../../utils/ModificaforFecha";
 import type { AlertaBandejaAlertaPersona, Alerta_update, InterfazMostarAlerta } from '../../interfaces/interfacesAlertas';
@@ -51,7 +51,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
 
     const title = (<Title title="Informacion de alerta " />);
 
-   // eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const {
         nombre_clase_alerta,
         tipo_alerta,
@@ -64,7 +64,6 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
         repeticiones_suspendidas,
         nivel_prioridad
     } = alerta_idTo_find;
-   
 
 
 
@@ -154,21 +153,21 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
 
                     const elemento_buscado_en_array = data_entidad[updatedata_entidad_index];
                     const leido_value = elemento_buscado_en_array.leido;
-                      if (!leido_value){
-                    const updateddata_entidad: Alerta_update = {
-                        ...elemento_buscado_en_array,
-                        leido: !leido_value,
-                    };
+                    if (!leido_value) {
+                        const updateddata_entidad: Alerta_update = {
+                            ...elemento_buscado_en_array,
+                            leido: !leido_value,
+                        };
 
 
 
-                    const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_findd}/`, updateddata_entidad);
+                        const response = await api.put(`/transversal/alertas/alertas_bandeja_Alerta_persona/update/${alerta_idTo_findd}/`, updateddata_entidad);
 
 
-                    set_data_entidad(response.data.data);
-                    control_success('La notificación actual ha sido revisada');
-                  }
-                   
+                        set_data_entidad(response.data.data);
+                        control_success('La notificación actual ha sido revisada');
+                    }
+
                 } catch (error: any) {
                     control_error(error.response.data.detail);
                 }
@@ -199,14 +198,14 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
     return (
         <div>
             <Tooltip title="Informacion de alerta" placement="right">
-            <Button
-                onClick={handleClick}
-                
-            >
-              <VisibilityIcon
+                <Button
+                    onClick={handleClick}
 
-              />
-            </Button>
+                >
+                    <VisibilityIcon
+
+                    />
+                </Button>
             </Tooltip>
             <Dialog header={title} visible={visible} style={{ width: '60%' }} closable={false} onHide={() => { set_visible(false) }} footer={footer_content}>
                 <Grid container sx={{
@@ -222,14 +221,14 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
                     <Grid item xs={12}  >
 
                         <TextField
-                            style={{ width: "95%",margin:6 }}
+                            style={{ width: "95%", margin: 6 }}
                             label="Clase Alerta"
                             variant="outlined"
                             size="small"
                             disabled
                             fullWidth
                             value={nombre_clase_alerta}
-                     
+
                         />
                     </Grid>
 
@@ -244,7 +243,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
                             fullWidth
                             value={tipo_alerta}
 
-                           
+
                         />
                     </Grid>
                     <Grid item xs={12} sm={4} >
@@ -309,14 +308,14 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
                             size="small"
                             disabled
                             fullWidth
-                            value={nombre_modulo.split('/#/app/')}
+                            value={nombre_modulo ? nombre_modulo.split('/#/app/') : ""}
                         />
                     </Grid>
-              
-              
-                  
 
-                <Grid item xs={12} sm={4} >
+
+
+
+                    <Grid item xs={12} sm={4} >
 
                         <TextField
                             style={{ margin: 6, width: "85%" }}
@@ -326,21 +325,21 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
                             disabled
                             fullWidth
                             value={repeticiones_suspendidas === true ? "Sí" : "No"}
-                           
+
                         />
                     </Grid>
-                <Grid item xs={12} sm={2} >
+                    <Grid item xs={12} sm={2} >
 
-                    <TextField
-                        style={{ margin: 6 , width: "85%"}}
-                        label="Prioridad"
-                        variant="outlined"
-                        size="small"
-                        disabled
-                        fullWidth
-                        value={nivel_prioridad}
-                    />
-                </Grid>
+                        <TextField
+                            style={{ margin: 6, width: "85%" }}
+                            label="Prioridad"
+                            variant="outlined"
+                            size="small"
+                            disabled
+                            fullWidth
+                            value={nivel_prioridad}
+                        />
+                    </Grid>
 
 
                     <Grid item xs={12}>

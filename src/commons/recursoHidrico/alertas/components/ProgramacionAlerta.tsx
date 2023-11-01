@@ -37,17 +37,20 @@ export const ProgramacionAlerta: React.FC = () => {
       field: 'mes_cumplimiento',
       headerName: 'MES',
       width: 150,
+      flex: 1,
       renderCell: (params) => mesesEnEspanol[params.value] || params.value,
     },
     {
       field: 'dia_cumplimiento',
       headerName: 'DIA',
       width: 150,
+      flex: 1,
     },
     {
       field: 'Action',
       headerName: 'ACCIONES',
       width: 250,
+      flex: 1,
       renderCell: (params) => {
         return (
           <>
@@ -139,7 +142,7 @@ export const ProgramacionAlerta: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={6}>
           <Typography variant="body2" color="text.secondary">
             <strong>Selecciona un mes</strong>
           </Typography>
@@ -187,7 +190,7 @@ export const ProgramacionAlerta: React.FC = () => {
             </Typography>
           )}
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={6}>
           <Typography variant="body2" color="text.secondary">
             <strong>Selecciona un día</strong>
           </Typography>
@@ -238,14 +241,14 @@ export const ProgramacionAlerta: React.FC = () => {
               </Typography>
               
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
             <ButtonGroup
-              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' ,marginRight:80}}
             >
                 {download_xls({ nurseries: rows_alerta_programada, columns: colums_alerta_programada })}
                 {download_pdf({ nurseries: rows_alerta_programada, columns: colums_alerta_programada, title: 'Alertas programadas' })}
             </ButtonGroup> 
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{marginLeft:80,marginRight:80}}>
               <DataGrid
                 autoHeight
                 rows={rows_alerta_programada}

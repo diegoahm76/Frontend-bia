@@ -816,7 +816,7 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
               }
               label="¿Autoriza tratamiento de datos? *"
             /> <Grid item xs={12}>
-              <button onClick={open_link}>Privacidad de datos</button>
+              <Button  variant="contained"    color="primary" onClick={open_link}>Privacidad de datos</Button>
             </Grid>
             {errors.acepta_tratamiento_datos?.type === 'required' && (
               <FormHelperText>

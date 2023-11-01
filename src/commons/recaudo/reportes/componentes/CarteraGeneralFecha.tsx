@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Grid, Box, Stack, TextField, Button, FormControl } from '@mui/material';
 import { FileDownloadOutlined, SearchOutlined } from '@mui/icons-material';
@@ -97,9 +98,26 @@ export const CarteraGeneralFecha: React.FC = () => {
   useEffect(() => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
+  
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //      console.log("11111");
+  //     console.log(get_cartera_fecha);
+  //     console.log(reportes_recaudo);
+  //   }, 10000); // 20 segundos en milisegundos
 
+  //   // Limpiar el intervalo cuando el componente se desmonte
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
+
+
+
+    
   useEffect(() => {
-    if (visible_rows.length !== 0) {
+    // if (visible_rows.length !== 0) {
+      if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
       let total = 0
       for (let i = 0; i < visible_rows.length; i++) {
         total = total + parseFloat(visible_rows[i].valor_sancion)
@@ -107,35 +125,43 @@ export const CarteraGeneralFecha: React.FC = () => {
       }
     }
   }, [visible_rows])
-
   useEffect(() => {
-    if (visible_rows.length !== 0) {
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    if (visible_rows !== undefined && Array.isArray(visible_rows) && visible_rows.length > 0) {
+        set_values(visible_rows.map((obj) => Object.values(obj)) as any)
     }
-  }, [visible_rows])
+}, [visible_rows])
+
+  // useEffect(() => {
+  //   // if (visible_rows.length !== 0) {
+  //     if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
+  //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+  //   }
+  // }, [visible_rows])
 
   useEffect(() => {
     const arr_labels: any = []
+    if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
     for (let i = 0; i < visible_rows.length; i++) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       arr_labels.push(`${visible_rows[i].codigo_contable} ${visible_rows[i].concepto_deuda}`)
     }
     set_arr_label(arr_labels)
-  }, [visible_rows])
+}}, [visible_rows])
 
   useEffect(() => {
     const arr_series = []
+    if (visible_rows && Array.isArray(visible_rows) && visible_rows.length > 0) {
     for (let i = 0; i < visible_rows.length; i++) {
       arr_series.push(parseFloat(visible_rows[i].valor_sancion))
     }
     set_arr_data(arr_series)
-  }, [visible_rows])
+ } }, [visible_rows])
 
   const columns: GridColDef[] = [
     {
       field: 'codigo_contable',
       headerName: 'Código Contable',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -145,7 +171,7 @@ export const CarteraGeneralFecha: React.FC = () => {
     {
       field: 'concepto_deuda',
       headerName: 'Concepto Deuda',
-      width: 300,
+      width: 300,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -155,7 +181,7 @@ export const CarteraGeneralFecha: React.FC = () => {
     {
       field: 'valor_sancion',
       headerName: 'Total',
-      width: 170,
+      width: 170,flex: 1,
       renderCell: (params) => {
         const precio_cop = new Intl.NumberFormat("es-ES", {
           style: "currency",
@@ -169,7 +195,7 @@ export const CarteraGeneralFecha: React.FC = () => {
       },
     },
   ];
-
+ 
   return (
     <Grid
       container
@@ -257,7 +283,7 @@ export const CarteraGeneralFecha: React.FC = () => {
             </Stack>
           </Stack>
           {
-            visible_rows.length !== 0 ? (
+  // visible_rows && visible_rows.length !== undefined && visible_rows.length !== 0 ? (
               <Stack
                 direction='column'
                 justifyContent='center'
@@ -281,7 +307,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                           <DataGrid
                             autoHeight
                             disableSelectionOnClick
-                            rows={visible_rows}
+                            rows={visible_rows||[]}
                             columns={columns}
                             pageSize={10}
                             rowsPerPageOptions={[10]}
@@ -329,7 +355,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                   </Grid>
                 </Box>
               </Stack>
-            ) : null
+            // ) : null
           }
         </Box>
       </Grid>

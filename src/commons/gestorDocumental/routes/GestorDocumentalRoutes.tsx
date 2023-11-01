@@ -25,7 +25,11 @@ import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
+import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
+import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
+import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
+import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 
@@ -95,9 +99,14 @@ const routes = [
     component: () => <AdministracionPlantillaDocumentos_Routes />,
   },
   {
-    path: 'configuracionnnnnn/',
-    name: 'configuracionnnnnn',
+    path: 'configuracionmedio/',
+    name: 'configuracionmedio',
     component: () => <ConfiguracionMediosSolicitud_routes />,
+  },
+  {
+    path: 'configuraciontiposexpedientes/',
+    name: 'configuraciontiposexpedientes',
+    component: () => <ConfiguracionTiposExpedientes_Routes />,
   },
   {
     path: 'encuesta_configuracion/',
@@ -115,10 +124,22 @@ const routes = [
     component: () => <Encuasta_Routes />,
   },
   {
+    path: 'encuesta_asignacion/',
+    name: 'encuesta_asignacion',
+    component: () => <Encuasta_Routess />,
+  },
+  {
+    path: 'Interno_encuesta/',
+    name: 'Interno_encuesta',
+    component: () => <Encuasta_encuestas_Routes />,
+  },
+  
+  
+  {
     path: 'expedientes/',
     name: 'expedientes',
-    // component: () => <ExpedientesRoutes />,
-    component: () => <CierreExpedientesRoutes />,
+    component: () => <ExpedientesRoutes />,
+    // component: () => <CierreExpedientesRoutes />,
   },
   {
     path: 'archivo_fisico/',
@@ -129,6 +150,11 @@ const routes = [
     path: 'configuracion_tiempo_respuesta/',
     name: 'configuracion_tiempo_respuesta',
     component: () => <ConfiTiempoRespuestaRoutes />,
+  },
+  {
+    path: 'reportes_documentacion/',
+    name: 'reportes_documentacion',
+    component: () => <ReportesDocumentacionRoutes />,
   },
 ];
 
