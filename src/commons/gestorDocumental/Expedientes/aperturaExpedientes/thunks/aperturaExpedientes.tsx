@@ -79,6 +79,30 @@ export const obtener_unidad_organizacional: any = (id_trd: number) => {
     }
   };
 };
+// Anulación expedientes
+export const anular_expdiente: any = (id_expediente: number,motivo: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-expediente/anular/${id_expediente}/`,motivo);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Borrar expedientes
+export const borrar_expediente: any = (id_expediente: number) => {
+  return async () => {
+    try {
+      const { data } = await api.delete(`gestor/expedientes-archivos/expedientes/apertura-expediente/borrar/${id_expediente}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Obtener usuario logueado de local storage
 export const obtener_usuario_logueado: any = (id_serie: number) => {
   return async () => {

@@ -6,7 +6,8 @@ import { useAppDispatch } from "../../../../../hooks";
 
 
 interface IProps {
-    set_expediente: any
+    set_expediente: any,
+    set_limpiar: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -24,6 +25,15 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
     useEffect(() => {
         obtener_trd_actual_fc();
     }, []);
+
+    useEffect(() => {
+        if(props.set_limpiar){
+            set_seccion("");
+            set_serie("");
+            set_tipo_expediente("");
+            set_lt_serie([]);
+        }
+    }, [props.set_limpiar]);
 
     useEffect(() => {
         if (seccion !== "")

@@ -1,11 +1,11 @@
 import { Grid, TextField, Box, Button, Stack, FormHelperText, ToggleButton, FormLabel, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, Typography, Fab } from "@mui/material";
 import { Title } from "../../../../../components/Title";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { FormularioBuscarPersona } from "./FormularioBuscarPersona";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { obtener_config_expediente, obtener_serie_subserie, obtener_trd_actual, obtener_unidad_organizacional, obtener_unidades_marcadas, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
+import { borrar_expediente, obtener_config_expediente, obtener_serie_subserie, obtener_trd_actual, obtener_unidad_organizacional, obtener_unidades_marcadas, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -14,6 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { AperturaExpedientesScreen } from "./AperturaExpedientesScreen";
 import dayOfYear from 'dayjs/plugin/dayOfYear';
+import AnularExpedienteModal from "./AnularExpediente";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -55,19 +56,8 @@ export const ExpedientesScreen: React.FC = () => {
     const [msj_error_und_organizacional, set_msj_error_und_organizacional] = useState<string>("");
     const [persona_titular, set_persona_titular] = useState<any>({});
     const [persona_resp, set_persona_resp] = useState<any>({});
-    useEffect(() => {
-        obtener_trd_actual_fc();
-    }, []);
-
-    useEffect(() => {
-        if (seccion !== "")
-            obtener_serie_subserie_fc();
-    }, [seccion]);
-
-    useEffect(() => {
-        if (serie !== "")
-            obtener_config_expediente_fc();
-    }, [serie]);
+    const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
+    const [limpiar, set_limpiar] = useState<boolean>(false);
 
     useEffect(() => {
         if (palabras_clave !== "") {
@@ -84,31 +74,14 @@ export const ExpedientesScreen: React.FC = () => {
         }
     }, [expediente]);
 
-    const obtener_trd_actual_fc: () => void = () => {
-        dispatch(obtener_trd_actual()).then((response: any) => {
-            set_tdr(response.data);
-            dispatch(obtener_unidades_marcadas(response.data.id_organigrama)).then((response: any) => {
-                set_lt_seccion(response.data);
-            })
-        })
-    }
-    const obtener_serie_subserie_fc: () => void = () => {
-        dispatch(obtener_serie_subserie(tdr.id_trd, seccion)).then((response: any) => {
-            set_lt_serie(response.data);
-        })
-    }
-
-    const obtener_config_expediente_fc: () => void = () => {
-        dispatch(obtener_config_expediente(serie)).then((response: any) => {
-            set_tipo_expediente(response.data.cod_tipo_expediente);
-            set_expediente(response.data);
-        })
-    }
-
     const obtener_unidad_organizacional_fc: () => void = () => {
         dispatch(obtener_unidad_organizacional()).then((response: any) => {
             set_lt_unidades_org(response.data);
         })
+    }
+
+    const borrar_expediente_fc: () => void = () => {
+        dispatch(borrar_expediente(0));
     }
 
     const obtener_usuario_logueado_fc: () => void = () => {
@@ -152,13 +125,35 @@ export const ExpedientesScreen: React.FC = () => {
         }
     };
 
+    const limpiar_formulario = (): void => {
+        set_limpiar(true);
+    };
+
+    useEffect(() => {
+        if(limpiar){
+            set_und_organizacional("");
+            set_seccion("");
+            set_serie("");
+            set_tipo_expediente("");
+            set_titulo("");
+            set_descripcion("");
+            set_persona_resp({});
+            set_persona_titular({});
+            set_fecha_creacion(dayjs());
+            set_palabras_clave("");
+            set_lt_palabras_clave([]);
+            set_expediente(null);
+            set_limpiar(false);
+        }
+    }, [limpiar]);
+
     return (
         <>
             <Grid
                 container
                 sx={class_css}
             >
-                <AperturaExpedientesScreen set_expediente={set_expediente}></AperturaExpedientesScreen>
+                <AperturaExpedientesScreen set_limpiar={limpiar} set_expediente={set_expediente}></AperturaExpedientesScreen>
             </Grid>
             {expediente !== null && <Grid
                 container
@@ -523,7 +518,7 @@ export const ExpedientesScreen: React.FC = () => {
                                 // color='inherit'
                                 variant="outlined"
                                 startIcon={<CleanIcon />}
-                                onClick={() => { }}
+                                onClick={() => { limpiar_formulario() }}
                             >
                                 Limpiar
                             </Button>
@@ -531,14 +526,15 @@ export const ExpedientesScreen: React.FC = () => {
                                 sx={{background: '#ff9800'}}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
-                                onClick={() => { }}
+                                onClick={() => { set_abrir_modal_anular(true) }}
                             >
                                 Anular expediente
                             </Button>
+                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={0}></AnularExpedienteModal>}
                             <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
-                                onClick={() => { }}
+                                onClick={() => { borrar_expediente_fc() }}
                                 sx={{background: '#ff6961'}}
                             >
                                 Borrar expediente
