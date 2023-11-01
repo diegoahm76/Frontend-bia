@@ -96,6 +96,7 @@ export const EncabezadoSolicitud: React.FC = () => {
                 <Button
                   color='primary'
                   variant='contained'
+                  fullWidth
                   onClick={() => {
                     void dispatch(get_obligaciones_id(solicitud_facilidad.deudor.identificacion))
                     set_modal_obligaciones(true)

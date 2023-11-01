@@ -29,12 +29,15 @@ export const FacilidadesPagoFuncionario: React.FC = () => {
       throw new Error(error);
     }
   }, [])
-
+  useEffect(() => {
+    set_modal(facilidades.length === 0); // Actualiza modal cuando cambie la longitud de facilidades
+  }, [facilidades]);
   return (
     <>
-      <Title title='Listado de Facilidades de Pago Asignadas - Usuario Cormacarena'/>
-      {
-        facilidades.length !== 0 ? (
+     
+      
+      {/* {
+        facilidades.length !== 0 ? ( */}
           <Grid
             container
             sx={{
@@ -46,7 +49,7 @@ export const FacilidadesPagoFuncionario: React.FC = () => {
               p: '20px',
               boxShadow: '0px 3px 6px #042F4A26',
             }}
-          >
+          > <Title title='Listado de Facilidades de Pago Asignadas - Usuario Cormacarena'/>
             <Grid item xs={12}>
               <Box
                 component="form"
@@ -58,15 +61,15 @@ export const FacilidadesPagoFuncionario: React.FC = () => {
               </Box>
             </Grid>
           </Grid>
-        ) : (
+        {/* ) : ( */}
           <DialogoInformativo
             tipo_notificacion='info'
             mensaje_notificacion='Usted no tiene facilidades de pago asignadas'
             abrir_modal={modal}
             abrir_dialog={handle_close}
           />
-        )
-      }
+        {/* )
+      } */}
     </>
   )
 }

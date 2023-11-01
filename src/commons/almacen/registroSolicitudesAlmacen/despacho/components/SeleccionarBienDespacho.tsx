@@ -354,7 +354,7 @@ const SeleccionarBienDespacho = () => {
               id_unidad_medida_solicitada:
                 bien_selected.id_unidad_medida ?? null,
               bodega: current_bien.bodega ?? null,
-              id_entrada_bien: current_bien.id_entrada_bien ?? null,
+              id_entrada_almacen_bien: current_bien.id_entrada_almacen_bien ?? null,
             };
             console.log(new_bien);
             if (bien === undefined) {

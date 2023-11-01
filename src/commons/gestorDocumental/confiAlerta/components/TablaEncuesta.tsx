@@ -23,6 +23,7 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             const res = await api.get("/gestor/encuestas/encabezado_encuesta/get/");
             if (res.data.success) {
                 setEncuestas(res.data.data);
+                
             }
         } catch (error) {
             console.error(error);
@@ -44,6 +45,8 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
 
         setEncuestas(filteredEncuestas);
     };
+
+    
     useEffect(() => {
         fetchEncuestas(); // Llama a fetchEncuestas al montar el componente
     }, []);
@@ -70,6 +73,7 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
                         aria-label="Ver"
                         onClick={() => {
                             handleClear();
+                            console.log(params.row)
                             const id = params.row.id_encabezado_encuesta; // Obtener el ID de la fila seleccionada
                             setSelectedEncuestaId(id); // Almacenar el ID en el estado
                         }}
@@ -127,12 +131,12 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             />
             <Grid item xs={12} marginTop={2}>
                 <DataGrid
-                    density="compact"
                     autoHeight
-                    columns={columns}
-                    rows={encuestas}
                     pageSize={10}
+                    columns={columns}
+                    density="compact"
                     rowsPerPageOptions={[10]}
+                    rows={encuestas}
                     getRowId={(row) => row.id_encabezado_encuesta}
                 />
             </Grid>

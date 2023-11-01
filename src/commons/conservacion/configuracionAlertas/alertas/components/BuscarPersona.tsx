@@ -276,6 +276,7 @@ export const BuscarPersona: React.FC<PropsBuscador> = ({
           tiene_usuario: false,
           digito_verificacion: '',
           cod_naturaleza_empresa: '',
+          tipo_usuario:'',
         };
         onResult(new_data);
       }

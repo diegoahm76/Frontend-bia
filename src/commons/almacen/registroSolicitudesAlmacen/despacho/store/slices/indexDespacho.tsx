@@ -8,6 +8,7 @@ import {
 } from '../../interfaces/despacho';
 import { type Persona } from '../../../../../../interfaces/globalModels';
 import { type IObjBienesSolicitud as IObjBienSolicitudAux } from '../../../solicitudBienConsumo/interfaces/solicitudBienConsumo';
+import dayjs from 'dayjs';
 
 const initial_state_person: Persona = {
   id_persona: null,
@@ -29,7 +30,7 @@ export const initial_state_current_despacho: IObjDespacho = {
   numero_despacho_consumo: null,
   numero_solicitud_por_tipo: null,
   fecha_solicitud: null,
-  fecha_despacho: new Date().toString(),
+  fecha_despacho: (new Date().toString()),
   fecha_registro: null,
   motivo: null,
   es_despacho_conservacion: null,

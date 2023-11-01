@@ -89,6 +89,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   });
   const [meses_actual, set_meses_actual] = useState<string[]>([]);
   const [tamano_detalles, set_tamano_detalles] = useState<boolean>(true);
+  const [periodos, set_periodos] = useState<string[]>([]);
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/deudores')
@@ -128,6 +129,14 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   }, [form_liquidacion.id_expediente]);
 
   useEffect(() => {
+    const ciclo = form_liquidacion.ciclo_liquidacion;
+    if (ciclo) {
+      set_periodos(detalles_periodos[ciclo].periodos);
+      set_periodo_actual(detalles_periodos[ciclo]);
+    }
+  }, [form_liquidacion.ciclo_liquidacion]);
+
+  useEffect(() => {
     if (form_liquidacion.periodo_liquidacion) {
       const index_periodo = periodo_actual.periodos.findIndex(periodo => periodo === form_liquidacion.periodo_liquidacion);
       if (index_periodo >= 0) {
@@ -156,7 +165,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           console.log(error);
         });
     } else {
-      set_form_liquidacion((previousState) => ({ ...previousState, periodo_liquidacion: '', valor: 0 }));
+      set_periodos([]);
+      set_form_liquidacion((previousState) => ({ ...previousState, ciclo_liquidacion: '', periodo_liquidacion: '', valor: 0 }));
       set_fecha_liquidacion(dayjs(new Date()));
       set_fecha_vencimiento(dayjs(new Date()));
       set_rows_detalles([]);
@@ -164,16 +174,18 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   };
 
   const agregar_datos_inputs = (liquidacion_base: Liquidacion): void => {
-    const { id, fecha_liquidacion, vencimiento, periodo_liquidacion, valor } = liquidacion_base;
+    const { id, fecha_liquidacion, vencimiento, ciclo_liquidacion, periodo_liquidacion, valor, detalles } = liquidacion_base;
     set_id_liquidacion_pdf(id.toString());
+    set_periodos(detalles_periodos[ciclo_liquidacion].periodos);
     set_form_liquidacion((previousState) => ({
       ...previousState,
+      ciclo_liquidacion,
       periodo_liquidacion,
       valor,
     }));
     set_fecha_liquidacion(dayjs(fecha_liquidacion));
     set_fecha_vencimiento(dayjs(vencimiento));
-    agregar_detalles(liquidacion_base.detalles);
+    agregar_detalles(detalles);
   };
 
   const agregar_detalles = (detalles: DetallesLiquidacion[]): void => {
@@ -428,14 +440,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   fecha_vencimiento={fecha_vencimiento}
                   id_liquidacion_pdf={id_liquidacion_pdf}
                   detalles_ciclos={detalles_ciclos}
-                  detalles_periodos={detalles_periodos}
+                  periodos={periodos}
                   tamano_detalles={tamano_detalles}
                   handle_input_form_liquidacion_change={handle_input_form_liquidacion_change}
                   handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
                   handle_submit_liquidacion={handle_submit_liquidacion}
                   set_fecha_liquidacion={set_fecha_liquidacion}
                   set_fecha_vencimiento={set_fecha_vencimiento}
-                  set_periodo_actual={set_periodo_actual}
                 />
               </TabPanel>
             </TabContext>

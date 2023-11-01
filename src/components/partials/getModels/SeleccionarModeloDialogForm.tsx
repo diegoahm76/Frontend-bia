@@ -285,13 +285,14 @@ const SeleccionarModeloDialogForm = ({
                             </Grid>
                         </Grid>
                     }
-                    {models.length > 0 &&
+                    {/* {models.length > 0 && */}
                         <Grid container sx={{
                             position: 'relative',
                             background: '#FAFAFA',
                             borderRadius: '15px',
                             p: '20px',
                             mb: '20px',
+                            
                             boxShadow: '0px 3px 6px #042F4A26',
                             marginLeft: '-6px',
                         }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
@@ -312,7 +313,7 @@ const SeleccionarModeloDialogForm = ({
                   onSelectionModelChange={handle_selection_change}
                   density="compact"
                   autoHeight
-                  rows={models}
+                  rows={models || []}
                   columns={columns_model}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
@@ -326,7 +327,7 @@ const SeleccionarModeloDialogForm = ({
                 />
               </Box>
             </Grid>
-          }
+          {/* } */}
 
         </DialogContent>
         <Divider />

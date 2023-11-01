@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
+import { Title } from "../../../../components";
 
 interface RootState {
   solicitud_facilidad: {
@@ -26,7 +27,7 @@ export const VistaSolicitud: React.FC = () => {
     {
       field: 'nombre_tipo_bien',
       headerName: 'Tipo Bien',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -36,7 +37,7 @@ export const VistaSolicitud: React.FC = () => {
     {
       field: 'descripcion',
       headerName: 'Identificación',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -46,23 +47,23 @@ export const VistaSolicitud: React.FC = () => {
     {
       field: 'valor',
       headerName: 'Avalúo',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => {
         const precio_cop = new Intl.NumberFormat("es-ES", {
           style: "currency",
           currency: "COP",
         }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
         )
       },
     },
     {
       field: 'Direccion',
       headerName: 'Dirección',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {`${params.row.direccion as string}, ${params.row.ubicacion as string}`}
@@ -72,7 +73,7 @@ export const VistaSolicitud: React.FC = () => {
     {
       field: 'documento_soporte',
       headerName: 'Doc. Impuestos',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           <a href={params.value} target="_blank" rel="noreferrer">
@@ -92,9 +93,11 @@ export const VistaSolicitud: React.FC = () => {
 
   return (
     <>
-      <h3>Detalle</h3>
+      <Title title={`Detalle`} />
+
+      <h3></h3>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={6}>
           <a href={solicitud_facilidad.facilidad_pago.documento_soporte} target="_blank" rel="noreferrer">
             <Button
               fullWidth
@@ -107,7 +110,8 @@ export const VistaSolicitud: React.FC = () => {
             </Button>
           </a>
         </Grid>
-        <Grid item xs={12} sm={5}>
+
+        <Grid item xs={12} sm={6}>
           <a href={solicitud_facilidad.facilidad_pago.consignacion_soporte} target="_blank" rel="noreferrer">
             <Button
               fullWidth
@@ -120,7 +124,7 @@ export const VistaSolicitud: React.FC = () => {
             </Button>
           </a>
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Calidad en que actúa la persona"
             size="small"
@@ -129,7 +133,9 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={5}>
+
+
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Valor Abonado"
             size="small"
@@ -138,7 +144,7 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Fecha del Abono"
             size="small"
@@ -155,27 +161,27 @@ export const VistaSolicitud: React.FC = () => {
               <PersonaJuridica />
             ) : solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 3 ? (
               <DeudorSolidarioNatural />
-            ) : solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 4 ?  (
+            ) : solicitud_facilidad.facilidad_pago.id_tipo_actuacion === 4 ? (
               <DeudorSolidarioJuridico />
             ) : null
           }
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
             value={
               solicitud_facilidad.facilidad_pago.periodicidad === 1 ?
-              'Mensual' : solicitud_facilidad.facilidad_pago.periodicidad === 3 ?
-              'Trimestral' : solicitud_facilidad.facilidad_pago.periodicidad === 6 ?
-              'Semestral' : solicitud_facilidad.facilidad_pago.periodicidad === 12 ?
-              'Anual' : solicitud_facilidad.facilidad_pago.periodicidad
+                'Mensual' : solicitud_facilidad.facilidad_pago.periodicidad === 3 ?
+                  'Trimestral' : solicitud_facilidad.facilidad_pago.periodicidad === 6 ?
+                    'Semestral' : solicitud_facilidad.facilidad_pago.periodicidad === 12 ?
+                      'Anual' : solicitud_facilidad.facilidad_pago.periodicidad
             }
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Plazo"
             size="small"
@@ -184,7 +190,7 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={6}>
           <a href={solicitud_facilidad.facilidad_pago.documento_no_enajenacion} target="_blank" rel="noreferrer">
             <Button
               fullWidth
@@ -199,10 +205,10 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         {
           solicitud_facilidad.facilidad_pago.periodicidad === 12 && solicitud_facilidad.facilidad_pago.cuotas > 1 ||
-          solicitud_facilidad.facilidad_pago.periodicidad === 6 && solicitud_facilidad.facilidad_pago.cuotas > 2 ||
-          solicitud_facilidad.facilidad_pago.periodicidad === 3 && solicitud_facilidad.facilidad_pago.cuotas > 4 ||
-          solicitud_facilidad.facilidad_pago.periodicidad === 1 && solicitud_facilidad.facilidad_pago.cuotas > 12 ? (
-            <Grid item xs={12} sm={5}>
+            solicitud_facilidad.facilidad_pago.periodicidad === 6 && solicitud_facilidad.facilidad_pago.cuotas > 2 ||
+            solicitud_facilidad.facilidad_pago.periodicidad === 3 && solicitud_facilidad.facilidad_pago.cuotas > 4 ||
+            solicitud_facilidad.facilidad_pago.periodicidad === 1 && solicitud_facilidad.facilidad_pago.cuotas > 12 ? (
+            <Grid item xs={12} sm={6}>
               <a href={solicitud_facilidad.documento_garantia} target="_blank" rel="noreferrer">
                 <Button
                   fullWidth
@@ -218,10 +224,11 @@ export const VistaSolicitud: React.FC = () => {
           ) : null
         }
       </Grid>
-      <p><strong>Relación de bienes</strong></p>
+      <Title title={`Relación de bienes`} />
+      <p><strong></strong></p>
       <Grid item xs={12}>
         <Grid item>
-           <Box sx={{ width: '100%' }}>
+          <Box sx={{ width: '100%' }}>
             <DataGrid
               autoHeight
               disableSelectionOnClick
@@ -250,9 +257,9 @@ export const VistaSolicitud: React.FC = () => {
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
         {
           solicitud_facilidad.facilidad_pago.notificaciones !== undefined ?
-          solicitud_facilidad.facilidad_pago.notificaciones ?
-          (<FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) :
-          (<FormControlLabel disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) : null
+            solicitud_facilidad.facilidad_pago.notificaciones ?
+              (<FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) :
+              (<FormControlLabel disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) : null
         }
       </FormGroup>
     </>

@@ -24,6 +24,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
+  console.log("data_busqueda_Avanazda", data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
   const [id_visualizar, set_id_visualizar] = useState(0);
@@ -32,36 +33,43 @@ export const MostrarCentroPlantillas: React.FC = () => {
   const columns: GridColDef[] = [
 
     {
-      field: 'id_plantilla_doc',
-      headerName: 'Id',
-      width: 200,
-      flex: 1,
-    },
-    {
       field: 'nombre',
       headerName: 'Nombre Plantilla',
       width: 200,
       flex: 1,
     },
     {
-      field: 'nombre_tipologia',
-      headerName: 'Nombre Tipologia',
+      field: 'descripcion',
+      headerName: 'Descripcion',
+      width: 200,
+      flex: 1
+    },
+    {
+      field: 'otras_tipologias',
+      headerName: 'Tipologia',
       width: 200,
       flex: 1,
     },
     {
-      field: 'ruta',
-      headerName: 'Ruta',
-      width: 120,
+      field: 'cod_tipo_acceso',
+      headerName: 'Disponibilidad',
+      width: 200,
       flex: 1,
-      renderCell: (params: any) => (
-        <DownloadButton
-          fileUrl={params.row.archivos_digitales.ruta_archivo}
-          fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
-          condition={false} // Establece la condición según tus necesidades
-        />
-      ),
     },
+
+    // {
+    //   field: 'ruta',
+    //   headerName: 'Ruta',
+    //   width: 120,
+    //   flex: 1,
+    //   renderCell: (params: any) => (
+    //     <DownloadButton
+    //       fileUrl={params.row.archivos_digitales.ruta_archivo}
+    //       fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
+    //       condition={false} // Establece la condición según tus necesidades
+    //     />
+    //   ),
+    // },
     {
       field: 'extension',
       headerName: 'Extensión',
@@ -78,10 +86,15 @@ export const MostrarCentroPlantillas: React.FC = () => {
       width: 80,
       flex: 1,
       renderCell: (params: any) => (
-
-        <IconButton onClick={() => set_id_visualizar(params.row.id_plantilla_doc)}      >
-          <InformacionPlantillasPersonas data={id_visualizar} />
-        </IconButton>),
+        <> <DownloadButton
+          fileUrl={params.row.archivos_digitales.ruta_archivo}
+          fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
+          condition={false} // Establece la condición según tus necesidades
+        />
+          <IconButton onClick={() => set_id_visualizar(params.row.id_plantilla_doc)}      >
+            <InformacionPlantillasPersonas data={id_visualizar} />
+          </IconButton>
+        </>)
     },
   ];
 
@@ -104,7 +117,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       let queryURL = url;
 
       if (!checked) {
-        if (nombre_plantilla || Extension || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
+        if (nombre_plantilla || Extension || Descripccion || choise_seleccionado_tipologia || choise_seleccionado_disponivilidad) {
           queryURL += '?';
 
           if (nombre_plantilla) { queryURL += `nombre=${nombre_plantilla}&`; }
@@ -115,11 +128,14 @@ export const MostrarCentroPlantillas: React.FC = () => {
 
           if (choise_seleccionado_disponivilidad) { queryURL += `disponibilidad=${choise_seleccionado_disponivilidad}`; }
 
+          if (Descripccion) {
+            queryURL += `descripcion=${Descripccion}`;
+          }
           // Elimina el último '&' si está presente
           if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
         }
       }
-
+      console.log("queryURL", queryURL);
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
@@ -187,12 +203,12 @@ export const MostrarCentroPlantillas: React.FC = () => {
       }}
     >
       <Grid item xs={12} >
-        <Title title="Seleccionar Archivos" />
+        <Title title="Descargar Plantillas" />
       </Grid>
 
-      <Grid item xs={5}>
+      <Grid item xs={6}>
         <TextField
-          style={{ width: '80%', marginTop: 20 }}
+          style={{ width: '90%', marginTop: 20 }}
           label={`Buscar por Nombre de Plantilla`}
           variant="outlined"
           fullWidth
@@ -203,7 +219,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
         />
 
         <TextField
-          style={{ width: '80%', marginTop: 7 }}
+          style={{ width: '90%', marginTop: 7 }}
           label={`Buscar por Descripccion`}
           variant="outlined"
           fullWidth
@@ -213,7 +229,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
           }}
         />
         <TextField
-          style={{ width: '80%', marginTop: 7 }}
+          style={{ width: '90%', marginTop: 7 }}
           label={`Buscar por Extension`}
           variant="outlined"
           fullWidth
@@ -222,19 +238,9 @@ export const MostrarCentroPlantillas: React.FC = () => {
             set_Extension(e.target.value);
           }}
         />
-        <Grid item xs={12}>
-          <Checkbox
-            onChange={(e) => {
-              setChecked(e.target.checked);
-            }}
-            checked={checked}
-          ></Checkbox>
-          <label htmlFor="ingredient4" className="ml-2">
-            Mostrat Todas Las Plantillas
-          </label>
-        </Grid>
+
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={6}>
         <FormControl fullWidth style={{ marginTop: 20 }}>
           <InputLabel id="choise-label">Tipologia Documental</InputLabel>
           <Select
@@ -270,8 +276,22 @@ export const MostrarCentroPlantillas: React.FC = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid container>
+      <Grid container style={{ marginTop: 10 }}>
+
         <Grid item xs={6}>
+
+          <Checkbox
+            onChange={(e) => {
+              setChecked(e.target.checked);
+            }}
+            checked={checked}
+          ></Checkbox>
+          <label htmlFor="ingredient4" className="ml-2">
+            Mostrar todas las plantillas
+          </label>
+
+        </Grid>
+        <Grid item xs={3}>
           <Button
             color="primary"
             fullWidth
@@ -283,7 +303,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
             Buscar
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={3}>
           <Button fullWidth variant="outlined"
             startIcon={<CleanIcon />}
 
