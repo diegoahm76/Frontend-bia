@@ -6,34 +6,21 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
+import ReplyIcon from '@mui/icons-material/Reply';
 import { api, baseURL } from "../../../../api/axios";
+import { initialFormData } from "../interfaces/types";
+import { TablaEncuestaInterno } from "./InternoEncuestas";
 import { Button, FormControl, Grid, TextField } from "@mui/material";
 import { control_error, control_success } from "../../../../helpers";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import { RadioGroup, FormControlLabel, Radio, Typography, } from "@mui/material";
 import { FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
-import ReplyIcon from '@mui/icons-material/Reply';
-import { TablaEncuestaInterno } from "./InternoEncuestas";
-import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../../Encuesta/interfaces/types";
 import { fetch_data_dptos_encuestas, fetch_data_municipio_encuestas, fetch_data_pais_encuestas } from "../../Encuesta/services/encuestas.service";
+import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../../Encuesta/interfaces/types";
 
 export const EncuestaInterno: React.FC = () => {
 
-    const initialFormData = {
-        id_encuesta: 104,
-        _id_persona: 0,
-        email: "",
-        cod_sexo: "",
-        telefono: "",
-        rango_edad: "",
-        tipo_usuario: "R",
-        nombre_completo: "",
-        nro_documento_id: "",
-        id_pais_para_extranjero: "",
-        id_municipio_para_nacional: "",
-        id_tipo_documento_usuario: "",
-        ids_opciones_preguntas_encuesta: []
-    };
+ 
     const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null);
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (
@@ -137,7 +124,7 @@ export const EncuestaInterno: React.FC = () => {
         }
         return true;
     };
-  useEffect(() => {
+    useEffect(() => {
         void fetchUsuarioRegistrado().then((response) => {
             setUsuarioData(response); // Establece los datos del usuario obtenidos de la respuesta
         }).catch((error) => {
@@ -202,11 +189,10 @@ export const EncuestaInterno: React.FC = () => {
 
 
     // Estado para el sexo
+    // Efecto para cargar los datos del sexo
     const [sexos, setSexos] = useState<Sexo[]>([]);
 
-    // Efecto para cargar los datos del sexo
-    useEffect(() => {
-        const fetchSexo = async (): Promise<void> => {
+     const fetchSexo = async (): Promise<void> => {
             try {
                 const url = "/listas/sexo/";
                 const res = await api.get<{ data: Sexo[] }>(url);
@@ -215,6 +201,8 @@ export const EncuestaInterno: React.FC = () => {
                 console.error(error);
             }
         };
+
+    useEffect(() => {
         fetchSexo();
     }, []);
     const [usuarioData, setUsuarioData] = useState<UsuarioRegistrado | null>(null);
@@ -325,7 +313,7 @@ export const EncuestaInterno: React.FC = () => {
                                     <Select
                                         label="Tipo de Documento"
                                         name="id_tipo_documento_usuario"
-                                        disabled                                        value={formData.id_tipo_documento_usuario}
+                                        disabled value={formData.id_tipo_documento_usuario}
                                         onChange={handleInputChange}
                                     >
                                         {tiposDocumento.map((tipoDoc) => (
@@ -338,7 +326,7 @@ export const EncuestaInterno: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                               disabled
+                                    disabled
                                     value={formData.nro_documento_id}
                                     label="Numero identificación "
                                     onChange={handleInputChange}
@@ -351,7 +339,7 @@ export const EncuestaInterno: React.FC = () => {
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                               disabled
+                                    disabled
                                     value={formData.nombre_completo}
                                     onChange={handleInputChange}
                                     label="Nombre completo"
@@ -371,7 +359,7 @@ export const EncuestaInterno: React.FC = () => {
                                         name="cod_sexo"
                                         value={formData.cod_sexo}
                                         onChange={handleInputChange}
-                                   disabled
+                                        disabled
                                     >
                                         {sexos.map((sexo) => (
                                             <MenuItem key={sexo.value} value={sexo.value}>
@@ -391,7 +379,7 @@ export const EncuestaInterno: React.FC = () => {
                                         name="rango_edad"
                                         value={formData.rango_edad}
                                         onChange={handleInputChange}
-                                   disabled
+                                        disabled
                                     >
                                         {rangoEdad.map((rango) => (
                                             <MenuItem key={rango.value} value={rango.value}>
@@ -404,7 +392,7 @@ export const EncuestaInterno: React.FC = () => {
 
                             <Grid item xs={12} sm={4}>
                                 <TextField
-                               disabled
+                                    disabled
                                     onChange={handleInputChange}
                                     value={formData.email}
                                     variant="outlined"
@@ -415,14 +403,14 @@ export const EncuestaInterno: React.FC = () => {
                                 />
                             </Grid> <Grid item xs={12} sm={4}>
                                 <TextField
-                               disabled
-                                    variant="outlined"
-                                    size="small"
-                                    label="Telefono  "
-                                    fullWidth
+                                    disabled
                                     onChange={handleInputChange}
                                     value={formData.telefono}
+                                    variant="outlined"
+                                    label="Telefono"
                                     name="telefono"
+                                    size="small"
+                                    fullWidth
                                 />
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -432,7 +420,7 @@ export const EncuestaInterno: React.FC = () => {
                                         label="país"
                                         name="id_pais_para_extranjero"
                                         value={formData.id_pais_para_extranjero}
-                                   disabled
+                                        disabled
                                         onChange={(event) => {
                                             const selectedValue = event.target.value as string;
                                             setselected_pais(selectedValue);
@@ -459,7 +447,7 @@ export const EncuestaInterno: React.FC = () => {
                                             const selectedValue = event.target.value as string;
                                             setselected_departamento(selectedValue);
                                         }}
-                                   disabled
+                                        disabled
 
                                     >
                                         {departamentos.map((departamento) => (
@@ -474,12 +462,12 @@ export const EncuestaInterno: React.FC = () => {
                                 <FormControl size="small" fullWidth>
                                     <InputLabel >Municipio</InputLabel>
                                     <Select
-                                        label="Municipio"
-                                        onChange={handleInputChange}
-                                        name="id_municipio_para_nacional"
-                                   disabled
                                         value={formData.id_municipio_para_nacional}
+                                        name="id_municipio_para_nacional"
                                         inputProps={{ shrink: true }}
+                                        onChange={handleInputChange}
+                                        label="Municipio"
+                                        disabled
                                     >
                                         {municipios.map((municipio) => (
                                             <MenuItem key={municipio.value} value={municipio.value}>
@@ -504,14 +492,14 @@ export const EncuestaInterno: React.FC = () => {
                                         m={2}
                                         p={2}
                                         sx={{
-                                            position: 'relative',
-                                            background: '#FAFAFA',
-                                            borderRadius: '15px',
-                                            p: '20px',
-                                            m: '10px 0 20px 0',
-                                            mb: '20px',
                                             boxShadow: '0px 3px 6px #042F4A26',
                                             borderLeft: '6px solid blue',
+                                            background: '#FAFAFA',
+                                            borderRadius: '15px',
+                                            position: 'relative',
+                                            m: '10px 0 20px 0',
+                                            mb: '20px',
+                                            p: '20px',
                                         }}
                                     > <img
                                             src="../image/botones/logoCormaca.png"

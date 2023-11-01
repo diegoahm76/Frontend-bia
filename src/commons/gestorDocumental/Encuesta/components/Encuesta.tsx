@@ -12,26 +12,26 @@ import { control_error, control_success } from "../../../../helpers";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import { RadioGroup, FormControlLabel, Radio, Typography, } from "@mui/material";
 import { FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
-import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../interfaces/types";
 import { fetch_data_dptos_encuestas, fetch_data_municipio_encuestas, fetch_data_pais_encuestas } from "../services/encuestas.service";
+import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../interfaces/types";
 import { TablaEncuestaAsignada } from "./TablaEncuestaAsignada";
 import ReplyIcon from '@mui/icons-material/Reply';
 
 export const Encuesta: React.FC = () => {
 
     const initialFormData = {
-        id_encuesta: 104,
-        _id_persona: 0,
         email: "",
         cod_sexo: "",
         telefono: "",
+        _id_persona: 0,
         rango_edad: "",
+        id_encuesta: 104,
         tipo_usuario: "",
         nombre_completo: "",
         nro_documento_id: "",
         id_pais_para_extranjero: "",
-        id_municipio_para_nacional: "",
         id_tipo_documento_usuario: "",
+        id_municipio_para_nacional: "",
         ids_opciones_preguntas_encuesta: []
     };
     const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null);
@@ -362,11 +362,11 @@ export const Encuesta: React.FC = () => {
                                 <FormControl required size="small" fullWidth>
                                     <InputLabel >Sexo</InputLabel>
                                     <Select
-                                        label="Sexo"
-                                        name="cod_sexo"
-                                        value={formData.cod_sexo}
-                                        onChange={handleInputChange}
                                         disabled={formData.tipo_usuario === 'A'}
+                                        onChange={handleInputChange}
+                                        value={formData.cod_sexo}
+                                        name="cod_sexo"
+                                        label="Sexo"
                                     >
                                         {sexos.map((sexo) => (
                                             <MenuItem key={sexo.value} value={sexo.value}>
@@ -382,11 +382,11 @@ export const Encuesta: React.FC = () => {
                                 <FormControl required size="small" fullWidth>
                                     <InputLabel >Rango de Edad</InputLabel>
                                     <Select
+                                        disabled={formData.tipo_usuario === 'A'}
+                                        onChange={handleInputChange}
+                                        value={formData.rango_edad}
                                         label="Rango de Edad"
                                         name="rango_edad"
-                                        value={formData.rango_edad}
-                                        onChange={handleInputChange}
-                                        disabled={formData.tipo_usuario === 'A'}
                                     >
                                         {rangoEdad.map((rango) => (
                                             <MenuItem key={rango.value} value={rango.value}>
@@ -499,14 +499,14 @@ export const Encuesta: React.FC = () => {
                                         m={2}
                                         p={2}
                                         sx={{
-                                            position: 'relative',
-                                            background: '#FAFAFA',
-                                            borderRadius: '15px',
                                             p: '20px',
-                                            m: '10px 0 20px 0',
                                             mb: '20px',
-                                            boxShadow: '0px 3px 6px #042F4A26',
+                                            m: '10px 0 20px 0',
+                                            position: 'relative',
+                                            borderRadius: '15px',
+                                            background: '#FAFAFA',
                                             borderLeft: '6px solid blue',
+                                            boxShadow: '0px 3px 6px #042F4A26',
                                         }}
                                     > <img
                                             src="../image/botones/logoCormaca.png"
