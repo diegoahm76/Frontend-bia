@@ -37,10 +37,22 @@ import {
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { setCcdOrganigramaCurrentAsiOfiResp } from '../../../../toolkit/slice/DelOfiResSlice';
-import { validacionInicialDataPendientePorPersistir } from '../../../../toolkit/thunks/validacionInicial.thunks';
+import { validacionInicialDataPendientePorPersistir } from '../../../../toolkit/thunks/validacionInicial.service';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
+interface Row {
+  id: number;
+  nombre: string;
+  version: string;
+  nombre_organigrama: string;
+  version_organigrama: string;
+  id_ccd: number;
+}
+
+interface Params {
+  row: Row;
+}
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
@@ -53,19 +65,14 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
-  const handleSeleccionCcdOficinasResponsables = async (params: any) => {
-    const { row } = params;
-    const { id, nombre, version, nombre_organigrama, version_organigrama } =
-      row;
-    console.log(row);
 
-    const validacionSeccionesPendientes =
-      await validacionInicialDataPendientePorPersistir(params?.row?.id_ccd);
+  const handleSeleccionCcdOficinasResponsables = async (params: Params) => {
+    const { id, nombre, version } = params.row;
 
-    //* se realiza el disparo de una alerta si la validacion.data es true
+    const validacionSeccionesPendientes = await validacionInicialDataPendientePorPersistir(params.row.id_ccd);
+
     if (validacionSeccionesPendientes?.data.length) {
-      // const dataString = validacionSeccionesPendientes.data.join(', ');
-      let array = Array.from({ length: 0 }, (_, i) => ({ // ponerle una longitud > 0 para simular los datos
+      const array = Array.from({ length: 0 }, (_, i) => ({
         codigo: 'CCD' + i,
         nombre: `nombre${i}`
       }));
@@ -76,47 +83,35 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <p><b>CCD seleccionado :</b> Nombre: ${nombre} - Versión: ${version}</p>
           <ul style = "padding:0">
             ${[...validacionSeccionesPendientes.data, ...array]
-              .map((el: any) => {
-                return `<li
-                style="list-style: none; margin-top:5px;"
-              >Unidad: <b>${el.codigo}</b> - ${el.nombre}</li>`;
-              })
+              .map((el: any) => `<li style="list-style: none; margin-top:5px;">Unidad: <b>${el.codigo}</b> - ${el.nombre}</li>`)
               .join('')}
           </ul>
         `;
 
-      await Swal.fire({
+      const swalOptions = {
         title: 'No puede seleccionar este CCD',
         html: htmlText,
         icon: 'warning',
         showCancelButton: true,
         allowOutsideClick: false,
         confirmButtonText: 'Ir a módulo de asignación de unidades responsables',
-        cancelButtonText:
-          'Ir al módulo de homologación de secciones persistentes',
+        cancelButtonText: 'Ir al módulo de homologación de secciones persistentes',
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          //* se selecciona el elemento seleccionado como actual dentro del módulo
+      } as any;
 
-          //* debe ir al módulo de asignación de unidades responsables
-          navigate('/app/gestor_documental/ccd/actividades_previas_cambio_ccd/asignaciones_unidades_responsables');
-
-
-         /* dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
-          handleSeleccionCCD_PSD(false);*/
-          return;
-        }
+      
+      await Swal.fire(swalOptions).then(async (result) => {
+        const navigateTo = result.isConfirmed
+        ? '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/asignaciones_unidades_responsables'
+        : '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/homologacion_secciones_persistentes';
+        navigate(navigateTo);
       });
 
       return;
     }
-    console.log(validacionSeccionesPendientes);
 
-    //* se selecciona el elemento seleccionado como actual dentro del módulo
-
-    dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
+    dispatch(setCcdOrganigramaCurrentAsiOfiResp(params.row));
   };
 
   const columns_ccds: GridColDef[] = [
