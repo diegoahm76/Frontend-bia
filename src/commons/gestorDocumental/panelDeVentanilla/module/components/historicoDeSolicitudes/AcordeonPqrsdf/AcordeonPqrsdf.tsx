@@ -117,28 +117,28 @@ export const AcordeonPqrsdf = () => {
 
       {accordionData.map((item, index) => (
         // luego la idea en construir el link con el id del panel cuando se cree el elemento de busqueda para el filtrado de las pqrsqdf
-        <Accordion
-          expanded={expanded === item.panelId}
-          onChange={handleChange(item.panelId)}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`${item.panelId}bh-content`}
-            id={`${item.panelId}bh-header`}
+        <a id={`#${item.panelId}`} key={index}>
+          <Accordion
+            expanded={expanded === item.panelId}
+            onChange={handleChange(item.panelId)}
           >
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>
-              {item.header}
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              {/*{item.secondaryHeader}*/}
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <a href={`#${item.panelId}`} key={index}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`${item.panelId}bh-content`}
+              id={`${item.panelId}bh-header`}
+            >
+              <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                {item.header}
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>
+                {/*{item.secondaryHeader}*/}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
               <Typography>{item.details}</Typography>
-            </a>
-          </AccordionDetails>
-        </Accordion>
+            </AccordionDetails>
+          </Accordion>
+        </a>
       ))}
     </>
   );
