@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
+import { useContext } from 'react';
 import { VisaulTexto } from '../../../../../asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
 import { Title } from '../../../../../../../../../components';
 import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
@@ -10,6 +10,8 @@ import { columnsPart2 } from '../../columns/columnsParte2';
 import GradingIcon from '@mui/icons-material/Grading';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { type GridValueGetterParams } from '@mui/x-data-grid';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 
 const styles = {
   width: '100%',
@@ -27,11 +29,28 @@ export const SeccSubCcdActual = (): JSX.Element => {
     (state) => state.DelOfiResSlice
   );
 
+  //* context declaration
+  const { secondLoading } = useContext(ModalAndLoadingContext);
+
   // Verificar si hay loading
-  /* if (loading) {
-      return <LoaderComponent />;
-    }
-  */
+  if (secondLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          boxShadow: 'none',
+          background: '#fff',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={400} />
+      </Grid>
+    );
+  }
+
   // Verificar la longitud del array de unidadesResponsablesActual
   if (
     Array.isArray(unidadesResponsablesActual) &&
@@ -54,7 +73,7 @@ export const SeccSubCcdActual = (): JSX.Element => {
                 aria-label="select"
                 size="large"
                 onClick={() => {
-                  console.log(params.row)
+                  console.log(params.row);
                   // handleRequest(params.row)
                 }}
               >
@@ -94,12 +113,7 @@ export const SeccSubCcdActual = (): JSX.Element => {
         <RenderDataGrid
           title="Listado de elementos"
           columns={columns}
-          rows={
-            [
-              ...unidadesResponsablesActual,
-              ...unidadesResponsablesActual,
-            ] || []
-          }
+          rows={[...unidadesResponsablesActual] || []}
         />
       </Grid>
     </>

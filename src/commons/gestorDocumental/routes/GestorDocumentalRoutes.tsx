@@ -30,8 +30,8 @@ import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/
 import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
 import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
+import { MainViewPanelVentanilla } from '../panelDeVentanilla/screen/MainViewPanelVentanilla';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
-
 
 const routes = [
   {
@@ -133,8 +133,6 @@ const routes = [
     name: 'Interno_encuesta',
     component: () => <Encuasta_encuestas_Routes />,
   },
-  
-  
   {
     path: 'expedientes/',
     name: 'expedientes',
@@ -155,6 +153,11 @@ const routes = [
     path: 'reportes_documentacion/',
     name: 'reportes_documentacion',
     component: () => <ReportesDocumentacionRoutes />,
+  },
+  {
+    path: 'panel_ventanilla/',
+    name: 'panel_ventanilla/',
+    component: () => <MainViewPanelVentanilla />,
   },
 ];
 

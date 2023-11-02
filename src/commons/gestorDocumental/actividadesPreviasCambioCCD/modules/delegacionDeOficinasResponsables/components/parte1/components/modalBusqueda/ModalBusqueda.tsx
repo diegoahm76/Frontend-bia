@@ -45,6 +45,7 @@ import { validacionInicialDataPendientePorPersistir } from '../../../../toolkit/
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { getUnidadesResponsablesActual } from '../../../../toolkit/thunks/unidadesActualResponsable.service';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
 interface Row {
   id: number;
@@ -69,6 +70,8 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   // ? ---- context declaration ----
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
+
+  const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
   const handleSeleccionCcdOficinasResponsables = async (params: Params) => {
     const { id, nombre, version } = params.row;
@@ -124,6 +127,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     const unidadesResponsablesCcdSeleccionado =
       await getUnidadesResponsablesActual({
         idCcdSeleccionado: params.row.id_ccd,
+        setLoading: handleSecondLoading,
       });
     // ! en consecuencia asignar ese valor a un elemento del store para manejar la interacción posterior
     dispatch(

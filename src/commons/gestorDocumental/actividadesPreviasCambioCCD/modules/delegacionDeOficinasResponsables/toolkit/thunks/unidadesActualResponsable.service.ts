@@ -4,12 +4,13 @@ import { control_error, control_success } from '../../../../../../../helpers';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getUnidadesResponsablesActual = async ({
   idCcdSeleccionado,
-}: // setLoading,
-{
+  setLoading,
+}: {
   idCcdSeleccionado: number;
-  // setLoading: (loading: boolean) => void;
+  setLoading: (loading: boolean) => void;
 }) => {
   //* no olvidar añadirel respectivo loading
+  setLoading(true)
   try {
     const url = `gestor/ccd/get-unidades-actual-responsable-ccd/get/${idCcdSeleccionado}/`;
     const { data } = await api.get(url);
@@ -38,5 +39,6 @@ export const getUnidadesResponsablesActual = async ({
     return [];
   } finally {
     //* debe ir el loading
+    setLoading(false)
   }
 };
