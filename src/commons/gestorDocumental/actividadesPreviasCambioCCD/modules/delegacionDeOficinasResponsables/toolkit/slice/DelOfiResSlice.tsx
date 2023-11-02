@@ -5,6 +5,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 const initialState: any= {
   //! elemento actual dentro del módulo búsqueda ccd 
   ccdOrganigramaCurrentBusquedaOfiResp: null,
+  //! unidades que ya fueron asignadas como responsables de series documentales
+  unidadesResponsablesActual: [],
 };
 
 export const DelOfiResSlice = createSlice({
@@ -14,6 +16,12 @@ export const DelOfiResSlice = createSlice({
     //* ccd actual de la busqueda
     setCcdOrganigramaCurrentAsiOfiResp: (state, action: PayloadAction<any>) => {
       state.ccdOrganigramaCurrentBusquedaOfiResp = action.payload;
+    },
+
+
+    //* unidades que ya fueron asignadas como responsables de series documentales
+    setUnidadesResponsablesActual: (state, action: PayloadAction<any>) => {
+      state.unidadesResponsablesActual = action.payload;
     },
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
@@ -26,6 +34,8 @@ export const DelOfiResSlice = createSlice({
 export const {
   // ! acciones sobre los ccd's y organigramas
   setCcdOrganigramaCurrentAsiOfiResp,
+  // ! unidades que ya fueron asignadas como responsables de series documentales
+  setUnidadesResponsablesActual,
   // ? reset states
   reset_states_asi_ofi_resp,
 } = DelOfiResSlice.actions;
