@@ -11,6 +11,8 @@ import {
 import { Grid } from '@mui/material';
 import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
+import { PanelDeVentanillaScreen } from '../module/screen/panelDeVentanilla/PanelDeVentanillaScreen';
+import { HistoricoDeSolicitudesScreen } from '../module/screen/historicoDeSolicitudes/historicoDeSolicitudesScreen';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   const [value, setValue] = useState(0);
@@ -20,7 +22,6 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
 
   return (
     <Grid container sx={containerStyles}>
-      {/*    <Grid item xs={12} sm={12}> */}
       <Title title="Panel de ventanilla" />
       <Box sx={{ width: '100%', mt: '1.5rem' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -34,12 +35,12 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          Panel de ventanilla parte inicial
+          <PanelDeVentanillaScreen />
           {/* se debe reemplazar por el inicio del componente de la parte 1 */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           {/* se debe reemplazar por el inicio del componente de la parte 2 */}
-          Histórico de solicitudes de pqrdsdf
+          <HistoricoDeSolicitudesScreen />
         </CustomTabPanel>
       </Box>
     </Grid>
