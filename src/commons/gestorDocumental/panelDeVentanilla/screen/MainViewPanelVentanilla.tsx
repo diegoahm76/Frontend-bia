@@ -12,7 +12,7 @@ import { Grid } from '@mui/material';
 import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
 import { PanelDeVentanillaScreen } from '../module/screen/panelDeVentanilla/PanelDeVentanillaScreen';
-import { HistoricoDeSolicitudesScreen } from '../module/screen/historicoDeSolicitudes/historicoDeSolicitudesScreen';
+import { HistoricoDeSolicitudesScreen } from '../module/screen/historicoDeSolicitudes/HistoricoDeSolicitudesScreen';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   const [value, setValue] = useState(0);

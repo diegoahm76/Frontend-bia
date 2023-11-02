@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react'
+import React from 'react';
+import { AcordeonPqrsdf } from '../../components/historicoDeSolicitudes/AcordeonPqrsdf/AcordeonPqrsdf';
 
 export const HistoricoDeSolicitudesScreen = (): JSX.Element => {
   return (
-    <div>Historico de solicitudes pantalla principal definida</div>
-  )
-}
+    <>
+      <AcordeonPqrsdf />
+    </>
+  );
+};
