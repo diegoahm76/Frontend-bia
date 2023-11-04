@@ -16,6 +16,9 @@ import { AperturaExpedientesScreen } from "./AperturaExpedientesScreen";
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import AnularExpedienteModal from "./AnularExpediente";
 import BuscarExpediente from "./BuscarExpediente";
+import MoverCarpeta from "../../../deposito/Carpetas/components/MoverCarpeta";
+import { useForm } from "react-hook-form";
+import { IObjCarpeta } from "../../../deposito/interfaces/deposito";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -27,6 +30,21 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedientesScreen: React.FC = () => {
+    const [open_modal, set_open_modal] = useState(false);
+    const { control: control_carpeta_destino, reset: reset_carpeta_destino,
+        getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
+
+
+        const handle_close_buscar = () => {
+            set_open_modal(false);
+        };
+
+            // pasar el modal mover carpeta
+    const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
+        reset_carpeta_destino(carpeta_mover)
+        console.log(carpeta_mover)
+    };
+
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const msj_error = "El campo es obligatorio."
@@ -402,6 +420,17 @@ export const ExpedientesScreen: React.FC = () => {
                                         >
                                             Agregar
                                         </Button>
+                                        {open_modal && (
+                <Grid item xs={12} marginY={1}>
+                    <MoverCarpeta
+                        control_carpeta_destino={control_carpeta_destino}
+                        open={open_modal}
+                        handle_close_buscar={handle_close_buscar}
+                        get_values={get_values_carpeta_destino}
+                        handle_mover_carpeta={handle_mover_carpeta}
+                    />
+                </Grid>
+            )}
                                     </Grid>
                                 </Stack>
                             </Grid>
