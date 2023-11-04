@@ -71,7 +71,7 @@ export const SeleccionarArchivo: React.FC = () => {
 
 
   return (
-    <>
+    
       <Grid
         container
         sx={{
@@ -98,18 +98,18 @@ export const SeleccionarArchivo: React.FC = () => {
             onChange={HandleCompletarDatos}
           />
         </Grid>
-        <Grid xs={12} md={8}>
+        <Grid item  xs={12} md={8}>
           <TextField
             style={{ width: '95%', marginTop: 20 }}
             label="Descripción"
             name="descripcion"
-            value={form.descripcion}
+            value={form.descripcion||""}
             onChange={HandleCompletarDatos}
           />
         </Grid>
-
+ 
         {file_nombre && form.borrar_text === 1 && (
-          <Grid item  xs={12} sm={7} >
+          <Grid item xs={12} sm={7} >
             <TextField
               style={{ marginTop: 14, width: '95%' }}
               variant="outlined"
@@ -134,12 +134,12 @@ export const SeleccionarArchivo: React.FC = () => {
               value={fileExtension ?? ''}
               fullWidth
             />
-          </Grid>
+          </Grid> 
         )}
-<Grid
- container
- style={{display:'flex', justifyContent:'flex-end',marginRight:50}}
- >
+        <Grid
+          container
+          style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 50 }}
+        >
 
           <Button
             style={{ marginTop: 10, width: 180 }}
@@ -170,11 +170,7 @@ export const SeleccionarArchivo: React.FC = () => {
             />
           </Button>
 
-</Grid>
-      
-
-
+        </Grid>
       </Grid>
-    </>
   );
 };
