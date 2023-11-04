@@ -8,7 +8,7 @@ export const Confi_Encuasta_Routes: React.FC = () => {
     return (
         <Routes>
             <Route path="/encuesta" element={< Encabezado />} />  
-            <Route path="/crear" element={< EncabezadoCrear />} />
+            {/* <Route path="/crear" element={< EncabezadoCrear />} /> */}
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
         

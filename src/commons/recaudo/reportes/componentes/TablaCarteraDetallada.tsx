@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
+import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, ButtonGroup } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -11,6 +12,8 @@ import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/R
 import { faker } from '@faker-js/faker';
 import JsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface RootState {
   reportes_recaudo: {
@@ -74,7 +77,7 @@ export const TablaCarteraDetallada: React.FC = () => {
       set_total(total);
     }
   }, [visible_rows]);
-  
+
   // useEffect(() => {
   //   if(visible_rows.length !== 0) {
   //     let total = 0
@@ -136,16 +139,16 @@ export const TablaCarteraDetallada: React.FC = () => {
   }
 
   const columns: GridColDef[] = [
-    {
-      field: 'id',
-      headerName: 'id',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+    // {
+    //   field: 'id',
+    //   headerName: 'id',
+    //   width: 150,
+    //   renderCell: (params) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       {params.value}
+    //     </div>
+    //   ),
+    // },
     {
       field: 'codigo_contable',
       headerName: 'Código Contable',
@@ -246,21 +249,63 @@ export const TablaCarteraDetallada: React.FC = () => {
       );
     }
   }, [visible_rows]);
-  
+
   // useEffect(() => {
   //   if(visible_rows.length !== 0){
   //     set_values(visible_rows.map((obj) => Object.values(obj)) as any)
   //   }
   // }, [visible_rows])
+  useEffect(() => {
+    set_visible_rows(reportes_recaudo)
+  }, [reportes_recaudo])
+  const [searchId, setSearchId] = useState('');
 
+  const handleSearch = () => {
+    let filteredData = [...reportes_recaudo];
+    if (search) {
+      filteredData = filteredData.filter(facilidad => facilidad.nombre_deudor.toLowerCase().includes(search.toLowerCase()));
+    }
+    if (searchId) {
+      filteredData = filteredData.filter(facilidad => facilidad.identificacion.toLowerCase().includes(searchId.toLowerCase()));
+    }
+    set_visible_rows(filteredData);
+  };
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
-        direction="row"
-        justifyContent="space-between"
-        sx={{ mb: '20px' }}
+      direction="row"
+      justifyContent="left"
+      spacing={2}
+      sx={{ mb: '20px' }}
       >
-        <Stack
+        <Grid item xs={12} sm={3}>
+          <TextField
+            style={{ marginTop: '10px' }}
+            value={search}
+            onChange={e => set_search(e.target.value)}
+            label="Buscar por nombre de deudor"
+            variant="outlined"
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            value={searchId}
+            style={{ marginTop: '10px' }}
+            onChange={e => setSearchId(e.target.value)}
+            label="Buscar por identificación"
+            variant="outlined"
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Button variant="contained" style={{ marginTop: '10px' }} color="primary" fullWidth startIcon={<SearchOutlined />} onClick={handleSearch}>
+            Buscar
+          </Button>
+        </Grid>
+        {/* <Stack
           direction="row"
           justifyContent="left"
           spacing={2}
@@ -316,8 +361,8 @@ export const TablaCarteraDetallada: React.FC = () => {
           >
             Mostrar Todo
           </Button>
-        </Stack>
-        <Stack
+        </Stack> */}
+        {/* <Stack
           direction="row"
           justifyContent="right"
           spacing={2}
@@ -338,56 +383,67 @@ export const TablaCarteraDetallada: React.FC = () => {
           >
             Exportar PDF
           </Button>
-        </Stack>
+        </Stack> */}
+        <Grid item xs={12}  sm={2} ></Grid>
+        <Grid item xs={12}  sm={1} >
+          <ButtonGroup fullWidth >
+            {download_xls({ nurseries: visible_rows, columns })}
+            {download_pdf({
+              nurseries: visible_rows,
+              columns,
+              title: 'Mis alertas',
+            })}
+          </ButtonGroup>
+        </Grid>
       </Stack>
 
-      {visible_rows && visible_rows.length !== undefined ?(
-          <Grid
-            container
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px',
-              mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-            }}
-          >
-            <Grid item xs={12}>
-              <Grid item>
-                <Box sx={{ width: '100%', height: '400px' }}>
-                  <DataGrid
-                    autoHeight
-                    disableSelectionOnClick
-                    rows={visible_rows || []}
-                    columns={columns}
-                    pageSize={10}
-                    page={page}
-                    rowCount={total_pages}
-                    pagination
-                    onPageChange={(params) => set_page(params)}
-                  />
+      {visible_rows && visible_rows.length !== undefined ? (
+        // <Grid
+        //   container
+        //   sx={{
+        //     position: 'relative',
+        //     background: '#FAFAFA',
+        //     borderRadius: '15px',
+        //     p: '20px',
+        //     mb: '20px',
+        //     boxShadow: '0px 3px 6px #042F4A26',
+        //   }}
+        // >
+        <Grid item xs={12}>
+          <Grid item>
+            {/* <Box sx={{ width: '100%', height: '400px' }}> */}
+            <DataGrid
+              autoHeight
+              disableSelectionOnClick
+              rows={visible_rows || []}
+              columns={columns}
+              pageSize={10}
+              page={page}
+              rowCount={total_pages}
+              pagination
+              onPageChange={(params) => set_page(params)}
+            />
 
 
-                </Box>
-              </Grid>
-              <Stack
-                direction="row"
-                display='flex'
-                justifyContent='flex-end'
-              >
-                <Grid item xs={12} sm={2.5} mt='30px'>
-                  <TextField
-                    label={<strong>Total General</strong>}
-                    size="small"
-                    fullWidth
-                    value={total_cop}
-                  />
-                </Grid>
-              </Stack>
-            </Grid>
+            {/* </Box> */}
           </Grid>
-        ) : null
+          <Stack
+            direction="row"
+            display='flex'
+            justifyContent='flex-end'
+          >
+            <Grid item xs={12} sm={2.5} mt='30px'>
+              <TextField
+                label={<strong>Total General</strong>}
+                size="small"
+                fullWidth
+                value={total_cop}
+              />
+            </Grid>
+          </Stack>
+        </Grid>
+        // </Grid>
+      ) : null
       }
     </Box>
   );

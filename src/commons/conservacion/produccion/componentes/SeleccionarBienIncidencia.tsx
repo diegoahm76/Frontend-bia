@@ -44,7 +44,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -54,7 +54,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -64,7 +64,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'saldo_disponible',
       headerName: 'Saldo disponible',
-      width: 200,
+      width: 200,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -77,7 +77,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -87,7 +87,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -98,7 +98,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'cantidad_a_consumir',
       headerName: 'Cantidad',
-      width: 140,
+      width: 140,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -108,7 +108,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'observaciones',
       headerName: 'Observacion',
-      width: 150,
+      width: 150,flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -118,7 +118,7 @@ const SeleccionarBienPreparacion = () => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 90,
+      width: 90,flex: 1,
       renderCell: (params) => (
         <>
           <Tooltip title="Editar">
