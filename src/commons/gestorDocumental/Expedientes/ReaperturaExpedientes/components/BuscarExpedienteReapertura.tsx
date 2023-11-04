@@ -110,11 +110,11 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
     const mostrar_busqueda_expediente: any = async () => {
         const titulo_expediente = get_values('titulo_expediente') ?? '';
         const codigos_uni_serie_subserie = get_values('codigos_uni_serie_subserie') ?? '';
-        const trd_nombre = get_values('trd_nombre') ?? '';
+        const nombre_tdr_origen = get_values('nombre_tdr_origen') ?? '';
         const fecha_apertura_expediente = get_values('fecha_apertura_expediente') ?? '';
         const id_serie_origen = get_values('id_serie_origen') ?? '';
         const id_subserie_origen = get_values('id_subserie_origen') ?? '';
-        void dispatch(get_busqueda_avanzada_expediente_cerrado(titulo_expediente, trd_nombre, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
+        void dispatch(get_busqueda_avanzada_expediente_cerrado(titulo_expediente, nombre_tdr_origen, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
 
     }
 
@@ -172,6 +172,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -201,6 +205,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -211,7 +219,7 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
 
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
                                     <Controller
-                                        name="trd_nombre"
+                                        name="nombre_trd_origen"
                                         control={control_reapertura_expediente}
                                         defaultValue=""
                                         rules={{ required: true }}
@@ -230,6 +238,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
                                             >
 
                                             </TextField>
@@ -263,6 +275,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -292,6 +308,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -321,6 +341,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -350,6 +374,10 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -357,13 +385,6 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
                                         )}
                                     />
                                 </Grid>
-
-
-
-
-
-
-
 
                             </Grid>
 

@@ -1,11 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { IObjSubserieSerie, IObjTrd, IReporteDocumentacion } from '../../interfaces/reporteDocumentacion';
+import { DatosRespuesta, IObjSubserieSerie, IObjTrd, IReporteDocumentacion, Permisos, PermisosGenerales } from '../../interfaces/reporteDocumentacion';
 
 
 export const initial_state: IReporteDocumentacion = {
     trd: [],
     serie_subserie: [],
-
+    permisos_no_propios: [],
+    permisos_generales: null,
 
 }
 
@@ -30,10 +31,22 @@ export const reportes_documentacion_slice = createSlice({
         ) => {
             state.serie_subserie = action.payload;
         },
+        set_permisos_no_propios: (
+            state: IReporteDocumentacion,
+            action: PayloadAction<DatosRespuesta[]>
+        ) => {
+            state.permisos_no_propios = action.payload;
+        },
+        set_permisos_generales: (
+            state: IReporteDocumentacion,
+            action: PayloadAction<PermisosGenerales>
+        ) => {
+            state.permisos_generales = action.payload;
+        },
 
     }
 })
 
 export const {
-    set_trd, set_serie_subserie
+    set_trd, set_serie_subserie, set_permisos_no_propios, set_permisos_generales
 } = reportes_documentacion_slice.actions;

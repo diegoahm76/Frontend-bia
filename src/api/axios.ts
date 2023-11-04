@@ -20,7 +20,7 @@ api.interceptors.request.use(
         //* interceptar la solicitud por tipo de metodo y mostrar un mensaje de carga
         console.log(
           `%c ${request?.method?.toUpperCase()} ${request.url}`,
-          'color: blue; font-weight: bold;'
+          "color: blue; font-weight: bold;"
         );
         return request;
       }
@@ -35,11 +35,9 @@ api.interceptors.request.use(
     return request;
   },
   async (error) => {
-      await caches.delete("bia-v2");
-      window.location.href = "/#/auth/login";
-      control_warning(
-        "Su sesión ha expirado, por favor vuelva a iniciar sesión"
-      );
+    await caches.delete("bia-v2");
+    window.location.href = "/#/auth/login";
+    control_warning("Su sesión ha expirado, por favor vuelva a iniciar sesión");
     return await Promise.reject(error);
   }
 );

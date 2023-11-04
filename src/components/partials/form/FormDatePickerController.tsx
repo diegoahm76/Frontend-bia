@@ -35,6 +35,7 @@ interface IProps {
   min_date?: string | null;
   max_date?: string | null;
   format?: string | null;
+  marginTop?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -55,7 +56,7 @@ const FormDatePickerController = ({
   return (
     <>
       {!(hidden_text ?? false) && (
-        <Grid item xs={xs} md={md} margin={0}>
+        <Grid item xs={xs} md={md} margin={0} marginTop={0}>
           <Controller
             name={control_name}
             control={control_form}

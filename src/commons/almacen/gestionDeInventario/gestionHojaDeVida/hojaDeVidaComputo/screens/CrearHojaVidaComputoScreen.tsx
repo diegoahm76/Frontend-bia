@@ -76,6 +76,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
       void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
     }
   };
+
   const delete_hoja_vida = (): void => {
     if (current_cv_computer.id_hoja_de_vida !== null && current_cv_computer.id_hoja_de_vida !== undefined) {
       void dispatch(delete_cv_computers_service(current_cv_computer.id_hoja_de_vida));
@@ -127,7 +128,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
         <Grid
           container
-         
+
           padding={2}
           spacing={2}
           direction="row" justifyContent="flex-end"

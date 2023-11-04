@@ -459,7 +459,7 @@ export function AdministrarViveroScreen(): JSX.Element {
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
-                onClick={() => {                
+                onClick={() => {
                   dispatch(current_nursery(initial_state_current_nursery as any));
                   set_action('create');
                   set_add_nursery_is_active(true);

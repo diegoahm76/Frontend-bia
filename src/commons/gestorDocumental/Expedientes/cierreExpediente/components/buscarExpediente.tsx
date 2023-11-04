@@ -112,11 +112,11 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
     const mostrar_busqueda_expediente: any = async () => {
         const titulo_expediente = get_values('titulo_expediente') ?? '';
         const codigos_uni_serie_subserie = get_values('codigos_uni_serie_subserie') ?? '';
-        const trd_nombre = get_values('trd_nombre') ?? '';
+        const nombre_trd_origen = get_values('nombre_tdr_origen') ?? '';
         const fecha_apertura_expediente = get_values('fecha_apertura_expediente') ?? '';
         const id_serie_origen = get_values('id_serie_origen') ?? '';
         const id_subserie_origen = get_values('id_subserie_origen') ?? '';
-        void dispatch(get_busqueda_avanzada_expediente(titulo_expediente, trd_nombre, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
+        void dispatch(get_busqueda_avanzada_expediente(titulo_expediente, nombre_trd_origen, codigos_uni_serie_subserie, fecha_apertura_expediente, id_serie_origen, id_subserie_origen));
 
     }
 
@@ -171,9 +171,13 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 variant="outlined"
                                                 disabled={false}
                                                 defaultValue={value}
+                                                InputLabelProps={{ shrink: true }}
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
 
                                             >
 
@@ -203,6 +207,11 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
+
 
                                             >
 
@@ -213,7 +222,7 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
 
                                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
                                     <Controller
-                                        name="trd_nombre"
+                                        name="nombre_trd_origen"
                                         control={control_cierre_expediente}
                                         defaultValue=""
                                         rules={{ required: true }}
@@ -232,6 +241,10 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
                                             >
 
                                             </TextField>
@@ -265,6 +278,10 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -294,6 +311,10 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -323,6 +344,10 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -352,6 +377,10 @@ const BuscarExpediente = ({ control_cierre_expediente, open, handle_close_buscar
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 

@@ -5,7 +5,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LoadingButton } from '@mui/lab';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import {
     Avatar,
     Box,
@@ -16,19 +17,19 @@ import {
     MenuItem,
     TextField,
 } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
-import { Controller, useForm } from 'react-hook-form';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { Controller, } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { crear_archivo_soporte, get_archivos_id_expediente, get_tipologias, get_trd } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
+import { crear_archivo_soporte, get_archivos_id_expediente, get_tipologias, get_trd, update_file } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
 import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
 import { IList } from '../../../../../interfaces/globalModels';
 import { api } from '../../../../../api/axios';
 import FormInputFileController from '../../../../../components/partials/form/FormInputFileController';
-import { set_current_archivo_expediente, } from '../../cierreExpediente/store/slice/indexCierreExpedientes';
+import { initial_state_current_archivo_expediente, set_current_archivo_expediente, } from '../../cierreExpediente/store/slice/indexCierreExpedientes';
 import { type IObjArchivoExpediente as FormValues } from '../../cierreExpediente/interfaces/cierreExpedientes';
-import { IDeposito } from '../../../deposito/interfaces/deposito';
+import FormButton from '../../../../../components/partials/form/FormButton';
+import FormDatePickerControllerV from '../../../../../components/partials/form/FormDatePickerControllerv';
 interface IProps {
 
     control_archivo_expediente: any;
@@ -52,6 +53,7 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
     const [mostrar_campos_consecutivo, set_mostrar_campos_consecutivo] = useState(true);
     const [file, set_file] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>('');
+    const [action, set_action] = useState<string>("guardar");
 
 
 
@@ -99,6 +101,12 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
         }
     }, [file]);
     useEffect(() => {
+        if (current_archivo_expediente.id_documento_de_archivo_exped !== null) {
+            set_action("editar")
+        } else {
+            set_action("guardar")
+
+        }
 
 
         if (current_archivo_expediente.file !== null) {
@@ -183,10 +191,24 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
         form_data.append('file', file === null ? '' : file);
         form_data.append('id_expediente_documental', selected_expediente.id_expediente_documental)
 
-        void dispatch(crear_archivo_soporte(form_data));
-        console.log('crear')
-        void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
-        //  set_selected_expediente(initial_state_current_archivo_expediente)
+
+
+        if (data.id_documento_de_archivo_exped === null) {
+            {
+                void dispatch(crear_archivo_soporte(form_data));
+                void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
+
+
+                dispatch(set_current_archivo_expediente(initial_state_current_archivo_expediente))
+            }
+
+        } else {
+            if (data.id_documento_de_archivo_exped !== undefined && data.id_documento_de_archivo_exped !== null) {
+                void dispatch(update_file(data.id_documento_de_archivo_exped, form_data));
+                dispatch(set_current_archivo_expediente(initial_state_current_archivo_expediente))
+            }
+        }
+
 
 
 
@@ -248,6 +270,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -257,20 +284,21 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                 </Grid>
 
 
-                                <FormDatePickerController
-                                    xs={12}
-                                    md={3.5}
-                                    margin={2}
-                                    control_form={control_archivo_expediente}
-                                    control_name={'fecha_creacion_doc'}
-                                    default_value={''}
-                                    rules={{}}
-                                    label={'Fecha de creación Documento'}
-                                    disabled={false}
-                                    format={'YYYY-MM-DD'}
-                                    helper_text={''}
-                                />
-
+                                <Grid item xs={12} sm={3.5} marginTop={2} margin={2} >
+                                    <FormDatePickerControllerV
+                                        xs={0}
+                                        md={0}
+                                        margin={0}
+                                        control_form={control_archivo_expediente}
+                                        control_name={'fecha_creacion_doc'}
+                                        default_value={''}
+                                        rules={{}}
+                                        label={'Fecha de creación Documento'}
+                                        disabled={false}
+                                        format={'YYYY-MM-DD'}
+                                        helper_text={''}
+                                    />
+                                </Grid>
 
                                 <Grid item xs={12} sm={3.5} marginTop={2}  >
                                     <Controller
@@ -294,6 +322,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 {tipologias.map((option) => (
                                                     <MenuItem key={option.id_tipologia_documental} value={option.nombre ?? ''}>
@@ -335,6 +368,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     onChange(numericValue);
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
 
                                             </TextField>
@@ -367,6 +405,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     handle_tiene_consecutivo(e);
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 <MenuItem value="true">SI</MenuItem>
                                                 <MenuItem value="false">NO</MenuItem>
@@ -398,6 +441,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 {tipo_origen.map((option) => (
                                                     <MenuItem key={option.label} value={option.value ?? ''}>
@@ -434,6 +482,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     value={value}
                                                     onChange={onChange}
                                                     error={!(error == null)}
+                                                    sx={{
+                                                        backgroundColor: 'white',
+                                                    }}
+
+                                                    InputLabelProps={{ shrink: true }}
                                                 >
 
                                                 </TextField>
@@ -466,6 +519,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                         onChange(numericValue);
                                                     }}
                                                     error={!(error == null)}
+                                                    sx={{
+                                                        backgroundColor: 'white',
+                                                    }}
+
+                                                    InputLabelProps={{ shrink: true }}
                                                 >
                                                 </TextField>
                                             )}
@@ -494,6 +552,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     value={value}
                                                     onChange={onChange}
                                                     error={!(error == null)}
+                                                    sx={{
+                                                        backgroundColor: 'white',
+                                                    }}
+
+                                                    InputLabelProps={{ shrink: true }}
                                                 >
 
                                                 </TextField>
@@ -527,6 +590,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
 
                                                 {tipo_archivo.map((option) => (
@@ -566,6 +634,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     handle_tiene_consecutivo(e);
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                             >
                                                 <MenuItem value="true">SI</MenuItem>
                                                 <MenuItem value="false">NO</MenuItem>
@@ -606,6 +679,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     }
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                                 inputProps={{
                                                     maxLength: 50 // Establece el límite máximo de caracteres
                                                 }}
@@ -643,6 +721,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                     }
                                                 }}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
                                                 inputProps={{
                                                     maxLength: 200 // Establece el límite máximo de caracteres
                                                 }}
@@ -675,6 +758,11 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                                                 value={value}
                                                 onChange={onChange}
                                                 error={!(error == null)}
+                                                sx={{
+                                                    backgroundColor: 'white',
+                                                }}
+
+                                                InputLabelProps={{ shrink: true }}
 
                                             >
 
@@ -712,11 +800,13 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                     </Grid>
                     <Grid container justifyContent="flex-end">
                         <Grid item margin={2}>
-                            <Button variant="contained"
-                                color="success"
-                                onClick={handle_submit_archivo(on_submit)}>
-                                Guardar
-                            </Button>
+                            <FormButton
+                                variant_button="contained"
+                                on_click_function={handle_submit_archivo(on_submit)}
+                                icon_class={action === "guardar" ? <SaveIcon /> : <EditIcon />}
+                                label={action}
+                                type_button="button"
+                            />
                         </Grid>
                         <Grid item margin={2}>
                             <Button variant="outlined"

@@ -5,6 +5,7 @@ import { ICierreExpedientes, IObjarchivo, IObjArchivoExpediente, IObjCierreExped
 const initial_state_current_cierre_expediente: IObjCierreExpediente = {
     fecha_actual: (new Date().toString()),
     id_expediente_doc: null,
+    titulo_expediente: null,
 
 
 }
@@ -22,7 +23,7 @@ const initial_state_informacion_reapertura: IObjInformacionReapertura = {
     }
 }
 
-const initial_state_current_archivo_expediente: IObjArchivoExpediente = {
+export const initial_state_current_archivo_expediente: IObjArchivoExpediente = {
     id_expediente_documental: null,
     nombre_asignado_documento: null,
     fecha_creacion_doc: (new Date().toString()),
@@ -32,12 +33,38 @@ const initial_state_current_archivo_expediente: IObjArchivoExpediente = {
     codigo_tipologia_doc_agno: "",
     codigo_tipologia_doc_consecutivo: "",
     cod_categoria_archivo: null,
-    tiene_replica_fisica: null,
+    tiene_replica_fisica: false,
     asunto: null,
     descripcion: null,
     palabras_clave_documento: null,
     file: null,
     id_tipologia_documental: null,
+    id_documento_de_archivo_exped: null,
+    nombre_tipologia: null,
+    identificacion_doc_en_expediente: null,
+    nombre_original_del_archivo: null,
+    fecha_incorporacion_doc_a_Exp: null,
+    es_version_original: false,
+    orden_en_expediente: null,
+    es_un_archivo_anexo: false,
+    tipologia_no_creada_trd: null,
+    anexo_corresp_a_lista_chequeo: false,
+    cantidad_anexos: null,
+    sub_sistema_incorporacion: null,
+    cod_tipo_radicado: null,
+    codigo_radicado_prefijo: null,
+    codigo_radicado_agno: null,
+    codigo_radicado_consecutivo: null,
+    es_radicado_inicial_de_solicitud: false,
+    documento_requiere_rta: false,
+    id_persona_titular: null,
+    id_doc_de_arch_del_cual_es_anexo: null,
+    id_archivo_sistema: null,
+    id_doc_arch_respondido: null,
+    id_doc_arch_rad_ini_exp_simple: null,
+    id_und_org_oficina_creadora: null,
+    id_persona_que_crea: null,
+    id_und_org_oficina_respon_actual: null,
 }
 
 export const initial_state: ICierreExpedientes = {
