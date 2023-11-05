@@ -79,8 +79,21 @@ export const obtener_unidad_organizacional: any = (id_trd: number) => {
     }
   };
 };
+// Crear expediente
+export const crear_expediente: any = (expediente: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`gestor/expedientes-archivos/expedientes/apertura-expediente/create/`,expediente);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Anulación expedientes
-export const anular_expdiente: any = (id_expediente: number,motivo: any) => {
+export const anular_expediente: any = (id_expediente: number,motivo: any) => {
   return async () => {
     try {
       const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-expediente/anular/${id_expediente}/`,motivo);
