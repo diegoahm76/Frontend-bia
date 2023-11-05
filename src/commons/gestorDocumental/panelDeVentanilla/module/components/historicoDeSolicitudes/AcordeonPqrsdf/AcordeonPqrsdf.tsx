@@ -36,13 +36,16 @@ export const AcordeonPqrsdf = () => {
     );
 
     if (searchElement) {
-      if (buttonLink.current) {
-        buttonLink.current.href = `#${radicado}`;
-      }
+      setExpanded(radicado);
+      buttonLink.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+
+      });
       control_success(
         'Se ha encontrado un elemento un elemento que coincide con el radicado ingresado'
       );
-      setExpanded(radicado);
     } else {
       void Swal.fire({
         icon: 'warning',
@@ -128,6 +131,24 @@ export const AcordeonPqrsdf = () => {
       details:
         'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
     },
+    {
+      panelId: 'panel12',
+      header: 'Personal data',
+      details:
+        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
+    },
+    {
+      panelId: 'panel13',
+      header: 'Personal data',
+      details:
+        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
+    },
+    {
+      panelId: 'panel14',
+      header: 'Personal data',
+      details:
+        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
+    },
   ];
 
   return (
@@ -163,16 +184,15 @@ export const AcordeonPqrsdf = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <a ref={buttonLink} href={`#${radicado}`}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    type="submit"
-                    startIcon={<SearchIcon />}
-                  >
-                    BUSCAR
-                  </Button>
-                </a>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  startIcon={<SearchIcon />}
+                >
+                  buscar
+                  {/*  <a ref={buttonLink}>BUSCAR</a> */}
+                </Button>
               </Grid>
             </Grid>
           </Box>
@@ -181,36 +201,35 @@ export const AcordeonPqrsdf = () => {
       {/* se crea el buscador necesaria, en el mismo sentido al seleccionar la pqrsdf y exista se debe expandir dicho elemento y navegar a el  */}
 
       {accordionData.map((item, index) => (
-        // luego la idea en construir el link con el id del panel cuando se cree el elemento de busqueda para el filtrado de las pqrsqdf
-        <Accordion
-          id={'panel11'}
-          key={index}
-          expanded={expanded === item.panelId}
-          onChange={handleChange(item.panelId)}
-        >
-          <AccordionSummary
-            expandIcon={
-              <ExpandCircleDownIcon
-                sx={{
-                  color: 'primary.main',
-                }}
-              />
-            }
-            aria-controls={`${item.panelId}bh-content`}
-            id={`${item.panelId}bh-header`}
+          <Accordion
+            ref={buttonLink}
+            style={{ marginBottom: '1rem' }}
+            key={index}
+            expanded={expanded === item.panelId}
+            onChange={handleChange(item.panelId)}
           >
-            <Typography
-            sx={{ width: '33%', flexShrink: 0 }}>
-              {item.header}
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              {/*{item.secondaryHeader}*/}
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>{item.details}</Typography>
-          </AccordionDetails>
-        </Accordion>
+            <AccordionSummary
+              expandIcon={
+                <ExpandCircleDownIcon
+                  sx={{
+                    color: 'primary.main',
+                  }}
+                />
+              }
+              aria-controls={`${item.panelId}bh-content`}
+              id={`${item.panelId}bh-header`}
+            >
+              <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                {item.header}
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>
+                {/*{item.secondaryHeader}*/}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{item.details}</Typography>
+            </AccordionDetails>
+          </Accordion>
       ))}
     </>
   );

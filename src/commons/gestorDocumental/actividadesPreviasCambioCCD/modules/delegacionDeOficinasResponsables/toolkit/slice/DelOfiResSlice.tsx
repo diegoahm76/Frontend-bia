@@ -7,6 +7,9 @@ const initialState: any= {
   ccdOrganigramaCurrentBusquedaOfiResp: null,
   //! unidades que ya fueron asignadas como responsables de series documentales
   unidadesResponsablesActual: [],
+  currentUnidadSeleccionadaResponsable: {},
+  //* oficinas de la unidad actual (seleccionada)
+  oficinasUnidadActual: [],
 };
 
 export const DelOfiResSlice = createSlice({
@@ -24,9 +27,22 @@ export const DelOfiResSlice = createSlice({
       state.unidadesResponsablesActual = action.payload;
     },
 
+    //* current unidad seleccionada responsable
+    setCurrentUnidadSeleccionadaResp: (state, action: PayloadAction<any>) => {
+      state.currentUnidadSeleccionadaResponsable = action.payload;
+    },
+
+    // ? se setean las oficinas de la unidad actual que ha sido seleccionada
+    setOficinasUnidadActual: (state, action: PayloadAction<any>) => {
+      state.oficinasUnidadActual = action.payload;
+    },
+
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     reset_states_asi_ofi_resp: (state) => {
       state.ccdOrganigramaCurrentBusquedaOfiResp = null;
+      state.unidadesResponsablesActual = [];
+      state.currentUnidadSeleccionadaResponsable = null;
+      state.oficinasUnidadActual = [];
     },
   },
 });
@@ -36,6 +52,12 @@ export const {
   setCcdOrganigramaCurrentAsiOfiResp,
   // ! unidades que ya fueron asignadas como responsables de series documentales
   setUnidadesResponsablesActual,
+  // ! current unidad seleccionada responsable
+  setCurrentUnidadSeleccionadaResp,
+
+  // ? se setean las oficinas de la unidad actual que ha sido seleccionada
+  setOficinasUnidadActual,
+
   // ? reset states
   reset_states_asi_ofi_resp,
 } = DelOfiResSlice.actions;

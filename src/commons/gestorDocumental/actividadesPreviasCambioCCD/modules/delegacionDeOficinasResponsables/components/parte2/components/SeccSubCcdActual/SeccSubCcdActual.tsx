@@ -4,7 +4,10 @@ import { VisaulTexto } from '../../../../../asignacionUnidadesResponsables/compo
 import { Title } from '../../../../../../../../../components';
 import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { columnsPart2 } from '../../columns/columnsParte2';
 import GradingIcon from '@mui/icons-material/Grading';
@@ -12,8 +15,13 @@ import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCc
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { getOficinasUnidadSeleccionada } from '../../../../toolkit/thunks/seleccionOficina.service';
+import {
+  setCurrentUnidadSeleccionadaResp,
+  setOficinasUnidadActual,
+} from '../../../../toolkit/slice/DelOfiResSlice';
 
-const styles = {
+export const styles = {
   width: '100%',
   display: 'flex',
   mt: '20px',
@@ -24,13 +32,16 @@ const styles = {
 };
 
 export const SeccSubCcdActual = (): JSX.Element => {
-  //* redux states
-  const { unidadesResponsablesActual } = useAppSelector(
-    (state) => state.DelOfiResSlice
-  );
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
+  //* redux states
+  const { unidadesResponsablesActual, ccdOrganigramaCurrentBusquedaOfiResp } =
+    useAppSelector((state) => state.DelOfiResSlice);
   //* context declaration
-  const { secondLoading } = useContext(ModalAndLoadingContext);
+  const { secondLoading, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // Verificar si hay loading
   if (secondLoading) {
@@ -58,6 +69,27 @@ export const SeccSubCcdActual = (): JSX.Element => {
   )
     return <></>;
 
+  // ? espacio para las funciones manejadorqes de eventos
+  const handleRequest = async (row: any) => {
+    const { id_unidad_actual, id_unidad_nueva } = row;
+    console.log(ccdOrganigramaCurrentBusquedaOfiResp);
+    try {
+      const getOficinasUnidadActual = await getOficinasUnidadSeleccionada(
+        id_unidad_actual,
+        handleThirdLoading
+      );
+
+      // ? este valor de manera normal va a venir partido entre dos arrays , el que contiene la unidad actual que por defecto debe ir de primerar y el array que contienen las oficinas de la unidad actual
+      console.log(getOficinasUnidadActual);
+
+      //* se setean las oficinas de la unidad actual que ha sido seleccionada
+      dispatch(setCurrentUnidadSeleccionadaResp(row));
+      dispatch(setOficinasUnidadActual(getOficinasUnidadActual));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // ? manejo de columnas para el elemento que se está renderizando
   const columns =
     [
@@ -74,7 +106,10 @@ export const SeccSubCcdActual = (): JSX.Element => {
                 size="large"
                 onClick={() => {
                   console.log(params.row);
-                  // handleRequest(params.row)
+
+                  // * aqui se debe realizar la petición para traer las oficinas correspondientes
+
+                  handleRequest(params.row);
                 }}
               >
                 <Avatar sx={AvatarStyles} variant="rounded">
