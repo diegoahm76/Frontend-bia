@@ -20,6 +20,7 @@ import BuscarExpediente from "./BuscarExpediente";
 import MoverCarpeta from "../../../deposito/Carpetas/components/MoverCarpeta";
 import { useForm } from "react-hook-form";
 import { IObjCarpeta } from "../../../deposito/interfaces/deposito";
+import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -83,7 +84,20 @@ export const ExpedientesScreen: React.FC = () => {
     const [tdr, set_tdr] = useState<any>({});
     const [seccion, set_seccion] = useState<string>("");
     const [serie, set_serie] = useState<any>("");
-
+    // Notificaciones
+    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
+    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
+    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
+    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
+    
+    const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
+        set_titulo_notificacion(titulo);
+        set_tipo_notificacion(tipo);
+        set_mensaje_notificacion(mensaje)
+        set_dialog_notificaciones_is_active(active);
+        set_abrir_modal(active);
+    }
     useEffect(() => {
         if (palabras_clave !== "")
             set_lt_palabras_clave(palabras_clave.split(',', 5));
@@ -647,6 +661,14 @@ export const ExpedientesScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
+            {dialog_notificaciones_is_active && (
+                <DialogNoticacionesComponent
+                    titulo_notificacion={titulo_notificacion}
+                    abrir_modal={abrir_modal}
+                    tipo_notificacion={tipo_notificacion}
+                    mensaje_notificacion={mensaje_notificacion}
+                    abrir_dialog={set_abrir_modal} />
+            )}
         </>
     )
 }

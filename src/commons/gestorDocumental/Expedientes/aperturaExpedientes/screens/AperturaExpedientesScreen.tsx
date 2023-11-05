@@ -3,6 +3,7 @@ import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { obtener_config_expediente, obtener_serie_subserie, obtener_trd_actual, obtener_unidades_marcadas } from "../thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
+import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
 
 
 interface IProps {
@@ -22,7 +23,20 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
     const [lt_serie, set_lt_serie] = useState<any>([]);
     const [serie, set_serie] = useState<any>("");
     const [tipo_expediente, set_tipo_expediente] = useState<string>("");
-
+    // Notificaciones
+    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
+    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
+    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
+    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
+    
+    const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
+        set_titulo_notificacion(titulo);
+        set_tipo_notificacion(tipo);
+        set_mensaje_notificacion(mensaje)
+        set_dialog_notificaciones_is_active(active);
+        set_abrir_modal(active);
+    }
 
     useEffect(() => {
         obtener_trd_actual_fc();
@@ -70,19 +84,29 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
     }
 
     const obtener_config_expediente_fc: () => void = () => {
-        dispatch(obtener_config_expediente(serie.id_catserie_unidadorg)).then((response: any) => {
-            set_tipo_expediente(response.data.tipo_expediente);
-            props.set_expediente(response.data);
+        dispatch(obtener_config_expediente(serie.id_catserie_unidadorg)).then((service: any) => {
+            if(service.success){
+                set_tipo_expediente(service.data.tipo_expediente);
+                props.set_expediente(service.data);
+            }else{
+                generar_notificación_reporte('Notificación', 'info', service.response.data.detail, true);
+                set_tipo_expediente('');
+                props.set_expediente(null);
+            }
         })
     }
 
     const cambio_seccion: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_serie("");
+        set_tipo_expediente('');
+        props.set_expediente(null);
         set_seccion(e.target.value);
         props.set_seccion(e.target.value);
     }
 
     const cambio_serie: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+        set_tipo_expediente('');
+        props.set_expediente(null);
         set_serie(e.target.value);
         props.set_serie(e.target.value);
     }
@@ -166,6 +190,14 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
                     </Grid>
                 </Box>
             </Grid>
+            {dialog_notificaciones_is_active && (
+                <DialogNoticacionesComponent
+                    titulo_notificacion={titulo_notificacion}
+                    abrir_modal={abrir_modal}
+                    tipo_notificacion={tipo_notificacion}
+                    mensaje_notificacion={mensaje_notificacion}
+                    abrir_dialog={set_abrir_modal} />
+            )}
         </>
     )
 }
