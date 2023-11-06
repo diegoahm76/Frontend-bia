@@ -1,27 +1,10 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { LoadingButton } from '@mui/lab';
-import {
-    Avatar,
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    Grid,
-    TextField,
-} from '@mui/material';
+
+import {Box,Button,Dialog,DialogContent,Grid,TextField} from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
-import { Controller, useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import { get_busqueda_avanzada_expediente_cerrado, get_tipologias, get_trd } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
 import { buscar_expediente, buscar_expediente_id } from '../thunks/aperturaExpedientes';
 import dayjs from 'dayjs';
 
@@ -29,8 +12,10 @@ interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
     set_expediente: any;
+    serie: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
     const dispatch = useAppDispatch();
@@ -43,6 +28,14 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const [sub_serie, set_sub_serie] = useState<any>("");
     const [persona_titular, set_persona_titular] = useState<any>("");
     const [palabras_clave, set_palabras_clave] = useState<any>("");
+
+    useEffect(() => {
+        if (props.serie !== ""){
+            set_cod_und_series(props.serie.codigo_unidad_organizacional);
+            set_serie(props.serie.nombre_serie);
+            set_sub_serie(props.serie.nombre_subserie??'');
+        }
+    }, [props.serie]);
 
     const cambio_titulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_titulo(e.target.value);
@@ -171,10 +164,8 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Titulo"
                                         variant="outlined"
-                                        disabled={false}
                                         value={titulo}
                                         onChange={cambio_titulo}
-
                                     />
                                 </Grid>
 
@@ -186,7 +177,9 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Código Und. Serie. Subserie"
                                         variant="outlined"
-                                        disabled={false}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
                                         value={cod_und_series}
                                         onChange={cambio_cod_und_series}
 
@@ -199,7 +192,6 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="TRD/Fecha"
                                         variant="outlined"
-                                        disabled={false}
                                         value={tdr_fecha}
                                         onChange={cambio_tdr_fecha}
                                     />
@@ -214,7 +206,6 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Año de Apertura"
                                         variant="outlined"
-                                        disabled={false}
                                         value={año_apertura}
                                         onChange={cambio_año_apertura}
 
@@ -228,7 +219,9 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Serie"
                                         variant="outlined"
-                                        disabled={false}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
                                         value={serie}
                                         onChange={cambio_serie}
 
@@ -242,7 +235,9 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Sub Serie"
                                         variant="outlined"
-                                        disabled={false}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
                                         value={sub_serie}
                                         onChange={cambio_sub_serie}
 
@@ -258,7 +253,6 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Persona titular"
                                         variant="outlined"
-                                        disabled={false}
                                         value={persona_titular}
                                         onChange={cambio_persona_titular}
 
@@ -272,7 +266,6 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                         size="small"
                                         label="Palabras Clave"
                                         variant="outlined"
-                                        disabled={false}
                                         value={palabras_clave}
                                         onChange={cambio_palabras_clave}
 
@@ -330,4 +323,5 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     );
 };
 
+// eslint-disable-next-line no-restricted-syntax
 export default BuscarExpediente;

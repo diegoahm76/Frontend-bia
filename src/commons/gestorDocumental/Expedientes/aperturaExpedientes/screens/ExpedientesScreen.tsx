@@ -1,11 +1,11 @@
-import { Grid, TextField, Box, Button, Stack, FormHelperText, ToggleButton, FormLabel, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, Typography, Fab, InputAdornment } from "@mui/material";
+import { Grid, TextField, Box, Button, Stack, FormHelperText, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, Typography, Fab, InputAdornment } from "@mui/material";
 import { Title } from "../../../../../components/Title";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormularioBuscarPersona } from "./FormularioBuscarPersona";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { actualizar_expediente, borrar_expediente, buscar_persona, crear_expediente, obtener_config_expediente, obtener_serie_subserie, obtener_trd_actual, obtener_unidad_organizacional, obtener_unidades_marcadas, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
+import { actualizar_expediente, borrar_expediente, buscar_persona, crear_expediente, obtener_unidad_organizacional, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -20,7 +20,6 @@ import BuscarExpediente from "./BuscarExpediente";
 import MoverCarpeta from "../../../deposito/Carpetas/components/MoverCarpeta";
 import { useForm } from "react-hook-form";
 import { IObjCarpeta } from "../../../deposito/interfaces/deposito";
-import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -32,30 +31,10 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedientesScreen: React.FC = () => {
-    const [open_modal, set_open_modal] = useState(false);
-    const { control: control_carpeta_destino, reset: reset_carpeta_destino,
-        getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
-
-
-    const handle_close_buscar = () => {
-        set_open_modal(false);
-    };
-    // pasar el modal mover carpeta
-    const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
-        reset_carpeta_destino(carpeta_mover);
-        let carpetas_new = carpetas;
-        carpetas_new.push(carpeta_mover);
-        carpetas_new.forEach((c: any, i: number) => {
-            let my_copy = Object.assign({}, c);
-            my_copy.ruta = c.identificacion_caja + ' > ' + c.identificacion_bandeja + ' > ' + c.identificacion_estante + ' > ' + c.identificacion_deposito;
-            my_copy.contenedor = c.identificacion_carpeta;
-            carpetas_new[i] = my_copy;
-        })
-        set_carpetas(carpetas_new);
-    };
-
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const [open_modal, set_open_modal] = useState(false);
+    const { control: control_carpeta_destino, reset: reset_carpeta_destino, getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
     const msj_error = "El campo es obligatorio."
     const min_date = dayjs().dayOfYear(1);
     const max_date = dayjs();
@@ -81,20 +60,24 @@ export const ExpedientesScreen: React.FC = () => {
     const [tdr, set_tdr] = useState<any>({});
     const [seccion, set_seccion] = useState<string>("");
     const [serie, set_serie] = useState<any>("");
-    // Notificaciones
-    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
-    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
-    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
-    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
-    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
 
-    const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
-        set_titulo_notificacion(titulo);
-        set_tipo_notificacion(tipo);
-        set_mensaje_notificacion(mensaje)
-        set_dialog_notificaciones_is_active(active);
-        set_abrir_modal(active);
-    }
+    const handle_close_buscar = () => {
+        set_open_modal(false);
+    };
+
+    const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
+        reset_carpeta_destino(carpeta_mover);
+        let carpetas_new = carpetas;
+        carpetas_new.push(carpeta_mover);
+        carpetas_new.forEach((c: any, i: number) => {
+            let my_copy = Object.assign({}, c);
+            my_copy.ruta = c.identificacion_caja + ' > ' + c.identificacion_bandeja + ' > ' + c.identificacion_estante + ' > ' + c.identificacion_deposito;
+            my_copy.contenedor = c.identificacion_carpeta;
+            carpetas_new[i] = my_copy;
+        })
+        set_carpetas(carpetas_new);
+    };
+
     useEffect(() => {
         if (palabras_clave !== "")
             set_lt_palabras_clave(palabras_clave.split(',', 5));
@@ -631,7 +614,7 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                          {expediente?.cod_tipo_expediente === 'C' &&   <Button
+                          {expediente?.cod_tipo_expediente === 'S' &&   <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
@@ -639,7 +622,7 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Buscar expediente
                             </Button>}
-                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente}></BuscarExpediente>}
+                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                         </Stack>
                     </Box>
                 </Grid>
@@ -701,14 +684,6 @@ export const ExpedientesScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
-            {dialog_notificaciones_is_active && (
-                <DialogNoticacionesComponent
-                    titulo_notificacion={titulo_notificacion}
-                    abrir_modal={abrir_modal}
-                    tipo_notificacion={tipo_notificacion}
-                    mensaje_notificacion={mensaje_notificacion}
-                    abrir_dialog={set_abrir_modal} />
-            )}
         </>
     )
 }
