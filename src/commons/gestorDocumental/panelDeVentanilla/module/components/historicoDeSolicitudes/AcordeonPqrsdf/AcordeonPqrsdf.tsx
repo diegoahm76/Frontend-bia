@@ -1,50 +1,56 @@
-/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
-// import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, Grid, TextField } from '@mui/material';
-import { containerStyles } from '../../../../../tca/screens/utils/constants/constants';
-import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { control_success } from '../../../../../../../helpers';
+import { BuscadorSolicitudes } from '../buscador/BuscadorSolicitudes';
+import {
+  accordionData,
+  consultaColumns,
+  infoSolicitudColumns,
+  stylesTypography,
+} from './accordionData'; // Import your accordion data from a separate file
+import { Grid } from '@mui/material';
+import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 
 export const AcordeonPqrsdf = () => {
   const [expanded, setExpanded] = useState<string | boolean>(false);
   const [radicado, setRadicado] = useState<string>('');
 
-  const buttonLink = useRef<any>(null);
+  const accordionRef = useRef<any>(null);
 
-  {
-    /*  this is the handle change that manages accordeon element */
-  }
+  useEffect(() => {
+    // Scroll to the expanded accordion panel when `expanded` changes
+    if (expanded && accordionRef.current) {
+      accordionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
+    }
+  }, [expanded]);
+
   const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  const onChange = (event: any) => setRadicado(event.target.value);
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setRadicado(event.target.value);
 
   const onSubmit = () => {
     const searchElement = accordionData.find(
-      (element) => element?.panelId === radicado
+      (element) => element?.id_radicado === radicado
     );
 
     if (searchElement) {
       setExpanded(radicado);
-      buttonLink.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-
-      });
       control_success(
-        'Se ha encontrado un elemento un elemento que coincide con el radicado ingresado'
+        'Se ha encontrado un elemento que coincide con el radicado ingresado'
       );
     } else {
       void Swal.fire({
@@ -54,182 +60,74 @@ export const AcordeonPqrsdf = () => {
       });
       setExpanded(false);
     }
-
-    // buttonLink.current?.click();
-
-    // href={`#${radicado}`} //* se debe asignar al buttonLink como prop para poder dirigirlo al elemento
-    console.log('se ha encontrado el siguiente elemento', searchElement);
   };
-
-  const accordionData = [
-    {
-      panelId: 'panel1',
-      header: 'General settings',
-      // secondaryHeader: 'I am an accordion',
-      details:
-        'Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget maximus est, id dignissim quam.',
-    },
-    {
-      panelId: 'panel2',
-      header: 'Users',
-      // secondaryHeader: 'You are currently not an owner',
-      details:
-        'Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet.',
-    },
-    {
-      panelId: 'panel3',
-      header: 'Advanced settings',
-      // secondaryHeader: 'Filtering has been entirely disabled for whole web server',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel4',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel5',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel6',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel7',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel8',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel9',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel10',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel11',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel12',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel13',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-    {
-      panelId: 'panel14',
-      header: 'Personal data',
-      details:
-        'Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue.',
-    },
-  ];
 
   return (
     <>
-      {/* se crea el buscador necesaria, en el mismo sentido al seleccionar la pqrsdf y exista se debe expandir dicho elemento y navegar a el  */}
-      <Grid container sx={containerStyles}>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            justifyContent: 'center',
-          }}
+      {/* Search input component */}
+      <BuscadorSolicitudes
+        setRadicado={setRadicado}
+        radicado={radicado}
+        onChange={onChange}
+        onSubmit={onSubmit}
+      />
+
+      {accordionData.map((item) => (
+        <Accordion
+          ref={expanded === item.id_radicado ? accordionRef : null}
+          style={{ marginBottom: '1rem' }}
+          key={item.id_radicado}
+          expanded={expanded === item.id_radicado}
+          onChange={handleChange(item.id_radicado)}
         >
-          <Box
-            component="form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              onSubmit();
-            }}
+          <AccordionSummary
+            expandIcon={
+              <ExpandCircleDownIcon
+                sx={{
+                  color: 'primary.main',
+                }}
+              />
+            }
+            aria-controls={`${item.id_radicado}-content`}
+            id={`${item.id_radicado}-header`}
           >
+            <Typography>
+              <b>Radicado:</b> {item.nombre_pqr}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={7}>
-                <TextField
-                  fullWidth
-                  label="Radicado"
-                  size="small"
-                  variant="outlined"
-                  value={radicado}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    onChange(e);
-                  }}
-                />
+              <Grid item xs={6}>
+                <Typography sx={stylesTypography}>
+                  <b>Titular:</b> {item.titular}
+                </Typography>
+                <Typography sx={stylesTypography}>
+                  <b>Cantidad de anexos: </b>
+                  {item.titular}
+                </Typography>
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  startIcon={<SearchIcon />}
-                >
-                  buscar
-                  {/*  <a ref={buttonLink}>BUSCAR</a> */}
-                </Button>
+              <Grid item xs={6}>
+                <Typography sx={stylesTypography}>
+                  <b>Estado actual:</b> {item.estado_actual_radicado}
+                </Typography>
+                <Typography sx={stylesTypography}>
+                  <b>Asunto: </b>
+                  {item.asunto}
+                </Typography>
               </Grid>
             </Grid>
-          </Box>
-        </Grid>
-      </Grid>
-      {/* se crea el buscador necesaria, en el mismo sentido al seleccionar la pqrsdf y exista se debe expandir dicho elemento y navegar a el  */}
-
-      {accordionData.map((item, index) => (
-          <Accordion
-            ref={buttonLink}
-            style={{ marginBottom: '1rem' }}
-            key={index}
-            expanded={expanded === item.panelId}
-            onChange={handleChange(item.panelId)}
-          >
-            <AccordionSummary
-              expandIcon={
-                <ExpandCircleDownIcon
-                  sx={{
-                    color: 'primary.main',
-                  }}
-                />
-              }
-              aria-controls={`${item.panelId}bh-content`}
-              id={`${item.panelId}bh-header`}
-            >
-              <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                {item.header}
-              </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>
-                {/*{item.secondaryHeader}*/}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{item.details}</Typography>
-            </AccordionDetails>
-          </Accordion>
+            <RenderDataGrid
+              title="Información inicial de la solicitud"
+              columns={infoSolicitudColumns}
+              rows={item.info_solicitud}
+            />
+            <RenderDataGrid
+              title="Acerca de la consulta"
+              columns={consultaColumns}
+              rows={item.solicitud}
+            />
+          </AccordionDetails>
+        </Accordion>
       ))}
     </>
   );
