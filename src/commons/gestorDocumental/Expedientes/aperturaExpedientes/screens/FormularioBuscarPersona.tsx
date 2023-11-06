@@ -24,7 +24,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                     variant='contained'
                     startIcon={<SearchIcon />}
                     onClick={() => { set_abrir_modal_persona(true); }}
-                    disabled={props.expediente !== null}
+                    disabled={props.expediente !== null && props.expediente?.expediente.length === 0}
                 >
                     Buscar persona
                 </Button>
@@ -43,7 +43,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                         variant='contained'
                         startIcon={<SearchIcon />}
                         onClick={() => { set_abrir_modal_persona(true); }}
-                        disabled={props.expediente !== null}
+                        disabled={props.expediente !== null && props.expediente?.expediente.length === 0}
                     >
                         Buscar persona
                     </Button>

@@ -103,12 +103,12 @@ export const ExpedientesScreen: React.FC = () => {
     }, [palabras_clave]);
 
     useEffect(() => {
-        if (expediente !== null) {
+        if (expediente !== null && expediente.expediente.length !== 0) {
             set_titulo(expediente.expediente[0].titulo_expediente);
             set_descripcion(expediente.expediente[0].descripcion_expediente);
             set_fecha_creacion(dayjs(expediente.expediente[0].fecha_apertura_expediente));
             set_und_organizacional(expediente.expediente[0].id_und_org_oficina_respon_actual);
-            set_palabras_clave(expediente.expediente[0].palabras_clave_expediente);
+            set_palabras_clave(expediente.expediente[0].palabras_clave_expediente.replace(/\|/g, ','));
             if (expediente.expediente[0].id_persona_responsable_actual !== null) {
                 dispatch(buscar_persona(expediente.expediente[0].tipo_documento_persona_responsable_actual, expediente.expediente[0].nro_documento_persona_responsable_actual)).then((response: any) => {
                     set_persona_resp(response.data[0]);
@@ -125,6 +125,9 @@ export const ExpedientesScreen: React.FC = () => {
 
             obtener_unidad_organizacional_fc();
             obtener_usuario_logueado_fc();
+        }else if(expediente !== null){
+            obtener_unidad_organizacional_fc();
+            obtener_usuario_logueado_fc();
         }
     }, [expediente]);
 
@@ -135,7 +138,10 @@ export const ExpedientesScreen: React.FC = () => {
     }
 
     const borrar_expediente_fc: () => void = () => {
-        dispatch(borrar_expediente(expediente.expediente.id_expediente_documental));
+        dispatch(borrar_expediente(expediente.expediente[0].id_expediente_documental)).then((response: any)=>{
+            if(response.success)
+                limpiar_formulario();
+        });
     }
 
     const obtener_usuario_logueado_fc: () => void = () => {
@@ -199,10 +205,9 @@ export const ExpedientesScreen: React.FC = () => {
                 "id_subserie_origen": serie?.id_subserie_doc,
                 "id_persona_titular_exp_complejo": expediente?.cod_tipo_expediente === 'C' ? persona_titular.id_persona : null
             }
-            console.log(expediente_obj);
-
             dispatch(crear_expediente(expediente_obj)).then((response: any) => {
-                console.log(response);
+                if(response.success)
+                    set_expediente({expediente: [response.data]});
             });
         } else {
             const expediente_obj = {
@@ -211,11 +216,10 @@ export const ExpedientesScreen: React.FC = () => {
                 "descripcion_expediente": descripcion,
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
             }
-            console.log(expediente_obj);
             dispatch(actualizar_expediente(expediente?.expediente[0].id_expediente_documental, expediente_obj)).then((response: any) => {
-                console.log(response);
+                if(response.success)
+                    set_expediente({expediente: [response.data]});
             });
-
         }
     };
 
@@ -283,7 +287,7 @@ export const ExpedientesScreen: React.FC = () => {
                                     size="small"
                                     required
                                     InputProps={{
-                                        readOnly: expediente !== null,
+                                        readOnly: expediente?.expediente.length !== 0,
                                     }}
                                     onChange={cambio_titulo}
                                     fullWidth
@@ -298,14 +302,14 @@ export const ExpedientesScreen: React.FC = () => {
                                     type={'text'}
                                     size="small"
                                     InputProps={{
-                                        readOnly: expediente?.expediente[0].creado_automaticamente,
+                                        readOnly: (expediente?.expediente.length !== 0 && expediente?.expediente[0].creado_automaticamente),
                                     }}
                                     onChange={cambio_descripcion}
                                     fullWidth
                                     value={descripcion}
                                 />
                             </Grid>
-                            {expediente.expediente.length != 0 && <Grid item xs={12} sm={12}>
+                            {expediente?.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={12}>
                                 <Stack
                                     direction="row"
                                     justifyContent="center"
@@ -385,7 +389,7 @@ export const ExpedientesScreen: React.FC = () => {
                                                         onChange={cambio_und_organizacional}
                                                         required
                                                         error={msj_error_und_organizacional}
-                                                        readOnly={expediente !== null}
+                                                        readOnly={expediente !== null && expediente?.expediente.length !== 0}
                                                     >
                                                         {lt_unidades_org.map((lt: any) => (
                                                             <MenuItem key={lt.id_unidad_organizacional} value={lt.id_unidad_organizacional}>
@@ -463,7 +467,7 @@ export const ExpedientesScreen: React.FC = () => {
                                                 label="Fecha creación expediente"
                                                 value={fecha_creacion}
                                                 onChange={(newValue) => { cambio_fecha_creacion(newValue); }}
-                                                readOnly={expediente?.expediente[0].creado_automaticamente}
+                                                readOnly={(expediente?.expediente.length !== 0 && expediente?.expediente[0].creado_automaticamente)}
                                                 renderInput={(params) => (
                                                     <TextField
                                                         required
@@ -627,7 +631,7 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                          {expediente?.cod_tipo_expediente === 'C' &&   <Button
+                          {expediente?.cod_tipo_expediente === 'S' &&   <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
@@ -658,7 +662,7 @@ export const ExpedientesScreen: React.FC = () => {
                                 startIcon={<SaveIcon />}
                                 onClick={() => { crear_obj_expediente() }}
                             >
-                                {expediente !== null ? 'Actualizar' : 'Guardar'}
+                                {expediente?.expediente.length !== 0 ? 'Actualizar' : 'Guardar'}
                             </Button>}
                             <Button
                                 // color='inherit'
@@ -668,7 +672,7 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {!(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
+                            {expediente?.expediente.length !== 0 && !(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
@@ -676,8 +680,8 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Anular expediente
                             </Button>}
-                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={expediente?.expediente[0].id_expediente_documental}></AnularExpedienteModal>}
-                            {!(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
+                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={expediente?.expediente.length !== 0 ? expediente?.expediente[0].id_expediente_documental : null}></AnularExpedienteModal>}
+                            {expediente?.expediente.length !== 0 && !(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_expediente_fc() }}

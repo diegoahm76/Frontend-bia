@@ -32,7 +32,6 @@ const AnularExpedienteModal = ({ is_modal_active, set_is_modal_active, title, us
   const guardar_anulacion = (): void => {
     dispatch(anular_expediente(id_expediente, { observacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
       if (response.success) {
-        navigate('/home');
         set_is_modal_active(false);
       }
     }).catch((error: any) =>{
