@@ -60,7 +60,6 @@ export const ExpedientesScreen: React.FC = () => {
     const min_date = dayjs().dayOfYear(1);
     const max_date = dayjs();
     const [lt_unidades_org, set_lt_unidades_org] = useState<any[]>([]);
-    const [titulo_accion, set_titulo_accion] = useState<string>("Creación de expdientes");
     const [palabras_clave, set_palabras_clave] = useState<string>("");
     const [lt_palabras_clave, set_lt_palabras_clave] = useState<any>([]);
     const [error_fecha_creacion, set_msj_error_fecha_creacion] = useState<boolean>(false);
@@ -154,28 +153,33 @@ export const ExpedientesScreen: React.FC = () => {
     const cambio_titulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_titulo(e.target.value);
         set_msj_error_titulo(!(e.target.value !== null && e.target.value !== ""));
-    };
+    }
 
     const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_descripcion(e.target.value);
-    };
+    }
 
     const cambio_palabras_clave: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         const palabras_clave_before = palabras_clave;
         set_palabras_clave(e.target.value);
         if ((palabras_clave_before.match(/\,/g) || []).length > 4)
             set_palabras_clave(palabras_clave_before.slice(0, -1))
-    };
+    }
 
     const cambio_fecha_creacion = (date: Dayjs | null): void => {
         if (date !== null)
             set_fecha_creacion(date);
         set_msj_error_fecha_creacion(!(date !== null));
-    };
+    }
 
     const limpiar_formulario = (): void => {
         set_limpiar(true);
-    };
+    }
+
+    const salir_expediente: () => void = () => {
+        navigate('/home');
+    }
+
     const crear_obj_expediente = (): void => {
         if (expediente.expediente.length === 0) {
             const expediente_obj = {
@@ -250,7 +254,7 @@ export const ExpedientesScreen: React.FC = () => {
                 sx={class_css}
             >
                 <Grid item md={12} xs={12}>
-                    <Title title={titulo_accion} />
+                    <Title title={expediente.expediente.length === 0 ? 'Creación de expedientes' : 'Actualización de expediente'} />
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
@@ -623,14 +627,14 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            <Button
+                          {expediente?.cod_tipo_expediente === 'C' &&   <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
                                 onClick={() => { set_abrir_modal_buscar(true); }}
                             >
                                 Buscar expediente
-                            </Button>
+                            </Button>}
                             {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente}></BuscarExpediente>}
                         </Stack>
                     </Box>
@@ -648,14 +652,14 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            <Button
+                            {expediente !== null && <Button
                                 color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
                                 onClick={() => { crear_obj_expediente() }}
                             >
                                 {expediente !== null ? 'Actualizar' : 'Guardar'}
-                            </Button>
+                            </Button>}
                             <Button
                                 // color='inherit'
                                 variant="outlined"
@@ -664,28 +668,28 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            <Button
+                            {!(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { set_abrir_modal_anular(true) }}
                             >
                                 Anular expediente
-                            </Button>
+                            </Button>}
                             {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={expediente?.expediente[0].id_expediente_documental}></AnularExpedienteModal>}
-                            <Button
+                            {!(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_expediente_fc() }}
                                 sx={{ background: '#ff6961' }}
                             >
                                 Borrar expediente
-                            </Button>
+                            </Button>}
                             <Button
                                 color="error"
                                 variant='contained'
                                 startIcon={<ClearIcon />}
-                                onClick={() => { set_carpetas([]); }}
+                                onClick={() => { salir_expediente() }}
                             >
                                 Salir
                             </Button>
