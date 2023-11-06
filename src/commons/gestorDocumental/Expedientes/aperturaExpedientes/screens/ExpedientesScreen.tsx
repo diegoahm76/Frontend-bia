@@ -631,7 +631,7 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                          {expediente?.cod_tipo_expediente === 'S' &&   <Button
+                          {expediente?.cod_tipo_expediente === 'C' &&   <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
