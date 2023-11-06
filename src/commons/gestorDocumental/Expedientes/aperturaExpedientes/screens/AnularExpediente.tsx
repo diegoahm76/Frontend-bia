@@ -8,7 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../../hooks";
 import { control_error } from "../../../../../helpers";
-import { anular_expdiente } from "../thunks/aperturaExpedientes";
+import { anular_expediente } from "../thunks/aperturaExpedientes";
 interface IProps {
   is_modal_active: boolean,
   set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -30,9 +30,8 @@ const AnularExpedienteModal = ({ is_modal_active, set_is_modal_active, title, us
   };
 
   const guardar_anulacion = (): void => {
-    dispatch(anular_expdiente(id_expediente, { observacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
+    dispatch(anular_expediente(id_expediente, { observacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
       if (response.success) {
-        navigate('/home');
         set_is_modal_active(false);
       }
     }).catch((error: any) =>{
