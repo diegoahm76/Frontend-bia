@@ -91,6 +91,18 @@ export const crear_expediente: any = (expediente: any) => {
     }
   };
 };
+// Actualizar expediente
+export const actualizar_expediente: any = (id_expediente: number,expediente: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-expediente/update/${id_expediente}/`,expediente);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // Anulación expedientes
 export const anular_expediente: any = (id_expediente: number,motivo: any) => {
@@ -109,6 +121,42 @@ export const borrar_expediente: any = (id_expediente: number) => {
   return async () => {
     try {
       const { data } = await api.delete(`gestor/expedientes-archivos/expedientes/apertura-expediente/borrar/${id_expediente}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Buscar expediente por id
+export const buscar_expediente_id: any = (id_expediente: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/apertura-expediente/get/${id_expediente}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Buscar expedientes
+export const buscar_expediente: any = (trd_nombre: string,fecha_apertura_expediente: string,id_serie_origen: string,id_subserie_origen: string,palabras_clave_expediente: string,titulo_expediente: string,codigos_uni_serie_subserie: string,id_persona_titular_exp_complejo: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expediente-abierto/?trd_nombre=${trd_nombre}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&palabras_clave_expediente=${palabras_clave_expediente}&titulo_expediente=${titulo_expediente}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie}&id_persona_titular_exp_complejo=${id_persona_titular_exp_complejo}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Buscar persona
+export const buscar_persona: any = (tipo_documento: string,numero_documento: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`personas/get-personas-filters/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

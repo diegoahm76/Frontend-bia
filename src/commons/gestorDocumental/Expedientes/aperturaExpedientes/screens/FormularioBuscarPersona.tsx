@@ -8,6 +8,7 @@ import { control_error } from "../../../../../helpers";
 interface IProps {
     seccion: boolean,
     set_persona_titular?: any
+    expediente?: any
     set_persona_responsable?: any
 }
 
@@ -23,6 +24,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                     variant='contained'
                     startIcon={<SearchIcon />}
                     onClick={() => { set_abrir_modal_persona(true); }}
+                    disabled={props.expediente !== null}
                 >
                     Buscar persona
                 </Button>
@@ -41,6 +43,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                         variant='contained'
                         startIcon={<SearchIcon />}
                         onClick={() => { set_abrir_modal_persona(true); }}
+                        disabled={props.expediente !== null}
                     >
                         Buscar persona
                     </Button>

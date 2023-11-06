@@ -5,7 +5,7 @@ import { FormularioBuscarPersona } from "./FormularioBuscarPersona";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { borrar_expediente, crear_expediente, obtener_config_expediente, obtener_serie_subserie, obtener_trd_actual, obtener_unidad_organizacional, obtener_unidades_marcadas, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
+import { actualizar_expediente, borrar_expediente, buscar_persona, crear_expediente, obtener_config_expediente, obtener_serie_subserie, obtener_trd_actual, obtener_unidad_organizacional, obtener_unidades_marcadas, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -75,8 +75,6 @@ export const ExpedientesScreen: React.FC = () => {
     const [persona_titular, set_persona_titular] = useState<any>({});
     const [persona_resp, set_persona_resp] = useState<any>({});
     const [carpetas, set_carpetas] = useState<any>([]);
-    const [carpeta_ruta, set_carpeta_ruta] = useState<string>("");
-    const [contenedor, set_contenedor] = useState<string>("");
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
@@ -90,7 +88,7 @@ export const ExpedientesScreen: React.FC = () => {
     const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
     const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
     const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
-    
+
     const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
         set_titulo_notificacion(titulo);
         set_tipo_notificacion(tipo);
@@ -107,6 +105,25 @@ export const ExpedientesScreen: React.FC = () => {
 
     useEffect(() => {
         if (expediente !== null) {
+            set_titulo(expediente.expediente[0].titulo_expediente);
+            set_descripcion(expediente.expediente[0].descripcion_expediente);
+            set_fecha_creacion(dayjs(expediente.expediente[0].fecha_apertura_expediente));
+            set_und_organizacional(expediente.expediente[0].id_und_org_oficina_respon_actual);
+            set_palabras_clave(expediente.expediente[0].palabras_clave_expediente);
+            if (expediente.expediente[0].id_persona_responsable_actual !== null) {
+                dispatch(buscar_persona(expediente.expediente[0].tipo_documento_persona_responsable_actual, expediente.expediente[0].nro_documento_persona_responsable_actual)).then((response: any) => {
+                    set_persona_resp(response.data[0]);
+                })
+            } else
+                set_persona_resp({});
+
+            if (expediente.expediente[0].id_persona_titular_exp_complejo !== null) {
+                dispatch(buscar_persona(expediente.expediente[0].tipo_documento_persona_titular_exp_complejo, expediente.expediente[0].nro_documento_persona_titular_exp_complejo)).then((response: any) => {
+                    set_persona_titular(response.data[0]);
+                })
+            } else
+                set_persona_titular({});
+
             obtener_unidad_organizacional_fc();
             obtener_usuario_logueado_fc();
         }
@@ -119,7 +136,7 @@ export const ExpedientesScreen: React.FC = () => {
     }
 
     const borrar_expediente_fc: () => void = () => {
-        dispatch(borrar_expediente(0));
+        dispatch(borrar_expediente(expediente.expediente.id_expediente_documental));
     }
 
     const obtener_usuario_logueado_fc: () => void = () => {
@@ -160,32 +177,46 @@ export const ExpedientesScreen: React.FC = () => {
         set_limpiar(true);
     };
     const crear_obj_expediente = (): void => {
-        const expediente_obj = {
-            "titulo_expediente": titulo,
-            "descripcion_expediente": descripcion,
-            "id_unidad_org_oficina_respon_original": und_organizacional,
-            "id_und_org_oficina_respon_actual": und_organizacional,
-            "id_persona_responsable_actual": persona_resp?.id_persona,
-            "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
-            "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
-            "cod_tipo_expediente": expediente?.cod_tipo_expediente,
-            "carpetas_caja": carpetas.map((obj: any) => obj.id_carpeta),
-            "id_cat_serie_und_org_ccd_trd_prop": serie.id_catserie_unidadorg,//tripeta serie
-            "id_trd_origen": tdr.id_trd,
-            "id_und_seccion_propietaria_serie": seccion,
-            "id_serie_origen": serie?.id_serie_doc, // se obtiene del objeto de la tripleta
-            "id_subserie_origen": serie?.id_subserie_doc,
-            "id_persona_titular_exp_complejo": expediente?.cod_tipo_expediente === 'C' ? persona_titular.id_persona : null
-        }
-        console.log(expediente_obj);
+        if (expediente.expediente.length === 0) {
+            const expediente_obj = {
+                "titulo_expediente": titulo,
+                "descripcion_expediente": descripcion,
+                "id_unidad_org_oficina_respon_original": und_organizacional,
+                "id_und_org_oficina_respon_actual": und_organizacional,
+                "id_persona_responsable_actual": persona_resp?.id_persona,
+                "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
+                "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
+                "cod_tipo_expediente": expediente?.cod_tipo_expediente,
+                "carpetas_caja": carpetas.map((obj: any) => obj.id_carpeta),
+                "id_cat_serie_und_org_ccd_trd_prop": serie.id_catserie_unidadorg,//tripeta serie
+                "id_trd_origen": tdr.id_trd,
+                "id_und_seccion_propietaria_serie": seccion,
+                "id_serie_origen": serie?.id_serie_doc, // se obtiene del objeto de la tripleta
+                "id_subserie_origen": serie?.id_subserie_doc,
+                "id_persona_titular_exp_complejo": expediente?.cod_tipo_expediente === 'C' ? persona_titular.id_persona : null
+            }
+            console.log(expediente_obj);
 
-        dispatch(crear_expediente(expediente_obj)).then((response: any) => {
-            console.log(response);
-        });
+            dispatch(crear_expediente(expediente_obj)).then((response: any) => {
+                console.log(response);
+            });
+        } else {
+            const expediente_obj = {
+                "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
+                "carpetas_caja": carpetas.map((obj: any) => obj.id_carpeta),
+                "descripcion_expediente": descripcion,
+                "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
+            }
+            console.log(expediente_obj);
+            dispatch(actualizar_expediente(expediente?.expediente[0].id_expediente_documental, expediente_obj)).then((response: any) => {
+                console.log(response);
+            });
+
+        }
     };
 
     useEffect(() => {
-        if (carpetas.length>0) {
+        if (carpetas.length > 0) {
             console.log('carpetas: ', carpetas)
         }
     }, [carpetas]);
@@ -248,7 +279,7 @@ export const ExpedientesScreen: React.FC = () => {
                                     size="small"
                                     required
                                     InputProps={{
-                                        readOnly: false,
+                                        readOnly: expediente !== null,
                                     }}
                                     onChange={cambio_titulo}
                                     fullWidth
@@ -263,7 +294,7 @@ export const ExpedientesScreen: React.FC = () => {
                                     type={'text'}
                                     size="small"
                                     InputProps={{
-                                        readOnly: false,
+                                        readOnly: expediente?.expediente[0].creado_automaticamente,
                                     }}
                                     onChange={cambio_descripcion}
                                     fullWidth
@@ -323,7 +354,7 @@ export const ExpedientesScreen: React.FC = () => {
                                                     }}
                                                 />
                                             </Grid>
-                                            <FormularioBuscarPersona seccion={true} set_persona_titular={set_persona_titular}></FormularioBuscarPersona>
+                                            <FormularioBuscarPersona seccion={true} set_persona_titular={set_persona_titular} expediente={expediente}></FormularioBuscarPersona>
                                         </Grid>
                                     </Grid>
                                 </Stack>
@@ -350,6 +381,7 @@ export const ExpedientesScreen: React.FC = () => {
                                                         onChange={cambio_und_organizacional}
                                                         required
                                                         error={msj_error_und_organizacional}
+                                                        readOnly={expediente !== null}
                                                     >
                                                         {lt_unidades_org.map((lt: any) => (
                                                             <MenuItem key={lt.id_unidad_organizacional} value={lt.id_unidad_organizacional}>
@@ -427,7 +459,7 @@ export const ExpedientesScreen: React.FC = () => {
                                                 label="Fecha creación expediente"
                                                 value={fecha_creacion}
                                                 onChange={(newValue) => { cambio_fecha_creacion(newValue); }}
-                                                readOnly={false}
+                                                readOnly={expediente?.expediente[0].creado_automaticamente}
                                                 renderInput={(params) => (
                                                     <TextField
                                                         required
@@ -599,7 +631,7 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Buscar expediente
                             </Button>
-                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={undefined}></BuscarExpediente>}
+                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente}></BuscarExpediente>}
                         </Stack>
                     </Box>
                 </Grid>
@@ -622,7 +654,7 @@ export const ExpedientesScreen: React.FC = () => {
                                 startIcon={<SaveIcon />}
                                 onClick={() => { crear_obj_expediente() }}
                             >
-                                Guardar
+                                {expediente !== null ? 'Actualizar' : 'Guardar'}
                             </Button>
                             <Button
                                 // color='inherit'
@@ -640,7 +672,7 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Anular expediente
                             </Button>
-                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={0}></AnularExpedienteModal>}
+                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={expediente?.expediente[0].id_expediente_documental}></AnularExpedienteModal>}
                             <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
