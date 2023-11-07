@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export const accordionData = Array.from({ length: 12 }, (_, i) => ({
+export const accordionData = Array.from({ length: 30 }, (_, i) => ({
   nombre_pqr: `PQR ${i + 1} año: ${i + 1}`,
   id_radicado: `panel${i + 1}`,
   titular: `General settings ${i + 1}`,

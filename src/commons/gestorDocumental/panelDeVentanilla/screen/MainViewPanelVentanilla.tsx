@@ -12,7 +12,7 @@ import { Grid } from '@mui/material';
 import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
 import { PanelDeVentanillaScreen } from '../module/screen/panelDeVentanilla/PanelDeVentanillaScreen';
-import { HistoricoDeSolicitudesScreen } from '../module/screen/historicoDeSolicitudes/HistoricoDeSolicitudesScreen';
+import { HistoricoSolicitudesScreen } from '../module/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   const [value, setValue] = useState(0);
@@ -40,7 +40,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           {/* se debe reemplazar por el inicio del componente de la parte 2 */}
-          <HistoricoDeSolicitudesScreen />
+          <HistoricoSolicitudesScreen />
         </CustomTabPanel>
       </Box>
     </Grid>

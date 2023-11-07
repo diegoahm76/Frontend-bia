@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
+import { ButtonsPanelVentanilla } from '../../components/panelDeVentanilla/components/buttonsPanelVentanilla/ButtonsPanelVentanilla';
 
 export const PanelDeVentanillaScreen = (): JSX.Element => {
-  return <div>Panel de ventanila parte inicial</div>;
+  return (
+    <>
+      {/* primer parte, button */}
+      <ButtonsPanelVentanilla />
+    </>
+  );
 };
