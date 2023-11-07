@@ -12,7 +12,6 @@ export const Parte1ScreenOfi = () => {
   const [ccdList, setccdList] = useState<any[]>([]);
   return (
     <>
-      
       <Grid container sx={containerStyles}>
         <Title title="Delegación de oficinas responsables de expedientes del CCD" />
 

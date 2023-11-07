@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import { MainViewPanelVentanilla } from '../screen/MainViewPanelVentanilla';
+import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
@@ -15,7 +16,7 @@ const routes = [
   },
   {
     path: 'asignar_a_usario/',
-    component: () => <>Módulo de asignación a usario</>,
+    component: () => <AsignacionUsuarioScreen />,
   },
   {
     path: 'asignar_a_grupo/',
