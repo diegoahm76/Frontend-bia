@@ -9,9 +9,9 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useNavigate } from 'react-router-dom';
-import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
-import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales
 const actions = [

@@ -6,7 +6,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import Swal from 'sweetalert2';
-import { control_success } from '../../../../../../helpers';
+
 import { BuscadorSolicitudes } from '../buscador/BuscadorSolicitudes';
 import {
   accordionData,
@@ -15,7 +15,8 @@ import {
   stylesTypography,
 } from './accordionData'; // Import your accordion data from a separate file
 import { Grid } from '@mui/material';
-import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { control_success } from '../../../../../../../helpers';
 
 export const AcordeonPqrsdf = () => {
   const [expanded, setExpanded] = useState<string | boolean>(false);
