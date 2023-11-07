@@ -1,11 +1,11 @@
-import { Grid, TextField, Box, Button, Stack, FormHelperText, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, Typography, Fab, InputAdornment } from "@mui/material";
+import { Grid, TextField, Box, Button, Stack, FormHelperText, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, Typography, Fab, InputAdornment, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { FormularioBuscarPersona } from "./FormularioBuscarPersona";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { actualizar_expediente, borrar_expediente, buscar_persona, crear_expediente, obtener_unidad_organizacional, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
+import { actualizar_expediente, borrar_expediente, buscar_expediente_id, buscar_persona, crear_expediente, obtener_unidad_organizacional, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -20,6 +20,9 @@ import BuscarExpediente from "./BuscarExpediente";
 import MoverCarpeta from "../../../deposito/Carpetas/components/MoverCarpeta";
 import { useForm } from "react-hook-form";
 import { IObjCarpeta } from "../../../deposito/interfaces/deposito";
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FolderIcon from '@mui/icons-material/Folder';
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -60,22 +63,16 @@ export const ExpedientesScreen: React.FC = () => {
     const [tdr, set_tdr] = useState<any>({});
     const [seccion, set_seccion] = useState<string>("");
     const [serie, set_serie] = useState<any>("");
-
+    const [expanded, set_expanded] = useState<string | false>('panel1');
     const handle_close_buscar = () => {
         set_open_modal(false);
     };
 
-    const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
+    const handle_mover_carpeta = (carpeta_mover: any) => {
         reset_carpeta_destino(carpeta_mover);
         let carpetas_new = carpetas;
-        carpetas_new.push(carpeta_mover);
-        carpetas_new.forEach((c: any, i: number) => {
-            let my_copy = Object.assign({}, c);
-            my_copy.ruta = c.identificacion_caja + ' > ' + c.identificacion_bandeja + ' > ' + c.identificacion_estante + ' > ' + c.identificacion_deposito;
-            my_copy.contenedor = c.identificacion_carpeta;
-            carpetas_new[i] = my_copy;
-        })
-        set_carpetas(carpetas_new);
+        carpetas_new.push({ ruta: carpeta_mover.identificacion_caja + ' > ' + carpeta_mover.identificacion_bandeja + ' > ' + carpeta_mover.identificacion_estante + ' > ' + carpeta_mover.identificacion_deposito, carpetas: [{id_carpeta_caja: carpeta_mover.id_carpeta, carpeta: carpeta_mover.identificacion_carpeta}]});
+        set_carpetas([...carpetas_new]);
     };
 
     useEffect(() => {
@@ -92,6 +89,10 @@ export const ExpedientesScreen: React.FC = () => {
             set_fecha_creacion(dayjs(expediente.expediente[0].fecha_apertura_expediente));
             set_und_organizacional(expediente.expediente[0].id_und_org_oficina_respon_actual);
             set_palabras_clave(expediente.expediente[0].palabras_clave_expediente.replace(/\|/g, ','));
+
+            if(expediente.expediente[0]?.carpetas_caja?.length > 0)
+                crear_obj_carpetas(expediente.expediente[0]);
+            
             if (expediente.expediente[0].id_persona_responsable_actual !== null) {
                 dispatch(buscar_persona(expediente.expediente[0].tipo_documento_persona_responsable_actual, expediente.expediente[0].nro_documento_persona_responsable_actual)).then((response: any) => {
                     set_persona_resp(response.data[0]);
@@ -108,7 +109,7 @@ export const ExpedientesScreen: React.FC = () => {
 
             obtener_unidad_organizacional_fc();
             obtener_usuario_logueado_fc();
-        }else if(expediente !== null){
+        } else if (expediente !== null) {
             obtener_unidad_organizacional_fc();
             obtener_usuario_logueado_fc();
         }
@@ -121,8 +122,8 @@ export const ExpedientesScreen: React.FC = () => {
     }
 
     const borrar_expediente_fc: () => void = () => {
-        dispatch(borrar_expediente(expediente.expediente[0].id_expediente_documental)).then((response: any)=>{
-            if(response.success)
+        dispatch(borrar_expediente(expediente.expediente[0].id_expediente_documental)).then((response: any) => {
+            if (response.success)
                 limpiar_formulario();
         });
     }
@@ -137,6 +138,33 @@ export const ExpedientesScreen: React.FC = () => {
     const cambio_und_organizacional: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_und_organizacional(e.target.value);
         set_msj_error_und_organizacional(!(e.target.value !== null && e.target.value !== ""));
+    }
+
+    const handle_change = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        set_expanded(newExpanded ? panel : false);
+    };
+
+    const buscar_expediente: any = (expediente: any) => {
+        dispatch(buscar_expediente_id(expediente.id_expediente_documental)).then(((response: any) =>{
+            if(response.data !== null && response.data !== undefined)
+                set_expediente({expediente: [response.data]});
+            else
+                set_expediente(null);
+        }));
+    }
+
+    const crear_obj_carpetas: any = (expediente: any) => {
+        let obj_carpetas: { ruta: string; carpetas: any; }[] = [];
+        expediente?.carpetas_caja.forEach((dp: any) => {
+            dp.estantes?.forEach((st: any) => {
+                st.bandejas?.forEach((bj: any) => {
+                    bj.cajas?.forEach((cj: any) => {
+                        obj_carpetas.push({ ruta: dp.deposito + ' > ' + st.estante + ' > ' + bj.bandeja + ' > ' + cj.caja, carpetas: cj.carpetas })
+                    });
+                });
+            });
+        });
+        set_carpetas(obj_carpetas);
     }
 
     const cambio_titulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,7 +208,7 @@ export const ExpedientesScreen: React.FC = () => {
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
                 "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
                 "cod_tipo_expediente": expediente?.cod_tipo_expediente,
-                "carpetas_caja": carpetas.map((obj: any) => obj.id_carpeta),
+                "carpetas_caja": carpetas.length === 0 ? [] : carpetas?.map((obj: any) => obj.carpetas.map((obj_carp: any) => obj_carp.id_carpeta_caja))[0],
                 "id_cat_serie_und_org_ccd_trd_prop": serie.id_catserie_unidadorg,//tripeta serie
                 "id_trd_origen": tdr.id_trd,
                 "id_und_seccion_propietaria_serie": seccion,
@@ -189,28 +217,22 @@ export const ExpedientesScreen: React.FC = () => {
                 "id_persona_titular_exp_complejo": expediente?.cod_tipo_expediente === 'C' ? persona_titular.id_persona : null
             }
             dispatch(crear_expediente(expediente_obj)).then((response: any) => {
-                if(response.success)
-                    set_expediente({expediente: [response.data]});
+                if (response.success)
+                    buscar_expediente(response.data);
             });
         } else {
             const expediente_obj = {
                 "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
-                "carpetas_caja": carpetas.map((obj: any) => obj.id_carpeta),
+                "carpetas_caja":  carpetas.length === 0 ? [] : carpetas?.map((obj: any) => obj.carpetas.map((obj_carp: any) => obj_carp.id_carpeta_caja))[0],
                 "descripcion_expediente": descripcion,
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
             }
             dispatch(actualizar_expediente(expediente?.expediente[0].id_expediente_documental, expediente_obj)).then((response: any) => {
-                if(response.success)
-                    set_expediente({expediente: [response.data]});
+                if (response.success)
+                    buscar_expediente(response.data);;
             });
         }
     };
-
-    useEffect(() => {
-        if (carpetas.length > 0) {
-            console.log('carpetas: ', carpetas)
-        }
-    }, [carpetas]);
 
     useEffect(() => {
         if (limpiar) {
@@ -227,6 +249,15 @@ export const ExpedientesScreen: React.FC = () => {
             set_limpiar(false);
         }
     }, [limpiar]);
+
+    const eliminar_carpeta = (index: number, sub_index: number): void => {
+        let carpetas_local = [...carpetas];
+        carpetas_local[index].carpetas.splice(sub_index, 1);
+        if(carpetas_local[index].carpetas.length === 0)
+            carpetas_local.splice(index, 1);
+
+        set_carpetas([...carpetas_local]);
+    }
 
     return (
         <>
@@ -432,7 +463,7 @@ export const ExpedientesScreen: React.FC = () => {
                                                     }}
                                                 />
                                             </Grid>
-                                            <FormularioBuscarPersona seccion={false} set_persona_responsable={set_persona_resp}></FormularioBuscarPersona>
+                                            <FormularioBuscarPersona seccion={false} set_persona_responsable={set_persona_resp} expediente={expediente}></FormularioBuscarPersona>
                                         </Grid>
                                     </Grid>
                                 </Stack>
@@ -518,44 +549,33 @@ export const ExpedientesScreen: React.FC = () => {
                                         spacing={2}
                                     >
                                         <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                label="Ruta carpeta"
-                                                type={'text'}
-                                                size="small"
-                                                fullWidth
-                                                value={c.ruta}
-                                                InputLabelProps={{
-                                                    shrink: true
-                                                }}
-                                                InputProps={{
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            <FolderOutlinedIcon />
-                                                        </InputAdornment>
-                                                    ),
-                                                    readOnly: true,
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={2}>
-                                            <TextField
-                                                label="Carpeta"
-                                                type={'text'}
-                                                size="small"
-                                                fullWidth
-                                                value={c.contenedor}
-                                                InputLabelProps={{
-                                                    shrink: true
-                                                }}
-                                                InputProps={{
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            <FolderOutlinedIcon />
-                                                        </InputAdornment>
-                                                    ),
-                                                    readOnly: true,
-                                                }}
-                                            />
+                                            <Accordion expanded={expanded === 'panel' + index} onChange={handle_change('panel' + index)} sx={{ padding: '0px' }}>
+                                                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1d-content" id="panel1d-header">
+                                                    <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px' }} />
+                                                    <Typography sx={{ fontSize: '16px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
+                                                        {c.ruta}
+                                                    </Typography>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                    {c.carpetas.map((carp: any, sub_index: number) => (
+                                                        <Grid item xs={12} sm={12} key={sub_index}>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: '16px', fontWeight: '410', color: 'gray', display: 'inline-flex', flexDirection: 'row' }}>
+                                                                    <FolderIcon sx={{ marginRight: '10px', color: 'gray' }} />
+                                                                    {carp.carpeta}
+                                                                    <Stack
+                                                                        direction="row"
+                                                                        justifyContent="flex-end"
+                                                                    >
+                                                                        <ClearOutlinedIcon onClick={() => { eliminar_carpeta(index, sub_index) }} sx={{ color: 'red', cursor: 'pointer' }} />
+                                                                    </Stack>
+                                                                </Typography>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                    ))}
+                                                </AccordionDetails>
+                                            </Accordion>
                                         </Grid>
                                     </Stack>
                                 </Grid>))}
@@ -614,7 +634,7 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                          {expediente?.cod_tipo_expediente === 'S' &&   <Button
+                            {expediente?.cod_tipo_expediente === 'S' && <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}

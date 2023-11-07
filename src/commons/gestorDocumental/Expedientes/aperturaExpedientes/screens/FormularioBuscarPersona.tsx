@@ -15,7 +15,9 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
-
+    useEffect(() => {
+        console.log(props.expediente?.expediente);
+    }, [props.expediente]);
     return (
         <>
             {props.seccion && <Grid item xs={12} sm={3}>
@@ -24,7 +26,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                     variant='contained'
                     startIcon={<SearchIcon />}
                     onClick={() => { set_abrir_modal_persona(true); }}
-                    disabled={props.expediente !== null && props.expediente?.expediente.length === 0}
+                    disabled={props.expediente?.expediente.length !== 0 && props.expediente?.expediente !== undefined}
                 >
                     Buscar persona
                 </Button>
@@ -43,7 +45,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                         variant='contained'
                         startIcon={<SearchIcon />}
                         onClick={() => { set_abrir_modal_persona(true); }}
-                        disabled={props.expediente !== null && props.expediente?.expediente.length === 0}
+                        disabled={props.expediente?.expediente.length !== 0 && props.expediente?.expediente !== undefined}
                     >
                         Buscar persona
                     </Button>
