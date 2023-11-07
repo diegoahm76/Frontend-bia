@@ -84,13 +84,13 @@ export const ButtonsPanelVentanilla = () => {
     });
   });
 
-  const handleAsignacionPersonal = withValidation(() => {
-    console.log('Enviar solicitud al usuario');
-  });
+  const handleAsignacionPersonal = withValidation(() =>
+    console.log('Enviar solicitud al usuario')
+  );
 
-  const handleAsignacionGrupo = withValidation(() => {
-    console.log('Asignar al grupo');
-  });
+  const handleAsignacionGrupo = withValidation(() =>
+    console.log('Asignar al grupo')
+  );
 
   const handleClickActionsGeneral = (action: any) => {
     //* por cada nombre se ejecutaran acciones diferentes
