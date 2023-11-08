@@ -58,7 +58,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
     const seleccionar_expediente: any = (expediente: any) => {
         if(expediente !== null && expediente !== undefined)
-            props.set_expediente({expediente: [expediente]});
+            props.set_expediente(expediente);
         else
             props.set_expediente(null);
         props.set_is_modal_active(false);

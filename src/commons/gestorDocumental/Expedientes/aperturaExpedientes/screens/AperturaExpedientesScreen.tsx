@@ -8,6 +8,7 @@ import { DialogNoticacionesComponent } from "../../../../../components/DialogNot
 
 interface IProps {
     set_expediente: any,
+    set_configuracion: any,
     set_serie: any,
     set_seccion: any,
     set_tdr: any,
@@ -86,8 +87,9 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
     const obtener_config_expediente_fc: () => void = () => {
         dispatch(obtener_config_expediente(serie.id_catserie_unidadorg)).then((service: any) => {
             if(service.success){
+                props.set_configuracion(service.data);
                 set_tipo_expediente(service.data.tipo_expediente);
-                props.set_expediente(service.data);
+                service.data.cod_tipo_expediente === 'S' ? props.set_expediente(service.data) : props.set_expediente(null);
             }else{
                 generar_notificación_reporte('Notificación', 'info', service.response.data.detail, true);
                 set_tipo_expediente('');

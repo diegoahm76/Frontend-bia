@@ -9,7 +9,8 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { useEffect, useState } from "react";
 
 interface IProps {
-    expediente: any
+    expediente: any,
+    configuracion: any,
     limpiar: boolean
 }
 
@@ -19,9 +20,9 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
     const [carpetas, set_carpetas] = useState<any>([]);
 
     useEffect(() => {
-        if (props.expediente !== null && props.expediente.expediente.length !== 0) {
-            if(props.expediente.expediente[0]?.carpetas_caja?.length > 0)
-                crear_obj_carpetas(props.expediente.expediente[0]);
+        if (props.expediente !== null) {
+            if(props.expediente.carpetas_caja.length > 0)
+                crear_obj_carpetas(props.expediente);
         }
     }, [props.expediente]);
 
@@ -48,13 +49,20 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
             set_carpetas([]);
         }
     }, [props.limpiar]);
+
     return (
         <>
             {props.expediente !== null && <Grid item md={12} xs={12}>
                 <Title title="Expediente seleccionado" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={12}>
+                            <Stack
+                                direction="row"
+                                justifyContent="center"
+                                spacing={2}
+                            >
+                        <Grid item xs={12} sm={props.configuracion.cod_tipo_expediente === 'C' ? 6 : 8}>
                             <TextField
                                 label="Titulo"
                                 type={'text'}
@@ -63,10 +71,10 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     readOnly: true,
                                 }}
                                 fullWidth
-                                value={props.expediente?.expediente[0].titulo_expediente ?? ''}
+                                value={props.expediente?.titulo_expediente ?? ''}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        {props.configuracion.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Consecutivo"
                                 type={'text'}
@@ -75,9 +83,12 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     readOnly: true,
                                 }}
                                 fullWidth
-                                value={props.expediente?.expediente[0].codigo_exp_consec_por_agno}
+                                value={props.expediente?.codigo_exp_consec_por_agno}
                             />
-                        </Grid>
+                        </Grid>}
+                            </Stack>
+                            </Grid>
+
                         <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
@@ -94,7 +105,7 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                             readOnly: true,
                                         }}
                                         fullWidth
-                                        value={props.expediente?.expediente[0].descripcion_expediente}
+                                        value={props.expediente?.descripcion_expediente}
                                     />
                                 </Grid>
                             </Stack>
@@ -110,7 +121,7 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
                                             label="Fecha creación expediente"
-                                            value={dayjs(props.expediente?.expediente[0].fecha_apertura_expediente)}
+                                            value={dayjs(props.expediente?.fecha_apertura_expediente)}
                                             onChange={(newValue) => { }}
                                             readOnly={true}
                                             renderInput={(params) => (

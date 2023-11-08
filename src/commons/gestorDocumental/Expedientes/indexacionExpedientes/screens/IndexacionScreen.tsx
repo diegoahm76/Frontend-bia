@@ -29,6 +29,7 @@ export const IndexacionScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
+    const [configuracion, set_configuracion] = useState<any>(null);
     const [usuario, set_usuario] = useState<any>(null);
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
@@ -69,8 +70,11 @@ export const IndexacionScreen: React.FC = () => {
         if (archivos.length !== 0) {
             const data_documentos: any[] = archivos.map((obj:any) => obj.data_json);
             const data_archivos: File[] = archivos.map((obj:any) => obj.archivo);
-            
-            dispatch(crear_indexacion_documentos({data_documentos,archivo:data_archivos}, expediente?.expediente[0].id_expediente_documental)).then((response: any) => {
+            const form_data = new FormData();
+            form_data.append('data_documentos', JSON.stringify(data_documentos));
+            // form_data.append('archivos', data_archivos[0]);
+            data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
+            dispatch(crear_indexacion_documentos(form_data, expediente?.expediente[0].id_expediente_documental)).then((response: any) => {
                 // if(response.success)
                 //     set_expediente({expediente: [response.data]});
             });
@@ -88,8 +92,10 @@ export const IndexacionScreen: React.FC = () => {
                 "cod_origen_archivo": "E",
                 "palabras_clave_documento": "oscar|prueba|test|otro|algo"
             }
-            dispatch(actualizar_documento(expediente?.expediente[0].id_expediente_documental, documento_obj)).then((response: any) => {
-                if(response.success)
+            dispatch(actualizar_documento(12, documento_obj)).then((response: any) => {
+                if(response.success){
+
+                }
                     set_expediente({expediente: [response.data]});
             });
         }
@@ -99,6 +105,7 @@ export const IndexacionScreen: React.FC = () => {
         if (limpiar) {
             set_archivos([]);
             set_expediente(null);
+            set_configuracion(null);
             set_limpiar(false);
         }
     }, [limpiar]);
@@ -109,19 +116,19 @@ export const IndexacionScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <SerieDocumentalScreen set_expediente={set_expediente} set_serie={set_serie} set_seccion={set_seccion} set_tdr={set_tdr} limpiar={limpiar}></SerieDocumentalScreen>
+                <SerieDocumentalScreen set_expediente={set_expediente} set_serie={set_serie} set_seccion={set_seccion} set_tdr={set_tdr} limpiar={limpiar} set_configuracion={set_configuracion}></SerieDocumentalScreen>
             </Grid>
             {expediente !== null && <Grid
                 container
                 sx={class_css}
             >
-                <ExpedienteSeleccionado expediente={expediente} limpiar={limpiar}></ExpedienteSeleccionado>
+                <ExpedienteSeleccionado expediente={expediente} limpiar={limpiar} configuracion={configuracion}></ExpedienteSeleccionado>
             </Grid>}
             {expediente !== null && <Grid
                 container
                 sx={class_css}
             >
-                <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos}></ArchivoDocumento>
+                <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion}></ArchivoDocumento>
             </Grid>}
             <Grid container>
                 <Grid item xs={12} sm={4}>
@@ -168,7 +175,7 @@ export const IndexacionScreen: React.FC = () => {
                                 startIcon={<SaveIcon />}
                                 onClick={() => { crear_obj_indexacion() }}
                             >
-                                {expediente?.expediente.length !== 0 ? 'Actualizar' : 'Guardar'}
+                                {expediente?.length !== 0 ? 'Actualizar' : 'Guardar'}
                             </Button>}
                             <Button
                                 // color='inherit'
@@ -178,22 +185,22 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {expediente?.expediente.length !== 0 && !(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
+                            {true && expediente !== null && <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { set_abrir_modal_anular(true) }}
                             >
-                                Anular expediente
+                                Anular documento
                             </Button>}
-                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={expediente?.expediente.length !== 0 ? expediente?.expediente[0].id_expediente_documental : null}></AnularExpedienteModal>}
-                            {expediente?.expediente.length !== 0 && !(expediente?.expediente[0].creado_automaticamente) && expediente !== null && <Button
+                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={1}></AnularExpedienteModal>}
+                            {true && expediente !== null && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_documento_fc() }}
                                 sx={{ background: '#ff6961' }}
                             >
-                                Borrar expediente
+                                Borrar documento
                             </Button>}
                             <Button
                                 color="error"

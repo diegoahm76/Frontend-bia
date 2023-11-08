@@ -59,6 +59,8 @@ export const ExpedientesScreen: React.FC = () => {
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
+    const [configuracion, set_configuracion] = useState<any>(null);
+
     // Sección apertura
     const [tdr, set_tdr] = useState<any>({});
     const [seccion, set_seccion] = useState<string>("");
@@ -214,7 +216,7 @@ export const ExpedientesScreen: React.FC = () => {
                 "id_und_seccion_propietaria_serie": seccion,
                 "id_serie_origen": serie?.id_serie_doc, // se obtiene del objeto de la tripleta
                 "id_subserie_origen": serie?.id_subserie_doc,
-                "id_persona_titular_exp_complejo": expediente?.cod_tipo_expediente === 'C' ? persona_titular.id_persona : null
+                "id_persona_titular_exp_complejo": configuracion.cod_tipo_expediente === 'C' ? persona_titular.id_persona : null
             }
             dispatch(crear_expediente(expediente_obj)).then((response: any) => {
                 if (response.success)
@@ -265,7 +267,7 @@ export const ExpedientesScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <AperturaExpedientesScreen set_limpiar={limpiar} set_expediente={set_expediente} set_serie={set_serie} set_seccion={set_seccion} set_tdr={set_tdr}></AperturaExpedientesScreen>
+                <AperturaExpedientesScreen set_limpiar={limpiar} set_expediente={set_expediente} set_serie={set_serie} set_seccion={set_seccion} set_tdr={set_tdr} set_configuracion={set_configuracion}></AperturaExpedientesScreen>
             </Grid>
             {expediente !== null && <Grid
                 container
@@ -323,7 +325,7 @@ export const ExpedientesScreen: React.FC = () => {
                                     value={descripcion}
                                 />
                             </Grid>
-                            {expediente?.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={12}>
+                            {configuracion.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={12}>
                                 <Stack
                                     direction="row"
                                     justifyContent="center"
@@ -634,7 +636,7 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            {expediente?.cod_tipo_expediente === 'S' && <Button
+                            {configuracion.cod_tipo_expediente === 'C' && <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
