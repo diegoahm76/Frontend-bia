@@ -5,11 +5,9 @@ import { useAppDispatch } from "../../../../../hooks";
 import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
 import { obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
 import { obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import dayjs, { Dayjs } from "dayjs";
-import BuscarExpediente from "../../aperturaExpedientes/screens/BuscarExpediente";
+import dayjs from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import BuscarExpediente from "./BuscarExpediente";
 
 
 interface IProps {
@@ -17,7 +15,7 @@ interface IProps {
     set_serie: any,
     set_seccion: any,
     set_tdr: any,
-    set_limpiar: boolean
+    limpiar: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -32,7 +30,6 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
     const [tipo_expediente, set_tipo_expediente] = useState<string>("");
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [expediente, set_expediente] = useState<any>(null);
-    const [fecha_creacion, set_fecha_creacion] = useState<Dayjs>(dayjs());
 
     // Notificaciones
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
@@ -54,15 +51,6 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
     }, []);
 
     useEffect(() => {
-        if (props.set_limpiar) {
-            set_seccion("");
-            set_serie("");
-            set_tipo_expediente("");
-            set_lt_serie([]);
-        }
-    }, [props.set_limpiar]);
-
-    useEffect(() => {
         if (tdr !== "")
             obtener_unidades_marcadas_fc();
     }, [tdr]);
@@ -82,7 +70,6 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
         })
     }
     const obtener_unidades_marcadas_fc: () => void = () => {
-        debugger
         dispatch(obtener_unidades_marcadas(tdr.id_organigrama)).then((response: any) => {
             set_lt_seccion(response.data);
         })
@@ -138,10 +125,21 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
         props.set_serie(e.target.value);
     }
 
+    useEffect(() => {
+        if (props.limpiar) {
+            set_tdr("");
+            set_seccion("");
+            set_serie("");
+            set_tipo_expediente("");
+            set_expediente(null);
+        }
+    }, [props.limpiar]);
+
+
     return (
         <>
             <Grid item md={12} xs={12}>
-                <Title title="Apertura de expedientes electrónicos documentales" />
+                <Title title="Serie documental" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
                         <Grid item xs={12} sm={12}>
@@ -244,86 +242,6 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
                                 {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                             </Stack>
                         </Box>
-                    </Grid>
-                </Box>
-            </Grid>
-            <Grid item md={12} xs={12}>
-                <Title title="Expediente seleccionado" />
-                <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-                    <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Titulo"
-                                type={'text'}
-                                size="small"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                value={expediente?.titulo}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Consecutivo"
-                                type={'text'}
-                                size="small"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                value={expediente?.consecutivo}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                            >
-                                <Grid item xs={12} sm={8}>
-                                    <TextField
-                                        label="Descripción"
-                                        multiline
-                                        rows={3}
-                                        type={'text'}
-                                        size="small"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        fullWidth
-                                        value={expediente?.descripcion}
-                                    />
-                                </Grid>
-                            </Stack>
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                                spacing={2}
-                                sx={{ mt: '10px' }}
-                            >
-                                <Grid item xs={12} sm={6}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker
-                                            label="Fecha creación expediente"
-                                            value={fecha_creacion}
-                                            onChange={(newValue) => { }}
-                                            readOnly={(expediente?.expediente.length !== 0 && expediente?.expediente[0].creado_automaticamente)}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    required
-                                                    fullWidth
-                                                    size="small"
-                                                    {...params}
-                                                />
-                                            )}
-                                        />
-                                    </LocalizationProvider>
-
-                                </Grid>
-                            </Stack>
-                        </Grid>
                     </Grid>
                 </Box>
             </Grid>

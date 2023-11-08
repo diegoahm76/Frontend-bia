@@ -44,10 +44,10 @@ export const obtener_trd_actual_retirados: any = () => {
   };
 };
 // Crear documento
-export const crear_expediente: any = (documento: any) => {
+export const crear_indexacion_documentos: any = (obj_json: any, id_expediente: number) => {
   return async () => {
     try {
-      const { data } = await api.post(`gestor/expedientes-archivos/expedientes/apertura-documento/create/`,documento);
+      const { data } = await api.post(`gestor/expedientes-archivos/expedientes/indexar-documentos/create/${id_expediente}/`,obj_json);
       control_success('El documento se creo correctamente.');
       return data;
     } catch (error: any) {
@@ -57,10 +57,10 @@ export const crear_expediente: any = (documento: any) => {
   };
 };
 // Actualizar documento
-export const actualizar_expediente: any = (id_expediente: number,documento: any) => {
+export const actualizar_documento: any = (id_expediente: number,documento: any) => {
   return async () => {
     try {
-      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-documento/update/${id_expediente}/`,documento);
+      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/indexar-documentos/update/${id_expediente}/`,documento);
       control_success('El documento fue actualizado correctamente.');
       return data;
     } catch (error: any) {
@@ -69,12 +69,60 @@ export const actualizar_expediente: any = (id_expediente: number,documento: any)
     }
   };
 };
-
-// Anulación expedientes
-export const anular_expediente: any = (id_expediente: number,motivo: any) => {
+// Selección de Expediente
+export const obtener_expediente_id_serie: any = (id_serie: number) => {
   return async () => {
     try {
-      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-documento/anular/${id_expediente}/`,motivo);
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/list-complejos/get/${id_serie}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener Tipologias de Catalogo TRD
+export const obtener_tipologias_id_serie: any = (id_serie: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/trd/catalogo-trd/get-tipologias/${id_serie}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener Tipo-Origen-Doc
+export const obtener_tipo_archivo: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/choices/tipo-origen-doc/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener Categoria-Expediente
+export const obtener_tipos_recurso: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/choices/categoria-archivo/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Anulación documento
+export const anular_documento: any = (id_expediente: number,motivo: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/indexar-documentos/anular/${id_expediente}/`,motivo);
       control_success('El documento se anuló correctamente.');
       return data;
     } catch (error: any) {
@@ -83,11 +131,11 @@ export const anular_expediente: any = (id_expediente: number,motivo: any) => {
     }
   };
 };
-// Borrar expedientes
-export const borrar_expediente: any = (id_expediente: number) => {
+// Borrar documento
+export const borrar_documento: any = (id_expediente: number) => {
   return async () => {
     try {
-      const { data } = await api.delete(`gestor/expedientes-archivos/expedientes/apertura-documento/borrar/${id_expediente}/`);
+      const { data } = await api.delete(`gestor/expedientes-archivos/expedientes/indexar-documentos/delete/${id_expediente}/`);
       control_success('El documento a sido borrado correctamente.');
       return data;
     } catch (error: any) {

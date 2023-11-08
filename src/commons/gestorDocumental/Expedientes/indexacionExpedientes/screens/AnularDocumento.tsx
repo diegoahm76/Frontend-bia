@@ -8,7 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../../hooks";
 import { control_error } from "../../../../../helpers";
-import { anular_expediente } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
+import { anular_documento } from "../thunks/indexacionExpedientes";
 interface IProps {
   is_modal_active: boolean,
   set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -30,7 +30,7 @@ const AnularDocumnetoModal = ({ is_modal_active, set_is_modal_active, title, use
   };
 
   const guardar_anulacion = (): void => {
-    dispatch(anular_expediente(id_expediente, { observacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
+    dispatch(anular_documento(id_expediente, { observacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
       if (response.success) {
         set_is_modal_active(false);
       }

@@ -123,6 +123,8 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                 props.set_expediente({expediente: [response.data]});
             else
                 props.set_expediente(null);
+        
+            props.set_is_modal_active(false);
         }));
     }
 
