@@ -3,7 +3,7 @@
 import { PerSolicitaComplemento } from '../components/perSolicitaComplemento/PerSolicitaComplemento';
 import { PersonaTitular } from '../components/personaTitular/PersonaTitular';
 
-export const Parte1Screen = (): JSX.Element => {
+export const ParteInicial = (): JSX.Element => {
   return (
     <>
       <PersonaTitular />

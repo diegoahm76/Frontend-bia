@@ -5,13 +5,9 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Grid } from '@mui/material';
-import { Parte1Screen } from '../parte1/screen/Parte1Screen';
 import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
-
-const steps = ['Información inicial', 'Segundo paso', 'Tercer paso'];
+import { steps } from './constants/constants';
 
 export const StepperAsignacionUsuario = () => {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -20,6 +16,14 @@ export const StepperAsignacionUsuario = () => {
   const isStepSkipped = (step: number) => skipped.has(step);
 
   const handleNext = () => {
+
+
+    if('hola'.length > 0){
+      alert('no se puede avanzar')
+      return;
+    }
+
+    {/* dentro de ésta función se deben poner condicionales para que dependiendo si los campos de uno de los pasos está vacío no permite avanzar al próximo paso */}
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -61,8 +65,20 @@ export const StepperAsignacionUsuario = () => {
             stepProps.completed = false;
           }
           return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
+            <Step
+            sx={{
+              '& .MuiStepLabel-label': {
+                fontSize: '1rem',
+              },
+            }}
+            key={label} {...stepProps}>
+              <StepLabel
+              sx={{
+                '& .MuiStepLabel-label': {
+                  fontSize: '1rem',
+                },
+              }}
+              {...labelProps}>{label}</StepLabel>
             </Step>
           );
         })}
@@ -96,7 +112,7 @@ export const StepperAsignacionUsuario = () => {
                 {
                   /*parte 1*/
                 }
-                return <Parte1Screen />;
+                return <Parte2Screen />;
               case 1:
                 return <Parte2Screen />;
               case 2:
