@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, Stack, TextField } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 
 export const PersonaTitular = (): JSX.Element => {
@@ -24,11 +23,10 @@ export const PersonaTitular = (): JSX.Element => {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               disabled={false}
               size="small"
-              label="Nombre CCD"
+              label="Nombres"
               variant="outlined"
               value={'siuuuu'}
               onChange={(e) => {
@@ -41,11 +39,10 @@ export const PersonaTitular = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               disabled={false}
               size="small"
-              label="Versión CCD"
+              label="Apellidos"
               variant="outlined"
               value={'iji siuu'}
               inputProps={{
@@ -58,10 +55,9 @@ export const PersonaTitular = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               size="small"
-              label="Valor aumento series CCD"
+              label="Tipo de documento"
               disabled={false}
               variant="outlined"
               value={'hola sss'}
@@ -70,10 +66,9 @@ export const PersonaTitular = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               size="small"
-              label="valor aumento subseries CCD"
+              label="Número de documento"
               variant="outlined"
               disabled={false}
               value={'hola'}

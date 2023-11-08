@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -10,20 +10,20 @@ import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
 
 export const StepperAsignacionUsuario = () => {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set<number>());
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set<number>());
 
   const isStepSkipped = (step: number) => skipped.has(step);
 
   const handleNext = () => {
-
-
-    if('hola'.length > 0){
-      alert('no se puede avanzar')
+/*    if ('hola'.length > 0) {
+      alert('no se puede avanzar');
       return;
     }
-
-    {/* dentro de ésta función se deben poner condicionales para que dependiendo si los campos de uno de los pasos está vacío no permite avanzar al próximo paso */}
+*/
+    {
+      /* dentro de ésta función se deben poner condicionales para que dependiendo si los campos de uno de los pasos está vacío no permite avanzar al próximo paso */
+    }
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -66,19 +66,24 @@ export const StepperAsignacionUsuario = () => {
           }
           return (
             <Step
-            sx={{
-              '& .MuiStepLabel-label': {
-                fontSize: '1rem',
-              },
-            }}
-            key={label} {...stepProps}>
-              <StepLabel
               sx={{
                 '& .MuiStepLabel-label': {
                   fontSize: '1rem',
                 },
               }}
-              {...labelProps}>{label}</StepLabel>
+              key={label}
+              {...stepProps}
+            >
+              <StepLabel
+                sx={{
+                  '& .MuiStepLabel-label': {
+                    fontSize: '1rem',
+                  },
+                }}
+                {...labelProps}
+              >
+                {label}
+              </StepLabel>
             </Step>
           );
         })}
@@ -116,7 +121,7 @@ export const StepperAsignacionUsuario = () => {
               case 1:
                 return <Parte2Screen />;
               case 2:
-                return <Parte3Screen/>;
+                return <Parte3Screen />;
               default:
                 return null;
             }

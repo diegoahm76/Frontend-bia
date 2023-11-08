@@ -8,6 +8,9 @@ import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import DevicesIcon from '@mui/icons-material/Devices';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
+import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import MultipleStopIcon from '@mui/icons-material/MultipleStop';
+
 import { useNavigate } from 'react-router-dom';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
@@ -27,16 +30,22 @@ const actions = [
     icon: <PersonAddIcon />,
     name: 'Enviar solicitud al usuario',
     path: '/app/gestor_documental/panel_ventanilla/asignar_a_usario',
-    disabled: false,
+    disabled: true,
   },
   {
     id: 'AsigGrup',
     icon: <GroupsIcon />,
     name: 'Asignar al grupo',
     path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: false,
+    disabled: true,
   },
-  /* { icon: <SaveIcon />, name: 'Save', path: '/save', disabled: true },*/
+  {
+    id: 'ContinuarAsigGrup',
+    icon: <ReduceCapacityIcon />,
+    name: 'Continuar con asignación de grupo',
+    // path:'/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
+    disabled: true,
+  },
 ];
 export const ButtonsPanelVentanilla = () => {
   //* navigate declaration
@@ -92,6 +101,10 @@ export const ButtonsPanelVentanilla = () => {
     console.log('Asignar al grupo')
   );
 
+  const handleContinuarAsignacionAGrupo = withValidation(() =>
+    console.log('Continuar con asignación de grupo')
+  );
+
   const handleClickActionsGeneral = (action: any) => {
     //* por cada nombre se ejecutaran acciones diferentes
     switch (action.id) {
@@ -104,6 +117,9 @@ export const ButtonsPanelVentanilla = () => {
       case 'AsigGrup':
         handleAsignacionGrupo(action);
         break;
+      case 'ContinuarAsigGrup':
+        handleContinuarAsignacionAGrupo(action);
+        break;
       default:
         break;
     }
@@ -114,7 +130,7 @@ export const ButtonsPanelVentanilla = () => {
       <SpeedDial
         ariaLabel="SpeedDial basic example"
         sx={{ position: 'absolute', top: 0, left: 0 }}
-        icon={<SpeedDialIcon />}
+        icon={<MultipleStopIcon />}
         direction="right"
       >
         {actions.map((action) => (
@@ -122,10 +138,11 @@ export const ButtonsPanelVentanilla = () => {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            style={{
+            // disableInteractive={action.disabled}
+           /* style={{
               pointerEvents: action.disabled ? 'none' : 'auto',
               opacity: action.disabled ? 0.1 : 1,
-            }}
+            }} */
             onClick={() => handleClickActionsGeneral(action)}
           />
         ))}

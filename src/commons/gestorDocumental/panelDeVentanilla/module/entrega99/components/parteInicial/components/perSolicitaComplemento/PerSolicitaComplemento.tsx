@@ -13,7 +13,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
         justifyContent: 'center',
       }}
     >
-      <Title title="Persona titular de la PQRSDF" />
+      <Title title="Persona que solicita el complemento de información" />
       <form
         style={{
           marginTop: '3rem',
@@ -32,11 +32,10 @@ export const PerSolicitaComplemento = (): JSX.Element => {
         >
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               disabled={false}
               size="small"
-              label="Nombre CCD"
+              label="Nombres"
               variant="outlined"
               value={'siuuuu'}
               onChange={(e) => {
@@ -49,11 +48,10 @@ export const PerSolicitaComplemento = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               disabled={false}
               size="small"
-              label="Versión CCD"
+              label="Apellidos"
               variant="outlined"
               value={'iji siuu'}
               inputProps={{
@@ -66,10 +64,9 @@ export const PerSolicitaComplemento = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               size="small"
-              label="Valor aumento series CCD"
+              label="Tipo de documento"
               disabled={false}
               variant="outlined"
               value={'hola sss'}
@@ -78,10 +75,9 @@ export const PerSolicitaComplemento = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               size="small"
-              label="valor aumento subseries CCD"
+              label="Número de documento"
               variant="outlined"
               disabled={false}
               value={'hola'}
@@ -91,10 +87,9 @@ export const PerSolicitaComplemento = (): JSX.Element => {
 
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               fullWidth
               size="small"
-              label="valor aumento subseries CCD"
+              label="Unidad organizacional solicitante"
               variant="outlined"
               disabled={false}
               value={'hola'}
