@@ -55,6 +55,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     const [error_tipo_recurso, set_error_tipo_recurso] = useState<boolean>(false);
     const [error_año_doc, set_error_año_doc] = useState<boolean>(false);
     const [error_consecutivo, set_error_consecutivo] = useState<boolean>(false);
+    const [error_nombre_documento, set_error_nombre_documento] = useState<boolean>(false);
+    const [error_asunto, set_error_asunto] = useState<boolean>(false);
+    const [error_tiene_replica, set_error_tiene_replica] = useState<boolean>(false);
 
     const columns: GridColDef[] = [
         {
@@ -136,6 +139,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     }
     const cambio_tiene_replica: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tiene_replica(e.target.value);
+        set_error_tiene_replica(!(e.target.value !== null && e.target.value !== ""));
     }
     const cambio_fecha_incorporacion_exp = (date: Dayjs | null): void => {
         if (date !== null)
@@ -162,6 +166,17 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     const cambio_consecutivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_consecutivo(e.target.value);
     }
+    const cambio_nombre_documento: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_nombre_documento(e.target.value);
+        set_error_nombre_documento(!(e.target.value !== null && e.target.value !== ""));
+    }
+    const cambio_asunto: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_asunto(e.target.value);
+        set_error_asunto(!(e.target.value !== null && e.target.value !== ""));
+    }
+    const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_descripcion(e.target.value);
+    }
     const cambio_palabras_clave: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         const palabras_clave_before = palabras_clave;
         set_palabras_clave(e.target.value);
@@ -178,31 +193,33 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     };
 
     const agregar_archivos: any = () => {
-        let archivos_grid: any[] = [...archivos];
-        let orden = archivos_grid.length + 1;
-        const data_json = {
-            "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
-            "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
-            "id_tipologia_documental": parseInt(tipologia_doc),
-            "nro_folios_del_doc": parseInt(nro_folio),
-            "cod_origen_archivo": tipo_archivo,
-            "codigo_radicado_prefijo": tiene_consecutivo === 'S' ? parseInt(prefijo) : null,
-            "codigo_radicado_agno": tiene_consecutivo === 'S' ? año_doc.format('YYYY') : null,
-            "codigo_radicado_consecutivo": tiene_consecutivo === 'S' ? consecutivo : null,
-            "cod_categoria_archivo": tipo_recurso,
-            "tiene_replica_fisica": (tiene_replica === 'S'),
-            "nombre_asignado_documento": nombre_documento,
-            "asunto": asunto,
-            "descripcion": descripcion,
-            "orden_en_expediente": orden,
-            "palabras_clave_documento": palabras_clave
+        if (validar_formulario()) {
+            let archivos_grid: any[] = [...archivos];
+            let orden = archivos_grid.length + 1;
+            const data_json = {
+                "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
+                "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
+                "id_tipologia_documental": parseInt(tipologia_doc),
+                "nro_folios_del_doc": parseInt(nro_folio),
+                "cod_origen_archivo": tipo_archivo,
+                "codigo_radicado_prefijo": tiene_consecutivo === 'S' ? parseInt(prefijo) : null,
+                "codigo_radicado_agno": tiene_consecutivo === 'S' ? año_doc.format('YYYY') : null,
+                "codigo_radicado_consecutivo": tiene_consecutivo === 'S' ? consecutivo : null,
+                "cod_categoria_archivo": tipo_recurso,
+                "tiene_replica_fisica": (tiene_replica === 'S'),
+                "nombre_asignado_documento": nombre_documento,
+                "asunto": asunto,
+                "descripcion": descripcion,
+                "orden_en_expediente": orden,
+                "palabras_clave_documento": palabras_clave
+            }
+            // const form_data = new FormData();
+            // form_data.append('file', archivo_principal);
+            const tipologia = lt_tipologias.find((t: any) => t.id_tipologia_documental === parseInt(tipologia_doc)).nombre;
+            archivos_grid = [...archivos_grid, { orden: orden, archivo: archivo_principal, tipologia: tipologia, data_json: data_json }];
+            set_archivos([...archivos_grid]);
+            set_limpiar(true);
         }
-        // const form_data = new FormData();
-        // form_data.append('file', archivo_principal);
-        const tipologia = lt_tipologias.find((t: any) => t.id_tipologia_documental === parseInt(tipologia_doc)).nombre;
-        archivos_grid = [...archivos_grid, { orden: orden, archivo: archivo_principal, tipologia: tipologia, data_json: data_json }];
-        set_archivos([...archivos_grid]);
-        set_limpiar(true);
     }
 
     const eliminar_archivos: any = (archivo: any) => {
@@ -214,12 +231,28 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         set_archivos([...archivos_grid]);
     }
 
+    const validar_formulario = (): boolean =>{
+        set_error_fecha_incorporacion_exp(fecha_creacion_doc === null);
+        set_error_fecha_creacion_doc(fecha_creacion_doc === null);
+        set_error_tipologia_doc(tipologia_doc === '');
+        set_error_nro_folio(nro_folio === '');
+        set_error_tipo_archivo(tipo_archivo === '');
+        set_error_tipo_recurso(tipo_recurso === '');
+        set_error_nombre_documento(nombre_documento === '');
+        set_error_asunto(asunto === '');
+        set_error_tiene_replica(tiene_replica === '');
+        set_error_año_doc(error_año_doc === null && tiene_consecutivo === 'S');
+        set_error_consecutivo(error_consecutivo === null && tiene_consecutivo === 'S');
+        return !(fecha_creacion_doc === null || fecha_creacion_doc === null || tipologia_doc === '' || nro_folio === '' || tipo_archivo === '' || tipo_recurso === '' 
+                    || nombre_documento === '' || asunto === '' || tiene_replica === '' || (error_año_doc === null && tiene_consecutivo === 'S') || (error_consecutivo === null && tiene_consecutivo === 'S'));
+    }
+
     const limpiar_formulario = (): void => {
         set_limpiar(true);
     }
 
     useEffect(() => {
-        if(props.limpiar)
+        if (props.limpiar)
             limpiar_formulario();
     }, [props.limpiar]);
 
@@ -445,6 +478,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tiene_replica ?? ""}
                                     onChange={cambio_tiene_replica}
                                     readOnly={false}
+                                    error={error_tiene_replica}
                                 >
                                     {lt_si_no.map((m: any) => (
                                         <MenuItem key={m.id} value={m.id}>
@@ -453,10 +487,11 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     ))}
                                 </Select>
                             </FormControl>
+                            {error_tiene_replica && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                label="Numero de documento"
+                                label="Nombre de documento"
                                 type={'text'}
                                 size="small"
                                 InputProps={{
@@ -464,19 +499,27 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 }}
                                 fullWidth
                                 value={nombre_documento}
+                                required
+                                onChange={cambio_nombre_documento}
+                                error={error_nombre_documento}
                             />
+                            {error_nombre_documento && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Asunto"
                                 type={'text'}
                                 size="small"
+                                required
                                 InputProps={{
                                     readOnly: false,
                                 }}
                                 fullWidth
                                 value={asunto}
+                                onChange={cambio_asunto}
+                                error={error_asunto}
                             />
+                            {error_asunto && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField
@@ -490,6 +533,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 }}
                                 fullWidth
                                 value={descripcion}
+                                onChange={cambio_descripcion}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12}>

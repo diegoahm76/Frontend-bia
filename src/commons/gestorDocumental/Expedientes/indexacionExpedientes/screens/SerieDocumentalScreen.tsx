@@ -218,7 +218,7 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
                             </Stack>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    {(tipo_expediente !== 'Simple' && tipo_expediente !== '') && <Grid item xs={12} sm={12}>
                         <Box
                             component="form"
                             sx={{ mt: '20px', mb: '20px' }}
@@ -242,7 +242,7 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
                                 {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                             </Stack>
                         </Box>
-                    </Grid>
+                    </Grid>}
                 </Box>
             </Grid>
             {dialog_notificaciones_is_active && (
