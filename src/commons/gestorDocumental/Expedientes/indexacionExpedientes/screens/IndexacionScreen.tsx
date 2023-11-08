@@ -29,6 +29,7 @@ export const IndexacionScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
+    const [id_documento_seleccionado, set_id_documento_seleccionado] = useState<any>(null);
     const [configuracion, set_configuracion] = useState<any>(null);
     const [usuario, set_usuario] = useState<any>(null);
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
@@ -47,7 +48,7 @@ export const IndexacionScreen: React.FC = () => {
     }, []);
 
     const borrar_documento_fc: () => void = () => {
-        dispatch(borrar_documento(expediente.expediente[0].id_expediente_documental)).then((response: any)=>{
+        dispatch(borrar_documento(id_documento_seleccionado)).then((response: any)=>{
             if(response.success)
                 limpiar_formulario();
         });
@@ -109,7 +110,7 @@ export const IndexacionScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar}></ArchivoDocumento>
+                <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar} set_id_documento_seleccionado={set_id_documento_seleccionado}></ArchivoDocumento>
             </Grid>}
             <Grid container>
                 <Grid item xs={12} sm={4}>
@@ -166,7 +167,7 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {true && expediente !== null && <Button
+                            {id_documento_seleccionado !== null && expediente !== null && <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
@@ -174,8 +175,8 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Anular documento
                             </Button>}
-                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={1}></AnularExpedienteModal>}
-                            {true && expediente !== null && <Button
+                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularExpedienteModal>}
+                            {id_documento_seleccionado !== null && expediente !== null && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_documento_fc() }}

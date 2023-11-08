@@ -19,6 +19,7 @@ interface IProps {
     set_archivos: any,
     set_actualizar: any,
     configuracion: any,
+    set_id_documento_seleccionado: any,
     limpiar: boolean,
     serie: any
 }
@@ -379,6 +380,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         set_archivos([...archivos_grid]);
     }
     const seleccionar_archivos: any = (archivo: any) => {
+        props.set_id_documento_seleccionado(archivo.id_documento_de_archivo_exped);
         dispatch(obtener_documento_id(archivo.id_documento_de_archivo_exped)).then((response: any) => {
             if(response.succes){
                 set_fecha_incorporacion_exp(dayjs(response.data.fecha_incorporacion_doc_a_Exp));
