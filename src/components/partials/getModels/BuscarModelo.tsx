@@ -145,6 +145,8 @@ const BuscarModelo = ({
           multiple={form_input.multiple ?? false}
           hidden_text={form_input.hidden_text ?? null}
           auto_focus={form_input.auto_focus ?? false}
+          on_change_function={form_input.on_change_function ?? null}
+          none_option={form_input.none_option ?? null}
         />
       );
     } else if (form_input.datum_type === 'title') {
@@ -325,15 +327,25 @@ const BuscarModelo = ({
           >
             <Box sx={{ width: '80%' }}>
               <Grid item xs={12} md={12} marginTop={-2}>
-
                 <Title title={title_list ?? ''}></Title>
               </Grid>
               <Grid item xs={12} md={12} marginTop={2}>
-                <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
-
-                  {download_xls({ nurseries: list as any[], columns:columns_list as any[] })}
-                  {download_pdf({ nurseries: list, columns: columns_list, title: title_list })}
-
+                <ButtonGroup
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {download_xls({
+                    nurseries: list as any[],
+                    columns: columns_list as any[],
+                  })}
+                  {download_pdf({
+                    nurseries: list,
+                    columns: columns_list,
+                    title: title_list,
+                  })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"

@@ -43,9 +43,9 @@ const PrimaryForm = ({
           type={form_input.type}
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
-          multiline_text={form_input.multiline_text}
-          rows_text={form_input.rows_text}
-          on_blur_function={form_input.on_blur_function}
+          multiline_text={form_input.multiline_text ?? false}
+          rows_text={form_input.rows_text ?? 1}
+          on_blur_function={form_input.on_blur_function ?? null}
           set_value={form_input.set_value ?? null}
           hidden_text={form_input.hidden_text ?? null}
         />
@@ -60,9 +60,9 @@ const PrimaryForm = ({
           label={form_input.label}
           type={form_input.type}
           disabled={form_input.disabled}
-          multiline_text={form_input.multiline_text}
-          rows_text={form_input.rows_text}
-          on_blur_function={form_input.on_blur_function}
+          multiline_text={form_input.multiline_text ?? false}
+          rows_text={form_input.rows_text ?? 1}
+          on_blur_function={form_input.on_blur_function ?? null}
         />
       );
     } else if (form_input.datum_type === 'select_controller') {
@@ -82,7 +82,9 @@ const PrimaryForm = ({
           option_key={form_input.option_key}
           multiple={form_input.multiple ?? false}
           hidden_text={form_input.hidden_text ?? null}
-          auto_focus={form_input.auto_focus ?? null}
+          auto_focus={form_input.auto_focus ?? false}
+          on_change_function={form_input.on_change_function ?? null}
+          none_option={form_input.none_option ?? null}
         />
       );
     } else if (form_input.datum_type === 'title') {
