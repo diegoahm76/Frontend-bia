@@ -325,7 +325,7 @@ export const ExpedientesScreen: React.FC = () => {
                                     value={descripcion}
                                 />
                             </Grid>
-                            {configuracion.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={12}>
+                            {configuracion?.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={12}>
                                 <Stack
                                     direction="row"
                                     justifyContent="center"
@@ -636,7 +636,7 @@ export const ExpedientesScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            {configuracion.cod_tipo_expediente === 'C' && <Button
+                            {configuracion?.cod_tipo_expediente === 'C' && <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
