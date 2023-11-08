@@ -130,6 +130,8 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
             set_tdr("");
             set_seccion("");
             set_serie("");
+            set_lt_seccion([]);
+            set_lt_serie([]);
             set_tipo_expediente("");
             set_expediente(null);
         }
