@@ -5,17 +5,19 @@ import dayjs, { Dayjs } from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useAppDispatch } from "../../../../../hooks";
-import { obtener_documento_id, obtener_tipo_archivo, obtener_tipologias_id_serie, obtener_tipos_archivos_permitidos, obtener_tipos_recurso } from "../thunks/indexacionExpedientes";
+import { actualizar_documento, obtener_documento_id, obtener_tipo_archivo, obtener_tipologias_id_serie, obtener_tipos_archivos_permitidos, obtener_tipos_recurso } from "../thunks/indexacionExpedientes";
 import { CloudUpload } from '@mui/icons-material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
     expediente: any,
     set_archivos: any,
+    set_actualizar: any,
     configuracion: any,
     limpiar: boolean,
     serie: any
@@ -46,7 +48,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     const [archivos, set_archivos] = useState<any>([]);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [creado_automaticamente, set_creado_automaticamente] = useState<boolean>(false);
-    const [actualizar, set_actualizar] = useState<boolean>(true);
+    const [actualizar, set_actualizar] = useState<boolean>(false);
 
     // Listas
     const [lt_tipologias, set_lt_tipologias] = useState<any[]>([]);
@@ -157,6 +159,29 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                             </Avatar>
                         </IconButton>
                     </Tooltip>
+                    {actualizar && <Tooltip title="Guardar edición">
+                        <IconButton
+                            onClick={() => {
+                                actualizar_documentos(params.row);
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
+                                }}
+                                variant="rounded"
+                            >
+
+                                <SaveIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
+
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>}
                     {!actualizar && <Tooltip title="Eliminar">
                         <IconButton
                             onClick={() => {
@@ -325,7 +350,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
             const tipologia = lt_tipologias.find((t: any) => t.id_tipologia_documental === parseInt(tipologia_doc)).nombre;
             archivos_grid = [...archivos_grid, { orden_en_expediente: orden,nombre_asignado_documento:nombre_documento, archivo: archivo_principal, tipologia: tipologia, data_json: data_json }];
             set_archivos([...archivos_grid]);
-            // set_limpiar(true);
+            set_limpiar(true);
         }
     }
 
@@ -375,9 +400,30 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
             }else{
 
             }
-        })
-        console.log(archivo)
+        });
     }
+    const actualizar_documentos: any = (archivo: any) => {
+        if (validar_formulario()) {
+            const data_json = {
+                "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
+                "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
+                "descripcion": descripcion,
+                "asunto": asunto,
+                "nombre_asignado_documento": nombre_documento,
+                // "id_persona_titular": "1",
+                "cod_categoria_archivo": tipo_recurso,
+                "tiene_replica_fisica": (tiene_replica === 'S'),
+                "nro_folios_del_doc": parseInt(nro_folio),
+                "cod_origen_archivo": tipo_archivo,
+                "palabras_clave_documento": palabras_clave
+            };
+            dispatch(actualizar_documento(archivo.id_documento_de_archivo_exped, data_json)).then((response: any) => {
+                if(response.success)
+                    set_limpiar(true);
+            });;
+        }
+    }
+
     const eliminar_archivos: any = (archivo: any) => {
         let archivos_grid: any[] = [...archivos];
         archivos_grid.splice((archivo.orden - 1), 1);
@@ -420,6 +466,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         if(props.expediente !== null && props.expediente !== undefined){
             if(props.expediente){
                 set_archivos(props.expediente.documentos_agregados);
+                set_actualizar(props.expediente.documentos_agregados.length > 0);
+                props.set_actualizar(props.expediente.documentos_agregados.length > 0);
             }
         }
     }, [props.expediente]);

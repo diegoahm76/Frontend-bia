@@ -35,6 +35,7 @@ export const IndexacionScreen: React.FC = () => {
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [archivos, set_archivos] = useState<any>([]);
+    const [actualizar, set_actualizar] = useState<boolean>(false);
 
     // Sección apertura
     const [tdr, set_tdr] = useState<any>({});
@@ -67,7 +68,7 @@ export const IndexacionScreen: React.FC = () => {
     }
 
     const crear_obj_indexacion = (): void => {
-        if (archivos.length !== 0) {
+        if (!actualizar) {
             const data_documentos: any[] = archivos.map((obj:any) => obj.data_json);
             const data_archivos: File[] = archivos.map((obj:any) => obj.archivo);
             const form_data = new FormData();
@@ -78,27 +79,7 @@ export const IndexacionScreen: React.FC = () => {
                 // if(response.success)
                 //     set_expediente({expediente: [response.data]});
             });
-        } else {
-            const documento_obj = {
-                "fecha_creacion_doc": "2023-10-31",
-                "fecha_incorporacion_doc_a_Exp": "2023-10-31",
-                "descripcion": "test update oscar",
-                "asunto": "test oscar",
-                "nombre_asignado_documento": "excel_oscar",
-                "id_persona_titular": "1",
-                "cod_categoria_archivo": "TX",
-                "tiene_replica_fisica": false,
-                "nro_folios_del_doc": "10",
-                "cod_origen_archivo": "E",
-                "palabras_clave_documento": "oscar|prueba|test|otro|algo"
-            }
-            dispatch(actualizar_documento(12, documento_obj)).then((response: any) => {
-                if(response.success){
-
-                }
-                    set_expediente({expediente: [response.data]});
-            });
-        }
+        } 
     };
 
     useEffect(() => {
@@ -128,7 +109,7 @@ export const IndexacionScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion}></ArchivoDocumento>
+                <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar}></ArchivoDocumento>
             </Grid>}
             <Grid container>
                 <Grid item xs={12} sm={4}>
@@ -148,7 +129,7 @@ export const IndexacionScreen: React.FC = () => {
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
-                                onClick={() => { set_abrir_modal_buscar(true); }}
+                                onClick={() => {  }}
                             >
                                 Buscar documento
                             </Button>
@@ -169,13 +150,13 @@ export const IndexacionScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            {expediente !== null && <Button
+                            {expediente !== null && !actualizar && <Button
                                 color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
                                 onClick={() => { crear_obj_indexacion() }}
                             >
-                                {expediente?.length !== 0 ? 'Actualizar' : 'Guardar'}
+                                Guardar
                             </Button>}
                             <Button
                                 // color='inherit'

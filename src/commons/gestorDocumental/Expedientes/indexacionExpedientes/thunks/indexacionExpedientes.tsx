@@ -160,7 +160,6 @@ export const obtener_documento_id: any = (id_documento: number) => {
   return async () => {
     try {
       const { data } = await api.get(`gestor/expedientes-archivos/expedientes/indexar-documentos/get/${id_documento}/`);
-      control_success('El documento a sido borrado correctamente.');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
