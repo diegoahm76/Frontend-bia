@@ -7,6 +7,9 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
+import { Parte1Screen } from '../parte1/screen/Parte1Screen';
+import { Parte2Screen } from '../parte2/screen/Parte2Screen';
+import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 
 const steps = ['Información inicial', 'Segundo paso', 'Tercer paso'];
 
@@ -66,9 +69,6 @@ export const StepperAsignacionUsuario = () => {
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          {/* <Typography sx={{ mt: 2, mb: 1 }}>
-                All steps completed - you&apos;re finished
-              </Typography>*/}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
@@ -90,16 +90,17 @@ export const StepperAsignacionUsuario = () => {
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
-
-          {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
           {(() => {
             switch (activeStep) {
               case 0:
-                return <Typography>Estás en el primer paso</Typography>;
+                {
+                  /*parte 1*/
+                }
+                return <Parte1Screen />;
               case 1:
-                return <Typography>Estás en el segundo paso</Typography>;
+                return <Parte2Screen />;
               case 2:
-                return <Typography>Estás en el tercer paso</Typography>;
+                return <Parte3Screen/>;
               default:
                 return null;
             }

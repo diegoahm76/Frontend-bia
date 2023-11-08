@@ -20,9 +20,6 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
       >
         <Grid item xs={12}>
           <Title title="Solicitud al usuario sobre PQRSDF" />
-          {/*parte 1*/}
-          {/* parte2 */}
-          {/* parte3 */}
           {/*stepper*/}
           <StepperAsignacionUsuario />
         </Grid>
