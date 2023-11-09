@@ -176,7 +176,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   }
 
   useEffect(() => {
-    if (resultado_busqueda.length > 0 && (agrupar || agrupar_bodega || !mostrar || seleccion_tipo_consulta === 'IPC')) {
+    if (resultado_busqueda.length > 0 && (agrupar || agrupar_bodega || mostrar || seleccion_tipo_consulta === 'IPC')) {
       let agrupamiento: any = [];
       resultado_busqueda.forEach(rb => {
         rb.inventario.forEach((inv: any) => {
