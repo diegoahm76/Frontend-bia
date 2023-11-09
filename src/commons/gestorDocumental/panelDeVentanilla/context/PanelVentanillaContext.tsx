@@ -2,18 +2,37 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, createContext, useState } from 'react';
 
-export const PanelVentanillaContext = createContext({});
+interface PanelVentanillaContextProps {
+  radicado: string;
+  setRadicado: React.Dispatch<React.SetStateAction<string>>;
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
+  handleChange?: (event: React.SyntheticEvent, newValue: number) => void;
+}
 
-
-export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
-  const [state, setRadicado] = useState({
-    busqueda_panel_ventanilla: {
-      tipo_de_solicitud: '',
-    },
+export const PanelVentanillaContext =
+  createContext<PanelVentanillaContextProps>({
+    radicado: '',
+    setRadicado: () => {},
+    value: 0,
+    setValue: () => {},
+    handleChange: () => {},
   });
 
+export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
+  const [radicado, setRadicado] = useState('');
+  //* value de los paneles
+  const [value, setValue] = useState(0);
+
+  //? funciones actualizadoras
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) =>
+    setValue(newValue);
+
   return (
-    <PanelVentanillaContext.Provider value={{ state, setRadicado }}>
+    <PanelVentanillaContext.Provider
+      value={{ radicado, setRadicado, value, setValue, handleChange }}
+    >
       {children}
     </PanelVentanillaContext.Provider>
   );

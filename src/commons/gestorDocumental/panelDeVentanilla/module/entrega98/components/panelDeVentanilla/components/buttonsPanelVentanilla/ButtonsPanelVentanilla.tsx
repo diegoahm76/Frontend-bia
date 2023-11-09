@@ -15,6 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { useContext } from 'react';
+import { PanelVentanillaContext } from '../../../../../../context/PanelVentanillaContext';
+import { Button, Tab, Tabs } from '@mui/material';
+import { a11yProps } from '../../../../../../utils/extra/customTabPanel/CustomTabPanel';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales
 const actions = [
@@ -50,6 +54,10 @@ const actions = [
 export const ButtonsPanelVentanilla = () => {
   //* navigate declaration
   const navigate = useNavigate();
+  //* context declaration
+  // const { setRadicado } = useContext(PanelVentanillaContext);
+
+  const { value, handleChange, setRadicado } = useContext(PanelVentanillaContext);
 
   // ? manejar acciones para cada elemento
 
@@ -126,22 +134,33 @@ export const ButtonsPanelVentanilla = () => {
   };
 
   return (
-    <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-      <SpeedDial
-        ariaLabel="SpeedDial basic example"
-        sx={{ position: 'absolute', top: 0, left: 0 }}
-        icon={<MultipleStopIcon />}
-        direction="right"
-      >
-        {actions.map((action) => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            onClick={() => handleClickActionsGeneral(action)}
-          />
-        ))}
-      </SpeedDial>
-    </Box>
+    <>
+      <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
+        <SpeedDial
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: 'absolute', top: 0, left: 0 }}
+          icon={<MultipleStopIcon />}
+          direction="right"
+        >
+          {actions.map((action) => (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              onClick={() => handleClickActionsGeneral(action)}
+            />
+          ))}
+        </SpeedDial>
+      </Box>
+      <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Panel de ventanilla" {...a11yProps(0)} />
+            <Tab label="Histórico de solicitudes" {...a11yProps(1)} />
+          </Tabs>
+   
+    </>
   );
 };

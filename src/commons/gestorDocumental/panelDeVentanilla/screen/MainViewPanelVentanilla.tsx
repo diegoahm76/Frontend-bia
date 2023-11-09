@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
@@ -13,13 +13,15 @@ import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
 import { PanelDeVentanillaScreen } from '../module/entrega98/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { HistoricoSolicitudesScreen } from '../module/entrega98/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
-
+import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) =>
-    setValue(newValue);
+  //* context declaration
+  const { value, handleChange } = useContext(PanelVentanillaContext);
+
+
 
   return (
     <Grid container sx={containerStyles}>

@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import { MainViewPanelVentanilla } from '../screen/MainViewPanelVentanilla';
 import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
+import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
@@ -28,16 +29,18 @@ const routes = [
 export const PanelVentanillaRoutes: React.FC = () => {
   return (
     // <Suspense fallback={<Loader />}>
-    <Routes>
-      {routes.map((route) => (
-        <Route
-          key={route.path}
-          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-          element={route.component()}
-        />
-      ))}
-      <Route path="/*" element={<Page404 />} />
-    </Routes>
+    <PanelVentanillaProvider>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+            element={route.component()}
+          />
+        ))}
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
+    </PanelVentanillaProvider>
     // </Suspense>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -17,10 +17,13 @@ import {
 import { Grid } from '@mui/material';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { control_success } from '../../../../../../../helpers';
+import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
 
 export const AcordeonPqrsdf = () => {
   const [expanded, setExpanded] = useState<string | boolean>(false);
-  const [radicado, setRadicado] = useState<string>('');
+
+  //* context declaration
+  const { radicado, setRadicado } = useContext(PanelVentanillaContext);
 
   const accordionRef = useRef<any>(null);
 
