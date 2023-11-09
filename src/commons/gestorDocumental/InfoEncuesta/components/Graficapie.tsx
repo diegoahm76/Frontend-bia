@@ -1,21 +1,39 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { type ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
+import { api } from "../../../../api/axios";
+import { useState, useEffect } from "react";
+import { Propstorta, ReporteRangoEdad } from "../interfaces/types";
 
-export const Graficapie: React.FC = () => {
-    const chartData: ApexOptions = {
+export const Graficapie: React.FC <Propstorta>= ({selectedEncuestaId}) => {
+      const [reporteRangoEdad, setReporteRangoEdad] = useState<ReporteRangoEdad | null>(null);
+      useEffect(() => {
+        const fetchReporteRangoEdad = async (): Promise<void> => {
+          try {
+            const url = `/gestor/encuestas/reporte_rango_edad/get/${selectedEncuestaId}/`;
+            const res = await api.get<ReporteRangoEdad>(url);
+            setReporteRangoEdad(res.data);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+      
+        fetchReporteRangoEdad();
+      }, [selectedEncuestaId]);
+      const labels = reporteRangoEdad?.data.registros.map((registro) => registro.nombre) || [];
+      const series = reporteRangoEdad?.data.registros.map((registro) => registro.total) || [];
+      const chartData: ApexOptions = {
         chart: {
             width: 380,
-            type: "pie", // Cambiar el tipo de gráfico a "pie" para una gráfica de tipo tarta
+            type: "pie",
         },
-        labels: ["Categoría 1", "Categoría 2", "Categoría 3", "Categoría 4", "Categoría 5"],
-        title: {
-            // text: "Ejemplo de Gráfica de Tarta",
-        },
-        series: [44, 55, 13, 43, 22],
+        labels: labels,  // Usar "labels" aquí
+        title: {},
+        series: series,  // Usar "series" aquí
         responsive: [
             {
                 breakpoint: 480,
@@ -30,9 +48,11 @@ export const Graficapie: React.FC = () => {
             },
         ],
     };
+                      
     return (
         <>
             <>
+            {/* <h1>{selectedEncuestaId}</h1> */}
                 <ReactApexChart options={chartData} series={chartData.series} type="pie" height={215} />
             </>
         </>

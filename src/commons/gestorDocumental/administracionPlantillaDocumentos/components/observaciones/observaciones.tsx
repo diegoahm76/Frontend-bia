@@ -184,10 +184,10 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
         </Grid>
 
         <Grid item container spacing={1} style={{ marginLeft: 15 }}>
-          <Grid item xs={1} >
+         
             <h5>Activo</h5>
-          </Grid>
-          <Grid item xs={10} sm={4} style={{marginTop:14}}>
+    
+          <Grid item xs={10} sm={4} >
 
 
             <FormControlLabel

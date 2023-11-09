@@ -155,7 +155,7 @@ export const Encabezado: React.FC = () => {
       return newFormData;
     }); setGridRows((prevRows) => [
       ...prevRows,
-      
+
       { opciones: tempOption, acciones: <IconButton><DeleteIcon /></IconButton> }
     ]);
     setTempOption("");
@@ -258,7 +258,7 @@ export const Encabezado: React.FC = () => {
       setEditMode(false); // Sal del modo de edición
       setTempQuestions([...tempQuestions, newQuestion]);
       setQuestionGridRows([...questionGridRows, { id: newQuestion.redaccion_pregunta, pregunta: newQuestion.redaccion_pregunta }]);
-    } 
+    }
     // else {
     //   setTempQuestions([...tempQuestions, newQuestion]);
     //   setQuestionGridRows([...questionGridRows, { id: newQuestion.redaccion_pregunta, pregunta: newQuestion.redaccion_pregunta }]);
@@ -347,7 +347,7 @@ export const Encabezado: React.FC = () => {
           preguntas: tempQuestions
         });
 
-        
+
 
         console.log('Encuesta actualizada exitosamente:', response.data);
         control_success("Encuesta actualizada con éxito");
@@ -447,7 +447,7 @@ export const Encabezado: React.FC = () => {
     setSelectedOption(null);
     setTempOption("");
   };
-  
+
 
   const [valorSeleccionado, setValorSeleccionado] = useState('');
 
@@ -466,7 +466,7 @@ export const Encabezado: React.FC = () => {
               sx={miEstilo}
             >
               <Title title="Encabezado" />
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   variant="outlined"
                   size="small"
@@ -481,7 +481,7 @@ export const Encabezado: React.FC = () => {
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth size="small">
                   <InputLabel shrink>Activo</InputLabel>
                   <Select
@@ -545,6 +545,7 @@ export const Encabezado: React.FC = () => {
               </Grid>
 
               <Grid item spacing={2} container>
+                <Grid item xs={12} sm={3}></Grid>
                 <Grid item xs={12} sm={3}>
                   {formData.preguntas.map((pregunta, index) => (
                     <div key={index}>
@@ -730,7 +731,8 @@ export const Encabezado: React.FC = () => {
           </>
         ) : (
           <>
-            <TablaEncuesta setShowContent={setShowContent} handleClear={handleClear} setSelectedEncuestaId={setSelectedEncuestaId} is_modal_active={is_buscar} /></>
+            <TablaEncuesta setShowContent={setShowContent} handleClear={handleClear} setSelectedEncuestaId={setSelectedEncuestaId} is_modal_active={is_buscar} />
+          </>
         )}
       </>
     </>

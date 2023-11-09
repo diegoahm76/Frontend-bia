@@ -1,12 +1,28 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { ApexOptions } from "apexcharts";
+import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const GraficaBar: React.FC = () => {
+import { api } from "../../../../api/axios";
+import { Propstorta, ReporteRegion } from "../interfaces/types";
+// eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
+export const GraficaBar: React.FC<Propstorta> = ({ selectedEncuestaId }) => {
+    const fetchReporteRegion = async (): Promise<void> => {
+        try {
+            const url = `/gestor/encuestas/reporte_region/get/${selectedEncuestaId}/`;
+            const res = await api.get<ReporteRegion>(url);
+            setReporteRegion(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    const [reporteRegion, setReporteRegion] = useState<ReporteRegion | null>(null);
+    useEffect(() => {
+        fetchReporteRegion();
+    }, [selectedEncuestaId]);
+    const categories = reporteRegion?.data.registros.map(registro => registro.nombre) || [];
+    const dataTotals = reporteRegion?.data.registros.map(registro => registro.total) || [];
     const chartData: ApexOptions = {
         chart: {
             type: 'bar',
@@ -37,20 +53,16 @@ export const GraficaBar: React.FC = () => {
             intersect: false
         },
         xaxis: {
-            categories: ['Planta sana', 'Planta en cuarentena'],
+            categories: categories,  // Actualiza las categorías
         }
     };
 
     const series = [
         {
-            name: 'En distribución',
-            data: [25, 15] // Reemplaza estos valores con tus datos reales
-        },
-        {
-            name: 'En producción',
-            data: [35, 45] // Reemplaza estos valores con tus datos reales
+            name: 'Total por región',
+            data: dataTotals  // Actualiza los datos
         }
-    ];
+    ];  
     return (
         <>
             <>

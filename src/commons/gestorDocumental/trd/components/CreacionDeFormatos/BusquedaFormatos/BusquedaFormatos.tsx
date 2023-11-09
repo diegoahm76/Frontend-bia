@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Controller } from 'react-hook-form';
 import {
@@ -20,6 +20,7 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
+  Switch,
   Tooltip,
   ButtonGroup,
 } from '@mui/material';
@@ -58,6 +59,10 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   const { data_format_documental_type } = useAppSelector(
     (state: any) => state.trd_slice
   );
+  // stiven
+  console.log(data_format_documental_type);
+  const [asociadaTipologiaDocTrd, setAsociadaTipologiaDocTrd] = useState(false);
+  //stiven
 
   const {
     //* necesary to use the form
@@ -204,47 +209,47 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       flex: 1,
       renderCell: (params: any) => (
         <>
-        <Tooltip title = "Editar formato tipo de medio">
-          <IconButton
-            onClick={() => {
-              if (
-                params.row.registro_precargado ||
-                params.row.item_ya_usado !== false
-              ) {
-                control_warning('No se puede editar el formato tipo de medio');
-                return;
-              }
+          <Tooltip title="Editar formato tipo de medio">
+            <IconButton
+              onClick={() => {
+                if (
+                  params.row.registro_precargado ||
+                  params.row.item_ya_usado !== false
+                ) {
+                  control_warning('No se puede editar el formato tipo de medio');
+                  return;
+                }
 
-              reset_format_documental_type({
-                nombre: params.row.nombre,
-                'cod-tipo-medio': {
-                  label: params.row.tipo_medio_doc,
-                  value: 0,
-                  'cod-tipo-medio': params.row.cod_tipo_medio_doc,
-                },
-                activo: params.row.activo,
-                id_formato_tipo_medio: params.row.id_formato_tipo_medio,
-              });
-              set_title_button('Actualizar');
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <EditIcon
-                sx={{
-                  color:
-                    params.row.registro_precargado ||
-                    params.row.item_ya_usado !== false
-                      ? 'gray'
-                      : 'primary.main',
-                  width: '18px',
-                  height: '18px',
-                }}
-              />
-            </Avatar>
-          </IconButton>
+                reset_format_documental_type({
+                  nombre: params.row.nombre,
+                  'cod-tipo-medio': {
+                    label: params.row.tipo_medio_doc,
+                    value: 0,
+                    'cod-tipo-medio': params.row.cod_tipo_medio_doc,
+                  },
+                  activo: params.row.activo,
+                  id_formato_tipo_medio: params.row.id_formato_tipo_medio,
+                });
+                set_title_button('Actualizar');
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <EditIcon
+                  sx={{
+                    color:
+                      params.row.registro_precargado ||
+                        params.row.item_ya_usado !== false
+                        ? 'gray'
+                        : 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
           </Tooltip>
 
-          <Tooltip title = "Eliminar formato tipo de medio">
+          <Tooltip title="Eliminar formato tipo de medio">
             <IconButton
               onClick={() => {
                 if (
@@ -265,7 +270,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   sx={{
                     color:
                       params.row.registro_precargado ||
-                      params.row.item_ya_usado !== false
+                        params.row.item_ya_usado !== false
                         ? 'gray'
                         : 'red',
                     width: '18px',
@@ -370,132 +375,184 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   />
                 )}
               />
-              <Grid
-                item
-                xs={4}
-                sm={4}
-                sx={{
-                  ml: '-25rem',
-                }}
-              >
-                {title_button === 'Actualizar' ? (
-                  <Controller
-                    name="activo"
-                    control={control_format_documental_type}
-                    defaultValue=""
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormControl fullWidth>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={value}
-                              onChange={(e) => {
-                                onChange(e.target.checked);
-                              }}
-                              // name="checkedB"
-                              color="primary"
-                            />
-                          }
-                          label={
-                            value ? (
-                              <Typography variant="body2">
-                                Activo
-                                <Tooltip
-                                  title="Formato tipo de medio activo"
-                                  placement="right"
-                                >
-                                  <InfoIcon
-                                    sx={{
-                                      width: '1.2rem',
-                                      height: '1.2rem',
-                                      ml: '0.5rem',
-                                      color: 'green',
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Typography>
-                            ) : (
-                              <Typography variant="body2">
-                                Inactivo
-                                <Tooltip
-                                  title="Formato tipo de medio inactivo"
-                                  placement="right"
-                                >
-                                  <InfoIcon
-                                    sx={{
-                                      width: '1.2rem',
-                                      height: '1.2rem',
-                                      ml: '0.5rem',
-                                      color: 'orange',
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Typography>
-                            )
-                          }
-                        />
-                      </FormControl>
-                    )}
-                  />
-                ) : null}
-              </Grid>
-              <Stack
-                direction="row"
-                justifyContent="flex-end"
-                spacing={2}
-                sx={{ mt: '20px' }}
-              >
-                <LoadingButton
-                  loading={createTRDLoadingButton}
-                  color="primary"
-                  variant="contained"
-                  startIcon={<SearchIcon />}
-                  disabled={
-                    control_format_documental_type._formValues['cod-tipo-medio']
-                      .value === null
-                  }
-                  title={'Buscar datos de los formatos relacionados'}
-                  onClick={() => {
-                    void dispatch(
-                      get_formatos_by_tipo_medio_by_format_and_name(
-                        setCreateTRDLoadingButton,
-                        data_format_documental_type_watch_form.nombre,
-                        data_format_documental_type_watch_form[
-                          'cod-tipo-medio'
-                        ]['cod-tipo-medio']
-                      )
-                    );
-                  }}
-                >
-                  BUSCAR
-                </LoadingButton>
 
-                <Button
-                  type="submit"
-                  color="success"
-                  variant="contained"
-                  startIcon={
-                    title_button === 'Actualizar' ? <SyncIcon /> : <SaveIcon />
+
+            </Grid>
+            <Grid item xs={12} sm={6} container justifyContent="center" alignItems="center">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h5>Controlar Tamaño Maximo</h5>
+
+                <FormControlLabel
+                style={{marginLeft:10}}
+                  control={
+                    <Switch
+                      checked={asociadaTipologiaDocTrd}
+                      onChange={(event: any) => setAsociadaTipologiaDocTrd(event.target.checked)}
+                    />
                   }
-                >
-                  {title_button}
-                </Button>
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  startIcon={<CleanIcon />}
-                  onClick={() => {
-                    reset_all_format_documental_type_modal();
-                  }}
-                >
-                  LIMPIAR
-                </Button>
-              </Stack>
+                  label={asociadaTipologiaDocTrd ? 'Si' : 'No'}
+                />
+              </div>
             </Grid>
 
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="TamañoMaximo"
+                control={control_format_documental_type}
+                defaultValue=""
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Tamaño Maximo en MB"
+                    inputProps={{ maxLength: 20 }}
+                    helperText={'Ingrese el tamaño'}
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      if (e.target.value.length === 20) {
+                        control_warning('maximo 20 carácteres');
+                      }
+
+                      onChange(e.target.value);
+                    }}
+                  />
+                )}
+              />
+
+            </Grid>
+            <Grid container justifyContent="flex-end" alignItems="center">
+
+            <Grid
+              item
+              xs={4}
+              sm={4}
+              sx={{
+                ml: '-25rem',
+              }}
+            >
+              {title_button === 'Actualizar' ? (
+                <Controller
+                  name="activo"
+                  control={control_format_documental_type}
+                  defaultValue=""
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormControl fullWidth>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={value}
+                            onChange={(e) => {
+                              onChange(e.target.checked);
+                            }}
+                            // name="checkedB"
+                            color="primary"
+                          />
+                        }
+                        label={
+                          value ? (
+                            <Typography variant="body2">
+                              Activo
+                              <Tooltip
+                                title="Formato tipo de medio activo"
+                                placement="right"
+                              >
+                                <InfoIcon
+                                  sx={{
+                                    width: '1.2rem',
+                                    height: '1.2rem',
+                                    ml: '0.5rem',
+                                    color: 'green',
+                                  }}
+                                />
+                              </Tooltip>
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2">
+                              Inactivo
+                              <Tooltip
+                                title="Formato tipo de medio inactivo"
+                                placement="right"
+                              >
+                                <InfoIcon
+                                  sx={{
+                                    width: '1.2rem',
+                                    height: '1.2rem',
+                                    ml: '0.5rem',
+                                    color: 'orange',
+                                  }}
+                                />
+                              </Tooltip>
+                            </Typography>
+                          )
+                        }
+                      />
+                    </FormControl>
+                  )}
+                />
+              ) : null}
+            </Grid>
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mt: '20px' }}
+            >
+              <LoadingButton
+                loading={createTRDLoadingButton}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                disabled={
+                  control_format_documental_type._formValues['cod-tipo-medio']
+                    .value === null
+                }
+                title={'Buscar datos de los formatos relacionados'}
+                onClick={() => {
+                  void dispatch(
+                    get_formatos_by_tipo_medio_by_format_and_name(
+                      setCreateTRDLoadingButton,
+                      data_format_documental_type_watch_form.nombre,
+                      data_format_documental_type_watch_form[
+                      'cod-tipo-medio'
+                      ]['cod-tipo-medio']
+                    )
+                  );
+                }}
+              >
+                BUSCAR
+              </LoadingButton>
+
+              <Button
+                type="submit"
+                color="success"
+                variant="contained"
+                startIcon={
+                  title_button === 'Actualizar' ? <SyncIcon /> : <SaveIcon />
+                }
+              >
+                {title_button}
+              </Button>
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  reset_all_format_documental_type_modal();
+                }}
+              >
+                LIMPIAR
+              </Button>
+            </Stack>
+
+            </Grid>
             {data_format_documental_type.length > 0 ? (
               <Grid item xs={12}>
                 <ButtonGroup
