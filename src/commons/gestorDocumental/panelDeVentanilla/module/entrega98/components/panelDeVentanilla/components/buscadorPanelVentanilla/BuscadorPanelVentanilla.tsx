@@ -7,15 +7,29 @@ import Select from 'react-select';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import { Title } from '../../../../../../../../../components';
+import {
+  choicesEstadoActual,
+  choicesTipoDeSolicitud,
+} from '../../utils/choices';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* hooks
-  const { control_busqueda_panel_ventanilla } = usePanelVentanilla();
+  const {
+    control_busqueda_panel_ventanilla,
+    watch_busqueda_panel_ventanilla,
+    reset_search_form,
+  } = usePanelVentanilla();
 
   // ? handleSubmit
   const handleSubmit = () => {
-    console.log('submit , buscando coincidencias');
+    console.log(
+      'submit , buscando coincidencias',
+      watch_busqueda_panel_ventanilla
+    );
   };
+
+  const resetForm = () => reset_search_form();
 
   return (
     <Grid
@@ -30,33 +44,28 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       }}
     >
       <Grid item xs={12}>
-        {/* <Title title="TRD - ( Tabla de retención documental )" />*/}
+        <Title title="Buscar elemento" />
         <form
           onSubmit={(w) => {
             w.preventDefault();
             handleSubmit();
           }}
           style={{
-            marginTop: '20px',
+            marginTop: '2.2rem',
           }}
         >
           <Grid container spacing={2}>
             <Grid
               item
               xs={12}
-              sm={6}
+              sm={4}
               sx={{
                 zIndex: 2,
               }}
             >
-              {/* <label className="text-terciary">
-                  Lista de ccds terminadoss
-                  <samp className="text-danger">*</samp>
-                </label> */}
-              {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
               <Controller
                 //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-                name="id_ccd"
+                name="tipo_de_solicitud"
                 control={control_busqueda_panel_ventanilla}
                 rules={{ required: true }}
                 render={({
@@ -66,18 +75,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                   <div>
                     <Select
                       value={value}
-                      // name="id_ccd"
                       onChange={(selectedOption) => {
-                        /*dispatch(
-                          getServiceSeriesSubseriesXUnidadOrganizacional(
-                            selectedOption.item
-                          )
-                        );*/
                         console.log(selectedOption);
                         onChange(selectedOption);
                       }}
-                      // isDisabled={trd_current != null}
-                      options={[] as any}
+                      options={choicesTipoDeSolicitud as any[]}
                       placeholder="Seleccionar"
                     />
                     <label>
@@ -97,9 +99,9 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <Controller
-                name="nombre"
+                name="radicado"
                 control={control_busqueda_panel_ventanilla}
                 defaultValue=""
                 rules={{ required: true }}
@@ -109,15 +111,8 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 }) => (
                   <TextField
                     required
-                    // margin="dense"
                     fullWidth
-                    // name="nombre"
-                    label="Nombre del TRD"
-                    /* helperText={
-                      trd_current != null
-                        ? 'Actualice el nombre'
-                        : 'Ingrese nombre'
-                    }*/
+                    label="Radicado"
                     size="small"
                     variant="outlined"
                     value={value}
@@ -130,35 +125,48 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid
+              item
+              xs={12}
+              sm={4}
+              sx={{
+                zIndex: 2,
+              }}
+            >
               <Controller
-                name="version"
+                //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
+                name="estado_actual"
                 control={control_busqueda_panel_ventanilla}
-                defaultValue=""
-                // rules={{ required: false }}
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
                 }) => (
-                  <TextField
-                    required
-                    fullWidth
-                    // name="version"
-                    label="Versión del TRD"
-                    /* helperText={
-                      trd_current != null
-                        ? 'Actualice la versión'
-                        : 'Ingrese versión'
-                    }*/
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                      onChange(e.target.value);
-                    }}
-                    inputProps={{ maxLength: 10 }}
-                  />
+                  <div>
+                    <Select
+                      value={value}
+                      onChange={(selectedOption) => {
+                        console.log(selectedOption);
+                        onChange(selectedOption);
+                      }}
+                      // isDisabled={trd_current != null}
+                      options={choicesEstadoActual as any[]}
+                      placeholder="Seleccionar"
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem',
+                          marginTop: '0.25rem',
+                          marginLeft: '0.25rem',
+                        }}
+                      >
+                        Estado actual
+                      </small>
+                    </label>
+                  </div>
                 )}
               />
             </Grid>
@@ -172,22 +180,18 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
           >
             <LoadingButton
               loading={false}
+              type="submit"
               color="primary"
               variant="contained"
               startIcon={<SearchIcon />}
-              onClick={() => {
-                console.log('se están buscando los elementos');
-              }}
             >
-              BUSCAR TRD
+              BUSCAR ELEMENTO
             </LoadingButton>
             <Button
               color="primary"
               variant="outlined"
               startIcon={<CleanIcon />}
-              onClick={() => {
-                console.log('limpiando todos los campos ');
-              }}
+              onClick={resetForm}
             >
               LIMPIAR CAMPOS
             </Button>

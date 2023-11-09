@@ -126,7 +126,7 @@ export const ButtonsPanelVentanilla = () => {
   };
 
   return (
-    <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
       <SpeedDial
         ariaLabel="SpeedDial basic example"
         sx={{ position: 'absolute', top: 0, left: 0 }}
@@ -138,11 +138,6 @@ export const ButtonsPanelVentanilla = () => {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            // disableInteractive={action.disabled}
-           /* style={{
-              pointerEvents: action.disabled ? 'none' : 'auto',
-              opacity: action.disabled ? 0.1 : 1,
-            }} */
             onClick={() => handleClickActionsGeneral(action)}
           />
         ))}
