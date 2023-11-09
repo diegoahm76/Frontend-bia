@@ -20,10 +20,10 @@ import { control_success } from '../../../../../../../helpers';
 import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
 
 export const AcordeonPqrsdf = () => {
-  const [expanded, setExpanded] = useState<string | boolean>(false);
+
 
   //* context declaration
-  const { radicado, setRadicado } = useContext(PanelVentanillaContext);
+  const { radicado, setRadicado, expanded, setExpanded } = useContext(PanelVentanillaContext);
 
   const accordionRef = useRef<any>(null);
 
@@ -40,7 +40,7 @@ export const AcordeonPqrsdf = () => {
 
   const handleChange =
     (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
+      setExpanded?.(isExpanded ? panel : false);
     };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -52,7 +52,7 @@ export const AcordeonPqrsdf = () => {
     );
 
     if (searchElement) {
-      setExpanded(radicado);
+      setExpanded?.(radicado);
       control_success(
         'Se ha encontrado un elemento que coincide con el radicado ingresado'
       );
@@ -62,7 +62,7 @@ export const AcordeonPqrsdf = () => {
         title: 'Oops...',
         text: 'No se ha encontrado un elemento que coincida con el radicado ingresado',
       });
-      setExpanded(false);
+      setExpanded?.(false);
     }
   };
 

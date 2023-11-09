@@ -19,21 +19,12 @@ export const CustomTabPanel = (props: TabPanelProps) => {
       style={{}}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>{children}</Box>
-
-        /*
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>*/
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 };
 
-export const a11yProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-};
+export const a11yProps = (index: number) => ({
+  id: `simple-tab-${index}`,
+  'aria-controls': `simple-tabpanel-${index}`,
+});

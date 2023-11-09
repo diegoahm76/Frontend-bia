@@ -8,6 +8,8 @@ interface PanelVentanillaContextProps {
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
   handleChange?: (event: React.SyntheticEvent, newValue: number) => void;
+  expanded: string | boolean;
+  setExpanded: React.Dispatch<React.SetStateAction<string | boolean>>;
 }
 
 export const PanelVentanillaContext =
@@ -17,22 +19,34 @@ export const PanelVentanillaContext =
     value: 0,
     setValue: () => {},
     handleChange: () => {},
+    expanded: false,
+    setExpanded: () => {},
   });
 
 export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   const [radicado, setRadicado] = useState('');
   //* value de los paneles
   const [value, setValue] = useState(0);
+  //* expanded de los acordeones
+  const [expanded, setExpanded] = useState<string | boolean>(false);
 
   //? funciones actualizadoras
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) =>
     setValue(newValue);
 
+  const valuesToUse = {
+    radicado,
+    setRadicado,
+    value,
+    setValue,
+    handleChange,
+    expanded,
+    setExpanded,
+  };
+
   return (
-    <PanelVentanillaContext.Provider
-      value={{ radicado, setRadicado, value, setValue, handleChange }}
-    >
+    <PanelVentanillaContext.Provider value={valuesToUse}>
       {children}
     </PanelVentanillaContext.Provider>
   );

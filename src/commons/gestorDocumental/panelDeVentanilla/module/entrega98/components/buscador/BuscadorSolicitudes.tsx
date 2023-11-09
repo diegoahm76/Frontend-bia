@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
-import { Box, Button, Grid, Stack, TextField } from '@mui/material';
+import { Button, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import { useContext } from 'react';
+import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
 
 export const BuscadorSolicitudes = (props: any): JSX.Element => {
   const { setRadicado, radicado, onChange, onSubmit } = props;
+
+  //* context use
+  const { expanded, setExpanded } = useContext(PanelVentanillaContext);
 
   return (
     <>
@@ -80,7 +84,8 @@ export const BuscadorSolicitudes = (props: any): JSX.Element => {
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  setRadicado('');
+                  setRadicado?.('');
+                  setExpanded?.(false);
                 }}
               >
                 LIMPIAR CAMPOS

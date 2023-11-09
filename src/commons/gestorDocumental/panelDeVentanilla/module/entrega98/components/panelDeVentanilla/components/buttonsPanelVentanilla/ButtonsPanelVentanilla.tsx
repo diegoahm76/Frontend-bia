@@ -15,10 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
-import { useContext } from 'react';
-import { PanelVentanillaContext } from '../../../../../../context/PanelVentanillaContext';
-import { Button, Tab, Tabs } from '@mui/material';
-import { a11yProps } from '../../../../../../utils/extra/customTabPanel/CustomTabPanel';
+import { ModalAtomInfoElement } from '../../../../Atom/ModalAtomInfoElement';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales
 const actions = [
@@ -55,11 +52,6 @@ export const ButtonsPanelVentanilla = () => {
   //* navigate declaration
   const navigate = useNavigate();
   //* context declaration
-  // const { setRadicado } = useContext(PanelVentanillaContext);
-
-  const { value, handleChange, setRadicado } = useContext(PanelVentanillaContext);
-
-  // ? manejar acciones para cada elemento
 
   const withValidation =
     (fn: Function) => (action: { disabled: boolean; path: string }) => {
@@ -114,7 +106,7 @@ export const ButtonsPanelVentanilla = () => {
   );
 
   const handleClickActionsGeneral = (action: any) => {
-    //* por cada nombre se ejecutaran acciones diferentes
+    //* por cada nombre se ejecutaran acciones diferentes, se debe analizar por si vienen cambios desde el backend que se plantee
     switch (action.id) {
       case 'Dig':
         handleDigitalizacion(action);
@@ -152,15 +144,9 @@ export const ButtonsPanelVentanilla = () => {
           ))}
         </SpeedDial>
       </Box>
-      <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-          >
-            <Tab label="Panel de ventanilla" {...a11yProps(0)} />
-            <Tab label="Histórico de solicitudes" {...a11yProps(1)} />
-          </Tabs>
-   
+
+      {/* modal de prueba para elementos de información */}
+      <ModalAtomInfoElement infoTitle="Información del elemento (pqrsdf) - (complemento)" />
     </>
   );
 };
