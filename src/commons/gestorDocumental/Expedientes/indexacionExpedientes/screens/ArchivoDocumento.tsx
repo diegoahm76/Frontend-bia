@@ -137,7 +137,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                             </Avatar>
                         </IconButton>
                     </Tooltip>}
-                    <Tooltip title="Eliminar">
+                    {actualizar && <Tooltip title="Selecionar documento">
                         <IconButton
                             onClick={() => {
                                 seleccionar_archivos(params.row);
@@ -159,7 +159,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
 
                             </Avatar>
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip>}
                     {actualizar && <Tooltip title="Guardar edición">
                         <IconButton
                             onClick={() => {
