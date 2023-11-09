@@ -137,7 +137,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                             </Avatar>
                         </IconButton>
                     </Tooltip>}
-                    <Tooltip title="Eliminar">
+                    {actualizar && <Tooltip title="Selecionar documento">
                         <IconButton
                             onClick={() => {
                                 seleccionar_archivos(params.row);
@@ -159,7 +159,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
 
                             </Avatar>
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip>}
                     {actualizar && <Tooltip title="Guardar edición">
                         <IconButton
                             onClick={() => {
@@ -351,18 +351,18 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
             const tipologia = lt_tipologias.find((t: any) => t.id_tipologia_documental === parseInt(tipologia_doc)).nombre;
             archivos_grid = [...archivos_grid, { orden_en_expediente: orden,nombre_asignado_documento:nombre_documento, archivo: archivo_principal, tipologia: tipologia, data_json: data_json }];
             set_archivos([...archivos_grid]);
-            set_limpiar(true);
+            // set_limpiar(true);
         }
     }
 
     const bajar_fila: any = (archivo: any) => {
         let archivos_grid: any[] = [...archivos].slice();
         const contador_archivos = archivos_grid.length;
-        const nueva_posicion = archivo.orden;
+        const nueva_posicion = archivo.orden_en_expediente;
         if (contador_archivos > 1 && nueva_posicion !== 1) {
-            archivos_grid[nueva_posicion - 1].orden = nueva_posicion + 1;
-            archivos_grid[nueva_posicion].orden = nueva_posicion;
-            archivos_grid = [...archivos_grid.sort((a, b) => a.orden - b.orden)];
+            archivos_grid[nueva_posicion - 1].orden_en_expediente = nueva_posicion + 1;
+            archivos_grid[nueva_posicion].orden_en_expediente = nueva_posicion;
+            archivos_grid = [...archivos_grid.sort((a, b) => a.orden_en_expediente - b.orden_en_expediente)];
         } else
             return
         set_archivos([...archivos_grid]);
@@ -370,11 +370,11 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     const subir_fila: any = (archivo: any) => {
         let archivos_grid: any[] = [...archivos].slice();
         const contador_archivos = archivos_grid.length;
-        const nueva_posicion = archivo.orden;
-        if (contador_archivos > 2 && nueva_posicion !== 1) {
-            archivos_grid[nueva_posicion - 1].orden = nueva_posicion - 1;
-            archivos_grid[nueva_posicion - 2].orden = nueva_posicion;
-            archivos_grid = [...archivos_grid.sort((a, b) => a.orden - b.orden)];
+        const nueva_posicion = archivo.orden_en_expediente;
+        if (contador_archivos > 2 && (nueva_posicion-1) !== 1) {
+            archivos_grid[nueva_posicion - 1].orden_en_expediente = nueva_posicion - 1;
+            archivos_grid[nueva_posicion - 2].orden_en_expediente = nueva_posicion;
+            archivos_grid = [...archivos_grid.sort((a, b) => a.orden_en_expediente - b.orden_en_expediente)];
         } else
             return
         set_archivos([...archivos_grid]);
@@ -428,9 +428,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
 
     const eliminar_archivos: any = (archivo: any) => {
         let archivos_grid: any[] = [...archivos];
-        archivos_grid.splice((archivo.orden - 1), 1);
+        archivos_grid.splice((archivo.orden_en_expediente - 1), 1);
         archivos_grid.forEach((archivo: any, index: number) => {
-            archivo.orden = index + 1;
+            archivo.orden_en_expediente = index + 1;
         });
         set_archivos([...archivos_grid]);
     }

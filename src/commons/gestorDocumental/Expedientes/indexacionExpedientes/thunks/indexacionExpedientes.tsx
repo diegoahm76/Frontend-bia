@@ -81,6 +81,18 @@ export const obtener_expediente_id_serie: any = (id_serie: number) => {
     }
   };
 };
+// Selección de Expediente
+export const obtener_expediente_simple_id_serie: any = (id_serie: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/simple/get/${id_serie}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Obtener Tipologias de Catalogo TRD
 export const obtener_tipologias_id_serie: any = (id_serie: number) => {
   return async () => {

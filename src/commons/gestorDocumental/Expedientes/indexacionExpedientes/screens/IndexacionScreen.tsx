@@ -76,7 +76,7 @@ export const IndexacionScreen: React.FC = () => {
             form_data.append('data_documentos', JSON.stringify(data_documentos));
             // form_data.append('archivos', data_archivos[0]);
             data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
-            dispatch(crear_indexacion_documentos(form_data, expediente?.expediente[0].id_expediente_documental)).then((response: any) => {
+            dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
                 // if(response.success)
                 //     set_expediente({expediente: [response.data]});
             });
