@@ -398,7 +398,7 @@ const ReaperturaExpedienteScreen = () => {
 
 
             <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12} sm={8} marginTop={3} >
+                <Grid item xs={12} sm={11.5} marginTop={3} >
                     <Controller
                         name="justificacion_reapertura"
                         control={control_reapertura_expediente}
