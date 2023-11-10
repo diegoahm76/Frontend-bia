@@ -254,7 +254,7 @@ const CierreExpedientesScreen = () => {
             </Grid>
 
             <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12} sm={6} marginTop={2} margin={2}>
+                <Grid item xs={12} sm={11.5} marginTop={2} margin={2}>
                     <Controller
                         name="justificacion_cierre_reapertura"
                         control={control_cierre_expediente}
@@ -268,7 +268,6 @@ const CierreExpedientesScreen = () => {
                                 margin="dense"
                                 fullWidth
                                 multiline
-                                rows={2}
                                 label="Observación"
                                 variant="outlined"
                                 disabled={false}
@@ -279,6 +278,7 @@ const CierreExpedientesScreen = () => {
                                 sx={{
                                     backgroundColor: 'white',
                                 }}
+                                InputProps={{ classes: { input: 'autogrow-input' } }}
 
                             >
 

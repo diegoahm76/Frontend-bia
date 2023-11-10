@@ -80,19 +80,6 @@ export const TipologiaDocumental: React.FC = () => {
           <h5>¿Plantilla asociada a tipologia documental del TRD?</h5>
 
           <Grid item xs={1} style={{ margin: 7, marginRight: 10 }}>
-            {/* <FormControl fullWidth>
-          
-              <Select
-                labelId="demo-simple-select-label-2"
-                id="demo-simple-select-2"
-                name="asociada_a_tipologia_doc_trd"
-                value={form.asociada_a_tipologia_doc_trd}
-                onChange={HandleCompletarDatos}
-              >
-                <MenuItem value="True">Si</MenuItem>
-                <MenuItem value="False">No</MenuItem>
-              </Select>
-            </FormControl> */}
             <FormControlLabel
               control={
                 <Switch
