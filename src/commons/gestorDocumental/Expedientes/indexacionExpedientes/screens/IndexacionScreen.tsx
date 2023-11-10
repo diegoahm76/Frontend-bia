@@ -10,11 +10,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { SerieDocumentalScreen } from "./SerieDocumentalScreen";
-import AnularExpedienteModal from "../../aperturaExpedientes/screens/AnularExpediente";
 import BuscarExpediente from "./BuscarExpediente";
 import { ExpedienteSeleccionado } from "./ExpedienteSeleccionado";
 import { ArchivoDocumento } from "./ArchivoDocumento";
-import { actualizar_documento, borrar_documento, crear_indexacion_documentos } from "../thunks/indexacionExpedientes";
+import { borrar_documento, crear_indexacion_documentos } from "../thunks/indexacionExpedientes";
+import AnularDocumnetoModal from "./AnularDocumento";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -77,8 +77,8 @@ export const IndexacionScreen: React.FC = () => {
             // form_data.append('archivos', data_archivos[0]);
             data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
             dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
-                // if(response.success)
-                //     set_expediente({expediente: [response.data]});
+                if(response.success)
+                    set_limpiar(true);
             });
         } 
     };
@@ -175,7 +175,7 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Anular documento
                             </Button>}
-                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularExpedienteModal>}
+                            {<AnularDocumnetoModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularDocumnetoModal>}
                             {id_documento_seleccionado !== null && expediente !== null && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
