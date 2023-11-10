@@ -30,6 +30,7 @@ interface IProps {
   on_blur_function?: any;
   set_value?: any;
   hidden_text?: boolean | null;
+  step_number?: string | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -51,10 +52,9 @@ const FormInputController = ({
   hidden_text,
   marginTop,
   margin,
+  step_number,
 }: IProps) => {
-  const handle_file_input_change = (e: any): void => {
-    set_value(e.target.files != null ? e.target.files[0] : '');
-  };
+  const input_props = type === 'number' ? { step: step_number ?? 0.00001 } : {};
   return (
     <>
       {!(hidden_text ?? false) && (
@@ -65,7 +65,7 @@ const FormInputController = ({
           margin={margin ?? 0}
           marginTop={marginTop ?? 0}
         >
-          {type !== 'file' ? (
+          {type !== 'number' ? (
             <Controller
               name={control_name}
               control={control_form}
@@ -115,7 +115,10 @@ const FormInputController = ({
                 min: rules.min_rule?.rule,
                 max: rules.max_rule?.rule,
               }}
-              render={({ field: { value }, fieldState: { error } }) => (
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
                 <TextField
                   margin="dense"
                   fullWidth
@@ -124,7 +127,12 @@ const FormInputController = ({
                   variant="outlined"
                   type={type}
                   disabled={disabled}
-                  onChange={handle_file_input_change}
+                  inputProps={input_props}
+                  value={value === null ? '' : value}
+                  multiline={multiline_text ?? false}
+                  rows={rows_text ?? 1}
+                  onChange={onChange}
+                  onBlur={on_blur_function}
                   error={!(error == null)}
                   helperText={
                     error != null
@@ -133,7 +141,7 @@ const FormInputController = ({
                         : error.type === 'min'
                         ? rules.min_rule?.message
                         : rules.max_rule?.message
-                      : value === '' && helper_text
+                      : helper_text
                   }
                 />
               )}

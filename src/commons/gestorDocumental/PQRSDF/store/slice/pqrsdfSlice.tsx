@@ -7,6 +7,8 @@ import type {
   IPqrsdf,
   IObjDocumentType,
   IObjPqrRequest,
+  IObjExhibit,
+  IObjMetaData,
 } from '../../interfaces/pqrsdf';
 // import { type Persona } from '../../../../../interfaces/globalModels';
 
@@ -22,6 +24,12 @@ export const type_applicant: IObjListType[] = [
     label: 'Anónimo',
   },
 ];
+
+export const initial_state_list: IObjListType = {
+  id: null,
+  key: null,
+  label: '',
+};
 
 export const on_behalf_of: IObjListType[] = [
   {
@@ -71,13 +79,38 @@ export const initial_state_company: IObjCompany = {
 
 export const initial_state_pqr: IObjPqr = {
   id_pqr: null,
-  created_at: null,
+  created_at: new Date(),
   filing_at: null,
   filing_number: null,
   pqr_status: null,
   pqr_status_id: null,
   pqr_request: [],
-  requires_response: true,
+  pqr_type: null,
+  headline: null,
+  subject: null,
+  description: null,
+  requires_response: null,
+  is_anonymous: null,
+  person_interposes_id: null,
+  titular_person_id: null,
+  code_owner_relationship: null,
+  owner_relationship: null,
+  media_type: null,
+  media_type_id: null,
+  presentation_type: null,
+  code_presentation_type: null,
+  destination_office: null,
+  destination_office_id: null,
+  person_create: null,
+  person_create_id: null,
+  reception_office: null,
+  reception_office_id: null,
+  filling_id: null,
+  filling_at: null,
+  requires_digitization: null,
+  response_time: null,
+  total_number_exhibit: null,
+  total_number_pages: null,
 };
 
 export const initial_state_pqr_request: IObjPqrRequest = {
@@ -118,11 +151,45 @@ export const person_types: IObjListType[] = [
   },
 ];
 
+export const initial_state_exhibit: IObjExhibit = {
+  id_exhibit: null,
+  exhibit_name: null,
+  exhibit_order: null,
+  storage_medium: null,
+  code_storage_medium: null,
+  other_storage_medium: null,
+  pages_number: null,
+  is_digitized: null,
+  metadata: null,
+};
+
+export const initial_state_metadata: IObjMetaData = {
+  id_metadata: null,
+  exhibit_id: null,
+  created_at: null,
+  description: null,
+  subject: null,
+  file_category: null,
+  code_file_category: null,
+  is_original: null,
+  has_physical_replica: null,
+  has_typology: null,
+  pages_number: null,
+  file_origin: null,
+  code_file_origin: null,
+  exhibit_name: null,
+  storage_medium: null,
+  key_words: null,
+  file_system_id: null,
+  file_typology_id: null,
+  file_typology: null,
+};
+
 const initial_state: IPqrsdf = {
   list_applicant_types: type_applicant,
-  type_applicant: type_applicant[1],
+  type_applicant: initial_state_list,
   list_on_behalf_of: on_behalf_of,
-  on_behalf_of: on_behalf_of[0],
+  on_behalf_of: initial_state_list,
   persons: [],
   person: initial_state_person,
   companies: [],
@@ -145,15 +212,23 @@ const initial_state: IPqrsdf = {
   },
 
   pqr_types: [],
-  pqr_type: ,
+  pqr_type: initial_state_list,
   presentation_types: [],
-  presentation_type: ,
+  presentation_type: initial_state_list,
   media_types: [],
-  media_type: ,
+  media_type: initial_state_list,
   destination_offices: [],
-  destination_office: ,
-  Exhibits: [],
-  Exhibit: ,
+  destination_office: initial_state_list,
+  storage_mediums: [],
+  exhibits: [],
+  exhibit: initial_state_exhibit,
+  file_categories: [],
+  file_category: initial_state_list,
+  file_origins: [],
+  file_origin: initial_state_list,
+  file_typologies: [],
+  file_typology: initial_state_list,
+  metadata: initial_state_metadata,
 };
 
 export const pqrsdf_slice = createSlice({
@@ -257,6 +332,96 @@ export const pqrsdf_slice = createSlice({
     ) => {
       state.document_type = action.payload;
     },
+
+    set_pqr_types: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.pqr_types = action.payload;
+    },
+    set_pqr_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.pqr_type = action.payload;
+    },
+
+    set_presentation_types: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.presentation_types = action.payload;
+    },
+    set_presentation_type: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType>
+    ) => {
+      state.presentation_type = action.payload;
+    },
+
+    set_media_types: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.media_types = action.payload;
+    },
+    set_media_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.media_type = action.payload;
+    },
+
+    set_destination_offices: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.destination_offices = action.payload;
+    },
+    set_destination_office: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType>
+    ) => {
+      state.destination_office = action.payload;
+    },
+
+    set_exhibits: (state: IPqrsdf, action: PayloadAction<IObjExhibit[]>) => {
+      state.exhibits = action.payload;
+    },
+    set_exhibit: (state: IPqrsdf, action: PayloadAction<IObjExhibit>) => {
+      state.exhibit = action.payload;
+    },
+
+    set_file_categories: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.file_categories = action.payload;
+    },
+    set_file_category: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType>
+    ) => {
+      state.file_category = action.payload;
+    },
+
+    set_file_origins: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.file_origins = action.payload;
+    },
+    set_file_origin: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.file_origin = action.payload;
+    },
+
+    set_file_typologies: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.file_typologies = action.payload;
+    },
+    set_file_typology: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType>
+    ) => {
+      state.file_typology = action.payload;
+    },
+
+    set_metadata: (state: IPqrsdf, action: PayloadAction<IObjMetaData>) => {
+      state.metadata = action.payload;
+    },
   },
 });
 export const {
@@ -281,5 +446,22 @@ export const {
   set_person_type,
   set_document_types,
   set_document_type,
+  set_pqr_types,
+  set_pqr_type,
+  set_presentation_types,
+  set_presentation_type,
+  set_media_types,
+  set_media_type,
+  set_destination_offices,
+  set_destination_office,
+  set_exhibits,
+  set_exhibit,
+  set_file_categories,
+  set_file_category,
+  set_file_origins,
+  set_file_origin,
+  set_file_typologies,
+  set_file_typology,
+  set_metadata,
   reset_state,
 } = pqrsdf_slice.actions;

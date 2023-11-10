@@ -30,6 +30,8 @@ import ImageUploader from '../form/ImageUploader';
 import FormDateTimePickerController from '../form/FormDateTimePickerController';
 import FormDateRangePickerController from '../form/FormDateRangePickerController';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
+import FormCheckboxController from '../form/FormCheckboxController';
+import FormButtonGrid from '../form/FormButtonGrid';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -86,7 +88,7 @@ const SeleccionarModeloDialogForm = ({
           rows_text={form_input.rows_text ?? 1}
           on_blur_function={form_input.on_blur_function ?? null}
           set_value={form_input.set_value ?? null}
-          hidden_text={form_input.hidden_text ?? null}
+          step_number={form_input.step_number ?? null}
         />
       );
     } else if (form_input.datum_type === 'input_no_controller') {
@@ -199,6 +201,7 @@ const SeleccionarModeloDialogForm = ({
           min_date={form_input.min_date ?? null}
           max_date={form_input.max_date ?? null}
           format={form_input.format ?? null}
+          margin={form_input.margin ?? null}
         />
       );
     } else if (form_input.datum_type === 'image_uploader') {
@@ -210,6 +213,41 @@ const SeleccionarModeloDialogForm = ({
           selected_image={form_input.selected_imagen}
           width_image={form_input.width_image}
           height_image={form_input.height_image}
+        />
+      );
+    } else if (form_input.datum_type === 'checkbox_controller') {
+      return (
+        <FormCheckboxController
+          xs={form_input.xs}
+          md={form_input.md}
+          control_form={form_input.control_form}
+          control_name={form_input.control_name}
+          default_value={form_input.default_value}
+          rules={form_input.rules}
+          label={form_input.label}
+          disabled={form_input.disabled}
+          helper_text={form_input.helper_text}
+          hidden_text={form_input.hidden_text ?? null}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
+        />
+      );
+    } else if (form_input.datum_type === 'button') {
+      return (
+        <FormButtonGrid
+          xs={form_input.xs}
+          md={form_input.md}
+          label={form_input.label}
+          disabled={form_input.disabled}
+          hidden_text={form_input.hidden_text ?? null}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
+          on_click_function={form_input.on_click_function ?? null}
+          icon_class={form_input.icon_class ?? null}
+          variant_button={form_input.variant_button ?? null}
+          type_button={form_input.type_button ?? null}
+          style_button={form_input.style_button ?? null}
+          color_button={form_input.color_button ?? null}
         />
       );
     }

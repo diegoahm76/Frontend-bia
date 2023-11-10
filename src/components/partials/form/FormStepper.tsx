@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Grid from '@mui/material/Grid';
-import { Box, Stack } from '@mui/material';
+import { Box, Chip, Stack } from '@mui/material';
 import FormInputController from './FormInputController';
 import FormInputNoController from './FormInputNoController';
 import FormSelectController from './FormSelectController';
@@ -21,33 +21,37 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { IObjStepConfiguration } from '../../../commons/gestorDocumental/PQRSDF/interfaces/pqrsdf';
+import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
+import { type SubmitHandler } from 'react-hook-form';
+import { validate } from 'uuid';
 interface IProps {
-  on_submit_form: any;
-  form_inputs: any[];
-  button_submit_label: string;
-  button_submit_icon_class: any;
-  show_button?: boolean | null;
+  configuration_steps: IObjStepConfiguration[];
+  message_success?: string | null;
+  handle_submit?: any | null;
+  validate?: any | null;
 }
 
-const steps = [
-  'Select campaign settings',
-  'Create an ad group',
-  'Create an ad',
-];
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const FormStepper = () => {
+const FormStepper = ({
+  configuration_steps,
+  message_success,
+  handle_submit,
+  validate,
+}: IProps) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepOptional = (step: number) => {
-    return step === 1;
+    return configuration_steps[step].optional ?? false;
   };
 
   const isStepSkipped = (step: number) => {
-    return skipped.has(step);
+    return configuration_steps[step].skipped ?? false;
   };
 
-  const handleNext = () => {
+  const handleNext = (data: any): void => {
+    validate(data);
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -83,19 +87,24 @@ const FormStepper = () => {
 
   return (
     <Box component="form" sx={{ width: '100%' }} margin={2}>
-      {activeStep === steps.length ? (
+      {activeStep === configuration_steps.length ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
+          <Stack direction="row" spacing={1} alignItems={'center'}>
+            <Chip
+              icon={<PlaylistAddCheckCircleIcon />}
+              label={message_success ?? 'Diligenciado con exito!!'}
+              color="success"
+            />
+          </Stack>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
+
             <Button onClick={handleReset}>Reset</Button>
           </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          {configuration_steps[activeStep].body ?? null}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
@@ -103,37 +112,39 @@ const FormStepper = () => {
               onClick={handleBack}
               sx={{ mr: 1 }}
             >
-              Back
+              Atras
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
             {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
+                Saltar
               </Button>
             )}
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            <Button onClick={handle_submit(handleNext)}>
+              {activeStep === configuration_steps.length - 1
+                ? 'Finalizar'
+                : 'Siguiente'}
             </Button>
           </Box>
         </React.Fragment>
       )}
       <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
+        {configuration_steps.map((step, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;
           } = {};
           if (isStepOptional(index)) {
             labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
+              <Typography variant="caption">Opcional</Typography>
             );
           }
           if (isStepSkipped(index)) {
             stepProps.completed = false;
           }
           return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
+            <Step key={step.step_title} {...stepProps}>
+              <StepLabel {...labelProps}>{step.step_title}</StepLabel>
             </Step>
           );
         })}

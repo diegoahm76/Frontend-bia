@@ -33,16 +33,31 @@ export interface IPqrsdf {
   media_type: IObjListType;
   destination_offices: IObjListType[];
   destination_office: IObjListType;
-  Exhibits: IObjExhibit[];
-  Exhibit: IObjExhibit;
-
+  exhibits: IObjExhibit[];
+  exhibit: IObjExhibit;
+  storage_mediums: IObjListType[];
+  file_categories: IObjListType[];
+  file_category: IObjListType;
+  file_origins: IObjListType[];
+  file_origin: IObjListType;
+  file_typologies: IObjListType[];
+  file_typology: IObjListType;
+  metadata: IObjMetaData;
 }
 
 export interface IObjListType {
   id: number | null;
   key: string | number | null;
   label: string | null;
-  reference?: string | null; // relacionar perdon_type_id en document_type
+  reference?: string | null; 
+}
+
+export interface IObjStepConfiguration {
+  step_number: number | null;
+  optional: boolean | null;
+  skipped: boolean | null;
+  step_title: string | null;
+  body?: React.ReactNode | null; 
 }
 
 export interface IObjDocumentType {
@@ -81,13 +96,14 @@ export interface IObjCompany {
 
 export interface IObjPqr {
   id_pqr?: number | null;
-  created_at?: string | null;
+  created_at?: string | Date | null;
   filing_at?: string | null;
   filing_number?: string | null;
   pqr_status?: string | null;
   pqr_status_id?: string | null;
   pqr_request?: IObjPqrRequest[];
   pqr_type?: string | null;
+  pqr_type_id?: number | null;
   headline?: string | null;
   subject?: string | null;
   description?: string | null;
@@ -110,6 +126,9 @@ export interface IObjPqr {
   filling_id?: number | null;
   filling_at?: string | null;
   requires_digitization?: boolean | null;
+  response_time?: number | null;
+  total_number_exhibit?: number | null;
+  total_number_pages?: number | null;
 }
 
 export interface IObjPqrRequest {
@@ -135,6 +154,8 @@ export interface IObjExhibit {
   other_storage_medium?: string | number | null;
   pages_number?: number | null;
   is_digitized?: boolean | null;
+  exhibit_link?: string | null;
+  metadata: IObjMetaData | null;
 }
 
 export interface IObjMetaData {
@@ -147,6 +168,7 @@ export interface IObjMetaData {
   code_file_category?: string | number | null;
   is_original?: boolean | null;
   has_physical_replica?: boolean | null;
+  has_typology?: boolean | null;
   pages_number?: number | null;
   file_origin?: string | null;
   code_file_origin?: string | number | null;
@@ -154,6 +176,7 @@ export interface IObjMetaData {
   storage_medium?: string | null;
   key_words?: string | null;
   file_system_id?: number | null;
-  file_topology_id?: number | null;
-  file_topology?: string | null;
+  file_typology_id?: number | null;
+  file_typology?: string | null;
+  other_file_typology?: string | null;
 }

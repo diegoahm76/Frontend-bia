@@ -48,7 +48,6 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Solicitud PQRSDF"></Title>
         </Grid>
-        <FormStepper />
         <SeleccionTipoPersona />
         {type_applicant.id === 1 && on_behalf_of.id === 1 && <TipoPersona />}
         {type_applicant.id === 1 && on_behalf_of.id === 2 && <TipoEmpresa />}
