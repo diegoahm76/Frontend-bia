@@ -31,7 +31,7 @@ const actions = [
     icon: <PersonAddIcon />,
     name: 'Enviar solicitud al usuario',
     path: '/app/gestor_documental/panel_ventanilla/asignar_a_usario',
-    disabled: true,
+    disabled: false,
   },
   {
     id: 'AsigGrup',

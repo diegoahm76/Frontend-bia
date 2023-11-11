@@ -36,19 +36,12 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
         fullWidth
         maxWidth="lg"
         // ? ----- numero 1 -----
-        open={true}
+        open={false}
         // ? ---  numero 2 -----
         onClose={() => {
           console.log('cerrando modal de información de elemento');
         }}
       >
-{/*        <Box
-          component="form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log('buscando trd');
-          }}
-        >*/}
           <DialogTitle>
             <Title title={infoTitle || 'Título provisional'} />
           </DialogTitle>
@@ -175,7 +168,6 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
               </Button>
             </Stack>
           </DialogActions>
-       {/* </Box> */}
       </Dialog>
     </>
   );

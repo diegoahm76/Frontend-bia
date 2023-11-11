@@ -23,6 +23,14 @@ const routes = [
     path: 'asignar_a_grupo/',
     component: () => <>Módulo de asignación a grupo</>,
   },
+  {
+      path: 'pqr_info/:id',
+      component: () => <>INFORMACIÓN DE LA PQR</>,
+  },
+  {
+    path: 'complemento_info/:id',
+    component: () => <>INFORMACIÓN DEL COMPLEMENTO</>,
+  }
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -34,7 +42,8 @@ export const PanelVentanillaRoutes: React.FC = () => {
           {routes.map((route) => (
             <Route
               key={route.path}
-              path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+              // path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+              path={route.path}
               element={route.component()}
             />
           ))}

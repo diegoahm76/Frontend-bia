@@ -6,6 +6,7 @@ import { Button, Grid } from '@mui/material';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { Link } from 'react-router-dom';
 
 export const ElementosPrincipales = (): JSX.Element => {
   //* context declaration
@@ -43,24 +44,41 @@ export const ElementosPrincipales = (): JSX.Element => {
       >
         Se debe usar para el cambio a la otra pestaña
       </Button>
-      <Button
-        color="warning"
-        variant="contained"
-        onClick={() => {
-          console.log('cambiando a ver pqrsdf');
-        }}
+      <Link
+        //* estos ids se van a manejar a traves de los params.row
+        to="/app/gestor_documental/panel_ventanilla/pqr_info/1"
       >
-        Ver pqrsdf
-      </Button>
-      <Button
-        color="error"
-        variant="contained"
-        onClick={() => {
-          console.log('cambiando a ver complemento');
-        }}
+        <Button
+          color="warning"
+          sx={{
+            marginLeft: '1rem',
+          }}
+          variant="contained"
+          onClick={() => {
+            console.log('cambiando a ver pqrsdf');
+          }}
+        >
+          Ver pqrsdf
+        </Button>
+      </Link>
+
+      <Link
+        //* estos ids se van a manejar a traves de los params.row
+        to="/app/gestor_documental/panel_ventanilla/complemento_info/1"
       >
-        Ver complemento de pqrsdf
-      </Button>
+        <Button
+          color="error"
+          sx={{
+            marginLeft: '1rem',
+          }}
+          variant="contained"
+          onClick={() => {
+            console.log('cambiando a ver complemento');
+          }}
+        >
+          Ver complemento de pqrsdf
+        </Button>
+      </Link>
       <RenderDataGrid
         rows={[]}
         columns={[]}
