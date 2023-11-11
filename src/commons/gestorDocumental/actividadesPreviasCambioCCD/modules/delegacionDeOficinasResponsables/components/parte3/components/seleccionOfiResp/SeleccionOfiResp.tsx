@@ -2,25 +2,52 @@
 import { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppSelector } from '../../../../../../../../../hooks';
-import { Grid } from '@mui/material';
+import { Button, Grid, Tooltip } from '@mui/material';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { VisaulTexto } from '../../../../../asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
 import { styles } from '../../../parte2/components/SeccSubCcdActual/SeccSubCcdActual';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import Select from 'react-select';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 
 export const SeleccionOfiResp = (): JSX.Element => {
   //* redux states
 
   const {
-    oficinasUnidadActual: { unidadActual, oficinas },
+    grilladoDeOficinas, // : { unidadActual, oficinas },
     currentUnidadSeleccionadaResponsable,
   } = useAppSelector((state) => state.DelOfiResSlice);
 
   //* context declaration
   const { thirdLoading } = useContext(ModalAndLoadingContext);
 
-  const rowsArray = unidadActual ? [...unidadActual, ...oficinas] : [];
+  // ? FUNCTIONS
+
+  /*  const onChange = (idPersona: number, unidadSeleccionada: any) => {
+    dispatch(
+      setUnidadesSeleccionadas({
+        ...unidadesSeleccionadas,
+        [idPersona]: unidadSeleccionada
+      })
+    );
+  };
+
+  const handleLimpiarSelect = (idPersona: any) => {
+    dispatch(
+      setUnidadesSeleccionadas({
+        ...unidadesSeleccionadas,
+        [idPersona]: null
+      })
+    );
+  };*/
+
+  const rowsArray = grilladoDeOficinas?.unidadActual
+    ? [
+        ...grilladoDeOficinas?.unidadActual,
+        ...grilladoDeOficinas?.oficinasActuales,
+      ]
+    : [];
 
   const columns = [
     {
@@ -72,6 +99,71 @@ export const SeleccionOfiResp = (): JSX.Element => {
         return <div>{nombre}</div>;
       },
     },
+
+    {
+      headerName: 'Selección nuevo oficina responsable',
+      field: 'oficinasNuevas',
+      minWidth: 300,
+      renderCell: (params: any) => (
+        <>
+          <div
+            style={{
+              zIndex: 999999,
+            }}
+          >
+            <Select
+              styles={{
+                container: (provided) => ({
+                  ...provided,
+                  width: '200px',
+                  height: '30px',
+
+                  zIndex: 999999,
+
+                  borderRadius: '5px',
+                }),
+              }}
+              // value={unidadesSeleccionadas[params.row.id_persona]}
+              // value={unidadesSeleccionadas}
+              onChange={(selectedOption) => {
+                //  onChange(params.row.id_persona, selectedOption);
+              }}
+              menuPortalTarget={document.body}
+              options={params?.row?.oficinasNuevas?.map((oficina: any) => ({
+                value: oficina.id_unidad_organizacional,
+                label: oficina.nombre,
+                // idPersona: params.row.id_persona
+              }))}
+              placeholder="Seleccionar"
+            />
+          </div>
+        </>
+      ),
+    },
+    {
+      headerName: 'Acciones',
+      field: 'acción',
+      width: 100,
+      renderCell: (params: any) => (
+        <>
+          <Tooltip title="Limpiar lista desplegable">
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{
+                // marginLeft: '5px',
+                width: '20px !important',
+                border: 'none',
+              }}
+              startIcon={<CleaningServicesIcon />}
+              onClick={() => {
+                // handleLimpiarSelect(params.row.id_persona);
+              }}
+            />
+          </Tooltip>
+        </>
+      ),
+    },
   ];
 
   // Verificar si hay loading
@@ -93,8 +185,8 @@ export const SeleccionOfiResp = (): JSX.Element => {
     );
   }
 
-  // Verificar la longitud del array de unidadesResponsablesActual
-  if (Array.isArray(rowsArray) && !rowsArray.length) return <></>;
+  // ? Verificar la longitud del array de unidadesResponsablesActual
+ // if (Array.isArray(rowsArray) && !rowsArray.length) return <></>;
 
   return (
     <Grid

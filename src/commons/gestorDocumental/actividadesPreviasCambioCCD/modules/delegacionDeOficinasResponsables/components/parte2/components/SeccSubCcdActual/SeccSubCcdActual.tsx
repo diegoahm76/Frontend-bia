@@ -15,11 +15,12 @@ import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCc
 import { type GridValueGetterParams } from '@mui/x-data-grid';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
-import { getOficinasUnidadSeleccionada } from '../../../../toolkit/thunks/seleccionOficina.service';
+import { getOficinas } from '../../../../toolkit/thunks/seleccionOficina.service';
 import {
   setCurrentUnidadSeleccionadaResp,
-  setOficinasUnidadActual,
+  setGrilladoOficinas,
 } from '../../../../toolkit/slice/DelOfiResSlice';
+import { control_error } from '../../../../../../../../../helpers';
 
 export const styles = {
   width: '100%',
@@ -43,7 +44,7 @@ export const SeccSubCcdActual = (): JSX.Element => {
     ModalAndLoadingContext
   );
 
-  // Verificar si hay loading
+  //* Verificar si hay loading
   if (secondLoading) {
     return (
       <Grid
@@ -72,21 +73,23 @@ export const SeccSubCcdActual = (): JSX.Element => {
   // ? espacio para las funciones manejadorqes de eventos
   const handleRequest = async (row: any) => {
     const { id_unidad_actual, id_unidad_nueva } = row;
-    console.log(ccdOrganigramaCurrentBusquedaOfiResp);
     try {
-      const getOficinasUnidadActual = await getOficinasUnidadSeleccionada(
-        id_unidad_actual,
-        handleThirdLoading
-      );
-
-      // ? este valor de manera normal va a venir partido entre dos arrays , el que contiene la unidad actual que por defecto debe ir de primerar y el array que contienen las oficinas de la unidad actual
-      console.log(getOficinasUnidadActual);
+      const getGrilladoOficinas = await getOficinas({
+        idUnidadOrganizacionalActual: id_unidad_actual,
+        idCcdNuevo: ccdOrganigramaCurrentBusquedaOfiResp.id_ccd,
+        idUnidadNueva: id_unidad_nueva,
+        setLoading: handleThirdLoading,
+      });
 
       //* se setean las oficinas de la unidad actual que ha sido seleccionada
       dispatch(setCurrentUnidadSeleccionadaResp(row));
-      dispatch(setOficinasUnidadActual(getOficinasUnidadActual));
+
+      // ? se asiga todo el grillado de oficinas en un solo dispatch( tanto las oficinas de la unidad actual como las posibles oficinas a seleccionar, de la nueva unidad)
+      dispatch(setGrilladoOficinas(getGrilladoOficinas));
     } catch (error) {
+      //* manejar el error de mejor manera
       console.log(error);
+      control_error('Error al traer las oficinas de la unidad actual');
     }
   };
 
@@ -105,10 +108,8 @@ export const SeccSubCcdActual = (): JSX.Element => {
                 aria-label="select"
                 size="large"
                 onClick={() => {
-                  console.log(params.row);
-
+                  // console.log(params.row);
                   // * aqui se debe realizar la petición para traer las oficinas correspondientes
-
                   handleRequest(params.row);
                 }}
               >

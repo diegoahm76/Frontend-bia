@@ -42,3 +42,44 @@ export const getUnidadesResponsablesActual = async ({
     setLoading(false)
   }
 };
+
+export const getUnidadesParaAsignar = async ({
+  idCcdSeleccionado,
+  setLoading,
+}: {
+  idCcdSeleccionado: number;
+  setLoading: (loading: boolean) => void;
+}) => {
+  //* no olvidar añadirel respectivo loading
+  setLoading(true)
+  try {
+    const url = `gestor/ccd/get-unidades-para-asignar/get/${idCcdSeleccionado}/`;
+    const { data } = await api.get(url);
+
+    if (!data?.success)
+      throw new Error(
+        'Ha ocurrido un error al obtener las unidades para asignar, se proceder a reiniciar el módulo'
+      );
+
+    if (data?.data?.length === 0) {
+      control_error(
+        'No se encontraron unidades para asignar para el CCD seleccionado'
+      );
+      return [];
+    }
+
+    control_success(
+      'Se encontraron unidades para asignar para el CCD seleccionado'
+    );
+    return data?.data;
+  } catch (err: any) {
+    control_error(err.message);
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+    return [];
+  } finally {
+    //* debe ir el loading
+    setLoading(false)
+  }
+}

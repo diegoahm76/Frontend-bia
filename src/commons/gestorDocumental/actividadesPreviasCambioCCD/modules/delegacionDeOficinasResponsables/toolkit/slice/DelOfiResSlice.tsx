@@ -9,7 +9,7 @@ const initialState: any= {
   unidadesResponsablesActual: [],
   currentUnidadSeleccionadaResponsable: {},
   //* oficinas de la unidad actual (seleccionada)
-  oficinasUnidadActual: [],
+  grilladoDeOficinas: [],
 };
 
 export const DelOfiResSlice = createSlice({
@@ -33,8 +33,8 @@ export const DelOfiResSlice = createSlice({
     },
 
     // ? se setean las oficinas de la unidad actual que ha sido seleccionada
-    setOficinasUnidadActual: (state, action: PayloadAction<any>) => {
-      state.oficinasUnidadActual = action.payload;
+    setGrilladoOficinas: (state, action: PayloadAction<any>) => {
+      state.grilladoDeOficinas = action.payload;
     },
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
@@ -42,7 +42,7 @@ export const DelOfiResSlice = createSlice({
       state.ccdOrganigramaCurrentBusquedaOfiResp = null;
       state.unidadesResponsablesActual = [];
       state.currentUnidadSeleccionadaResponsable = null;
-      state.oficinasUnidadActual = [];
+      state.grilladoDeOficinas = [];
     },
   },
 });
@@ -55,8 +55,8 @@ export const {
   // ! current unidad seleccionada responsable
   setCurrentUnidadSeleccionadaResp,
 
-  // ? se setean las oficinas de la unidad actual que ha sido seleccionada
-  setOficinasUnidadActual,
+  // ? se setea todo el grillado de oficinas para un mejor manejo de los estados (oficinas unidad actual y oficinas unidad nueva)
+  setGrilladoOficinas,
 
   // ? reset states
   reset_states_asi_ofi_resp,
