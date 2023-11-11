@@ -11,8 +11,8 @@ export const postDelegaciones = async ({
 }): Promise<any> => {
   setLoading?.(true);
   try {
-    /*const url = `gestor/ccd/oficinas-delegadas-ccd/create/`;
-    const response = await api.post(url, delegaciones);*/
+    const url = `gestor/ccd/oficinas-delegadas-ccd/create/`;
+    const response = await api.post(url, delegaciones);
 
     // console.log('response', response);
 
