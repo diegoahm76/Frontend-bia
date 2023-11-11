@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { Button, Grid, Tooltip } from '@mui/material';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { VisaulTexto } from '../../../../../asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
@@ -10,13 +13,17 @@ import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import Select from 'react-select';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import { setOficinasNuevaSeleccionadas } from '../../../../toolkit/slice/DelOfiResSlice';
+import { Title } from '../../../../../../../../../components';
 
 export const SeleccionOfiResp = (): JSX.Element => {
+  // dispatch declaration
+  const dispatch = useAppDispatch();
   //* redux states
-
   const {
     grilladoDeOficinas, // : { unidadActual, oficinas },
     currentUnidadSeleccionadaResponsable,
+    oficinasNuevaSeleccionadas,
   } = useAppSelector((state) => state.DelOfiResSlice);
 
   //* context declaration
@@ -24,23 +31,23 @@ export const SeleccionOfiResp = (): JSX.Element => {
 
   // ? FUNCTIONS
 
-  /*  const onChange = (idPersona: number, unidadSeleccionada: any) => {
+  const onChange = (idUnidadOrganizacional: any, oficinaSeleccionada: any) => {
     dispatch(
-      setUnidadesSeleccionadas({
-        ...unidadesSeleccionadas,
-        [idPersona]: unidadSeleccionada
+      setOficinasNuevaSeleccionadas({
+        ...oficinasNuevaSeleccionadas,
+        [idUnidadOrganizacional]: oficinaSeleccionada,
       })
     );
   };
 
-  const handleLimpiarSelect = (idPersona: any) => {
+  const handleLimpiarSelect = (idUnidadOrganizacional: any) => {
     dispatch(
-      setUnidadesSeleccionadas({
-        ...unidadesSeleccionadas,
-        [idPersona]: null
+      setOficinasNuevaSeleccionadas({
+        ...oficinasNuevaSeleccionadas,
+        [idUnidadOrganizacional]: null,
       })
     );
-  };*/
+  };
 
   const rowsArray = grilladoDeOficinas?.unidadActual
     ? [
@@ -104,49 +111,70 @@ export const SeleccionOfiResp = (): JSX.Element => {
       headerName: 'Selección nuevo oficina responsable',
       field: 'oficinasNuevas',
       minWidth: 300,
-      renderCell: (params: any) => (
-        <>
+      renderCell: (params: any) =>
+        params.row.actual ? (
           <div
             style={{
-              zIndex: 999999,
+              color: 'gray',
+              backdropFilter: 'blur(500px)',
             }}
           >
-            <Select
-              styles={{
-                container: (provided) => ({
-                  ...provided,
-                  width: '200px',
-                  height: '30px',
-
-                  zIndex: 999999,
-
-                  borderRadius: '5px',
-                }),
-              }}
-              // value={unidadesSeleccionadas[params.row.id_persona]}
-              // value={unidadesSeleccionadas}
-              onChange={(selectedOption) => {
-                //  onChange(params.row.id_persona, selectedOption);
-              }}
-              menuPortalTarget={document.body}
-              options={params?.row?.oficinasNuevas?.map((oficina: any) => ({
-                value: oficina.id_unidad_organizacional,
-                label: oficina.nombre,
-                // idPersona: params.row.id_persona
-              }))}
-              placeholder="Seleccionar"
-            />
+            <b>
+              {grilladoDeOficinas?.unidadNueva[0]?.codigo.toUpperCase()} --{' '}
+              {grilladoDeOficinas?.unidadNueva[0]?.nombre.toUpperCase()}
+            </b>
           </div>
-        </>
-      ),
+        ) : (
+          <>
+            <div
+              style={{
+                zIndex: 999999,
+              }}
+            >
+              <Select
+                styles={{
+                  container: (provided) => ({
+                    ...provided,
+                    width: '200px',
+                    height: '30px',
+                    zIndex: 999999,
+                    borderRadius: '5px',
+                  }),
+                }}
+                //oficinasNuevaSeleccionadas[params.row.id_unidad_organizacional]
+                value={
+                  oficinasNuevaSeleccionadas[params.row.id_unidad_organizacional] ||
+                  grilladoDeOficinas?.oficinasNuevas?.find(
+                    (oficina: any) => oficina.unidad_delegada === params.row.id_unidad_organizacional
+                  )
+                }
+                onChange={(selectedOption) => {
+                  console.log(selectedOption);
+                  onChange(params.row.id_unidad_organizacional, selectedOption);
+                }}
+                menuPortalTarget={document.body}
+                options={grilladoDeOficinas?.oficinasNuevas?.map((oficina: any) => ({
+                  ...oficina,
+                  unidad_delegada: oficina.unidad_delegada,
+                  value: oficina.id_unidad_organizacional,
+                  label: `${oficina.codigo} -- ${oficina.nombre}`,
+                  idUnidadOrganizacional: params.row.id_unidad_organizacional,
+                }))}
+                placeholder="Seleccionar"
+              />
+            </div>
+          </>
+        ),
     },
     {
       headerName: 'Acciones',
       field: 'acción',
       width: 100,
-      renderCell: (params: any) => (
-        <>
-          <Tooltip title="Limpiar lista desplegable">
+      renderCell: (params: any) =>
+        params.row.actual ? (
+          <></>
+        ) : (
+          <Tooltip title="Limpiar listado">
             <Button
               variant="outlined"
               color="primary"
@@ -157,12 +185,11 @@ export const SeleccionOfiResp = (): JSX.Element => {
               }}
               startIcon={<CleaningServicesIcon />}
               onClick={() => {
-                // handleLimpiarSelect(params.row.id_persona);
+                handleLimpiarSelect(params.row.id_unidad_organizacional);
               }}
             />
           </Tooltip>
-        </>
-      ),
+        ),
     },
   ];
 
@@ -186,7 +213,7 @@ export const SeleccionOfiResp = (): JSX.Element => {
   }
 
   // ? Verificar la longitud del array de unidadesResponsablesActual
- // if (Array.isArray(rowsArray) && !rowsArray.length) return <></>;
+  if (Array.isArray(rowsArray) && !rowsArray.length) return <></>;
 
   return (
     <Grid
@@ -196,6 +223,7 @@ export const SeleccionOfiResp = (): JSX.Element => {
         justifyContent: 'center',
       }}
     >
+      <Title title="Selección de oficinas responsables" />
       <Grid item xs={12} sm={12} sx={styles}>
         <VisaulTexto
           elements={[
@@ -208,7 +236,7 @@ export const SeleccionOfiResp = (): JSX.Element => {
         />
       </Grid>
       <RenderDataGrid
-        title="Selección de oficinas responsables"
+        title="Listado de elementos"
         columns={columns || []}
         rows={rowsArray || []}
       />

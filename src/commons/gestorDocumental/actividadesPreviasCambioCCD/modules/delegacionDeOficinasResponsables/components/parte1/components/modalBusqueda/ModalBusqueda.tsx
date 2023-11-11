@@ -80,7 +80,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       await validacionInicialDataPendientePorPersistir(params.row.id_ccd);
 
     if (validacionSeccionesPendientes?.data.length) {
-      const array = Array.from({ length: 0 }, (_, i) => ({
+      const array = Array.from({ length: 12 }, (_, i) => ({
         codigo: 'CCD' + i,
         nombre: `nombre${i}`,
       }));
