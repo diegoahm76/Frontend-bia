@@ -29,7 +29,7 @@ export const AccionesFinal = (): JSX.Element => {
   const handleSubmit = async () => {
     const oficinasNuevas = Object.values(oficinasNuevaSeleccionadas).map(
       (oficina: any) => ({
-        idComparacion: oficina?.idUnidadOrganizacional,
+        idComparacion: oficina?.id_unidad_organizacional,
         id_unidad_nueva: oficina?.value,
       })
     );
@@ -75,7 +75,7 @@ export const AccionesFinal = (): JSX.Element => {
       ...oficinasDelegadas,
     ]);
 
-   /* if (!oficinasDelegadas.length || !unidadesPadreUnidas.length) {
+    /* if (!oficinasDelegadas.length || !unidadesPadreUnidas.length) {
       control_warning('No se ha seleccionado ninguna oficina para delegar');
       return;
     }*/
