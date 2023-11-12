@@ -30,6 +30,12 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   //* expanded de los acordeones
   const [expanded, setExpanded] = useState<string | boolean>(false);
 
+
+  //* almacenar informacion de los anexos
+  const [anexos, setAnexos] = useState<any>([]);
+  //* almacenar informacion de los metadatos
+  const [metadatos, setMetadatos] = useState<any>([]);
+
   //? funciones actualizadoras
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) =>
@@ -43,6 +49,10 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
     handleChange,
     expanded,
     setExpanded,
+    anexos,
+    setAnexos,
+    metadatos,
+    setMetadatos,
   };
 
   return (
