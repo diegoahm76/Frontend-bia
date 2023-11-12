@@ -16,7 +16,7 @@ export const AgregarEstantes: React.FC = () => {
   useEffect(() => {
     void fetch_data_orden_estante();
   }, []);
-  
+
   useEffect(() => {
     reset_estantes({
       identificacion_por_deposito: '',

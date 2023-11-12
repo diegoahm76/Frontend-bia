@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
+import { AgregarPlanes } from '../components/Planes/AgregarPlanes';
+import { ListarPlanes } from '../components/Planes/ListarPlanes';
+import { useAppSelector } from '../../../../hooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const PGARScreen: React.FC = () => {
+export const PlanesScreen: React.FC = () => {
+  const { mode } = useAppSelector((state) => state.planes);
+
   return (
     <>
       <Grid
@@ -22,9 +27,11 @@ export const PGARScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="PGAR" />
+          <Title title="Planes" />
         </Grid>
       </Grid>
+      <ListarPlanes />
+      {mode.crear || mode.editar ? <AgregarPlanes /> : null}
     </>
   );
 };

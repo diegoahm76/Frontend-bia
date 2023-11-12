@@ -1,13 +1,24 @@
 import { Route, Routes } from 'react-router-dom';
-import { PGARRoutes } from '../PGAR/router/PGARRoutes';
+import { PlanesRoutes } from '../Planes/router/PlanesRoutes';
 import { Page404 } from '../../../screens/404';
-
+import { ConfiguracionesBasicasRoutes } from '../configuraciones/Routes/ConfiguracionesBasicasRoutes';
+import { EjeEstretegicoRoutes } from '../EjeEstrategico/router/EjeEstretegicoRoutes';
 
 const routes = [
   {
-    path: 'pgar/',
-    name: 'pgar',
-    component: () => <PGARRoutes />,
+    path: 'informacion/',
+    name: 'informacion',
+    component: () => <PlanesRoutes />,
+  },
+  {
+    path: 'eje/',
+    name: 'eje',
+    component: () => <EjeEstretegicoRoutes />,
+  },
+  {
+    path: 'configuraciones_basicas/',
+    name: 'configuraciones_basicas',
+    component: () => <ConfiguracionesBasicasRoutes />,
   },
 ];
 
