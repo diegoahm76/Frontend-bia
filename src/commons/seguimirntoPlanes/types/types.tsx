@@ -23,8 +23,28 @@ export interface IEjeEstrategico {
   id_plan?: number | null;
   id_tipo_eje?: number | null;
 }
+// Objetivo
+export interface IObjetivo {
+  id_objetivo?: number | null;
+  nombre_plan?: string;
+  nombre_objetivo: string;
+  id_plan?: number | null;
+}
+// Programas
+export interface IProgramas {
+  id_programa?: number | null;
+  nombre_plan?: string;
+  porcentaje_1: number | null;
+  porcentaje_2: number | null;
+  porcentaje_3: number | null;
+  porcentaje_4: number | null;
+  nombre_programa: string;
+  id_plan?: number | null;
+}
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
   mode: IMode;
+  obj_plan: IObjetivo;
+  programa: IProgramas;
 }

@@ -3,6 +3,8 @@ import { PlanesRoutes } from '../Planes/router/PlanesRoutes';
 import { Page404 } from '../../../screens/404';
 import { ConfiguracionesBasicasRoutes } from '../configuraciones/Routes/ConfiguracionesBasicasRoutes';
 import { EjeEstretegicoRoutes } from '../EjeEstrategico/router/EjeEstretegicoRoutes';
+import { ObjetivosRoutes } from '../Objetivos/router/ObjetivosRoutes';
+import { ProgramasRoutes } from '../Programas/router/ProgramasRoutes';
 
 const routes = [
   {
@@ -19,6 +21,21 @@ const routes = [
     path: 'configuraciones_basicas/',
     name: 'configuraciones_basicas',
     component: () => <ConfiguracionesBasicasRoutes />,
+  },
+  {
+    path: 'objetivos/',
+    name: 'objetivos',
+    component: () => <ObjetivosRoutes />,
+  },
+  {
+    path: 'programas/',
+    name: 'programas',
+    component: () => <ProgramasRoutes />,
+  },
+  {
+    path: '/*',
+    name: '404',
+    component: () => <Page404 />,
   },
 ];
 

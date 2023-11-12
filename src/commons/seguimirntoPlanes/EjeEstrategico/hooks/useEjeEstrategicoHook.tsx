@@ -51,7 +51,7 @@ export const useEjeEstrategicoHook = (): any => {
 
   // declaracion redux
   const {
-    plan: { id_plan },
+    plan: { id_plan }, eje_estrategico: { id_eje_estrategico },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_eje_estrategico = handleSubmit_eje_estrategico(
@@ -82,7 +82,7 @@ export const useEjeEstrategicoHook = (): any => {
       console.log(data, 'data');
       set_is_saving_eje_estrategico(true);
       await put_eje_estrategico(
-        (id_plan as number) ?? 0,
+        (id_eje_estrategico as number) ?? 0,
         data as IEjeEstrategico
       );
       control_success('Se actualizó correctamente');

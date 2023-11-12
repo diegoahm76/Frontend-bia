@@ -4,6 +4,8 @@ import type {
   IEjeEstrategico,
   IPlanes,
   IPlanesIndex,
+  IObjetivo,
+  IProgramas,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -22,7 +24,7 @@ export const mode_planes: IMode = {
   editar: false,
 };
 
-export const initial_state_objetivo: IEjeEstrategico = {
+export const initial_state_eje_estrategico: IEjeEstrategico = {
   id_eje_estrategico: null,
   nombre_plan: '',
   nombre_tipo_eje: '',
@@ -31,10 +33,30 @@ export const initial_state_objetivo: IEjeEstrategico = {
   id_tipo_eje: null,
 };
 
+export const initial_state_objetivo_plan: IObjetivo = {
+  id_objetivo: null,
+  nombre_plan: '',
+  nombre_objetivo: '',
+  id_plan: null,
+};
+
+export const initial_state_programa: IProgramas = {
+  id_programa: null,
+  nombre_plan: '',
+  porcentaje_1: null,
+  porcentaje_2: null,
+  porcentaje_3: null,
+  porcentaje_4: null,
+  nombre_programa: '',
+  id_plan: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
-  eje_estrategico: initial_state_objetivo,
+  eje_estrategico: initial_state_eje_estrategico,
   mode: mode_planes,
+  obj_plan: initial_state_objetivo_plan,
+  programa: initial_state_programa,
 };
 export const planes_slice = createSlice({
   name: 'planes',
@@ -60,6 +82,18 @@ export const planes_slice = createSlice({
     ) => {
       state.mode = action.payload;
     },
+    set_current_objetivo: (
+      state: IPlanesIndex,
+      action: PayloadAction<IObjetivo>
+    ) => {
+      state.obj_plan = action.payload;
+    },
+    set_current_programa: (
+      state: IPlanesIndex,
+      action: PayloadAction<IProgramas>
+    ) => {
+      state.programa = action.payload;
+    },
   },
 });
 
@@ -68,4 +102,6 @@ export const {
   set_current_planes,
   set_current_eje_estrategico,
   set_current_mode_planes,
+  set_current_objetivo,
+  set_current_programa,
 } = planes_slice.actions;
