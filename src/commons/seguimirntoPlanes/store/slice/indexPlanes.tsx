@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { set } from 'date-fns';
 import type {
   IMode,
   IEjeEstrategico,
@@ -6,6 +7,7 @@ import type {
   IPlanesIndex,
   IObjetivo,
   IProgramas,
+  IProyectos,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -51,12 +53,24 @@ export const initial_state_programa: IProgramas = {
   id_plan: null,
 };
 
+export const initial_state_proyecto: IProyectos = {
+  id_proyecto: null,
+  nombre_programa: '',
+  pondera_1: null,
+  pondera_2: null,
+  pondera_3: null,
+  pondera_4: null,
+  nombre_proyecto: '',
+  id_programa: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
   mode: mode_planes,
   obj_plan: initial_state_objetivo_plan,
   programa: initial_state_programa,
+  proyecto: initial_state_proyecto,
 };
 export const planes_slice = createSlice({
   name: 'planes',
@@ -94,6 +108,12 @@ export const planes_slice = createSlice({
     ) => {
       state.programa = action.payload;
     },
+    set_current_proyecto: (
+      state: IPlanesIndex,
+      action: PayloadAction<IProyectos>
+    ) => {
+      state.proyecto = action.payload;
+    },
   },
 });
 
@@ -104,4 +124,5 @@ export const {
   set_current_mode_planes,
   set_current_objetivo,
   set_current_programa,
+  set_current_proyecto,
 } = planes_slice.actions;

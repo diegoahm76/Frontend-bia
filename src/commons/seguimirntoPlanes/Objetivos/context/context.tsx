@@ -64,6 +64,7 @@ export const UserProviderObjetivo= ({
 
   const fetch_data_objetivo = async (): Promise<void> => {
     try {
+      set_rows_objetivo([]);
       const response = await get_objetivo_id(id_plan as number);
       if (response?.length > 0) {
         const data_objetivo: IObjetivo[] = response.map(

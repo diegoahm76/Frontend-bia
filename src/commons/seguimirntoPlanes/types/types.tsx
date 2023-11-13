@@ -41,10 +41,22 @@ export interface IProgramas {
   nombre_programa: string;
   id_plan?: number | null;
 }
+// Proyectos
+export interface IProyectos {
+  id_proyecto?: number | null;
+  nombre_programa?: string;
+  pondera_1: number | null;
+  pondera_2: number | null;
+  pondera_3: number | null;
+  pondera_4: number | null;
+  nombre_proyecto: string;
+  id_programa?: number | null;
+}
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
   mode: IMode;
   obj_plan: IObjetivo;
   programa: IProgramas;
+  proyecto: IProyectos;
 }

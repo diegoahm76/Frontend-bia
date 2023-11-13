@@ -5,6 +5,7 @@ import { ConfiguracionesBasicasRoutes } from '../configuraciones/Routes/Configur
 import { EjeEstretegicoRoutes } from '../EjeEstrategico/router/EjeEstretegicoRoutes';
 import { ObjetivosRoutes } from '../Objetivos/router/ObjetivosRoutes';
 import { ProgramasRoutes } from '../Programas/router/ProgramasRoutes';
+import { ProyectosRoutes } from '../Proyectos/router/ProyectosRoutes';
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: 'programas/',
     name: 'programas',
     component: () => <ProgramasRoutes />,
+  },
+  {
+    path: 'proyectos/',
+    name: 'proyectos',
+    component: () => <ProyectosRoutes />,
   },
   {
     path: '/*',

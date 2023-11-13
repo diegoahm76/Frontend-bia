@@ -72,6 +72,7 @@ export const UserProviderEjeEstrategico = ({
   } = useAppSelector((state) => state.planes);
 
   const fetch_data_eje_estrategico = async (): Promise<void> => {
+    set_rows_eje_estrategico([]);
     try {
       const response = await get_eje_estrategico_id(id_plan as number);
       if (response?.length > 0) {
@@ -97,6 +98,7 @@ export const UserProviderEjeEstrategico = ({
 
   const fetch_data_eje_estrategico2 = async (): Promise<void> => {
     try {
+      set_rows_eje_estrategico([]);
       const response = await get_eje_estrategico();
       if (response?.length > 0) {
         const data_eje_estrategico: IEjeEstrategico[] | any = response.map(

@@ -2,16 +2,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import React, { createContext } from 'react';
-import type { IProgramas } from '../../types/types';
+import type { IProgramas, IProyectos } from '../../types/types';
 import { control_error } from '../../../../helpers';
 import { useAppSelector } from '../../../../hooks';
 import { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
-import { get_programa_id } from '../services/services';
+import { get_programas, get_proyecto_id } from '../services/services';
 
 interface UserContext {
   // * id
 
   // * rows
+  rows_proyecto: IProyectos[];
+  set_rows_proyecto: (value: IProyectos[]) => void;
   rows_programa: IProgramas[];
   set_rows_programa: (value: IProgramas[]) => void;
 
@@ -23,20 +25,24 @@ interface UserContext {
 
   // * fetch
 
+  fetch_data_proyecto: () => Promise<void>;
   fetch_data_programa: () => Promise<void>;
 }
 
-export const DataContextprograma = createContext<UserContext>({
+export const DataContextProyectos = createContext<UserContext>({
+  rows_proyecto: [],
+  set_rows_proyecto: () => {},
   rows_programa: [],
   set_rows_programa: () => {},
 
   tipo_eje_selected: [],
   set_tipo_eje_selected: () => {},
 
+  fetch_data_proyecto: async () => {},
   fetch_data_programa: async () => {},
 });
 
-export const UserProviderPrograma= ({
+export const UserProviderProyectos = ({
   children,
 }: {
   children: React.ReactNode;
@@ -47,25 +53,51 @@ export const UserProviderPrograma= ({
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
     ValueProps[]
   >([]);
+  const [rows_programa, set_rows_programa] = React.useState<IProgramas[]>([]);
 
   // * rows
 
-  const [rows_programa, set_rows_programa] = React.useState<
-    IProgramas[]
-  >([]);
+  const [rows_proyecto, set_rows_proyecto] = React.useState<IProyectos[]>([]);
 
   // * info
 
   // * fetch
   //* declaracion context
   const {
-    plan: { id_plan },
+    programa: { id_programa },
   } = useAppSelector((state) => state.planes);
+
+  const fetch_data_proyecto = async (): Promise<void> => {
+    try {
+      set_rows_proyecto([]);
+      const response = await get_proyecto_id(id_programa as number);
+      if (response?.length > 0) {
+        const data_proyecto: IProyectos[] = response.map(
+          (item: IProyectos) => ({
+            id_proyecto: item.id_proyecto,
+            nombre_proyecto: item.nombre_proyecto,
+            pondera_1: item.pondera_1,
+            pondera_2: item.pondera_2,
+            pondera_3: item.pondera_3,
+            pondera_4: item.pondera_4,
+            id_programa: item.id_programa,
+            nombre_programa: item.nombre_programa,
+          })
+        );
+
+        set_rows_proyecto(data_proyecto);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
 
   const fetch_data_programa = async (): Promise<void> => {
     try {
       set_rows_programa([]);
-      const response = await get_programa_id(id_plan as number);
+      const response = await get_programas();
       if (response?.length > 0) {
         const data_programa: IProgramas[] = response.map(
           (item: IProgramas) => ({
@@ -95,20 +127,23 @@ export const UserProviderPrograma= ({
     // * select
     tipo_eje_selected,
     set_tipo_eje_selected,
-
-    // * rows
     rows_programa,
     set_rows_programa,
+
+    // * rows
+    rows_proyecto,
+    set_rows_proyecto,
 
     // * info
 
     // * fetch
+    fetch_data_proyecto,
     fetch_data_programa,
   };
 
   return (
-    <DataContextprograma.Provider value={value}>
+    <DataContextProyectos.Provider value={value}>
       {children}
-    </DataContextprograma.Provider>
+    </DataContextProyectos.Provider>
   );
 };

@@ -47,6 +47,7 @@ export const UserProviderPlanes = ({
   // * fetch
   const fetch_data_planes = async (): Promise<void> => {
     try {
+      set_rows_planes([]);
       const response = await get_planes();
       if (response?.length > 0) {
         const data_planes: IPlanes[] | any = response.map((item: IPlanes) => ({
