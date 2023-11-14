@@ -10,22 +10,26 @@ import { miEstilo } from '../interfaces/types';
 import SearchIcon from '@mui/icons-material/Search';
 import { ActualizarExpediente } from './ActualizarExpediente';
 import { useForm } from 'react-hook-form';
-import { IObjCierreExpediente, IObjExpedientes } from '../../Expedientes/cierreExpediente/interfaces/cierreExpedientes';
+import { IObjCierreExpediente, IObjExpedientes, } from '../../Expedientes/cierreExpediente/interfaces/cierreExpedientes';
 import BuscarExpediente from '../../Expedientes/cierreExpediente/components/buscarExpediente';
 import { LoadingButton } from '@mui/lab';
 import FormInputController from '../../../../components/partials/form/FormInputController';
 
+
+
+
 export const ReubicacionExpediente: React.FC = () => {
-  const { control: control_cierre_expediente, getValues: get_values, reset: reset_cierre_expediente, handleSubmit: handle_cierre_expediente } = useForm<IObjCierreExpediente>();
+
+  const { control: control_cierre_expediente, getValues: get_values, reset: reset_cierre_expediente, handleSubmit: handle_cierre_expediente } = useForm<IObjExpedientes>();
   const [open_modal, set_open_modal] = useState(false);
   const [selected_expediente, set_selected_expediente] = useState<IObjExpedientes>();
 
   const handle_close_buscar = () => {
     set_open_modal(false);
   };
+  
   const handle_selected_expediente = (expediente: IObjExpedientes) => {
     set_selected_expediente(expediente);
-
   };
   const handle_buscar = () => {
     set_open_modal(true);
@@ -137,10 +141,14 @@ export const ReubicacionExpediente: React.FC = () => {
             label={"Subserie "}
           />
         </Grid>
+
+       
         <Grid item xs={12} sm={12}>
+          
           <TextField
             variant="outlined"
             size="small"
+            
             label="Descripción de expediente"
             fullWidth
             multiline
@@ -158,7 +166,7 @@ export const ReubicacionExpediente: React.FC = () => {
 
 
 
-      <ActualizarExpediente />
+      <ActualizarExpediente  />
 
 
 
@@ -167,10 +175,10 @@ export const ReubicacionExpediente: React.FC = () => {
 
       {open_modal && (
         <BuscarExpediente
-          control_cierre_expediente={control_cierre_expediente}
-          open={open_modal}
-          handle_close_buscar={handle_close_buscar}
-          get_values={get_values}
+        open={open_modal}
+        get_values={get_values}
+        handle_close_buscar={handle_close_buscar}
+        control_cierre_expediente={control_cierre_expediente}
           handle_selected_expediente={handle_selected_expediente}
 
         />
