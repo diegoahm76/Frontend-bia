@@ -91,6 +91,7 @@ export const ConfiguracionUnidadOrganizacional = () => {
             console.error(error);
         }
     };
+    console.log(seccionoSubseccion);
 
     useEffect(() => {
         fetch_choise_seccionsubseccion().catch((error) => {
