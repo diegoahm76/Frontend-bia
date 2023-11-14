@@ -60,7 +60,6 @@ export interface IProductos {
   nombre_producto: string;
   id_proyecto?: number | null;
   numero_producto?: number | null;
-
 }
 // Actividades
 export interface IActividades {
@@ -72,6 +71,23 @@ export interface IActividades {
   id_plan?: number | null;
   nombre_plan?: string;
 }
+// Indicadores
+export interface Indicadores {
+  id_indicador?: number | null;
+  nombre_medicion?: string;
+  nombre_tipo?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  nombre_plan?: string;
+  nombre_indicador: string;
+  linea_base: string;
+  medida: string;
+  id_medicion?: number | null;
+  id_tipo?: number | null;
+  id_producto?: number | null;
+  id_actividad?: number | null;
+  id_plan?: number | null;
+}
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
@@ -81,4 +97,5 @@ export interface IPlanesIndex {
   proyecto: IProyectos;
   producto: IProductos;
   actividad: IActividades;
+  indicador: Indicadores;
 }
