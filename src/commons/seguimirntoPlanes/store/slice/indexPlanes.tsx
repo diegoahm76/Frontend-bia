@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { set } from 'date-fns';
 import type {
   IMode,
   IEjeEstrategico,
@@ -10,6 +9,7 @@ import type {
   IProyectos,
   IProductos,
   IActividades,
+  Indicadores,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -85,6 +85,23 @@ export const initial_state_actividades: IActividades = {
   nombre_plan: '',
 };
 
+export const initial_state_indicadores: Indicadores = {
+  id_indicador: null,
+  nombre_medicion: '',
+  nombre_tipo: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  nombre_plan: '',
+  nombre_indicador: '',
+  linea_base: '',
+  medida: '',
+  id_medicion: null,
+  id_tipo: null,
+  id_producto: null,
+  id_actividad: null,
+  id_plan: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -94,7 +111,9 @@ export const initial_state: IPlanesIndex = {
   proyecto: initial_state_proyecto,
   producto: initial_state_productos,
   actividad: initial_state_actividades,
+  indicador: initial_state_indicadores,
 };
+
 export const planes_slice = createSlice({
   name: 'planes',
   initialState: initial_state,
@@ -149,6 +168,12 @@ export const planes_slice = createSlice({
     ) => {
       state.actividad = action.payload;
     },
+    set_current_indicador: (
+      state: IPlanesIndex,
+      action: PayloadAction<Indicadores>
+    ) => {
+      state.indicador = action.payload;
+    }
   },
 });
 
@@ -162,4 +187,5 @@ export const {
   set_current_proyecto,
   set_current_producto,
   set_current_actividad,
+  set_current_indicador,
 } = planes_slice.actions;

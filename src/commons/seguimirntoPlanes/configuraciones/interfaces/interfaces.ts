@@ -43,3 +43,11 @@ export interface IMedicion {
   item_ya_usado?: boolean;
   registro_precargado?: boolean;
 }
+// Tipos
+export interface ITipos {
+  id_tipo?: number;
+  nombre_tipo?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}

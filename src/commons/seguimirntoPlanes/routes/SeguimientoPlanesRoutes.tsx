@@ -8,6 +8,7 @@ import { ProgramasRoutes } from '../Programas/router/ProgramasRoutes';
 import { ProyectosRoutes } from '../Proyectos/router/ProyectosRoutes';
 import { ProductosRoutes } from '../Productos/router/ProductosRoutes';
 import { ActividadesRoutes } from '../Actividades/router/ActividadesRoutes';
+import { IndicadoresRoutes } from '../Indicadores/router/IndicadoresRoutes';
 
 const routes = [
   {
@@ -49,6 +50,11 @@ const routes = [
     path: 'actividades/',
     name: 'actividades',
     component: () => <ActividadesRoutes />,
+  },
+  {
+    path: 'indicadores/',
+    name: 'indicadores',
+    component: () => <IndicadoresRoutes />,
   },
   {
     path: '/*',
