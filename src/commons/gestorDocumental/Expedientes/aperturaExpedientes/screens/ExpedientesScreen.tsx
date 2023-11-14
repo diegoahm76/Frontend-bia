@@ -70,10 +70,17 @@ export const ExpedientesScreen: React.FC = () => {
         set_open_modal(false);
     };
 
-    const handle_mover_carpeta = (carpeta_mover: any) => {
-        reset_carpeta_destino(carpeta_mover);
-        let carpetas_new = carpetas;
-        carpetas_new.push({ ruta: carpeta_mover.identificacion_caja + ' > ' + carpeta_mover.identificacion_bandeja + ' > ' + carpeta_mover.identificacion_estante + ' > ' + carpeta_mover.identificacion_deposito, carpetas: [{id_carpeta_caja: carpeta_mover.id_carpeta, carpeta: carpeta_mover.identificacion_carpeta}]});
+    const handle_mover_carpeta = (carpeta: any) => {
+        reset_carpeta_destino(carpeta);
+        let carpetas_new: any[] = carpetas;
+        const index = carpetas_new.findIndex((c: any)=> c.ruta === (carpeta.identificacion_deposito + ' > ' + carpeta.identificacion_estante + ' > ' + carpeta.identificacion_bandeja + ' > ' + carpeta.identificacion_caja).toUpperCase())
+        if(index !== -1){
+            const carpeta_index = carpetas_new[index].carpetas.findIndex((c: any)=> c.id_carpeta_caja === carpeta.id_carpeta);
+            if(carpeta_index === -1)
+                carpetas_new[index].carpetas.push({id_carpeta_caja: carpeta.id_carpeta, carpeta: carpeta.identificacion_carpeta});
+        }else
+            carpetas_new.push({ ruta: (carpeta.identificacion_deposito + ' > ' + carpeta.identificacion_estante + ' > ' + carpeta.identificacion_bandeja + ' > ' + carpeta.identificacion_caja).toUpperCase(), carpetas: [{id_carpeta_caja: carpeta.id_carpeta, carpeta: carpeta.identificacion_carpeta}]});
+        
         set_carpetas([...carpetas_new]);
     };
 
@@ -200,6 +207,8 @@ export const ExpedientesScreen: React.FC = () => {
     }
 
     const crear_obj_expediente = (): void => {
+        const ids_carpetas = carpetas?.map((obj: any) => obj.carpetas.map((obj_carp: any) => obj_carp.id_carpeta_caja));
+        const carpetas_union = [].concat.apply([], ids_carpetas);
         if (expediente.expediente.length === 0) {
             const expediente_obj = {
                 "titulo_expediente": titulo,
@@ -210,7 +219,7 @@ export const ExpedientesScreen: React.FC = () => {
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
                 "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
                 "cod_tipo_expediente": expediente?.cod_tipo_expediente,
-                "carpetas_caja": carpetas.length === 0 ? [] : carpetas?.map((obj: any) => obj.carpetas.map((obj_carp: any) => obj_carp.id_carpeta_caja))[0],
+                "carpetas_caja": carpetas.length === 0 ? [] : carpetas_union,
                 "id_cat_serie_und_org_ccd_trd_prop": serie.id_catserie_unidadorg,//tripeta serie
                 "id_trd_origen": tdr.id_trd,
                 "id_und_seccion_propietaria_serie": seccion,
@@ -225,7 +234,7 @@ export const ExpedientesScreen: React.FC = () => {
         } else {
             const expediente_obj = {
                 "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
-                "carpetas_caja":  carpetas.length === 0 ? [] : carpetas?.map((obj: any) => obj.carpetas.map((obj_carp: any) => obj_carp.id_carpeta_caja))[0],
+                "carpetas_caja":  carpetas.length === 0 ? [] : carpetas_union,
                 "descripcion_expediente": descripcion,
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
             }
