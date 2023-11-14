@@ -6,16 +6,10 @@ import { containerStyles } from './../../../../../../tca/screens/utils/constants
 
 export const Parte2ScreenOfi = (): JSX.Element => {
   return (
-    <Grid
-      container
-      sx={{
-        ...containerStyles,
-        justifyContent: 'center',
-      }}
-    >
+
       <>
         <SeccSubCcdActual />
       </>
-    </Grid>
+
   );
 };

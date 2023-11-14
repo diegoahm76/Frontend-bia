@@ -10,11 +10,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { SerieDocumentalScreen } from "./SerieDocumentalScreen";
-import AnularExpedienteModal from "../../aperturaExpedientes/screens/AnularExpediente";
 import BuscarExpediente from "./BuscarExpediente";
 import { ExpedienteSeleccionado } from "./ExpedienteSeleccionado";
 import { ArchivoDocumento } from "./ArchivoDocumento";
-import { actualizar_documento, borrar_documento, crear_indexacion_documentos } from "../thunks/indexacionExpedientes";
+import { borrar_documento, crear_indexacion_documentos } from "../thunks/indexacionExpedientes";
+import AnularDocumnetoModal from "./AnularDocumento";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -37,6 +37,7 @@ export const IndexacionScreen: React.FC = () => {
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [archivos, set_archivos] = useState<any>([]);
     const [actualizar, set_actualizar] = useState<boolean>(false);
+    const [anulado, set_anulado] = useState<boolean>(false);
 
     // Sección apertura
     const [tdr, set_tdr] = useState<any>({});
@@ -46,6 +47,11 @@ export const IndexacionScreen: React.FC = () => {
     useEffect(() => {
         obtener_usuario_logueado_fc();
     }, []);
+
+    useEffect(() => {
+        if(configuracion !== null)
+            configuracion?.expediente.length > 0 ? set_anulado(configuracion?.expediente[0]?.anulado) : set_anulado(false);
+    }, [configuracion]);
 
     const borrar_documento_fc: () => void = () => {
         dispatch(borrar_documento(id_documento_seleccionado)).then((response: any)=>{
@@ -77,8 +83,8 @@ export const IndexacionScreen: React.FC = () => {
             // form_data.append('archivos', data_archivos[0]);
             data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
             dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
-                // if(response.success)
-                //     set_expediente({expediente: [response.data]});
+                if(response.success)
+                    set_limpiar(true);
             });
         } 
     };
@@ -151,7 +157,7 @@ export const IndexacionScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            {expediente !== null && !actualizar && <Button
+                            {(expediente !== null && !actualizar && !anulado) && <Button
                                 color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
@@ -167,7 +173,7 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {id_documento_seleccionado !== null && expediente !== null && <Button
+                            {(id_documento_seleccionado !== null && !anulado && expediente !== null) && <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
@@ -175,8 +181,8 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Anular documento
                             </Button>}
-                            {<AnularExpedienteModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularExpedienteModal>}
-                            {id_documento_seleccionado !== null && expediente !== null && <Button
+                            {<AnularDocumnetoModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularDocumnetoModal>}
+                            {(id_documento_seleccionado !== null && expediente !== null) && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_documento_fc() }}
