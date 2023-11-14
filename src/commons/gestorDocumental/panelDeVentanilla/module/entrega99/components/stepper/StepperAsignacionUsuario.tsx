@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
+import { Parte1Screen } from '../parte1/screen/Parte1Screen';
 
 export const StepperAsignacionUsuario = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -117,7 +118,7 @@ export const StepperAsignacionUsuario = () => {
                 {
                   /*parte 1*/
                 }
-                return <Parte2Screen />;
+                return <Parte1Screen />;
               case 1:
                 return <Parte2Screen />;
               case 2:
