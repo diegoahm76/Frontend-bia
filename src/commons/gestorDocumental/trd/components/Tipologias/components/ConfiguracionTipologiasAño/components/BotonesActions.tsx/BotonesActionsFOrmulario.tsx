@@ -49,12 +49,13 @@ export const BotonesActionsFormulario = () => {
       const postData = {
         "id_tipologia_doc": Formulario_Empresa.id_tipologia_documental,
         "maneja_consecutivo": Formulario_Empresa.maneja_consecutivo,
-        "nivel_consecutivo": "EM",
-        "valor_inicial": Formulario_Empresa.valor_inicial,
-        "cantidad_digitos": Formulario_Empresa.cantidad_digitos
-      };
-      const res = await api.post(url, postData);
-      const numeroConsulta = res.data.data;
+        "nivel_consecutivo": "SS",
+        "configuracion_por_unidad": Formulario_Empresa.configuracion_por_unidad
+    }
+    ;
+    console.log(postData);
+      // const res = await api.post(url, postData);
+      // const numeroConsulta = res.data.data;
 
       control_success("se creo correctamente");
     } catch (error: any) {
