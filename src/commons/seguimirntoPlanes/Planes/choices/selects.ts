@@ -12,4 +12,8 @@ export const tipo_plan = [
     value: 'PGR',
     label: 'Plan de Gestión Ambiental Regional',
   },
+  {
+    value: 'PES',
+    label: 'Plan de desarrollo economico y social',
+  },
 ];

@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  Alert,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Alert, Button, Grid, TextField, Typography } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -158,7 +152,7 @@ export const AgregarPrograma: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Porcentaje 1"
+                  label="Año 1"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -184,7 +178,7 @@ export const AgregarPrograma: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Porcentaje 2"
+                  label="Año 2"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -210,7 +204,7 @@ export const AgregarPrograma: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Porcentaje 3"
+                  label="Año 3"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -236,7 +230,7 @@ export const AgregarPrograma: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Porcentaje 4"
+                  label="Año 4"
                   variant="outlined"
                   value={value}
                   disabled={false}

@@ -115,7 +115,7 @@ export const AgregarProyecto: React.FC = () => {
               <Grid item xs={12} sm={6}></Grid>
             </>
           ) : null}
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="nombre_proyecto"
               control={control_proyecto}
@@ -141,6 +141,33 @@ export const AgregarProyecto: React.FC = () => {
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_proyecto"
+              control={control_proyecto}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Numero del proyecto"
+                  type="number"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_proyecto.numero_proyecto}
+                  // helperText={
+                  //   errors_proyecto.numero_proyecto
+                  //     ? 'Es obligatorio ingresar un nombre'
+                  //     : 'Ingrese un nombre'
+                  // }
+                />
+              )}
+            />
+          </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="pondera_1"
@@ -151,18 +178,18 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Ponderado 1"
+                  label="Año 1"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_proyecto.pondera_1}
-                  helperText={
-                    errors_proyecto.pondera_1
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
-                  }
+                  // error={!!errors_proyecto.pondera_1}
+                  // helperText={
+                  //   errors_proyecto.pondera_1
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
                 />
               )}
             />
@@ -177,18 +204,18 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Ponderado 2"
+                  label="Año 2"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_proyecto.pondera_2}
-                  helperText={
-                    errors_proyecto.pondera_2
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
-                  }
+                  // error={!!errors_proyecto.pondera_2}
+                  // helperText={
+                  //   errors_proyecto.pondera_2
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
                 />
               )}
             />
@@ -203,18 +230,18 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Ponderado 3"
+                  label="Año 3"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_proyecto.pondera_3}
-                  helperText={
-                    errors_proyecto.pondera_3
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
-                  }
+                  // error={!!errors_proyecto.pondera_3}
+                  // helperText={
+                  //   errors_proyecto.pondera_3
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
                 />
               )}
             />
@@ -229,18 +256,18 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Ponderado 4"
+                  label="Año 4"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_proyecto.pondera_4}
-                  helperText={
-                    errors_proyecto.pondera_4
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
-                  }
+                  // error={!!errors_proyecto.pondera_4}
+                  // helperText={
+                  //   errors_proyecto.pondera_4
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
                 />
               )}
             />

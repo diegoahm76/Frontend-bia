@@ -1,23 +1,33 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, Chip, Grid, IconButton } from '@mui/material';
+import { Avatar, Box, Grid, IconButton } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { useAppDispatch } from '../../../../../hooks';
 import {
-  set_current_proyecto,
   set_current_mode_planes,
+  set_current_producto,
 } from '../../../store/slice/indexPlanes';
-import { DataContextProyectos } from '../../context/context';
-import { Programa } from '../../../../recursoHidrico/PORH/Interfaces/interfaces';
+import { DataContextActividades } from '../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarProyecto: React.FC = () => {
-
-  const columns_proyectos: GridColDef[] = [
+export const ListarProductos: React.FC = () => {
+  const columns_productos: GridColDef[] = [
+    {
+      field: 'nombre_producto',
+      headerName: 'NOMBRE DEL PRODUCTO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'numero_producto',
+      headerName: 'NUMERO DEL PRODUCTO',
+      sortable: true,
+      width: 200,
+    },
     {
       field: 'nombre_proyecto',
       headerName: 'NOMBRE DEL PROYECTO',
@@ -25,46 +35,10 @@ export const ListarProyecto: React.FC = () => {
       width: 300,
     },
     {
-      field: 'numero_proyecto',
-      headerName: 'NUMERO DEL PROYECTO',
-      sortable: true,
-      width: 200,
-    },
-    {
-      field: 'nombre_programa',
-      headerName: 'NOMBRE DEL PROGRAMA',
-      sortable: true,
-      width: 300,
-    },
-    {
-      field: 'pondera_1',
-      headerName: 'AÑO 1',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'pondera_2',
-      headerName: 'AÑO 2',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'pondera_3',
-      headerName: 'AÑO 3',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'pondera_4',
-      headerName: 'AÑO 4',
-      sortable: true,
-      width: 130,
-    },
-    {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      width: 250,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -75,10 +49,11 @@ export const ListarProyecto: React.FC = () => {
                 set_current_mode_planes({
                   ver: true,
                   crear: false,
-                  editar: true,
+                  editar: false,
                 })
               );
-              dispatch(set_current_proyecto(params.row));
+
+              dispatch(set_current_producto(params.row));
             }}
           >
             <Avatar
@@ -90,8 +65,8 @@ export const ListarProyecto: React.FC = () => {
               }}
               variant="rounded"
             >
-              <EditIcon
-                titleAccess="Editar Proyecto"
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar producto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -100,27 +75,21 @@ export const ListarProyecto: React.FC = () => {
               />
             </Avatar>
           </IconButton>
+          
         </>
       ),
     },
   ];
 
-  const { rows_proyecto, fetch_data_proyecto } =
-    useContext(DataContextProyectos);
-
-  const {
-    programa: { id_programa }, 
-  } = useAppSelector((state) => state.planes);
-
-  console.log('id_programa', id_programa);
+  const { rows_productos, fetch_data_producto } = useContext(
+    DataContextActividades
+  );
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id_programa) {
-      fetch_data_proyecto();
-    }
-  }, [id_programa]);
+    void fetch_data_producto();
+  }, []);
 
   return (
     <>
@@ -140,7 +109,7 @@ export const ListarProyecto: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de proyectos " />
+          <Title title="Listado de productos " />
         </Grid>
         <>
           <Grid item xs={12}>
@@ -149,8 +118,8 @@ export const ListarProyecto: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_proyecto}
-                  columns={columns_proyectos}
+                  rows={rows_productos}
+                  columns={columns_productos}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
@@ -159,26 +128,6 @@ export const ListarProyecto: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <Button
-              variant="outlined"
-              color="primary"
-              disabled={false}
-              onClick={() => {
-                dispatch(
-                  set_current_mode_planes({
-                    ver: true,
-                    crear: true,
-                    editar: false,
-                  })
-                );
-              }}
-            >
-              Agregar Proyecto
-            </Button>
-          </Grid>
-        </Grid>
       </Grid>
     </>
   );

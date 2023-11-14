@@ -6,6 +6,8 @@ import { EjeEstretegicoRoutes } from '../EjeEstrategico/router/EjeEstretegicoRou
 import { ObjetivosRoutes } from '../Objetivos/router/ObjetivosRoutes';
 import { ProgramasRoutes } from '../Programas/router/ProgramasRoutes';
 import { ProyectosRoutes } from '../Proyectos/router/ProyectosRoutes';
+import { ProductosRoutes } from '../Productos/router/ProductosRoutes';
+import { ActividadesRoutes } from '../Actividades/router/ActividadesRoutes';
 
 const routes = [
   {
@@ -37,6 +39,16 @@ const routes = [
     path: 'proyectos/',
     name: 'proyectos',
     component: () => <ProyectosRoutes />,
+  },
+  {
+    path: 'productos/',
+    name: 'productos',
+    component: () => <ProductosRoutes />,
+  },
+  {
+    path: 'actividades/',
+    name: 'actividades',
+    component: () => <ActividadesRoutes />,
   },
   {
     path: '/*',

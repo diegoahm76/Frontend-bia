@@ -8,6 +8,8 @@ import type {
   IObjetivo,
   IProgramas,
   IProyectos,
+  IProductos,
+  IActividades,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -55,6 +57,7 @@ export const initial_state_programa: IProgramas = {
 
 export const initial_state_proyecto: IProyectos = {
   id_proyecto: null,
+  numero_proyecto: null,
   nombre_programa: '',
   pondera_1: null,
   pondera_2: null,
@@ -64,6 +67,24 @@ export const initial_state_proyecto: IProyectos = {
   id_programa: null,
 };
 
+export const initial_state_productos: IProductos = {
+  id_producto: null,
+  nombre_proyecto: '',
+  nombre_producto: '',
+  id_proyecto: null,
+  numero_producto: null,
+};
+
+export const initial_state_actividades: IActividades = {
+  id_actividad: null,
+  nombre_producto: '',
+  nombre_actividad: '',
+  id_producto: null,
+  numero_actividad: null,
+  id_plan: null,
+  nombre_plan: '',
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -71,6 +92,8 @@ export const initial_state: IPlanesIndex = {
   obj_plan: initial_state_objetivo_plan,
   programa: initial_state_programa,
   proyecto: initial_state_proyecto,
+  producto: initial_state_productos,
+  actividad: initial_state_actividades,
 };
 export const planes_slice = createSlice({
   name: 'planes',
@@ -114,6 +137,18 @@ export const planes_slice = createSlice({
     ) => {
       state.proyecto = action.payload;
     },
+    set_current_producto: (
+      state: IPlanesIndex,
+      action: PayloadAction<IProductos>
+    ) => {
+      state.producto = action.payload;
+    },
+    set_current_actividad: (
+      state: IPlanesIndex,
+      action: PayloadAction<IActividades>
+    ) => {
+      state.actividad = action.payload;
+    },
   },
 });
 
@@ -125,4 +160,6 @@ export const {
   set_current_objetivo,
   set_current_programa,
   set_current_proyecto,
+  set_current_producto,
+  set_current_actividad,
 } = planes_slice.actions;

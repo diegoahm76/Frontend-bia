@@ -44,6 +44,7 @@ export interface IProgramas {
 // Proyectos
 export interface IProyectos {
   id_proyecto?: number | null;
+  numero_proyecto: number | null;
   nombre_programa?: string;
   pondera_1: number | null;
   pondera_2: number | null;
@@ -52,6 +53,25 @@ export interface IProyectos {
   nombre_proyecto: string;
   id_programa?: number | null;
 }
+// productos
+export interface IProductos {
+  id_producto?: number | null;
+  nombre_proyecto?: string;
+  nombre_producto: string;
+  id_proyecto?: number | null;
+  numero_producto?: number | null;
+
+}
+// Actividades
+export interface IActividades {
+  id_actividad?: number | null;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  id_producto?: number | null;
+  numero_actividad?: number | null;
+  id_plan?: number | null;
+  nombre_plan?: string;
+}
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
@@ -59,4 +79,6 @@ export interface IPlanesIndex {
   obj_plan: IObjetivo;
   programa: IProgramas;
   proyecto: IProyectos;
+  producto: IProductos;
+  actividad: IActividades;
 }

@@ -88,6 +88,7 @@ export const AgregarObjetivo: React.FC = () => {
                       label="Nombre del Plan"
                       variant="outlined"
                       value={value}
+                      multiline
                       disabled={true}
                       required={true}
                       onChange={onChange}
@@ -98,7 +99,7 @@ export const AgregarObjetivo: React.FC = () => {
               <Grid item xs={12} sm={6}></Grid>
             </>
           ) : null}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} >
             <Controller
               name="nombre_objetivo"
               control={control_objetivo}
@@ -109,6 +110,7 @@ export const AgregarObjetivo: React.FC = () => {
                   size="small"
                   label="Nombre del Objetivo"
                   variant="outlined"
+                  multiline
                   value={value}
                   disabled={false}
                   required={true}

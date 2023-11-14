@@ -75,6 +75,7 @@ export const UserProviderProyectos = ({
         const data_proyecto: IProyectos[] = response.map(
           (item: IProyectos) => ({
             id_proyecto: item.id_proyecto,
+            numero_proyecto: item.numero_proyecto,
             nombre_proyecto: item.nombre_proyecto,
             pondera_1: item.pondera_1,
             pondera_2: item.pondera_2,

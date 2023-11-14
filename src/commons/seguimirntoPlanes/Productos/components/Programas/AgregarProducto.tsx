@@ -1,59 +1,46 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
-import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
-import { useEjeEstrategicoHook } from '../../hooks/useEjeEstrategicoHook';
-import { DataContextEjeEstrategico } from '../../context/context';
+import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
+import { useProductoHook } from '../../hooks/useProductoHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarEjeEstrategico: React.FC = () => {
+export const AgregarProducto: React.FC = () => {
   const {
-    control_eje_estrategico,
-    errors_eje_estrategico,
-    data_watch_eje_estrategico,
-    reset_eje_estrategico,
+    control_producto,
+    errors_producto,
+    reset_producto,
 
-    onsubmit_eje_estrategico,
+    onsubmit_producto,
     onsubmit_editar,
-    is_saving_eje_estrategico,
+    is_saving_producto,
 
-    limpiar_formulario_eje_estrategico,
-  } = useEjeEstrategicoHook();
-
-  const { tipo_eje_selected, fetch_data_tipo_eje } = useContext(
-    DataContextEjeEstrategico
-  );
+    limpiar_formulario_producto,
+  } = useProductoHook();
 
   const dispatch = useAppDispatch();
 
-  const { mode, eje_estrategico } = useAppSelector((state) => state.planes);
-
-  useEffect(() => {
-    fetch_data_tipo_eje();
-  }, []);
+  const { mode, producto } = useAppSelector((state) => state.planes);
 
   useEffect(() => {
     if (mode.crear) {
-      limpiar_formulario_eje_estrategico();
+      limpiar_formulario_producto();
     }
     if (mode.editar) {
-      reset_eje_estrategico({
-        id_eje_estrategico: eje_estrategico.id_eje_estrategico,
-        nombre_plan: eje_estrategico.nombre_plan,
-        nombre_tipo_eje: eje_estrategico.nombre_tipo_eje,
-        nombre: eje_estrategico.nombre,
-        id_plan: eje_estrategico.id_plan,
-        id_tipo_eje: eje_estrategico.id_tipo_eje,
+      reset_producto({
+        id_producto: producto.id_producto,
+        nombre_producto: producto.nombre_producto,
+        numero_producto: producto.numero_producto,
+        nombre_proyecto: producto.nombre_proyecto,
       });
     }
-  }, [mode, eje_estrategico]);
+  }, [mode, producto]);
 
   return (
     <>
@@ -62,7 +49,7 @@ export const AgregarEjeEstrategico: React.FC = () => {
           e.preventDefault();
           e.stopPropagation();
           if (mode.crear) {
-            onsubmit_eje_estrategico();
+            onsubmit_producto();
           }
           if (mode.editar) {
             onsubmit_editar();
@@ -85,20 +72,20 @@ export const AgregarEjeEstrategico: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de eje estrategico" />
+            <Title title="Registro de productos" />
           </Grid>
           {mode.editar ? (
             <>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="nombre_plan"
-                  control={control_eje_estrategico}
+                  name="nombre_proyecto"
+                  control={control_producto}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del Plan"
+                      label="Nombre del proyecto"
                       variant="outlined"
                       value={value}
                       disabled={true}
@@ -108,46 +95,28 @@ export const AgregarEjeEstrategico: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="nombre_tipo_eje"
-                  control={control_eje_estrategico}
-                  rules={{ required: false }}
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      size="small"
-                      label="Nombre del tipo de eje estrategico"
-                      variant="outlined"
-                      value={value}
-                      disabled={true}
-                      required={true}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </Grid>
+              <Grid item xs={12} sm={6}></Grid>
             </>
           ) : null}
           <Grid item xs={12} sm={6}>
             <Controller
-              name="nombre"
-              control={control_eje_estrategico}
+              name="nombre_producto"
+              control={control_producto}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   fullWidth
                   size="small"
-                  label="Nombre del eje estrategico"
+                  label="Nombre del producto"
                   variant="outlined"
                   multiline
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_eje_estrategico.nombre_plan}
+                  error={!!errors_producto.nombre_producto}
                   helperText={
-                    errors_eje_estrategico.nombre_plan
+                    errors_producto.nombre_producto
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
                   }
@@ -157,33 +126,28 @@ export const AgregarEjeEstrategico: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="id_tipo_eje"
-              control={control_eje_estrategico}
-              defaultValue=""
+              name="numero_producto"
+              control={control_producto}
               rules={{ required: true }}
-              render={({ field }) => (
+              render={({ field: { onChange, value } }) => (
                 <TextField
-                  {...field}
-                  // label="Tipo de eje"
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
                   fullWidth
-                  required
-                  error={!!errors_eje_estrategico.id_tipo_eje}
-                  helperText={
-                    errors_eje_estrategico?.id_tipo_eje?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el tipo de eje estrategico'
-                  }
-                >
-                  {tipo_eje_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  size="small"
+                  label="Numero del producto"
+                  type="number"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_producto.numero_producto}
+                  // helperText={
+                  //   errors_producto.numero_producto
+                  //     ? 'Es obligatorio ingresar un nombre'
+                  //     : 'Ingrese un nombre'
+                  // }
+                />
               )}
             />
           </Grid>
@@ -197,7 +161,7 @@ export const AgregarEjeEstrategico: React.FC = () => {
                 color="warning"
                 disabled={false}
                 onClick={() => {
-                  limpiar_formulario_eje_estrategico();
+                  limpiar_formulario_producto();
                   dispatch(
                     set_current_mode_planes({
                       ver: true,
@@ -215,9 +179,9 @@ export const AgregarEjeEstrategico: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving_eje_estrategico}
+                disabled={is_saving_producto}
                 startIcon={<SaveIcon />}
-                loading={is_saving_eje_estrategico}
+                loading={is_saving_producto}
               >
                 {mode.editar ? 'Actualizar' : 'Guardar'}
               </LoadingButton>

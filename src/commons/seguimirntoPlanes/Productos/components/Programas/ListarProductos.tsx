@@ -8,57 +8,32 @@ import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_proyecto,
+  set_current_producto,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextProyectos } from '../../context/context';
-import { Programa } from '../../../../recursoHidrico/PORH/Interfaces/interfaces';
+import { DataContextProductos } from '../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarProyecto: React.FC = () => {
+export const ListarProductos: React.FC = () => {
 
-  const columns_proyectos: GridColDef[] = [
+  const columns_productos: GridColDef[] = [
+    {
+      field: 'nombre_producto',
+      headerName: 'NOMBRE DEL PRODUCTO',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'numero_producto',
+      headerName: 'NUMERO DEL PRODUCTO',
+      sortable: true,
+      width: 200,
+    },
     {
       field: 'nombre_proyecto',
       headerName: 'NOMBRE DEL PROYECTO',
       sortable: true,
       width: 300,
-    },
-    {
-      field: 'numero_proyecto',
-      headerName: 'NUMERO DEL PROYECTO',
-      sortable: true,
-      width: 200,
-    },
-    {
-      field: 'nombre_programa',
-      headerName: 'NOMBRE DEL PROGRAMA',
-      sortable: true,
-      width: 300,
-    },
-    {
-      field: 'pondera_1',
-      headerName: 'AÑO 1',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'pondera_2',
-      headerName: 'AÑO 2',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'pondera_3',
-      headerName: 'AÑO 3',
-      sortable: true,
-      width: 130,
-    },
-    {
-      field: 'pondera_4',
-      headerName: 'AÑO 4',
-      sortable: true,
-      width: 130,
     },
     {
       field: 'acciones',
@@ -78,7 +53,7 @@ export const ListarProyecto: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_proyecto(params.row));
+              dispatch(set_current_producto(params.row));
             }}
           >
             <Avatar
@@ -91,7 +66,7 @@ export const ListarProyecto: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar Proyecto"
+                titleAccess="Editar producto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -105,22 +80,22 @@ export const ListarProyecto: React.FC = () => {
     },
   ];
 
-  const { rows_proyecto, fetch_data_proyecto } =
-    useContext(DataContextProyectos);
+  const { rows_producto, fetch_data_producto } =
+    useContext(DataContextProductos);
 
   const {
-    programa: { id_programa }, 
+    proyecto: { id_proyecto }, 
   } = useAppSelector((state) => state.planes);
 
-  console.log('id_programa', id_programa);
+  console.log('id_proyecto', id_proyecto);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id_programa) {
-      fetch_data_proyecto();
+    if (id_proyecto) {
+      fetch_data_producto();
     }
-  }, [id_programa]);
+  }, [id_proyecto]);
 
   return (
     <>
@@ -140,7 +115,7 @@ export const ListarProyecto: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de proyectos " />
+          <Title title="Listado de productos " />
         </Grid>
         <>
           <Grid item xs={12}>
@@ -149,8 +124,8 @@ export const ListarProyecto: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_proyecto}
-                  columns={columns_proyectos}
+                  rows={rows_producto}
+                  columns={columns_productos}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
@@ -175,7 +150,7 @@ export const ListarProyecto: React.FC = () => {
                 );
               }}
             >
-              Agregar Proyecto
+              Agregar producto
             </Button>
           </Grid>
         </Grid>

@@ -1,22 +1,20 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, Chip, Grid, IconButton } from '@mui/material';
+import { Avatar, Box, Grid, IconButton } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { useAppDispatch } from '../../../../../hooks';
 import {
-  set_current_proyecto,
   set_current_mode_planes,
+  set_current_proyecto,
 } from '../../../store/slice/indexPlanes';
-import { DataContextProyectos } from '../../context/context';
-import { Programa } from '../../../../recursoHidrico/PORH/Interfaces/interfaces';
+import { DataContextProductos } from '../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarProyecto: React.FC = () => {
-
+export const ListarProyectos: React.FC = () => {
   const columns_proyectos: GridColDef[] = [
     {
       field: 'nombre_proyecto',
@@ -64,7 +62,7 @@ export const ListarProyecto: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      width: 250,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -75,9 +73,10 @@ export const ListarProyecto: React.FC = () => {
                 set_current_mode_planes({
                   ver: true,
                   crear: false,
-                  editar: true,
+                  editar: false,
                 })
               );
+
               dispatch(set_current_proyecto(params.row));
             }}
           >
@@ -90,8 +89,8 @@ export const ListarProyecto: React.FC = () => {
               }}
               variant="rounded"
             >
-              <EditIcon
-                titleAccess="Editar Proyecto"
+              <ChecklistOutlinedIcon
+                titleAccess="Seleccionar proyecto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -105,22 +104,14 @@ export const ListarProyecto: React.FC = () => {
     },
   ];
 
-  const { rows_proyecto, fetch_data_proyecto } =
-    useContext(DataContextProyectos);
-
-  const {
-    programa: { id_programa }, 
-  } = useAppSelector((state) => state.planes);
-
-  console.log('id_programa', id_programa);
+  const { rows_proyectos, fetch_data_proyecto } =
+    useContext(DataContextProductos);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id_programa) {
-      fetch_data_proyecto();
-    }
-  }, [id_programa]);
+    void fetch_data_proyecto();
+  }, []);
 
   return (
     <>
@@ -140,7 +131,7 @@ export const ListarProyecto: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de proyectos " />
+          <Title title="Listado de Proyectos " />
         </Grid>
         <>
           <Grid item xs={12}>
@@ -149,7 +140,7 @@ export const ListarProyecto: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_proyecto}
+                  rows={rows_proyectos}
                   columns={columns_proyectos}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
@@ -159,26 +150,6 @@ export const ListarProyecto: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <Button
-              variant="outlined"
-              color="primary"
-              disabled={false}
-              onClick={() => {
-                dispatch(
-                  set_current_mode_planes({
-                    ver: true,
-                    crear: true,
-                    editar: false,
-                  })
-                );
-              }}
-            >
-              Agregar Proyecto
-            </Button>
-          </Grid>
-        </Grid>
       </Grid>
     </>
   );
