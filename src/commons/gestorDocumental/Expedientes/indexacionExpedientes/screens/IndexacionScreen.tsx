@@ -37,6 +37,7 @@ export const IndexacionScreen: React.FC = () => {
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [archivos, set_archivos] = useState<any>([]);
     const [actualizar, set_actualizar] = useState<boolean>(false);
+    const [anulado, set_anulado] = useState<boolean>(false);
 
     // Sección apertura
     const [tdr, set_tdr] = useState<any>({});
@@ -46,6 +47,11 @@ export const IndexacionScreen: React.FC = () => {
     useEffect(() => {
         obtener_usuario_logueado_fc();
     }, []);
+
+    useEffect(() => {
+        if(configuracion !== null)
+            configuracion?.expediente.length > 0 ? set_anulado(configuracion?.expediente[0]?.anulado) : set_anulado(false);
+    }, [configuracion]);
 
     const borrar_documento_fc: () => void = () => {
         dispatch(borrar_documento(id_documento_seleccionado)).then((response: any)=>{
@@ -151,7 +157,7 @@ export const IndexacionScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            {expediente !== null && !actualizar && <Button
+                            {(expediente !== null && !actualizar && !anulado) && <Button
                                 color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
@@ -167,7 +173,7 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {id_documento_seleccionado !== null && expediente !== null && <Button
+                            {(id_documento_seleccionado !== null && !anulado && expediente !== null) && <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
@@ -176,7 +182,7 @@ export const IndexacionScreen: React.FC = () => {
                                 Anular documento
                             </Button>}
                             {<AnularDocumnetoModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularDocumnetoModal>}
-                            {id_documento_seleccionado !== null && expediente !== null && <Button
+                            {(id_documento_seleccionado !== null && expediente !== null) && <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_documento_fc() }}

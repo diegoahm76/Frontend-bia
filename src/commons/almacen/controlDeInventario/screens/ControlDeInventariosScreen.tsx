@@ -29,7 +29,6 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const obtener_bodegas_fc: () => void = () => {
     dispatch(obtener_bodegas()).then((response: any) => {
       const bodegas_activas = response.filter((resp: { activo: boolean; }) => resp.activo);
-      console.log('filtrado activo: ', bodegas_activas)
       set_lt_bodegas(bodegas_activas);
     })
   }
