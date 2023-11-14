@@ -54,6 +54,7 @@ export const columnsAtom = [
 
 export const rowsEJEMPLO = [
   {
+    radicado: "Radicado 1",
     nombre: 'ejemplo 1',
     medio_almacenamiento: 'ejemplo 1',
     numero_folios: 'ejemplo 1',
@@ -61,6 +62,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 1',
   },
   {
+    radicado: "Radicado 2",
     nombre: 'ejemplo 2',
     medio_almacenamiento: 'ejemplo 2',
     numero_folios: 'ejemplo 2',
@@ -68,6 +70,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 2',
   },
   {
+    radicado: "Radicado 3",
     nombre: 'ejemplo 3',
     medio_almacenamiento: 'ejemplo 3',
     numero_folios: 'ejemplo 3',
@@ -75,6 +78,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 3',
   },
   {
+    radicado: "Radicado 4",
     nombre: 'ejemplo 4',
     medio_almacenamiento: 'ejemplo 4',
     numero_folios: 'ejemplo 4',
@@ -82,6 +86,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 4',
   },
   {
+    radicado: "Radicado 5",
     nombre: 'ejemplo 5',
     medio_almacenamiento: 'ejemplo 5',
     numero_folios: 'ejemplo 5',
@@ -89,6 +94,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 5',
   },
   {
+    radicado: "Radicado 6",
     nombre: 'ejemplo 6',
     medio_almacenamiento: 'ejemplo 6',
     numero_folios: 'ejemplo 6',
@@ -96,6 +102,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 6',
   },
   {
+    radicado: "Radicado 7",
     nombre: 'ejemplo 7',
     medio_almacenamiento: 'ejemplo 7',
     numero_folios: 'ejemplo 7',
@@ -103,6 +110,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 7',
   },
   {
+    radicado: "Radicado 8",
     nombre: 'ejemplo 8',
     medio_almacenamiento: 'ejemplo 8',
     numero_folios: 'ejemplo 8',
@@ -110,6 +118,7 @@ export const rowsEJEMPLO = [
     observacion: 'ejemplo 8',
   },
   {
+    radicado: "Radicado 9",
     nombre: 'ejemplo 9',
     medio_almacenamiento: 'ejemplo 9',
     numero_folios: 'ejemplo 9',

@@ -10,6 +10,10 @@ interface PanelVentanillaContextProps {
   handleChange?: (event: React.SyntheticEvent, newValue: number) => void;
   expanded: string | boolean;
   setExpanded: React.Dispatch<React.SetStateAction<string | boolean>>;
+  anexos: any;
+  setAnexos: React.Dispatch<React.SetStateAction<any>>;
+  metadatos: any;
+  setMetadatos: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const PanelVentanillaContext =
@@ -21,6 +25,10 @@ export const PanelVentanillaContext =
     handleChange: () => {},
     expanded: false,
     setExpanded: () => {},
+    anexos: [],
+    setAnexos: () => {},
+    metadatos: [],
+    setMetadatos: () => {},
   });
 
 export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
@@ -29,7 +37,6 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   const [value, setValue] = useState(0);
   //* expanded de los acordeones
   const [expanded, setExpanded] = useState<string | boolean>(false);
-
 
   //* almacenar informacion de los anexos
   const [anexos, setAnexos] = useState<any>([]);
