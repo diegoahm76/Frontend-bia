@@ -6,6 +6,7 @@ import { UserProvider } from '../../deposito/Estantes/context/context';
 import ReaperturaExpedienteScreen from '../ReaperturaExpedientes/screens/RepaerturaExpedienteScreen';
 import { ExpedientesScreen } from '../aperturaExpedientes/screens/ExpedientesScreen';
 import { IndexacionScreen } from '../indexacionExpedientes/screens/IndexacionScreen';
+import { FirmaCierreIndiceScreen } from '../FirmaCierreIndiceElectronico/screens/FirmaCierreIndiceScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedientesRoutes = (): ReactElement => {
@@ -27,6 +28,10 @@ export const ExpedientesRoutes = (): ReactElement => {
         <Route
           path="indexacion_expedientes/*"
           element={<IndexacionScreen />}
+        />
+        <Route
+          path="firma_cierre_indice/*"
+          element={<FirmaCierreIndiceScreen />}
         />
         <Route path="/*" element={<Page404 />} />
       </Routes>
