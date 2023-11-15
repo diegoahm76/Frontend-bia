@@ -28,7 +28,7 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     const [observaciones, set_observaciones] = useState<string>("");
     const [deshabilitar, set_deshabilitar] = useState<boolean>(false);
     const [validar, set_validar] = useState<boolean|null>(null);
-    const [countdown, set_countdown] = useState<number>();
+    const [countdown, set_countdown] = useState<number>(60);
     useEffect(() => {
         obtener_usuario_logueado_fc();
     }, []);
@@ -46,10 +46,10 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     };
 
     const enviar_codigo_verificacion: () => void = () => {
-        dispatch(enviar_codigo_verificación(props.indice?.id_indice_electronico_exp)).then((response: any) => {
-            set_deshabilitar(false);
-        })
         set_deshabilitar(true);
+        dispatch(enviar_codigo_verificación(props.indice?.id_indice_electronico_exp)).then((response: any) => {
+            // set_deshabilitar(false);
+        })
         const now = moment();
         const interval = setInterval(() => {
             const now_ciclo = moment();
@@ -208,7 +208,7 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                     variant='outlined'
                                     startIcon={<CheckOutlinedIcon />}
                                     onClick={() => { validar_codigo_verificacion()  }}
-                                    disabled={deshabilitar}
+                                    disabled={deshabilitar || codigo_verificacion === ''}
                                 >
                                     Validar
                                 </Button>
@@ -221,8 +221,8 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                 justifyContent="flex-start"
                             >
                                 <Grid item xs={12} sm={4} sx={{ pointerEvents: 'none' }}>
-                                    <Fab size="small" variant="extended" sx={validar ? { marginY: '3px', backgroundColor: 'green', color: 'white', px: '20px' } : { marginY: '3px', backgroundColor: '#ff9800', color: 'black', px: '20px' }}>
-                                        {validar ? 'Correcto' : 'Incorrecto'}
+                                    <Fab size="small" variant="extended" sx={!validar ? { marginY: '3px', backgroundColor: 'green', color: 'white', px: '20px' } : { marginY: '3px', backgroundColor: '#ff9800', color: 'black', px: '20px' }}>
+                                        {!validar ? 'Correcto' : 'Incorrecto'}
                                     </Fab>
                                 </Grid>
                             </Stack>
