@@ -194,17 +194,37 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
+                        <Grid item xs={12} sm={6}>
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-end"
+                                spacing={2}
+                                sx={{ mt: '2px' }}
+
+                            >
+                                <Grid item xs={12} sm={3}>
                                 <Button
-                                    color={validar ? 'success' : 'error'}
+                                    color='primary'
                                     variant='outlined'
-                                    startIcon={validar ? <CheckOutlinedIcon /> : <CloseOutlinedIcon />}
+                                    startIcon={<CheckOutlinedIcon />}
                                     onClick={() => { validar_codigo_verificacion()  }}
                                     disabled={deshabilitar}
                                 >
-                                    {validar ? 'Validado' : 'Validar'}
+                                    Validar
                                 </Button>
+                                </Grid>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                            >
+                                <Grid item xs={12} sm={4} sx={{ pointerEvents: 'none' }}>
+                                    <Fab size="small" variant="extended" sx={validar ? { marginY: '3px', backgroundColor: 'green', color: 'white', px: '20px' } : { marginY: '3px', backgroundColor: '#ff9800', color: 'black', px: '20px' }}>
+                                        {validar ? 'Correcto' : 'Incorrecto'}
+                                    </Fab>
+                                </Grid>
                             </Stack>
                         </Grid>
                         <Grid item xs={12} sm={12}>
