@@ -70,20 +70,16 @@ export const AccionesFinal = (): JSX.Element => {
       }
     );
 
-    console.log('unidadesPadreUnidasasasasas', [
+    /*   console.log('unidadesPadreUnidasasasasas', [
       ...unidadesPadreUnidas,
       ...oficinasDelegadas,
-    ]);
-
-    /* if (!oficinasDelegadas.length || !unidadesPadreUnidas.length) {
-      control_warning('No se ha seleccionado ninguna oficina para delegar');
-      return;
-    }*/
+    ]); */
 
     postDelegaciones({
       delegaciones: {
         id_ccd_nuevo: ccdOrganigramaCurrentBusquedaOfiResp.id_ccd,
-        oficinas_delegadas: [...oficinasDelegadas, ...unidadesPadreUnidas],
+        unidad_responsable: [...unidadesPadreUnidas],
+        oficinas_delegadas: [...oficinasDelegadas],
       },
       setLoading: setLoadingButton,
     }).then((res) => {

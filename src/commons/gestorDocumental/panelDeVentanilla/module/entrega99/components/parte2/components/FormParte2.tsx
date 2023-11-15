@@ -36,8 +36,8 @@ export const FormParte2 = (): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    /* e.target.value.length === 50 &&
-                          control_warning('máximo 50 caracteres');*/
+                    e.target.value.length === 50 &&
+                      control_warning('máximo 50 caracteres');
                   }}
                   inputProps={{ maxLength: 50 }}
                 />
@@ -59,19 +59,12 @@ export const FormParte2 = (): JSX.Element => {
                   fullWidth
                   disabled
                   type="date"
-                  // name="nombre"
                   label="Fecha de solicitud"
                   helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
                   InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    onChange(e.target.value);
-                    /* e.target.value.length === 50 &&
-                          control_warning('máximo 50 caracteres');*/
-                  }}
-                  inputProps={{ maxLength: 50 }}
                 />
               )}
             />
@@ -102,16 +95,13 @@ export const FormParte2 = (): JSX.Element => {
                   onChange={(e) => {
                     onChange(e.target.value);
                     e.target.value.length === 255 &&
-                          control_warning('máximo 255 caracteres');
+                      control_warning('máximo 255 caracteres');
                   }}
                   inputProps={{ maxLength: 255 }}
                 />
               )}
             />
           </Grid>
-
-
-
         </Grid>
 
         <Grid

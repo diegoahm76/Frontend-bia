@@ -10,7 +10,13 @@ export const FormParte1 = (): JSX.Element => {
         marginTop: '3rem',
       }}
     >
-      <Grid container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          mb: '2rem',
+        }}
+      >
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -79,6 +85,7 @@ export const FormParte1 = (): JSX.Element => {
             sx={{
               textAlign: 'center',
               mt: '1.5rem',
+              mb: '1.5rem',
             }}
             rows={5}
             size="small"

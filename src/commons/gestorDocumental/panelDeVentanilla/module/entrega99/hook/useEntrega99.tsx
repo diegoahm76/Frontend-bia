@@ -11,11 +11,25 @@ export const useEntrega99 = (): any => {
     reset: resetSegundoFormularioEntrega99,
   } = useForm();
 
+  const {
+    control: controlTercerPasoEntrega99,
+    handleSubmit: handleSubmitTercerPasoEntrega99,
+    // formState: formStateTercerFormulario,
+    setValue: setValueTercerFormularioEntrega99,
+    reset: resetTercerPasoEntrega99,
+  } = useForm();
+
   return {
     // ? Segundo paso
     controlSegundoPasoEntrega99,
     handleSubmitSegundoPasoEntrega99,
     setValueSegundoFormularioEntrega99,
     resetSegundoFormularioEntrega99,
+
+    // ? Tercer paso
+    controlTercerPasoEntrega99,
+    handleSubmitTercerPasoEntrega99,
+    setValueTercerFormularioEntrega99,
+    resetTercerPasoEntrega99,
   };
 };

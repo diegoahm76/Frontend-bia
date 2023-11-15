@@ -200,43 +200,6 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   </div>
                 )}
               </Grid>
-              {/*  <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{
-                  zIndex: 2
-                }}
-              >
-                <Controller
-                  name="unidades_organigrama"
-                  control={control_create_ccd}
-                  render={({ field }) => (
-                    <div>
-                      <Select
-                        {...field}
-                        isDisabled={ccd_current != null || ccd_current?.actual}
-                        value={field.value}
-                        options={list_unitys}
-                        placeholder="Seleccionar"
-                      />
-                      <label htmlFor={field.name}>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem'
-                          }}
-                        >
-                          {ccd_current
-                            ? `Unidad Seleccionada`
-                            : `Seleccionar Unidad`}
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid> */}
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="nombre_ccd"

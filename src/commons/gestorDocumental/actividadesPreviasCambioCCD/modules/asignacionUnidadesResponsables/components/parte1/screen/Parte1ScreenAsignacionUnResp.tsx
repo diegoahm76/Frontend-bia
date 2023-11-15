@@ -20,6 +20,7 @@ export const Parte1Screen = (): JSX.Element => {
         container
         spacing={3}
         sx={{
+          mt: '2rem',
           justifyContent: 'center',
         }}
       >
