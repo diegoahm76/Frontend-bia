@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
+import { ListarMetas } from '../components/Indicadores/ListarMetas';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { AgregarIndicacdor } from '../components/Programas/AgregarIndicacdor';
+import { Agregarmeta } from '../components/Indicadores/Agregarmeta';
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
-import { ListarIndicador } from '../components/Programas/ListarIndicador';
+import { ListarIndicador } from '../components/Indicadores/ListarIndicador';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const IndicadoresScreen: React.FC = () => {
+export const MetasScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
@@ -41,11 +42,12 @@ export const IndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Metas por Indicador " />
+          <Title title="Metas por indicador " />
         </Grid>
       </Grid>
       <ListarIndicador />
-      {mode.crear || mode.editar ? <AgregarIndicacdor /> : null}
+      {mode.ver ? <ListarMetas /> : null}
+      {mode.crear || mode.editar ? <Agregarmeta /> : null}
     </>
   );
 };

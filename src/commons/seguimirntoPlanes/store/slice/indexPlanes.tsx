@@ -10,6 +10,8 @@ import type {
   IProductos,
   IActividades,
   Indicadores,
+  IMetaIndicador,
+  IRubro,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -102,6 +104,22 @@ export const initial_state_indicadores: Indicadores = {
   id_plan: null,
 };
 
+export const initial_state_meta: IMetaIndicador = {
+  id_meta: null,
+  nombre_indicador: '',
+  nombre_meta: '',
+  unidad_meta: '',
+  porcentaje_meta: null,
+  valor_meta: '',
+  id_indicador: null,
+};
+
+export const initial_state_rubro: IRubro = {
+  id_rubro: null,
+  cuenta: '',
+  cod_pre: '',
+  valcuenta: '',
+};
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -112,6 +130,8 @@ export const initial_state: IPlanesIndex = {
   producto: initial_state_productos,
   actividad: initial_state_actividades,
   indicador: initial_state_indicadores,
+  meta: initial_state_meta,
+  rubro: initial_state_rubro,
 };
 
 export const planes_slice = createSlice({
@@ -173,6 +193,18 @@ export const planes_slice = createSlice({
       action: PayloadAction<Indicadores>
     ) => {
       state.indicador = action.payload;
+    },
+    set_current_meta: (
+      state: IPlanesIndex,
+      action: PayloadAction<IMetaIndicador>
+    ) => {
+      state.meta = action.payload;
+    },
+    set_current_rubro: (
+      state: IPlanesIndex,
+      action: PayloadAction<IRubro>
+    ) => {
+      state.rubro = action.payload;
     }
   },
 });
@@ -188,4 +220,6 @@ export const {
   set_current_producto,
   set_current_actividad,
   set_current_indicador,
+  set_current_meta,
+  set_current_rubro,
 } = planes_slice.actions;
