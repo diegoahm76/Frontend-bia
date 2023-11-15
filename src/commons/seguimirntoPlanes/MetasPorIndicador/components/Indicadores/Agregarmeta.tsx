@@ -1,58 +1,61 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
-import { useActividadHook } from '../../hooks/useActividadHook';
-import { DataContextActividades } from '../../context/context';
+import { useMetaHook } from '../../hooks/useMetaHook';
+import { tipo_medida } from '../../../Indicadores/choices/selects';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarActividad: React.FC = () => {
+export const Agregarmeta: React.FC = () => {
   const {
-    control_actividad,
-    errors_actividad,
-    reset_actividad,
+    control_meta,
+    errors_meta,
+    reset_meta,
+    data_watch_meta,
 
-    onsubmit_actividad,
+    onsubmit_meta,
     onsubmit_editar,
-    is_saving_actividad,
+    is_savingd_meta,
 
-    limpiar_formulario_actividad,
-  } = useActividadHook();
-
-  const { planes_selected, fetch_data_planes_selected } = useContext(
-    DataContextActividades
-  );
+    limpiar_formulario_meta,
+  } = useMetaHook();
 
   const dispatch = useAppDispatch();
 
-  const { mode, actividad } = useAppSelector((state) => state.planes);
+  const { mode, meta } = useAppSelector((state) => state.planes);
 
   useEffect(() => {
     if (mode.crear) {
-      limpiar_formulario_actividad();
+      limpiar_formulario_meta();
     }
     if (mode.editar) {
-      reset_actividad({
-        id_actividad: actividad.id_actividad,
-        nombre_actividad: actividad.nombre_actividad,
-        numero_actividad: actividad.numero_actividad,
-        nombre_plan: actividad.nombre_plan,
-        nombre_producto: actividad.nombre_producto,
-        id_plan: actividad.id_plan,
-        id_producto: actividad.id_producto,
+      reset_meta({
+        id_meta: meta.id_meta,
+        nombre_indicador: meta.nombre_indicador,
+        nombre_meta: meta.nombre_meta,
+        unidad_meta: meta.unidad_meta,
+        porcentaje_meta: meta.porcentaje_meta,
+        valor_meta: meta.valor_meta,
+        id_indicador: meta.id_indicador,
       });
     }
-  }, [mode, actividad]);
+  }, [mode, meta]);
 
-  useEffect(() => {
-    fetch_data_planes_selected();
-  }, []);
+  const porcentaje_meta = Number(data_watch_meta.porcentaje_meta);
+  const isGuardarDisabled = porcentaje_meta > 100;
 
   return (
     <>
@@ -61,7 +64,7 @@ export const AgregarActividad: React.FC = () => {
           e.preventDefault();
           e.stopPropagation();
           if (mode.crear) {
-            onsubmit_actividad();
+            onsubmit_meta();
           }
           if (mode.editar) {
             onsubmit_editar();
@@ -84,21 +87,22 @@ export const AgregarActividad: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de actividades" />
+            <Title title="Registro de metas" />
           </Grid>
           {mode.editar ? (
             <>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <Controller
-                  name="nombre_plan"
-                  control={control_actividad}
+                  name="nombre_indicador"
+                  control={control_meta}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del plan"
+                      label="Nombre del indicador"
                       variant="outlined"
+                      multiline
                       value={value}
                       disabled={true}
                       required={true}
@@ -107,46 +111,27 @@ export const AgregarActividad: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="nombre_producto"
-                  control={control_actividad}
-                  rules={{ required: false }}
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      size="small"
-                      label="Nombre del producto"
-                      variant="outlined"
-                      value={value}
-                      disabled={true}
-                      required={true}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </Grid>{' '}
             </>
           ) : null}
           <Grid item xs={12} sm={6}>
             <Controller
-              name="nombre_actividad"
-              control={control_actividad}
+              name="nombre_meta"
+              control={control_meta}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   fullWidth
                   size="small"
-                  label="Nombre actividad"
+                  label="Nombre meta"
                   variant="outlined"
                   multiline
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_actividad.nombre_actividad}
+                  error={!!errors_meta.nombre_meta}
                   helperText={
-                    errors_actividad.nombre_actividad
+                    errors_meta.nombre_meta
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
                   }
@@ -156,55 +141,27 @@ export const AgregarActividad: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="numero_actividad"
-              control={control_actividad}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Numero del actividad"
-                  type="number"
-                  variant="outlined"
-                  multiline
-                  value={value}
-                  disabled={false}
-                  required={true}
-                  onChange={onChange}
-                  // error={!!errors_actividad.numero_actividad}
-                  // helperText={
-                  //   errors_actividad.numero_actividad
-                  //     ? 'Es obligatorio ingresar un nombre'
-                  //     : 'Ingrese un nombre'
-                  // }
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="id_plan"
-              control={control_actividad}
+              name="unidad_meta"
+              control={control_meta}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  // label="Tipo de eje"
-                  select
+                  label="Tipo de unidad"
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  select
                   fullWidth
-                  required
-                  error={!!errors_actividad.id_plan}
+                  required={true}
+                  error={!!errors_meta.unidad_meta}
                   helperText={
-                    errors_actividad?.id_plan?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el plan'
+                    errors_meta.unidad_meta
+                      ? 'Es obligatorio ingresar un tipo de medida'
+                      : 'Ingrese un tipo de medida'
                   }
                 >
-                  {planes_selected.map((option) => (
+                  {tipo_medida.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -213,6 +170,71 @@ export const AgregarActividad: React.FC = () => {
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Controller
+              name="porcentaje_meta"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Porcentaje meta"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_meta.porcentaje_meta}
+                  // helperText={
+                  //   errors_meta.porcentaje_meta
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_meta"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor meta"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_meta.valor_meta}
+                  helperText={
+                    errors_meta.valor_meta
+                      ? 'Es obligatorio ingresar un valor de meta'
+                      : 'Ingrese un valor de meta'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {isGuardarDisabled ? (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="error">
+                  <Typography>
+                    El procentaje de la meta no puede ser mayor a 100
+                  </Typography>
+                </Alert>
+              </Grid>
+            </Grid>
+          ) : null}
+
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <ButtonSalir />
@@ -223,7 +245,7 @@ export const AgregarActividad: React.FC = () => {
                 color="warning"
                 disabled={false}
                 onClick={() => {
-                  limpiar_formulario_actividad();
+                  limpiar_formulario_meta();
                   dispatch(
                     set_current_mode_planes({
                       ver: true,
@@ -241,9 +263,9 @@ export const AgregarActividad: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving_actividad}
+                disabled={is_savingd_meta}
                 startIcon={<SaveIcon />}
-                loading={is_saving_actividad}
+                loading={is_savingd_meta}
               >
                 {mode.editar ? 'Actualizar' : 'Guardar'}
               </LoadingButton>

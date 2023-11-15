@@ -8,6 +8,9 @@ import { ProgramasRoutes } from '../Programas/router/ProgramasRoutes';
 import { ProyectosRoutes } from '../Proyectos/router/ProyectosRoutes';
 import { ProductosRoutes } from '../Productos/router/ProductosRoutes';
 import { ActividadesRoutes } from '../Actividades/router/ActividadesRoutes';
+import { IndicadoresRoutes } from '../Indicadores/router/IndicadoresRoutes';
+import { MetasRoutes } from '../MetasPorIndicador/router/MetasRoutes';
+import { RubrosRoutes } from '../Rubro/Rubro/router/RubrosRoutes';
 
 const routes = [
   {
@@ -49,6 +52,23 @@ const routes = [
     path: 'actividades/',
     name: 'actividades',
     component: () => <ActividadesRoutes />,
+  },
+  {
+    path: 'indicadores/',
+    name: 'indicadores',
+    component: () => <IndicadoresRoutes />,
+  },
+  // metas por indicador
+  {
+    path: 'metas/',
+    name: 'metas',
+    component: () => <MetasRoutes />,
+  },
+  // rubros
+  {
+    path: 'rubros/',
+    name: 'rubros',
+    component: () => <RubrosRoutes />,
   },
   {
     path: '/*',

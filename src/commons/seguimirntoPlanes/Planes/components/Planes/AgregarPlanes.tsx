@@ -169,7 +169,7 @@ export const AgregarPlanes: React.FC = () => {
                   error={!!errors_planes.tipo_plan}
                   helperText={
                     errors_planes.tipo_plan
-                      ? 'Es obligatorio ingresar un tipo de aforo'
+                      ? 'Es obligatorio ingresar un tipo plan'
                       : 'Ingrese un tipo de plan'
                   }
                 >
