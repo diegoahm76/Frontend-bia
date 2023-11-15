@@ -88,6 +88,23 @@ export interface Indicadores {
   id_actividad?: number | null;
   id_plan?: number | null;
 }
+// Metas por Indicador
+export interface IMetaIndicador {
+  id_meta?:          number | null;
+  nombre_indicador?: string;
+  nombre_meta:      string;
+  unidad_meta:      string;
+  porcentaje_meta:  number | null;
+  valor_meta:       string;
+  id_indicador?:     number | null;
+}
+// Rubro
+export interface IRubro {
+  id_rubro?: number | null;
+  cuenta: string;
+  cod_pre: string;
+  valcuenta: string;
+}
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
@@ -98,4 +115,6 @@ export interface IPlanesIndex {
   producto: IProductos;
   actividad: IActividades;
   indicador: Indicadores;
+  meta: IMetaIndicador;
+  rubro: IRubro;
 }
