@@ -19,9 +19,6 @@ export const PerSolicitaComplemento = (): JSX.Element => {
           marginTop: '3rem',
           justifyContent: 'center',
         }}
-        onSubmit={(e: any) => {
-          console.log('submit');
-        }}
       >
         <Grid
           sx={{
@@ -33,14 +30,11 @@ export const PerSolicitaComplemento = (): JSX.Element => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              disabled={false}
+              disabled
               size="small"
               label="Nombres"
               variant="outlined"
-              value={'siuuuu'}
-              onChange={(e) => {
-                console.log(e);
-              }}
+              value={'Cristiano'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -49,16 +43,13 @@ export const PerSolicitaComplemento = (): JSX.Element => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              disabled={false}
+              disabled
               size="small"
               label="Apellidos"
               variant="outlined"
-              value={'iji siuu'}
+              value={'Alias el bicho'}
               inputProps={{
                 maxLength: 10,
-              }}
-              onChange={(e) => {
-                console.log(e);
               }}
             />
           </Grid>
@@ -67,10 +58,9 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               fullWidth
               size="small"
               label="Tipo de documento"
-              disabled={false}
+              disabled
               variant="outlined"
-              value={'hola sss'}
-              onChange={() => {}}
+              value={'Cédula de ciudadanía'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -79,21 +69,19 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Número de documento"
               variant="outlined"
-              disabled={false}
-              value={'hola'}
-              onChange={() => {}}
+              disabled
+              value={'21201918'}
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={8}>
             <TextField
               fullWidth
               size="small"
               label="Unidad organizacional solicitante"
               variant="outlined"
-              disabled={false}
-              value={'hola'}
-              onChange={() => {}}
+              disabled
+              value={'Dirección general de tecnologías de la información y las comunicaciones'}
             />
           </Grid>
         </Grid>

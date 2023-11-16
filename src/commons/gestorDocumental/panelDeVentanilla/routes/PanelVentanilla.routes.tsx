@@ -4,16 +4,14 @@ import { MainViewPanelVentanilla } from '../screen/MainViewPanelVentanilla';
 import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
 import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
 import { ModalAndLoadingProvider } from '../../../../context/GeneralContext';
+import { VistaPqr } from '../module/entrega98/components/vistaPqr/VistaPqr';
+import { VistaComplemento } from '../module/entrega98/components/vistaComplemento/VistaComplemento';
 
 const routes = [
   {
     path: '',
     name: '',
     component: () => <MainViewPanelVentanilla />,
-  },
-  {
-    path: '/*',
-    component: () => <Page404 />,
   },
   {
     path: 'asignar_a_usario/',
@@ -24,13 +22,13 @@ const routes = [
     component: () => <>Módulo de asignación a grupo</>,
   },
   {
-      path: 'pqr_info/:id',
-      component: () => <>INFORMACIÓN DE LA PQR</>,
+    path: 'pqr_info/:id',
+    component: () => <VistaPqr />,
   },
   {
     path: 'complemento_info/:id',
-    component: () => <>INFORMACIÓN DEL COMPLEMENTO</>,
-  }
+    component: () => <VistaComplemento />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -42,8 +40,8 @@ export const PanelVentanillaRoutes: React.FC = () => {
           {routes.map((route) => (
             <Route
               key={route.path}
-              // path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-              path={route.path}
+              path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+              // path={route.path}
               element={route.component()}
             />
           ))}

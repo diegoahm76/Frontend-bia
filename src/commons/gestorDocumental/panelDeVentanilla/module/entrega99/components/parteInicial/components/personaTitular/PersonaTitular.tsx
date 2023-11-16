@@ -16,22 +16,16 @@ export const PersonaTitular = (): JSX.Element => {
         style={{
           marginTop: '3rem',
         }}
-        onSubmit={(e: any) => {
-          console.log('submit');
-        }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              disabled={false}
+              disabled
               size="small"
               label="Nombres"
               variant="outlined"
-              value={'siuuuu'}
-              onChange={(e) => {
-                console.log(e);
-              }}
+              value={'Pedro'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -40,16 +34,13 @@ export const PersonaTitular = (): JSX.Element => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              disabled={false}
+              disabled
               size="small"
               label="Apellidos"
               variant="outlined"
-              value={'iji siuu'}
+              value={'Perez'}
               inputProps={{
                 maxLength: 10,
-              }}
-              onChange={(e) => {
-                console.log(e);
               }}
             />
           </Grid>
@@ -58,10 +49,9 @@ export const PersonaTitular = (): JSX.Element => {
               fullWidth
               size="small"
               label="Tipo de documento"
-              disabled={false}
+              disabled
               variant="outlined"
-              value={'hola sss'}
-              onChange={() => {}}
+              value={'Cédula de ciudadanía'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -70,9 +60,8 @@ export const PersonaTitular = (): JSX.Element => {
               size="small"
               label="Número de documento"
               variant="outlined"
-              disabled={false}
-              value={'hola'}
-              onChange={() => {}}
+              disabled
+              value={'1006877856'}
             />
           </Grid>
         </Grid>

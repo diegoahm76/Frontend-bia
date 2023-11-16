@@ -142,10 +142,6 @@ export const TrdScreen: FC = (): JSX.Element => {
                   zIndex: 2
                 }}
               >
-                {/* <label className="text-terciary">
-                  Lista de ccds terminadoss
-                  <samp className="text-danger">*</samp>
-                </label> */}
                 {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
                 <Controller
                   name="id_ccd"

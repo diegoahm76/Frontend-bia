@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { Grid } from '@mui/material';
+import { Title } from '../../../../../../../../components';
+import { FormParte2 } from '../components/FormParte2';
 
 export const Parte2Screen = (): JSX.Element => {
   return (
-    <>
-      Se realiza la pantalla de la parte 2
-      {/*Se deben poner los respectivos componentes que se van a usar*/}
-    </>
+    <Grid
+      item
+      xs={12}
+      sx={{
+        mt: '2rem',
+      }}
+    >
+      <Title title="Solicitud de complemento de información al usuario" />
+      <FormParte2 />
+    </Grid>
   );
 };

@@ -127,6 +127,8 @@ export const ButtonsPanelVentanilla = () => {
 
   return (
     <>
+      {/* se debe revisar ya que no si no hay un elemento seleccionado (pqrsdf, tramites y servicios, otros) es inncesario mostrar este elemento dial  */}
+
       <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
         <SpeedDial
           ariaLabel="SpeedDial basic example"
@@ -144,9 +146,6 @@ export const ButtonsPanelVentanilla = () => {
           ))}
         </SpeedDial>
       </Box>
-
-      {/* modal de prueba para elementos de información */}
-      <ModalAtomInfoElement infoTitle="Información del elemento (pqrsdf) - (complemento)" />
     </>
   );
 };
