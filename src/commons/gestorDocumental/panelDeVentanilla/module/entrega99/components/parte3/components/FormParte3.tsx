@@ -9,8 +9,8 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BuildIcon from '@mui/icons-material/Build';
-import { ModalMetadatos } from '../../modalMetadatos/ModalMetadatos';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
+import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 
 export const FormParte3 = (): JSX.Element => {
   const { controlTercerPasoEntrega99 } = usePanelVentanilla();
