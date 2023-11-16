@@ -25,10 +25,18 @@ export const ModalAndLoadingProvider: FC<any> = ({
   const { isLoading: fourthLoading, handleLoading: handleFourthLoading } =
     useModalAndLoading('', 'isLoading');
 
-  const {isLoading: openModalOne, handleLoading: handleOpenModalOne} = useModalAndLoading('', 'isLoading');
+  const { isLoading: openModalOne, handleLoading: handleOpenModalOne } =
+    useModalAndLoading('', 'isLoading');
 
-  const {isLoading: openModalTwo, handleLoading: handleOpenModalTwo} = useModalAndLoading('', 'isLoading');
+  const { isLoading: openModalTwo, handleLoading: handleOpenModalTwo } =
+    useModalAndLoading('', 'isLoading');
 
+  // ? ----- modales para la entrega 99 -----
+
+  const {
+    isLoading: modalAgregarMetadatos,
+    handleLoading: handleModalAgregarMetadatos,
+  } = useModalAndLoading('', 'isLoading');
 
   //! you can add more call to hook if needed...
   // ? value object to return the data
@@ -58,6 +66,12 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* open modal two
     openModalTwo,
     handleOpenModalTwo,
+
+    // ? ----- modales para la entrega 99 -----
+    //* modal agregar metadatos
+    modalAgregarMetadatos,
+    handleModalAgregarMetadatos,
+
   };
   return (
     <ModalAndLoadingContext.Provider value={value}>

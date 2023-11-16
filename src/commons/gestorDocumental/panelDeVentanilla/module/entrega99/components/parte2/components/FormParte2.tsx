@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, TextField } from '@mui/material';
-import { useEntrega99 } from '../../../hook/useEntrega99';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 export const FormParte2 = (): JSX.Element => {
   //* hooks
-  const { controlSegundoPasoEntrega99 } = useEntrega99();
+  const { controlSegundoPasoEntrega99 } = usePanelVentanilla();
 
   return (
     <>
@@ -118,7 +118,7 @@ export const FormParte2 = (): JSX.Element => {
         >
           <Button
             variant="contained"
-            color="success"
+            color="warning"
             onClick={() => {
               console.log('click siuuu');
             }}

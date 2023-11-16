@@ -2,7 +2,6 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { useEntrega99 } from '../../../hook/useEntrega99';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -10,9 +9,11 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BuildIcon from '@mui/icons-material/Build';
+import { ModalMetadatos } from '../../modalMetadatos/ModalMetadatos';
+import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 
 export const FormParte3 = (): JSX.Element => {
-  const { controlTercerPasoEntrega99 } = useEntrega99();
+  const { controlTercerPasoEntrega99 } = usePanelVentanilla();
 
   return (
     <>
@@ -199,6 +200,7 @@ export const FormParte3 = (): JSX.Element => {
               startIcon={<BuildIcon />}
               onClick={() => {
                 console.log('click siuuu');
+                console.log('abriendo modal de metadatos');
               }}
             >
               AGREGAR METADATOS
@@ -219,7 +221,7 @@ export const FormParte3 = (): JSX.Element => {
                 console.log('soy el submit');
               }}
             >
-              AGREGAR
+              AGREGAR ANEXO
             </Button>
           </Grid>
         </Grid>
@@ -238,7 +240,7 @@ export const FormParte3 = (): JSX.Element => {
         >
           <Button
             variant="contained"
-            color="success"
+            color="warning"
             startIcon={<ArrowBackIcon />}
             onClick={() => {
               console.log('click siuuu');
@@ -265,6 +267,10 @@ export const FormParte3 = (): JSX.Element => {
           </Button>
         </Grid>
       </form>
+
+      {/* espacio para el modal de agregar metadatos */}
+      <ModalMetadatos />
+      {/* espacio para el modal de agregar metadatos */}
     </>
   );
 };

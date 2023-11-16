@@ -1,20 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, createContext, useState } from 'react';
-
-interface PanelVentanillaContextProps {
-  radicado: string;
-  setRadicado: React.Dispatch<React.SetStateAction<string>>;
-  value: number;
-  setValue: React.Dispatch<React.SetStateAction<number>>;
-  handleChange?: (event: React.SyntheticEvent, newValue: number) => void;
-  expanded: string | boolean;
-  setExpanded: React.Dispatch<React.SetStateAction<string | boolean>>;
-  anexos: any;
-  setAnexos: React.Dispatch<React.SetStateAction<any>>;
-  metadatos: any;
-  setMetadatos: React.Dispatch<React.SetStateAction<any>>;
-}
+import { PanelVentanillaContextProps } from './types/contextVentanilla.types';
 
 export const PanelVentanillaContext =
   createContext<PanelVentanillaContextProps>({
@@ -29,6 +16,10 @@ export const PanelVentanillaContext =
     setAnexos: () => {},
     metadatos: [],
     setMetadatos: () => {},
+    skipped: new Set<number>(),
+    setSkipped: () => {},
+    activeStep: 0,
+    setActiveStep: () => {},
   });
 
 export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
@@ -48,7 +39,14 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) =>
     setValue(newValue);
 
+  // ! -- MANEJO DE DATA DE LA ENTREGA 99 -- ! //
+
+  //* estados para el stepper de la entrega 99
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set<number>());
+
   const valuesToUse = {
+    // ? entrega 99
     radicado,
     setRadicado,
     value,
@@ -60,6 +58,11 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
     setAnexos,
     metadatos,
     setMetadatos,
+    // ? entrega 99
+    activeStep,
+    setActiveStep,
+    skipped,
+    setSkipped,
   };
 
   return (

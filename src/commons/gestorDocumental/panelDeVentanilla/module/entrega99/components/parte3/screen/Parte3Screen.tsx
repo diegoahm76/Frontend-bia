@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import { FormParte3 } from '../components/FormParte3';
 import { Title } from '../../../../../../../../components';
+import { AccionesFinales } from '../../AccionesFinales/AccionesFinales';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const Parte3Screen = (): JSX.Element => {
@@ -14,6 +15,7 @@ export const Parte3Screen = (): JSX.Element => {
     >
       <Title title="Anexos" />
       <FormParte3 />
+      <AccionesFinales />
     </Grid>
   );
 };
