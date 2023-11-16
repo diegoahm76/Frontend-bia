@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 
 import DevicesIcon from '@mui/icons-material/Devices';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -15,48 +13,22 @@ import { useNavigate } from 'react-router-dom';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
-import { ModalAtomInfoElement } from '../../../../Atom/ModalAtomInfoElement';
+import { useAppSelector } from '../../../../../../../../../hooks';
 
-//* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales
-const actions = [
-  {
-    id: 'Dig',
-    icon: <DevicesIcon />,
-    name: 'Enviar solicitud de digitalización',
-    path: '',
-    disabled: false,
-  },
-  {
-    id: 'AsigPer',
-    icon: <PersonAddIcon />,
-    name: 'Enviar solicitud al usuario',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_usario',
-    disabled: false,
-  },
-  {
-    id: 'AsigGrup',
-    icon: <GroupsIcon />,
-    name: 'Asignar al grupo',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: true,
-  },
-  {
-    id: 'ContinuarAsigGrup',
-    icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
-    // path:'/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: true,
-  },
-];
-export const ButtonsPanelVentanilla = () => {
+//* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
+
+export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
-  //* context declaration
+  //* redux states
+  const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
 
   const withValidation =
     (fn: Function) => (action: { disabled: boolean; path: string }) => {
       if (action.disabled) {
-        control_warning('Esta acción no está disponible');
+        control_warning(
+          'Esta acción no está disponible para el elemento el cual seleccionaste'
+        );
       } else {
         navigate(action.path);
         fn();
@@ -136,14 +108,22 @@ export const ButtonsPanelVentanilla = () => {
           icon={<MultipleStopIcon />}
           direction="right"
         >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={() => handleClickActionsGeneral(action)}
-            />
-          ))}
+          {actions.map(
+            (action: {
+              id: string;
+              icon: any;
+              name: string;
+              path: string;
+              disabled: boolean;
+            }) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={() => handleClickActionsGeneral(action)}
+              />
+            )
+          )}
         </SpeedDial>
       </Box>
     </>

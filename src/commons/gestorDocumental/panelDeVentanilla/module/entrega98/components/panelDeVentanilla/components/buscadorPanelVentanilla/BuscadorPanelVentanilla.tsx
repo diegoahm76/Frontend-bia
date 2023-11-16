@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, Stack, TextField } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { usePanelVentanilla } from '../../../../../../hook/usePanelVentanilla';
 import Select from 'react-select';
@@ -12,6 +12,7 @@ import {
   choicesEstadoActual,
   choicesTipoDeSolicitud,
 } from '../../utils/choices';
+import { getRequestStates } from './services/getRequestStates.service';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* hooks
@@ -21,7 +22,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     reset_search_form,
   } = usePanelVentanilla();
 
-  // ? handleSubmit
+  // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA PARA LAS PQRSDF -----
   const handleSubmit = () => {
     console.log(
       'submit , buscando coincidencias',
@@ -30,6 +31,18 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const resetForm = () => reset_search_form();
+
+  // ? useState Necesario
+  const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
+
+  //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
+  useEffect(() => {
+    console.log('bienvenido al módulo de ventanilla');
+
+    getRequestStates();
+  }, []);
+
+  // ?
 
   return (
     <Grid
@@ -149,7 +162,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                         console.log(selectedOption);
                         onChange(selectedOption);
                       }}
-                      // isDisabled={trd_current != null}
                       options={choicesEstadoActual as any[]}
                       placeholder="Seleccionar"
                     />

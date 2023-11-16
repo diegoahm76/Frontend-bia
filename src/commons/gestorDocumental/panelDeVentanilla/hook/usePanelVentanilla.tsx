@@ -74,7 +74,11 @@ export const usePanelVentanilla = () => {
     // formState: formState_manejo_metadatos_modal,
     setValue: setValueManejoMetadatosModal,
     reset: resetManejoMetadatosModal,
+    watch: watchManejoMetadatosModal,
   } = useForm();
+
+  //
+  const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
 
   return {
     // ! DECLARACIONES PARA LA ENTREGA 98 ................//
@@ -107,5 +111,6 @@ export const usePanelVentanilla = () => {
     handleSubmitManejoMetadatosModal,
     setValueManejoMetadatosModal,
     resetManejoMetadatosModal,
+    watchExeManejoModalMetadatos,
   };
 };
