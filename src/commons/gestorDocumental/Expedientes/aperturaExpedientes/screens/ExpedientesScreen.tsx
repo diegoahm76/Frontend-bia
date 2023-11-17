@@ -60,6 +60,7 @@ export const ExpedientesScreen: React.FC = () => {
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [configuracion, set_configuracion] = useState<any>(null);
+    const [select_expediente, set_select_expediente] = useState<any>(null);
 
     // Sección apertura
     const [tdr, set_tdr] = useState<any>({});
@@ -653,7 +654,7 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Buscar expediente
                             </Button>}
-                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
+                            {abrir_modal_buscar && <BuscarExpediente set_select_expediente={set_select_expediente} is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                         </Stack>
                     </Box>
                 </Grid>

@@ -13,6 +13,7 @@ interface IProps {
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
     set_expediente: any;
     serie: any;
+    set_select_expediente:any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -123,7 +124,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                 props.set_expediente({expediente: [response.data]});
             else
                 props.set_expediente(null);
-        
+                props.set_select_expediente(expediente)
             props.set_is_modal_active(false);
         }));
     }
