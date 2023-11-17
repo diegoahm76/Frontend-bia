@@ -127,6 +127,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     const unidadesResponsablesCcdSeleccionado =
       await getUnidadesResponsablesActual({
         idCcdSeleccionado: params.row.id_ccd,
+       // idUnidadActual: params.row.unidad_nueva,
         setLoading: handleSecondLoading,
       });
     // ! en consecuencia asignar ese valor a un elemento del store para manejar la interacción posterior

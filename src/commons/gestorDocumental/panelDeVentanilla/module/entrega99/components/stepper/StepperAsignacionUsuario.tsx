@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -8,15 +8,18 @@ import Button from '@mui/material/Button';
 import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
+import { Parte1Screen } from '../parte1/screen/Parte1Screen';
+import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
 
-export const StepperAsignacionUsuario = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set<number>());
+export const StepperAsignacionUsuario = (): JSX.Element => {
+  const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
+    PanelVentanillaContext
+  );
 
   const isStepSkipped = (step: number) => skipped.has(step);
 
   const handleNext = () => {
-/*    if ('hola'.length > 0) {
+    /*    if ('hola'.length > 0) {
       alert('no se puede avanzar');
       return;
     }
@@ -30,16 +33,16 @@ export const StepperAsignacionUsuario = () => {
       newSkipped.delete(activeStep);
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () =>
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
 
   const handleSkip = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
+    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
+    setSkipped((prevSkipped: Set<number>) => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -114,10 +117,7 @@ export const StepperAsignacionUsuario = () => {
           {(() => {
             switch (activeStep) {
               case 0:
-                {
-                  /*parte 1*/
-                }
-                return <Parte2Screen />;
+                return <Parte1Screen />;
               case 1:
                 return <Parte2Screen />;
               case 2:

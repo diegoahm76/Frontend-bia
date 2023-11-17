@@ -17,7 +17,7 @@ export const getOficinas = async ({
 }): Promise<any> => {
   setLoading?.(true);
   try {
-    const url1 = `gestor/ccd/get-oficinas-unidad-actual/get/${idUnidadOrganizacionalActual}`;
+    const url1 = `gestor/ccd/get-oficinas-unidad-actual/get/?id_ccd_nuevo=${idCcdNuevo}&id_unidad_actual=${idUnidadOrganizacionalActual}`;
     const url2 = `gestor/ccd/get-oficinas-unidad-nueva/get/?id_ccd_nuevo=${idCcdNuevo}&id_unidad_nueva=${idUnidadNueva}`;
 
     const [response1, response2] = await Promise.all([
