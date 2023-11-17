@@ -1,52 +1,64 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, ButtonGroup, Chip, Grid, IconButton } from '@mui/material';
+import { Avatar, Box, ButtonGroup, Grid, IconButton } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch } from '../../../../../hooks';
 import {
-  set_current_indicador,
   set_current_mode_planes,
+  set_current_programa,
 } from '../../../store/slice/indexPlanes';
-import { DataContextIndicador } from '../../../Indicadores/context/context';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { DataContextProyectos } from '../../context/context';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarIndicador: React.FC = () => {
-  const columns_indicador: GridColDef[] = [
-    {
-      field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
-      sortable: true,
-      width: 300,
-    },
+export const ListarProgramas: React.FC = () => {
+  const columns_programas: GridColDef[] = [
     {
       field: 'nombre_plan',
-      headerName: 'NOMBRE PLAN',
+      headerName: 'NOMBRE DEL PLAN',
       sortable: true,
       width: 300,
     },
     {
-      field: 'nombre_producto',
-      headerName: 'NOMBRE PRODUCTO',
+      field: 'nombre_programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
       width: 300,
     },
     {
-      field: 'nombre_actividad',
-      headerName: 'NOMBRE ACTIVIDAD',
+      field: 'porcentaje_1',
+      headerName: 'PORCENTAJE 1',
       sortable: true,
-      width: 300,
+      width: 130,
+    },
+    {
+      field: 'porcentaje_2',
+      headerName: 'PORCENTAJE 2',
+      sortable: true,
+      width: 130,
+    },
+    {
+      field: 'porcentaje_3',
+      headerName: 'PORCENTAJE 3',
+      sortable: true,
+      width: 130,
+    },
+    {
+      field: 'porcentaje_4',
+      headerName: 'PORCENTAJE 4',
+      sortable: true,
+      width: 130,
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      width: 250,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -61,7 +73,7 @@ export const ListarIndicador: React.FC = () => {
                 })
               );
 
-              dispatch(set_current_indicador(params.row));
+              dispatch(set_current_programa(params.row));
             }}
           >
             <Avatar
@@ -74,7 +86,7 @@ export const ListarIndicador: React.FC = () => {
               variant="rounded"
             >
               <ChecklistOutlinedIcon
-                titleAccess="Seleccionar indicador"
+                titleAccess="Seleccionar programa"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -88,13 +100,13 @@ export const ListarIndicador: React.FC = () => {
     },
   ];
 
-  const { rows_indicador, fetch_data_indicadores } =
-    useContext(DataContextIndicador);
+  const { rows_programa, fetch_data_programa } =
+    useContext(DataContextProyectos);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch_data_indicadores();
+    void fetch_data_programa();
   }, []);
 
   return (
@@ -115,13 +127,13 @@ export const ListarIndicador: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de indicadores " />
+          <Title title="Listado de Programas " />
         </Grid>
         <>
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
-              <ButtonGroup
+                <ButtonGroup
                   style={{
                     margin: 7,
                     display: 'flex',
@@ -129,20 +141,20 @@ export const ListarIndicador: React.FC = () => {
                   }}
                 >
                   {download_xls({
-                    nurseries: rows_indicador,
-                    columns: columns_indicador,
+                    nurseries: rows_programa,
+                    columns: columns_programas,
                   })}
                   {download_pdf({
-                    nurseries: rows_indicador,
-                    columns: columns_indicador,
-                    title: 'CREAR INDICADORES',
+                    nurseries: rows_programa,
+                    columns: columns_programas,
+                    title: 'CREAR ',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_indicador}
-                  columns={columns_indicador}
+                  rows={rows_programa}
+                  columns={columns_programas}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

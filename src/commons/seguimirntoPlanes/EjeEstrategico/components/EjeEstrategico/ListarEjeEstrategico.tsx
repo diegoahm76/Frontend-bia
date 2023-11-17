@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, Chip, Grid, IconButton } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Chip,
+  Grid,
+  IconButton,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +21,8 @@ import {
   set_current_eje_estrategico,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarEjeEstrategico: React.FC = () => {
@@ -126,6 +136,23 @@ export const ListarEjeEstrategico: React.FC = () => {
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
+                <ButtonGroup
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {download_xls({
+                    nurseries: rows_eje_estrategico,
+                    columns: columns_eje,
+                  })}
+                  {download_pdf({
+                    nurseries: rows_eje_estrategico,
+                    columns: columns_eje,
+                    title: 'CREAR EJE ESTRATEGICO',
+                  })}
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight

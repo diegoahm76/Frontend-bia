@@ -1,44 +1,40 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, ButtonGroup, Chip, Grid, IconButton } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Chip,
+  Grid,
+  IconButton,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_indicador,
+  set_current_subprograma,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextIndicador } from '../../../Indicadores/context/context';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { DataContextSubprogramas } from '../../context/context';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarIndicador: React.FC = () => {
-  const columns_indicador: GridColDef[] = [
+export const ListarSubprograma: React.FC = () => {
+  const columns_subprograma: GridColDef[] = [
     {
-      field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
+      field: 'nombre_subprograma',
+      headerName: 'NOMBRE SUBPROGRAMA',
       sortable: true,
-      width: 300,
+      width: 200,
     },
     {
-      field: 'nombre_plan',
-      headerName: 'NOMBRE PLAN',
-      sortable: true,
-      width: 300,
-    },
-    {
-      field: 'nombre_producto',
-      headerName: 'NOMBRE PRODUCTO',
-      sortable: true,
-      width: 300,
-    },
-    {
-      field: 'nombre_actividad',
-      headerName: 'NOMBRE ACTIVIDAD',
+      field: 'nombre_programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
       width: 300,
     },
@@ -57,11 +53,10 @@ export const ListarIndicador: React.FC = () => {
                 set_current_mode_planes({
                   ver: true,
                   crear: false,
-                  editar: false,
+                  editar: true,
                 })
               );
-
-              dispatch(set_current_indicador(params.row));
+              dispatch(set_current_subprograma(params.row));
             }}
           >
             <Avatar
@@ -73,8 +68,8 @@ export const ListarIndicador: React.FC = () => {
               }}
               variant="rounded"
             >
-              <ChecklistOutlinedIcon
-                titleAccess="Seleccionar indicador"
+              <EditIcon
+                titleAccess="Editar subprograma"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -88,14 +83,23 @@ export const ListarIndicador: React.FC = () => {
     },
   ];
 
-  const { rows_indicador, fetch_data_indicadores } =
-    useContext(DataContextIndicador);
+  const { rows_subprogramas, fetch_data_subprogramas } = useContext(
+    DataContextSubprogramas
+  );
+
+  const {
+    programa: { id_programa },
+  } = useAppSelector((state) => state.planes);
+
+  console.log('id_programa', id_programa);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch_data_indicadores();
-  }, []);
+    if (id_programa) {
+      fetch_data_subprogramas();
+    }
+  }, [id_programa]);
 
   return (
     <>
@@ -115,13 +119,13 @@ export const ListarIndicador: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de indicadores " />
+          <Title title="Listado de subprogramas " />
         </Grid>
         <>
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
-              <ButtonGroup
+                <ButtonGroup
                   style={{
                     margin: 7,
                     display: 'flex',
@@ -129,20 +133,20 @@ export const ListarIndicador: React.FC = () => {
                   }}
                 >
                   {download_xls({
-                    nurseries: rows_indicador,
-                    columns: columns_indicador,
+                    nurseries: rows_subprogramas,
+                    columns: columns_subprograma,
                   })}
                   {download_pdf({
-                    nurseries: rows_indicador,
-                    columns: columns_indicador,
-                    title: 'CREAR INDICADORES',
+                    nurseries: rows_subprogramas,
+                    columns: columns_subprograma,
+                    title: 'CREAR ',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_indicador}
-                  columns={columns_indicador}
+                  rows={rows_subprogramas}
+                  columns={columns_subprograma}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
@@ -151,6 +155,26 @@ export const ListarIndicador: React.FC = () => {
             </Box>
           </Grid>
         </>
+        <Grid container spacing={2} justifyContent="flex-end">
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={false}
+              onClick={() => {
+                dispatch(
+                  set_current_mode_planes({
+                    ver: true,
+                    crear: true,
+                    editar: false,
+                  })
+                );
+              }}
+            >
+              Agregar Subprograma
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );

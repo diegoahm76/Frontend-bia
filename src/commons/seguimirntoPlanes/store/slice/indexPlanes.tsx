@@ -12,6 +12,9 @@ import type {
   Indicadores,
   IMetaIndicador,
   IRubro,
+  ISubprogramas,
+  IFuentesFinanciacion,
+  IDetalleCuentas,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -120,6 +123,48 @@ export const initial_state_rubro: IRubro = {
   cod_pre: '',
   valcuenta: '',
 };
+
+export const initial_state_subprogramas: ISubprogramas = {
+  id_subprograma: null,
+  nombre_programa: '',
+  nombre_subprograma: '',
+  id_programa: null,
+};
+
+export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
+  id_fuente: null,
+  nombre_fuente: '',
+  nombre_indicador: '',
+  nombre_cuenca: '',
+  vano_1: null,
+  vano_2: null,
+  vano_3: null,
+  vano_4: null,
+  valor_total: null,
+  id_indicador: null,
+  id_cuenca: null,
+};
+
+export const initial_state_detalle_inversion: IDetalleCuentas = {
+  id_detalle_inversion: null,
+  nombre_sector: '',
+  nombre_rubro: '',
+  nombre_programa: '',
+  nombre_subprograma: '',
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  cuenta: '',
+  valor_cuenta: null,
+  id_sector: null,
+  id_rubro: null,
+  id_programa: null,
+  id_subprograma: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -132,6 +177,9 @@ export const initial_state: IPlanesIndex = {
   indicador: initial_state_indicadores,
   meta: initial_state_meta,
   rubro: initial_state_rubro,
+  subprograma: initial_state_subprogramas,
+  fuente_financiacion: initial_state_fuentes_fianciacion,
+  detalle_inversion: initial_state_detalle_inversion,
 };
 
 export const planes_slice = createSlice({
@@ -200,12 +248,27 @@ export const planes_slice = createSlice({
     ) => {
       state.meta = action.payload;
     },
-    set_current_rubro: (
-      state: IPlanesIndex,
-      action: PayloadAction<IRubro>
-    ) => {
+    set_current_rubro: (state: IPlanesIndex, action: PayloadAction<IRubro>) => {
       state.rubro = action.payload;
-    }
+    },
+    set_current_subprograma: (
+      state: IPlanesIndex,
+      action: PayloadAction<ISubprogramas>
+    ) => {
+      state.subprograma = action.payload;
+    },
+    set_current_fuentes_financiacion: (
+      state: IPlanesIndex,
+      action: PayloadAction<IFuentesFinanciacion>
+    ) => {
+      state.fuente_financiacion = action.payload;
+    },
+    set_current_detalle_inversion: (
+      state: IPlanesIndex,
+      action: PayloadAction<IDetalleCuentas>
+    ) => {
+      state.detalle_inversion = action.payload;
+    },
   },
 });
 
@@ -222,4 +285,7 @@ export const {
   set_current_indicador,
   set_current_meta,
   set_current_rubro,
+  set_current_subprograma,
+  set_current_fuentes_financiacion,
+  set_current_detalle_inversion,
 } = planes_slice.actions;

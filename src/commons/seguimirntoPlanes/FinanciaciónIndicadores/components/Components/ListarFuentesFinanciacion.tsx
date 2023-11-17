@@ -20,39 +20,39 @@ import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_meta,
+  set_current_fuentes_financiacion,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextMetas } from '../../context/context';
+import { DataContextFuentesFinanciacion } from '../../context/context';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarMetas: React.FC = () => {
-  const columns_metas: GridColDef[] = [
+export const ListarFuentesFinanciacion: React.FC = () => {
+  const columns_fuente: GridColDef[] = [
     {
       field: 'nombre_indicador',
       headerName: 'NOMBRE INDICADOR',
       sortable: true,
-      width: 300,
+      width: 250,
     },
     {
-      field: 'unidad_meta',
-      headerName: 'UNIDAD META',
+      field: 'nombre_fuente',
+      headerName: 'NOMBRE FUENTE',
       sortable: true,
-      width: 120,
+      width: 250,
     },
     {
-      field: 'porcentaje_meta',
-      headerName: 'PORCENTAJE META',
+      field: 'nombre_cuenca',
+      headerName: 'NOMBRE CUENCA',
       sortable: true,
-      width: 300,
+      width: 250,
     },
     {
-      field: 'valor_meta',
-      headerName: 'VALOR META',
+      field: 'vano_1',
+      headerName: 'VANO 1',
       sortable: true,
-      width: 300,
+      width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -65,7 +65,74 @@ export const ListarMetas: React.FC = () => {
         return formattedInversion;
       },
     },
+    {
+      field: 'vano_2',
+      headerName: 'VANO 2',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
 
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'vano_3',
+      headerName: 'VANO 3',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'vano_4',
+      headerName: 'VANO 4',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'valor_total',
+      headerName: 'VALOR TOTAL',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
@@ -84,7 +151,7 @@ export const ListarMetas: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_meta(params.row));
+              dispatch(set_current_fuentes_financiacion(params.row));
             }}
           >
             <Avatar
@@ -97,7 +164,7 @@ export const ListarMetas: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar meta"
+                titleAccess="Editar fuente de financiación"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -111,20 +178,21 @@ export const ListarMetas: React.FC = () => {
     },
   ];
 
-  const { rows_metas, fetch_data_mata_indicador } =
-    useContext(DataContextMetas);
+  const { rows_fuentes, fetch_data_fuente_financiacion } = useContext(
+    DataContextFuentesFinanciacion
+  );
 
-  const {
-    indicador: { id_indicador },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   indicador: { id_indicador },
+  // } = useAppSelector((state) => state.planes);s
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id_indicador) {
-      fetch_data_mata_indicador();
-    }
-  }, [id_indicador]);
+    // if (id_indicador) {
+    fetch_data_fuente_financiacion();
+    // }
+  }, []);
 
   return (
     <>
@@ -144,7 +212,7 @@ export const ListarMetas: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de metas " />
+          <Title title="Listado de Fuentes de Financiación " />
         </Grid>
         <>
           <Grid item xs={12}>
@@ -158,21 +226,22 @@ export const ListarMetas: React.FC = () => {
                   }}
                 >
                   {download_xls({
-                    nurseries: rows_metas,
-                    columns: columns_metas,
+                    nurseries: rows_fuentes,
+                    columns: columns_fuente,
                   })}
                   {download_pdf({
-                    nurseries: rows_metas,
-                    columns: columns_metas,
-                    title: 'CREAR META',
+                    nurseries: rows_fuentes,
+                    columns: columns_fuente,
+                    title: 'CREAR FUENTE',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_metas}
-                  columns={columns_metas}
+                  rows={rows_fuentes}
+                  columns={columns_fuente}
                   pageSize={10}
+                  // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
@@ -196,7 +265,7 @@ export const ListarMetas: React.FC = () => {
                 );
               }}
             >
-              Agregar Meta
+              Agregar fuente de financiación
             </Button>
           </Grid>
         </Grid>

@@ -51,3 +51,18 @@ export interface ITipos {
   item_ya_usado?: boolean;
   registro_precargado?: boolean;
 }
+
+
+
+
+
+
+
+// Sector 
+export interface ISector {
+  id_sector?: number;
+  nombre_sector?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}

@@ -73,7 +73,7 @@ export interface IActividades {
 }
 // Indicadores
 export interface Indicadores {
-  id_indicador?: number | null;
+  id_indicador: number | null;
   nombre_medicion?: string;
   nombre_tipo?: string;
   nombre_producto?: string;
@@ -90,13 +90,13 @@ export interface Indicadores {
 }
 // Metas por Indicador
 export interface IMetaIndicador {
-  id_meta?:          number | null;
+  id_meta?: number | null;
   nombre_indicador?: string;
-  nombre_meta:      string;
-  unidad_meta:      string;
-  porcentaje_meta:  number | null;
-  valor_meta:       string;
-  id_indicador?:     number | null;
+  nombre_meta: string;
+  unidad_meta: string;
+  porcentaje_meta: number | null;
+  valor_meta: string;
+  id_indicador?: number | null;
 }
 // Rubro
 export interface IRubro {
@@ -104,6 +104,47 @@ export interface IRubro {
   cuenta: string;
   cod_pre: string;
   valcuenta: string;
+}
+// subprogramas
+export interface ISubprogramas {
+  id_subprograma?: number | null;
+  nombre_subprograma: string;
+  nombre_programa?: string;
+  id_programa?: number | null;
+}
+// Fuentes de financiacion indicadores
+export interface IFuentesFinanciacion {
+  id_fuente: number | null;
+  nombre_fuente: string;
+  nombre_indicador?: string;
+  nombre_cuenca?: string;
+  vano_1: number | null;
+  vano_2: number | null;
+  vano_3: number | null;
+  vano_4: number | null;
+  valor_total: number | null;
+  id_indicador?: number | null;
+  id_cuenca?: number | null;
+}
+// Detalle Inversion Cuentas
+export interface IDetalleCuentas {
+  id_detalle_inversion?: number | null;
+  nombre_sector?: string;
+  nombre_rubro?: string;
+  nombre_programa?: string;
+  nombre_subprograma?: string;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  cuenta: string;
+  valor_cuenta: number | null;
+  id_sector?: number | null;
+  id_rubro?: number | null;
+  id_programa?: number | null;
+  id_subprograma?: number | null;
+  id_proyecto?: number | null;
+  id_producto?: number | null;
+  id_actividad?: number | null;
 }
 export interface IPlanesIndex {
   plan: IPlanes;
@@ -117,4 +158,7 @@ export interface IPlanesIndex {
   indicador: Indicadores;
   meta: IMetaIndicador;
   rubro: IRubro;
+  subprograma: ISubprogramas;
+  fuente_financiacion: IFuentesFinanciacion;
+  detalle_inversion: IDetalleCuentas;
 }

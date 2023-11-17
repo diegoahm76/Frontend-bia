@@ -3,13 +3,13 @@ import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { ListarProgramas } from '../components/Proyectos/ListarProgramas';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { AgregarProyecto } from '../components/Proyectos/AgregarProyecto';
+import { AgregarSubprograma } from '../components/Proyectos/AgregarSubprograma';
 import { useEffect } from 'react';
-import { ListarProyecto } from '../components/Proyectos/ListarProyecto';
+import { ListarSubprograma } from '../components/Proyectos/ListarSubprograma';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ProyectosScreen: React.FC = () => {
+export const SubprogremasScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
@@ -42,12 +42,12 @@ export const ProyectosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Proyectos " />
+          <Title title="Subprogramas " />
         </Grid>
       </Grid>
       <ListarProgramas />
-      {mode.ver ? <ListarProyecto /> : null}
-      {mode.crear || mode.editar ? <AgregarProyecto /> : null}
+      {mode.ver ? <ListarSubprograma /> : null}
+      {mode.crear || mode.editar ? <AgregarSubprograma /> : null}
     </>
   );
 };

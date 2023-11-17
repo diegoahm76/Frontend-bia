@@ -11,6 +11,9 @@ import { ActividadesRoutes } from '../Actividades/router/ActividadesRoutes';
 import { IndicadoresRoutes } from '../Indicadores/router/IndicadoresRoutes';
 import { MetasRoutes } from '../MetasPorIndicador/router/MetasRoutes';
 import { RubrosRoutes } from '../Rubro/Rubro/router/RubrosRoutes';
+import { SubProgramasRoutes } from '../Subprogramas/router/SubProgramasRoutes';
+import { FuentesFinanciacionRoutes } from '../FinanciaciónIndicadores/router/FuentesFinanciacionRoutes';
+import { DetalleInversionRoutes } from '../DetalleInversionCuentas/router/DetalleInversionRoutes';
 
 const routes = [
   {
@@ -69,6 +72,24 @@ const routes = [
     path: 'rubros/',
     name: 'rubros',
     component: () => <RubrosRoutes />,
+  },
+  // subprogramas
+  {
+    path: 'subprogramas/',
+    name: 'subprogramas',
+    component: () => <SubProgramasRoutes />,
+  },
+  // Fuentes de financiacion
+  {
+    path: 'fuentes_financiacion/',
+    name: 'fuentes_financiacion',
+    component: () => <FuentesFinanciacionRoutes />,
+  },
+  // Detalle de inversion cuentas
+  {
+    path: 'detalle_inversion/',
+    name: 'detalle_inversion',
+    component: () => <DetalleInversionRoutes />,
   },
   {
     path: '/*',

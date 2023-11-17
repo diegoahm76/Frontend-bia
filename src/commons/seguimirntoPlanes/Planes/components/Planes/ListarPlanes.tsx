@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, Chip, Grid, IconButton } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Chip,
+  Grid,
+  IconButton,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,10 +21,12 @@ import {
   set_current_mode_planes,
   set_current_planes,
 } from '../../../store/slice/indexPlanes';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarPlanes: React.FC = () => {
-  const columns_pgar: GridColDef[] = [
+  const columns_planes: GridColDef[] = [
     {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
@@ -147,11 +157,28 @@ export const ListarPlanes: React.FC = () => {
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
+                <ButtonGroup
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {download_xls({
+                    nurseries: rows_planes,
+                    columns: columns_planes,
+                  })}
+                  {download_pdf({
+                    nurseries: rows_planes,
+                    columns: columns_planes,
+                    title: 'CREAR PLAN',
+                  })}
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={rows_planes}
-                  columns={columns_pgar}
+                  columns={columns_planes}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
