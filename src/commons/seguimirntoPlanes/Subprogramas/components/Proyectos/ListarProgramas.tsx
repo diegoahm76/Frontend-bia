@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Grid, IconButton } from '@mui/material';
+import { Avatar, Box, ButtonGroup, Grid, IconButton } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,7 +11,9 @@ import {
   set_current_mode_planes,
   set_current_programa,
 } from '../../../store/slice/indexPlanes';
-import { DataContextProyectos } from '../../context/context';
+import { DataContextSubprogramas } from '../../context/context';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarProgramas: React.FC = () => {
@@ -20,13 +22,13 @@ export const ListarProgramas: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 300,
+      width: 450,
     },
     {
       field: 'nombre_programa',
       headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 300,
+      width: 450,
     },
     {
       field: 'porcentaje_1',
@@ -98,7 +100,9 @@ export const ListarProgramas: React.FC = () => {
     },
   ];
 
-  const { rows_programa, fetch_data_programa } = useContext(DataContextProyectos);
+  const { rows_programa, fetch_data_programa } = useContext(
+    DataContextSubprogramas
+  );
 
   const dispatch = useAppDispatch();
 
@@ -130,6 +134,23 @@ export const ListarProgramas: React.FC = () => {
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
+                <ButtonGroup
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {download_xls({
+                    nurseries: rows_programa,
+                    columns: columns_programas,
+                  })}
+                  {download_pdf({
+                    nurseries: rows_programa,
+                    columns: columns_programas,
+                    title: 'CREAR ',
+                  })}
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight

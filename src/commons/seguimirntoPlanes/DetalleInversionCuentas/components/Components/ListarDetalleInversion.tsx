@@ -1,64 +1,99 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, Chip, Grid, IconButton } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Grid,
+  IconButton,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridColDef,
+  type GridValueFormatterParams,
+} from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_proyecto,
+  set_current_detalle_inversion,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextProyectos } from '../../context/context';
-import { Programa } from '../../../../recursoHidrico/PORH/Interfaces/interfaces';
+import { DataContextDetalleInversion } from '../../context/context';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarProyecto: React.FC = () => {
-
-  const columns_proyectos: GridColDef[] = [
+export const ListarDetalleInversion: React.FC = () => {
+  const columns_detalle: GridColDef[] = [
     {
-      field: 'nombre_proyecto',
-      headerName: 'NOMBRE DEL PROYECTO',
+      field: 'cuenta',
+      headerName: 'CUENTA',
       sortable: true,
-      width: 300,
+      width: 250,
     },
     {
-      field: 'numero_proyecto',
-      headerName: 'NUMERO DEL PROYECTO',
+      field: 'valor_cuenta',
+      headerName: 'VALOR CUENTA',
       sortable: true,
-      width: 200,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'nombre_sector',
+      headerName: 'NOMBRE SECTOR',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_rubro',
+      headerName: 'RUBRO',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'nombre_programa',
-      headerName: 'NOMBRE DEL PROGRAMA',
+      headerName: 'NOMBRE PROGRAMA',
       sortable: true,
-      width: 300,
+      width: 250,
     },
     {
-      field: 'pondera_1',
-      headerName: 'AÑO 1',
+      field: 'nombre_subprograma',
+      headerName: 'NOMBRE SUBPROGRAMA',
       sortable: true,
-      width: 130,
+      width: 250,
     },
     {
-      field: 'pondera_2',
-      headerName: 'AÑO 2',
+      field: 'nombre_proyecto',
+      headerName: 'NOMBRE PROYECTO',
       sortable: true,
-      width: 130,
+      width: 250,
     },
     {
-      field: 'pondera_3',
-      headerName: 'AÑO 3',
+      field: 'nombre_producto',
+      headerName: 'NOMBRE PRODUCTO',
       sortable: true,
-      width: 130,
+      width: 250,
     },
     {
-      field: 'pondera_4',
-      headerName: 'AÑO 4',
+      field: 'nombre_actividad',
+      headerName: 'NOMBRE ACTIVIDAD',
       sortable: true,
-      width: 130,
+      width: 250,
     },
     {
       field: 'acciones',
@@ -78,7 +113,7 @@ export const ListarProyecto: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_proyecto(params.row));
+              dispatch(set_current_detalle_inversion(params.row));
             }}
           >
             <Avatar
@@ -91,7 +126,7 @@ export const ListarProyecto: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar Proyecto"
+                titleAccess="Editar detalle inversion cuentas"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -105,22 +140,21 @@ export const ListarProyecto: React.FC = () => {
     },
   ];
 
-  const { rows_proyecto, fetch_data_proyecto } =
-    useContext(DataContextProyectos);
+  const { rows_detalle_inversion, fetch_data_detalle_inversion } = useContext(
+    DataContextDetalleInversion
+  );
 
-  const {
-    programa: { id_programa }, 
-  } = useAppSelector((state) => state.planes);
-
-  console.log('id_programa', id_programa);
+  // const {
+  //   indicador: { id_indicador },
+  // } = useAppSelector((state) => state.planes);s
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id_programa) {
-      fetch_data_proyecto();
-    }
-  }, [id_programa]);
+    // if (id_indicador) {
+    fetch_data_detalle_inversion();
+    // }
+  }, []);
 
   return (
     <>
@@ -140,18 +174,36 @@ export const ListarProyecto: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de proyectos " />
+          <Title title="Listado de detalle inversión cuentas " />
         </Grid>
         <>
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
+                <ButtonGroup
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {download_xls({
+                    nurseries: rows_detalle_inversion,
+                    columns: columns_detalle,
+                  })}
+                  {download_pdf({
+                    nurseries: rows_detalle_inversion,
+                    columns: columns_detalle,
+                    title: 'CREAR',
+                  })}
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_proyecto}
-                  columns={columns_proyectos}
+                  rows={rows_detalle_inversion}
+                  columns={columns_detalle}
                   pageSize={10}
+                  // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
@@ -175,7 +227,7 @@ export const ListarProyecto: React.FC = () => {
                 );
               }}
             >
-              Agregar Proyecto
+              Agregar detalle inversión cuentas
             </Button>
           </Grid>
         </Grid>

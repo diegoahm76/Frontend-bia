@@ -1,46 +1,73 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, ButtonGroup, Chip, Grid, IconButton } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Chip,
+  Grid,
+  IconButton,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_indicador,
+  set_current_proyecto,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextIndicador } from '../../../Indicadores/context/context';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { DataContextProyectos } from '../../context/context';
+import { Programa } from '../../../../recursoHidrico/PORH/Interfaces/interfaces';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarIndicador: React.FC = () => {
-  const columns_indicador: GridColDef[] = [
+export const ListarProyecto: React.FC = () => {
+  const columns_proyectos: GridColDef[] = [
     {
-      field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
+      field: 'nombre_proyecto',
+      headerName: 'NOMBRE DEL PROYECTO',
       sortable: true,
       width: 300,
     },
     {
-      field: 'nombre_plan',
-      headerName: 'NOMBRE PLAN',
+      field: 'numero_proyecto',
+      headerName: 'NUMERO DEL PROYECTO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'nombre_programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
       width: 300,
     },
     {
-      field: 'nombre_producto',
-      headerName: 'NOMBRE PRODUCTO',
+      field: 'pondera_1',
+      headerName: 'AÑO 1',
       sortable: true,
-      width: 300,
+      width: 130,
     },
     {
-      field: 'nombre_actividad',
-      headerName: 'NOMBRE ACTIVIDAD',
+      field: 'pondera_2',
+      headerName: 'AÑO 2',
       sortable: true,
-      width: 300,
+      width: 130,
+    },
+    {
+      field: 'pondera_3',
+      headerName: 'AÑO 3',
+      sortable: true,
+      width: 130,
+    },
+    {
+      field: 'pondera_4',
+      headerName: 'AÑO 4',
+      sortable: true,
+      width: 130,
     },
     {
       field: 'acciones',
@@ -57,11 +84,10 @@ export const ListarIndicador: React.FC = () => {
                 set_current_mode_planes({
                   ver: true,
                   crear: false,
-                  editar: false,
+                  editar: true,
                 })
               );
-
-              dispatch(set_current_indicador(params.row));
+              dispatch(set_current_proyecto(params.row));
             }}
           >
             <Avatar
@@ -73,8 +99,8 @@ export const ListarIndicador: React.FC = () => {
               }}
               variant="rounded"
             >
-              <ChecklistOutlinedIcon
-                titleAccess="Seleccionar indicador"
+              <EditIcon
+                titleAccess="Editar Proyecto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -88,14 +114,22 @@ export const ListarIndicador: React.FC = () => {
     },
   ];
 
-  const { rows_indicador, fetch_data_indicadores } =
-    useContext(DataContextIndicador);
+  const { rows_proyecto, fetch_data_proyecto } =
+    useContext(DataContextProyectos);
+
+  const {
+    programa: { id_programa },
+  } = useAppSelector((state) => state.planes);
+
+  console.log('id_programa', id_programa);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch_data_indicadores();
-  }, []);
+    if (id_programa) {
+      fetch_data_proyecto();
+    }
+  }, [id_programa]);
 
   return (
     <>
@@ -115,13 +149,13 @@ export const ListarIndicador: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de indicadores " />
+          <Title title="Listado de proyectos " />
         </Grid>
         <>
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
-              <ButtonGroup
+                <ButtonGroup
                   style={{
                     margin: 7,
                     display: 'flex',
@@ -129,20 +163,20 @@ export const ListarIndicador: React.FC = () => {
                   }}
                 >
                   {download_xls({
-                    nurseries: rows_indicador,
-                    columns: columns_indicador,
+                    nurseries: rows_proyecto,
+                    columns: columns_proyectos,
                   })}
                   {download_pdf({
-                    nurseries: rows_indicador,
-                    columns: columns_indicador,
-                    title: 'CREAR INDICADORES',
+                    nurseries: rows_proyecto,
+                    columns: columns_proyectos,
+                    title: 'CREAR ',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_indicador}
-                  columns={columns_indicador}
+                  rows={rows_proyecto}
+                  columns={columns_proyectos}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
@@ -151,6 +185,26 @@ export const ListarIndicador: React.FC = () => {
             </Box>
           </Grid>
         </>
+        <Grid container spacing={2} justifyContent="flex-end">
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={false}
+              onClick={() => {
+                dispatch(
+                  set_current_mode_planes({
+                    ver: true,
+                    crear: true,
+                    editar: false,
+                  })
+                );
+              }}
+            >
+              Agregar Proyecto
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );

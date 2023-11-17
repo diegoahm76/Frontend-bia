@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ListarProgramas } from '../components/Proyectos/ListarProgramas';
+import { ListarFuentesFinanciacion } from '../components/Components/ListarFuentesFinanciacion';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { AgregarProyecto } from '../components/Proyectos/AgregarProyecto';
+import { AgregarFuenteFinanciacion } from '../components/Components/AgregarFuenteFinanciacion';
 import { useEffect } from 'react';
-import { ListarProyecto } from '../components/Proyectos/ListarProyecto';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ProyectosScreen: React.FC = () => {
+export const FuentesIndicadoresScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
@@ -42,12 +41,11 @@ export const ProyectosScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Proyectos " />
+          <Title title="Metas por indicador " />
         </Grid>
       </Grid>
-      <ListarProgramas />
-      {mode.ver ? <ListarProyecto /> : null}
-      {mode.crear || mode.editar ? <AgregarProyecto /> : null}
+      <ListarFuentesFinanciacion />
+      {mode.crear || mode.editar ? <AgregarFuenteFinanciacion /> : null}
     </>
   );
 };
