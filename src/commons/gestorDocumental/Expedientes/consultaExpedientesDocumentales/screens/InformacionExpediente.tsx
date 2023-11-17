@@ -1,5 +1,5 @@
 import { Grid, Box, Button, Stack, TextField, Typography, Fab } from "@mui/material";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { obtener_usuario_logueado } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
@@ -11,6 +11,7 @@ import { Title } from "../../../../../components/Title";
 import { BusquedaExpediente } from "./BusquedaExpediente";
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
+import ConcederAccesoExpediente from "../../ConcesionAccesoExpedientes/screens/ConcederAccesoExpediente";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -26,7 +27,7 @@ export const InformacionExpediente: React.FC = () => {
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
     const [indice, set_indice] = useState<any>(null);
-    const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
+    const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
 
     const salir_expediente: () => void = () => {
@@ -223,11 +224,11 @@ export const InformacionExpediente: React.FC = () => {
                                 color='primary'
                                 variant='outlined'
                                 startIcon={<ListOutlinedIcon />}
-                                onClick={() => { set_abrir_modal_buscar(true); }}
+                                onClick={() => { set_abrir_modal_conceder(true); }}
                             >
                                 Conceder acceso a expediente
                             </Button>
-                            {/* {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>} */}
+                            {abrir_modal_conceder && <ConcederAccesoExpediente is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} expediente={expediente} ></ConcederAccesoExpediente>}
                         </Stack>
                     </Box>
                 </Grid>
