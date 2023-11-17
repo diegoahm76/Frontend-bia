@@ -37,6 +37,8 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
     item_ya_usado: false,
     id_persona_empresa: 3,
     numero_sucursal: null,
+    direccion_sucursal_georeferenciada_lon:"",
+    direccion_sucursal_georeferenciada_lat:"",
   };
   const [exiting, 
     // set_exiting
