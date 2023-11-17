@@ -175,9 +175,14 @@ export const ActualizarExpediente: React.FC = () => {
 
 
 
-                <Grid item xs={12} sm={7.8}></Grid>
+                <Grid item xs={12} sm={7.8}>
+                    
+                </Grid>
                 {/* <Grid item xs={12} sm={1}>
                     <ButtonSalir />
+
+
+
                 </Grid> */}
                 <Grid item xs={12} sm={1.6}>
                     <Button startIcon={<SaveIcon />} color='success' fullWidth variant="contained">
