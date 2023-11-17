@@ -104,7 +104,7 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
     return (
         <>
             <Grid item md={12} xs={12}>
-                <Title title="Serie documental" />
+                <Title title="Información del índice" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
                         <Grid item xs={12} sm={7}>

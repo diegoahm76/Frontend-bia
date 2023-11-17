@@ -18,15 +18,7 @@ export const VerCierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
 
     useEffect(() => {
         dispatch(obtener_cierre_indice(props.indice?.id_indice_electronico_exp)).then((response: any) => {
-            set_indice_cierre({
-                "id_indice_electronico_exp": 1,
-                "id_persona_firma_cierre": 1,
-                "nombre_persona_firma_cierre": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
-                "fecha_cierre": "2023-11-13T14:36:16.987281",
-                "telefono_celular": "+573103210287",
-                "email": "oscarstep.123@gmail.com",
-                "observacion_firme_cierre": "Realizo firma del sds"
-            });
+            set_indice_cierre(response.data);
         })
     }, []);
 
