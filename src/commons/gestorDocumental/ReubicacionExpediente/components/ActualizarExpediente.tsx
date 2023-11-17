@@ -21,7 +21,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { control_error, control_success } from '../../../../helpers';
 import CierreExpedientesScreen from '../../Expedientes/cierreExpediente/screen/CierreExpedientesScreen';
 import { ExpedientesScreen } from '../../Expedientes/aperturaExpedientes/screens/ExpedientesScreen';
-import { Expedien } from '../../Expedientes/aperturaExpedientes/screens/ReubicacionExpediente';
+import { Expedien } from './ReubicacionExpedientes';
 
 
 export const ActualizarExpediente: React.FC = () => {

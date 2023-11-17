@@ -1,24 +1,24 @@
 import { Grid, TextField, Box, Button, Stack, FormHelperText, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { Title } from "../../../../../components/Title";
+import { Title } from "../../../../components/Title";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { buscar_persona, obtener_unidad_organizacional, obtener_usuario_logueado } from "../thunks/aperturaExpedientes";
-import { useAppDispatch } from "../../../../../hooks";
+import { buscar_persona, obtener_unidad_organizacional, obtener_usuario_logueado } from "../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes";
+import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
-import AnularExpedienteModal from "./AnularExpediente";
-import BuscarExpediente from "./BuscarExpediente";
-import MoverCarpeta from "../../../deposito/Carpetas/components/MoverCarpeta";
+import AnularExpedienteModal from "../../Expedientes/aperturaExpedientes/screens/AnularExpediente";
+import BuscarExpediente from "../../Expedientes/aperturaExpedientes/screens/BuscarExpediente";
+import MoverCarpeta from "../../deposito/Carpetas/components/MoverCarpeta";
 import { useForm } from "react-hook-form";
-import { IObjCarpeta } from "../../../deposito/interfaces/deposito";
+import { IObjCarpeta } from "../../deposito/interfaces/deposito";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FolderIcon from '@mui/icons-material/Folder';
-import { control_success } from "../../../../../helpers";
+import { control_success } from "../../../../helpers";
  dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
