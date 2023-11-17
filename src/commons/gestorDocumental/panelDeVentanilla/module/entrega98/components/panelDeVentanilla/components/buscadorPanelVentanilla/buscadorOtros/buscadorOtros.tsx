@@ -1,22 +1,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useEffect, useState } from 'react';
 import { Button, Grid, Stack, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { LoadingButton } from '@mui/lab';
-import SearchIcon from '@mui/icons-material/Search';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import { Title } from '../../../../../../../../../../components';
 import { usePanelVentanilla } from '../../../../../../../hook/usePanelVentanilla';
+import { getRequestStates } from '../services/getRequestStates.service';
 
-export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
+export const BuscadorOtros = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
+
+  //* hooks
+  /*  const {
+    control_busqueda_panel_ventanilla,
+    watch_busqueda_panel_ventanilla,
+  } = usePanelVentanilla();*/
 
   // ? useState Necesario
   // const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
 
   //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
-  /* useEffect(() => {
+ /* useEffect(() => {
     void getRequestStates().then((res: any) => {
       console.log(res);
       setRequestStatuses(res);
@@ -27,29 +30,8 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
 
   return (
     <>
-      <Grid item xs={12} sm={4}>
-        <Controller
-          name="nombre_titular"
-          control={control_busqueda_panel_ventanilla}
-          defaultValue=""
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              fullWidth
-              label="Nombre titular"
-              size="small"
-              variant="outlined"
-              value={value}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => {
-                onChange(e.target.value);
-              }}
-              inputProps={{ maxLength: 50 }}
-            />
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={12} sm={4}>
+      {/*el select de tipo de solicitud va a ir en el panel principal de busqueda para que se puede manejar la dualidad al momento de seleccionar*/}
+      {/*<Grid item xs={12} sm={4}>
         <Controller
           name="radicado"
           control={control_busqueda_panel_ventanilla}
@@ -69,30 +51,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
             />
           )}
         />
-      </Grid>
-
-      <Grid item xs={12} sm={4}>
-        <Controller
-          name="asunto_proyecto"
-          control={control_busqueda_panel_ventanilla}
-          defaultValue=""
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              fullWidth
-              label="Asunto / Proyecto"
-              size="small"
-              variant="outlined"
-              value={value}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => {
-                onChange(e.target.value);
-              }}
-              inputProps={{ maxLength: 50 }}
-            />
-          )}
-        />
-      </Grid>
-
+      </Grid>*/}
       <Grid
         item
         xs={12}
@@ -103,7 +62,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
       >
         <Controller
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-          name="pago_tramite"
+          name="estado_actual_solicitud"
           control={control_busqueda_panel_ventanilla}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <div>
@@ -126,32 +85,10 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
                     marginLeft: '0.25rem',
                   }}
                 >
-                  Pago
+                  Estado actual
                 </small>
               </label>
             </div>
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={12} sm={4}>
-        <Controller
-          name="expediente"
-          control={control_busqueda_panel_ventanilla}
-          defaultValue=""
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              fullWidth
-              label="Expediente"
-              size="small"
-              variant="outlined"
-              value={value}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => {
-                onChange(e.target.value);
-              }}
-              inputProps={{ maxLength: 50 }}
-            />
           )}
         />
       </Grid>

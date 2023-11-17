@@ -12,6 +12,8 @@ import { choicesTipoDeSolicitud } from '../../utils/choices';
 import { getRequestStates } from './services/getRequestStates.service';
 import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
 import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
+import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
+import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* hooks
@@ -23,12 +25,18 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA PARA LAS PQRSDF -----
   const handleSubmit = () => {
+    if (
+      !control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud?.label
+    ) {
+      control_warning('Debe seleccionar un tipo de solicitud');
+      return;
+    }
+
     console.log(
       'submit , buscando coincidencias',
       watch_busqueda_panel_ventanilla
     );
   };
-
   const resetForm = () => reset_search_form();
 
   // ? useState Necesario
@@ -86,16 +94,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 }) => (
                   <div>
                     <Select
+                      required
                       value={value}
                       onChange={(selectedOption) => {
                         console.log(selectedOption);
                         onChange(selectedOption);
-
-                        console.log(
-                          control_busqueda_panel_ventanilla?._formValues
-                            ?.tipo_de_solicitud?.label
-                        );
-                        console.log(watch_busqueda_panel_ventanilla);
                       }}
                       options={choicesTipoDeSolicitud as any[]}
                       placeholder="Seleccionar"
@@ -136,7 +139,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
               />
             ) : control_busqueda_panel_ventanilla?._formValues
                 ?.tipo_de_solicitud?.label === 'Otros' ? (
-              <>hola otros</>
+              <BuscadorOtros
+                control_busqueda_panel_ventanilla={
+                  control_busqueda_panel_ventanilla
+                }
+              />
             ) : (
               <>hola default</>
             )}

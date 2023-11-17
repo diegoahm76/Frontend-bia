@@ -36,10 +36,8 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
           name="radicado"
           control={control_busqueda_panel_ventanilla}
           defaultValue=""
-          rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
-              required
               fullWidth
               label="Radicado"
               size="small"
@@ -66,7 +64,6 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="estado_actual_solicitud"
           control={control_busqueda_panel_ventanilla}
-          rules={{ required: true }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <div>
               <Select

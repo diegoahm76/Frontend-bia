@@ -42,27 +42,44 @@ const actions: any[] = [
 
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
+
+  //* acciones de los botones (tambien se deberán configurar los botones para pqrsdf, trámites y servicios y otros)
   actions,
-  currentElementPqrsdComplemento: null,
-  pqrsdf: [],
+  currentElementPqrsdComplementoTramitesYotros: null,
+  listaElementosPqrsfTramitesUotros: [],
+  listaComplementosRequerimientosOtros: [],
 };
 
 export const PanelVentanillaSlice = createSlice({
   name: 'PanelVentanillaSlice',
   initialState,
   reducers: {
+    //* este es editor de actions inicial de los botones, se deberá también definir los de tramites y servicios y otros
     setActionssToManagePermissions: (state, action: PayloadAction<any>) => {
       state.actions = action.payload;
     },
 
     // ? set pqrsdf tras búsqueda
-    setPqrsdfBusqueda: (state, action: PayloadAction<any>) => {
-      state.pqrsdf = action.payload;
+    setListaElementosPqrsfTramitesUotrosBusqueda: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.listaElementosPqrsfTramitesUotros = action.payload;
+    },
+
+    setListaElementosComplementosRequerimientosOtros: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.listaComplementosRequerimientosOtros = action.payload;
     },
 
     // ? actualizador del elemento actual de pqrsd complemento
-    setCurrentElementPqrsdComplemento: (state, action: PayloadAction<any>) => {
-      state.currentElementPqrsdComplemento = action.payload;
+    setCurrentElementPqrsdComplementoTramitesYotros: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.currentElementPqrsdComplementoTramitesYotros = action.payload;
     },
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetPanelVentanillaFull: (state) => {
@@ -74,13 +91,12 @@ export const PanelVentanillaSlice = createSlice({
 export const {
   // ? acciones sobre lo botones del panel de ventanilla
   setActionssToManagePermissions,
-
-  // ? acciones sobre pqrsdf
-  setPqrsdfBusqueda,
-
+  // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
+  setListaElementosPqrsfTramitesUotrosBusqueda,
+  // ? acciones sobre lista de complementos, derequerimientos y otros
+  setListaElementosComplementosRequerimientosOtros,
   // ? acciones sobre la visualización de los elementos de pqrsd complemento
-  setCurrentElementPqrsdComplemento,
-
+  setCurrentElementPqrsdComplementoTramitesYotros,
   // ? reset de todos los estados del slice
   resetPanelVentanillaFull,
 } = PanelVentanillaSlice.actions;

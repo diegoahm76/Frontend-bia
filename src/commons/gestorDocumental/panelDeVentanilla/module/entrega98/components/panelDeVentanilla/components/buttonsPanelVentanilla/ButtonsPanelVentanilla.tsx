@@ -17,6 +17,14 @@ import { useAppSelector } from '../../../../../../../../../hooks';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
+{
+  /* se van a tener que añadir las condiciones, ya que el panel de Ventanilla va a terminar teniendo 3 bloques de botones
+
+  1. botones de pqrsdf
+  2. boton de tramites y servicios
+  3. boton de otros
+*/
+}
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();

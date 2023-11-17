@@ -48,10 +48,10 @@ export const usePanelVentanilla = () => {
       // ? para pqrsdf
 
       //* se debe evaluar el borrado de los valores del selector llamado tipo de solicitud
-      /* tipo_de_solicitud: {
+      tipo_de_solicitud: {
         value: '',
         label: '',
-      },*/
+      },
       estado_actual_solicitud: {
         value: '',
         label: '',
