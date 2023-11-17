@@ -44,6 +44,7 @@ const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
   actions,
   currentElementPqrsdComplemento: null,
+  pqrsdf: [],
 };
 
 export const PanelVentanillaSlice = createSlice({
@@ -52,6 +53,11 @@ export const PanelVentanillaSlice = createSlice({
   reducers: {
     setActionssToManagePermissions: (state, action: PayloadAction<any>) => {
       state.actions = action.payload;
+    },
+
+    // ? set pqrsdf tras búsqueda
+    setPqrsdfBusqueda: (state, action: PayloadAction<any>) => {
+      state.pqrsdf = action.payload;
     },
 
     // ? actualizador del elemento actual de pqrsd complemento
@@ -69,18 +75,12 @@ export const {
   // ? acciones sobre lo botones del panel de ventanilla
   setActionssToManagePermissions,
 
+  // ? acciones sobre pqrsdf
+  setPqrsdfBusqueda,
+
   // ? acciones sobre la visualización de los elementos de pqrsd complemento
   setCurrentElementPqrsdComplemento,
+
+  // ? reset de todos los estados del slice
+  resetPanelVentanillaFull,
 } = PanelVentanillaSlice.actions;
-
-// ? export values
-/*export const currentElementPqrsdComplemento = useAppSelector(
-  (state: any) => state.PanelVentanillaSlice.currentElementPqrsdComplemento
-);
-
-export const actionsToManagePermissions = useAppSelector(
-  (state: any) => state.PanelVentanillaSlice.actions
-);
-*/
-// Uso de currentElementPqrsdComplemento con useAppSelector
-// const x = useAppSelector(currentElementPqrsdComplemento);

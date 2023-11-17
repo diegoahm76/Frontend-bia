@@ -8,11 +8,10 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../../../../../../components';
-import {
-  choicesEstadoActual,
-  choicesTipoDeSolicitud,
-} from '../../utils/choices';
+import { choicesTipoDeSolicitud } from '../../utils/choices';
 import { getRequestStates } from './services/getRequestStates.service';
+import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
+import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* hooks
@@ -33,17 +32,16 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   const resetForm = () => reset_search_form();
 
   // ? useState Necesario
-  const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
+  // const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
 
   //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
-  useEffect(() => {
-    console.log('bienvenido al módulo de ventanilla');
-
-    getRequestStates();
+  /* useEffect(() => {
+    void getRequestStates().then((res: any) => {
+      console.log(res);
+      setRequestStatuses(res);
+    });
   }, []);
-
-  // ?
-
+*/
   return (
     <Grid
       container
@@ -68,6 +66,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
           }}
         >
           <Grid container spacing={2}>
+            {/* se va a establecer solo el primer input y en base a la información que se proveea ahí se mostrará la búsqueda de trámites y servicios o la búsqueda correspondiente a trámites y servicios */}
             <Grid
               item
               xs={12}
@@ -91,6 +90,12 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                       onChange={(selectedOption) => {
                         console.log(selectedOption);
                         onChange(selectedOption);
+
+                        console.log(
+                          control_busqueda_panel_ventanilla?._formValues
+                            ?.tipo_de_solicitud?.label
+                        );
+                        console.log(watch_busqueda_panel_ventanilla);
                       }}
                       options={choicesTipoDeSolicitud as any[]}
                       placeholder="Seleccionar"
@@ -112,76 +117,34 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Controller
-                name="radicado"
-                control={control_busqueda_panel_ventanilla}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    required
-                    fullWidth
-                    label="Radicado"
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                      onChange(e.target.value);
-                    }}
-                    inputProps={{ maxLength: 50 }}
-                  />
-                )}
+
+            {control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud
+              ?.label === 'PQRSDF' ||
+            !control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud
+              ?.label ? (
+              <BuscadorPqrsdf
+                control_busqueda_panel_ventanilla={
+                  control_busqueda_panel_ventanilla
+                }
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={4}
-              sx={{
-                zIndex: 2,
-              }}
-            >
-              <Controller
-                //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-                name="estado_actual"
-                control={control_busqueda_panel_ventanilla}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <div>
-                    <Select
-                      value={value}
-                      onChange={(selectedOption) => {
-                        console.log(selectedOption);
-                        onChange(selectedOption);
-                      }}
-                      options={choicesEstadoActual as any[]}
-                      placeholder="Seleccionar"
-                    />
-                    <label>
-                      <small
-                        style={{
-                          color: 'rgba(0, 0, 0, 0.6)',
-                          fontWeight: 'thin',
-                          fontSize: '0.75rem',
-                          marginTop: '0.25rem',
-                          marginLeft: '0.25rem',
-                        }}
-                      >
-                        Estado actual
-                      </small>
-                    </label>
-                  </div>
-                )}
+            ) : control_busqueda_panel_ventanilla?._formValues
+                ?.tipo_de_solicitud?.label === 'Tramites y servicios' ? (
+              <BuscadorTramitesYservicios
+                control_busqueda_panel_ventanilla={
+                  control_busqueda_panel_ventanilla
+                }
               />
-            </Grid>
+            ) : control_busqueda_panel_ventanilla?._formValues
+                ?.tipo_de_solicitud?.label === 'Otros' ? (
+              <>hola otros</>
+            ) : (
+              <>hola default</>
+            )}
+
+            {/* tambien se debe agregar la opción de otros */}
+
+            {/* Otros */}
+            {/* Tramites y servicios  */}
           </Grid>
 
           <Stack
