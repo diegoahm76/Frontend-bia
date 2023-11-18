@@ -22,8 +22,9 @@ import {
   set_person_type,
   set_document_types,
   set_document_type,
+  set_company,
 } from '../../store/slice/pqrsdfSlice';
-import { get_document_types_service } from '../../store/thunks/pqrsdfThunks';
+import { get_companies_service, get_company_document_service, get_document_types_service } from '../../store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoEmpresa = () => {
   const dispatch = useAppDispatch();
@@ -61,13 +62,13 @@ const TipoEmpresa = () => {
     reset_empresa(company);
   }, [company]);
 
-  useEffect(() => {
-    reset_empresa({
-      ...company,
-      person_type: person_type.key,
-      document_type: document_type.cod_tipo_documento,
-    });
-  }, [document_type, person_type]);
+  // useEffect(() => {
+  //   reset_empresa({
+  //     ...company,
+  //     tipo_persona: person_type.key,
+  //     tipo_documento: document_type.cod_tipo_documento,
+  //   });
+  // }, [document_type, person_type]);
 
   useEffect(() => {
     set_aux_document_types(
@@ -76,13 +77,16 @@ const TipoEmpresa = () => {
       )
     );
     set_aux_person_types(
-      person_types.filter((objeto: IObjListType) => objeto.key === 2)
+      person_types.filter((objeto: IObjListType) => objeto.key === 'J')
     );
   }, [document_types, person_types]);
+  useEffect(() => {
+    console.log(company)
+  }, [company]);
 
   const columns_personas: GridColDef[] = [
     {
-      field: 'document_type',
+      field: 'tipo_documento',
       headerName: 'Tipo de documento',
       width: 250,
       renderCell: (params) => (
@@ -92,7 +96,7 @@ const TipoEmpresa = () => {
       ),
     },
     {
-      field: 'document',
+      field: 'numero_documento',
       headerName: 'Número de documento',
       width: 200,
       renderCell: (params) => (
@@ -102,7 +106,7 @@ const TipoEmpresa = () => {
       ),
     },
     {
-      field: 'tradename',
+      field: 'nombre_comercial',
       headerName: 'Nombre comercial',
       width: 300,
       renderCell: (params) => (
@@ -113,7 +117,7 @@ const TipoEmpresa = () => {
     },
 
     {
-      field: 'person_type',
+      field: 'tipo_persona',
       headerName: 'Tipo de persona',
       width: 250,
       renderCell: (params) => (
@@ -125,14 +129,14 @@ const TipoEmpresa = () => {
   ];
 
   const on_change_select = (value: any, name: string): void => {
-    if (name === 'person_type') {
+    if (name === 'tipo_persona') {
       dispatch(set_document_type({ cod_tipo_documento: null, nombre: null }));
       if (value !== undefined) {
         dispatch(set_person_type(value));
       } else {
         dispatch(set_person_type({ id: null, key: null, label: null }));
       }
-    } else if (name === 'document_type') {
+    } else if (name === 'tipo_documento_id') {
       if (value !== undefined) {
         dispatch(set_document_type(value));
       } else {
@@ -142,35 +146,33 @@ const TipoEmpresa = () => {
   };
 
   const get_personas: any = async () => {
-    const document = get_values('document') ?? '';
-    const type = get_values('document_type') ?? '';
-    const name = get_values('tradename') ?? '';
-    const person_type = get_values('person_type') ?? '';
+    const document = get_values('numero_documento') ?? '';
+    const type = get_values('tipo_documento_id') ?? '';
+    const nombre_comercial = get_values('nombre_comercial') ?? '';
+    const razon_social = get_values('razon_social') ?? '';
+    const person_type = get_values('tipo_persona') ?? '';
     console.log(document, type, name, person_type);
-    // void dispatch(
-    //   get_companies_service(
-    //     type,
-    //     document,
-    //     primer_nombre,
-    //     primer_apellido,
-    //     razon_social,
-    //     comercial_name
-    //   )
-    // );
+    void dispatch(
+      get_companies_service(
+        type,
+        document,
+        razon_social,
+        nombre_comercial
+      )
+    );
   };
 
   const search_person: any = async () => {
-    const document = get_values('document') ?? '';
-    const type = get_values('document_type') ?? '';
-    console.log(document, type);
-    // void dispatch(get_person_document_service(type, document));
+    const document = get_values('numero_documento') ?? '';
+    const type = get_values('tipo_documento_id') ?? '';
+    void dispatch(get_company_document_service(type, document));
   };
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
-          set_current_model={set_person}
-          row_id={'id_person'}
+          set_current_model={set_company}
+          row_id={'id_persona'}
           columns_model={columns_personas}
           models={companies}
           get_filters_models={get_personas}
@@ -187,7 +189,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 4,
               control_form: control_tipo_empresa,
-              control_name: 'document_type',
+              control_name: 'tipo_documento_id',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
@@ -203,7 +205,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 3,
               control_form: control_tipo_empresa,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
@@ -217,7 +219,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 5,
               control_form: control_tipo_empresa,
-              control_name: 'tradename',
+              control_name: 'nombre_comercial',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Nombre comercial',
@@ -230,7 +232,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 6,
               control_form: control_tipo_empresa,
-              control_name: 'business_name',
+              control_name: 'razon_social',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Razón social',
@@ -243,7 +245,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 3,
               control_form: control_tipo_empresa,
-              control_name: 'representatives_document_type',
+              control_name: 'persona_representante.tipo_documento_id',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento representante',
@@ -259,7 +261,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 3,
               control_form: control_tipo_empresa,
-              control_name: 'representatives_document',
+              control_name: 'persona_representante.numero_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Documento representante',
@@ -272,7 +274,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 9,
               control_form: control_tipo_empresa,
-              control_name: 'representatives_full_name',
+              control_name: 'persona_representante.nombre_completo',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Nombre representante',
@@ -288,7 +290,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_empresa,
-              control_name: 'person_type',
+              control_name: 'tipo_persona',
               default_value: '',
               rules: {},
               label: 'Tipo de persona',
@@ -304,7 +306,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_empresa,
-              control_name: 'document_type',
+              control_name: 'tipo_documento_id',
               default_value: '',
               rules: {},
               label: 'Tipo de documento',
@@ -320,7 +322,7 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_empresa,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: {},
               label: 'Número de documento',
@@ -333,10 +335,23 @@ const TipoEmpresa = () => {
               xs: 12,
               md: 3,
               control_form: control_tipo_empresa,
-              control_name: 'tradename',
+              control_name: 'nombre_comercial',
               default_value: '',
               rules: {},
               label: 'Nombre comercial',
+              type: 'text',
+              disabled: false,
+              helper_text: '',
+            },
+            {
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_tipo_empresa,
+              control_name: 'razon_social',
+              default_value: '',
+              rules: {},
+              label: 'Razón social',
               type: 'text',
               disabled: false,
               helper_text: '',

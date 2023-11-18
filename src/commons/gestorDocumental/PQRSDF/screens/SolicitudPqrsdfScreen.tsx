@@ -16,6 +16,7 @@ import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 import { reset_state } from '../store/slice/pqrsdfSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
+import { get_document_types_service, get_list_applicant_types_service, get_list_on_behalf_service, get_person_types_service, get_pqrs_status_aux_service } from '../store/thunks/pqrsdfThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SolicitudPqrsdfScreen(): JSX.Element {
@@ -32,6 +33,15 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
   const initial_values = (): void => {
     // resetear variables con valores iniciales
   };
+
+  useEffect(() => {
+    dispatch(get_document_types_service())
+    dispatch(get_person_types_service())
+    dispatch(get_list_applicant_types_service())
+    dispatch(get_list_on_behalf_service())
+    dispatch(get_pqrs_status_aux_service())
+
+  }, []);
   return (
     <>
       <Grid
@@ -49,26 +59,24 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
           <Title title="Solicitud PQRSDF"></Title>
         </Grid>
         <SeleccionTipoPersona />
-        {type_applicant.id === 1 && on_behalf_of.id === 1 && <TipoPersona />}
-        {type_applicant.id === 1 && on_behalf_of.id === 2 && <TipoEmpresa />}
-        {type_applicant.id === 1 && on_behalf_of.id === 3 && <TipoPoderdante />}
-        {on_behalf_of.id === 1
-          ? person.id_person !== null && <EstadoPqrsdf />
-          : on_behalf_of.id === 2
-          ? company.id_company !== null && <EstadoPqrsdf />
-          : on_behalf_of.id === 3 &&
-            grantor.id_person !== null &&
-            attorney.id_person !== null && <EstadoPqrsdf />}
-        {pqr_status.key === 2 && <ListadoPqrsdf />}
-        <EstadoPqrsdf />
-        <ListadoPqrsdf />
+        {type_applicant.id === 'T' && on_behalf_of.id === 'P' && <TipoPersona />}
+        {type_applicant.id === 'T' && on_behalf_of.id === 'E' && <TipoEmpresa />}
+        {type_applicant.id === 'T' && on_behalf_of.id === 'A' && <TipoPoderdante />}
+        {on_behalf_of.id === 'P'
+          ? person.id_persona !== null && <EstadoPqrsdf />
+          : on_behalf_of.id === 'E'
+            ? company.id_persona !== null && <EstadoPqrsdf />
+            : on_behalf_of.id === 'A' &&
+            grantor.id_persona !== null &&
+            attorney.id_persona !== null && <EstadoPqrsdf />}
+        {pqr_status.key === 'ESR' && <ListadoPqrsdf />}
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton
               variant_button="contained"
               on_click_function={null}
               icon_class={<SaveIcon />}
-              disabled={!(pqr_status.key === 1 || type_applicant.key === 2)}
+              disabled={!(pqr_status.key === 'N' || type_applicant.key === 'A')}
               label="Crear PQRSDF"
               type_button="button"
             />

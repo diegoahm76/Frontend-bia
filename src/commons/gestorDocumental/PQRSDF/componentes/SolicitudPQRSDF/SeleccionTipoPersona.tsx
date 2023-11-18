@@ -111,7 +111,7 @@ const SeleccionTipoPersona = () => {
               select_options: list_on_behalf_of,
               option_label: 'label',
               option_key: 'key',
-              hidden_text: type_applicant.id !== 1,
+              hidden_text: type_applicant.id !== 'T',
               on_change_function: on_change_select,
             },
           ]}

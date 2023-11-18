@@ -50,31 +50,28 @@ export const on_behalf_of: IObjListType[] = [
 ];
 
 export const initial_state_person: IObjPerson = {
-  id_person: null,
-  document_type_id: null,
-  document_type: null,
-  person_type_id: null,
-  person_type: null,
-  document: null,
-  name: null,
-  last_name: null,
-  full_name: null,
+  id_persona: null,
+  tipo_documento_id: null,
+  tipo_documento: null,
+  tipo_persona: null,
+  tipo_persona_desc: null,
+  numero_documento: null,
+  primer_apellido: null,
+  primer_nombre: null,
+  nombre_completo: null,
 };
 
 export const initial_state_company: IObjCompany = {
-  id_company: null,
-  document_type_id: null,
-  document_type: null,
-  tradename: null,
-  business_name: null,
-  document: null,
-  person_type_id: null,
-  person_type: null,
-  representatives_document_type_id: null,
-  representatives_document_type: null,
-  representatives_document: null,
-  representatives_name: null,
-  representatives_last_name: null,
+  id_persona: null,
+  tipo_documento_id: null,
+  tipo_documento: null,
+  tipo_persona: null,
+  tipo_persona_desc: null,
+  numero_documento: null,
+
+  nombre_comercial: null,
+  razon_social: null,
+  persona_representante: initial_state_person
 };
 
 export const initial_state_pqr: IObjPqr = {
@@ -185,9 +182,9 @@ export const initial_state_metadata: IObjMetaData = {
 };
 
 const initial_state: IPqrsdf = {
-  list_applicant_types: type_applicant,
+  list_applicant_types: [],
   type_applicant: initial_state_list,
-  list_on_behalf_of: on_behalf_of,
+  list_on_behalf_of: [],
   on_behalf_of: initial_state_list,
   persons: [],
   person: initial_state_person,
@@ -197,12 +194,12 @@ const initial_state: IPqrsdf = {
   grantor: initial_state_person,
   attorneys: [],
   attorney: initial_state_person,
-  list_pqr_status: pqr_types,
-  pqr_status: pqr_types[0],
+  list_pqr_status: [],
+  pqr_status: initial_state_list,
   pqrs: [],
   pqr: initial_state_pqr,
   pqr_request: initial_state_pqr_request,
-  person_types: person_types,
+  person_types: [],
   person_type: { id: null, key: null, label: null },
   document_types: [],
   document_type: {

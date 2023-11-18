@@ -46,7 +46,7 @@ export interface IPqrsdf {
 }
 
 export interface IObjListType {
-  id: number | null;
+  id: number | string | null;
   key: string | number | null;
   label: string | null;
   reference?: string | null; 
@@ -66,32 +66,28 @@ export interface IObjDocumentType {
 }
 
 export interface IObjPerson {
-  id_person?: number | null;
-  document_type_id?: number | string | null;
-  document_type?: number | string | null;
-  person_type_id?: number | string | null;
-  person_type?: number | string | null;
-  document?: number | string | null;
-  name?: string | null;
-  last_name?: string | null;
-  full_name?: string | null;
+  id_persona?: number | null;
+  tipo_documento_id?: number | string | null;
+  tipo_documento?: number | string | null;
+  tipo_persona?: number | string | null;
+  tipo_persona_desc?: number | string | null;
+  numero_documento?: number | string | null;
+  primer_nombre?: string | null;
+  primer_apellido?: string | null;
+  nombre_completo?: string | null;
 }
 
 export interface IObjCompany {
-  id_company?: number | null;
-  document_type_id?: number | null;
-  document_type?: number | string | null;
-  tradename?: string | null;
-  business_name?: string | null;
-  document?: number | string | null;
-  person_type_id?: number | null;
-  person_type?: string | number | null;
-  representatives_document_type_id?: number | null;
-  representatives_document_type?: number | string | null;
-  representatives_document?: number | string | null;
-  representatives_name?: string | null;
-  representatives_last_name?: string | null;
-  representatives_full_name?: string | null;
+  id_persona?: number | null;
+  tipo_documento_id?: number | string | null;
+  tipo_documento?: number | string | null;
+  tipo_persona?: number | string | null;
+  tipo_persona_desc?: number | string | null;
+  numero_documento?: number | string | null;
+  razon_social?: string | null;
+  nombre_comercial?: string | null;
+  persona_representante?: IObjPerson | null;
+  
 }
 
 export interface IObjPqr {

@@ -23,13 +23,14 @@ import {
   set_pqrs,
   set_pqr_status,
 } from '../../store/slice/pqrsdfSlice';
+import { get_pqrs_service } from '../../store/thunks/pqrsdfThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EstadoPqrsdf = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_estado } = useForm<any>();
-  const { list_pqr_status, pqr_status } = useAppSelector(
+  const { list_pqr_status, pqr_status, company, person, grantor, on_behalf_of } = useAppSelector(
     (state) => state.pqrsdf_slice
   );
 
@@ -37,6 +38,22 @@ const EstadoPqrsdf = () => {
     if (name === 'pqr_status') {
       if (value !== undefined) {
         dispatch(set_pqr_status(value));
+        console.log(value)
+        if (value.key === 'ESR') {
+          if (on_behalf_of.key === 'P') {
+            if (person.id_persona !== null && person.id_persona !== undefined) {
+              void dispatch(get_pqrs_service(person.id_persona))
+            }
+          } else if (on_behalf_of.key === 'E') {
+            if (company.id_persona !== null && company.id_persona !== undefined) {
+              void dispatch(get_pqrs_service(company.id_persona))
+            }
+          } else {
+            if (grantor.id_persona !== null && grantor.id_persona !== undefined) {
+              void dispatch(get_pqrs_service(grantor.id_persona))
+            }
+          }
+        }
       } else {
         dispatch(set_pqr_status({ id: null, key: null, label: null }));
       }
