@@ -10,6 +10,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import BuscarExpediente from "../../indexacionExpedientes/screens/BuscarExpediente";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { VerExpedientes } from "../../ConcesionAccesoExpedientes/screens/VerExpedientes";
+import { VerDocumentos } from "../../ConcesionAccesoExpedientes/screens/VerDocumentos";
 
 interface IProps {
     set_expediente: any,
@@ -28,6 +30,8 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [año, set_año] = useState<any>("");
     const [tipo_expediente, set_tipo_expediente] = useState<string>("");
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
+    const [abrir_modal_expedientes, set_abrir_modal_expedientes] = useState<boolean>(false);
+    const [abrir_modal_documentos, set_abrir_modal_documentos] = useState<boolean>(false);
     const [expediente, set_expediente] = useState<any>(null);
     const [expedientes, set_expedientes] = useState<any>([]);
     // Notificaciones
@@ -294,63 +298,64 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                             getRowId={(row) => row.orden_en_expediente} />
                     </Grid>
                     <Grid container>
-                    <Grid item xs={12} sm={9}>
-                        <Box
-                            component="form"
-                            sx={{ mt: '20px', mb: '20px' }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <Stack
-                                direction="row"
-                                justifyContent="flex-start"
-                                spacing={2}
-                                sx={{ mt: '20px' }}
+                        <Grid item xs={12} sm={9}>
+                            <Box
+                                component="form"
+                                sx={{ mt: '20px', mb: '20px' }}
+                                noValidate
+                                autoComplete="off"
                             >
-                                <Button
-                                    color='primary'
-                                    variant='outlined'
-                                    startIcon={<VisibilityOutlinedIcon />}
-                                // onClick={() => { set_abrir_modal_conceder(true); }}
+                                <Stack
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    spacing={2}
+                                    sx={{ mt: '20px' }}
                                 >
-                                    Ver expedientes a los que me han dado acceso
-                                </Button>
-                                <Button
-                                    color='primary'
-                                    variant='outlined'
-                                    startIcon={<VisibilityOutlinedIcon />}
-                                // onClick={() => { set_abrir_modal_conceder(true); }}
-                                >
-                                    Ver documentos a los que me han dado acceso
-                                </Button>
-                                {/* {abrir_modal_conceder && <ConcederAccesoExpediente is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} expediente={expediente} ></ConcederAccesoExpediente>} */}
-                            </Stack>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                        <Box
-                            component="form"
-                            sx={{ mt: '20px', mb: '20px' }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <Stack
-                                direction="row"
-                                justifyContent="flex-end"
-                                spacing={2}
-                                sx={{ mt: '20px' }}
+                                    <Button
+                                        color='primary'
+                                        variant='outlined'
+                                        startIcon={<VisibilityOutlinedIcon />}
+                                        onClick={() => { set_abrir_modal_expedientes(true); }}
+                                        >
+                                        Ver expedientes a los que me han dado acceso
+                                    </Button>
+                                    {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes}></VerExpedientes>}
+                                    <Button
+                                        color='primary'
+                                        variant='outlined'
+                                        startIcon={<VisibilityOutlinedIcon />}
+                                        onClick={() => { set_abrir_modal_documentos(true); }}
+                                    >
+                                        Ver documentos a los que me han dado acceso
+                                    </Button>
+                                    {abrir_modal_documentos && <VerDocumentos is_modal_active={abrir_modal_documentos} set_is_modal_active={set_abrir_modal_documentos}></VerDocumentos>}
+                                </Stack>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <Box
+                                component="form"
+                                sx={{ mt: '20px', mb: '20px' }}
+                                noValidate
+                                autoComplete="off"
                             >
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    startIcon={<SearchIcon />}
-                                    onClick={() => { }}
+                                <Stack
+                                    direction="row"
+                                    justifyContent="flex-end"
+                                    spacing={2}
+                                    sx={{ mt: '20px' }}
                                 >
-                                    Búsqueda avanzada
-                                </Button>
-                            </Stack>
-                        </Box>
-                    </Grid>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        startIcon={<SearchIcon />}
+                                        onClick={() => { }}
+                                    >
+                                        Búsqueda avanzada
+                                    </Button>
+                                </Stack>
+                            </Box>
+                        </Grid>
                     </Grid>
                 </Box>
             </Grid>
