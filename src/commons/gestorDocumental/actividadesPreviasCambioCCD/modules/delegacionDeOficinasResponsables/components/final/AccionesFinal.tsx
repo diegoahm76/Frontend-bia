@@ -8,6 +8,7 @@ import {
   setOficinasNuevaSeleccionadas,
 } from '../../toolkit/slice/DelOfiResSlice';
 import { postDelegaciones } from '../../toolkit/thunks/postDelegaciones.service';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const AccionesFinal = (): JSX.Element => {
   //* dispatch declaration
@@ -28,7 +29,7 @@ export const AccionesFinal = (): JSX.Element => {
   const handleSubmit = async () => {
     const oficinasNuevas = Object.values(oficinasNuevaSeleccionadas).map(
       (oficina: any) => ({
-        idComparacion: oficina?.idUnidadOrganizacional,
+        idComparacion: oficina?.id_unidad_organizacional,
         id_unidad_nueva: oficina?.value,
       })
     );
@@ -56,16 +57,32 @@ export const AccionesFinal = (): JSX.Element => {
       })
       .filter(Boolean);
 
+    //* unidades responsable inicial
+
+    const unidadesPadreUnidas = grilladoDeOficinas?.unidadActual?.map(
+      (unidadActual: any, index: number) => {
+        const unidadNueva = grilladoDeOficinas?.unidadNueva[index];
+
+        return {
+          id_unidad_actual: unidadActual.id_unidad_organizacional,
+          id_unidad_nueva: unidadNueva?.id_unidad_organizacional,
+        };
+      }
+    );
+
+    /*   console.log('unidadesPadreUnidasasasasas', [
+      ...unidadesPadreUnidas,
+      ...oficinasDelegadas,
+    ]); */
+
     postDelegaciones({
       delegaciones: {
         id_ccd_nuevo: ccdOrganigramaCurrentBusquedaOfiResp.id_ccd,
-        oficinas_delegadas: oficinasDelegadas,
+        unidad_responsable: [...unidadesPadreUnidas],
+        oficinas_delegadas: [...oficinasDelegadas],
       },
       setLoading: setLoadingButton,
     }).then((res) => {
-      // limpiar el campo de grid de los select y volver a traer las secciones / subsecciones
-
-      // ? se limpian los estados
       reset_states_asi_ofi_resp();
       dispatch(setOficinasNuevaSeleccionadas([]));
       dispatch(setGrilladoOficinas([]));

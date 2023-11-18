@@ -23,6 +23,7 @@ import {
   Paper,
   TableBody,
   Tooltip,
+  Chip,
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
@@ -70,6 +71,15 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
       field: 'nombre_rol',
       minWidth: 350,
       flex: 1,
+      renderCell: (params: any) => (
+        <Typography variant="body1">
+          {params.row.nombre_rol.includes('zCamunda') ? (
+            <>{params.row.nombre_rol.replace(/zCamunda - /g, '')}</>
+          ) : (
+            <>{params.row.nombre_rol}</>
+          )}
+        </Typography>
+      ),
     },
     {
       headerName: 'Descripción',
@@ -150,7 +160,11 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
           </Tooltip>
           {/* se debe ver si ese rol tiene permisos de tramites y servicios */}
           {params.row.nombre_rol.includes('zCamunda') && (
-            <Tooltip title="Rol con permisos para trámites y servicios" placement="top" arrow>
+            <Tooltip
+              title="Rol con permisos para trámites y servicios"
+              placement="top"
+              arrow
+            >
               <IconButton
                 onClick={() => {
                   void view_detail(params.row);
@@ -176,27 +190,6 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               </IconButton>
             </Tooltip>
           )}
-          {/* <Tooltip title="Ver detalle" placement="top" arrow>
-            <IconButton
-              onClick={() => {
-                void view_detail(params.row);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <DetailIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-          </Tooltip>*/}
         </>
       ),
     },

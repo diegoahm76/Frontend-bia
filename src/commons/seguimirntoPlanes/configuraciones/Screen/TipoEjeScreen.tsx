@@ -1,20 +1,29 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Avatar, Button, ButtonGroup, Chip, Grid, IconButton, Stack } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Chip,
+  Grid,
+  IconButton,
+  Stack,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { eliminar_tipos_eje, get_tipos_eje } from '../Request/request';
 import type { TiposEjes } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
-import { AgregarTipoEje } from '../Components/AgregarTipoEje';
-import { ActualizarTipoEje } from '../Components/ActualizarTipoEje';
+import { ActualizarTipoEje } from '../Components/TiposEje/ActualizarTipoEje';
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { AgregarTipoEje } from '../Components/ODS/AgregarTipoEje';
+import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const TipoEjeScreen: React.FC = () => {
@@ -79,9 +88,7 @@ export const TipoEjeScreen: React.FC = () => {
             <>
               <IconButton
                 onClick={() => {
-                  confirmar_eliminar_tipo_eje(
-                    params.row.id_tipo_eje as number
-                  );
+                  confirmar_eliminar_tipo_eje(params.row.id_tipo_eje as number);
                 }}
               >
                 <Avatar
@@ -141,7 +148,9 @@ export const TipoEjeScreen: React.FC = () => {
       }));
       set_rows(datos_tipo_eje);
     } catch (error: any) {
-      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const confirmar_eliminar_tipo_eje = (id_tipo_eje: number): void => {
@@ -205,11 +214,19 @@ export const TipoEjeScreen: React.FC = () => {
           {rows.length > 0 && (
             <>
               <ButtonGroup
-                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                style={{
+                  margin: 7,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
               >
                 {download_xls({ nurseries: rows, columns })}
-                {download_pdf({ nurseries: rows, columns, title: 'Resultados de la búsqueda' })}
-              </ButtonGroup> 
+                {download_pdf({
+                  nurseries: rows,
+                  columns,
+                  title: 'Resultados de la búsqueda',
+                })}
+              </ButtonGroup>
               <DataGrid
                 autoHeight
                 rows={rows}
@@ -230,6 +247,27 @@ export const TipoEjeScreen: React.FC = () => {
           ></Stack>
         </Grid>
       </Grid>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        justifyContent="flex-end"
+      >
+        <Grid item>
+          <ButtonSalir />
+        </Grid>
+      </Grid>
+
       <AgregarTipoEje
         is_modal_active={is_crear}
         set_is_modal_active={set_is_crear}
@@ -239,9 +277,7 @@ export const TipoEjeScreen: React.FC = () => {
         is_modal_active={is_editar}
         set_is_modal_active={set_is_editar}
         get_data={get_traer_tipo_eje}
-        data={
-          tipo_eje
-        }
+        data={tipo_eje}
       />
     </>
   );

@@ -4,6 +4,7 @@ import { AgregarRubros } from '../components/Planes/AgregarRubros';
 import { ListarRubros } from '../components/Planes/ListarRubros';
 import { useAppSelector } from '../../../../../hooks';
 import { Title } from '../../../../../components/Title';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RubrosScreen: React.FC = () => {
@@ -32,6 +33,26 @@ export const RubrosScreen: React.FC = () => {
       </Grid>
       <ListarRubros />
       {mode.crear || mode.editar ? <AgregarRubros /> : null}
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        justifyContent="flex-end"
+      >
+        <Grid item>
+          <ButtonSalir />
+        </Grid>
+      </Grid>
     </>
   );
 };

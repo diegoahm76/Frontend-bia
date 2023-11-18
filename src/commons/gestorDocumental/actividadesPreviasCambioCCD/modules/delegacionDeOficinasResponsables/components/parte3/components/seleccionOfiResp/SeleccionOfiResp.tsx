@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
   useAppDispatch,
@@ -17,9 +17,9 @@ import { setOficinasNuevaSeleccionadas } from '../../../../toolkit/slice/DelOfiR
 import { Title } from '../../../../../../../../../components';
 
 export const SeleccionOfiResp = (): JSX.Element => {
-  // dispatch declaration
+  // ?  dispatch declaration
   const dispatch = useAppDispatch();
-  //* redux states
+  // ? redux states
   const {
     grilladoDeOficinas, // : { unidadActual, oficinas },
     currentUnidadSeleccionadaResponsable,
@@ -31,20 +31,23 @@ export const SeleccionOfiResp = (): JSX.Element => {
 
   // ? FUNCTIONS
 
-  const onChange = (idUnidadOrganizacional: any, oficinaSeleccionada: any) => {
+  const onChange = (
+    id_unidad_organizacional: any,
+    oficinaSeleccionada: any
+  ) => {
     dispatch(
       setOficinasNuevaSeleccionadas({
         ...oficinasNuevaSeleccionadas,
-        [idUnidadOrganizacional]: oficinaSeleccionada,
+        [id_unidad_organizacional]: oficinaSeleccionada,
       })
     );
   };
 
-  const handleLimpiarSelect = (idUnidadOrganizacional: any) => {
+  const handleLimpiarSelect = (id_unidad_organizacional: any) => {
     dispatch(
       setOficinasNuevaSeleccionadas({
         ...oficinasNuevaSeleccionadas,
-        [idUnidadOrganizacional]: null,
+        [id_unidad_organizacional]: null,
       })
     );
   };
@@ -141,25 +144,26 @@ export const SeleccionOfiResp = (): JSX.Element => {
                     borderRadius: '5px',
                   }),
                 }}
-                //oficinasNuevaSeleccionadas[params.row.id_unidad_organizacional]
                 value={
-                  oficinasNuevaSeleccionadas[params.row.id_unidad_organizacional] ||
-                  grilladoDeOficinas?.oficinasNuevas?.find(
-                    (oficina: any) => oficina.unidad_delegada === params.row.id_unidad_organizacional
-                  )
+                  oficinasNuevaSeleccionadas[
+                    params.row.id_unidad_organizacional
+                  ]
                 }
                 onChange={(selectedOption) => {
                   console.log(selectedOption);
                   onChange(params.row.id_unidad_organizacional, selectedOption);
                 }}
                 menuPortalTarget={document.body}
-                options={grilladoDeOficinas?.oficinasNuevas?.map((oficina: any) => ({
-                  ...oficina,
-                  unidad_delegada: oficina.unidad_delegada,
-                  value: oficina.id_unidad_organizacional,
-                  label: `${oficina.codigo} -- ${oficina.nombre}`,
-                  idUnidadOrganizacional: params.row.id_unidad_organizacional,
-                }))}
+                options={grilladoDeOficinas?.oficinasNuevas?.map(
+                  (oficina: any) => ({
+                    ...oficina,
+                    unidad_delegada: oficina.unidad_delegada,
+                    value: oficina.id_unidad_organizacional,
+                    label: `${oficina.codigo} -- ${oficina.nombre}`,
+                    id_unidad_organizacional:
+                      params.row.id_unidad_organizacional,
+                  })
+                )}
                 placeholder="Seleccionar"
               />
             </div>
@@ -193,6 +197,32 @@ export const SeleccionOfiResp = (): JSX.Element => {
     },
   ];
 
+  useEffect(() => {
+    if (grilladoDeOficinas?.oficinasActuales) {
+      const updates = grilladoDeOficinas?.oficinasActuales?.reduce(
+        (acc: any, oficina: any) => {
+          const oficinaSeleccionada = {
+            ...oficina,
+            value: oficina.unidad_delegada?.value,
+            label: oficina.unidad_delegada?.label,
+            id_unidad_organizacional: oficina.id_unidad_organizacional,
+          };
+          return {
+            ...acc,
+            [oficina.id_unidad_organizacional]: oficinaSeleccionada,
+          };
+        },
+        {}
+      );
+
+      dispatch(
+        setOficinasNuevaSeleccionadas({
+          ...oficinasNuevaSeleccionadas,
+          ...updates,
+        })
+      );
+    }
+  }, [grilladoDeOficinas]);
   // Verificar si hay loading
   if (thirdLoading) {
     return (

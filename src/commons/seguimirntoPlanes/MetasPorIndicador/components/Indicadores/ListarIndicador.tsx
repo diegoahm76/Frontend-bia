@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, Chip, Grid, IconButton } from '@mui/material';
+import { Avatar, Box, Button, ButtonGroup, Chip, Grid, IconButton } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +12,8 @@ import {
 } from '../../../store/slice/indexPlanes';
 import { DataContextIndicador } from '../../../Indicadores/context/context';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarIndicador: React.FC = () => {
@@ -119,6 +121,23 @@ export const ListarIndicador: React.FC = () => {
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
               <>
+              <ButtonGroup
+                  style={{
+                    margin: 7,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {download_xls({
+                    nurseries: rows_indicador,
+                    columns: columns_indicador,
+                  })}
+                  {download_pdf({
+                    nurseries: rows_indicador,
+                    columns: columns_indicador,
+                    title: 'CREAR INDICADORES',
+                  })}
+                </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight

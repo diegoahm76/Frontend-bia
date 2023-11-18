@@ -1,174 +1,422 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-  Box,
+  Avatar,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
   Grid,
+  IconButton,
   Stack,
   TextField,
+  Tooltip,
 } from '@mui/material';
 
 // ? icons
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // ? components
 import { Title } from '../../../../../../components';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { useNavigate } from 'react-router-dom';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { columnsAtom, rowsEJEMPLO } from './columnsAtom/columnsAtom';
+import { useContext } from 'react';
+import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
+import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
+import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
+import InfoIcon from '@mui/icons-material/Info';
+import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
 
-  /*
-    1. Estado de apertura y cierre
-    2. manejador de apertura y cierre
-    3. título de la información
-  
-  */
+  //* navigate declaration
+  const navigate = useNavigate();
 
+  //* destructuring props
   const { infoTitle } = props;
+
+  //* se debe traer de un context el estado de los anexos y de los metadatos
+  const {
+    openModalOne: infoAnexos,
+    openModalTwo: infoMetadatos,
+    handleOpenModalOne: handleOpenInfoAnexos,
+    handleOpenModalTwo: handleOpenInfoMetadatos,
+  } = useContext(ModalAndLoadingContext);
+
+  //* datos que se setean dentro de los anexos y los metadatos
+  const { anexos, metadatos, setAnexos, setMetadatos } = useContext(
+    PanelVentanillaContext
+  );
+
+  const colums = [
+    ...columnsAtom,
+    {
+      headerName: 'Acciones',
+      field: 'Acciones',
+      minWidth: 150,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <Tooltip title="Ver anexo">
+              <IconButton
+                onClick={() => {
+                  console.log('ver anexo');
+                  console.log(params.row);
+                  setAnexos(params.row);
+                  //* se debe analizar si el estado persiste al abrir el modal se anexan los metadatos desde acá problablemente
+                  handleOpenInfoAnexos(true);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <>
-      <Dialog
-        fullWidth
-        maxWidth="lg"
-        // ? ----- numero 1 -----
-        open={false}
-        // ? ---  numero 2 -----
-        onClose={() => {
-          console.log('cerrando modal de información de elemento');
-        }}
-      >
-          <DialogTitle>
-            <Title title={infoTitle || 'Título provisional'} />
-          </DialogTitle>
-          <Divider />
-
-          {/* contenido de los elementos (apertura) */}
-          <DialogContent
+      <Grid container sx={containerStyles}>
+        <Grid item xs={12}>
+          <Title title={infoTitle || 'Información'} />
+          <Grid
+            container
+            spacing={2}
             sx={{
-              mb: '.5rem',
-              mt: '1.3rem',
-              justifyContent: 'center',
+              mt: '1.5rem',
+              mb: '2rem',
             }}
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Nombre del TRD"
-                  size="small"
-                  variant="outlined"
-                  // value={value}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    // onChange(e.target.value);
-                    console.log(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Versión del TRD"
-                  size="small"
-                  variant="outlined"
-                  // value={value}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    // onChange(e.target.value);
-                    console.log(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Versión del TRD"
-                  size="small"
-                  variant="outlined"
-                  // value={value}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    // onChange(e.target.value);
-                    console.log(e.target.value);
-                  }}
-                />
-              </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Radicado"
+                size="small"
+                variant="outlined"
+                value={''}
+                InputLabelProps={{ shrink: true }}
+                style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Títular"
+                size="small"
+                variant="outlined"
+                // value={value}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Cantidad de anexos"
+                size="small"
+                variant="outlined"
+                // value={value}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <TextField
+                fullWidth
+                disabled
+                label="Asunto"
+                size="small"
+                variant="outlined"
+                // value={value}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
 
+        <RenderDataGrid
+          rows={rowsEJEMPLO || []}
+          columns={colums || []}
+          title="Listado de anexos"
+          // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos
+        />
+
+        {/* ------------------------------------------------------------------------- */}
+        {/* ------------------------------------------------------------------------- */}
+        {/* --- se procede a insertar los campos de la información de los anexos ---  */}
+
+        {/* condicional para mostrar los anexos después de seleccionar el respecivo anexo */}
+        {infoAnexos ? (
+          <>
+            <Title
+              title={`Anexo:  ${anexos?.radicado ?? ''} , Nombre de anexo : ${
+                anexos?.nombre ?? ''
+              }`}
+            />
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                mt: '1.5rem',
+                mb: '2rem',
+                justifyContent: 'center',
+              }}
+            >
               <Grid item xs={12} sm={12}>
                 <TextField
                   fullWidth
-                  label="Versión del TRD"
+                  label="Observación"
                   size="small"
+                  disabled
+                  variant="outlined"
+                  value={anexos?.observacion ?? ''}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <DownloadButton
+                  fileName="prueba"
+                  fileUrl="https://back-end-bia-beta.up.railway.app/api/v1/documentos/1/download"
+                  condition={false}
+                />
+              </Grid>
+
+              <Stack
+                direction="column"
+                justifyContent="center"
+                spacing={2}
+                sx={{ mb: '20px', mt: '20px' }}
+              >
+                <Button
+                  color="warning"
+                  variant="contained"
+                  onClick={() => {
+                    // ? --- al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
+                    handleOpenInfoAnexos(false);
+                    handleOpenInfoMetadatos(false);
+                    console.log('cerrando información de anexo');
+                  }}
+                  startIcon={<CloseIcon />}
+                >
+                  CERRAR INFORMACIÓN DE ANEXO
+                </Button>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => {
+                    // ? al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
+                    console.log('cerrando información de anexo');
+                    // handleOpenInfoAnexos(false);
+
+                    //* se debe hacer la petición del anexo así mostrarlo
+                    setMetadatos([]); //* seguramente será un objeto
+                    handleOpenInfoMetadatos(true);
+                  }}
+                  startIcon={<InfoIcon />}
+                >
+                  ver información de metadato
+                </Button>
+              </Stack>
+            </Grid>
+          </>
+        ) : null}
+
+        {/* --- se procede a insertar los campos de la información de los anexos ---  */}
+        {/* ------------------------------------------------------------------------- */}
+        {/* ------------------------------------------------------------------------- */}
+
+        {/* --- se procede a insertar los campos de la información de los METADATOS ---  */}
+        {/* ------------------------------------------------------------------------- */}
+        {/* ------------------------------------------------------------------------- */}
+
+        {/* condicional para mostrar los metadatos después de seleccionar el respecivo anexo */}
+
+        {infoMetadatos && infoAnexos ? (
+          <>
+            <Title title="Metadatos" />
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                mt: '1.5rem',
+                mb: '2rem',
+                justifyContent: 'center',
+              }}
+            >
+              {/* primera fila de elementos de los metadatos */}
+
+              <Grid item xs={12} sm={3.5}>
+                <TextField
+                  fullWidth
+                  label="Número de folios"
+                  size="small"
+                  disabled
                   variant="outlined"
                   // value={value}
                   InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    // onChange(e.target.value);
-                    console.log(e.target.value);
-                    // console.log(e.target.value);
-                  }}
                 />
               </Grid>
-            </Grid>
+              <Grid item xs={12} sm={5}>
+                <TextField
+                  fullWidth
+                  label="Asunto"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3.5}>
+                <TextField
+                  fullWidth
+                  label="Fecha creación de archivo"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
 
-            {/* listado de anexos */}
-            <div
-              style={{
-                marginTop: '2rem',
-              }}
-            >
-              <RenderDataGrid
-                rows={[]}
-                columns={[]}
-                title="Listado de anexos"
-                aditionalElement={
-                  //* este elemento adicional en realidad va a ir dentro de las filas de la tabla (ya que la vista del anexo se maneja por id)
-                  <>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={() => {
-                        console.log(
-                          'viendo información del anexo seleccionado'
-                        );
-                      }}
-                    >
-                      Ver Información del anexo seleccionado
-                    </Button>
-                  </>
-                }
-              />
-            </div>
-          </DialogContent>
+              {/* segunda fila de elementos de los metadatos */}
 
-          {/* contenido de los elementos (cierre) */}
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  fullWidth
+                  label="Archivo origen en el sistema"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  fullWidth
+                  label="Origen de archivo"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  fullWidth
+                  label="Categoría de archivo"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  fullWidth
+                  label="¿Tiene copia física?"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
 
-          <Divider />
-          <DialogActions>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-            >
-              <Button
-                color="error"
-                variant="contained"
-                // ? ---  numero 2 -----
-                onClick={() => {
-                  console.log('cerrando modal de información de elemento');
-                }}
-                startIcon={<CloseIcon />}
+              {/* tercera fila de los metadatos */}
+
+              {/* revisar si se debe cambiar a un select, ya que las palabras clave pueden terminar siendo mas de una */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Palabras clave"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Nombre de tipología documental"
+                  size="small"
+                  disabled
+                  variant="outlined"
+                  // value={value}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+
+              {/* botones es los metadatos */}
+              <Stack
+                direction="column"
+                justifyContent="center"
+                spacing={2}
+                sx={{ mb: '20px', mt: '20px' }}
               >
-                CERRAR
-              </Button>
-            </Stack>
-          </DialogActions>
-      </Dialog>
+                <Button
+                  color="warning"
+                  variant="contained"
+                  onClick={() => {
+                    handleOpenInfoMetadatos(false);
+                    console.log('cerrando información de METADATO');
+                  }}
+                  startIcon={<CloseIcon />}
+                >
+                  CERRAR INFORMACIÓN DE METADATO
+                </Button>
+              </Stack>
+            </Grid>
+          </>
+        ) : null}
+
+        {/* --- se procede a insertar los campos de la información de los complementos ---  */}
+        {/* ------------------------------------------------------------------------- */}
+        {/* ------------------------------------------------------------------------- */}
+
+        {/* ------ ACCIONES FINALES SOBRE EL ATOM ---- CERRAR Y VOLVER AL MÓDULO DE VENTANILLA -------  */}
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          spacing={2}
+          sx={{ mb: '20px', mt: '20px' }}
+        >
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={() => {
+              navigate('/app/gestor_documental/panel_ventanilla/');
+            }}
+            startIcon={<ArrowBackIcon />}
+          >
+            VOLVER A PANEL DE VENTANILLA
+          </Button>
+        </Stack>
+      </Grid>
     </>
   );
 };

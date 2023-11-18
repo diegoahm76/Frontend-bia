@@ -1,16 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, createContext, useState } from 'react';
-
-interface PanelVentanillaContextProps {
-  radicado: string;
-  setRadicado: React.Dispatch<React.SetStateAction<string>>;
-  value: number;
-  setValue: React.Dispatch<React.SetStateAction<number>>;
-  handleChange?: (event: React.SyntheticEvent, newValue: number) => void;
-  expanded: string | boolean;
-  setExpanded: React.Dispatch<React.SetStateAction<string | boolean>>;
-}
+import { PanelVentanillaContextProps } from './types/contextVentanilla.types';
 
 export const PanelVentanillaContext =
   createContext<PanelVentanillaContextProps>({
@@ -21,6 +12,14 @@ export const PanelVentanillaContext =
     handleChange: () => {},
     expanded: false,
     setExpanded: () => {},
+    anexos: [],
+    setAnexos: () => {},
+    metadatos: [],
+    setMetadatos: () => {},
+    skipped: new Set<number>(),
+    setSkipped: () => {},
+    activeStep: 0,
+    setActiveStep: () => {},
   });
 
 export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
@@ -30,12 +29,24 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   //* expanded de los acordeones
   const [expanded, setExpanded] = useState<string | boolean>(false);
 
+  //* almacenar informacion de los anexos
+  const [anexos, setAnexos] = useState<any>([]);
+  //* almacenar informacion de los metadatos
+  const [metadatos, setMetadatos] = useState<any>([]);
+
   //? funciones actualizadoras
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) =>
     setValue(newValue);
 
+  // ! -- MANEJO DE DATA DE LA ENTREGA 99 -- ! //
+
+  //* estados para el stepper de la entrega 99
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set<number>());
+
   const valuesToUse = {
+    // ? entrega 99
     radicado,
     setRadicado,
     value,
@@ -43,6 +54,15 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
     handleChange,
     expanded,
     setExpanded,
+    anexos,
+    setAnexos,
+    metadatos,
+    setMetadatos,
+    // ? entrega 99
+    activeStep,
+    setActiveStep,
+    skipped,
+    setSkipped,
   };
 
   return (

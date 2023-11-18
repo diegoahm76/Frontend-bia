@@ -51,3 +51,69 @@ export interface ITipos {
   item_ya_usado?: boolean;
   registro_precargado?: boolean;
 }
+// Sector 
+export interface ISector {
+  id_sector?: number;
+  nombre_sector: string;
+  aplicacion: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+// Modalidades
+export interface IModalidad {
+  id_modalidad?: number;
+  nombre_modalidad?: string;
+  codigo_modalidad?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+
+// Ubicaciones
+export interface IUbicacion {
+  id_ubicacion?: number;
+  nombre_ubicacion?: string;
+  codigo_ubicacion?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+
+// Fuente de recursos PAA
+export interface IFuenteRecursoPAA {
+  id_fuente?: number;
+  nombre_fuente?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+
+// intervalos
+export interface IIntervalo {
+  id_intervalo?: number;
+  nombre_intervalo?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+
+// Estados VF
+export interface IEstadoVF {
+  id_estado?: number;
+  nombre_estado?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+
+// Còdigos UNSPSC
+
+export interface ICodigoUnspsc {
+  id_codigo?: number;
+  codigo_unsp?: string;
+  nombre_producto_unsp?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
