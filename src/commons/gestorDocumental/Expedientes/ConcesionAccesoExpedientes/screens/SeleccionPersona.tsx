@@ -1,5 +1,5 @@
 
-import { Box, Button, Dialog, DialogContent, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Dialog, DialogContent, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -12,7 +12,7 @@ import { BuscadorPersonaConcesiones } from './BuscadorPersonaConcesiones';
 import { control_error } from '../../../../../helpers';
 import { get_tipo_documento } from '../../../../../request';
 import { obtener_persona } from '../../../../seguridad/screens/vinculacionColaboradores/Thunks/VinculacionColaboradores';
-
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 interface IProps {
     expediente: any;
 }
@@ -24,15 +24,17 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
     const [acceso_desde, set_acceso_desde] = useState<Dayjs>(dayjs());
     const [acceso_hasta, set_acceso_hasta] = useState<Dayjs>(dayjs());
+    const [permitir, set_permitir] = useState<boolean>(false);
     const [error_acceso_desde, set_error_acceso_desde] = useState<boolean>(false);
     const [error_acceso_hasta, set_error_acceso_hasta] = useState<boolean>(false);
+    const [observaciones, set_observaciones] = useState<string>("");
     const [persona, set_persona] = useState<any>(null);
     const [nombre_completo, set_nombre_completo] = useState<string>("");
     const [tipos_documentos, set_tipos_documentos] = useState<any>([]);
     const [tipo_documento, set_tipo_documento] = useState<string>("");
-    const [msj_error_tdoc, set_msj_error_tdoc] = useState<string>("");
+    const [msj_error_tdoc, set_msj_error_tdoc] = useState<boolean>(false);
     const [nro_documento, set_nro_documento] = useState<string>("");
-    const [msj_error_nro_documento, set_msj_error_nro_documento] = useState<string>("");
+    const [msj_error_nro_documento, set_msj_error_nro_documento] = useState<boolean>(false);
 
     useEffect(() => {
         void get_list_tipo_doc();
@@ -68,23 +70,30 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
             set_acceso_desde(date);
         set_error_acceso_desde(!(date !== null));
     }
+
     const cambio_acceso_hasta = (date: Dayjs | null): void => {
         if (date !== null)
             set_acceso_desde(date);
         set_error_acceso_desde(!(date !== null));
+
     }
+
+    const handle_change_isd = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        set_permitir(e.target.checked);
+    };
+
+    const cambio_observaciones: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_observaciones(e.target.value);
+    };
 
     const cambio_tipo_documento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo_documento(e.target.value);
-        if (e.target.value !== null && e.target.value !== "")
-            set_msj_error_tdoc("");
+        set_msj_error_tdoc(e.target.value !== null && e.target.value !== "");
     }
 
     const cambio_nro_documento: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== null && e.target.value !== undefined && e.target.value !== "") {
-            set_nro_documento(e.target.value);
-            set_msj_error_nro_documento("");
-        }
+        set_nro_documento(e.target.value);
+        set_msj_error_nro_documento(e.target.value !== null && e.target.value !== undefined && e.target.value !== "");
     };
 
     const buscar_persona = (tipo_doc: string, nro_doc: string): void => {
@@ -105,13 +114,13 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                     <Grid item container spacing={2}>
                         <Grid item container spacing={3} sx={{ mt: '1px' }}>
                             <Grid item xs={12} sm={3}>
-                            <FormControl required size='small' fullWidth>
+                                <FormControl required size='small' fullWidth>
                                     <InputLabel>Tipo de documento</InputLabel>
                                     <Select
                                         value={tipo_documento}
                                         label="Tipo de documento"
                                         onChange={cambio_tipo_documento}
-                                        error={msj_error_tdoc !== ""}
+                                        error={msj_error_tdoc}
                                     >
                                         {tipos_documentos.map((tipos: any) => (
                                             <MenuItem key={tipos.value} value={tipos.value}>
@@ -129,9 +138,9 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                     fullWidth
                                     value={nro_documento}
                                     onChange={cambio_nro_documento}
-                                    error={msj_error_nro_documento !== ""}
+                                    error={msj_error_nro_documento}
                                 />
-                                {(msj_error_nro_documento !== "") && (<FormHelperText error >{msj_error_nro_documento}</FormHelperText>)}
+                                {msj_error_nro_documento && (<FormHelperText error >{msj_error}</FormHelperText>)}
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
@@ -155,12 +164,12 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                     Buscar persona
                                 </Button>
                                 {abrir_modal_persona && (
-                    <BuscadorPersonaConcesiones
-                        is_modal_active={abrir_modal_persona}
-                        set_is_modal_active={set_abrir_modal_persona}
-                        title={"Busqueda de persona titular"}
-                        set_persona={set_persona} />
-                )}
+                                    <BuscadorPersonaConcesiones
+                                        is_modal_active={abrir_modal_persona}
+                                        set_is_modal_active={set_abrir_modal_persona}
+                                        title={"Busqueda de persona titular"}
+                                        set_persona={set_persona} />
+                                )}
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -204,27 +213,15 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                 {error_acceso_hasta && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
 
                             </Grid>
-                            <Grid item xs={12} sm={9}>
+                            <Grid item xs={12} sm={12}>
                                 <Stack
                                     direction="row"
-                                    justifyContent="flex-end"
+                                    justifyContent="center"
                                     spacing={2}
                                     sx={{ mt: '5px' }}
 
                                 >
-                                    <Grid item xs={12} sm={8}>
-                                        <Typography sx={{ fontSize: '18px', fontWeight: '420' }}> Permitirle ver documentos de tipologías reservadas </Typography>
-                                    </Grid>
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12} sm={3}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                >
-                                    <Grid item xs={12} sm={4} sx={{ pointerEvents: 'none' }}>
-
-                                    </Grid>
+                                    <FormControlLabel labelPlacement="start" label="Permitirle ver documentos de tipologías reservadas"  control={<Checkbox value={permitir} onChange={handle_change_isd} />}/>
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} sm={12}>
@@ -235,11 +232,31 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                     rows={2}
                                     size="small"
                                     fullWidth
-                                    value={'Texto de prueba'}
+                                    value={observaciones}
+                                    onChange={cambio_observaciones}
                                 />
                             </Grid>
                         </Grid>
                     </Grid>
+                    <Grid container>
+                <Grid item xs={12} sm={12}>
+                    <Stack
+                        direction="row"
+                        justifyContent="flex-end"
+                        spacing={2}
+                        sx={{ mt: '10px' }}
+                    >
+                        <Button
+                            color="primary"
+                            variant='contained'
+                            startIcon={<AddCircleOutlinedIcon />}
+                            onClick={() => {  }}
+                        >
+                            Agregar
+                        </Button>
+                    </Stack>
+                </Grid>
+            </Grid>
                 </Box>
             </Grid>
         </>

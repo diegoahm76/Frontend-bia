@@ -159,7 +159,7 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
             boxShadow: '0px 3px 6px #042F4A26',
           }}
         >
-          <Grid item xs={12} sm={6} md={12}>
+          {/* <Grid item xs={12} sm={6} md={12}>
             <CustomSelect
               onChange={handle_change_select}
               label="Unidad organizacional *"
@@ -171,7 +171,7 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
               errors={errors}
               register={register}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6} md={3}>
             <CustomSelect
               onChange={handle_change_select}
