@@ -12,7 +12,7 @@ import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import moment from "moment";
-import { enviar_codigo_verificación, validar_codigo_verificación } from "../thunks/FirmaCierreIndice";
+import { enviar_codigo_verificación, firma_cierre_indice, validar_codigo_verificación } from "../thunks/FirmaCierreIndice";
 
 interface IProps {
     expediente: any,
@@ -28,7 +28,8 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     const [observaciones, set_observaciones] = useState<string>("");
     const [deshabilitar, set_deshabilitar] = useState<boolean>(false);
     const [validar, set_validar] = useState<boolean|null>(null);
-    const [countdown, set_countdown] = useState<number>();
+    const [countdown, set_countdown] = useState<number>(60);
+    const [reintentos, set_reintentos] = useState<number>(0);
     useEffect(() => {
         obtener_usuario_logueado_fc();
     }, []);
@@ -46,10 +47,14 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     };
 
     const enviar_codigo_verificacion: () => void = () => {
-        dispatch(enviar_codigo_verificación(props.indice?.id_indice_electronico_exp)).then((response: any) => {
-            set_deshabilitar(false);
-        })
+        set_reintentos(reintentos+1);
+        if(reintentos+1 === 3){
+            return
+        }
         set_deshabilitar(true);
+        dispatch(enviar_codigo_verificación(props.indice?.id_indice_electronico_exp)).then((response: any) => {
+            // set_deshabilitar(false);
+        })
         const now = moment();
         const interval = setInterval(() => {
             const now_ciclo = moment();
@@ -65,7 +70,13 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     }
     const validar_codigo_verificacion: () => void = () => {
         dispatch(validar_codigo_verificación(props.indice?.id_indice_electronico_exp,codigo_verificacion)).then((response: any) => {
-            set_validar(true);
+            set_validar(response.success);
+        })
+    }
+
+    const guardar_cierre_indice: () => void = () => {
+        dispatch(firma_cierre_indice(props.indice?.id_indice_electronico_exp,observaciones)).then((response: any) => {
+            // set_validar(response.success);
         })
     }
 
@@ -194,17 +205,37 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
+                        <Grid item xs={12} sm={6}>
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-end"
+                                spacing={2}
+                                sx={{ mt: '2px' }}
+
+                            >
+                                <Grid item xs={12} sm={3}>
                                 <Button
-                                    color={validar ? 'success' : 'error'}
+                                    color='primary'
                                     variant='outlined'
-                                    startIcon={validar ? <CheckOutlinedIcon /> : <CloseOutlinedIcon />}
+                                    startIcon={<CheckOutlinedIcon />}
                                     onClick={() => { validar_codigo_verificacion()  }}
-                                    disabled={deshabilitar}
+                                    disabled={(reintentos !== 0 && reintentos < 3) && codigo_verificacion === ''}
                                 >
-                                    {validar ? 'Validado' : 'Validar'}
+                                    {reintentos < 3 ? 'Validar' : 'Superó los intentos permitidos'}
                                 </Button>
+                                </Grid>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                            >
+                                <Grid item xs={12} sm={4} sx={{ pointerEvents: 'none' }}>
+                                    <Fab size="small" variant="extended" sx={reintentos < 3 && validar ? { marginY: '3px', backgroundColor: 'green', color: 'white', px: '20px' } : { marginY: '3px', backgroundColor: '#ff9800', color: 'black', px: '20px' }}>
+                                        {reintentos < 3 && validar ? 'Correcto' : 'Incorrecto'}
+                                    </Fab>
+                                </Grid>
                             </Stack>
                         </Grid>
                         <Grid item xs={12} sm={12}>
@@ -235,7 +266,7 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                     color='success'
                                     variant='contained'
                                     startIcon={<SaveIcon />}
-                                    onClick={() => {  }}
+                                    onClick={() => { guardar_cierre_indice() }}
                                 >
                                     Guardar cierre
                                 </Button>

@@ -86,7 +86,7 @@ export const FirmaCierreIndiceScreen: React.FC = () => {
             >
                 <ExpedienteSeleccionado expediente={expediente}></ExpedienteSeleccionado>
             </Grid>}
-            {expediente !== null && <Grid
+            {indice !== null && <Grid
                 container
                 sx={class_css}
             >
