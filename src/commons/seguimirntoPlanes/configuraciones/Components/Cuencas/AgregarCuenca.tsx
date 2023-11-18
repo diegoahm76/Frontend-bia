@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   Box,
@@ -14,12 +13,13 @@ import {
 import type React from 'react';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
-import { crear_ods } from '../Request/request';
-import type { IObjetivoDesarrolloSostenible } from '../interfaces/interfaces';
-import { control_error, control_success } from '../../../../helpers';
-import CleanIcon from '@mui/icons-material/CleaningServices';
+import { crear_cuenca } from '../../Request/request';
+import type { CrearCuenca } from '../../interfaces/interfaces';
+import { control_error, control_success } from '../../../../../helpers';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../../components';
+import { Title } from '../../../../../components';
+import CloseIcon from '@mui/icons-material/Close';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -27,16 +27,11 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarODS: React.FC<IProps> = ({
+export const AgregarCuenca: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   get_datos,
 }) => {
-  const [is_loading, set_is_loading] = useState(false);
-
-  const handle_close = (): void => {
-    set_is_modal_active(false);
-  };
   const {
     register,
     reset,
@@ -45,25 +40,34 @@ export const AgregarODS: React.FC<IProps> = ({
     formState: { errors },
   } = useForm();
 
-  const on_submit_ods: SubmitHandler<FieldValues> = async (data) => {
+  const [is_loading, set_is_loading] = useState(false);
+
+  const handle_close = (): void => {
+    set_is_modal_active(false);
+  };
+
+  const on_submit_cuenca: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_is_loading(true);
-      await crear_ods(data as IObjetivoDesarrolloSostenible);
+      await crear_cuenca(data as CrearCuenca);
       set_is_modal_active(false);
-      control_success('Objetivo de desarrollo sostenible creado correctamente');
+      control_success('cuenca creada correctamente');
       await get_datos();
       reset();
-      limpiar_formulario();
       set_is_loading(false);
     } catch (error: any) {
       set_is_loading(false);
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail ||
+          'Algo salio mal, intenta de nuevo más tarde'
+      );
     }
   };
 
   const limpiar_formulario = (): void => {
     reset();
   };
+
   return (
     <Dialog
       open={is_modal_active}
@@ -72,26 +76,26 @@ export const AgregarODS: React.FC<IProps> = ({
       maxWidth="md"
     >
       {' '}
-      <Box component="form" onSubmit={handleSubmit(on_submit_ods)}>
+      <Box component="form" onSubmit={handleSubmit(on_submit_cuenca)}>
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Registro de ODS" />
+          <Title title="Crear Cuenca" />
         </Grid>
         <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre del ods"
+                label="Nombre Cuenca"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                {...register('nombre_objetivo', {
+                {...register('nombre', {
                   required: true,
                 })}
-                error={!!errors.nombre}
+                error={Boolean(errors.nombre)}
                 helperText={
                   errors.nombre?.type === 'required'
                     ? 'Este campo es obligatorio'
@@ -103,16 +107,19 @@ export const AgregarODS: React.FC<IProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
-          </Button>
+            Cerrar
+          </Button>{' '}
           <Button
             variant="outlined"
-            // color="warning"
+            color="warning"
             startIcon={<CleanIcon />}
             onClick={limpiar_formulario}
           >

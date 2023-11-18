@@ -15,24 +15,25 @@ import {
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { control_error, control_success } from '../../../../helpers';
-import type { EditarCuenca } from '../interfaces/interfaces';
-import { editar_cuenca } from '../Request/request';
-import { Title } from '../../../../components';
+import { control_error, control_success } from '../../../../../helpers';
+import type { ISector } from '../../interfaces/interfaces';
+import { editar_sector } from '../../Request/request';
+import { Title } from '../../../../../components';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  data_cuencas: any;
+  data: any;
   get_data: () => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ActualizarCuenca: React.FC<IProps> = ({
+export const ActualizarSector: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
-  data_cuencas,
+  data,
   get_data,
 }) => {
   const {
@@ -43,7 +44,7 @@ export const ActualizarCuenca: React.FC<IProps> = ({
     watch,
     setValue: set_value,
     formState: { errors },
-  } = useForm<EditarCuenca>();
+  } = useForm<ISector>();
 
   const [is_loading, set_is_loading] = useState(false);
 
@@ -58,38 +59,46 @@ export const ActualizarCuenca: React.FC<IProps> = ({
 
   useEffect(() => {
     setTimeout(() => {
-      set_value('nombre', data_cuencas?.nombre);
-      set_value('activo', data_cuencas?.activo);
+      set_value('nombre_sector', data?.nombre_sector);
+      set_value('aplicacion', data?.aplicacion);
+      set_value('activo', data?.activo);
     }, 100);
-  }, [data_cuencas, reset]);
+  }, [data, reset]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (is_modal_active && data_cuencas) {
-      reset(data_cuencas);
+    if (is_modal_active && data) {
+      reset(data);
     }
-  }, [is_modal_active, data_cuencas, reset]);
+  }, [is_modal_active, data, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   };
 
-  const on_submit = async (data: EditarCuenca): Promise<any> => {
+  const on_submit = async (data: ISector): Promise<any> => {
     try {
       set_is_loading(true);
-      const datos_cuenca = {
-        nombre: data.nombre,
+      const datos_sector = {
+        nombre_sector: data.nombre_sector,
         activo: data.activo,
+        aplicacion: data.aplicacion,
       };
-      await editar_cuenca(data_cuencas.id_cuenca, datos_cuenca as EditarCuenca);
+      await editar_sector(
+        (data.id_sector as number) ?? 0,
+        datos_sector as ISector
+      );
       set_is_modal_active(false);
-      control_success('Cuenca actualizada correctamente');
+      control_success('Sector actualizado correctamente');
       void get_data();
       reset();
       set_is_loading(false);
     } catch (error: any) {
       set_is_loading(false);
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail ||
+          'Algo salio mal, intenta de nuevo más tarde'
+      );
     }
   };
 
@@ -103,7 +112,7 @@ export const ActualizarCuenca: React.FC<IProps> = ({
       {' '}
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Editar Cuenca" />
+          <Title title="Editar Sector" />
         </Grid>
 
         <DialogTitle></DialogTitle>
@@ -112,19 +121,38 @@ export const ActualizarCuenca: React.FC<IProps> = ({
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre Cuenca"
+                label="Nombre Sector"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                defaultValue={data_cuencas?.nombre}
-                {...register('nombre', {
+                defaultValue={data?.nombre}
+                {...register('nombre_sector', {
                   required: true,
                 })}
-                error={Boolean(errors.nombre)}
+                error={Boolean(errors.nombre_sector)}
                 helperText={
-                  errors.nombre?.type === 'required'
+                  errors.nombre_sector?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Aplicación"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+                {...register('aplicacion', {
+                  required: true,
+                })}
+                error={Boolean(errors.aplicacion)}
+                helperText={
+                  errors.aplicacion?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }
@@ -148,13 +176,16 @@ export const ActualizarCuenca: React.FC<IProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
-          </Button>
+            Cerrar
+          </Button>{' '}
           <Button
             variant="contained"
             disabled={is_loading}

@@ -15,24 +15,25 @@ import {
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { control_error, control_success } from '../../../../helpers';
-import type { IMedicion } from '../interfaces/interfaces';
-import { editar_mediciones } from '../Request/request';
-import { Title } from '../../../../components';
+import { control_error, control_success } from '../../../../../helpers';
+import type { EditarCuenca } from '../../interfaces/interfaces';
+import { editar_cuenca } from '../../Request/request';
+import { Title } from '../../../../../components';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  data: any;
+  data_cuencas: any;
   get_data: () => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ActualizarMediciones: React.FC<IProps> = ({
+export const ActualizarCuenca: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
-  data,
+  data_cuencas,
   get_data,
 }) => {
   const {
@@ -43,7 +44,7 @@ export const ActualizarMediciones: React.FC<IProps> = ({
     watch,
     setValue: set_value,
     formState: { errors },
-  } = useForm<IMedicion>();
+  } = useForm<EditarCuenca>();
 
   const [is_loading, set_is_loading] = useState(false);
 
@@ -58,35 +59,32 @@ export const ActualizarMediciones: React.FC<IProps> = ({
 
   useEffect(() => {
     setTimeout(() => {
-      set_value('nombre_medicion', data?.nombre_medicion);
-      set_value('activo', data?.activo);
+      set_value('nombre', data_cuencas?.nombre);
+      set_value('activo', data_cuencas?.activo);
     }, 100);
-  }, [data, reset]);
+  }, [data_cuencas, reset]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (is_modal_active && data) {
-      reset(data);
+    if (is_modal_active && data_cuencas) {
+      reset(data_cuencas);
     }
-  }, [is_modal_active, data, reset]);
+  }, [is_modal_active, data_cuencas, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   };
 
-  const on_submit = async (data: IMedicion): Promise<any> => {
+  const on_submit = async (data: EditarCuenca): Promise<any> => {
     try {
       set_is_loading(true);
-      const datos_medicion = {
-        nombre_medicion: data.nombre_medicion,
+      const datos_cuenca = {
+        nombre: data.nombre,
         activo: data.activo,
       };
-      await editar_mediciones(
-        (data.id_medicion as number) ?? 0,
-        datos_medicion as IMedicion
-      );
+      await editar_cuenca(data_cuencas.id_cuenca, datos_cuenca as EditarCuenca);
       set_is_modal_active(false);
-      control_success('Medidor actualizado correctamente');
+      control_success('Cuenca actualizada correctamente');
       void get_data();
       reset();
       set_is_loading(false);
@@ -94,7 +92,7 @@ export const ActualizarMediciones: React.FC<IProps> = ({
       set_is_loading(false);
       control_error(
         error.response.data.detail ||
-          'Algo salio mal, intenta de nuevo mas tarde'
+          'Algo salio mal, intenta de nuevo más tarde'
       );
     }
   };
@@ -106,9 +104,10 @@ export const ActualizarMediciones: React.FC<IProps> = ({
       fullWidth
       maxWidth="md"
     >
+      {' '}
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Editar Medidor" />
+          <Title title="Editar Cuenca" />
         </Grid>
 
         <DialogTitle></DialogTitle>
@@ -117,19 +116,19 @@ export const ActualizarMediciones: React.FC<IProps> = ({
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre Medidor"
+                label="Nombre Cuenca"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                defaultValue={data?.nombre}
-                {...register('nombre_medicion', {
+                defaultValue={data_cuencas?.nombre}
+                {...register('nombre', {
                   required: true,
                 })}
-                error={Boolean(errors.nombre_medicion)}
+                error={Boolean(errors.nombre)}
                 helperText={
-                  errors.nombre_medicion?.type === 'required'
+                  errors.nombre?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }
@@ -152,15 +151,17 @@ export const ActualizarMediciones: React.FC<IProps> = ({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button
+        <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
-          </Button>
-          <Button
+            Cerrar
+          </Button>{' '}          <Button
             variant="contained"
             disabled={is_loading}
             color="success"

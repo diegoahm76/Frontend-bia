@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   Box,
@@ -14,11 +13,13 @@ import {
 import type React from 'react';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
-import { crear_tipos_eje } from '../Request/request';
-import type { TiposEjes } from '../interfaces/interfaces';
-import { control_error, control_success } from '../../../../helpers';
-import { Title } from '../../../../components';
+import { crear_tipos } from '../../Request/request';
+import type { ITipos } from '../../interfaces/interfaces';
+import { control_error, control_success } from '../../../../../helpers';
 import SaveIcon from '@mui/icons-material/Save';
+import { Title } from '../../../../../components';
+import CloseIcon from '@mui/icons-material/Close';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -26,7 +27,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarTipoEje: React.FC<IProps> = ({
+export const AgregarTipos: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   get_datos,
@@ -34,7 +35,6 @@ export const AgregarTipoEje: React.FC<IProps> = ({
   const {
     register,
     reset,
-    watch,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     formState: { errors },
@@ -46,12 +46,12 @@ export const AgregarTipoEje: React.FC<IProps> = ({
     set_is_modal_active(false);
   };
 
-  const on_submit_cargo: SubmitHandler<FieldValues> = async (data) => {
+  const on_submit_tipos: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_is_loading(true);
-      await crear_tipos_eje(data as TiposEjes);
+      await crear_tipos(data as ITipos);
       set_is_modal_active(false);
-      control_success('Tipo de eje estrategico creado correctamente');
+      control_success('Tipo creado correctamente');
       await get_datos();
       reset();
       set_is_loading(false);
@@ -59,9 +59,12 @@ export const AgregarTipoEje: React.FC<IProps> = ({
       set_is_loading(false);
       control_error(
         error.response.data.detail ||
-          'Algo salio mal, intenta de nuevamente mas tarde'
+          'Algo salio mal, intenta de nuevo más tarde'
       );
     }
+  };
+  const limpiar_formulario = (): void => {
+    reset();
   };
 
   return (
@@ -72,28 +75,28 @@ export const AgregarTipoEje: React.FC<IProps> = ({
       maxWidth="md"
     >
       {' '}
-      <Box component="form" onSubmit={handleSubmit(on_submit_cargo)}>
+      <Box component="form" onSubmit={handleSubmit(on_submit_tipos)}>
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Registro de tipos de eje estrategico" />
+          <Title title="Crear Tipo" />
         </Grid>
         <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre del tipo de eje estrategico"
+                label="Nombre tipo"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                {...register('nombre_tipo_eje', {
+                {...register('nombre_tipo', {
                   required: true,
                 })}
-                error={!!errors.nombre}
+                error={Boolean(errors.nombre_tipo)}
                 helperText={
-                  errors.nombre?.type === 'required'
+                  errors.nombre_tipo?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }
@@ -103,19 +106,30 @@ export const AgregarTipoEje: React.FC<IProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
+            Cerrar
+          </Button>{' '}
+          <Button
+            variant="outlined"
+            color="warning"
+            startIcon={<CleanIcon />}
+            onClick={limpiar_formulario}
+          >
+            Limpiar
           </Button>
           <Button
             variant="contained"
-            startIcon={<SaveIcon />}
             disabled={is_loading}
             color="success"
             type="submit"
+            startIcon={<SaveIcon />}
           >
             Guardar
           </Button>
