@@ -8,7 +8,8 @@ import { obtener_config_expediente, obtener_serie_subserie, obtener_unidades_mar
 import dayjs from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
 import BuscarExpediente from "../../indexacionExpedientes/screens/BuscarExpediente";
-
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 interface IProps {
     set_expediente: any,
@@ -28,7 +29,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [tipo_expediente, set_tipo_expediente] = useState<string>("");
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [expediente, set_expediente] = useState<any>(null);
-
+    const [expedientes, set_expedientes] = useState<any>([]);
     // Notificaciones
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
     const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
@@ -36,6 +37,50 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
     const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
 
+    const columns: GridColDef[] = [
+        {
+            field: 'codigo_exp_Agno',
+            headerName: 'CÓDIGO',
+            sortable: true,
+            width: 150,
+        },
+        {
+            field: 'codigo_exp_consec_por_agno',
+            headerName: 'TRD',
+            sortable: true,
+            width: 200,
+        },
+        {
+            field: 'tipologia',
+            headerName: 'TITULO',
+            width: 200,
+        },
+        {
+            field: 'desde',
+            headerName: 'UNIDAD ORGANIZACIONAL',
+            width: 200,
+        },
+        {
+            field: 'hasta',
+            headerName: 'SERIE',
+            width: 200,
+        },
+        {
+            field: 'subserie',
+            headerName: 'SUBSERIE',
+            width: 200,
+        },
+        {
+            field: 'año',
+            headerName: 'AÑO',
+            width: 100,
+        },
+        {
+            field: 'persona',
+            headerName: 'PERSONA TITULAR',
+            width: 200,
+        }
+    ];
     const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
         set_titulo_notificacion(titulo);
         set_tipo_notificacion(tipo);
@@ -63,7 +108,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
 
     useEffect(() => {
         // if (serie !== "")
-            // obtener_config_expediente_fc();
+        // obtener_config_expediente_fc();
     }, [serie]);
 
     const obtener_trd_actual_fc: () => void = () => {
@@ -195,20 +240,20 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                 justifyContent="center"
                             >
                                 <Grid item xs={12} sm={3}>
-                                <FormControl size='small' fullWidth>
-                                <InputLabel>Año</InputLabel>
-                                <Select
-                                    label="Año"
-                                    value={año}
-                                    onChange={cambio_año}
-                                >
-                                    {[{id: 2023, nombre: '2023'}].map((m: any) => (
-                                        <MenuItem key={m.id} value={m.id}>
-                                            {m.nombre}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                    <FormControl size='small' fullWidth>
+                                        <InputLabel>Año</InputLabel>
+                                        <Select
+                                            label="Año"
+                                            value={año}
+                                            onChange={cambio_año}
+                                        >
+                                            {[{ id: 2023, nombre: '2023' }].map((m: any) => (
+                                                <MenuItem key={m.id} value={m.id}>
+                                                    {m.nombre}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
                             </Stack>
                         </Grid>
@@ -232,11 +277,80 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     startIcon={<SearchIcon />}
                                     onClick={() => { set_abrir_modal_buscar(true); }}
                                 >
-                                    Buscar expediente
+                                    Buscar
                                 </Button>
                                 {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                             </Stack>
                         </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <DataGrid
+                            density="compact"
+                            autoHeight
+                            columns={columns}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            rows={expedientes}
+                            getRowId={(row) => row.orden_en_expediente} />
+                    </Grid>
+                    <Grid container>
+                    <Grid item xs={12} sm={9}>
+                        <Box
+                            component="form"
+                            sx={{ mt: '20px', mb: '20px' }}
+                            noValidate
+                            autoComplete="off"
+                        >
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                                spacing={2}
+                                sx={{ mt: '20px' }}
+                            >
+                                <Button
+                                    color='primary'
+                                    variant='outlined'
+                                    startIcon={<VisibilityOutlinedIcon />}
+                                // onClick={() => { set_abrir_modal_conceder(true); }}
+                                >
+                                    Ver expedientes a los que me han dado acceso
+                                </Button>
+                                <Button
+                                    color='primary'
+                                    variant='outlined'
+                                    startIcon={<VisibilityOutlinedIcon />}
+                                // onClick={() => { set_abrir_modal_conceder(true); }}
+                                >
+                                    Ver documentos a los que me han dado acceso
+                                </Button>
+                                {/* {abrir_modal_conceder && <ConcederAccesoExpediente is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} expediente={expediente} ></ConcederAccesoExpediente>} */}
+                            </Stack>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <Box
+                            component="form"
+                            sx={{ mt: '20px', mb: '20px' }}
+                            noValidate
+                            autoComplete="off"
+                        >
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-end"
+                                spacing={2}
+                                sx={{ mt: '20px' }}
+                            >
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    startIcon={<SearchIcon />}
+                                    onClick={() => { }}
+                                >
+                                    Búsqueda avanzada
+                                </Button>
+                            </Stack>
+                        </Box>
+                    </Grid>
                     </Grid>
                 </Box>
             </Grid>

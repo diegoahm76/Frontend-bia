@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
+import { BuscadorPersonaConcesiones } from './BuscadorPersonaConcesiones';
 
 interface IProps {
     expediente: any;
@@ -22,6 +23,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     const [acceso_hasta, set_acceso_hasta] = useState<Dayjs>(dayjs());
     const [error_acceso_desde, set_error_acceso_desde] = useState<boolean>(false);
     const [error_acceso_hasta, set_error_acceso_hasta] = useState<boolean>(false);
+    const [persona, set_persona] = useState<any>(null);
 
     useEffect(() => {
     }, []);
@@ -106,13 +108,13 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                 >
                                     Buscar persona
                                 </Button>
-                                {/* {abrir_modal_persona && (
-                    <BuscadorPersonaDialog
+                                {abrir_modal_persona && (
+                    <BuscadorPersonaConcesiones
                         is_modal_active={abrir_modal_persona}
                         set_is_modal_active={set_abrir_modal_persona}
                         title={"Busqueda de persona titular"}
-                        set_persona={props.set_persona_titular} />
-                )} */}
+                        set_persona={set_persona} />
+                )}
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>

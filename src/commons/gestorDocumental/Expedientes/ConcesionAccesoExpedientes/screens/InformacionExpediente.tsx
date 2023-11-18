@@ -10,15 +10,6 @@ interface IProps {
     expediente: any;
 }
 
-const class_css = {
-    position: 'relative',
-    background: '#FAFAFA',
-    borderRadius: '15px',
-    p: '20px',
-    mb: '20px',
-    boxShadow: '0px 3px 6px #042F4A26',
-};
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();

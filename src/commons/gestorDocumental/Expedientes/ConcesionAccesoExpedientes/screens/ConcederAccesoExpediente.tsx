@@ -7,6 +7,7 @@ import { useAppDispatch } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { InformacionExpediente } from './InformacionExpediente';
 import { SeleccionPersona } from './SeleccionPersona';
+import { ConcesionesPermisosVigentes } from './ConcesionesPermisosVigentes';
 
 interface IProps {
     is_modal_active: boolean,
@@ -86,6 +87,12 @@ const ConcederAccesoExpediente: React.FC<IProps> = (props: IProps) => {
                 sx={class_css}
             >
                 <SeleccionPersona expediente={props.expediente}></SeleccionPersona>
+            </Grid>
+                <Grid
+                container
+                sx={class_css}
+            >
+                <ConcesionesPermisosVigentes expediente={props.expediente}></ConcesionesPermisosVigentes>
             </Grid>
                 </DialogContent>
             </Dialog>
