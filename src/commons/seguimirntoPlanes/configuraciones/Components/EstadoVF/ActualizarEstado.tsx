@@ -15,11 +15,12 @@ import {
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { control_error, control_success } from '../../../../helpers';
-import type { IEntidades } from '../interfaces/interfaces';
-import { editar_entidades } from '../Request/request';
-import { Title } from '../../../../components';
+import { control_error, control_success } from '../../../../../helpers';
+import type { IEstadoVF } from '../../interfaces/interfaces';
+import { editar_estado_vf } from '../../Request/request';
+import { Title } from '../../../../../components';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IProps {
   is_modal_active: boolean;
@@ -29,7 +30,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ActualizarEntidad: React.FC<IProps> = ({
+export const ActualizarEstado: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   data,
@@ -43,7 +44,7 @@ export const ActualizarEntidad: React.FC<IProps> = ({
     watch,
     setValue: set_value,
     formState: { errors },
-  } = useForm<IEntidades>();
+  } = useForm<IEstadoVF>();
 
   const [is_loading, set_is_loading] = useState(false);
 
@@ -58,7 +59,7 @@ export const ActualizarEntidad: React.FC<IProps> = ({
 
   useEffect(() => {
     setTimeout(() => {
-      set_value('nombre_entidad', data?.nombre_entidad);
+      set_value('nombre_estado', data?.nombre_estado);
       set_value('activo', data?.activo);
     }, 100);
   }, [data, reset]);
@@ -74,27 +75,28 @@ export const ActualizarEntidad: React.FC<IProps> = ({
     set_is_modal_active(false);
   };
 
-  const on_submit = async (data: IEntidades): Promise<any> => {
+  const on_submit = async (data: IEstadoVF): Promise<any> => {
     try {
       set_is_loading(true);
-      const datos_entidad = {
-        nombre: data.nombre_entidad,
+      const datos = {
+        nombre_estado: data.nombre_estado,
         activo: data.activo,
       };
-      await editar_entidades(
-        (data.id_entidad as number) ?? 0,
-        datos_entidad as IEntidades
+      await editar_estado_vf(
+        (data.id_estado as number) ?? 0,
+        datos as IEstadoVF
       );
       set_is_modal_active(false);
-      control_success(
-        'Cuenca actualizada correctamente || Algo salio mal, intenta de nuevamente mas tarde'
-      );
+      control_success('El registro se ha actualizado correctamente');
       void get_data();
       reset();
       set_is_loading(false);
     } catch (error: any) {
       set_is_loading(false);
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail ||
+          'Algo salio mal, intenta de nuevo más tarde'
+      );
     }
   };
 
@@ -108,7 +110,7 @@ export const ActualizarEntidad: React.FC<IProps> = ({
       {' '}
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Editar Entidad" />
+          <Title title="Editar estado" />
         </Grid>
 
         <DialogTitle></DialogTitle>
@@ -117,19 +119,19 @@ export const ActualizarEntidad: React.FC<IProps> = ({
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre Entidad"
+                label="Nombre estado "
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
                 defaultValue={data?.nombre}
-                {...register('nombre_entidad', {
+                {...register('nombre_estado', {
                   required: true,
                 })}
-                error={Boolean(errors.nombre_entidad)}
+                error={Boolean(errors.nombre_estado)}
                 helperText={
-                  errors.nombre_entidad?.type === 'required'
+                  errors.nombre_estado?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }
@@ -153,13 +155,16 @@ export const ActualizarEntidad: React.FC<IProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
-          </Button>
+            Cerrar
+          </Button>{' '}
           <Button
             variant="contained"
             disabled={is_loading}

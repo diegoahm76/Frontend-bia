@@ -215,9 +215,6 @@ export const AgregarActividad: React.FC = () => {
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
-              <ButtonSalir />
-            </Grid>
-            <Grid item>
               <Button
                 variant="outlined"
                 color="warning"

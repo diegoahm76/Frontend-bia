@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Avatar, Button, ButtonGroup, Chip, Grid, IconButton, Stack } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Chip,
+  Grid,
+  IconButton,
+  Stack,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,8 +20,9 @@ import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { AgregarMedicion } from '../Components/AgregarMedicion';
-import { ActualizarMediciones } from '../Components/ActualizarMediciones';
+import { AgregarMedicion } from '../Components/Mediciones/AgregarMedicion';
+import { ActualizarMediciones } from '../Components/Mediciones/ActualizarMediciones';
+import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const MedidasScreen: React.FC = () => {
@@ -124,7 +133,9 @@ export const MedidasScreen: React.FC = () => {
       }));
       set_rows(datos_medicion);
     } catch (error: any) {
-      control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
     }
   };
   const confirmar_eliminar_mediciones = (id_medicion: number): void => {
@@ -149,7 +160,9 @@ export const MedidasScreen: React.FC = () => {
           void get_traer_medicion();
           control_success('La medición se eliminó correctamente');
         } catch (error: any) {
-          control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
+          control_error(
+            error.response.data.detail || 'Algo paso, intente de nuevo'
+          );
         }
       }
     });
@@ -193,11 +206,19 @@ export const MedidasScreen: React.FC = () => {
           {rows.length > 0 && (
             <>
               <ButtonGroup
-                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+                style={{
+                  margin: 7,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
               >
                 {download_xls({ nurseries: rows, columns })}
-                {download_pdf({ nurseries: rows, columns, title: 'CREAR MEDICION' })}
-              </ButtonGroup> 
+                {download_pdf({
+                  nurseries: rows,
+                  columns,
+                  title: 'CREAR MEDICION',
+                })}
+              </ButtonGroup>
               <DataGrid
                 autoHeight
                 rows={rows}
@@ -218,6 +239,27 @@ export const MedidasScreen: React.FC = () => {
           ></Stack>
         </Grid>
       </Grid>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        justifyContent="flex-end"
+      >
+        <Grid item>
+          <ButtonSalir />
+        </Grid>
+      </Grid>
+
       <AgregarMedicion
         is_modal_active={is_crear}
         set_is_modal_active={set_is_crear}

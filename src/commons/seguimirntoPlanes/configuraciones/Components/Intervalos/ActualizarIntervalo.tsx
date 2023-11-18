@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable react/prop-types */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   Button,
@@ -13,25 +10,27 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
-  MenuItem,
   TextField,
 } from '@mui/material';
+import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { TiposEjes } from '../interfaces/interfaces';
-import { editar_tipos_eje } from '../Request/request';
-import { control_error, control_success } from '../../../../helpers';
-import { Title } from '../../../../components';
+import { control_error, control_success } from '../../../../../helpers';
+import type { IIntervalo } from '../../interfaces/interfaces';
+import { editar_intervalos } from '../../Request/request';
+import { Title } from '../../../../../components';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  data: TiposEjes;
+  data: any;
   get_data: () => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ActualizarTipoEje: React.FC<IProps> = ({
+export const ActualizarIntervalo: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   data,
@@ -45,43 +44,59 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
     watch,
     setValue: set_value,
     formState: { errors },
-  } = useForm<TiposEjes>({
-    defaultValues: {
-      nombre_tipo_eje: '',
-      activo: false,
-    },
-  });
+  } = useForm<IIntervalo>();
 
   const [is_loading, set_is_loading] = useState(false);
 
-  const {
-    // nombre,
-    activo,
-  } = watch();
+  const activo = watch('activo') ?? false;
+
+  const handle_change_checkbox = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const { checked } = event.target;
+    set_value('activo', checked);
+  };
 
   useEffect(() => {
     setTimeout(() => {
-      set_value('nombre_tipo_eje', data?.nombre_tipo_eje);
+      set_value('nombre_intervalo', data?.nombre_intervalo);
       set_value('activo', data?.activo);
     }, 100);
   }, [data, reset]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (is_modal_active && data) {
+      reset(data);
+    }
+  }, [is_modal_active, data, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   };
 
-  const on_submit = async (datos: TiposEjes): Promise<any> => {
+  const on_submit = async (data: IIntervalo): Promise<any> => {
     try {
       set_is_loading(true);
-      await editar_tipos_eje((data?.id_tipo_eje as number) ?? 0, datos);
+      const datos = {
+        nombre_intervalo: data.nombre_intervalo,
+        activo: data.activo,
+      };
+      await editar_intervalos(
+        (data.id_intervalo as number) ?? 0,
+        datos as IIntervalo
+      );
       set_is_modal_active(false);
-      control_success('Tipo de eje estrategico actualizado correctamente');
+      control_success('El registro se ha actualizado correctamente');
       void get_data();
       reset();
       set_is_loading(false);
     } catch (error: any) {
       set_is_loading(false);
-      control_error(error.response.data.detail);
+      control_error(
+        error.response.data.detail ||
+          'Algo salio mal, intenta de nuevo más tarde'
+      );
     }
   };
 
@@ -95,26 +110,28 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
       {' '}
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Editar Tipo de eje estrategico" />
+          <Title title="Editar intervalo" />
         </Grid>
+
         <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre del tipo de eje estrategico"
+                label="Nombre intervalo"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                {...register('nombre_tipo_eje', {
+                defaultValue={data?.nombre}
+                {...register('nombre_intervalo', {
                   required: true,
                 })}
-                error={!!errors.nombre_tipo_eje}
+                error={Boolean(errors.nombre_intervalo)}
                 helperText={
-                  errors.nombre_tipo_eje?.type === 'required'
+                  errors.nombre_intervalo?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }
@@ -127,13 +144,10 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
                     <Checkbox
                       {...register('activo', {})}
                       checked={activo}
-                      onChange={(e) => {
-                        // onchange(e.target.checked)
-                        set_value('activo', e.target.checked);
-                      }}
+                      onChange={handle_change_checkbox}
                     />
                   }
-                  label={activo ? 'Activo' : 'Inactivo'}
+                  label="Activo *"
                 />
               </FormControl>
             </Grid>
@@ -141,13 +155,16 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
-          </Button>
+            Cerrar
+          </Button>{' '}
           <Button
             variant="contained"
             disabled={is_loading}

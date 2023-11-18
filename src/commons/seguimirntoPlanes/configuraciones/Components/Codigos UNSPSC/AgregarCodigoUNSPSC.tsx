@@ -13,11 +13,13 @@ import {
 import type React from 'react';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
-import { crear_mediciones } from '../Request/request';
-import type { IMedicion } from '../interfaces/interfaces';
-import { control_error, control_success } from '../../../../helpers';
+import { crear_codigo_unspsc } from '../../Request/request';
+import type { ICodigoUnspsc } from '../../interfaces/interfaces';
+import { control_error, control_success } from '../../../../../helpers';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../../components';
+import { Title } from '../../../../../components';
+import CloseIcon from '@mui/icons-material/Close';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -25,7 +27,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarMedicion: React.FC<IProps> = ({
+export const AgregarCodigoUNSPSC: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   get_datos,
@@ -44,12 +46,12 @@ export const AgregarMedicion: React.FC<IProps> = ({
     set_is_modal_active(false);
   };
 
-  const on_submit_mediciones: SubmitHandler<FieldValues> = async (data) => {
+  const on_submit: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_is_loading(true);
-      await crear_mediciones(data as IMedicion);
+      await crear_codigo_unspsc(data as ICodigoUnspsc);
       set_is_modal_active(false);
-      control_success('Medidor creado correctamente');
+      control_success('El registro se ha creado correctamente');
       await get_datos();
       reset();
       set_is_loading(false);
@@ -57,9 +59,12 @@ export const AgregarMedicion: React.FC<IProps> = ({
       set_is_loading(false);
       control_error(
         error.response.data.detail ||
-          'Algo salio mal, intenta de nuevo mas tarde'
+          'Algo salio mal, intenta de nuevo más tarde'
       );
     }
+  };
+  const limpiar_formulario = (): void => {
+    reset();
   };
 
   return (
@@ -69,9 +74,10 @@ export const AgregarMedicion: React.FC<IProps> = ({
       fullWidth
       maxWidth="md"
     >
-      <Box component="form" onSubmit={handleSubmit(on_submit_mediciones)}>
+      {' '}
+      <Box component="form" onSubmit={handleSubmit(on_submit)}>
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Crear Medidor" />
+          <Title title="Crear código UNSPSC" />
         </Grid>
         <DialogTitle></DialogTitle>
         <Divider />
@@ -79,18 +85,37 @@ export const AgregarMedicion: React.FC<IProps> = ({
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre Medidor"
+                label="Código UNSPSC"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                {...register('nombre_medicion', {
+                {...register('codigo_unsp', {
                   required: true,
                 })}
-                error={Boolean(errors.nombre_medicion)}
+                error={Boolean(errors.codigo_unsp)}
                 helperText={
-                  errors.nombre_medicion?.type === 'required'
+                  errors.codigo_unsp?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Nombre producto UNSPSC"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+                {...register('nombre_producto_unsp', {
+                  required: true,
+                })}
+                error={Boolean(errors.nombre_producto_unsp)}
+                helperText={
+                  errors.nombre_producto_unsp?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }
@@ -100,12 +125,23 @@ export const AgregarMedicion: React.FC<IProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
+            startIcon={<CloseIcon />}
             onClick={() => {
               handle_close();
               reset();
             }}
           >
-            Cancelar
+            Cerrar
+          </Button>{' '}
+          <Button
+            variant="outlined"
+            color="warning"
+            startIcon={<CleanIcon />}
+            onClick={limpiar_formulario}
+          >
+            Limpiar
           </Button>
           <Button
             variant="contained"
