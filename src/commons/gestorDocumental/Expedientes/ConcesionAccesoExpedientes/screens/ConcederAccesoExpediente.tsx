@@ -1,5 +1,5 @@
 
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -8,7 +8,8 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { InformacionExpediente } from './InformacionExpediente';
 import { SeleccionPersona } from './SeleccionPersona';
 import { ConcesionesPermisosVigentes } from './ConcesionesPermisosVigentes';
-
+import ClearIcon from '@mui/icons-material/Clear';
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -74,27 +75,39 @@ const ConcederAccesoExpediente: React.FC<IProps> = (props: IProps) => {
             <Dialog fullWidth maxWidth="lg"
                 open={props.is_modal_active}
                 onClose={() => { props.set_is_modal_active(false); }} >
-                    <DialogTitle>{'Conceder acceso a expedientes'}</DialogTitle>
+                <DialogTitle>{'Conceder acceso a expedientes'}</DialogTitle>
                 <DialogContent>
-                <Grid
-                container
-                sx={class_css}
-            >
-                <InformacionExpediente expediente={props.expediente}></InformacionExpediente>
-            </Grid>
-                <Grid
-                container
-                sx={class_css}
-            >
-                <SeleccionPersona expediente={props.expediente}></SeleccionPersona>
-            </Grid>
-                <Grid
-                container
-                sx={class_css}
-            >
-                <ConcesionesPermisosVigentes expediente={props.expediente}></ConcesionesPermisosVigentes>
-            </Grid>
+                    <Grid
+                        container
+                        sx={class_css}
+                    >
+                        <InformacionExpediente expediente={props.expediente}></InformacionExpediente>
+                    </Grid>
+                    <Grid
+                        container
+                        sx={class_css}
+                    >
+                        <SeleccionPersona expediente={props.expediente}></SeleccionPersona>
+                    </Grid>
+                    <Grid
+                        container
+                        sx={class_css}
+                    >
+                        <ConcesionesPermisosVigentes expediente={props.expediente}></ConcesionesPermisosVigentes>
+                    </Grid>
                 </DialogContent>
+                <DialogActions>
+                    <Button
+                        color='success'
+                        variant='contained'
+                        startIcon={<SaveIcon />}
+                        onClick={ () => {}}>Guardar</Button>
+                    <Button
+                        color='error'
+                        variant='contained'
+                        startIcon={<ClearIcon />}
+                        onClick={() => { props.set_is_modal_active(false); }}>Salir</Button>
+                </DialogActions>
             </Dialog>
         </>
     );
