@@ -60,7 +60,8 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
             grantor.id_person !== null &&
             attorney.id_person !== null && <EstadoPqrsdf />}
         {pqr_status.key === 2 && <ListadoPqrsdf />}
-
+        <EstadoPqrsdf />
+        <ListadoPqrsdf />
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton

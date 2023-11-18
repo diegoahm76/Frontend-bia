@@ -95,40 +95,42 @@ export interface IObjCompany {
 }
 
 export interface IObjPqr {
-  id_pqr?: number | null;
-  created_at?: string | Date | null;
-  filing_at?: string | null;
-  filing_number?: string | null;
-  pqr_status?: string | null;
-  pqr_status_id?: string | null;
-  pqr_request?: IObjPqrRequest[];
-  pqr_type?: string | null;
-  pqr_type_id?: number | null;
-  headline?: string | null;
-  subject?: string | null;
-  description?: string | null;
-  requires_response?: boolean | null;
-  is_anonymous?: boolean | null;
-  person_interposes_id?: number | null;
-  titular_person_id?: number | null;
-  code_owner_relationship?: string | number | null;
-  owner_relationship?: string | null;
-  media_type?: string | null;
-  media_type_id?: number | null;
-  presentation_type?: string | null;
-  code_presentation_type?: string | number | null;
-  destination_office?: string | null;
-  destination_office_id?: number | null;
-  person_create?: string | null;
-  person_create_id?: number | null;
-  reception_office?: string | null;
-  reception_office_id?: number | null;
-  filling_id?: number | null;
-  filling_at?: string | null;
-  requires_digitization?: boolean | null;
-  response_time?: number | null;
-  total_number_exhibit?: number | null;
-  total_number_pages?: number | null;
+  id_pqr?: number | null; // id de pqr
+  created_at?: string | Date | null; // fecha creación pqr
+  filing_at?: string | null; // fecha de radicado pqr
+  filing_number?: string | null; // numero de radicado
+  pqr_status?: string | null; // estado de pqr
+  pqr_status_id?: string | null; // id del estado de pqr
+  pqr_request?: IObjPqrRequest[]; // solicitudes de pqr
+
+  
+  pqr_type?: string | null; // tipó de pqr
+  pqr_type_id?: number | null;// id de tipo de pqr
+  headline?: string | null; // persona titular
+  subject?: string | null; // asunto de pqr
+  description?: string | null; // descripcion pqr
+  requires_response?: boolean | null;// requere respuesta
+  is_anonymous?: boolean | null;// es anonimo
+  person_interposes_id?: number | null;// id de la persona que interpone
+  titular_person_id?: number | null; // id de la persona titular
+  code_owner_relationship?: string | number | null; // codigo de relacion entre persona titular y persona que interpone
+  owner_relationship?: string | null; //relacion entre persona titular y persona que interpone
+  media_type?: string | null; // medio de entrega de documentacion
+  media_type_id?: number | null; // id medio de entrega de documentacion
+  presentation_type?: string | null; //tipo de presentacion
+  code_presentation_type?: string | number | null; // id tipo de presentacion
+  destination_office?: string | null; // sucursal destino nombre
+  destination_office_id?: number | null; // id sucursal destino
+  person_create?: string | null;// nombre persona que crea
+  person_create_id?: number | null; // id persona que crea
+  reception_office?: string | null; // sucursal de recepcion fisica
+  reception_office_id?: number | null; // id de sucursal de recepcion fisica
+  filing_id?: number | null; // id del radicado
+  
+  requires_digitization?: boolean | null;// requiere digializacion
+  response_time?: number | null; // tiempo de respuesta
+  total_number_exhibit?: number | null;// total de anexos
+  total_number_pages?: number | null; // total folios en anexos
 }
 
 export interface IObjPqrRequest {
