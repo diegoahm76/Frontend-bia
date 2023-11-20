@@ -13,7 +13,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 export const BotonesActionsFormulario = () => {
   const navigate = useNavigate();
 
-  const { Formulario_Empresa, Set_Formulario_Empresa } = useContext(TipodeCeaccionContext);
+  const { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return } = useContext(TipodeCeaccionContext);
 
 
   const crear_configuracion_expediente = async () => {
@@ -28,13 +28,8 @@ export const BotonesActionsFormulario = () => {
       };
       const res = await api.post(url, postData);
       const data_return = res.data.data;
-      const {
-         T246IdConfigTipologiaDocAgno,
-        T247consecutivoActual,
-        T247consecutivoActualAMostrar }= data_return;
 
-        Set_Formulario_Empresa(data_return)
-
+      Set_Datos_Return(data_return);
       control_success("se creo correctamente");
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -51,17 +46,37 @@ export const BotonesActionsFormulario = () => {
         "maneja_consecutivo": Formulario_Empresa.maneja_consecutivo,
         "nivel_consecutivo": "SS",
         "configuracion_por_unidad": Formulario_Empresa.configuracion_por_unidad
-    }
-    ;
-    console.log(postData);
-      // const res = await api.post(url, postData);
-      // const numeroConsulta = res.data.data;
-
+      }
+        ;
+      const res = await api.post(url, postData);
+      const numeroConsulta = res.data.data;
+      Set_Datos_Return(numeroConsulta);
       control_success("se creo correctamente");
     } catch (error: any) {
       control_error(error.response.data.detail);
+
     }
   };
+
+
+  const crear_configuracion_expediente_simple = async () => {
+    try {
+      const url = '/gestor/trd/configuracion-tipologia/configuracion-tipologia-actual/';
+      const postData = {
+
+        "tipologia": Formulario_Empresa.id_tipologia_documental,
+        "maneja_consecutivo": Formulario_Empresa.maneja_consecutivo,
+      };
+      const res = await api.post(url, postData);
+      const numeroConsulta = res.data.data;
+      Set_Datos_Return(numeroConsulta);
+      control_success("se creo correctamente");
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+
+    }
+  };
+
 
 
 
@@ -86,10 +101,6 @@ export const BotonesActionsFormulario = () => {
       }}
     >
 
-
-
-
-
       {Formulario_Empresa.opcion_seleccionada === "Empresa" && (
         <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
           <Button
@@ -100,7 +111,7 @@ export const BotonesActionsFormulario = () => {
             fullWidth
             variant="contained"
           >
-            Guardar empresa
+            Guardar
           </Button>
         </Grid>
       )}
@@ -117,26 +128,44 @@ export const BotonesActionsFormulario = () => {
             fullWidth
             variant="contained"
           >
-            Guardar seccon
+            Guardar
           </Button>
         </Grid>
       )}
 
 
-      {Formulario_Empresa.opcion_seleccionada === "" && (
+      {Formulario_Empresa.opcion_seleccionada === "Ninguno" && (
         <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
           <Button
             startIcon={<SaveIcon />}
             style={{ width: "90%", marginTop: 15 }}
-            onClick={crear_configuracion_expediente}
+            onClick={crear_configuracion_expediente_simple}
             color="success" // Cambia el color según si es una actualización o creación
             fullWidth
             variant="contained"
           >
-            Guardar sin nada
+            Guardar
           </Button>
         </Grid>
       )}
+
+
+
+
+
+      <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+        <Button
+          startIcon={<ClearIcon />}
+          fullWidth
+          style={{ width: "90%", marginTop: 15, backgroundColor: "orange" }}
+          variant="contained"
+          onClick={() => {
+            navigate('/app/gestor_documental/configuracion_datos_basicos/configuraciontipologuiaño/consulta/');
+          }}
+        >
+          Consultar Años Anteriores
+        </Button>
+      </Grid>
 
 
 

@@ -8,41 +8,42 @@ import { DataGrid, GridColumns } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from 'uuid';
 import SaveIcon from '@mui/icons-material/Save';
 import { TipodeCeaccionContext } from "../../context/CreacionTipologuia";
+import { control_info } from "../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/success_errors";
 
 
 
 export interface VariablesCreacionPlantilla {
-    valor_inicio: Number,
-    cantidad_digitos: number,
-    prefijo_consecutivo: string,
-    id_unidad_organizacional: number
+    valor_inicial: any;
+    cantidad_digitos: any;
+    prefijo_consecutivo: any;
+    id_unidad_organizacional: any;
 }
 
 
 export const ConfiguracionUnidadOrganizacional = () => {
 
-    const { Formulario_Empresa, Set_Formulario_Empresa } = useContext(TipodeCeaccionContext);
+    const { Formulario_Empresa, Set_Formulario_Empresa ,Datos_Return} = useContext(TipodeCeaccionContext);
 
 
-    const datos_tabla = [
-        {
-            "Consecutivo_inicial": 100,
-            "Consecutivo_Actual": 120,
-            "Persona_Última_Configuración": "Usuario1",
-            "Fecha_Última_Configuración": "2023-11-02",
-        }
-    ];
+
+
+    const {
+        Persona_ult_config_implemen,
+        T247fechaUltConfigImplemen,
+        T247consecutivoInicial,
+        T247consecutivoActualAMostrar
+    
+    }= Datos_Return;
 
     const columna_numero_1 = [
-        { attribute: "Tipo de Expediente", value: datos_tabla ? datos_tabla[0]?.Consecutivo_inicial : "" },
-        { attribute: "Año de Expediente", value: datos_tabla ? datos_tabla[0]?.Consecutivo_Actual : "" },
-        { attribute: "Código de Expediente", value: datos_tabla ? datos_tabla[0]?.Persona_Última_Configuración : "" },
-        { attribute: "Consecutivo Inicial", value: datos_tabla ? datos_tabla[0]?.Fecha_Última_Configuración : "" },
-
-    ]
+        { attribute: "Consecutivo inicial", value: T247consecutivoInicial || "" },
+        { attribute: "Consecutivo Actual", value: T247consecutivoActualAMostrar || "" },
+        { attribute: "Persona Ultima Configuracion", value: Persona_ult_config_implemen || "" },
+        { attribute: "Fecha Ultima Configuracion (sin T)", value: T247fechaUltConfigImplemen ? new Date(T247fechaUltConfigImplemen).toISOString().split('T')[0] : "" },    ]
 
 
 
+      
 
     const columns: GridColumns = [
         { field: 'id_unidad_organizacional', headerName: 'sección-Subsección', flex: 1, align: 'center', headerAlign: 'center' },
@@ -68,8 +69,9 @@ export const ConfiguracionUnidadOrganizacional = () => {
             flex: 1,
             renderCell: (params: any) => (
                 <Button startIcon={<SaveIcon />}
-                    color='success'
-                    variant="contained">
+                    onClick={()=>eliminar_configuracion_tipologuia(params.row.id_unidad_organizacional)}
+                    color='error'
+                    variant="contained">h
 
                 </Button>
             ),
@@ -91,7 +93,6 @@ export const ConfiguracionUnidadOrganizacional = () => {
             console.error(error);
         }
     };
-    console.log(seccionoSubseccion);
 
     useEffect(() => {
         fetch_choise_seccionsubseccion().catch((error) => {
@@ -101,10 +102,10 @@ export const ConfiguracionUnidadOrganizacional = () => {
 
 
     const valores_defecto: VariablesCreacionPlantilla = {
-        valor_inicio: 0,
+        valor_inicial: 1,
         cantidad_digitos: 0,
         prefijo_consecutivo: "",
-        id_unidad_organizacional: 0
+        id_unidad_organizacional: 0,
     }
 
     const [form, set_form] = useState(valores_defecto);
@@ -122,18 +123,37 @@ export const ConfiguracionUnidadOrganizacional = () => {
     }
 
 
-
-
-
-    const Agragar_configuracion = () => {
+    const eliminar_configuracion_tipologuia = (id_unidad_organizacional: number) => {
+        // Filtra la configuración para excluir la que se va a eliminar
+        const nuevaConfiguracion = Formulario_Empresa.configuracion_por_unidad.filter(
+          (configuracion: any) => configuracion.id_unidad_organizacional !== id_unidad_organizacional
+        );
+      
+        // Actualiza el estado con la nueva configuración
         Set_Formulario_Empresa({
+          ...Formulario_Empresa,
+          configuracion_por_unidad: nuevaConfiguracion,
+        });
+      };
+
+      const Agragar_configuracion = () => {
+        const { configuracion_por_unidad } = Formulario_Empresa;
+      
+        // Verificar si ya existe un elemento con el mismo id_unidad_organizacional
+        const existeConfiguracion = configuracion_por_unidad.some(
+          (configuracion:any) => configuracion.id_unidad_organizacional === form.id_unidad_organizacional
+        );
+      
+        if (!existeConfiguracion) {
+          Set_Formulario_Empresa({
             ...Formulario_Empresa,
-            configuracion_por_unidad: [...Formulario_Empresa.configuracion_por_unidad, form]
-
-        })
-
-    }
-
+            configuracion_por_unidad: [...configuracion_por_unidad, form],
+          });
+        } else {
+          // Manejar el caso donde ya existe la configuración
+          control_info("Ya existe");
+        }
+      };
     return (
         <>
             <Grid
@@ -185,14 +205,14 @@ export const ConfiguracionUnidadOrganizacional = () => {
                                 variant="outlined"
                                 label="Valor Inicial"
                                 fullWidth
-                                name="valor_inicio"
-                                value={form.valor_inicio}
+                                name="valor_inicial"
+                                value={form.valor_inicial}
                                 onChange={(e) => {
                                     const input = e.target.value;
                                     if (/^\d*$/.test(input)) {  // Esta expresión regular permite solo dígitos
                                         set_form({
                                             ...form,
-                                            valor_inicio: +input
+                                            valor_inicial: +input
                                         });
                                     }
                                 }}
@@ -257,7 +277,7 @@ export const ConfiguracionUnidadOrganizacional = () => {
 
 
 
-                            {datos_tabla?.length !== 0 ? (
+                            {Datos_Return?.length !== 0 ? (
                                 <Grid item xs={8}>
                                     <DataGrid
                                         density="compact"
@@ -273,7 +293,7 @@ export const ConfiguracionUnidadOrganizacional = () => {
 
                                 </Grid>
                             ) :
-                                (<h3>No hay datos para mostrar</h3>)}
+                                (<h3>...</h3>)}
 
                         </Grid>
 

@@ -12,7 +12,7 @@ import { TipodeCeaccionContext } from "../../context/CreacionTipologuia";
 
 export const ConfiguracionValoresEmpresa = () => {
 
-    const { Formulario_Empresa, Set_Formulario_Empresa } = useContext(TipodeCeaccionContext);
+    const { Formulario_Empresa, Set_Formulario_Empresa ,Datos_Return} = useContext(TipodeCeaccionContext);
 
     const HandleCompletarDatos = (e: any) => {
         Set_Formulario_Empresa({
@@ -26,23 +26,21 @@ export const ConfiguracionValoresEmpresa = () => {
     const valorNumerico = isNaN(Formulario_Empresa.valor_inicial) ? 0 : Number(Formulario_Empresa.valor_inicial);
     const valorFormateado = String(valorNumerico).padStart(Formulario_Empresa.cantidad_digitos, '0');
 
+    const {
+        Persona_ult_config_implemen,
+        T247fechaUltConfigImplemen,
+        T247consecutivoInicial,
+        T247consecutivoActualAMostrar
+    
+    }= Datos_Return;
 
-    const datos_tabla = [
-        {
-            "Consecutivo_inicial": 100,
-            "Consecutivo_Actual": 120,
-            "Persona_Última_Configuración": "Usuario1",
-            "Fecha_Última_Configuración": "2023-11-02",
-        }
-    ];
-
+ 
+    
     const columna_numero_1 = [
-        { attribute: "Tipo de Expediente", value: datos_tabla ? datos_tabla[0]?.Consecutivo_inicial : "" },
-        { attribute: "Año de Expediente", value: datos_tabla ? datos_tabla[0]?.Consecutivo_Actual : "" },
-        { attribute: "Código de Expediente", value: datos_tabla ? datos_tabla[0]?.Persona_Última_Configuración : "" },
-        { attribute: "Consecutivo Inicial", value: datos_tabla ? datos_tabla[0]?.Fecha_Última_Configuración : "" },
-
-    ]
+        { attribute: "Consecutivo inicial", value: T247consecutivoInicial || "" },
+        { attribute: "Consecutivo Actual", value: T247consecutivoActualAMostrar || "" },
+        { attribute: "Persona Ultima Configuracion", value: Persona_ult_config_implemen || "" },
+        { attribute: "Fecha Ultima Configuracion (sin T)", value: T247fechaUltConfigImplemen ? new Date(T247fechaUltConfigImplemen).toISOString().split('T')[0] : "" },    ]
 
 
 
@@ -128,7 +126,7 @@ export const ConfiguracionValoresEmpresa = () => {
                     />
                 </Grid>
                 <Grid item xs={10} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
-                    {datos_tabla?.length !== 0 ? (
+                    {Datos_Return?.length !== 0 ? (
                         <DataGrid
                             density="compact"
                             style={{ marginTop: 15, width: "100%" }}
@@ -140,7 +138,7 @@ export const ConfiguracionValoresEmpresa = () => {
                             ]}
 
                             getRowId={(row) => uuidv4()} />) :
-                        (<h3>No hay datos para mostrar</h3>)}
+                        (<h3>...</h3>)}
 
                 </Grid>
             </Grid>

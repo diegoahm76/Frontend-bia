@@ -127,11 +127,11 @@ export const AñoConfiguracionn = () => {
                                             name="maneja_consecutivo"
                                             checked={Formulario_Empresa.maneja_consecutivo}
                                             onChange={(e) => {
-                                                    Set_Formulario_Empresa({
-                                                        ...Formulario_Empresa,
-                                                        maneja_consecutivo: !Formulario_Empresa.maneja_consecutivo
-                                                    });
-                                                
+                                                Set_Formulario_Empresa({
+                                                    ...Formulario_Empresa,
+                                                    maneja_consecutivo: !Formulario_Empresa.maneja_consecutivo
+                                                });
+
                                             }}
                                         />
                                     }
@@ -146,24 +146,28 @@ export const AñoConfiguracionn = () => {
                         <Grid item xs={12} sm={6}>
 
 
-                            <FormControl fullWidth>
-                                <InputLabel id="choice-label">Seleccionar</InputLabel>
-                                <Select
-                                    name="opcion_seleccionada"
-                                    label="Seleccionar"
-                                    labelId="choice-label"
-                                    style={{ width: "95%" }}
-                                    id="demo-simple-select-2"
-                                    value={Formulario_Empresa.opcion_seleccionada}
-                                    onChange={HandleCompletarDatos}
-                                >
-                                    {Object.keys(options).map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+<FormControl fullWidth>
+  <InputLabel id="choice-label">Seleccionar</InputLabel>
+  <Select
+    name="opcion_seleccionada"
+    label="Seleccionar"
+    labelId="choice-label"
+    style={{ width: "95%" }}
+    id="demo-simple-select-2"
+    value={Formulario_Empresa.opcion_seleccionada}
+    onChange={HandleCompletarDatos}
+  >
+    {/* Agrega la opción "Ninguno" al principio de la lista */}
+    <MenuItem value="Ninguno">Ninguno</MenuItem>
+
+    {/* Ahora agrega las opciones restantes desde tu objeto "options" */}
+    {Object.keys(options).map((option) => (
+      <MenuItem key={option} value={option}>
+        {option}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
                         </Grid>
                     )}
 
@@ -178,7 +182,7 @@ export const AñoConfiguracionn = () => {
             )}
 
 
-            
+
             {Formulario_Empresa.opcion_seleccionada === "SecciónSubsección" && (
                 <ConfiguracionUnidadOrganizacional />
             )}

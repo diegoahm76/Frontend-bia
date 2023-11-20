@@ -8,11 +8,14 @@ interface TipodeCeaccionInterfaz {
   Formulario_Empresa: any,
   Set_Formulario_Empresa: React.Dispatch<SetStateAction<any>>,
 
+  Datos_Return: any,
+  Set_Datos_Return: React.Dispatch<SetStateAction<any>>,
+
 
 }
 
 export interface ConfiguracionPorUnidad {
-  valor_inicio: any;
+  valor_inicial: any;
   cantidad_digitos: any;
   prefijo_consecutivo: any;
   id_unidad_organizacional: any;
@@ -37,7 +40,7 @@ interface Formulario {
 }
 
 export const TipodeCeaccionContext = createContext<TipodeCeaccionInterfaz>
-  ({ Formulario_Empresa: [], Set_Formulario_Empresa: () => { } });
+  ({ Formulario_Empresa: [], Set_Formulario_Empresa: () => { }, Set_Datos_Return: () => { }, Datos_Return: [] });
 
 
 
@@ -56,14 +59,14 @@ export const Inicial_Formulario: Formulario = {
 export const FormularioConfiguracionTipologuiaprovider
   = ({ children }: FormularioConfiguracionTipologuiaproviderProps): JSX.Element => {
 
-const [Datos_Return, Set_Datos_Return] = useState<any>([]);
+    const [Datos_Return, Set_Datos_Return] = useState<any>([]);
     const [Formulario_Empresa, Set_Formulario_Empresa] = useState<Formulario>(Inicial_Formulario);
 
-console.log(Datos_Return);
-  
 
 
-    const Valores_Formulario_Empresa_tipologia = { Formulario_Empresa, Set_Formulario_Empresa };
+
+
+    const Valores_Formulario_Empresa_tipologia = { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return, Datos_Return };
 
     return (
       <TipodeCeaccionContext.Provider value={Valores_Formulario_Empresa_tipologia}>
