@@ -9,12 +9,6 @@ import { getRequestStates } from '../services/getRequestStates.service';
 export const BuscadorPqrsdf = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
 
-  //* hooks
-  /*  const {
-    control_busqueda_panel_ventanilla,
-    watch_busqueda_panel_ventanilla,
-  } = usePanelVentanilla();*/
-
   // ? useState Necesario
   const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
 

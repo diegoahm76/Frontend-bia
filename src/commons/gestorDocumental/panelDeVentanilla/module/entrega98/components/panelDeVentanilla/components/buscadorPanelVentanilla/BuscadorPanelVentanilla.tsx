@@ -14,8 +14,14 @@ import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
 import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import Swal from 'sweetalert2';
+import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/getPqrsdfPanVen.service';
+import { setListaElementosPqrsfTramitesUotrosBusqueda } from '../../../../../../toolkit/store/PanelVentanillaStore';
+import { useAppDispatch } from '../../../../../../../../../hooks';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* hooks
   const {
     control_busqueda_panel_ventanilla,
@@ -23,33 +29,60 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     reset_search_form,
   } = usePanelVentanilla();
 
-  // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA PARA LAS PQRSDF -----
+  // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
+  const searchSubmitPqrsdf = () => {
+    const { tipo_de_solicitud, radicado, estado_actual_solicitud } =
+      watch_busqueda_panel_ventanilla;
+    void getGrilladoPqrsdfPanelVentanilla(
+      '' /*|| estado_actual_solicitud?.label,*/,
+      '' /*|| radicado,*/,
+      tipo_de_solicitud?.label,
+    ).then((res) => {
+      dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+    });
+  };
+
+  const searchSubmitTramitesYservicios = () => {
+    console.log('searchSubmitTramitesYservicios');
+  };
+
+  const searchSubmitOtros = () => {
+    console.log('submit , buscando coincidencias de otros');
+  };
+
   const handleSubmit = () => {
-    if (
-      !control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud?.label
-    ) {
-      control_warning('Debe seleccionar un tipo de solicitud');
+    const tipoDeSolicitud:
+      | 'PQRSDF'
+      | 'Tramites y servicios'
+      | 'Otros'
+      | undefined =
+      control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud?.label;
+
+    if (!tipoDeSolicitud) {
+      Swal.fire({
+        title: 'Opps...',
+        text: 'Debe seleccionar un tipo de solicitud para realizar la búsqueda',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+      });
       return;
     }
 
-    console.log(
-      'submit , buscando coincidencias',
-      watch_busqueda_panel_ventanilla
-    );
+    const searchActions = {
+      PQRSDF: searchSubmitPqrsdf,
+      'Tramites y servicios': searchSubmitTramitesYservicios,
+      Otros: searchSubmitOtros,
+    };
+
+    const searchAction = searchActions[tipoDeSolicitud];
+
+    if (searchAction) {
+      searchAction();
+    }
   };
+
   const resetForm = () => reset_search_form();
 
-  // ? useState Necesario
-  // const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
-
-  //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
-  /* useEffect(() => {
-    void getRequestStates().then((res: any) => {
-      console.log(res);
-      setRequestStatuses(res);
-    });
-  }, []);
-*/
   return (
     <Grid
       container

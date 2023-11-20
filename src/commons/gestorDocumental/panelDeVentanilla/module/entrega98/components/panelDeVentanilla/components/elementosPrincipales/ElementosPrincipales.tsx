@@ -39,7 +39,7 @@ export const ElementosPrincipales = (): JSX.Element => {
 
   return (
     <>
-      <ListaElementosPqrsdf />
+      {/*<ListaElementosPqrsdf />*/}
       {/*  se va a manjear el grillado con guia en el primer elemento del array con base al tipo de solicitud, tal vez de la misma manera se podra manejar la lógica y actualización de los botones sin necesidad de esperar a darle click a alguno de los elementos de la lista   */}
       {listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud === 'PQRSDF' ? (
         <ListaElementosPqrsdf />

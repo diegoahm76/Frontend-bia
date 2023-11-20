@@ -11,7 +11,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
 import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
-import { useAppDispatch } from '../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../../hooks';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -22,6 +25,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   //* loader button simulacion
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
+  );
+
+  //* redux states
+  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
+    (state) => state.PanelVentanillaSlice
   );
 
   //* espacio para la definición de las columnas
@@ -295,7 +303,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         </Button>
       </Link>
       <RenderDataGrid
-        rows={rows ?? []}
+        rows={listaElementosPqrsfTramitesUotros ?? []}
         columns={columns ?? []}
         title={`Lista de solicitudes de ${rows[0]?.tipo_solicitud}`}
       />
