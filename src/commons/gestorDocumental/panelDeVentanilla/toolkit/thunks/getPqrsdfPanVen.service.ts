@@ -38,10 +38,10 @@ export const getGrilladoPqrsdfPanelVentanilla = async (
     }
 
     void Swal.fire({
+      title: 'Opps...',
       icon: 'warning',
-      title: 'No se encontraron pqrsdf relacionadas con el filtro seleccionado',
-      showConfirmButton: false,
-      timer: 1500,
+      text: 'No se encontraron pqrsdf relacionadas con el filtro seleccionado',
+      showConfirmButton: true,
     });
     return [];
   } catch (e: any) {
