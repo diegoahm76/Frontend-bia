@@ -3,10 +3,6 @@ import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 
-import DevicesIcon from '@mui/icons-material/Devices';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import GroupsIcon from '@mui/icons-material/Groups';
-import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +26,13 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
   const navigate = useNavigate();
   //* redux states
   const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
+  const actionsTramitesYServicios = useAppSelector(
+    (state) => state.PanelVentanillaSlice.actionsTramitesYServicios
+  );
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+    (state) =>
+      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  );
 
   const withValidation =
     (fn: Function) => (action: { disabled: boolean; path: string }) => {
@@ -42,6 +45,10 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
         fn();
       }
     };
+
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
   const handleDigitalizacion = withValidation(async () => {
     await Swal.fire({
@@ -105,35 +112,110 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
     }
   };
 
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  //*
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  //*
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+
   return (
     <>
       {/* se debe revisar ya que no si no hay un elemento seleccionado (pqrsdf, tramites y servicios, otros) es inncesario mostrar este elemento dial  */}
-
-      <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-        <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: 'absolute', top: 0, left: 0 }}
-          icon={<MultipleStopIcon />}
-          direction="right"
-        >
-          {actions.map(
-            (action: {
-              id: string;
-              icon: any;
-              name: string;
-              path: string;
-              disabled: boolean;
-            }) => (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                onClick={() => handleClickActionsGeneral(action)}
-              />
-            )
-          )}
-        </SpeedDial>
-      </Box>
+      {(() => {
+        switch (currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud) {
+          case 'PQRSDF':
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: 'absolute', top: 0, left: 0 }}
+                  icon={<MultipleStopIcon />}
+                  direction="right"
+                >
+                  {actions.map(
+                    (action: {
+                      id: string;
+                      icon: any;
+                      name: string;
+                      path: string;
+                      disabled: boolean;
+                    }) =>
+                      action.disabled ? null : (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          tooltipTitle={action.name}
+                          onClick={() => handleClickActionsGeneral(action)}
+                        />
+                      )
+                  )}
+                </SpeedDial>
+              </Box>
+            );
+          case 'Tramites y Servicios':
+            // Caso para 'Tramites y Servicios'
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: 'absolute', top: 0, left: 0 }}
+                  icon={<MultipleStopIcon />}
+                  direction="right"
+                >
+                  {actionsTramitesYServicios.map(
+                    (action: {
+                      id: string;
+                      icon: any;
+                      name: string;
+                      path: string;
+                      disabled: boolean;
+                    }) =>
+                      action.disabled ? null : (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          tooltipTitle={action.name}
+                          onClick={() => {
+                            console.log(action);
+                          }}
+                        />
+                      )
+                  )}
+                </SpeedDial>
+              </Box>
+            );
+          case 'Otros':
+            // Caso para 'Otros'
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <>Botones de Otros </>
+              </Box>
+            );
+          default:
+            // Caso para null o cualquier otro valor
+            return <></>;
+        }
+      })()}
     </>
   );
 };

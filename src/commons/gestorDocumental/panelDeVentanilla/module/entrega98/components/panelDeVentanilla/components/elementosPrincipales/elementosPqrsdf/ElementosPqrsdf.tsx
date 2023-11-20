@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Button } from '@mui/material';
+import { Avatar, Button, IconButton, Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { LoadingButton } from '@mui/lab';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import TaskIcon from '@mui/icons-material/Task';
+import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
+import { useAppDispatch } from '../../../../../../../../../../hooks';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* context declaration
   const { setRadicado, setValue } = useContext(PanelVentanillaContext);
 
@@ -37,17 +44,23 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 );
                 return;
               } else {
-                setLoadingStates((prev) => ({ ...prev, [params.row.id_PQRSDF]: true }));
+                setLoadingStates((prev) => ({
+                  ...prev,
+                  [params.row.id_PQRSDF]: true,
+                }));
                 // Simulate an async operation
                 setTimeout(() => {
                   setValue(1);
                   setRadicado('panel8');
-                  setLoadingStates((prev) => ({ ...prev, [params.row.id_PQRSDF]: false }));
+                  setLoadingStates((prev) => ({
+                    ...prev,
+                    [params.row.id_PQRSDF]: false,
+                  }));
                 }, 1000);
               }
             }}
           >
-            {`Sol. de digitalización: ${params.value}`}
+            {`Solicitud de digitalización: ${params.value}`}
           </LoadingButton>
         );
       },
@@ -65,8 +78,107 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               console.log('cambiando a ver pqrsdf');
             }}
           >
-            {`Sol. de usuario: ${params.value}`}
+            {`Solicitud al  usuario: ${params.value}`}
           </Button>
+        );
+      },
+    },
+    {
+      headerName: 'Acciones',
+      field: 'Acciones',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <Tooltip title="Ver info pqrsdf">
+              <IconButton
+                onClick={() => {
+                  console.log(params.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
+            {/*segundo elemento definición*/}
+
+            <Tooltip
+              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
+            >
+              <IconButton
+                onClick={() => {
+                  console.log(params.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <KeyboardDoubleArrowDownIcon
+                    sx={{
+                      color: 'info.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Seleccionar elemento para procesos">
+              <IconButton
+                onClick={() => {
+                  //* se debe actualizar el array de acciones ya que de esa manera se va a determinar a que módulos va a tener acceso el elemento selccionado
+
+                  // ? en consecuencia se debe manejar segun los estados que se deban ejecutar por cada pqr se´gún los documentos de modelado
+                  /*dispatch(setActionssToManagePermissions())*/
+                  dispatch(
+                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
+                  );
+                  console.log(params.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <TaskIcon
+                    sx={{
+                      color: 'warning.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
         );
       },
     },
