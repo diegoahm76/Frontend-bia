@@ -5,22 +5,19 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LoadingButton } from '@mui/lab';
 import {
-  Avatar,
+  Autocomplete,
   Box,
   Button,
   Dialog,
   DialogContent,
   Grid,
-  IconButton,
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import {  useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../components';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -50,7 +47,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
     useState('');
   const [deposito_seleccionado, set_deposito_seleccionado] =
     useState<IObjDepositos | null>(null);
-  const { depositos, estantes, bandejas,cajas,carpetas } = useAppSelector(
+  const { depositos, estantes, bandejas, cajas, carpetas } = useAppSelector(
     (state) => state.archivo_fisico
   );
   useEffect(() => {
@@ -183,14 +180,16 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
               p: '20px',
               mb: '20px',
               boxShadow: '0px 3px 6px #042F4A26',
-              marginTop: '20px',
               marginLeft: '-5px',
             }}
           >
             <Title title="BÚSQUEDA AVANZADA" />
             <Grid container sx={{ mt: '10px', mb: '20px' }}>
+
+
               <Grid container justifyContent="center">
-                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
+                <Grid item xs={12} sm={3.5} margin={2}  marginTop={1.2}>
+                  
                   <TextField
                     autoFocus
                     margin="dense"
@@ -216,185 +215,193 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                     ))}
                   </TextField>
                 </Grid>
-
-                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  <Autocomplete
                     fullWidth
-                    select
                     size="small"
-                    label="Depósito"
-                    variant="outlined"
-                    disabled={
-                      tipo_elemento_seleccionado !== 'Depósito de Archivo'
-                    }
-                    error={!(Error == null)}
-                    sx={{
-                      backgroundColor: 'white',
+                    disablePortal
+                    id="combo-box-demo"
+                    options={depositos}
+                    value={depositos.find(
+                      (option) =>
+                        option.id_deposito ===
+                        (tipo_elemento_seleccionado
+                          ? parseInt(tipo_elemento_seleccionado, 10)
+                          : null)
+                    )}
+                    onChange={(event, newValue) => {
+                      set_deposito_seleccionado(newValue || null);
                     }}
-                    InputLabelProps={{ shrink: true }}
-                    value={tipo_elemento_seleccionado}
-                    onChange={(event) => {
-                      const selected_deposito = depositos.find(
-                        (option) =>
-                          option.id_deposito ===
-                          (event.target.value
-                            ? parseInt(event.target.value, 10)
-                            : null)
-                      );
-
-                      set_deposito_seleccionado(selected_deposito || null);
-                    }}
-                  >
-                    {depositos.map((option) => (
-                      <MenuItem
-                        key={option.id_deposito}
-                        value={option.id_deposito ?? ''}
-                      >
-                        {option.nombre_deposito}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    getOptionLabel={(option) => option.nombre_deposito ?? ''}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Depósito"
+                        variant="outlined"
+                        size="small"
+                        disabled={
+                          tipo_elemento_seleccionado !== 'Depósito de Archivo'
+                        }
+                        error={!(Error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  />
                 </Grid>
 
-                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  <Autocomplete
                     fullWidth
-                    select
                     size="small"
-                    label="Estante"
-                    variant="outlined"
-                    disabled={
-                      tipo_elemento_seleccionado !== 'Estante' &&
-                      (!deposito_seleccionado || isNaN(deposito_seleccionado.id_deposito || NaN))
-                    }
-                    
-                    error={!(Error == null)}
-                    sx={{
-                      backgroundColor: 'white',
+                    disablePortal
+                    id="combo-box-demo"
+                    options={estantes}
+                    value={estantes.find(
+                      (option) =>
+                        option.id_estante_deposito ===
+                        (tipo_elemento_seleccionado
+                          ? parseInt(tipo_elemento_seleccionado, 10)
+                          : null)
+                    )}
+                    onChange={(event, newValue) => {
+                      set_deposito_seleccionado(newValue || null);
                     }}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(event) =>
-                      set_tipo_elemento_seleccionado(event.target.value)
+                    getOptionLabel={(option) =>
+                      option.identificacion_por_deposito ?? ''
                     }
-                  >
-                    {estantes.map((option) => (
-                      <MenuItem
-                        key={option.id_estante_deposito}
-                        value={option.id_estante_deposito ?? ''}
-                      >
-                        {option.identificacion_por_deposito}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Estante"
+                        variant="outlined"
+                        size="small"
+                        disabled={tipo_elemento_seleccionado !== 'Estante'}
+                        error={!(Error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  />
                 </Grid>
               </Grid>
 
               <Grid container justifyContent="center">
-              <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  <Autocomplete
                     fullWidth
-                    select
                     size="small"
-                    label="Bandeja"
-                    variant="outlined"
-                    disabled={
-                      tipo_elemento_seleccionado !== 'Bandeja' &&
-                      (!deposito_seleccionado || isNaN(deposito_seleccionado.id_deposito || NaN))
-                    }
-                    
-                    error={!(Error == null)}
-                    sx={{
-                      backgroundColor: 'white',
+                    disablePortal
+                    id="combo-box-demo"
+                    options={bandejas}
+                    value={bandejas.find(
+                      (option) =>
+                        option.id_bandeja_estante ===
+                        (tipo_elemento_seleccionado
+                          ? parseInt(tipo_elemento_seleccionado, 10)
+                          : null)
+                    )}
+                    onChange={(event, newValue) => {
+                      set_deposito_seleccionado(newValue || null);
                     }}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(event) =>
-                      set_tipo_elemento_seleccionado(event.target.value)
+                    getOptionLabel={(option) =>
+                      option.identificacion_por_estante ?? ''
                     }
-                  >
-                    {bandejas.map((option) => (
-                      <MenuItem
-                        key={option.id_bandeja_estante}
-                        value={option.id_bandeja_estante ?? ''}
-                      >
-                        {option.identificacion_por_estante}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid> <Grid item xs={12} sm={3.5} margin={2}>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Caja"
-                    variant="outlined"
-                    disabled={
-                      tipo_elemento_seleccionado !== 'Caja' &&
-                      (!deposito_seleccionado || isNaN(deposito_seleccionado.id_deposito || NaN))
-                    }
-                    
-                    error={!(Error == null)}
-                    sx={{
-                      backgroundColor: 'white',
-                    }}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(event) =>
-                      set_tipo_elemento_seleccionado(event.target.value)
-                    }
-                  >
-                    {cajas.map((option) => (
-                      <MenuItem
-                        key={option.id_caja_bandeja}
-                        value={option.id_caja_bandeja ?? ''}
-                      >
-                        {option.identificacion_por_bandeja}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Bandeja"
+                        variant="outlined"
+                        size="small"
+                        disabled={tipo_elemento_seleccionado !== 'Bandeja'}
+                        error={!(Error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  />
                 </Grid>
 
-                <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                <TextField
-                    autoFocus
-                    margin="dense"
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  <Autocomplete
                     fullWidth
-                    select
                     size="small"
-                    label="Carpeta"
-                    variant="outlined"
-                    disabled={
-                      tipo_elemento_seleccionado !== 'Carpeta' &&
-                      (!deposito_seleccionado || isNaN(deposito_seleccionado.id_deposito || NaN))
-                    }
-                    
-                    error={!(Error == null)}
-                    sx={{
-                      backgroundColor: 'white',
+                    disablePortal
+                    id="combo-box-demo"
+                    options={cajas}
+                    value={cajas.find(
+                      (option) =>
+                        option.id_bandeja_estante ===
+                        (tipo_elemento_seleccionado
+                          ? parseInt(tipo_elemento_seleccionado, 10)
+                          : null)
+                    )}
+                    onChange={(event, newValue) => {
+                      set_deposito_seleccionado(newValue || null);
                     }}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(event) =>
-                      set_tipo_elemento_seleccionado(event.target.value)
+                    getOptionLabel={(option) =>
+                      option.identificacion_por_bandeja ?? ''
                     }
-                  >
-                    {carpetas.map((option) => (
-                      <MenuItem
-                        key={option.id_carpeta_caja}
-                        value={option.id_carpeta_caja ?? ''}
-                      >
-                        {option.identificacion_por_caja}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Caja"
+                        variant="outlined"
+                        size="small"
+                        disabled={tipo_elemento_seleccionado !== 'Caja'}
+                        error={!(Error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  />
                 </Grid>
 
-               
+                <Grid item xs={12} sm={3.5}  margin={2}>
+                <Autocomplete
+                    fullWidth
+                    size="small"
+                    disablePortal
+                    id="combo-box-demo"
+                    options={carpetas}
+                    value={carpetas.find(
+                      (option) =>
+                        option.id_carpeta_caja ===
+                        (tipo_elemento_seleccionado
+                          ? parseInt(tipo_elemento_seleccionado, 10)
+                          : null)
+                    )}
+                    onChange={(event, newValue) => {
+                      set_deposito_seleccionado(newValue || null);
+                    }}
+                    getOptionLabel={(option) =>
+                      option.identificacion_por_caja ?? ''
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Carpeta"
+                        variant="outlined"
+                        size="small"
+                        disabled={tipo_elemento_seleccionado !== 'Carpeta'}
+                        error={!(Error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  />
+                  
+                </Grid>
               </Grid>
 
               <>
