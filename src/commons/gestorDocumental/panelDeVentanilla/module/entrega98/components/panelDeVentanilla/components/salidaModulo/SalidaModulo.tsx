@@ -14,10 +14,9 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
-import { usePanelVentanilla } from '../../../../../../hook/usePanelVentanilla';
 import { resetPanelVentanillaFull } from '../../../../../../toolkit/store/PanelVentanillaStore';
 
-export const SalidaModulo = (): JSX.Element => {
+export const SalidaModulo: React.FC = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
   //* dispatch declaration
@@ -25,7 +24,7 @@ export const SalidaModulo = (): JSX.Element => {
 
   // ? redux states
 
-  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
     (state) => state.PanelVentanillaSlice
   );
 
@@ -76,7 +75,7 @@ export const SalidaModulo = (): JSX.Element => {
                     SALIR DEL MÓDULO
                   </Button>
 
-                  {currentElementPqrsdComplementoTramitesYotros && (
+                  {listaElementosPqrsfTramitesUotros?.length ? (
                     <Button
                       color="primary"
                       variant="outlined"
@@ -87,6 +86,8 @@ export const SalidaModulo = (): JSX.Element => {
                     >
                       REINICIAR MÓDULO
                     </Button>
+                  ) : (
+                    <></>
                   )}
                 </Stack>
               </Grid>

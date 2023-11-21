@@ -4,6 +4,9 @@ import { useContext } from 'react';
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { ComplementosPqrsdf } from './ComplementosPqrsd/ComplementosPqrsdf';
+import { Grid } from '@mui/material';
+import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 
 export const SubElementoPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -14,7 +17,7 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
   const { thirdLoading } = useContext(ModalAndLoadingContext);
 
   // ? se debe definir el loading
-  /*  if (thirdLoading)
+  if (thirdLoading)
     return (
       <Grid
         container
@@ -27,7 +30,7 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
       >
         <Loader altura={270} />
       </Grid>
-    );*/
+    );
 
   // if (!listaComplementosRequerimientosOtros?.length) return <></>;
 

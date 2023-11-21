@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
-import { api } from '../../../../../api/axios';
-import { control_error, control_success } from '../../../../../helpers';
-import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { formatDate } from '../../../../../utils/functions/formatDate';
+import { api } from '../../../../../../api/axios';
+import { control_error, control_success } from '../../../../../../helpers';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { formatDate } from '../../../../../../utils/functions/formatDate';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 interface Item {

@@ -32,14 +32,14 @@ const actionsPQRSDF: any[] = [
     icon: <GroupsIcon />,
     name: 'Asignar al grupo',
     path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: true,
+    disabled: false,
   },
   {
     id: 'ContinuarAsigGrup',
     icon: <ReduceCapacityIcon />,
     name: 'Continuar con asignación de grupo',
     path: '',
-    disabled: true,
+    disabled: false,
   },
 ];
 

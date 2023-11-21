@@ -10,17 +10,24 @@ import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
-import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
+import {
+  setCurrentElementPqrsdComplementoTramitesYotros,
+  setListaElementosComplementosRequerimientosOtros,
+} from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
+import Swal from 'sweetalert2';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/Pqrsdf/getComplementos.service';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* context declaration
   const { setRadicado, setValue } = useContext(PanelVentanillaContext);
+  const { handleThirdLoading } = useContext(ModalAndLoadingContext);
 
   //* loader button simulacion
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
@@ -38,7 +45,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     {
       headerName: 'Número de solicitudes de digitalización',
       field: 'numero_solicitudes_digitalizacion',
-      minWidth: 250,
+      minWidth: 300,
       renderCell: (params: any) => {
         return (
           <LoadingButton
@@ -59,6 +66,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 // Simulate an async operation
                 setTimeout(() => {
                   setValue(1);
+                  //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
                   setRadicado('panel8');
                   setLoadingStates((prev) => ({
                     ...prev,
@@ -76,7 +84,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     {
       headerName: 'Número de solicitudes de usuario',
       field: 'numero_solicitudes_usuario',
-      minWidth: 250,
+      minWidth: 300,
       renderCell: (params: any) => {
         return (
           <Button
@@ -98,40 +106,81 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Tooltip title="Ver info pqrsdf">
-              <IconButton
-                onClick={() => {
-                  console.log(params.row);
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
+            <Link
+              //* estos ids se van a manejar a traves de los params.row
+              to={`/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`}
+            >
+              <Tooltip title="Ver info pqrsdf">
+                <IconButton
+                  onClick={() => {
+                    dispatch(
+                      setCurrentElementPqrsdComplementoTramitesYotros(
+                        params?.row
+                      )
+                    );
+                    void Swal.fire({
+                      icon: 'success',
+                      title: 'Elemento seleccionado',
+                      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente o reinicies el módulo.',
+                      showConfirmButton: true,
+                      // timer: 1500,
+                    });
                   }}
-                  variant="rounded"
                 >
-                  <VisibilityIcon
+                  <Avatar
                     sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
                     }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
+                    variant="rounded"
+                  >
+                    <VisibilityIcon
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                    />
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            </Link>
 
             {/*segundo elemento definición*/}
 
+            
             <Tooltip
               title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
             >
               <IconButton
+                sx={{
+                  color: !params?.row?.tiene_complementos
+                    ? 'disabled'
+                    : 'info.main',
+                }}
                 onClick={() => {
-                  console.log(params.row);
+                  if (!params.row.tiene_complementos) {
+                    void Swal.fire({
+                      title: 'Opps...',
+                      icon: 'error',
+                      text: `Esta PQRSDF no tiene complementos asociados`,
+                      showConfirmButton: true,
+                    });
+                    dispatch(
+                      setListaElementosComplementosRequerimientosOtros([])
+                    );
+                  } else {
+                    void getComplementosAsociadosPqrsdf(
+                      params.row.id_PQRSDF,
+                      handleThirdLoading
+                    ).then((res) => {
+                      dispatch(
+                        setListaElementosComplementosRequerimientosOtros(res)
+                      );
+                    });
+                  }
                 }}
               >
                 <Avatar
@@ -164,7 +213,13 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                   dispatch(
                     setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
                   );
-                  console.log(params.row);
+                  void Swal.fire({
+                    icon: 'success',
+                    title: 'Elemento seleccionado',
+                    text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+                    showConfirmButton: true,
+                    // timer: 1500,
+                  });
                 }}
               >
                 <Avatar
@@ -194,51 +249,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   return (
     <>
-      <Button
-        color="primary"
-        variant="contained"
-        onClick={() => {
-          setValue(1);
-          setRadicado('panel8');
-        }}
-      >
-        Se debe usar para el cambio a la otra pestaña
-      </Button>
-      <Link
-        //* estos ids se van a manejar a traves de los params.row
-        to="/app/gestor_documental/panel_ventanilla/pqr_info/1"
-      >
-        <Button
-          color="warning"
-          sx={{
-            marginLeft: '1rem',
-          }}
-          variant="contained"
-          onClick={() => {
-            console.log('cambiando a ver pqrsdf');
-          }}
-        >
-          Ver pqrsdf
-        </Button>
-      </Link>
-
-      <Link
-        //* estos ids se van a manejar a traves de los params.row
-        to="/app/gestor_documental/panel_ventanilla/complemento_info/1"
-      >
-        <Button
-          color="error"
-          sx={{
-            marginLeft: '1rem',
-          }}
-          variant="contained"
-          onClick={() => {
-            console.log('cambiando a ver complemento');
-          }}
-        >
-          Ver complemento de pqrsdf
-        </Button>
-      </Link>
       <RenderDataGrid
         rows={listaElementosPqrsfTramitesUotros ?? []}
         columns={columns ?? []}

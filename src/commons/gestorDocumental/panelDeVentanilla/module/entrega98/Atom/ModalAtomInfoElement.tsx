@@ -25,10 +25,28 @@ import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadB
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
 import InfoIcon from '@mui/icons-material/Info';
 import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
+import { useAppSelector } from '../../../../../../hooks';
+
+/* complementos:
+            "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
+            "asunto": "AAAA",
+            "cantidad_anexos": 0,
+            "radicado": "ABC123-2023-R12345",
+
+*/
+
+/* pqrsdf 
+            "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
+            "asunto": "SIN IDENTIFICAR",
+            "cantidad_anexos": 3,
+            "radicado": "XYZ789-2023-R67890",
+*/
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
-
+  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+    (state) => state.PanelVentanillaSlice
+  );
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -112,7 +130,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Radicado"
                 size="small"
                 variant="outlined"
-                value={''}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.radicado ?? ''
+                }
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -124,7 +144,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Títular"
                 size="small"
                 variant="outlined"
-                // value={value}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.nombre_completo_titular ??
+                  ''
+                }
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -135,7 +158,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Cantidad de anexos"
                 size="small"
                 variant="outlined"
-                // value={value}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.cantidad_anexos ??
+                  ''
+                }
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -146,7 +172,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Asunto"
                 size="small"
                 variant="outlined"
-                // value={value}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.asunto ?? ''
+                }
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>

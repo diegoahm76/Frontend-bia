@@ -46,9 +46,4 @@ export const columnsComplementoPqrsdf = [
       return params.value ? 'Si' : 'No';
     },
   },
-  {
-    headerName: 'Número solicitudes',
-    field: 'numero_solicitudes',
-    minWidth: 200,
-  },
 ];

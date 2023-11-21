@@ -15,8 +15,12 @@ import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/Buscado
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
-import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/getPqrsdfPanVen.service';
-import { setListaElementosPqrsfTramitesUotrosBusqueda } from '../../../../../../toolkit/store/PanelVentanillaStore';
+import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/Pqrsdf/getPqrsdfPanVen.service';
+import {
+  setCurrentElementPqrsdComplementoTramitesYotros,
+  setListaElementosComplementosRequerimientosOtros,
+  setListaElementosPqrsfTramitesUotrosBusqueda,
+} from '../../../../../../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
@@ -25,9 +29,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* context declaration
-  const {handleSecondLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
   //* hooks
   const {
@@ -43,19 +45,31 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     void getGrilladoPqrsdfPanelVentanilla(
       '' /*|| estado_actual_solicitud?.label,*/,
       '' /*|| radicado,*/,
-      '', /* tipo_de_solicitud?.label, */
-      handleSecondLoading,
+      '' /* tipo_de_solicitud?.label, */,
+      handleSecondLoading
     ).then((res) => {
       dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+
+      //* se limpian los otros controles para no crear conflictos
+      dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+      dispatch(setListaElementosComplementosRequerimientosOtros([]));
     });
   };
 
   const searchSubmitTramitesYservicios = () => {
     console.log('searchSubmitTramitesYservicios');
+
+    //* se limpian los otros controles para no crear conflictos
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+    dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
 
   const searchSubmitOtros = () => {
     console.log('submit , buscando coincidencias de otros');
+
+    //* se limpian los otros controles para no crear conflictos
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+    dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
 
   const handleSubmit = () => {
