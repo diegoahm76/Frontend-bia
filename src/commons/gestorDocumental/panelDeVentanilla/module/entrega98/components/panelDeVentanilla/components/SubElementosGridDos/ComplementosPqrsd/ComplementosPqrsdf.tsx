@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { Link } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { TaskIcon } from '@mui/icons-material/Task';
+import TaskIcon from '@mui/icons-material/Task';
 
 export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
@@ -83,7 +83,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
         return (
           <>
             <Link
-              to={`/app/gestor_documental/panel_ventanilla/pqrsdf_complemento/${params.row.idComplementoUsu_PQR}`}
+              to={`/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`}
             >
               <Tooltip title="Ver info complemento asociado">
                 <IconButton
