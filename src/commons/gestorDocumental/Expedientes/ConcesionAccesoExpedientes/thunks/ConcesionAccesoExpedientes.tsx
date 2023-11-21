@@ -69,11 +69,24 @@ export const obtener_persona_cc_nro: any = (tipo_documento: string, nro_document
   };
 };
 
-// Conceder acceso a expedientes
-export const conceder_acceso_expediente: any = (id_expediente: number,accesos: any) => {
+// Obtener concesiones de expedientes realizados
+export const obtener_concesiones_realizados: any = (id_expediente: number, propios: boolean) => {
   return async () => {
     try {
-      const { data } = await api.post(`api/gestor/expedientes-archivos/expedientes/concesion-acceso/expedientes/create/${id_expediente}/`,accesos);
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/expedientes/get/${id_expediente}/?propios=${propios}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Actualizar acceso a expedientes
+export const actualizar_acceso_expediente: any = (id_expediente: number,accesos: any, accesos_otros: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/concesion-acceso/expedientes/update/${id_expediente}/`,{concesiones_propias: accesos, concesiones_otros: accesos_otros});
       control_success('El acceso a expedientes fue realizado correctamente.');
       return data;
     } catch (error: any) {
@@ -82,6 +95,7 @@ export const conceder_acceso_expediente: any = (id_expediente: number,accesos: a
     }
   };
 };
+
 // Actualizar expediente
 export const actualizar_expediente: any = (id_expediente: number,expediente: any) => {
   return async () => {

@@ -41,6 +41,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     const [msj_error_tdoc, set_msj_error_tdoc] = useState<boolean>(false);
     const [nro_documento, set_nro_documento] = useState<string>("");
     const [msj_error_nro_documento, set_msj_error_nro_documento] = useState<boolean>(false);
+    const [error_observacion, set_error_observacion] = useState<boolean>(false);
 
     useEffect(() => {
         void get_list_tipo_doc();
@@ -49,7 +50,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     useEffect(() => {
         if (props.editar_concesion !== null) {
             set_id_concesion_acc(props.editar_concesion.id_concesion_acc)
-            buscar_persona(props.editar_concesion.tipo_documento, props.editar_concesion.numero_documento);
+            buscar_persona(props.editar_concesion.tipo_documento_persona_recibe_acceso, props.editar_concesion.numero_documento_persona_recibe_acceso);
             set_acceso_desde(props.editar_concesion.fecha_acceso_inicia);
             set_acceso_hasta(props.editar_concesion.fecha_acceso_termina);
             set_permitir(props.editar_concesion.con_acceso_tipologias_reservadas);
@@ -68,6 +69,8 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
             set_tipo_documento(persona.tipo_documento);
             set_nro_documento(persona.numero_documento);
             set_nombre_completo(persona.nombre_completo);
+            set_msj_error_nro_documento(false);
+            set_msj_error_tdoc(false);
         } else {
             set_nombre_completo("");
         }
@@ -101,16 +104,17 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
 
     const cambio_observaciones: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_observaciones(e.target.value);
+        set_error_observacion(e.target.value === null && e.target.value === "")
     };
 
     const cambio_tipo_documento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo_documento(e.target.value);
-        set_msj_error_tdoc(e.target.value !== null && e.target.value !== "");
+        set_msj_error_tdoc(e.target.value === null && e.target.value === "");
     }
 
     const cambio_nro_documento: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_nro_documento(e.target.value);
-        set_msj_error_nro_documento(e.target.value !== null && e.target.value !== undefined && e.target.value !== "");
+        set_msj_error_nro_documento(e.target.value === null && e.target.value === "");
     };
 
     const buscar_persona = (tipo_doc: string, nro_doc: string): void => {
@@ -136,21 +140,32 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     }
 
     const agregar_concesion = (): void => {
-        debugger
-        props.set_concesion({
-            "id_concesion_acc": id_concesion_acc ?? uuidv4(),
-            "id_persona_recibe_acceso": persona.id_persona,
-            "nombre_persona_recibe_acceso": persona.nombre_completo,
-            "tipo_documento": persona.tipo_documento,
-            "numero_documento": persona.numero_documento,
-            "nombre_unidad_org_destinatario_conceder": persona.nombre_unidad_organizacional_actual,
-            "id_unidad_org_destinatario_conceder": persona.id_unidad_organizacional_actual,
-            "con_acceso_tipologias_reservadas": permitir,
-            "fecha_acceso_inicia": acceso_desde,
-            "fecha_acceso_termina": acceso_hasta,
-            "observacion": observaciones
-        });
-        limpiar();
+        if(valida_formulario()){
+            props.set_concesion({
+                "id_concesion_acc": id_concesion_acc ?? uuidv4(),
+                "id_persona_recibe_acceso": persona.id_persona,
+                "nombre_persona_recibe_acceso": persona.nombre_completo,
+                "tipo_documento_persona_recibe_acceso": persona.tipo_documento,
+                "numero_documento_persona_recibe_acceso": persona.numero_documento,
+                "nombre_unidad_org_destinatario_conceder": persona.nombre_unidad_organizacional_actual,
+                "id_unidad_org_destinatario_conceder": persona.id_unidad_organizacional_actual,
+                "con_acceso_tipologias_reservadas": permitir,
+                "fecha_acceso_inicia": acceso_desde,
+                "fecha_acceso_termina": acceso_hasta,
+                "observacion": observaciones
+            });
+            limpiar();
+        }
+    }
+    const valida_formulario = (): boolean => {
+        if(persona === null){
+            set_msj_error_nro_documento(true);
+            set_msj_error_tdoc(true);
+        }
+        set_error_acceso_desde(acceso_desde === null);
+        set_error_acceso_hasta(acceso_hasta === null);
+        set_error_observacion(observaciones === '');
+        return (persona !== null && acceso_desde !== null && acceso_hasta !== null && observaciones !== '');
     }
 
     return (
@@ -176,6 +191,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                         ))}
                                     </Select>
                                 </FormControl>
+                                {msj_error_tdoc && (<FormHelperText error >{msj_error}</FormHelperText>)}
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <TextField
@@ -279,9 +295,12 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                     rows={2}
                                     size="small"
                                     fullWidth
+                                    error={error_observacion}
                                     value={observaciones}
                                     onChange={cambio_observaciones}
                                 />
+                                {error_observacion && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
+
                             </Grid>
                         </Grid>
                     </Grid>

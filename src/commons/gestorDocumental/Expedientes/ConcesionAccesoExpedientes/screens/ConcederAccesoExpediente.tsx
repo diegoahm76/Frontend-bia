@@ -109,7 +109,7 @@ const ConcederAccesoExpediente: React.FC<IProps> = (props: IProps) => {
                         container
                         sx={class_css}
                     >
-                        <ConcesionesPermisosVigentes expediente={props.expediente} concesion={concesion} accion_guardar={guardar} set_editar_concesion={set_editar_concesion}></ConcesionesPermisosVigentes>
+                        <ConcesionesPermisosVigentes expediente={props.expediente} concesion={concesion} accion_guardar={guardar} set_editar_concesion={set_editar_concesion} set_is_modal_active={props.set_is_modal_active}></ConcesionesPermisosVigentes>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
