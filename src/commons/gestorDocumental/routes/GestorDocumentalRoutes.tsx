@@ -13,8 +13,6 @@ import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/Di
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
-// import { Suspense } from 'react';
-// import { Loader } from '../../../utils/Loader/Loader';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
@@ -32,6 +30,7 @@ import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignaci
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 
 const routes = [
   {
@@ -159,6 +158,13 @@ const routes = [
     path: 'Pqrsdf/',
     name: 'Pqrsdf',
     component: () => <PqrsdfRoutes />,
+    
+  
+  },
+  {
+    path: 'panel_ventanilla/',
+    name: 'panel_ventanilla/',
+    component: () => <PanelVentanillaRoutes />,
   },
 ];
 

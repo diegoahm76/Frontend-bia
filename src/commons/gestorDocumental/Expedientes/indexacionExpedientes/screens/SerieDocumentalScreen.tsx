@@ -3,7 +3,7 @@ import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../hooks";
 import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
-import { obtener_expediente_id_serie, obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
+import { obtener_expediente_id_serie, obtener_expediente_simple_id_serie, obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
 import { obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import dayjs from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
@@ -99,31 +99,12 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
                 props.set_configuracion(service.data);
                 if(service.data.cod_tipo_expediente === 'S'){
                     dispatch(obtener_expediente_id_serie(serie.id_catserie_unidadorg)).then((response: any) => {
-                        const mock = {
-                            "succes": true,
-                            "detail": "Resultados de la búsqueda",
-                            "data": [
-                                {
-                                    "id_expediente_documental": 12,
-                                    "codigo_exp_und_serie_subserie": "1000.1",
-                                    "codigo_exp_Agno": 2023,
-                                    "codigo_exp_consec_por_agno": null,
-                                    "titulo_expediente": "tstetete",
-                                    "descripcion_expediente": "ttt",
-                                    "fecha_apertura_expediente": "2023-11-07T00:00:00",
-                                    "carpetas_caja": [],
-                                    "documentos_agregados": [
-                                        {
-                                            "id_documento_de_archivo_exped": 29,
-                                            "orden_en_expediente": 1,
-                                            "nombre_asignado_documento": "test",
-                                            "tipologia": "Actas"
-                                        }
-                                    ]
-                                }
-                            ]
+                        if(response.succes){
+                            dispatch(obtener_expediente_simple_id_serie(response.data[0].id_expediente_documental)).then((response: any) => {
+                                if(response.succes)
+                                    props.set_expediente(response.data);
+                            });
                         }
-                        props.set_expediente(mock.data[0]);
                     });
                 }else
                     props.set_expediente(null);

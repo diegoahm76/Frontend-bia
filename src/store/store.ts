@@ -59,6 +59,7 @@ import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPrevias
 import { reportes_documentacion_slice } from "../commons/gestorDocumental/reportesDocumentacionPermisos/store/slice/indexReporteDocumentacion";
 import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
 import { pqrsdf_slice } from "../commons/gestorDocumental/PQRSDF/store/slice/pqrsdfSlice";
+import { planes_slice } from "../commons/seguimirntoPlanes/store/slice/indexPlanes";
 
 const persist_config = {
   key: "macarenia_app",
@@ -143,6 +144,11 @@ const app_reducers = combineReducers({
   DelOfiResSlice: DelOfiResSlice.reducer,
   // pqrsdf
   pqrsdf_slice: pqrsdf_slice.reducer,
+
+  
+ // ! SEGUIMIENTO A PLANES
+ // ? planes
+ planes: planes_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
