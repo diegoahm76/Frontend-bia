@@ -56,6 +56,32 @@ export const obtener_personas: any = (tipo_documento: string,numero_documento: s
   };
 };
 
+// Obtiene persona por tipo y numero de documento
+export const obtener_persona_cc_nro: any = (tipo_documento: string, nro_documento: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/personas/get-by-documento/?tipo_documento=${tipo_documento}&numero_documento=${nro_documento}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Conceder acceso a expedientes
+export const conceder_acceso_expediente: any = (id_expediente: number,accesos: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`api/gestor/expedientes-archivos/expedientes/concesion-acceso/expedientes/create/${id_expediente}/`,accesos);
+      control_success('El acceso a expedientes fue realizado correctamente.');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Actualizar expediente
 export const actualizar_expediente: any = (id_expediente: number,expediente: any) => {
   return async () => {

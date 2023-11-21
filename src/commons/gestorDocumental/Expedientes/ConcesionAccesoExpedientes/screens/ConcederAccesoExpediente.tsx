@@ -10,6 +10,7 @@ import { SeleccionPersona } from './SeleccionPersona';
 import { ConcesionesPermisosVigentes } from './ConcesionesPermisosVigentes';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
+import { obtener_usuario_logueado } from '../../aperturaExpedientes/thunks/aperturaExpedientes';
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -28,11 +29,26 @@ const class_css = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ConcederAccesoExpediente: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
+    const [concesion, set_concesion] = useState<any>(null);
+    const [usuario, set_usuario] = useState<any>(null);
+    const [editar_concesion, set_editar_concesion] = useState<any>(null);
+    const [guardar, set_guardar] = useState<boolean>(false);
 
     useEffect(() => {
+        obtener_usuario_logueado_fc();
     }, []);
 
+    useEffect(() => {
+        if (guardar) {
+            set_guardar(false);
+        }
+    }, [guardar]);
 
+    const obtener_usuario_logueado_fc: () => void = () => {
+        dispatch(obtener_usuario_logueado()).then((response: any) => {
+            set_usuario(response);
+        })
+    }
     const columns: GridColDef[] = [
         {
             field: 'codigo_exp_Agno',
@@ -87,13 +103,13 @@ const ConcederAccesoExpediente: React.FC<IProps> = (props: IProps) => {
                         container
                         sx={class_css}
                     >
-                        <SeleccionPersona expediente={props.expediente}></SeleccionPersona>
+                        <SeleccionPersona expediente={props.expediente} set_concesion={set_concesion} editar_concesion={editar_concesion}></SeleccionPersona>
                     </Grid>
                     <Grid
                         container
                         sx={class_css}
                     >
-                        <ConcesionesPermisosVigentes expediente={props.expediente}></ConcesionesPermisosVigentes>
+                        <ConcesionesPermisosVigentes expediente={props.expediente} concesion={concesion} accion_guardar={guardar} set_editar_concesion={set_editar_concesion}></ConcesionesPermisosVigentes>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
@@ -101,7 +117,7 @@ const ConcederAccesoExpediente: React.FC<IProps> = (props: IProps) => {
                         color='success'
                         variant='contained'
                         startIcon={<SaveIcon />}
-                        onClick={ () => {}}>Guardar</Button>
+                        onClick={ () => { set_guardar(true); }}>Guardar</Button>
                     <Button
                         color='error'
                         variant='contained'

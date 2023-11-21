@@ -11,10 +11,15 @@ import dayjs, { Dayjs } from 'dayjs';
 import { BuscadorPersonaConcesiones } from './BuscadorPersonaConcesiones';
 import { control_error } from '../../../../../helpers';
 import { get_tipo_documento } from '../../../../../request';
-import { obtener_persona } from '../../../../seguridad/screens/vinculacionColaboradores/Thunks/VinculacionColaboradores';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
+import { obtener_persona_cc_nro } from '../thunks/ConcesionAccesoExpedientes';
+import { v4 as uuidv4 } from 'uuid';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+
 interface IProps {
-    expediente: any;
+    expediente: any,
+    set_concesion: any,
+    editar_concesion: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -29,6 +34,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     const [error_acceso_hasta, set_error_acceso_hasta] = useState<boolean>(false);
     const [observaciones, set_observaciones] = useState<string>("");
     const [persona, set_persona] = useState<any>(null);
+    const [id_concesion_acc, set_id_concesion_acc] = useState<any>(null);
     const [nombre_completo, set_nombre_completo] = useState<string>("");
     const [tipos_documentos, set_tipos_documentos] = useState<any>([]);
     const [tipo_documento, set_tipo_documento] = useState<string>("");
@@ -41,7 +47,18 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     }, []);
 
     useEffect(() => {
-        if (tipo_documento !== "" && nro_documento !== "") {
+        if (props.editar_concesion !== null) {
+            set_id_concesion_acc(props.editar_concesion.id_concesion_acc)
+            buscar_persona(props.editar_concesion.tipo_documento, props.editar_concesion.numero_documento);
+            set_acceso_desde(props.editar_concesion.fecha_acceso_inicia);
+            set_acceso_hasta(props.editar_concesion.fecha_acceso_termina);
+            set_permitir(props.editar_concesion.con_acceso_tipologias_reservadas);
+            set_observaciones(props.editar_concesion.observacion);
+        }
+    }, [props.editar_concesion]);
+
+    useEffect(() => {
+        if (tipo_documento !== "" && nro_documento !== "" && nro_documento !== persona?.numero_documento) {
             buscar_persona(tipo_documento, nro_documento);
         }
     }, [tipo_documento, nro_documento]);
@@ -73,8 +90,8 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
 
     const cambio_acceso_hasta = (date: Dayjs | null): void => {
         if (date !== null)
-            set_acceso_desde(date);
-        set_error_acceso_desde(!(date !== null));
+            set_acceso_hasta(date);
+        set_error_acceso_hasta(!(date !== null));
 
     }
 
@@ -97,13 +114,43 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     };
 
     const buscar_persona = (tipo_doc: string, nro_doc: string): void => {
-        dispatch(obtener_persona(tipo_doc, nro_doc)).then((response: { success: boolean, detail: string, data: any }) => {
+        dispatch(obtener_persona_cc_nro(tipo_doc, nro_doc)).then((response: { success: boolean, detail: string, data: any }) => {
             if (response.success && response.data !== undefined) {
-                set_persona(response.data);
+                set_persona(response.data[0]);
             } else {
                 set_persona(null);
             }
         });
+    }
+
+    const limpiar = (): void => {
+        set_acceso_desde(dayjs());
+        set_acceso_hasta(dayjs());
+        set_tipo_documento('');
+        set_nro_documento('');
+        set_nombre_completo('');
+        set_permitir(false);
+        set_observaciones('');
+        set_persona(null);
+        set_id_concesion_acc(null);
+    }
+
+    const agregar_concesion = (): void => {
+        debugger
+        props.set_concesion({
+            "id_concesion_acc": id_concesion_acc ?? uuidv4(),
+            "id_persona_recibe_acceso": persona.id_persona,
+            "nombre_persona_recibe_acceso": persona.nombre_completo,
+            "tipo_documento": persona.tipo_documento,
+            "numero_documento": persona.numero_documento,
+            "nombre_unidad_org_destinatario_conceder": persona.nombre_unidad_organizacional_actual,
+            "id_unidad_org_destinatario_conceder": persona.id_unidad_organizacional_actual,
+            "con_acceso_tipologias_reservadas": permitir,
+            "fecha_acceso_inicia": acceso_desde,
+            "fecha_acceso_termina": acceso_hasta,
+            "observacion": observaciones
+        });
+        limpiar();
     }
 
     return (
@@ -221,8 +268,8 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                     sx={{ mt: '5px' }}
 
                                 >
-                                    <FormControlLabel labelPlacement="start" label="Permitirle ver documentos de tipologías reservadas"  control={<Checkbox value={permitir} onChange={handle_change_isd} />}/>
-                                </Stack>
+                                    <span style={{marginTop: '9px'}} >{"Permitirle ver documentos de tipologías reservadas "}</span>
+                                    <Checkbox checked={permitir} onChange={handle_change_isd} inputProps={{ 'aria-label': 'controlled' }}/></Stack>
                             </Grid>
                             <Grid item xs={12} sm={12}>
                                 <TextField
@@ -239,24 +286,24 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                         </Grid>
                     </Grid>
                     <Grid container>
-                <Grid item xs={12} sm={12}>
-                    <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                        sx={{ mt: '10px' }}
-                    >
-                        <Button
-                            color="primary"
-                            variant='contained'
-                            startIcon={<AddCircleOutlinedIcon />}
-                            onClick={() => {  }}
-                        >
-                            Agregar
-                        </Button>
-                    </Stack>
-                </Grid>
-            </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-end"
+                                spacing={2}
+                                sx={{ mt: '10px' }}
+                            >
+                                <Button
+                                    color="primary"
+                                    variant='contained'
+                                    startIcon={props.editar_concesion !== null ?<EditOutlinedIcon />:<AddCircleOutlinedIcon />}
+                                    onClick={() => { agregar_concesion() }}
+                                >
+                                    {props.editar_concesion !== null ? 'Editar':'Agregar'}
+                                </Button>
+                            </Stack>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Grid>
         </>
