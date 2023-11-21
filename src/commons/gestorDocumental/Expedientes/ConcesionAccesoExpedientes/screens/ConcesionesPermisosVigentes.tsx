@@ -89,7 +89,6 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
                 "observacion": cr.observacion
             }
         });
-        console.log(concesiones);
         if (props.accion_guardar) {
             dispatch(actualizar_acceso_expediente(1,concesiones,concesiones_otros)).then((response: any) => {
                 if(response.success)
@@ -197,15 +196,8 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
             width: 150,
             renderCell: (params) => (
                 <>
-                    <Tooltip title="Editar">
-                        <IconButton onClick={() => { editar_concesiones(params.row) }}>
-                            <Avatar sx={class_icon} variant="rounded">
-                                <EditOutlinedIcon sx={{ color: 'primary.main', width: '18px', height: '18px' }} />
-                            </Avatar>
-                        </IconButton>
-                    </Tooltip>
                     <Tooltip title="Eliminar">
-                        <IconButton onClick={() => { eliminar_concesiones(params.row) }}>
+                        <IconButton onClick={() => { eliminar_concesiones_otros(params.row) }}>
                             <Avatar sx={class_icon} variant="rounded">
                                 <ClearOutlinedIcon sx={{ color: 'primary.main', width: '18px', height: '18px' }} />
                             </Avatar>
@@ -220,11 +212,19 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
     const editar_concesiones: (row: any) => void = (row: any) => {
         props.set_editar_concesion(row);
     }
+
     const eliminar_concesiones: (row: any) => void = (row: any) => {
         let concesiones_grid: any[] = [...concesiones_realizadas];
         const index = concesiones_grid.findIndex((cg: any) => cg.id_concesion_acc === row.id_concesion_acc);
         concesiones_grid.splice(index, 1);
         set_concesiones_realizadas([...concesiones_grid]);
+    }
+
+    const eliminar_concesiones_otros: (row: any) => void = (row: any) => {
+        let concesiones_grid_otros: any[] = [...concesiones_realizadas_otros];
+        const index = concesiones_grid_otros.findIndex((cg: any) => cg.id_concesion_acc === row.id_concesion_acc);
+        concesiones_grid_otros.splice(index, 1);
+        set_concesiones_realizadas_otros([...concesiones_grid_otros]);
     }
 
     return (
