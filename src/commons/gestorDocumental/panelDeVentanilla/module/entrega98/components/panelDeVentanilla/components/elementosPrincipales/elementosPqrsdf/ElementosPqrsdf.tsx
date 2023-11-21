@@ -192,69 +192,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     },
   ];
 
-  const rows = [
-    {
-      id_PQRSDF: 10,
-      tipo_solicitud: 'PQRSDF',
-      nombre_completo_titular: 'SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL',
-      asunto: 'SIN IDENTIFICAR',
-      cantidad_anexos: 3,
-      radicado: 'XYZ789-2023-R67890',
-      fecha_radicado: '2023-11-07T12:00:00',
-      requiere_digitalizacion: true,
-      estado_solicitud: 'GUARDADO',
-      estado_asignacion_grupo: 'Pendiente',
-      nombre_sucursal: null,
-      numero_solicitudes_digitalizacion: 0,
-      numero_solicitudes_usuario: 0,
-    },
-    {
-      id_PQRSDF: 9,
-      tipo_solicitud: 'PQRSDF',
-      nombre_completo_titular: 'SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL',
-      asunto: 'SIN IDENTIFICAR',
-      cantidad_anexos: 5,
-      radicado: 'ABC123-2023-R12345',
-      fecha_radicado: '2023-11-07T12:00:00',
-      requiere_digitalizacion: true,
-      estado_solicitud: 'EN VENTANILLA CON PENDIENTES',
-      estado_asignacion_grupo: 'Pendiente',
-      nombre_sucursal: null,
-      numero_solicitudes_digitalizacion: 11,
-      numero_solicitudes_usuario: 0,
-    },
-    {
-      id_PQRSDF: 27,
-      tipo_solicitud: 'PQRSDF',
-      nombre_completo_titular: 'prueba  user ',
-      asunto: 'Solicitud de PQRSDF',
-      cantidad_anexos: 4,
-      radicado: 'RE-2023-00000002',
-      fecha_radicado: '2023-11-16T05:32:00',
-      requiere_digitalizacion: false,
-      estado_solicitud: 'EN VENTANILLA SIN PENDIENTES',
-      estado_asignacion_grupo: 'Pendiente',
-      nombre_sucursal: null,
-      numero_solicitudes_digitalizacion: 0,
-      numero_solicitudes_usuario: 0,
-    },
-    {
-      id_PQRSDF: 28,
-      tipo_solicitud: 'PQRSDF',
-      nombre_completo_titular: 'prueba  user ',
-      asunto: 'Solicitud de PQRSDF',
-      cantidad_anexos: 5,
-      radicado: 'RE-2023-00000002',
-      fecha_radicado: null,
-      requiere_digitalizacion: false,
-      estado_solicitud: 'EN VENTANILLA CON PENDIENTES',
-      estado_asignacion_grupo: 'Pendiente',
-      nombre_sucursal: null,
-      numero_solicitudes_digitalizacion: 0,
-      numero_solicitudes_usuario: 0,
-    },
-  ];
-
   return (
     <>
       <Button
@@ -305,7 +242,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       <RenderDataGrid
         rows={listaElementosPqrsfTramitesUotros ?? []}
         columns={columns ?? []}
-        title={`Lista de solicitudes de ${rows[0]?.tipo_solicitud}`}
+        title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
       />
     </>
   );

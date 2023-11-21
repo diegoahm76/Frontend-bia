@@ -2,19 +2,24 @@ import Swal from 'sweetalert2';
 import { api } from '../../../../../api/axios';
 import { control_error, control_success } from '../../../../../helpers';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { formatDate } from '../../../../../utils/functions/formatDate';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 interface Item {
   fecha_radicado: string;
 }
 
+const BASE_URL = 'gestor/panel_ventanilla/pqrsdf/get/';
+
 export const getGrilladoPqrsdfPanelVentanilla = async (
   estado_actual_solicitud: string,
   radicado: string,
-  tipo_solicitud: string
+  tipo_solicitud: string,
+  handleSecondLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<Item[]> => {
   try {
-    const url = `gestor/panel_ventanilla/pqrsdf/get/?estado_actual_solicitud=${encodeURIComponent(
+    handleSecondLoading(true);
+    const url = `${BASE_URL}?estado_actual_solicitud=${encodeURIComponent(
       estado_actual_solicitud
     )}&radicado=${encodeURIComponent(
       radicado
@@ -23,17 +28,9 @@ export const getGrilladoPqrsdfPanelVentanilla = async (
     if (data?.data?.length) {
       const dataGrid = data?.data?.map((item: Item) => ({
         ...item,
-        fecha_radicado: new Date(item.fecha_radicado).toLocaleDateString(
-          'es-ES',
-          {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          }
-        ),
+        fecha_radicado: formatDate(item.fecha_radicado),
       }));
-      console.log('data', data);
-      control_success(data?.detail);
+      control_success(`${data?.detail} de pqrsdf`);
       return dataGrid;
     }
 
@@ -48,5 +45,7 @@ export const getGrilladoPqrsdfPanelVentanilla = async (
     control_error(e?.response?.data?.detail);
     console.error(e);
     return [];
+  } finally {
+    handleSecondLoading(false);
   }
 };

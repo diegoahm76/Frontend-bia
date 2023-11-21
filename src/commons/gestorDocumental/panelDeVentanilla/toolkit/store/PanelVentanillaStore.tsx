@@ -11,8 +11,6 @@ import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 // ? icons necesarios para los botones de acciones de tramites y servicios
 import BalanceIcon from '@mui/icons-material/Balance';
 
-
-
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
 const actionsPQRSDF: any[] = [
   {
@@ -69,7 +67,6 @@ const actionsTramitesYServicios: any[] = [
   },
 ];
 
-
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
   //* acciones de los botones (tambien se deberán configurar los botones para pqrsdf, trámites y servicios y otros)
@@ -113,7 +110,9 @@ export const PanelVentanillaSlice = createSlice({
     },
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetPanelVentanillaFull: (state) => {
-      state.currentElementPqrsdComplemento = null;
+      state.currentElementPqrsdComplementoTramitesYotros = null;
+      state.listaElementosPqrsfTramitesUotros = [];
+      state.listaComplementosRequerimientosOtros = [];
     },
   },
 });

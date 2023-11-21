@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useContext } from 'react';
 import { Button, Grid, Stack, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { usePanelVentanilla } from '../../../../../../hook/usePanelVentanilla';
 import Select from 'react-select';
@@ -18,10 +18,17 @@ import Swal from 'sweetalert2';
 import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/getPqrsdfPanVen.service';
 import { setListaElementosPqrsfTramitesUotrosBusqueda } from '../../../../../../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../../../../../../hooks';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+
+  //* context declaration
+  const {handleSecondLoading } = useContext(
+    ModalAndLoadingContext
+  );
+
   //* hooks
   const {
     control_busqueda_panel_ventanilla,
@@ -36,7 +43,8 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     void getGrilladoPqrsdfPanelVentanilla(
       '' /*|| estado_actual_solicitud?.label,*/,
       '' /*|| radicado,*/,
-      tipo_de_solicitud?.label,
+      '', /* tipo_de_solicitud?.label, */
+      handleSecondLoading,
     ).then((res) => {
       dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
     });
@@ -76,6 +84,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
 
     const searchAction = searchActions[tipoDeSolicitud];
 
+    //* se debe pasar el tema del loading
     if (searchAction) {
       searchAction();
     }

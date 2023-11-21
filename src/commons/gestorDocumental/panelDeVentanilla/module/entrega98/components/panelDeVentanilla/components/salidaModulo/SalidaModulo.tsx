@@ -10,8 +10,12 @@ import {
   reset_all,
 } from '../../../../../../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { usePanelVentanilla } from '../../../../../../hook/usePanelVentanilla';
+import { resetPanelVentanillaFull } from '../../../../../../toolkit/store/PanelVentanillaStore';
 
 export const SalidaModulo = (): JSX.Element => {
   //* navigate declaration
@@ -19,7 +23,11 @@ export const SalidaModulo = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
-  const { reset_search_form } = usePanelVentanilla();
+  // ? redux states
+
+  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+    (state) => state.PanelVentanillaSlice
+  );
 
   return (
     <>
@@ -67,6 +75,19 @@ export const SalidaModulo = (): JSX.Element => {
                   >
                     SALIR DEL MÓDULO
                   </Button>
+
+                  {currentElementPqrsdComplementoTramitesYotros && (
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={() => {
+                        reset_all([() => dispatch(resetPanelVentanillaFull())]);
+                      }}
+                    >
+                      REINICIAR MÓDULO
+                    </Button>
+                  )}
                 </Stack>
               </Grid>
             </Grid>

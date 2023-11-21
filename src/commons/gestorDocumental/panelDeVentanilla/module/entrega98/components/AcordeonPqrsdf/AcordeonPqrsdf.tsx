@@ -20,10 +20,10 @@ import { control_success } from '../../../../../../../helpers';
 import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
 
 export const AcordeonPqrsdf = () => {
-
-
   //* context declaration
-  const { radicado, setRadicado, expanded, setExpanded } = useContext(PanelVentanillaContext);
+  const { radicado, setRadicado, expanded, setExpanded } = useContext(
+    PanelVentanillaContext
+  );
 
   const accordionRef = useRef<any>(null);
 
@@ -123,12 +123,18 @@ export const AcordeonPqrsdf = () => {
             <RenderDataGrid
               title="Información inicial de la solicitud"
               columns={infoSolicitudColumns}
-              rows={item.info_solicitud}
+              rows={[
+                ...item.info_solicitud,
+                ...item.info_solicitud,
+              ]}
             />
             <RenderDataGrid
               title="Acerca de la consulta"
               columns={consultaColumns}
-              rows={item.solicitud}
+              rows={[
+                ...item.solicitud,
+                ...item.solicitud,
+              ]}
             />
           </AccordionDetails>
         </Accordion>
