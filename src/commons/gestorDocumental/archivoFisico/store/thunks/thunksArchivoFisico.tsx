@@ -89,17 +89,14 @@ export const avanzada_estante = (
   };
 };
 
-
 export const avanzada_bandeja = (
-  //   identificacion_estante: string | null,
-  deposito_archivo: number | null
-  //   &identificacion_estante=${ identificacion_estante ?? '' }
+  identificacion_estante: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-bandeja/?tipo_elemento=Bandeja&deposito_archivo=${
-          deposito_archivo ?? ''
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-bandeja/?tipo_elemento=Bandeja&identificacion_estante=${
+          identificacion_estante ?? ''
         }`
       );
       console.log(data);
@@ -119,15 +116,13 @@ export const avanzada_bandeja = (
 };
 
 export const avanzada_caja = (
-  //   identificacion_estante: string | null,
-  deposito_archivo: number | null
-  //   &identificacion_estante=${ identificacion_estante ?? '' }
+  identificacion_bandeja: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-caja/?tipo_elemento=Caja&deposito_archivo=${
-          deposito_archivo ?? ''
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-caja/?tipo_elemento=Caja&identificacion_bandeja=${
+          identificacion_bandeja ?? ''
         }`
       );
       console.log(data);
@@ -147,15 +142,13 @@ export const avanzada_caja = (
 };
 
 export const avanzada_carpeta = (
-  //   identificacion_estante: string | null,
-  deposito_archivo: number | null
-  //   &identificacion_estante=${ identificacion_estante ?? '' }
+  identificacion_caja: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-carpeta/?tipo_elemento=Carpeta&deposito_archivo=${
-          deposito_archivo ?? ''
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-carpeta/?tipo_elemento=Carpeta&identificacion_caja=${
+          identificacion_caja ?? ''
         }`
       );
       console.log(data);
