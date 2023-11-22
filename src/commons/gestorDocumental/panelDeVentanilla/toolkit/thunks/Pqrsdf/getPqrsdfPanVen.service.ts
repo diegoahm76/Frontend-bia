@@ -12,9 +12,9 @@ interface Item {
 const BASE_URL = 'gestor/panel_ventanilla/pqrsdf/get/';
 
 export const getGrilladoPqrsdfPanelVentanilla = async (
-  estado_actual_solicitud: string,
-  radicado: string,
-  tipo_solicitud: string,
+  estado_actual_solicitud: string = '',
+  radicado: string = '',
+  tipo_solicitud: string = '',
   handleSecondLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<Item[]> => {
   try {
@@ -43,7 +43,6 @@ export const getGrilladoPqrsdfPanelVentanilla = async (
     return [];
   } catch (e: any) {
     control_error(e?.response?.data?.detail);
-    console.error(e);
     return [];
   } finally {
     handleSecondLoading(false);

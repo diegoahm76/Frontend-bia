@@ -75,6 +75,9 @@ const initialState: any = {
   currentElementPqrsdComplementoTramitesYotros: null,
   listaElementosPqrsfTramitesUotros: [],
   listaComplementosRequerimientosOtros: [],
+  //* historicos
+  listaHistoricoSolicitudes: [],
+
 };
 
 export const PanelVentanillaSlice = createSlice({
@@ -108,11 +111,18 @@ export const PanelVentanillaSlice = createSlice({
     ) => {
       state.currentElementPqrsdComplementoTramitesYotros = action.payload;
     },
+    setListaHistoricoSolicitudes: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.listaHistoricoSolicitudes = action.payload;
+    },
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetPanelVentanillaFull: (state) => {
       state.currentElementPqrsdComplementoTramitesYotros = null;
       state.listaElementosPqrsfTramitesUotros = [];
       state.listaComplementosRequerimientosOtros = [];
+      state.listaHistoricoSolicitudes = [];
     },
   },
 });
@@ -126,6 +136,8 @@ export const {
   setListaElementosComplementosRequerimientosOtros,
   // ? acciones sobre la visualización de los elementos de pqrsd complemento
   setCurrentElementPqrsdComplementoTramitesYotros,
+  // ? listar historico de solicitudes pqr y complementos
+  setListaHistoricoSolicitudes,
   // ? reset de todos los estados del slice
   resetPanelVentanillaFull,
 } = PanelVentanillaSlice.actions;

@@ -18,17 +18,26 @@ import { Grid } from '@mui/material';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { control_success } from '../../../../../../../helpers';
 import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
+import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import { Loader } from '../../../../../../../utils/Loader/Loader';
+import { useAppSelector } from '../../../../../../../hooks';
+import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
 
 export const AcordeonPqrsdf = () => {
   //* context declaration
   const { radicado, setRadicado, expanded, setExpanded } = useContext(
     PanelVentanillaContext
   );
+  const { generalLoading } = useContext(ModalAndLoadingContext);
+
+  //* redux states
+  const { listaHistoricoSolicitudes } = useAppSelector(
+    (state) => state.PanelVentanillaSlice
+  );
 
   const accordionRef = useRef<any>(null);
 
   useEffect(() => {
-    // Scroll to the expanded accordion panel when `expanded` changes
     if (expanded && accordionRef.current) {
       accordionRef.current.scrollIntoView({
         behavior: 'smooth',
@@ -47,8 +56,8 @@ export const AcordeonPqrsdf = () => {
     setRadicado(event.target.value);
 
   const onSubmit = () => {
-    const searchElement = accordionData.find(
-      (element) => element?.id_radicado === radicado
+    const searchElement = listaHistoricoSolicitudes.find(
+      (element: any) => element?.cabecera?.radicado === radicado
     );
 
     if (searchElement) {
@@ -66,6 +75,24 @@ export const AcordeonPqrsdf = () => {
     }
   };
 
+  if (generalLoading)
+    return (
+      <Grid
+        container
+        sx={{
+          ...containerStyles,
+          mt: '2.5rem',
+          position: 'static',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader altura={800} />
+      </Grid>
+    );
+
+  if (!listaHistoricoSolicitudes?.length) return <></>;
+
   return (
     <>
       {/* Search input component */}
@@ -76,13 +103,13 @@ export const AcordeonPqrsdf = () => {
         onSubmit={onSubmit}
       />
 
-      {accordionData.map((item) => (
+      {listaHistoricoSolicitudes.map((item: any) => (
         <Accordion
-          ref={expanded === item.id_radicado ? accordionRef : null}
+          ref={expanded === item?.cabecera?.radicado ? accordionRef : null}
           style={{ marginBottom: '1rem' }}
-          key={item.id_radicado}
-          expanded={expanded === item.id_radicado}
-          onChange={handleChange(item.id_radicado)}
+          key={item?.cabecera?.id_PQRSDF}
+          expanded={expanded === item?.cabecera?.radicado}
+          onChange={handleChange(item?.cabecera?.radicado)}
         >
           <AccordionSummary
             expandIcon={
@@ -92,50 +119,74 @@ export const AcordeonPqrsdf = () => {
                 }}
               />
             }
-            aria-controls={`${item.id_radicado}-content`}
-            id={`${item.id_radicado}-header`}
+            aria-controls={`${item?.cabecera?.radicado}-content`}
+            id={`${item?.cabecera?.radicado}-header`}
           >
             <Typography>
-              <b>Radicado:</b> {item.nombre_pqr}
+              <b>Radicado:</b> {item?.cabecera?.radicado}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography sx={stylesTypography}>
-                  <b>Titular:</b> {item.titular}
+                  <b>Titular:</b> {item?.detalle?.titular}
                 </Typography>
                 <Typography sx={stylesTypography}>
                   <b>Cantidad de anexos: </b>
-                  {item.titular}
+                  {item?.detalle?.cantidad_anexos}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography sx={stylesTypography}>
-                  <b>Estado actual:</b> {item.estado_actual_radicado}
+                  <b>Estado actual:</b> {item?.detalle?.estado_actual_solicitud}
                 </Typography>
                 <Typography sx={stylesTypography}>
                   <b>Asunto: </b>
-                  {item.asunto}
+                  {item?.detalle?.asunto}
                 </Typography>
               </Grid>
             </Grid>
-            <RenderDataGrid
-              title="Información inicial de la solicitud"
-              columns={infoSolicitudColumns}
-              rows={[
-                ...item.info_solicitud,
-                ...item.info_solicitud,
-              ]}
-            />
-            <RenderDataGrid
-              title="Acerca de la consulta"
-              columns={consultaColumns}
-              rows={[
-                ...item.solicitud,
-                ...item.solicitud,
-              ]}
-            />
+
+            {!item?.detalle?.solicitud_actual.length ? (
+              <Typography
+                sx={{
+                  ...stylesTypography,
+                  textAlign: 'center',
+                  fontSize: '1rem',
+                  mt: '1.7rem',
+                  color: 'info.main',
+                }}
+              >
+                No se ha encontrado información relacionada a la respuesta de la
+                solicitud
+              </Typography>
+            ) : (
+              <RenderDataGrid
+                title="Información de la respuesta"
+                columns={infoSolicitudColumns ?? []}
+                rows={[...item?.detalle?.solicitud_actual] ?? []}
+              />
+            )}
+
+            {!item?.detalle?.registros.length ? (
+              <Typography
+                sx={{
+                  ...stylesTypography,
+                  textAlign: 'center',
+                  fontSize: '.8rem',
+                  color: 'info.main',
+                }}
+              >
+                No se ha encontrado información de los registros
+              </Typography>
+            ) : (
+              <RenderDataGrid
+                title="Información de la respuesta"
+                columns={infoSolicitudColumns ?? []}
+                rows={[...item?.detalle?.registros] ?? []}
+              />
+            )}
           </AccordionDetails>
         </Accordion>
       ))}

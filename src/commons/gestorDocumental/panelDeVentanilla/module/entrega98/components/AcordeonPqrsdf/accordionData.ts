@@ -1,3 +1,5 @@
+import { formatDate } from '../../../../../../../utils/functions/formatDate';
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export const accordionData = Array.from({ length: 8 }, (_, i) => ({
   nombre_pqr: `PQR ${i + 1} año: ${i + 1}`,
@@ -40,14 +42,17 @@ export const infoSolicitudColumns = [
 
 export const consultaColumns = [
   {
-    headerName: 'Acción',
-    field: 'accion_solicitud',
-    minWidth: 210,
+    headerName: 'Acción - Estado',
+    field: 'accion',
+    minWidth: 240,
   },
   {
-    headerName: 'Fecha de la solicitud',
-    field: 'fecha_respuesta_solicitud',
-    minWidth: 260,
+    headerName: 'Fecha respuesta de la solicitud',
+    field: 'fecha_respuesta',
+    minWidth: 300,
+    renderCell: (params: any) => {
+      return formatDate(params.value);
+    },
   },
   {
     headerName: 'Estado de la digitalización',
@@ -55,8 +60,8 @@ export const consultaColumns = [
     minWidth: 255,
   },
   {
-    headerName: 'Observación',
-    field: 'observacion',
+    headerName: 'Observaciones',
+    field: 'observaciones',
     minWidth: 360,
   },
 ];
