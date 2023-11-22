@@ -280,6 +280,11 @@ const BuscarModelo = ({
     if (modal_active_init !== null && modal_active_init !== undefined) {
       set_select_model_is_active(modal_active_init);
     }
+  }, [modal_active_init]);
+  useEffect(() => {
+    if (modal_active_init !== null && modal_active_init !== undefined) {
+      set_select_model_is_active(modal_active_init);
+    }
   }, []);
 
   useEffect(() => {

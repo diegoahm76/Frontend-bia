@@ -19,7 +19,11 @@ import {
   set_document_types,
   set_document_type,
 } from '../../store/slice/pqrsdfSlice';
-import { get_document_types_service, get_person_document_service, get_persons_service } from '../../store/thunks/pqrsdfThunks';
+import {
+  get_document_types_service,
+  get_person_document_service,
+  get_persons_service,
+} from '../../store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoPersona = () => {
   const dispatch = useAppDispatch();
@@ -144,15 +148,7 @@ const TipoPersona = () => {
     const last_name = get_values('primer_apellido') ?? '';
     console.log(document, type, name, last_name, person_type);
     void dispatch(
-      get_persons_service(
-        type,
-        document,
-        name,
-        last_name,
-        '',
-        '',
-        true
-      )
+      get_persons_service(type, document, name, last_name, '', '', true)
     );
   };
 
@@ -219,7 +215,10 @@ const TipoPersona = () => {
               label: 'Nombre completo',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado persona',
+              helper_text:
+                person.id_persona === null
+                  ? 'No se ha seleccionado empresa'
+                  : '',
             },
           ]}
           modal_select_model_title="Buscar persona"

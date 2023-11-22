@@ -24,7 +24,11 @@ import {
   set_document_type,
   set_company,
 } from '../../store/slice/pqrsdfSlice';
-import { get_companies_service, get_company_document_service, get_document_types_service } from '../../store/thunks/pqrsdfThunks';
+import {
+  get_companies_service,
+  get_company_document_service,
+  get_document_types_service,
+} from '../../store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoEmpresa = () => {
   const dispatch = useAppDispatch();
@@ -81,7 +85,7 @@ const TipoEmpresa = () => {
     );
   }, [document_types, person_types]);
   useEffect(() => {
-    console.log(company)
+    console.log(company);
   }, [company]);
 
   const columns_personas: GridColDef[] = [
@@ -153,12 +157,7 @@ const TipoEmpresa = () => {
     const person_type = get_values('tipo_persona') ?? '';
     console.log(document, type, name, person_type);
     void dispatch(
-      get_companies_service(
-        type,
-        document,
-        razon_social,
-        nombre_comercial
-      )
+      get_companies_service(type, document, razon_social, nombre_comercial)
     );
   };
 
@@ -225,7 +224,12 @@ const TipoEmpresa = () => {
               label: 'Nombre comercial',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado empresa',
+              helper_text:
+                company.id_persona === null
+                  ? company.id_persona === null
+                    ? 'No se ha seleccionado empresa'
+                    : ''
+                  : '',
             },
             {
               datum_type: 'input_controller',
@@ -238,7 +242,10 @@ const TipoEmpresa = () => {
               label: 'Razón social',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado empresa',
+              helper_text:
+                company.id_persona === null
+                  ? 'No se ha seleccionado empresa'
+                  : '',
             },
             {
               datum_type: 'select_controller',
@@ -250,7 +257,10 @@ const TipoEmpresa = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento representante',
               disabled: true,
-              helper_text: 'No se ha seleccionado empresa',
+              helper_text:
+                company.id_persona === null
+                  ? 'No se ha seleccionado empresa'
+                  : '',
               select_options: document_types,
               option_label: 'nombre',
               option_key: 'cod_tipo_documento',
@@ -267,7 +277,10 @@ const TipoEmpresa = () => {
               label: 'Documento representante',
               type: 'number',
               disabled: true,
-              helper_text: 'No se ha seleccionado empresa',
+              helper_text:
+                company.id_persona === null
+                  ? 'No se ha seleccionado empresa'
+                  : '',
             },
             {
               datum_type: 'input_controller',
@@ -280,7 +293,10 @@ const TipoEmpresa = () => {
               label: 'Nombre representante',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado empresa',
+              helper_text:
+                company.id_persona === null
+                  ? 'No se ha seleccionado empresa'
+                  : '',
             },
           ]}
           modal_select_model_title="Buscar empresa"

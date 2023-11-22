@@ -31,6 +31,7 @@ import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/ro
 import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
+import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 
 const routes = [
@@ -159,6 +160,11 @@ const routes = [
     path: 'Pqrsdf/',
     name: 'Pqrsdf',
     component: () => <PqrsdfRoutes />,
+  },
+  {
+    path: 'central_digitalizacion/',
+    name: 'central_digitalizacion',
+    component: () => <CentralDigitalizacionRoutes />,
   },
 ];
 

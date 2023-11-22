@@ -31,9 +31,9 @@ import {
   set_exhibit,
   set_exhibits,
   initial_state_exhibit,
-} from '../../store/slice/pqrsdfSlice';
+} from '../../store/slice/centralDigitalizacionSlice';
 import MetadataFormDialog from './MetadataFormDialog';
-import { IObjExhibit } from '../../interfaces/pqrsdf';
+import { IObjExhibit } from '../../interfaces/central_digitalizacion';
 import { v4 as uuid } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
