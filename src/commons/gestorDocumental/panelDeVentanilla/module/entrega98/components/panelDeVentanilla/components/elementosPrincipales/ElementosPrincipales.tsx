@@ -7,7 +7,7 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 
-export const ElementosPrincipales = (): JSX.Element => {
+export const ElementosPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
   const { listaElementosPqrsfTramitesUotros } = useAppSelector(
     (state) => state.PanelVentanillaSlice

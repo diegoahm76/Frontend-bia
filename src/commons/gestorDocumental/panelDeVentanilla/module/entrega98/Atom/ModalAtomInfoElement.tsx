@@ -18,7 +18,11 @@ import { Title } from '../../../../../../components';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { columnsAtom, rowsEJEMPLO } from './columnsAtom/columnsAtom';
+import {
+  columnsAtom,
+  rowsEJEMPLO,
+  rowsEjemploAnexosDePqrsdf,
+} from './columnsAtom/columnsAtom';
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
@@ -51,7 +55,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
   const navigate = useNavigate();
 
   //* destructuring props
-  const { infoTitle } = props;
+  const { infoTitle, titleOpcion } = props;
 
   //* se debe traer de un context el estado de los anexos y de los metadatos
   const {
@@ -182,9 +186,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
         </Grid>
 
         <RenderDataGrid
-          rows={rowsEJEMPLO || []}
+          rows={rowsEjemploAnexosDePqrsdf || []}
           columns={colums || []}
-          title="Listado de anexos"
+          title={titleOpcion}
           // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos
         />
 
@@ -299,7 +303,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'5'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -310,7 +314,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Metadatos asunto'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -321,7 +325,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'11/05/2023'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -335,7 +339,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Cédula de ciudadanía'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -346,7 +350,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Origen de archivo'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -357,7 +361,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Digital'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -368,7 +372,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'SI'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -383,7 +387,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Clave1, Clave2. Clave3'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -394,7 +398,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Tipología documental'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>

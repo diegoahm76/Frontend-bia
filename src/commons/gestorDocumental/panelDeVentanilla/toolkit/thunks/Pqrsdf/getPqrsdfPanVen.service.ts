@@ -42,7 +42,12 @@ export const getGrilladoPqrsdfPanelVentanilla = async (
     });
     return [];
   } catch (e: any) {
-    control_error(e?.response?.data?.detail);
+    void Swal.fire({
+      title: 'Opps...',
+      icon: 'warning',
+      text: `${e?.response?.data?.detail} para la búsqueda realizada`,
+      showConfirmButton: true,
+    });
     return [];
   } finally {
     handleSecondLoading(false);

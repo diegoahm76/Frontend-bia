@@ -22,6 +22,7 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { useAppSelector } from '../../../../../../../hooks';
 import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
+import { VisaulTexto } from '../../../../../actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
 
 export const AcordeonPqrsdf = () => {
   //* context declaration
@@ -91,7 +92,7 @@ export const AcordeonPqrsdf = () => {
       </Grid>
     );
 
-  if (!listaHistoricoSolicitudes?.length) return <></>;
+  /*  if (!listaHistoricoSolicitudes?.length) return <></>;*/
 
   return (
     <>
@@ -103,7 +104,13 @@ export const AcordeonPqrsdf = () => {
         onSubmit={onSubmit}
       />
 
-      {listaHistoricoSolicitudes.map((item: any) => (
+      {/*[
+        ...listaHistoricoSolicitudes,
+        ...listaHistoricoSolicitudes,
+        ...listaHistoricoSolicitudes,
+      ]*/}
+
+      {[...listaHistoricoSolicitudes]?.map((item: any) => (
         <Accordion
           ref={expanded === item?.cabecera?.radicado ? accordionRef : null}
           style={{ marginBottom: '1rem' }}
@@ -149,18 +156,19 @@ export const AcordeonPqrsdf = () => {
             </Grid>
 
             {!item?.detalle?.solicitud_actual.length ? (
-              <Typography
-                sx={{
-                  ...stylesTypography,
-                  textAlign: 'center',
-                  fontSize: '1rem',
-                  mt: '1.7rem',
-                  color: 'info.main',
+              <section
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '1.7rem',
                 }}
               >
-                No se ha encontrado información relacionada a la respuesta de la
-                solicitud
-              </Typography>
+                <VisaulTexto
+                  elements={[
+                    'No se ha encontrado información relacionada a la respuesta de la solicitud',
+                  ]}
+                />
+              </section>
             ) : (
               <RenderDataGrid
                 title="Información de la respuesta"
@@ -170,20 +178,23 @@ export const AcordeonPqrsdf = () => {
             )}
 
             {!item?.detalle?.registros.length ? (
-              <Typography
-                sx={{
-                  ...stylesTypography,
-                  textAlign: 'center',
-                  fontSize: '.8rem',
-                  color: 'info.main',
+              <section
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '1.7rem',
                 }}
               >
-                No se ha encontrado información de los registros
-              </Typography>
+                <VisaulTexto
+                  elements={[
+                    'No se ha encontrado información de los registros',
+                  ]}
+                />
+              </section>
             ) : (
               <RenderDataGrid
                 title="Información de la respuesta"
-                columns={infoSolicitudColumns ?? []}
+                columns={consultaColumns ?? []}
                 rows={[...item?.detalle?.registros] ?? []}
               />
             )}

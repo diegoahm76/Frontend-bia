@@ -43,9 +43,9 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     const { tipo_de_solicitud, radicado, estado_actual_solicitud } =
       watch_busqueda_panel_ventanilla;
     void getGrilladoPqrsdfPanelVentanilla(
-      '' /*|| estado_actual_solicitud?.label,*/,
-      '' /*|| radicado,*/,
-      '' /* tipo_de_solicitud?.label, */,
+      estado_actual_solicitud?.label,
+      radicado,
+      '' /*tipo_de_solicitud?.label,*/,
       handleSecondLoading
     ).then((res) => {
       dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));

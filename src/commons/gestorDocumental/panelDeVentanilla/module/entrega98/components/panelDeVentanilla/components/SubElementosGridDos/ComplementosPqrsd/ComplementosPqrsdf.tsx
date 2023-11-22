@@ -9,12 +9,13 @@ import { columnsComplementoPqrsdf } from './columnsComplementoPqrsd/colComplePqr
 import { LoadingButton } from '@mui/lab';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { Avatar, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
 import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { Link } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
+import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 
 export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
@@ -42,36 +43,16 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       minWidth: 300,
       renderCell: (params: any) => {
         return (
-          <LoadingButton
-            loading={loadingStates[params.row.idComplementoUsu_PQR]}
-            color="primary"
-            variant="contained"
+          <Chip
+            label={`Solicitudes de digitalización: ${params.value}`}
+            clickable
+            color="info"
             onClick={() => {
-              if (params.value === 0) {
-                control_warning(
-                  'No hay solicitudes de digitalización para este radicado, por lo tanto no se podrá ver historial de solicitudes de digitalización'
-                );
-                return;
-              } else {
-                setLoadingStates((prev) => ({
-                  ...prev,
-                  [params.row.idComplementoUsu_PQR]: true,
-                }));
-                // Simulate an async operation
-                setTimeout(() => {
-                  setValue(1);
-                  //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
-                  setRadicado('panel8');
-                  setLoadingStates((prev) => ({
-                    ...prev,
-                    [params.row.idComplementoUsu_PQR]: false,
-                  }));
-                }, 1000);
-              }
+              control_info(
+                `Actualmente tienes ${params.value} solicitudes de digitalización para este radicado`
+              );
             }}
-          >
-            {`Solicitud de digitalización: ${params.value}`}
-          </LoadingButton>
+          />
         );
       },
     },
@@ -95,7 +76,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                     );
                     void Swal.fire({
                       icon: 'success',
-                      title: 'Complmento seleccionado',
+                      title: 'Complemento seleccionado',
                       text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente o reinicies el módulo.',
                       showConfirmButton: true,
                       // timer: 1500,
@@ -122,66 +103,6 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                 </IconButton>
               </Tooltip>
             </Link>
-
-            {/*segundo elemento definición*/}
-
-            {/* <Link
-              estos ids se van a manejar a traves de los params.row
-              to={`/app/gestor_documental/panel_ventanilla/pqrsdf_complemento/${params.row.id_PQRSDF}`}
-            >*/}
-            {/* <Tooltip
-              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
-            >
-              <IconButton
-                sx={{
-                  color: !params?.row?.tiene_complementos
-                    ? 'disabled'
-                    : 'info.main',
-                }}
-                onClick={() => {
-                  if (!params.row.tiene_complementos) {
-                    void Swal.fire({
-                      title: 'Opps...',
-                      icon: 'error',
-                      text: `Esta PQRSDF no tiene complementos asociados`,
-                      showConfirmButton: true,
-                    });
-                    dispatch(
-                      setListaElementosComplementosRequerimientosOtros([])
-                    );
-                  } else {
-                    void getComplementosAsociadosPqrsdf(
-                      params.row.id_PQRSDF,
-                      handleThirdLoading
-                    ).then((res) => {
-                      dispatch(
-                        setListaElementosComplementosRequerimientosOtros(res)
-                      );
-                    });
-                  }
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <KeyboardDoubleArrowDownIcon
-                    sx={{
-                      color: 'info.main',
-                      width: '18px',
-                      height: '18px',
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>*/}
-            {/*</Link>*/}
-
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
@@ -226,9 +147,16 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     },
   ];
 
+  /* [
+    ...listaComplementosRequerimientosOtros,
+    ...listaComplementosRequerimientosOtros,
+    ...listaComplementosRequerimientosOtros,
+    ...listaComplementosRequerimientosOtros,
+  ];
+*/
   return (
     <RenderDataGrid
-      rows={listaComplementosRequerimientosOtros ?? []}
+      rows={[...listaComplementosRequerimientosOtros] ?? []}
       columns={columns ?? []}
       title="Complementos del elemento seleccionado"
     />

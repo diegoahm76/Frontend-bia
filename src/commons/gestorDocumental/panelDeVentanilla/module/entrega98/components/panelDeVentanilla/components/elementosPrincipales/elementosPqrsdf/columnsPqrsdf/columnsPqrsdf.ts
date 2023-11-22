@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { render } from '@testing-library/react';
+import { formatDate } from '../../../../../../../../../../../utils/functions/formatDate';
 
 /*
 
@@ -51,12 +51,10 @@ export const columnsPqrsdf = [
     headerName: 'Fecha de radicado',
     field: 'fecha_radicado',
     minWidth: 250,
-    renderCell: (params: any) =>
-      new Date(params.value).toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }),
+    renderCell: (params: any) => {
+      const validData = formatDate(params.value);
+      return validData;
+    },
   },
   {
     headerName: 'Requiere digitalización',
@@ -82,6 +80,6 @@ export const columnsPqrsdf = [
     minWidth: 250,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
-    }
+    },
   },
 ];

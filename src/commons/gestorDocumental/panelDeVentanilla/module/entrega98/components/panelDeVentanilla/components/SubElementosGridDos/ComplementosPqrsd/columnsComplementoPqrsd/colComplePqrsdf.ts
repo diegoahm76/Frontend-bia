@@ -16,12 +16,12 @@ export const columnsComplementoPqrsdf = [
   {
     headerName: 'Tipo',
     field: 'tipo',
-    minWidth: 150,
+    minWidth: 250,
   },
   {
     headerName: 'Nombre completo titular',
     field: 'nombre_completo_titular',
-    minWidth: 200,
+    minWidth: 300,
   },
   {
     headerName: 'Asunto',

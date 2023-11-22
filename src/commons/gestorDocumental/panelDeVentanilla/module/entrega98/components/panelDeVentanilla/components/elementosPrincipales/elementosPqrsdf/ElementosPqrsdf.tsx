@@ -13,6 +13,7 @@ import TaskIcon from '@mui/icons-material/Task';
 import {
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
+  setListaHistoricoSolicitudes,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import {
   useAppDispatch,
@@ -21,18 +22,41 @@ import {
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/Pqrsdf/getComplementos.service';
+import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/Pqrsdf/getHistoByRad.service';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* context declaration
   const { setRadicado, setValue } = useContext(PanelVentanillaContext);
-  const { handleThirdLoading } = useContext(ModalAndLoadingContext);
+  const { handleGeneralLoading, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
+  );
+
+  const handleRequestRadicado = async (radicado: string) => {
+    try {
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+
+    const historicoFiltrado = historico.filter(
+      (element: any) => element?.cabecera?.radicado === radicado
+    );
+
+    dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
+    console.log(historico);
+  };
 
   //* loader button simulacion
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
+  //* loader button simulacion
+  const [loadingStatesUser, setLoadingStatesUser] = useState<
+    Record<string, boolean>
+  >({});
 
   //* redux states
   const { listaElementosPqrsfTramitesUotros } = useAppSelector(
@@ -67,7 +91,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 setTimeout(() => {
                   setValue(1);
                   //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
-                  setRadicado('panel8');
+                  setRadicado(params?.row?.radicado);
+                  handleRequestRadicado(params?.row?.radicado);
                   setLoadingStates((prev) => ({
                     ...prev,
                     [params.row.id_PQRSDF]: false,
@@ -76,7 +101,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               }
             }}
           >
-            {`Solicitud de digitalización: ${params.value}`}
+            {`Solicitudes de digitalización: ${params.value}`}
           </LoadingButton>
         );
       },
@@ -87,15 +112,39 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       minWidth: 300,
       renderCell: (params: any) => {
         return (
-          <Button
-            color="warning"
-            variant="outlined"
-            onClick={() => {
-              console.log('cambiando a ver pqrsdf');
-            }}
-          >
-            {`Solicitud al  usuario: ${params.value}`}
-          </Button>
+          <>
+            <LoadingButton
+              loading={loadingStatesUser[params.row.id_PQRSDF]}
+              color="warning"
+              variant="outlined"
+              onClick={() => {
+                if (params.value === 0) {
+                  control_warning(
+                    'No hay solicitudes de al usuario para este radicado, por lo tanto no se podrá ver historial de solicitudes de al usuario'
+                  );
+                  return;
+                } else {
+                  setLoadingStatesUser((prev) => ({
+                    ...prev,
+                    [params.row.id_PQRSDF]: true,
+                  }));
+                  // Simulate an async operation
+                  setTimeout(() => {
+                    setValue(1);
+                    //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
+                    setRadicado(params?.row?.radicado);
+                    handleRequestRadicado(params?.row?.radicado);
+                    setLoadingStates((prev) => ({
+                      ...prev,
+                      [params.row.id_PQRSDF]: false,
+                    }));
+                  }, 1000);
+                }
+              }}
+            >
+              {`Solicitudes al  usuario: ${params.value}`}
+            </LoadingButton>
+          </>
         );
       },
     },
@@ -150,7 +199,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
             {/*segundo elemento definición*/}
 
-            
             <Tooltip
               title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
             >
@@ -246,11 +294,18 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       },
     },
   ];
+  /*rows={
+    [
+      ...listaElementosPqrsfTramitesUotros,
+      ...listaElementosPqrsfTramitesUotros,
+      ...listaElementosPqrsfTramitesUotros,
+    ] ?? []
+  }*/
 
   return (
     <>
       <RenderDataGrid
-        rows={listaElementosPqrsfTramitesUotros ?? []}
+        rows={[...listaElementosPqrsfTramitesUotros] ?? []}
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
       />

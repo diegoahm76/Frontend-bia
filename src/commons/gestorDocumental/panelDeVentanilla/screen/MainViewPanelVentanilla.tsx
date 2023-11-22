@@ -24,7 +24,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   //* context declaration
-  const { value, handleChange } = useContext(PanelVentanillaContext);
+  const { value, handleChange, setRadicado } = useContext(PanelVentanillaContext);
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async () => {
@@ -52,6 +52,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
             <Tab
               onClick={() => {
                 dispatch(setListaHistoricoSolicitudes([]));
+                setRadicado('');
               }}
               label="Panel de ventanilla"
               {...a11yProps(0)}

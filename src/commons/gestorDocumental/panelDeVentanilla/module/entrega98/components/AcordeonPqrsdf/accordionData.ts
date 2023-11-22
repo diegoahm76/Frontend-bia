@@ -37,6 +37,10 @@ export const infoSolicitudColumns = [
     headerName: 'Fecha de  la solicitud',
     field: 'fecha_solicitud',
     minWidth: 350,
+    renderCell: (params: any) => {
+      const validDate = formatDate(params.value);
+      return validDate;
+    },
   },
 ];
 
@@ -51,7 +55,8 @@ export const consultaColumns = [
     field: 'fecha_respuesta',
     minWidth: 300,
     renderCell: (params: any) => {
-      return formatDate(params.value);
+      const validDate = formatDate(params.value);
+      return validDate;
     },
   },
   {
