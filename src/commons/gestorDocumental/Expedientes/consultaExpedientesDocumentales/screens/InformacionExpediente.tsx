@@ -1,34 +1,19 @@
 import { Grid, Box, Button, Stack, TextField, Typography, Fab } from "@mui/material";
-import { SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
-import { obtener_usuario_logueado } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { Title } from "../../../../../components/Title";
-import { BusquedaExpediente } from "./BusquedaExpediente";
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import ConcederAccesoExpediente from "../../ConcesionAccesoExpedientes/screens/ConcederAccesoExpediente";
 dayjs.extend(dayOfYear);
-const class_css = {
-    position: 'relative',
-    background: '#FAFAFA',
-    borderRadius: '15px',
-    p: '20px',
-    mb: '20px',
-    boxShadow: '0px 3px 6px #042F4A26',
-}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InformacionExpediente: React.FC = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
-    const [indice, set_indice] = useState<any>(null);
     const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
-    const [limpiar, set_limpiar] = useState<boolean>(false);
 
     const salir_expediente: () => void = () => {
         navigate('/home');

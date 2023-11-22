@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { InfoPersona } from "../../../../../interfaces/globalModels";
 import { BusquedaPersona } from "./BusquedaPersona";
+import { InfoPersona } from "../../../../interfaces/globalModels";
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -9,7 +9,7 @@ interface IProps {
     set_persona: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-export const BuscadorPersonaConcesiones: React.FC<IProps> = (props: IProps) => {
+export const BuscadorPersonaExpDoc: React.FC<IProps> = (props: IProps) => {
     const [seleccion_persona, set_seleccion_persona] = useState<any>({});
 
     const set_persona_modal = (data: InfoPersona): void => {

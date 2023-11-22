@@ -17,7 +17,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { BuscadorPersonaExpDoc } from '../../BuscarPersonasExpDoc/BuscadorPersonaExpDoc';
 
 interface IProps {
-    expediente: any,
+    documento: any,
     set_concesion: any,
     editar_concesion: any
 }
@@ -29,7 +29,6 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
     const [acceso_desde, set_acceso_desde] = useState<Dayjs>(dayjs());
     const [acceso_hasta, set_acceso_hasta] = useState<Dayjs>(dayjs());
-    const [permitir, set_permitir] = useState<boolean>(false);
     const [error_acceso_desde, set_error_acceso_desde] = useState<boolean>(false);
     const [error_acceso_hasta, set_error_acceso_hasta] = useState<boolean>(false);
     const [observaciones, set_observaciones] = useState<string>("");
@@ -53,7 +52,6 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
             buscar_persona(props.editar_concesion.tipo_documento_persona_recibe_acceso, props.editar_concesion.numero_documento_persona_recibe_acceso);
             set_acceso_desde(props.editar_concesion.fecha_acceso_inicia);
             set_acceso_hasta(props.editar_concesion.fecha_acceso_termina);
-            set_permitir(props.editar_concesion.con_acceso_tipologias_reservadas);
             set_observaciones(props.editar_concesion.observacion);
         }
     }, [props.editar_concesion]);
@@ -98,10 +96,6 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
 
     }
 
-    const handle_change_isd = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        set_permitir(e.target.checked);
-    };
-
     const cambio_observaciones: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_observaciones(e.target.value);
         set_error_observacion(e.target.value === null && e.target.value === "")
@@ -133,7 +127,6 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
         set_tipo_documento('');
         set_nro_documento('');
         set_nombre_completo('');
-        set_permitir(false);
         set_observaciones('');
         set_persona(null);
         set_id_concesion_acc(null);
@@ -149,7 +142,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                 "numero_documento_persona_recibe_acceso": persona.numero_documento,
                 "nombre_unidad_org_destinatario_conceder": persona.nombre_unidad_organizacional_actual,
                 "id_unidad_org_destinatario_conceder": persona.id_unidad_organizacional_actual,
-                "con_acceso_tipologias_reservadas": permitir,
+                "id_documento_exp": 1,
                 "fecha_acceso_inicia": acceso_desde,
                 "fecha_acceso_termina": acceso_hasta,
                 "observacion": observaciones
@@ -275,17 +268,6 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                 </LocalizationProvider>
                                 {error_acceso_hasta && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
 
-                            </Grid>
-                            <Grid item xs={12} sm={12}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="center"
-                                    spacing={2}
-                                    sx={{ mt: '5px' }}
-
-                                >
-                                    <span style={{marginTop: '9px'}} >{"Permitirle ver documentos de tipologías reservadas "}</span>
-                                    <Checkbox checked={permitir} onChange={handle_change_isd} inputProps={{ 'aria-label': 'controlled' }}/></Stack>
                             </Grid>
                             <Grid item xs={12} sm={12}>
                                 <TextField

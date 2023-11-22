@@ -6,15 +6,13 @@ import { DataTable } from 'primereact/datatable';
 import type * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IList, InfoPersona, ResponseServer } from '../../../../../interfaces/globalModels';
-import { get_tipo_documento, search_avanzada } from '../../../../../request';
-import { control_error } from '../../../../../helpers';
-import { CustomSelect, Title } from '../../../../../components';
-import { download_xls_dos } from '../../../../../documentos-descargar/XLS_descargar';
-import { download_pdf_dos } from '../../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch } from '../../../../../hooks';
-import { obtener_personas, obtener_tipo_documento } from '../thunks/ConcesionAccesoExpedientes';
-import { obtener_unidad_organizacional } from '../../aperturaExpedientes/thunks/aperturaExpedientes';
+import { obtener_personas, obtener_tipo_documento } from '../ConcesionAccesoExpedientes/thunks/ConcesionAccesoExpedientes';
+import { obtener_unidad_organizacional } from '../aperturaExpedientes/thunks/aperturaExpedientes';
+import { IList, InfoPersona } from '../../../../interfaces/globalModels';
+import { CustomSelect, Title } from '../../../../components';
+import { download_xls_dos } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf_dos } from '../../../../documentos-descargar/PDF_descargar';
+import { useAppDispatch } from '../../../../hooks';
 
 interface IProps {
   set_persona: any;

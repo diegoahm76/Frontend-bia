@@ -11,7 +11,7 @@ import BuscarExpediente from "../../indexacionExpedientes/screens/BuscarExpedien
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { VerExpedientes } from "../../ConcesionAccesoExpedientes/screens/VerExpedientes";
-import { VerDocumentos } from "../../ConcesionAccesoExpedientes/screens/VerDocumentos";
+import { VerDocumentos } from "../../ConcesionAccesoDocumentos/screens/VerDocumentos";
 
 interface IProps {
     set_expediente: any,
