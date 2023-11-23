@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useForm } from 'react-hook-form';
-import { control } from 'leaflet';
 
 export const usePanelVentanilla = () => {
   // ? use Form declaration
+
+  // ! DECLARACIONES PARA LA ENTREGA 98 ................//
+  // ! DECLARACIONES PARA LA ENTREGA 98 ................//
+  // ! DECLARACIONES PARA LA ENTREGA 98 ................//
   const {
     control: control_busqueda_panel_ventanilla,
     setValue: set_value_valores_panel_ventanilla,
@@ -42,14 +45,67 @@ export const usePanelVentanilla = () => {
       radicado: '',
     });
 
-  return {
-    //* se deben retornar todos los elemento necesarios para el manejo de las pantallas del panel de ventanilla
+  // ! DECLARACIONES PARA LA ENTREGA 99 ................//
+  // ! DECLARACIONES PARA LA ENTREGA 99 ................//
 
+  // ? Segundo paso solicitud al usuario
+  const {
+    control: controlSegundoPasoEntrega99,
+    handleSubmit: handleSubmitSegundoPasoEntrega99,
+    // formState: formStateSegundoFormulario,
+    setValue: setValueSegundoFormularioEntrega99,
+    reset: resetSegundoFormularioEntrega99,
+  } = useForm();
+
+  // ? Tercer paso solicitud al usuario
+  const {
+    control: controlTercerPasoEntrega99,
+    handleSubmit: handleSubmitTercerPasoEntrega99,
+    // formState: formStateTercerFormulario,
+    setValue: setValueTercerFormularioEntrega99,
+    reset: resetTercerPasoEntrega99,
+  } = useForm();
+
+  // ? ----- controles para el manejo del modal de metadatos de la entrega 99 -----
+
+  const {
+    control: controlManejoMetadatosModal,
+    handleSubmit: handleSubmitManejoMetadatosModal,
+    // formState: formState_manejo_metadatos_modal,
+    setValue: setValueManejoMetadatosModal,
+    reset: resetManejoMetadatosModal,
+  } = useForm();
+
+  return {
+    // ! DECLARACIONES PARA LA ENTREGA 98 ................//
+    // ! DECLARACIONES PARA LA ENTREGA 98 ................//
+
+    //* se deben retornar todos los elemento necesarios para el manejo de las pantallas del panel de ventanilla
     // ? busqueda panel de ventanilla
     control_busqueda_panel_ventanilla,
     watch_busqueda_panel_ventanilla,
-
     //* funciones de reset
     reset_search_form,
+
+    // ! DECLARACIONES PARA LA ENTREGA 99 ................//
+    // ! DECLARACIONES PARA LA ENTREGA 99 ................//
+
+    // ? Segundo paso
+    controlSegundoPasoEntrega99,
+    handleSubmitSegundoPasoEntrega99,
+    setValueSegundoFormularioEntrega99,
+    resetSegundoFormularioEntrega99,
+
+    // ? Tercer paso
+    controlTercerPasoEntrega99,
+    handleSubmitTercerPasoEntrega99,
+    setValueTercerFormularioEntrega99,
+    resetTercerPasoEntrega99,
+
+    // ? Manejo del modal de metadatos
+    controlManejoMetadatosModal,
+    handleSubmitManejoMetadatosModal,
+    setValueManejoMetadatosModal,
+    resetManejoMetadatosModal,
   };
 };

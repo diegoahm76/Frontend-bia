@@ -37,6 +37,8 @@ interface IProps {
   hidden_text?: boolean | null;
   marginTop?: number;
   auto_focus?: boolean | null;
+  on_change_function?: any;
+  none_option?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -58,13 +60,21 @@ const FormSelectController = ({
   margin,
   marginTop,
   auto_focus,
+  on_change_function,
+  none_option,
 }: IProps) => {
   const id_select = String(uuid());
 
   return (
     <>
       {!(hidden_text ?? false) && (
-        <Grid item xs={xs} md={md} margin={margin ?? 0} marginTop={marginTop ?? 0}>
+        <Grid
+          item
+          xs={xs}
+          md={md}
+          margin={margin ?? 0}
+          marginTop={marginTop ?? 0}
+        >
           <Controller
             name={control_name}
             control={control_form}
@@ -74,6 +84,7 @@ const FormSelectController = ({
               <FormControl fullWidth>
                 <InputLabel id={id_select}>{label ?? ''}</InputLabel>
                 <Select
+                  name={control_name}
                   labelId={id_select}
                   multiple={multiple ?? false}
                   margin="dense"
@@ -83,13 +94,25 @@ const FormSelectController = ({
                   variant="outlined"
                   disabled={disabled}
                   value={value === null ? (multiple ?? false ? [] : '') : value}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    onChange(e);
+                    {
+                      on_change_function !== null &&
+                        on_change_function(
+                          select_options.find(
+                            (option: any) =>
+                              option[option_key] === e.target.value
+                          ),
+                          e.target.name
+                        );
+                    }
+                  }}
                   error={
                     !(error == null) ||
                     ((auto_focus ?? false) && (value === null || value === ''))
                   }
                 >
-                  {!(multiple ?? false) && (
+                  {(!(multiple ?? false) || (none_option ?? true)) && (
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -110,9 +133,9 @@ const FormSelectController = ({
                   }
                 >
                   {!(error == null) ||
-                    ((auto_focus ?? false) && (value === null || value === ''))
+                  ((auto_focus ?? false) && (value === null || value === ''))
                     ? rules.required_rule?.message
-                    : helper_text}
+                    : value === '' && helper_text}
                 </FormHelperText>
               </FormControl>
             )}

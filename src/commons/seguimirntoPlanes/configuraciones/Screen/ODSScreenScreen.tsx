@@ -16,13 +16,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { eliminar_ods, get_ods } from '../Request/request';
 import type { IObjetivoDesarrolloSostenible } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
-import { ActualizarODS } from '../Components/ActualizarODS';
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { AgregarODS } from '../Components/AgregarODS';
+import { AgregarODS } from '../Components/TiposEje/AgregarODS';
+import { ActualizarODS } from '../Components/ODS/ActualizarODS';
+import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const ODSScreen: React.FC = () => {
@@ -241,6 +242,27 @@ export const ODSScreen: React.FC = () => {
           ></Stack>
         </Grid>
       </Grid>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        justifyContent="flex-end"
+      >
+        <Grid item>
+          <ButtonSalir />
+        </Grid>
+      </Grid>
+
       <AgregarODS
         is_modal_active={is_crear}
         set_is_modal_active={set_is_crear}

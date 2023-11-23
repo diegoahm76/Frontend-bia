@@ -197,11 +197,11 @@ export const AgregarActividad: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_actividad.id_tipo_eje}
+                  error={!!errors_actividad.id_plan}
                   helperText={
-                    errors_actividad?.id_tipo_eje?.type === 'required'
+                    errors_actividad?.id_plan?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : 'ingrese el tipo de eje estrategico'
+                      : 'ingrese el plan'
                   }
                 >
                   {planes_selected.map((option) => (
@@ -214,9 +214,6 @@ export const AgregarActividad: React.FC = () => {
             />
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
-            <Grid item>
-              <ButtonSalir />
-            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

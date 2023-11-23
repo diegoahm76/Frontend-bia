@@ -169,7 +169,7 @@ export const AgregarPlanes: React.FC = () => {
                   error={!!errors_planes.tipo_plan}
                   helperText={
                     errors_planes.tipo_plan
-                      ? 'Es obligatorio ingresar un tipo de aforo'
+                      ? 'Es obligatorio ingresar un tipo plan'
                       : 'Ingrese un tipo de plan'
                   }
                 >
@@ -333,9 +333,6 @@ export const AgregarPlanes: React.FC = () => {
             />
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
-            <Grid item>
-              <ButtonSalir />
-            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

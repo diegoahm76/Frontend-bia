@@ -11,6 +11,7 @@ interface IProps {
   button_icon_class?: any;
   variant_button?: any;
   button_clean_show?: boolean | null;
+  clean_when_leaving?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -23,6 +24,7 @@ const Clean = ({
   button_icon_class,
   variant_button,
   button_clean_show,
+  clean_when_leaving,
 }: IProps) => {
   const handle_reset = (): void => {
     dispatch(reset_state());
@@ -30,9 +32,11 @@ const Clean = ({
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(reset_state());
-    };
+    if (clean_when_leaving ?? true) {
+      return () => {
+        dispatch(reset_state());
+      };
+    }
   }, [dispatch]);
 
   return (
