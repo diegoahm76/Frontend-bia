@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
   IArchivoFisico,
+  IObjarbol,
   IObjBandejas,
   IObjcajas,
   IObjcarpetas,
@@ -8,12 +9,24 @@ import {
   IObjEstantes,
 } from '../../interface/archivoFisico';
 
+const initial_state_arbol: IObjarbol = {
+  deposito: {
+    id_deposito: null,
+    nombre_deposito: null,
+    identificacion_deposito: null,
+    orden_deposito :null,
+    Informacion_Mostrar: null,
+  }
+}
+
 const initial_state: IArchivoFisico = {
   depositos: [],
   estantes: [],
   bandejas: [],
   cajas: [],
   carpetas: [],
+  arbol_deposito:initial_state_arbol,
+  depositos_tabla:[],
 };
 
 export const archivo_fisico_slice = createSlice({
@@ -50,6 +63,18 @@ export const archivo_fisico_slice = createSlice({
       ) => {
         state.carpetas= action.payload;
       },
+      set_deposito_arbol: (
+        state: IArchivoFisico,
+        action: PayloadAction<IObjarbol>
+      ) => {
+        state.arbol_deposito= action.payload;
+      },
+      set_listado_depositos: (
+        state: IArchivoFisico,
+        action: PayloadAction<IObjDepositos[]>
+      ) => {
+        state.depositos_tabla= action.payload;
+      },
   },
 });
 export const {
@@ -58,5 +83,7 @@ export const {
   set_bandejas_avanzadas,
   set_cajas_avanzadas,
   set_carpetas_avanzadas,
+  set_deposito_arbol,
+  set_listado_depositos
 
 } = archivo_fisico_slice.actions;

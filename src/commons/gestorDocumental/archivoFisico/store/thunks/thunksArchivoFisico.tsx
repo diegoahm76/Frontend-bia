@@ -8,8 +8,10 @@ import {
   set_bandejas_avanzadas,
   set_cajas_avanzadas,
   set_carpetas_avanzadas,
+  set_deposito_arbol,
   set_depositos_avanzada,
   set_estantes_avanzada,
+  set_listado_depositos,
 } from '../slice/indexArchivoFisico';
 
 export const control_error = (
@@ -49,6 +51,29 @@ export const avanzada_deposito = (): any => {
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_depositos_avanzada(data.data));
+        dispatch(set_listado_depositos(data.data));
+        control_success(data.detail);
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const tabla_arbol_deposito = (id:number | null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/depositos-archivos/archivoFisico/informacion-arbol/${id ?? ''}` 
+      );
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success === true) {
+        dispatch(set_deposito_arbol(data.data));
         control_success(data.detail);
       } else {
         control_error(data.detail);
@@ -116,15 +141,13 @@ export const avanzada_bandeja = (
 };
 
 export const avanzada_caja = (
-  identificacion_bandeja: string | null
+  id: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-caja/?tipo_elemento=Caja&identificacion_bandeja=${
-          identificacion_bandeja ?? ''
-        }`
-      );
+        `gestor/expedientes-archivos/expedientes/editar-archivos-soporte/${id ?? ''}/`)
+      ;
       console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {

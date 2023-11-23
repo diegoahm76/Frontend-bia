@@ -36,7 +36,14 @@ import {
   avanzada_carpeta,
   avanzada_deposito,
   avanzada_estante,
+  tabla_arbol_deposito,
 } from '../store/thunks/thunksArchivoFisico';
+import { ColumnProps } from 'primereact/column';
+import TableRowExpansion from '../../../../components/partials/form/TableRowExpansion';
+import {
+  DataTableExpandedRows,
+  DataTableValueArray,
+} from 'primereact/datatable';
 
 interface IProps {
   open: any;
@@ -60,6 +67,11 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
   const [caja_seleccionado, set_caja_seleccionado] = useState<IObjcajas | null>(
     null
   );
+  const [selectedPqr, setSelectedPqr] = useState<any>();
+
+  const [expandedRows, setExpandedRows] = useState<
+    DataTableExpandedRows | DataTableValueArray | undefined
+  >(undefined);
   const [selected_items, set_selected_items] = useState({
     tipoElemento: '',
     deposito: null,
@@ -68,9 +80,108 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
     caja: null,
     carpeta: null,
   });
-  const { depositos, estantes, bandejas, cajas, carpetas } = useAppSelector(
-    (state) => state.archivo_fisico
-  );
+  const {
+    depositos,
+    estantes,
+    bandejas,
+    cajas,
+    carpetas,
+    arbol_deposito,
+    depositos_tabla,
+  } = useAppSelector((state) => state.archivo_fisico);
+
+  // ARBOL //////////////////////////////////////////////
+
+  const columns_arbol_deposito: ColumnProps[] = [
+    {
+      field: 'identificacion_por_entidad',
+      header: 'Identificaciòn Entidad',
+    },
+    {
+      field: 'nombre_deposito',
+      header: 'Deposito',
+    },
+  ];
+  const columns_arbol_estantes: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: 'Tipo de solicitud',
+    },
+    {
+      field: 'identificacion_por_estante',
+      header: 'Fecha de radicado de salida',
+    },
+  ];
+  const columns_arbol_bandejas: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: 'Tipo de solicitud',
+    },
+    {
+      field: 'identificacion_por_bandeja',
+      header: 'Fecha de radicado de salida',
+    },
+  ];
+  const columns_arbol_cajas: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: 'Tipo de solicitud',
+    },
+    {
+      field: 'identificacion_por_caja',
+      header: 'Fecha de radicado de salida',
+    },
+  ];
+  const columns_arbol_carpetas: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: 'Tipo de solicitud',
+    },
+    {
+      field: 'identificacion_por_carpeta',
+      header: 'Fecha de radicado de salida',
+    },
+  ];
+
+  const definition_levels = [
+    {
+      column_id: 'identificacion_deposito',
+      level: 0,
+      columns: columns_arbol_deposito,
+      table_name: 'PQRSDF',
+      property_name: '',
+    },
+    {
+      column_id: 'identificacion_por_estante',
+      level: 1,
+      columns: columns_arbol_estantes,
+      table_name: 'Solicitudes de PQRSDF',
+      property_name: 'estante',
+    },
+    {
+      column_id: 'identificacion_por_bandeja',
+      level: 2,
+      columns: columns_arbol_bandejas,
+      table_name: 'Solicitudes de PQRSDF',
+      property_name: 'bandejas',
+    },
+    {
+      column_id: 'identificacion_por_caja',
+      level: 3,
+      columns: columns_arbol_cajas,
+      table_name: 'Solicitudes de PQRSDF',
+      property_name: 'cajas',
+    },
+    {
+      column_id: 'identificacion_por_carpetas',
+      level: 4,
+      columns: columns_arbol_carpetas,
+      table_name: 'Solicitudes de PQRSDF',
+      property_name: 'carpetas',
+    },
+  ];
+
+  // AVANZADA//////////////////////////////////////////////////////
   useEffect(() => {
     //  void dispatch(get_trd())
     //   void dispatch(get_tipologias())
@@ -369,6 +480,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
       deposito_seleccionado.id_deposito !== undefined
     ) {
       void dispatch(avanzada_estante(deposito_seleccionado.id_deposito));
+      void dispatch(tabla_arbol_deposito(deposito_seleccionado.id_deposito));
       console.log(deposito_seleccionado);
     }
   }, [deposito_seleccionado]);
@@ -413,7 +525,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
   }, [caja_seleccionado]);
 
   const handleBuscarClick = () => {
-       set_selected_items((prevItems: any) => ({
+    set_selected_items((prevItems: any) => ({
       ...prevItems,
       tipoElemento: tipo_elemento_seleccionado,
     }));
@@ -440,6 +552,15 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
               marginLeft: '-5px',
             }}
           >
+            <TableRowExpansion
+              products={depositos_tabla}
+              definition_levels={definition_levels}
+              selectedItem={selectedPqr}
+              setSelectedItem={setSelectedPqr}
+              expandedRows={expandedRows}
+              setExpandedRows={setExpandedRows}
+            />
+
             <Title title="BÚSQUEDA AVANZADA" />
             <Grid container sx={{ mt: '10px', mb: '20px' }}>
               <Grid container justifyContent="center">
@@ -656,12 +777,8 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                     )}
                   />
                 </Grid>
-             
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent="flex-end"
-                >
+
+                <Grid container spacing={2} justifyContent="flex-end">
                   <Grid item marginRight={4}>
                     <Button
                       variant="contained"
@@ -675,8 +792,6 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
               </Grid>
 
               <Grid container justifyContent="center">
-                
-
                 <>
                   {selected_items.tipoElemento === 'Depósito de Archivo' && (
                     <Box sx={{ width: '50%' }}>
