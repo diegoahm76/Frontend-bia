@@ -108,41 +108,41 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
   const columns_arbol_estantes: ColumnProps[] = [
     {
       field: 'Informacion_Mostrar',
-      header: 'Tipo de solicitud',
+      header: 'Estante',
     },
     {
       field: 'identificacion_por_estante',
-      header: 'Fecha de radicado de salida',
+      header: 'Identificacion',
     },
   ];
   const columns_arbol_bandejas: ColumnProps[] = [
     {
       field: 'Informacion_Mostrar',
-      header: 'Tipo de solicitud',
+      header: 'Bandeja',
     },
     {
       field: 'identificacion_por_bandeja',
-      header: 'Fecha de radicado de salida',
+      header: 'Identificacion',
     },
   ];
   const columns_arbol_cajas: ColumnProps[] = [
     {
       field: 'Informacion_Mostrar',
-      header: 'Tipo de solicitud',
+      header: 'Cajas',
     },
     {
       field: 'identificacion_por_caja',
-      header: 'Fecha de radicado de salida',
+      header: 'Identificacion',
     },
   ];
   const columns_arbol_carpetas: ColumnProps[] = [
     {
       field: 'Informacion_Mostrar',
-      header: 'Tipo de solicitud',
+      header: 'Carpeta',
     },
     {
       field: 'identificacion_por_carpeta',
-      header: 'Fecha de radicado de salida',
+      header: 'Identificaciona',
     },
   ];
 
@@ -151,35 +151,35 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
       column_id: 'identificacion_por_entidad',
       level: 0,
       columns: columns_arbol_deposito,
-      table_name: 'PQRSDF',
+      table_name: 'Depositos',
       property_name: '',
     },
     {
       column_id: 'identificacion_por_estante',
       level: 1,
       columns: columns_arbol_estantes,
-      table_name: 'Solicitudes de PQRSDF',
+      table_name: 'Estantes',
       property_name: 'estante',
     },
     {
       column_id: 'identificacion_por_bandeja',
       level: 2,
       columns: columns_arbol_bandejas,
-      table_name: 'Solicitudes de PQRSDF',
+      table_name: 'Bandejas',
       property_name: 'bandejas',
     },
     {
       column_id: 'identificacion_por_caja',
       level: 3,
       columns: columns_arbol_cajas,
-      table_name: 'Solicitudes de PQRSDF',
+      table_name: 'Cajas',
       property_name: 'cajas',
     },
     {
       column_id: 'identificacion_por_carpetas',
       level: 4,
       columns: columns_arbol_carpetas,
-      table_name: 'Solicitudes de PQRSDF',
+      table_name: 'Carpetas',
       property_name: 'carpetas',
     },
   ];
