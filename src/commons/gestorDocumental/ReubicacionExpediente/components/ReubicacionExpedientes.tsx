@@ -11,7 +11,7 @@ import { useAppDispatch } from "../../../../hooks";
 import FolderIcon from '@mui/icons-material/Folder';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from "../../../../components/Title";
-import { control_success } from "../../../../helpers";
+import { control_error, control_success } from "../../../../helpers";
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IObjCarpeta } from "../../deposito/interfaces/deposito";
@@ -192,6 +192,8 @@ export const Expedien: React.FC = () => {
 
     useEffect(() => {
         if (limpiar) {
+
+            setCarpetasEliminadas([])
             set_titulo("");
             set_descripcion("");
             set_persona_resp({});
@@ -215,31 +217,31 @@ export const Expedien: React.FC = () => {
         }
     }, [limpiar]);
 
-    
+
     const [carpetasEliminadas, setCarpetasEliminadas] = useState<number[]>([]);
 
     const eliminar_carpeta = (index: number, sub_index: number): void => {
         let carpetas_local = [...carpetas];
         const idCarpetaEliminada = carpetas_local[index].carpetas[sub_index].id_carpeta_caja;
-    
+
         carpetas_local[index].carpetas.splice(sub_index, 1);
         if (carpetas_local[index].carpetas.length === 0)
             carpetas_local.splice(index, 1);
-    
+
         set_carpetas([...carpetas_local]);
-    
+
         // Verificar si el número ya existe en carpetasEliminadas antes de agregarlo
         if (!carpetasEliminadas.includes(idCarpetaEliminada)) {
             setCarpetasEliminadas([...carpetasEliminadas, idCarpetaEliminada]);
         }
     };
-    
 
 
 
 
+
+    const idCarpetaCajaArray: number[] = []; // Variable para almacenar los valores
     const mostrarCarpetas = () => {
-        const idCarpetaCajaArray: number[] = []; // Variable para almacenar los valores
 
         for (let i = 0; i < carpetas.length; i++) {
             const carpetasInternas = carpetas[i].carpetas;
@@ -252,46 +254,49 @@ export const Expedien: React.FC = () => {
 
         // Imprimir el resultado para verificar
         fetchCuencas(idCarpetaCajaArray);
-        console.log("0000000");
-        console.log(carpetas);
-        console.log();
-        console.log("111111");
-        console.log();
+        // console.log("0000000");
+        // console.log(idCarpetaCajaArray);
 
     };
 
 
     const idExpediente = select_expediente?.id_expediente_documental;
-    const [cuencas, setCuencas] = useState<[]>([]);
+    // const [cuencas, setCuencas] = useState<[]>([]);
 
     const fetchCuencas = async (idCarpetaCajaArray: number[]) => {
         try {
-
-            // Realizar solicitud PUT después de obtener los datos
             const putData = {
                 "carpetas_cajas_agregar": idCarpetaCajaArray,
-                "carpetas_cajas_eliminar": [2]
+                "carpetas_cajas_eliminar": carpetasEliminadas
             };
             const putUrl = `/gestor/expedientes-archivos/expedientes/agregar-eliminar-expediente-carpeta/update/${idExpediente}/`;
-
+    
             const putRes = await api.put(putUrl, putData);
             console.log('Respuesta de la solicitud PUT:', putRes.data);
-            limpiar_formulario()
-        } catch (error) {
-            console.error('Error en la solicitud PUT:', error);
+            control_success("Expediente reubicado exitosamente");
+    
+            limpiar_formulario();
+        } catch (error: any) {
+            if (error && error.response && error.response.data && error.response.data.detail) {
+                control_error(error.response.data.detail);
+            } else {
+                console.error('Error en la solicitud PUT:', error);
+                control_error('Error desconocido al procesar la solicitud');
+            }
         }
     };
+    
 
     //   useEffect(() => {
     //     fetchCuencas(idCarpetaCajaArray);
     //   }, []); 
 
-    const eliminadas  = () => {
-      
+    const eliminadas = () => {
+
         console.log("xxxxxxx");
         console.log(carpetasEliminadas);
         console.log();
-         console.log();
+        console.log();
 
     };
 
@@ -304,12 +309,12 @@ export const Expedien: React.FC = () => {
                 <Title title={"Reubicación física de expedientes  "} />
             </Grid>
 
-            <Button
+            {/* <Button
                                     color='success'
                                     variant='contained'
                                     onClick={eliminadas}>
                                     Guardar
-                                </Button>
+                                </Button> */}
 
             <Grid
                 container spacing={2} marginTop={2}
