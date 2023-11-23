@@ -9,12 +9,11 @@ import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
-import { PanelVentanillaContext } from '../../../../../panelDeVentanilla/context/PanelVentanillaContext';
-
+import { RespuestaSolicitudContext } from '../../context/RepuestaSolicitudContext';
 
 export const StepperAsignacionUsuario = (): JSX.Element => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
-    PanelVentanillaContext
+    RespuestaSolicitudContext
   );
 
   const isStepSkipped = (step: number) => skipped.has(step);
