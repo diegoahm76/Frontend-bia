@@ -14,6 +14,8 @@ import { HistorialAlertas } from '../components/HistorialAlertas';
 import { ParametrosReferencia } from '../components/ParametrosReferencia';
 import { HistorialDeDatos } from '../components/HistorialDeDatos';
 import { ConfiguracionAlarma } from '../components/ConfiguracionAlarma';
+import { Clima } from '../screens/ClimaScreen';
+import { Cuencas } from '../screens/Cuencas';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
@@ -53,6 +55,12 @@ export const EstacionesRoutes: React.FC = () => {
 
       {/* Configuracion_alarma   */}
       <Route path="configuracion_alarma/*" element={<ConfiguracionAlarma />} />
+
+      {/* Clima */}Cuencas
+      <Route path="Clima/*" element={<Clima />} />
+
+      {/* Configuracion_alarma   */}
+      <Route path="Cuencas/*" element={<Cuencas />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>

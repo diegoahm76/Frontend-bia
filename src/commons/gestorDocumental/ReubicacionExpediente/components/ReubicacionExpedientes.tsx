@@ -1,25 +1,29 @@
-import { Grid, TextField, Box, Button, Stack, FormHelperText, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { Title } from "../../../../components/Title";
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/naming-convention */
 import dayjs, { Dayjs } from "dayjs";
-import { buscar_persona, obtener_unidad_organizacional, obtener_usuario_logueado } from "../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes";
-import { useAppDispatch } from "../../../../hooks";
-import { useNavigate } from "react-router-dom";
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import dayOfYear from 'dayjs/plugin/dayOfYear';
-import AnularExpedienteModal from "../../Expedientes/aperturaExpedientes/screens/AnularExpediente";
-import BuscarExpediente from "../../Expedientes/aperturaExpedientes/screens/BuscarExpediente";
-import MoverCarpeta from "../../deposito/Carpetas/components/MoverCarpeta";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { api } from "../../../../api/axios";
+import { useNavigate } from "react-router-dom";
+import dayOfYear from 'dayjs/plugin/dayOfYear';
+import SaveIcon from '@mui/icons-material/Save';
+import ClearIcon from '@mui/icons-material/Clear';
+import { useAppDispatch } from "../../../../hooks";
+import FolderIcon from '@mui/icons-material/Folder';
+import SearchIcon from '@mui/icons-material/Search';
+import { Title } from "../../../../components/Title";
+import { control_success } from "../../../../helpers";
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IObjCarpeta } from "../../deposito/interfaces/deposito";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FolderIcon from '@mui/icons-material/Folder';
-import { control_success } from "../../../../helpers";
- dayjs.extend(dayOfYear);
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import MoverCarpeta from "../../deposito/Carpetas/components/MoverCarpeta";
+import BuscarExpediente from "../../Expedientes/aperturaExpedientes/screens/BuscarExpediente";
+import AnularExpedienteModal from "../../Expedientes/aperturaExpedientes/screens/AnularExpediente";
+import { Grid, TextField, Box, Button, Stack, FormHelperText, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { buscar_persona, obtener_unidad_organizacional, obtener_usuario_logueado } from "../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes";
+
+dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -76,9 +80,9 @@ export const Expedien: React.FC = () => {
             if (carpeta_index === -1)
                 carpetas_new[index].carpetas.push({ id_carpeta_caja: carpeta.id_carpeta, carpeta: carpeta.identificacion_carpeta });
         } else
-        control_success( "Carpeta agregada exitosamente ");
+            control_success("Carpeta agregada exitosamente ");
 
-            carpetas_new.push({ ruta: (carpeta.identificacion_deposito + ' > ' + carpeta.identificacion_estante + ' > ' + carpeta.identificacion_bandeja + ' > ' + carpeta.identificacion_caja).toUpperCase(), carpetas: [{ id_carpeta_caja: carpeta.id_carpeta, carpeta: carpeta.identificacion_carpeta }] });
+        carpetas_new.push({ ruta: (carpeta.identificacion_deposito + ' > ' + carpeta.identificacion_estante + ' > ' + carpeta.identificacion_bandeja + ' > ' + carpeta.identificacion_caja).toUpperCase(), carpetas: [{ id_carpeta_caja: carpeta.id_carpeta, carpeta: carpeta.identificacion_carpeta }] });
 
         set_carpetas([...carpetas_new]);
     };
@@ -94,7 +98,9 @@ export const Expedien: React.FC = () => {
 
     const [select_expediente, set_select_expediente] = useState<any>(null);
     const estado = select_expediente?.nombre_unidad_org;
-    console.log("aqui", estado);
+    console.log("aqui", select_expediente);
+
+    console.log("nooo", expediente);
 
     useEffect(() => {
         if (expediente !== null && expediente.expediente.length !== 0) {
@@ -172,17 +178,12 @@ export const Expedien: React.FC = () => {
         set_titulo(e.target.value);
         set_msj_error_titulo(!(e.target.value !== null && e.target.value !== ""));
     }
-
-
-
     const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_descripcion(e.target.value);
     }
-
     const limpiar_formulario = (): void => {
         set_limpiar(true);
     }
-
     const salir_expediente: () => void = () => {
         navigate('/home');
     }
@@ -214,15 +215,85 @@ export const Expedien: React.FC = () => {
         }
     }, [limpiar]);
 
+    
+    const [carpetasEliminadas, setCarpetasEliminadas] = useState<number[]>([]);
+
     const eliminar_carpeta = (index: number, sub_index: number): void => {
         let carpetas_local = [...carpetas];
+        const idCarpetaEliminada = carpetas_local[index].carpetas[sub_index].id_carpeta_caja;
+    
         carpetas_local[index].carpetas.splice(sub_index, 1);
         if (carpetas_local[index].carpetas.length === 0)
             carpetas_local.splice(index, 1);
-
+    
         set_carpetas([...carpetas_local]);
-    }
+    
+        // Verificar si el número ya existe en carpetasEliminadas antes de agregarlo
+        if (!carpetasEliminadas.includes(idCarpetaEliminada)) {
+            setCarpetasEliminadas([...carpetasEliminadas, idCarpetaEliminada]);
+        }
+    };
+    
 
+
+
+
+    const mostrarCarpetas = () => {
+        const idCarpetaCajaArray: number[] = []; // Variable para almacenar los valores
+
+        for (let i = 0; i < carpetas.length; i++) {
+            const carpetasInternas = carpetas[i].carpetas;
+
+            for (let j = 0; j < carpetasInternas.length; j++) {
+                // Almacenar los valores en idCarpetaCajaArray
+                idCarpetaCajaArray.push(carpetasInternas[j].id_carpeta_caja);
+            }
+        }
+
+        // Imprimir el resultado para verificar
+        fetchCuencas(idCarpetaCajaArray);
+        console.log("0000000");
+        console.log(carpetas);
+        console.log();
+        console.log("111111");
+        console.log();
+
+    };
+
+
+    const idExpediente = select_expediente?.id_expediente_documental;
+    const [cuencas, setCuencas] = useState<[]>([]);
+
+    const fetchCuencas = async (idCarpetaCajaArray: number[]) => {
+        try {
+
+            // Realizar solicitud PUT después de obtener los datos
+            const putData = {
+                "carpetas_cajas_agregar": idCarpetaCajaArray,
+                "carpetas_cajas_eliminar": [2]
+            };
+            const putUrl = `/gestor/expedientes-archivos/expedientes/agregar-eliminar-expediente-carpeta/update/${idExpediente}/`;
+
+            const putRes = await api.put(putUrl, putData);
+            console.log('Respuesta de la solicitud PUT:', putRes.data);
+            limpiar_formulario()
+        } catch (error) {
+            console.error('Error en la solicitud PUT:', error);
+        }
+    };
+
+    //   useEffect(() => {
+    //     fetchCuencas(idCarpetaCajaArray);
+    //   }, []); 
+
+    const eliminadas  = () => {
+      
+        console.log("xxxxxxx");
+        console.log(carpetasEliminadas);
+        console.log();
+         console.log();
+
+    };
 
     return (
         <>
@@ -233,7 +304,12 @@ export const Expedien: React.FC = () => {
                 <Title title={"Reubicación física de expedientes  "} />
             </Grid>
 
-
+            <Button
+                                    color='success'
+                                    variant='contained'
+                                    onClick={eliminadas}>
+                                    Guardar
+                                </Button>
 
             <Grid
                 container spacing={2} marginTop={2}
@@ -470,6 +546,14 @@ export const Expedien: React.FC = () => {
                                 spacing={2}
                                 sx={{ mt: '20px' }}
                             >
+
+                                <Button
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<SaveIcon />}
+                                    onClick={mostrarCarpetas}>
+                                    Guardar
+                                </Button>
 
                                 <Button
                                     // color='inherit'
