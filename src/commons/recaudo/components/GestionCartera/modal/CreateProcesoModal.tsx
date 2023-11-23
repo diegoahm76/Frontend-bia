@@ -117,7 +117,7 @@ export const CreateProcesoModal = ({
   const handle_submit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const { id_etapa, id_categoria } = form_data;
-    create_new_proceso(fecha_inicio.format('YYYY-MM-DDTHH:mm:ss'), Number(id_etapa), Number(id_categoria));
+    create_new_proceso(fecha_inicio.format('YYYY-MM-DD'), Number(id_etapa), Number(id_categoria));
     set_fecha_inicio(dayjs(new Date()));
     set_form_data({ id_etapa: '', id_categoria: '' });
     handle_close();

@@ -7,6 +7,7 @@ import ReaperturaExpedienteScreen from '../ReaperturaExpedientes/screens/Repaert
 import { ExpedientesScreen } from '../aperturaExpedientes/screens/ExpedientesScreen';
 import { IndexacionScreen } from '../indexacionExpedientes/screens/IndexacionScreen';
 import { FirmaCierreIndiceScreen } from '../FirmaCierreIndiceElectronico/screens/FirmaCierreIndiceScreen';
+import { ConsultaExpedientesDocScreen } from '../consultaExpedientesDocumentales/screens/ConsultaExpedientesDocScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedientesRoutes = (): ReactElement => {
@@ -32,6 +33,10 @@ export const ExpedientesRoutes = (): ReactElement => {
         <Route
           path="firma_cierre_indice/*"
           element={<FirmaCierreIndiceScreen />}
+        />
+        <Route
+          path="consulta_epedientes_doc/*"
+          element={<ConsultaExpedientesDocScreen />}
         />
         <Route path="/*" element={<Page404 />} />
       </Routes>

@@ -14,14 +14,30 @@ import { Title } from '../../../../components';
 import { PanelDeVentanillaScreen } from '../module/entrega98/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { HistoricoSolicitudesScreen } from '../module/entrega98/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
 import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
+import { getHistoricoByRadicado } from '../toolkit/thunks/Pqrsdf/getHistoByRad.service';
+import { ModalAndLoadingContext } from '../../../../context/GeneralContext';
+import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaStore';
+import { useAppDispatch } from '../../../../hooks';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
-  // const [value, setValue] = useState(0);
+  // * dispatch declaration
+  const dispatch = useAppDispatch();
 
   //* context declaration
-  const { value, handleChange } = useContext(PanelVentanillaContext);
+  const { value, handleChange, setRadicado } = useContext(PanelVentanillaContext);
+  const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
+  const handleRequestRadicado = async () => {
+    try {
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
 
+    dispatch(setListaHistoricoSolicitudes(historico));
+    console.log(historico);
+  };
 
   return (
     <Grid container sx={containerStyles}>
@@ -33,8 +49,19 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            <Tab label="Panel de ventanilla" {...a11yProps(0)} />
-            <Tab label="Histórico de solicitudes" {...a11yProps(1)} />
+            <Tab
+              onClick={() => {
+                dispatch(setListaHistoricoSolicitudes([]));
+                setRadicado('');
+              }}
+              label="Panel de ventanilla"
+              {...a11yProps(0)}
+            />
+            <Tab
+              onClick={handleRequestRadicado}
+              label="Histórico de solicitudes"
+              {...a11yProps(1)}
+            />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>

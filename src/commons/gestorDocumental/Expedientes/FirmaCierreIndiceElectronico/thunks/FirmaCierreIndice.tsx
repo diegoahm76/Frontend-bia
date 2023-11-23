@@ -97,7 +97,7 @@ export const validar_codigo_verificación: any = (id_expediente_documental: numb
 export const firma_cierre_indice: any = (id_expediente_documental: number, observacion: string) => {
   return async () => {
     try {
-      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/firma-cierre/envio-codigo/15/`,{id_indice_electronico_exp: id_expediente_documental,observacion: observacion});
+      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/firma-cierre/`,{id_indice_electronico_exp: id_expediente_documental,observacion: observacion});
       control_success('Se realizó la firma correcta del cierre del índice electrónico.');
       return data;
     } catch (error: any) {

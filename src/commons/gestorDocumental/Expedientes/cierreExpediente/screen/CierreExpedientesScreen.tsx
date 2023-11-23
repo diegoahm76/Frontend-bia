@@ -28,7 +28,6 @@ const CierreExpedientesScreen = () => {
     const [open_modal, set_open_modal] = useState(false);
     const [open_modal_archivo, set_open_modal_archivo] = useState(false);
     const [selected_expediente, set_selected_expediente] = useState<IObjExpedientes>();
-    const [selected_archivo_soporte, set_selected_archivo_soporte] = useState<IObjArchivoExpediente>();
     const dispatch = useAppDispatch();
 
 
