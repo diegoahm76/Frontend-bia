@@ -98,9 +98,9 @@ export const Expedien: React.FC = () => {
 
     const [select_expediente, set_select_expediente] = useState<any>(null);
     const estado = select_expediente?.nombre_unidad_org;
-    console.log("aqui", select_expediente);
+    // console.log("aqui", select_expediente);
 
-    console.log("nooo", expediente);
+    // console.log("nooo", expediente);
 
     useEffect(() => {
         if (expediente !== null && expediente.expediente.length !== 0) {
@@ -291,14 +291,14 @@ export const Expedien: React.FC = () => {
     //     fetchCuencas(idCarpetaCajaArray);
     //   }, []); 
 
-    const eliminadas = () => {
+    // const eliminadas = () => {
 
-        console.log("xxxxxxx");
-        console.log(carpetasEliminadas);
-        console.log();
-        console.log();
+    //     // console.log("xxxxxxx");
+    //     // console.log(carpetasEliminadas);
+    //     console.log();
+    //     console.log();
 
-    };
+    // };
 
     return (
         <>
