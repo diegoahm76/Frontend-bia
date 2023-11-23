@@ -25,7 +25,7 @@ interface IProps {
   expandedRows: DataTableExpandedRows | DataTableValueArray | undefined;
   setExpandedRows: any;
   onRowToggleFunction: any;
-  initial_allow_expansion: boolean;
+  initial_allow_expansion?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TableRowExpansion = ({
