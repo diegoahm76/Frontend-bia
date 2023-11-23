@@ -28,6 +28,8 @@ import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/
 import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
 import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
+import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
+// import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 
 const routes = [
@@ -130,6 +132,7 @@ const routes = [
     name: 'Interno_encuesta',
     component: () => <Encuasta_encuestas_Routes />,
   },
+
   {
     path: 'expedientes/',
     name: 'expedientes',
@@ -150,6 +153,13 @@ const routes = [
     path: 'reportes_documentacion/',
     name: 'reportes_documentacion',
     component: () => <ReportesDocumentacionRoutes />,
+  },
+  {
+    path: 'Pqrsdf/',
+    name: 'Pqrsdf',
+    component: () => <PqrsdfRoutes />,
+    
+  
   },
   {
     path: 'panel_ventanilla/',

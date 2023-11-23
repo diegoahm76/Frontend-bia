@@ -250,7 +250,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
                     >
 
 
-                        <Title title={selected_expediente.id_documento_de_archivo_exped === null ? "AGREGAR ARCHIVO DE SOPORTE" : "EDITAR ARCHIVO DE SOPORTE"} />
+                        <Title title="ARCHIVO DE SOPORTE" />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
                             <Grid container justifyContent="center">

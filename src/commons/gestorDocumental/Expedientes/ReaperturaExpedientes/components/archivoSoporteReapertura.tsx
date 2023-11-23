@@ -245,7 +245,7 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
                             marginLeft: '-5px',
                         }}
                     >
-                        <Title title="AGREGAR ARCHIVO DE SOPORTE" />
+                        <Title title="ARCHIVO DE SOPORTE" />
                         <Grid container sx={{ mt: '10px', mb: '20px' }}>
 
                             <Grid container justifyContent="center">
