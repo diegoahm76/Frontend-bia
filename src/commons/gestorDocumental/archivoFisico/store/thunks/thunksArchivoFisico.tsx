@@ -64,7 +64,7 @@ export const avanzada_deposito = (): any => {
   };
 };
 
-export const tabla_arbol_deposito = (id:number | null): any => {
+export const tabla_arbol_deposito = (id:number | string |null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
@@ -73,7 +73,7 @@ export const tabla_arbol_deposito = (id:number | null): any => {
       console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
-        dispatch(set_deposito_arbol(data.data));
+        dispatch(set_deposito_arbol({deposito: data.deposito, estantes:data.estantes}));
         control_success(data.detail);
       } else {
         control_error(data.detail);

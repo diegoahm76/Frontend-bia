@@ -10,16 +10,16 @@ export interface IArchivoFisico {
 
 // busqueda avanzada
 export interface IObjDepositos {
-  id_deposito?: number | null;
+  id_deposito?: number |  null;
   nombre_deposito?: string | null;
   identificacion_por_entidad?: string | null;
   orden_ubicacion_por_entidad?: number | null;
   direccion_deposito?: string | null;
-  activo?: boolean;
+  activo?: boolean | null;
   cod_municipio_nal?: number | null;
   cod_pais_exterior?: string | null;
   id_sucursal_entidad?: number | null;
-  estante?: IObjEstanteArbol[];
+  estante?: IObjEstanteArbol[] | null;
 }
 export interface IObjEstantes {
   id_estante_deposito?: number | null;
@@ -73,13 +73,13 @@ export interface IObjcarpetas {
 
 export interface IObjarbol {
   deposito: {
-    id_deposito?: number | null;
+    id_deposito?: number | string | null;
     nombre_deposito?: string | null;
     identificacion_deposito?: string | null;
     orden_deposito?: number | null;
     Informacion_Mostrar?: string | null;
   };
-  estante?: IObjEstanteArbol[];
+  estantes?: IObjEstanteArbol[] | null;
 }
 
 export interface IObjEstanteArbol {
