@@ -18,22 +18,44 @@ import { Title } from '../../../../../../components';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { columnsAtom, rowsEJEMPLO } from './columnsAtom/columnsAtom';
+import {
+  columnsAtom,
+  rowsEJEMPLO,
+  rowsEjemploAnexosDePqrsdf,
+} from './columnsAtom/columnsAtom';
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
 import InfoIcon from '@mui/icons-material/Info';
 import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
+import { useAppSelector } from '../../../../../../hooks';
+
+/* complementos:
+            "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
+            "asunto": "AAAA",
+            "cantidad_anexos": 0,
+            "radicado": "ABC123-2023-R12345",
+
+*/
+
+/* pqrsdf 
+            "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
+            "asunto": "SIN IDENTIFICAR",
+            "cantidad_anexos": 3,
+            "radicado": "XYZ789-2023-R67890",
+*/
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
-
+  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+    (state) => state.PanelVentanillaSlice
+  );
   //* navigate declaration
   const navigate = useNavigate();
 
   //* destructuring props
-  const { infoTitle } = props;
+  const { infoTitle, titleOpcion } = props;
 
   //* se debe traer de un context el estado de los anexos y de los metadatos
   const {
@@ -112,7 +134,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Radicado"
                 size="small"
                 variant="outlined"
-                value={''}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.radicado ?? ''
+                }
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -124,7 +148,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Títular"
                 size="small"
                 variant="outlined"
-                // value={value}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.nombre_completo_titular ??
+                  ''
+                }
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -135,7 +162,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Cantidad de anexos"
                 size="small"
                 variant="outlined"
-                // value={value}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.cantidad_anexos ??
+                  ''
+                }
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -146,7 +176,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 label="Asunto"
                 size="small"
                 variant="outlined"
-                // value={value}
+                value={
+                  currentElementPqrsdComplementoTramitesYotros?.asunto ?? ''
+                }
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -154,9 +186,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
         </Grid>
 
         <RenderDataGrid
-          rows={rowsEJEMPLO || []}
+          rows={rowsEjemploAnexosDePqrsdf || []}
           columns={colums || []}
-          title="Listado de anexos"
+          title={titleOpcion}
           // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos
         />
 
@@ -271,7 +303,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'5'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -282,7 +314,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Metadatos asunto'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -293,7 +325,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'11/05/2023'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -307,7 +339,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Cédula de ciudadanía'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -318,7 +350,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Origen de archivo'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -329,7 +361,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Digital'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -340,7 +372,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'SI'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -355,7 +387,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Clave1, Clave2. Clave3'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -366,7 +398,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  // value={value}
+                  value={'Tipología documental'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
