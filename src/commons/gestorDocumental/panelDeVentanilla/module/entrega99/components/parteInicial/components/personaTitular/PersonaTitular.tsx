@@ -3,6 +3,10 @@ import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 
 export const PersonaTitular = (): JSX.Element => {
+
+  {/*datos deben salir de una mixtura del objeto de autenticación y */}
+
+
   return (
     <Grid
       item
@@ -18,20 +22,20 @@ export const PersonaTitular = (): JSX.Element => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               disabled
               size="small"
               label="Nombres"
               variant="outlined"
-              value={'Pedro'}
+              value={'cristiano'}
               inputProps={{
                 maxLength: 50,
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/*<Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               disabled
@@ -43,7 +47,7 @@ export const PersonaTitular = (): JSX.Element => {
                 maxLength: 10,
               }}
             />
-          </Grid>
+          </Grid>*/}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth

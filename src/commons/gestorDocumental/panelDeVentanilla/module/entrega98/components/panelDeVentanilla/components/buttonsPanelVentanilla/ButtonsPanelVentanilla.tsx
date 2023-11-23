@@ -1,67 +1,54 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 
-import DevicesIcon from '@mui/icons-material/Devices';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import GroupsIcon from '@mui/icons-material/Groups';
-import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 
 import { useNavigate } from 'react-router-dom';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
-import { ModalAtomInfoElement } from '../../../../Atom/ModalAtomInfoElement';
+import { useAppSelector } from '../../../../../../../../../hooks';
 
-//* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales
-const actions = [
-  {
-    id: 'Dig',
-    icon: <DevicesIcon />,
-    name: 'Enviar solicitud de digitalización',
-    path: '',
-    disabled: false,
-  },
-  {
-    id: 'AsigPer',
-    icon: <PersonAddIcon />,
-    name: 'Enviar solicitud al usuario',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_usario',
-    disabled: false,
-  },
-  {
-    id: 'AsigGrup',
-    icon: <GroupsIcon />,
-    name: 'Asignar al grupo',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: true,
-  },
-  {
-    id: 'ContinuarAsigGrup',
-    icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
-    // path:'/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: true,
-  },
-];
-export const ButtonsPanelVentanilla = () => {
+//* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
+
+{
+  /* se van a tener que añadir las condiciones, ya que el panel de Ventanilla va a terminar teniendo 3 bloques de botones
+
+  1. botones de pqrsdf
+  2. boton de tramites y servicios
+  3. boton de otros
+*/
+}
+export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
-  //* context declaration
+  //* redux states
+  const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
+  const actionsTramitesYServicios = useAppSelector(
+    (state) => state.PanelVentanillaSlice.actionsTramitesYServicios
+  );
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+    (state) =>
+      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  );
 
   const withValidation =
     (fn: Function) => (action: { disabled: boolean; path: string }) => {
       if (action.disabled) {
-        control_warning('Esta acción no está disponible');
+        control_warning(
+          'Esta acción no está disponible para el elemento el cual seleccionaste'
+        );
       } else {
         navigate(action.path);
         fn();
       }
     };
+
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
   const handleDigitalizacion = withValidation(async () => {
     await Swal.fire({
@@ -125,27 +112,110 @@ export const ButtonsPanelVentanilla = () => {
     }
   };
 
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  //*
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
+
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  //*
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
+
   return (
     <>
       {/* se debe revisar ya que no si no hay un elemento seleccionado (pqrsdf, tramites y servicios, otros) es inncesario mostrar este elemento dial  */}
-
-      <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-        <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: 'absolute', top: 0, left: 0 }}
-          icon={<MultipleStopIcon />}
-          direction="right"
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={() => handleClickActionsGeneral(action)}
-            />
-          ))}
-        </SpeedDial>
-      </Box>
+      {(() => {
+        switch (currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud) {
+          case 'PQRSDF':
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: 'absolute', top: 0, left: 0 }}
+                  icon={<MultipleStopIcon />}
+                  direction="right"
+                >
+                  {actions.map(
+                    (action: {
+                      id: string;
+                      icon: any;
+                      name: string;
+                      path: string;
+                      disabled: boolean;
+                    }) =>
+                      action.disabled ? null : (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          tooltipTitle={action.name}
+                          onClick={() => handleClickActionsGeneral(action)}
+                        />
+                      )
+                  )}
+                </SpeedDial>
+              </Box>
+            );
+          case 'Tramites y Servicios':
+            // Caso para 'Tramites y Servicios'
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: 'absolute', top: 0, left: 0 }}
+                  icon={<MultipleStopIcon />}
+                  direction="right"
+                >
+                  {actionsTramitesYServicios.map(
+                    (action: {
+                      id: string;
+                      icon: any;
+                      name: string;
+                      path: string;
+                      disabled: boolean;
+                    }) =>
+                      action.disabled ? null : (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          tooltipTitle={action.name}
+                          onClick={() => {
+                            console.log(action);
+                          }}
+                        />
+                      )
+                  )}
+                </SpeedDial>
+              </Box>
+            );
+          case 'Otros':
+            // Caso para 'Otros'
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <>Botones de Otros </>
+              </Box>
+            );
+          default:
+            // Caso para null o cualquier otro valor
+            return <></>;
+        }
+      })()}
     </>
   );
 };
