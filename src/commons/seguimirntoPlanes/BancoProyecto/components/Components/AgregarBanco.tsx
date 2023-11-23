@@ -8,87 +8,90 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
-import { useDetalleInversionHook } from '../../hooks/useDetalleInversionHook';
-import { DataContextDetalleInversion } from '../../context/context';
+import { useBancosHook } from '../../hooks/useBancosHook';
+import { DataContextBancos } from '../../context/context';
 import { DataContextIndicador } from '../../../Indicadores/context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarDetalleInversion: React.FC = () => {
+export const AgregarBanco: React.FC = () => {
   const {
-    control_detalle,
-    errors_detalle,
-    reset_detalle,
-    data_watch_detalle,
-    set_value_detalle,
+    control_banco,
+    errors_banco,
+    reset_banco,
+    data_watch_banco,
+    set_value_banco,
 
-    onsubmit_detalle,
+    onsubmit_banco,
     onsubmit_editar,
-    is_savingd_detalle,
+    is_savingd_banco,
 
-    limpiar_formulario_detalle,
-  } = useDetalleInversionHook();
+    limpiar_formulario_banco,
+  } = useBancosHook();
 
   const dispatch = useAppDispatch();
 
-  const { mode, detalle_inversion } = useAppSelector((state) => state.planes);
+  const { mode, banco } = useAppSelector((state) => state.planes);
+
+  const id_indicador = data_watch_banco.id_indicador;
 
   const {
-    productos_selected,
     actividad_selected,
     fetch_data_actividad_selected,
-    fetch_data_producto_selected,
+    indicadores_selected,
+    fetch_data_indicadores,
   } = useContext(DataContextIndicador);
 
   const {
     rubros_selected,
-    sector_selected,
-    programas_selected,
-    subprogramas_selected,
+    metas_selected,
     proyectos_selected,
+    fuentes_selected,
+    set_id_indicador,
+    fetch_data_metas,
     fetch_data_rubros,
-    fetch_data_sectores,
-    fetch_data_programas,
     fetch_data_proyectos,
-    fetch_data_subprogramas,
-  } = useContext(DataContextDetalleInversion);
+    fetch_data_fuentes,
+  } = useContext(DataContextBancos);
 
   useEffect(() => {
     fetch_data_actividad_selected();
-    fetch_data_producto_selected();
     fetch_data_rubros();
-    fetch_data_sectores();
-    fetch_data_programas();
+    fetch_data_metas();
     fetch_data_proyectos();
-    fetch_data_subprogramas();
+    fetch_data_fuentes();
+    fetch_data_indicadores();
   }, []);
 
   useEffect(() => {
+    if (id_indicador || banco.id_indicador) {
+      set_id_indicador(id_indicador ?? banco.id_indicador);
+    }
+  }, [id_indicador, banco]);
+
+  useEffect(() => {
     if (mode.crear) {
-      limpiar_formulario_detalle();
+      limpiar_formulario_banco();
     }
     if (mode.editar) {
-      reset_detalle({
-        id_detalle_inversion: detalle_inversion.id_detalle_inversion,
-        nombre_sector: detalle_inversion.nombre_sector,
-        nombre_rubro: detalle_inversion.nombre_rubro,
-        nombre_programa: detalle_inversion.nombre_programa,
-        nombre_subprograma: detalle_inversion.nombre_subprograma,
-        nombre_proyecto: detalle_inversion.nombre_proyecto,
-        nombre_producto: detalle_inversion.nombre_producto,
-        nombre_actividad: detalle_inversion.nombre_actividad,
-        cuenta: detalle_inversion.cuenta,
-        valor_cuenta: detalle_inversion.valor_cuenta,
-        id_sector: detalle_inversion.id_sector,
-        id_rubro: detalle_inversion.id_rubro,
-        id_programa: detalle_inversion.id_programa,
-        id_subprograma: detalle_inversion.id_subprograma,
-        id_proyecto: detalle_inversion.id_proyecto,
-        id_producto: detalle_inversion.id_producto,
-        id_actividad: detalle_inversion.id_actividad,
+      reset_banco({
+        id_banco: banco.id_banco,
+        nombre_proyecto: banco.nombre_proyecto,
+        nombre_actividad: banco.nombre_actividad,
+        nombre_indicador: banco.nombre_indicador,
+        nombre_meta: banco.nombre_meta,
+        rubro: banco.rubro,
+        banco_valor: banco.banco_valor,
+        objeto_contrato: banco.objeto_contrato,
+        id_proyecto: banco.id_proyecto,
+        id_actividad: banco.id_actividad,
+        id_indicador: banco.id_indicador,
+        id_meta: banco.id_meta,
+        id_rubro: banco.id_rubro,
+        id_fuente_financiacion: banco.id_fuente_financiacion,
       });
     }
-  }, [mode, detalle_inversion]);
+  }, [mode, banco]);
 
   return (
     <>
@@ -97,7 +100,7 @@ export const AgregarDetalleInversion: React.FC = () => {
           e.preventDefault();
           e.stopPropagation();
           if (mode.crear) {
-            onsubmit_detalle();
+            onsubmit_banco();
           }
           if (mode.editar) {
             onsubmit_editar();
@@ -127,7 +130,7 @@ export const AgregarDetalleInversion: React.FC = () => {
               {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_sector"
-                  control={control_detalle}
+                  control={control_banco}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
@@ -146,27 +149,53 @@ export const AgregarDetalleInversion: React.FC = () => {
               </Grid> */}
             </>
           ) : null}
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
-              name="cuenta"
-              control={control_detalle}
+              name="nombre_meta"
+              control={control_banco}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   fullWidth
                   size="small"
-                  label="Cuenta"
+                  label="Nombre Meta"
                   variant="outlined"
                   multiline
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_detalle.cuenta}
+                  error={!!errors_banco.nombre_meta}
                   helperText={
-                    errors_detalle.cuenta
-                      ? 'Es obligatorio ingresar una cuenta'
-                      : 'Ingrese una cuenta'
+                    errors_banco.nombre_meta
+                      ? 'Es obligatorio ingresar un nombre'
+                      : 'Ingrese un nombre'
+                  }
+                />
+              )}
+            />
+          </Grid> */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="objeto_contrato"
+              control={control_banco}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Objeto contrato"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_banco.objeto_contrato}
+                  helperText={
+                    errors_banco.objeto_contrato
+                      ? 'Es obligatorio ingresar un nombre'
+                      : 'Ingrese un nombre'
                   }
                 />
               )}
@@ -174,14 +203,14 @@ export const AgregarDetalleInversion: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="valor_cuenta"
-              control={control_detalle}
+              name="banco_valor"
+              control={control_banco}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   fullWidth
                   size="small"
-                  label="Valor detalle_inversion"
+                  label="Valor banco"
                   variant="outlined"
                   InputProps={{
                     inputComponent: NumericFormatCustom as any,
@@ -191,11 +220,11 @@ export const AgregarDetalleInversion: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_detalle.valor_cuenta}
+                  error={!!errors_banco.banco_valor}
                   helperText={
-                    errors_detalle.valor_cuenta
-                      ? 'Es obligatorio ingresar un valor de la cuenta'
-                      : 'Ingrese un valor de la cuenta'
+                    errors_banco.banco_valor
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
                   }
                 />
               )}
@@ -203,8 +232,8 @@ export const AgregarDetalleInversion: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="id_sector"
-              control={control_detalle}
+              name="id_indicador"
+              control={control_banco}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -216,14 +245,45 @@ export const AgregarDetalleInversion: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_detalle.id_sector}
+                  error={!!errors_banco.id_indicador}
                   helperText={
-                    errors_detalle?.id_sector?.type === 'required'
+                    errors_banco?.id_indicador?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : 'ingrese el sector'
                   }
                 >
-                  {sector_selected.map((option) => (
+                  {indicadores_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_meta"
+              control={control_banco}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={!id_indicador}
+                  fullWidth
+                  required
+                  error={!!errors_banco.id_meta}
+                  helperText={
+                    errors_banco?.id_meta?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese meta'
+                  }
+                >
+                  {metas_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -235,7 +295,7 @@ export const AgregarDetalleInversion: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_rubro"
-              control={control_detalle}
+              control={control_banco}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -247,9 +307,9 @@ export const AgregarDetalleInversion: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_detalle.id_rubro}
+                  error={!!errors_banco.id_rubro}
                   helperText={
-                    errors_detalle?.id_rubro?.type === 'required'
+                    errors_banco?.id_rubro?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : 'ingrese el rubro'
                   }
@@ -265,8 +325,8 @@ export const AgregarDetalleInversion: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="id_programa"
-              control={control_detalle}
+              name="id_fuente_financiacion"
+              control={control_banco}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -278,45 +338,14 @@ export const AgregarDetalleInversion: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_detalle.id_programa}
+                  error={!!errors_banco.id_fuente_financiacion}
                   helperText={
-                    errors_detalle?.id_programa?.type === 'required'
+                    errors_banco?.id_fuente_financiacion?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : 'ingrese el programa'
+                      : 'ingrese el fuente financiacion'
                   }
                 >
-                  {programas_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
-              name="id_subprograma"
-              control={control_detalle}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_detalle.id_subprograma}
-                  helperText={
-                    errors_detalle?.id_subprograma?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el subprograma'
-                  }
-                >
-                  {subprogramas_selected.map((option) => (
+                  {fuentes_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -328,7 +357,7 @@ export const AgregarDetalleInversion: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_proyecto"
-              control={control_detalle}
+              control={control_banco}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -340,9 +369,9 @@ export const AgregarDetalleInversion: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_detalle.id_proyecto}
+                  error={!!errors_banco.id_proyecto}
                   helperText={
-                    errors_detalle?.id_proyecto?.type === 'required'
+                    errors_banco?.id_proyecto?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : 'ingrese el proyecto'
                   }
@@ -358,39 +387,8 @@ export const AgregarDetalleInversion: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="id_producto"
-              control={control_detalle}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_detalle.id_producto}
-                  helperText={
-                    errors_detalle?.id_producto?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el producto'
-                  }
-                >
-                  {productos_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
               name="id_actividad"
-              control={control_detalle}
+              control={control_banco}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -402,9 +400,9 @@ export const AgregarDetalleInversion: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_detalle.id_actividad}
+                  error={!!errors_banco.id_actividad}
                   helperText={
-                    errors_detalle?.id_actividad?.type === 'required'
+                    errors_banco?.id_actividad?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : 'ingrese la actividad'
                   }
@@ -425,7 +423,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                 color="warning"
                 disabled={false}
                 onClick={() => {
-                  limpiar_formulario_detalle();
+                  limpiar_formulario_banco();
                   dispatch(
                     set_current_mode_planes({
                       ver: true,
@@ -443,9 +441,9 @@ export const AgregarDetalleInversion: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_savingd_detalle}
+                disabled={is_savingd_banco}
                 startIcon={<SaveIcon />}
-                loading={is_savingd_detalle}
+                loading={is_savingd_banco}
               >
                 {mode.editar ? 'Actualizar' : 'Guardar'}
               </LoadingButton>

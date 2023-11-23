@@ -1,24 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  Alert,
-  Button,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
-import { tipo_medida } from '../../../Indicadores/choices/selects';
 import { useFuenteFinanciacionHook } from '../../hooks/useFuenteFinanciacionHook';
 import { DataContextFuentesFinanciacion } from '../../context/context';
-import NumberFormat from 'react-number-format';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -27,8 +17,6 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
     control_fuente,
     errors_fuente,
     reset_fuente,
-    data_watch_fuente,
-    set_value_fuente,
 
     onsubmit_fuente,
     onsubmit_editar,
@@ -39,18 +27,14 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const { mode, fuente_financiacion } = useAppSelector((state) => state.planes);
+  const { mode, fuente } = useAppSelector((state) => state.planes);
 
-  const {
-    cuencas_selected,
-    indicadores_selected,
-    fetch_data_cuencas,
-    fetch_data_indicadores,
-  } = useContext(DataContextFuentesFinanciacion);
+  const { concepto_selected, fetch_data_concepto } = useContext(
+    DataContextFuentesFinanciacion
+  );
 
   useEffect(() => {
-    fetch_data_cuencas();
-    fetch_data_indicadores();
+    fetch_data_concepto();
   }, []);
 
   useEffect(() => {
@@ -59,31 +43,16 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
     }
     if (mode.editar) {
       reset_fuente({
-        id_fuente: fuente_financiacion.id_fuente,
-        nombre_indicador: fuente_financiacion.nombre_indicador,
-        nombre_fuente: fuente_financiacion.nombre_fuente,
-        nombre_cuenca: fuente_financiacion.nombre_cuenca,
-        vano_1: fuente_financiacion.vano_1,
-        vano_2: fuente_financiacion.vano_2,
-        vano_3: fuente_financiacion.vano_3,
-        vano_4: fuente_financiacion.vano_4,
-        valor_total: fuente_financiacion.valor_total,
-        id_indicador: fuente_financiacion.id_indicador,
-        id_cuenca: fuente_financiacion.id_cuenca,
+        id_fuente: fuente.id_fuente,
+        concepto: fuente.concepto,
+        vano_1: fuente.vano_1,
+        vano_2: fuente.vano_2,
+        vano_3: fuente.vano_3,
+        vano_4: fuente.vano_4,
+        id_concepto: fuente.id_concepto,
       });
     }
-  }, [mode, fuente_financiacion]);
-
-  const vano_1 = Number(data_watch_fuente.vano_1);
-  const vano_2 = Number(data_watch_fuente.vano_2);
-  const vano_3 = Number(data_watch_fuente.vano_3);
-  const vano_4 = Number(data_watch_fuente.vano_4);
-
-  const valor_total = vano_1 + vano_2 + vano_3 + vano_4;
-
-  useEffect(() => {
-    set_value_fuente('valor_total', valor_total);
-  }, [valor_total]);
+  }, [mode, fuente]);
 
   return (
     <>
@@ -115,11 +84,11 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de fuente_financiacions" />
+            <Title title="Registro de fuentes" />
           </Grid>
           {mode.editar ? (
             <>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Controller
                   name="nombre_indicador"
                   control={control_fuente}
@@ -138,7 +107,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
             </>
           ) : null}
           <Grid item xs={12} sm={6}>
@@ -278,36 +247,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="valor_total"
-              control={control_fuente}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Valor fuente_financiacion"
-                  variant="outlined"
-                  multiline
-                  value={value}
-                  disabled={true}
-                  required={true}
-                  onChange={onChange}
-                  InputProps={{
-                    inputComponent: NumericFormatCustom as any,
-                  }}
-                  error={!!errors_fuente.valor_total}
-                  helperText={
-                    errors_fuente.valor_total
-                      ? 'Es obligatorio ingresar un valor total de fuente de financiacion'
-                      : 'Ingrese un valor total de fuente de financiacion'
-                  }
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="id_indicador"
+              name="id_concepto"
               control={control_fuente}
               defaultValue=""
               rules={{ required: true }}
@@ -320,45 +260,14 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_fuente.id_indicador}
+                  error={!!errors_fuente.id_concepto}
                   helperText={
-                    errors_fuente?.id_indicador?.type === 'required'
+                    errors_fuente?.id_concepto?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : 'ingrese el indicador'
+                      : 'ingrese concepto'
                   }
                 >
-                  {indicadores_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="id_cuenca"
-              control={control_fuente}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_fuente.id_cuenca}
-                  helperText={
-                    errors_fuente?.id_cuenca?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese la cuenca'
-                  }
-                >
-                  {cuencas_selected.map((option) => (
+                  {concepto_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
