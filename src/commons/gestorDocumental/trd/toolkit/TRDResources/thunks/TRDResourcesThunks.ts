@@ -228,7 +228,9 @@ export const edit_formato_by_tipo_medio_service = ({
   nombre,
   id_formato_tipo_medio,
   cod_tipo_medio_doc,
-  activo
+  activo,
+  tamagno_max_mb,
+  control_tamagno_max
 }: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -238,7 +240,9 @@ export const edit_formato_by_tipo_medio_service = ({
       const { data } = await api.put(url, {
         nombre,
         cod_tipo_medio_doc,
-        activo
+        activo,
+        control_tamagno_max,
+        tamagno_max_mb
       });
       control_success(data.detail);
       return data;

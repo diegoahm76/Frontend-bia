@@ -80,6 +80,7 @@ export const use_trd = (): any => {
       nombre: '',
       activo: true,
       cod_tipo_medio_doc: '',
+      control_tamagno_max:true,
       formatos: []
     },
     mode: 'onBlur',
@@ -225,7 +226,7 @@ export const use_trd = (): any => {
         'cod-tipo-medio': ''
       },
       nombre: '',
-      activo: true
+      activo: true,tamagno_max_mb:0,control_tamagno_max:false
     });
 
     set_title_button('Guardar');
