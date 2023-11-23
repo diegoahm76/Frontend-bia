@@ -45,6 +45,8 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
 
         setEncuestas(filteredEncuestas);
     };
+
+    
     useEffect(() => {
         fetchEncuestas(); // Llama a fetchEncuestas al montar el componente
     }, []);
@@ -129,12 +131,12 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
             />
             <Grid item xs={12} marginTop={2}>
                 <DataGrid
-                    density="compact"
                     autoHeight
-                    columns={columns}
-                    rows={encuestas}
                     pageSize={10}
+                    columns={columns}
+                    density="compact"
                     rowsPerPageOptions={[10]}
+                    rows={encuestas}
                     getRowId={(row) => row.id_encabezado_encuesta}
                 />
             </Grid>

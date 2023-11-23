@@ -5,7 +5,7 @@ export interface Persona {
     segundo_nombre: string;
     primer_apellido: string;
     segundo_apellido: string;
-}
+};
 export interface Alertas {
     id_persona_alertar: number;
     nombre_completo: string;

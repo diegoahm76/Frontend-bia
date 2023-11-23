@@ -2,40 +2,69 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { type ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
+import { api } from "../../../../api/axios";
+import { Propstorta } from "../interfaces/types";
+interface ReporteSexo {
+  success: boolean;
+  detail: string;
+  data: {
+    registros: {
+      nombre: string;
+      total: number;
+    }[];
+    total: number;
+  };
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const GraficaArea: React.FC = () => {
-  // Datos para el Gráfico de Área
+export const GraficaArea: React.FC <Propstorta> = ({selectedEncuestaId}) => {
+
+  const [reporteSexo, setReporteSexo] = useState<ReporteSexo | null>(null);
+  useEffect(() => {
+    const fetchReporteSexo = async (): Promise<void> => {
+      try {
+        const url = `/gestor/encuestas/reporte_tipos_sexo/get/${selectedEncuestaId}/`;
+        const res = await api.get<ReporteSexo>(url);  // Asumo que estás usando 'api' para las solicitudes.
+        setReporteSexo(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchReporteSexo();
+  }, [selectedEncuestaId]);
+  const labels = reporteSexo?.data.registros.map(registro => registro.nombre) || [];
+  const series = reporteSexo?.data.registros.map(registro => registro.total) || [];
   const chartData: ApexOptions = {
     chart: {
       width: 380,
-      type: "area", // Configuramos el tipo de gráfico como "area" para un Gráfico de Área
+      type: "pie",
     },
-    xaxis: {
-      categories: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-    },
-    yaxis: {
-      title: {
-        text: "Valores",
-      },
-    },
-    title: {
-    //   text: "Ejemplo de Gráfico de Área",
-    },
-    series: [
+    labels: labels,  // Actualiza las etiquetas
+    series: series,  // Actualiza los datos
+    responsive: [
       {
-        name: "Serie 1",
-        data: [30, 40, 25, 50, 49],
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom",
+          },
+        },
       },
     ],
   };
-
+      
   return (
-    <>
-      <ReactApexChart options={chartData} series={chartData.series} type="area" height={215} />
-    </>
+      <>
+          <>
+              <ReactApexChart options={chartData} series={chartData.series} type="pie" height={215} />
+          </>
+      </>
   );
 };

@@ -141,7 +141,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       const index_periodo = periodo_actual.periodos.findIndex(periodo => periodo === form_liquidacion.periodo_liquidacion);
       if (index_periodo >= 0) {
         set_meses_actual(periodo_actual.meses[index_periodo]);
-        set_rows_detalles([]);
+        // set_rows_detalles([]);
         set_id_row_detalles(0);
       }
     }

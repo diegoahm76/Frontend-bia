@@ -30,6 +30,8 @@ import ImageUploader from '../form/ImageUploader';
 import FormDateTimePickerController from '../form/FormDateTimePickerController';
 import FormDateRangePickerController from '../form/FormDateRangePickerController';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
+import FormCheckboxController from '../form/FormCheckboxController';
+import FormButtonGrid from '../form/FormButtonGrid';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -82,11 +84,11 @@ const SeleccionarModeloDialogForm = ({
           type={form_input.type}
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
-          multiline_text={form_input.multiline_text}
-          rows_text={form_input.rows_text}
-          on_blur_function={form_input.on_blur_function}
+          multiline_text={form_input.multiline_text ?? false}
+          rows_text={form_input.rows_text ?? 1}
+          on_blur_function={form_input.on_blur_function ?? null}
           set_value={form_input.set_value ?? null}
-          hidden_text={form_input.hidden_text ?? null}
+          step_number={form_input.step_number ?? null}
         />
       );
     } else if (form_input.datum_type === 'input_no_controller') {
@@ -99,9 +101,9 @@ const SeleccionarModeloDialogForm = ({
           label={form_input.label}
           type={form_input.type}
           disabled={form_input.disabled}
-          multiline_text={form_input.multiline_text}
-          rows_text={form_input.rows_text}
-          on_blur_function={form_input.on_blur_function}
+          multiline_text={form_input.multiline_text ?? false}
+          rows_text={form_input.rows_text ?? 1}
+          on_blur_function={form_input.on_blur_function ?? null}
         />
       );
     } else if (form_input.datum_type === 'select_controller') {
@@ -121,7 +123,9 @@ const SeleccionarModeloDialogForm = ({
           option_key={form_input.option_key}
           multiple={form_input.multiple ?? false}
           hidden_text={form_input.hidden_text ?? null}
-          auto_focus={form_input.auto_focus ?? null}
+          auto_focus={form_input.auto_focus ?? false}
+          on_change_function={form_input.on_change_function ?? null}
+          none_option={form_input.none_option ?? null}
         />
       );
     } else if (form_input.datum_type === 'title') {
@@ -197,6 +201,7 @@ const SeleccionarModeloDialogForm = ({
           min_date={form_input.min_date ?? null}
           max_date={form_input.max_date ?? null}
           format={form_input.format ?? null}
+          margin={form_input.margin ?? null}
         />
       );
     } else if (form_input.datum_type === 'image_uploader') {
@@ -208,6 +213,41 @@ const SeleccionarModeloDialogForm = ({
           selected_image={form_input.selected_imagen}
           width_image={form_input.width_image}
           height_image={form_input.height_image}
+        />
+      );
+    } else if (form_input.datum_type === 'checkbox_controller') {
+      return (
+        <FormCheckboxController
+          xs={form_input.xs}
+          md={form_input.md}
+          control_form={form_input.control_form}
+          control_name={form_input.control_name}
+          default_value={form_input.default_value}
+          rules={form_input.rules}
+          label={form_input.label}
+          disabled={form_input.disabled}
+          helper_text={form_input.helper_text}
+          hidden_text={form_input.hidden_text ?? null}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
+        />
+      );
+    } else if (form_input.datum_type === 'button') {
+      return (
+        <FormButtonGrid
+          xs={form_input.xs}
+          md={form_input.md}
+          label={form_input.label}
+          disabled={form_input.disabled}
+          hidden_text={form_input.hidden_text ?? null}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
+          on_click_function={form_input.on_click_function ?? null}
+          icon_class={form_input.icon_class ?? null}
+          variant_button={form_input.variant_button ?? null}
+          type_button={form_input.type_button ?? null}
+          style_button={form_input.style_button ?? null}
+          color_button={form_input.color_button ?? null}
         />
       );
     }
@@ -222,18 +262,16 @@ const SeleccionarModeloDialogForm = ({
   };
 
   const select_model = (): void => {
-    const model = models.find((p) => p[row_id] === selected_row[0])
+    const model = models.find((p) => p[row_id] === selected_row[0]);
     if (model !== undefined) {
       dispatch(set_current_model(model));
-      set_models([])
+      set_models([]);
       handle_close_select_model();
     }
   };
   const search_models = (): void => {
-    search_model_function()
+    search_model_function();
   };
-
-
 
   return (
     <Dialog
@@ -255,26 +293,27 @@ const SeleccionarModeloDialogForm = ({
             <Divider /> */}
 
         <DialogContent sx={{ mb: '0px' }}>
-          { form_filters.length > 0 &&
-            <Grid container sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px',
-              mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-              marginTop: '10px',
-              marginLeft: '-6px',
-            }} spacing={2} direction="row">
-              <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
+          {form_filters.length > 0 && (
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+                marginTop: '10px',
+                marginLeft: '-6px',
+              }}
+              spacing={2}
+              direction="row"
+            >
+              <Title title={modal_title ?? 'Resultados de la busqueda'}></Title>
               {form_filters.map((option, index) => (
                 <TypeDatum key={index} form_input={option} />
               ))}
-              <Grid
-                item
-                xs={12}
-                md={2}
-              >
+              <Grid item xs={12} md={2}>
                 <FormButton
                   variant_button="contained"
                   on_click_function={get_filters_models}
@@ -284,50 +323,63 @@ const SeleccionarModeloDialogForm = ({
                 />
               </Grid>
             </Grid>
-          }
-          {models.length > 0 &&
-            <Grid container sx={{
+          )}
+          {/* {models.length > 0 && */}
+          <Grid
+            container
+            sx={{
               position: 'relative',
               background: '#FAFAFA',
               borderRadius: '15px',
               p: '20px',
               mb: '20px',
+
               boxShadow: '0px 3px 6px #042F4A26',
               marginLeft: '-6px',
-            }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
-              <Box sx={{ width: '100%' }}>
-                <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
-                <Grid container justifyContent="flex-end" sx={{ marginTop: "6px" }}>
-                  <ButtonGroup style={{ margin: 7 }}  >
+            }}
+            spacing={2}
+            justifyContent="center"
+            direction="row"
+            marginTop={2}
+          >
+            <Box sx={{ width: '100%' }}>
+              <Title
+                title={title_table_modal ?? 'Resultados de la busqueda'}
+              ></Title>
+              <Grid
+                container
+                justifyContent="flex-end"
+                sx={{ marginTop: '6px' }}
+              >
+                <ButtonGroup style={{ margin: 7 }}>
+                  {download_xls({ nurseries: models, columns: columns_model })}
+                  {download_pdf({
+                    nurseries: models,
+                    columns: columns_model,
+                    title: title_table_modal,
+                  })}
+                </ButtonGroup>
+              </Grid>
 
-                    {download_xls({ nurseries: models, columns: columns_model })}
-                    {download_pdf({ nurseries: models, columns: columns_model, title: title_table_modal })}
-
-
-
-                  </ButtonGroup>
-                </Grid>
-
-                <DataGrid
-                  onSelectionModelChange={handle_selection_change}
-                  density="compact"
-                  autoHeight
-                  rows={models || []}
-                  columns={columns_model}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) =>
-                    row[row_id ?? uuid()] === null
-                      ? uuid()
-                      : row[row_id ?? uuid()]
-                  }
-                  selectionModel={selected_row}
-                />
-              </Box>
-            </Grid>
-          }
-
+              <DataGrid
+                onSelectionModelChange={handle_selection_change}
+                density="compact"
+                autoHeight
+                rows={models || []}
+                columns={columns_model}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) =>
+                  row[row_id ?? uuid()] === null
+                    ? uuid()
+                    : row[row_id ?? uuid()]
+                }
+                selectionModel={selected_row}
+              />
+            </Box>
+          </Grid>
+          {/* } */}
         </DialogContent>
         <Divider />
         <DialogActions>

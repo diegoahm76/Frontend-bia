@@ -58,6 +58,8 @@ import { configuracion_tiempo_respuesta_slice } from "../commons/gestorDocumenta
 import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/toolkit/slice/types/AsignacionUniResp";
 import { reportes_documentacion_slice } from "../commons/gestorDocumental/reportesDocumentacionPermisos/store/slice/indexReporteDocumentacion";
 import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
+import { pqrsdf_slice } from "../commons/gestorDocumental/PQRSDF/store/slice/pqrsdfSlice";
+import { planes_slice } from "../commons/seguimirntoPlanes/store/slice/indexPlanes";
 
 const persist_config = {
   key: "macarenia_app",
@@ -140,6 +142,13 @@ const app_reducers = combineReducers({
   reportes_documentacion: reportes_documentacion_slice.reducer,
   // ? Delegacion oficinas responsables del ccd
   DelOfiResSlice: DelOfiResSlice.reducer,
+  // pqrsdf
+  pqrsdf_slice: pqrsdf_slice.reducer,
+
+  
+ // ! SEGUIMIENTO A PLANES
+ // ? planes
+ planes: planes_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

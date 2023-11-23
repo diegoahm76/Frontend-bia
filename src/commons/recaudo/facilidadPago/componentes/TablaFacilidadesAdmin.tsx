@@ -246,8 +246,8 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             size="small"
           />
           </Grid>
-        <Grid item    xs={12} sm={1}>
-          <Button variant="contained" color="primary"  startIcon={<SearchOutlined />} onClick={handleSearch}>
+        <Grid item    xs={12} sm={2}>
+          <Button variant="contained" color="primary"  fullWidth startIcon={<SearchOutlined />} onClick={handleSearch}>
             Buscar
           </Button>
         </Grid>
@@ -292,8 +292,10 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         >
           Buscar
         </Button> */}
-        <Button
+        <Grid item    xs={12} sm={2}>
+           <Button
           color='primary'
+          fullWidth
           variant='outlined'
           startIcon={<FilterAltOffOutlined />}
           onClick={() => {
@@ -306,19 +308,14 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         >
           Mostrar Todo
         </Button>
+        </Grid>
+       
       </Stack>
       {
         visible_rows.length !== 0 ? (
           <Grid
             container
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px',
-              mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-            }}
+          
           >
             <Grid item xs={12}>
               <Grid item>

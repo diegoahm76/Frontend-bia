@@ -7,7 +7,7 @@ import {
     // type AxiosResponse
 } from 'axios';
 import { api } from '../../../../../api/axios';
-import { set_serie_subserie, set_trd } from '../slice/indexReporteDocumentacion';
+import { set_permisos_generales, set_permisos_no_propios, set_serie_subserie, set_trd } from '../slice/indexReporteDocumentacion';
 
 
 
@@ -72,6 +72,50 @@ export const get_series_subseries = (
 
             if (data.success === true) {
                 dispatch(set_serie_subserie(data.data));
+
+            }
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+
+export const get_permisos = (
+    id: number,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/resportes-permisos-doc/reporte-permisos-no-propios/get/${id ?? ''}/`);
+            // const { data } = await api.get('gestor/resportes-permisos-doc/reporte-permisos-no-propios/get/5383/');
+            console.log(data.data)
+            if (data.succes === true) {
+                dispatch(set_permisos_no_propios(data.data));
+
+            }
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+        }
+    };
+};
+
+export const get_permisos_generales = (
+    id_ccd: number,
+    id_unidad_organizacional: number,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`gestor/resportes-permisos-doc/reporte-permisos-generales/get/${id_ccd ?? ''}/${id_unidad_organizacional ?? ''}/`);
+            // const { data } = await api.get('gestor/resportes-permisos-doc/reporte-permisos-no-propios/get/5383/');
+            console.log(data.data)
+            if (data.succes === true) {
+                dispatch(set_permisos_generales(data.data));
 
             }
             return data;

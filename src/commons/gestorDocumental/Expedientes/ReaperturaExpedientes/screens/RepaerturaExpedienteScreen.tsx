@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Box, Button, FilledTextFieldProps, Grid, OutlinedTextFieldProps, StandardTextFieldProps, TextField, TextFieldVariants, } from '@mui/material';
+import { Box, Button, FilledTextFieldProps, Grid, OutlinedTextFieldProps, StandardTextFieldProps, TextField, TextFieldVariants, Tooltip, } from '@mui/material';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,10 +12,11 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { IObjReaperturaExpediente, IObjExpedientes, IObjArchivoExpediente, IObjInformacionReapertura } from '../../cierreExpediente/interfaces/cierreExpedientes';
 import BuscarExpedienteReapertura from '../components/BuscarExpedienteReapertura';
 import ArchivoSoporteReapertura from '../components/archivoSoporteReapertura';
-import { get_archivos_id_expediente, get_informacion_reapertura, reapertura_expediente, } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
-import { DatePicker } from '@mui/lab';
+import { delete_file, get_archivos_id_expediente, get_informacion_reapertura, reapertura_expediente, } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography } from '@mui/material';
 import { JSX } from 'react/jsx-runtime';
+import { initial_state_current_archivo_expediente, set_current_archivo_expediente } from '../../cierreExpediente/store/slice/indexCierreExpedientes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ReaperturaExpedienteScreen = () => {
@@ -45,6 +46,7 @@ const ReaperturaExpedienteScreen = () => {
 
     const handle_adjuntar_archivo = () => {
         set_open_modal_archivo(true);
+        dispatch(set_current_archivo_expediente(initial_state_current_archivo_expediente))
     };
     const handle_close_adjuntar_archivo = () => {
         set_open_modal_archivo(false);
@@ -69,7 +71,7 @@ const ReaperturaExpedienteScreen = () => {
 
 
     const handle_selected_arrchivo_expediente = (archivo: IObjArchivoExpediente) => {
-        set_selected_archivo_soporte(archivo);
+        dispatch(set_current_archivo_expediente(archivo));
         set_open_modal_archivo(true);
 
 
@@ -124,16 +126,52 @@ const ReaperturaExpedienteScreen = () => {
             width: 350,
         },
         {
-            field: 'acciones',
-            headerName: 'ACCIONES',
+            field: 'Editar',
+            headerName: 'EDITAR',
             width: 100,
             renderCell: (params) => (
-                <Button
-                    onClick={() => handle_selected_arrchivo_expediente(params.row)}
-                    startIcon={<PlaylistAddCheckIcon />}
-                >
+                <Tooltip title="Editar">
+                    <Button
+                        onClick={() => handle_selected_arrchivo_expediente(params.row)}
+                        startIcon={<PlaylistAddCheckIcon />}
+                    >
 
-                </Button>
+                    </Button>
+                </Tooltip>
+            ),
+
+        },
+        {
+            field: 'acciones',
+            headerName: 'ELIMINAR',
+            width: 100,
+            renderCell: (params) => (
+                <>
+
+                    <Tooltip title="Eliminar">
+                        <Button
+                            aria-label="delete"
+                            size="small"
+
+
+                            onClick={() => {
+                                if (current_archivo_expediente.id_expediente_documental !== undefined && current_archivo_expediente.id_expediente_documental !== null) {
+                                    dispatch(delete_file(params.row.id_documento_de_archivo_exped, current_archivo_expediente.id_expediente_documental))
+                                }
+
+                            }}
+                        >
+                            <DeleteIcon
+                                titleAccess="Eliminar"
+                                sx={{
+                                    color: 'red',
+                                    width: '18px',
+                                    height: '18px',
+                                }}
+                            />
+                        </Button>
+                    </Tooltip>
+                </>
             ),
 
         },
@@ -217,28 +255,6 @@ const ReaperturaExpedienteScreen = () => {
                     format={'YYYY-MM-DD'}
                     helper_text={''}
                 />
-                {/* <Grid item xs={12} sm={3.5} >
-                    <Controller
-                        name="fecha_actual"
-                        control={control_reapertura_expediente}
-                        rules={{ required: true }}
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                fullWidth
-                                size="small"
-                                label="Fecha"
-                                variant="outlined"
-                                disabled={true}
-                                value={get_current_date().split(' ')[0]}
-                                onChange={onChange}
-                                error={!!error}
-                            />
-                        )}
-                    />
-                </Grid> */}
-
 
                 {open_modal && (
                     <Grid item xs={12} marginY={1}>
@@ -276,6 +292,9 @@ const ReaperturaExpedienteScreen = () => {
                                     value={value}
                                     onChange={onChange}
                                     error={!(error == null)}
+                                    sx={{
+                                        backgroundColor: 'white',
+                                    }}
 
                                 >
 
@@ -308,6 +327,9 @@ const ReaperturaExpedienteScreen = () => {
                                     value={value}
                                     onChange={onChange}
                                     error={!(error == null)}
+                                    sx={{
+                                        backgroundColor: 'white',
+                                    }}
 
                                 >
 
@@ -376,7 +398,7 @@ const ReaperturaExpedienteScreen = () => {
 
 
             <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12} sm={8} marginTop={3} >
+                <Grid item xs={12} sm={11.5} marginTop={3} >
                     <Controller
                         name="justificacion_reapertura"
                         control={control_reapertura_expediente}
@@ -398,6 +420,9 @@ const ReaperturaExpedienteScreen = () => {
                                 value={value}
                                 onChange={onChange}
                                 error={!(error == null)}
+                                sx={{
+                                    backgroundColor: 'white',
+                                }}
 
                             >
 

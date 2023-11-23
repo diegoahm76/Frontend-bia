@@ -146,7 +146,7 @@ export const AgregarPozo: React.FC<IProps> = ({
           </Button>
           <Button
             variant="outlined"
-            // color="warning"
+            color="warning"
             startIcon={<CleanIcon />}
             onClick={limpiar_formulario}
           >

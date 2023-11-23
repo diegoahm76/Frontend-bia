@@ -23,6 +23,7 @@ import {
   Paper,
   TableBody,
   Tooltip,
+  Chip,
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,6 +44,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -64,16 +66,20 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const [rows, set_rows] = useState<UsersRol[]>([]);
 
   const columns: GridColDef[] = [
-    // {
-    //   headerName: 'ID',
-    //   field: 'id_rol',
-    //   minWidth: 150,
-    // },
     {
       headerName: 'Nombre',
       field: 'nombre_rol',
       minWidth: 350,
       flex: 1,
+      renderCell: (params: any) => (
+        <Typography variant="body1">
+          {params.row.nombre_rol.includes('zCamunda') ? (
+            <>{params.row.nombre_rol.replace(/zCamunda - /g, '')}</>
+          ) : (
+            <>{params.row.nombre_rol}</>
+          )}
+        </Typography>
+      ),
     },
     {
       headerName: 'Descripción',
@@ -81,22 +87,10 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
       minWidth: 450,
       flex: 1,
     },
-    // {
-    //   headerName: 'Estado',
-    //   field: 'Rol_sistema',
-    //   minWidth: 150,
-    //   renderCell: (params) => {
-    //     return params.row.Rol_sistema === true ? (
-    //       <Chip size="small" label="true" color="success" variant="outlined" />
-    //     ) : (
-    //       <Chip size="small" label="false" color="error" variant="outlined" />
-    //     );
-    //   },
-    // },
     {
       headerName: 'Acciones',
       field: 'accion',
-      minWidth: 120,
+      minWidth: 200,
       flex: 1,
       renderCell: (params: any) => (
         <>
@@ -164,6 +158,38 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               </Avatar>
             </IconButton>
           </Tooltip>
+          {/* se debe ver si ese rol tiene permisos de tramites y servicios */}
+          {params.row.nombre_rol.includes('zCamunda') && (
+            <Tooltip
+              title="Rol con permisos para trámites y servicios"
+              placement="top"
+              arrow
+            >
+              <IconButton
+                onClick={() => {
+                  void view_detail(params.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <InfoIcon
+                    sx={{
+                      color: 'info.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
         </>
       ),
     },

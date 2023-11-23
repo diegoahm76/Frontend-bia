@@ -18,10 +18,7 @@ import {
   Stack,
   Tooltip,
 } from '@mui/material';
-import {
-  DataGrid,
-  type GridColDef,
-} from '@mui/x-data-grid';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 
 //* icons
@@ -33,14 +30,40 @@ import { columnnsSelCCDPSD } from '../../../../../../../permisosSeriesDoc/compon
 import { Title } from '../../../../../../../../../components';
 import { download_xls } from '../../../../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
-import { setCcdOrganigramaCurrentAsiOfiResp } from '../../../../toolkit/slice/DelOfiResSlice';
+import {
+  reset_states_asi_ofi_resp,
+  setCcdOrganigramaCurrentAsiOfiResp,
+  setUnidadesResponsablesActual,
+} from '../../../../toolkit/slice/DelOfiResSlice';
+import { validacionInicialDataPendientePorPersistir } from '../../../../toolkit/thunks/validacionInicial.service';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { getUnidadesResponsablesActual } from '../../../../toolkit/thunks/unidadesActualResponsable.service';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 
+interface Row {
+  id: number;
+  nombre: string;
+  version: string;
+  nombre_organigrama: string;
+  version_organigrama: string;
+  id_ccd: number;
+}
+
+interface Params {
+  row: Row;
+}
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
+  //* navigate declaration
+  const navigate = useNavigate();
   const { ccdList, setccdList } = params;
   //* --- dispatch declaration ----
   const dispatch = useAppDispatch();
@@ -48,19 +71,72 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { modalSeleccionCCD_PSD, handleSeleccionCCD_PSD, loadingButtonPSD } =
     useContext(ModalContextPSD);
 
+  const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
+  const handleSeleccionCcdOficinasResponsables = async (params: Params) => {
+    const { id, nombre, version } = params.row;
 
-  const handleSeleccionCcdOficinasResponsables = (params: any) => {
-    const { row } = params;
-    const { id, nombre, version, nombre_organigrama, version_organigrama } =
-      row;
-    console.log(row);
+    const validacionSeccionesPendientes =
+      await validacionInicialDataPendientePorPersistir(params.row.id_ccd);
 
-    //* se selecciona el elemento seleccionado como actual dentro del módulo
+    if (validacionSeccionesPendientes?.data.length) {
+      const array = Array.from({ length: 12 }, (_, i) => ({
+        codigo: 'CCD' + i,
+        nombre: `nombre${i}`,
+      }));
 
-   dispatch(setCcdOrganigramaCurrentAsiOfiResp(params?.row));
+      const htmlText = `
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <p>asigne un responsable a ésta(s) unidad(es) de tipo de sección / subsección para continuar en este módulo.</p>
+          <p><b>CCD seleccionado :</b> Nombre: ${nombre} - Versión: ${version}</p>
+          <ul style = "padding:0">
+            ${[...validacionSeccionesPendientes.data, ...array]
+              .map(
+                (el: any) =>
+                  `<li style="list-style: none; margin-top:5px;">Unidad: <b>${el.codigo}</b> - ${el.nombre}</li>`
+              )
+              .join('')}
+          </ul>
+        `;
 
+      const swalOptions = {
+        title: 'No puede seleccionar este CCD',
+        html: htmlText,
+        icon: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonText: 'Ir a módulo de asignación de unidades responsables',
+        cancelButtonText:
+          'Ir al módulo de homologación de secciones persistentes',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+      } as any;
 
+      await Swal.fire(swalOptions).then(async (result) => {
+        const navigateTo = result.isConfirmed
+          ? '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/asignaciones_unidades_responsables'
+          : '/app/gestor_documental/ccd/actividades_previas_cambio_ccd/homologacion_secciones_persistentes';
+        navigate(navigateTo);
+        dispatch(reset_states_asi_ofi_resp());
+      });
+
+      return;
+    }
+
+    //* se procede a llamar las unidades relacionadas con ese ccd
+    const unidadesResponsablesCcdSeleccionado =
+      await getUnidadesResponsablesActual({
+        idCcdSeleccionado: params.row.id_ccd,
+       // idUnidadActual: params.row.unidad_nueva,
+        setLoading: handleSecondLoading,
+      });
+    // ! en consecuencia asignar ese valor a un elemento del store para manejar la interacción posterior
+    dispatch(
+      setUnidadesResponsablesActual(unidadesResponsablesCcdSeleccionado)
+    );
+
+    // ? se asigan el valor de los params al store para manejar esos valores durante el ciclo de vida de la APP
+    dispatch(setCcdOrganigramaCurrentAsiOfiResp(params.row));
   };
 
   const columns_ccds: GridColDef[] = [
@@ -107,7 +183,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
             <IconButton
               onClick={() => {
                 handleSeleccionCcdOficinasResponsables(params);
-                // ! se cierra el modal
                 handleSeleccionCCD_PSD(false);
               }}
             >
@@ -205,4 +280,3 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     </Dialog>
   );
 };
-
