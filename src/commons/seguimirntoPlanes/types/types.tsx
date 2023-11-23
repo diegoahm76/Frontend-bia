@@ -146,6 +146,48 @@ export interface IDetalleCuentas {
   id_producto?: number | null;
   id_actividad?: number | null;
 }
+
+// Concepto POAI
+export interface IConceptoPOAI {
+  id_concepto?: number | null;
+  nombre_indicador?: string;
+  nombre?: string;
+  concepto: string;
+  cuenta?: string;
+  valor_total: number | null;
+  id_rubro?: number | null;
+  id_indicador?: number | null;
+  id_unidad_organizacional?: number | null;
+}
+// fuentes de financiacion
+export interface IFuentes {
+  id_fuente: number | null;
+  nombre_fuente?: string;
+  vano_1: number | null;
+  vano_2: number | null;
+  vano_3: number | null;
+  vano_4: number | null;
+  concepto: string;
+  id_concepto: number | null;
+}
+// Banco Proyectos
+export interface IBanco {
+  id_banco?: number | null;
+  nombre_proyecto?: string;
+  nombre_actividad?: string;
+  nombre_indicador?: string;
+  nombre_fuente?: string;
+  nombre_meta?: string;
+  rubro?: string;
+  banco_valor?: number | null;
+  objeto_contrato?: string;
+  id_proyecto?: number | null;
+  id_actividad?: number | null;
+  id_indicador?: number | null;
+  id_meta?: number | null;
+  id_rubro?: number | null;
+  id_fuente_financiacion?: number | null;
+}
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
@@ -161,4 +203,25 @@ export interface IPlanesIndex {
   subprograma: ISubprogramas;
   fuente_financiacion: IFuentesFinanciacion;
   detalle_inversion: IDetalleCuentas;
+  concepto_poai: IConceptoPOAI;
+  fuente: IFuentes;
+  banco: IBanco;
+}
+
+// unidades organizacionales
+export interface IUnidadesActuales {
+  id_unidad_organizacional: number;
+  nombre_unidad_org_actual_admin_series: string;
+  codigo_unidad_org_actual_admin_series: string;
+  nombre: string;
+  codigo: string;
+  cod_tipo_unidad: string;
+  cod_agrupacion_documental: null | string;
+  unidad_raiz: boolean;
+  item_usado: boolean;
+  activo: boolean;
+  id_organigrama: number;
+  id_nivel_organigrama: number;
+  id_unidad_org_padre: number | null;
+  id_unidad_org_actual_admin_series: number;
 }

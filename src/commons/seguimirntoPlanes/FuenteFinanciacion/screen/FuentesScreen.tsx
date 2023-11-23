@@ -9,7 +9,7 @@ import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FuentesIndicadoresScreen: React.FC = () => {
+export const FuentesScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ export const FuentesIndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Fuentes de financiación indicadores " />
+          <Title title="Fuentes de financiación  " />
         </Grid>
       </Grid>
       <ListarFuentesFinanciacion />

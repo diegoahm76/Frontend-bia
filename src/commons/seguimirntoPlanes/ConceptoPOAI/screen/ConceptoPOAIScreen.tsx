@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ListarFuentesFinanciacion } from '../components/Components/ListarFuentesFinanciacion';
+import { ListarConceptoPOAI } from '../components/Components/ListarConceptoPOAI';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { AgregarFuenteFinanciacion } from '../components/Components/AgregarFuenteFinanciacion';
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { AgregarConceptoPOAI } from '../components/Components/AgregarConceptoPOAI';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FuentesIndicadoresScreen: React.FC = () => {
+export const ConceptoPOAIScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
@@ -42,11 +42,11 @@ export const FuentesIndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Fuentes de financiación indicadores " />
+          <Title title="Concepto POAI " />
         </Grid>
       </Grid>
-      <ListarFuentesFinanciacion />
-      {mode.crear || mode.editar ? <AgregarFuenteFinanciacion /> : null}
+      <ListarConceptoPOAI />
+      {mode.crear || mode.editar ? <AgregarConceptoPOAI /> : null}
       <Grid
         container
         spacing={2}

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ListarFuentesFinanciacion } from '../components/Components/ListarFuentesFinanciacion';
+import { ListarBanco } from '../components/Components/ListarBanco';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { AgregarFuenteFinanciacion } from '../components/Components/AgregarFuenteFinanciacion';
+import { AgregarBanco } from '../components/Components/AgregarBanco';
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FuentesIndicadoresScreen: React.FC = () => {
+export const BancosScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
@@ -42,11 +42,11 @@ export const FuentesIndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Fuentes de financiación indicadores " />
+          <Title title="Detalle inversión cuentas " />
         </Grid>
       </Grid>
-      <ListarFuentesFinanciacion />
-      {mode.crear || mode.editar ? <AgregarFuenteFinanciacion /> : null}
+      <ListarBanco />
+      {mode.crear || mode.editar ? <AgregarBanco /> : null}
       <Grid
         container
         spacing={2}

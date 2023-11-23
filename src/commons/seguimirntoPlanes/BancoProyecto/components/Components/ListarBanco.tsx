@@ -20,16 +20,28 @@ import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_fuentes_financiacion,
+  set_current_banco,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextFuentesFinanciacion } from '../../context/context';
+import { DataContextBancos } from '../../context/context';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarFuentesFinanciacion: React.FC = () => {
-  const columns_fuente: GridColDef[] = [
+export const ListarBanco: React.FC = () => {
+  const columns_banco: GridColDef[] = [
+    {
+      field: 'nombre_proyecto',
+      headerName: 'NOMBRE PROYECTO',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_actividad',
+      headerName: 'NOMBRE ACTIVIDAD',
+      sortable: true,
+      width: 250,
+    },
     {
       field: 'nombre_indicador',
       headerName: 'NOMBRE INDICADOR',
@@ -37,88 +49,26 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       width: 250,
     },
     {
-      field: 'nombre_fuente',
-      headerName: 'NOMBRE FUENTE',
+      field: 'nombre_meta',
+      headerName: 'NOMBRE META',
       sortable: true,
       width: 250,
     },
     {
-      field: 'nombre_cuenca',
-      headerName: 'NOMBRE CUENCA',
+      field: 'rubro',
+      headerName: 'RUBRO',
       sortable: true,
       width: 250,
     },
     {
-      field: 'vano_1',
-      headerName: 'AÑO 1',
+      field: 'objeto_contrato',
+      headerName: 'OBJETO CONTRATO',
       sortable: true,
-      width: 150,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
-          style: 'currency',
-          currency: 'ARS',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        });
-
-        return formattedInversion;
-      },
+      width: 250,
     },
     {
-      field: 'vano_2',
-      headerName: 'AÑO 2',
-      sortable: true,
-      width: 150,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
-          style: 'currency',
-          currency: 'ARS',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        });
-
-        return formattedInversion;
-      },
-    },
-    {
-      field: 'vano_3',
-      headerName: 'AÑO 3',
-      sortable: true,
-      width: 150,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
-          style: 'currency',
-          currency: 'ARS',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        });
-
-        return formattedInversion;
-      },
-    },
-    {
-      field: 'vano_4',
-      headerName: 'AÑO 4',
-      sortable: true,
-      width: 150,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
-          style: 'currency',
-          currency: 'ARS',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        });
-
-        return formattedInversion;
-      },
-    },
-    {
-      field: 'valor_total',
-      headerName: 'VALOR TOTAL',
+      field: 'banco_valor',
+      headerName: 'BANCO VALOR',
       sortable: true,
       width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {
@@ -151,7 +101,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_fuentes_financiacion(params.row));
+              dispatch(set_current_banco(params.row));
             }}
           >
             <Avatar
@@ -164,7 +114,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar fuente de financiación"
+                titleAccess="Editar banco proyecto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -178,8 +128,8 @@ export const ListarFuentesFinanciacion: React.FC = () => {
     },
   ];
 
-  const { rows_fuentes, fetch_data_fuente_financiacion } = useContext(
-    DataContextFuentesFinanciacion
+  const { rows_bancos, fetch_data_bancos } = useContext(
+    DataContextBancos
   );
 
   // const {
@@ -190,7 +140,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
 
   useEffect(() => {
     // if (id_indicador) {
-    fetch_data_fuente_financiacion();
+    fetch_data_bancos();
     // }
   }, []);
 
@@ -212,7 +162,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Listado de Fuentes de Financiación " />
+          <Title title="Listado de Bancos " />
         </Grid>
         <>
           <Grid item xs={12}>
@@ -226,20 +176,20 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                   }}
                 >
                   {download_xls({
-                    nurseries: rows_fuentes,
-                    columns: columns_fuente,
+                    nurseries: rows_bancos,
+                    columns: columns_banco,
                   })}
                   {download_pdf({
-                    nurseries: rows_fuentes,
-                    columns: columns_fuente,
-                    title: 'CREAR FUENTE',
+                    nurseries: rows_bancos,
+                    columns: columns_banco,
+                    title: 'CREAR',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_fuentes}
-                  columns={columns_fuente}
+                  rows={rows_bancos}
+                  columns={columns_banco}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
@@ -265,7 +215,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                 );
               }}
             >
-              Agregar fuente de financiación
+              Agregar Banco Proyecto
             </Button>
           </Grid>
         </Grid>

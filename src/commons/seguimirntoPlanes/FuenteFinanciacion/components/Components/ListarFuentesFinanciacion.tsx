@@ -20,7 +20,7 @@ import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_fuentes_financiacion,
+  set_current_fuente,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
 import { DataContextFuentesFinanciacion } from '../../context/context';
@@ -31,20 +31,8 @@ import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar'
 export const ListarFuentesFinanciacion: React.FC = () => {
   const columns_fuente: GridColDef[] = [
     {
-      field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_fuente',
-      headerName: 'NOMBRE FUENTE',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_cuenca',
-      headerName: 'NOMBRE CUENCA',
+      field: 'concepto',
+      headerName: 'CONCEPTO',
       sortable: true,
       width: 250,
     },
@@ -117,23 +105,6 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       },
     },
     {
-      field: 'valor_total',
-      headerName: 'VALOR TOTAL',
-      sortable: true,
-      width: 150,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
-          style: 'currency',
-          currency: 'ARS',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        });
-
-        return formattedInversion;
-      },
-    },
-    {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
@@ -151,7 +122,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_fuentes_financiacion(params.row));
+              dispatch(set_current_fuente(params.row));
             }}
           >
             <Avatar
@@ -232,7 +203,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                   {download_pdf({
                     nurseries: rows_fuentes,
                     columns: columns_fuente,
-                    title: 'CREAR FUENTE',
+                    title: 'CREAR',
                   })}
                 </ButtonGroup>
                 <DataGrid
